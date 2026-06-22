@@ -38,6 +38,6 @@ export default {
     await message.reply(replyMessage);
 
     // Forward original email to your Tuta inbox
-    await message.forward("YOUR_TUTA_EMAIL@tuta.io");
+    await message.forward("sweetpea@tuta.io");
   },
 };
