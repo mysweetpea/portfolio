@@ -1,0 +1,10 @@
+{
+  "name": "email-auto-reply",
+  "version": "1.0.0",
+  "dependencies": {
+    "mimetext": "^3.0.0"
+  },
+  "scripts": {
+    "deploy": "wrangler deploy"
+  }
+}
