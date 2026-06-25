@@ -3,6 +3,6 @@ main = "src/index.js"
 compatibility_date = "2026-06-25"
 compatibility_flags = ["nodejs_compat"]
 
-[observability.logs]
-enabled = true
-invocation_logs = false
+[[send_email]]
+name = "SEND_EMAIL"
+destination_address = "sweetpea@tuta.io"
