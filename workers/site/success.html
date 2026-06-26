@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Welcome to MySweetPea</title>
+    <link rel="icon" type="image/svg+xml" href="/logo-favicon.svg" sizes="any">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    :root {
+      --bg-deep: #020617;
+      --glass-bg: rgba(255, 255, 255, 0.03);
+      --glass-border: rgba(255, 255, 255, 0.08);
+      --text-primary: #f8fafc;
+      --text-muted: #94a3b8;
+      --success: #34d399;
+      --success-dim: rgba(52, 211, 153, 0.15);
+    }
+    body {
+      font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+      background-color: var(--bg-deep);
+      color: var(--text-primary);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      position: relative;
+      overflow-x: hidden;
+    }
+    body::before, body::after {
+      content: ''; position: fixed; border-radius: 50%; filter: blur(120px); opacity: 0.35; z-index: -1; pointer-events: none;
+    }
+    body::before { width: 600px; height: 600px; background: radial-gradient(circle, #064e3b, transparent 70%); top: -10%; left: -10%; animation: float 20s infinite ease-in-out; }
+    body::after { width: 500px; height: 500px; background: radial-gradient(circle, #1e3a8a, transparent 70%); bottom: -10%; right: -10%; animation: float 25s infinite ease-in-out reverse; }
+    @keyframes float {
+      0%, 100% { transform: translate(0, 0) scale(1); }
+      33% { transform: translate(30px, -50px) scale(1.1); }
+      66% { transform: translate(-20px, 20px) scale(0.9); }
+    }
+    @keyframes slideUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+    @keyframes pop { 0% { transform: scale(0.8); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
+    .card {
+      background: var(--glass-bg);
+      backdrop-filter: blur(20px) saturate(150%);
+      -webkit-backdrop-filter: blur(20px) saturate(150%);
+      border: 1px solid var(--glass-border);
+      border-radius: 24px;
+      padding: 48px 40px;
+      max-width: 480px;
+      width: 100%;
+      text-align: center;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.05);
+      animation: slideUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+      opacity: 0;
+    }
+    .logo { margin-bottom: 20px; animation: pop 0.6s cubic-bezier(0.16, 1, 0.3, 1) 0.2s forwards; opacity: 0; display: inline-block; }
+    .logo img { width: 116px; height: 116px; }
+    h1 { font-size: 28px; margin-bottom: 12px; color: var(--success); animation: slideUp 0.6s ease 0.3s forwards; opacity: 0; }
+    p { line-height: 1.6; color: var(--text-muted); margin-bottom: 24px; animation: slideUp 0.6s ease 0.4s forwards; opacity: 0; }
+    .highlight {
+      background: var(--success-dim);
+      border-left: 3px solid var(--success);
+      padding: 16px;
+      border-radius: 12px;
+      margin: 24px 0;
+      text-align: left;
+      animation: slideUp 0.6s ease 0.5s forwards;
+      opacity: 0;
+    }
+    .highlight strong { color: var(--text-primary); }
+    .highlight a { color: #6ee7b7; text-decoration: none; }
+    .btn {
+      display: inline-block;
+      margin-top: 8px;
+      padding: 14px 32px;
+      background: var(--success);
+      color: #020617;
+      text-decoration: none;
+      border-radius: 12px;
+      font-weight: 700;
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+      box-shadow: 0 4px 20px rgba(52, 211, 153, 0.25);
+      animation: slideUp 0.6s ease 0.6s forwards;
+      opacity: 0;
+    }
+    .btn:hover { transform: translateY(-2px); box-shadow: 0 10px 30px rgba(52, 211, 153, 0.4); }
+    .services { margin-top: 32px; text-align: left; animation: slideUp 0.6s ease 0.7s forwards; opacity: 0; }
+    .services h3 { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--text-muted); margin-bottom: 12px; }
+    .service-list { list-style: none; }
+    .service-list li { padding: 10px 0; border-bottom: 1px solid rgba(255,255,255,0.05); display: flex; align-items: center; gap: 10px; transition: transform 0.2s; }
+    .service-list li:hover { transform: translateX(4px); }
+    .service-list a { color: #6ee7b7; text-decoration: none; font-weight: 500; transition: color 0.2s; }
+    .service-list a:hover { color: var(--success); }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <div class="logo">
+      <img src="logo.svg" alt="MySweetPea" width="116" height="116">
+    </div>
+    <h1>You're In!</h1>
+    <p>Your MySweetPea account has been created. Check your email for your temporary password.</p>
+    <div class="highlight">
+      <strong>Next Steps:</strong><br>
+      1. Check your email inbox<br>
+      2. Log in to <a href="https://auth.mysweetpea.duckdns.org">Authentik SSO</a><br>
+      3. Change your temporary password immediately
+    </div>
+    <a class="btn" href="https://auth.mysweetpea.duckdns.org">Go to Login Portal</a>
+    <div class="services">
+      <h3>Your Services</h3>
+      <ul class="service-list">
+        <li>🔐 <a href="https://vault.mysweetpea.duckdns.org">Password Manager</a></li>
+        <li>🎬 <a href="https://media.mysweetpea.duckdns.org">Media Server</a></li>
+        <li>📺 <a href="https://request.mysweetpea.duckdns.org">Request Portal</a></li>
+        <li>💬 <a href="https://chat.mysweetpea.duckdns.org">Matrix Chat</a></li>
+        <li>🤖 <a href="https://ai.mysweetpea.duckdns.org">AI Assistant</a></li>
+      </ul>
+    </div>
+  </div>
+</body>
+</html>
