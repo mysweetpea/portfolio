@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Subscription Error</title>
+    <link rel="icon" type="image/svg+xml" href="/logo-favicon.svg" sizes="any">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    :root {
+      --bg-deep: #020617;
+      --glass-bg: rgba(255, 255, 255, 0.03);
+      --glass-border: rgba(255, 255, 255, 0.08);
+      --text-primary: #f8fafc;
+      --text-muted: #94a3b8;
+      --error: #fb7185;
+      --error-dim: rgba(251, 113, 133, 0.15);
+    }
+    body {
+      font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+      background-color: var(--bg-deep);
+      color: var(--text-primary);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      position: relative;
+      overflow-x: hidden;
+    }
+    body::before, body::after {
+      content: ''; position: fixed; border-radius: 50%; filter: blur(120px); opacity: 0.35; z-index: -1; pointer-events: none;
+    }
+    body::before { width: 600px; height: 600px; background: radial-gradient(circle, #7f1d1d, transparent 70%); top: -10%; left: -10%; animation: float 20s infinite ease-in-out; }
+    body::after { width: 500px; height: 500px; background: radial-gradient(circle, #4c1d95, transparent 70%); bottom: -10%; right: -10%; animation: float 25s infinite ease-in-out reverse; }
+    @keyframes float {
+      0%, 100% { transform: translate(0, 0) scale(1); }
+      33% { transform: translate(30px, -50px) scale(1.1); }
+      66% { transform: translate(-20px, 20px) scale(0.9); }
+    }
+    @keyframes slideUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+    @keyframes pop { 0% { transform: scale(0.8); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
+    .card {
+      background: var(--glass-bg);
+      backdrop-filter: blur(20px) saturate(150%);
+      -webkit-backdrop-filter: blur(20px) saturate(150%);
+      border: 1px solid var(--glass-border);
+      border-radius: 24px;
+      padding: 48px 40px;
+      max-width: 480px;
+      width: 100%;
+      text-align: center;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.05);
+      animation: slideUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+      opacity: 0;
+    }
+    .logo { margin-bottom: 20px; animation: pop 0.6s cubic-bezier(0.16, 1, 0.3, 1) 0.2s forwards; opacity: 0; display: inline-block; }
+    .logo img { width: 116px; height: 116px; }
+    h1 { font-size: 28px; margin-bottom: 12px; color: var(--error); animation: slideUp 0.6s ease 0.3s forwards; opacity: 0; }
+    p { line-height: 1.6; color: var(--text-muted); margin-bottom: 24px; animation: slideUp 0.6s ease 0.4s forwards; opacity: 0; }
+    .action {
+      background: var(--error-dim);
+      border-left: 3px solid var(--error);
+      padding: 16px;
+      border-radius: 12px;
+      margin: 24px 0;
+      text-align: left;
+      animation: slideUp 0.6s ease 0.5s forwards;
+      opacity: 0;
+    }
+    .action strong { color: var(--text-primary); }
+    .btn {
+      display: inline-block;
+      padding: 14px 32px;
+      background: var(--error);
+      color: #020617;
+      text-decoration: none;
+      border-radius: 12px;
+      font-weight: 700;
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+      box-shadow: 0 4px 20px rgba(251, 113, 133, 0.25);
+      animation: slideUp 0.6s ease 0.6s forwards;
+      opacity: 0;
+    }
+    .btn:hover { transform: translateY(-2px); box-shadow: 0 10px 30px rgba(251, 113, 133, 0.4); }
+    .contact { margin-top: 24px; font-size: 0.85rem; color: var(--text-muted); animation: slideUp 0.6s ease 0.7s forwards; opacity: 0; }
+    .contact a { color: #fda4af; text-decoration: none; }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <div class="logo">
+      <img src="logo.svg" alt="MySweetPea" width="116" height="116">
+    </div>
+    <h1 id="error-title">Something Went Wrong</h1>
+    <p id="error-message">We couldn't process your subscription.</p>
+    <div class="action" id="error-action" style="display:none;">
+      <strong>What to do:</strong>
+      <p id="action-text" style="margin:8px 0 0; color:#fff;"></p>
+    </div>
+    <a class="btn" href="/">Back to Signup</a>
+    <div class="contact">
+      Need help? Email <a href="mailto:sweetpea@tuta.io">sweetpea@tuta.io</a>
+    </div>
+  </div>
+  <script>
+    const reasons = {
+      validation: { title: "Invalid Information", message: "The email, username, or invite code you entered doesn't meet our requirements.", action: "Please use a valid email address, a username with at least 3 characters, and a proper invite code." },
+      email_exists: { title: "Email Already Registered", message: "An account with this email already exists.", action: "If you forgot your password, contact us to reset it. Otherwise, use a different email address." },
+      invalid_code: { title: "Invalid Invite Code", message: "The invite code you entered doesn't exist in our database.", action: "Contact sweetpea@tuta.io to request a valid invite code." },
+      code_used: { title: "Invite Code Already Used", message: "This invite code has already been redeemed by another user.", action: "Contact sweetpea@tuta.io to request a fresh invite code." },
+      server_error: { title: "Server Error", message: "Something went wrong on our end while creating your account.", action: "Please try again in a few minutes. If the problem persists, contact support." }
+    };
+    const params = new URLSearchParams(window.location.search);
+    const reason = params.get('reason') || 'unknown';
+    const data = reasons[reason] || reasons.server_error;
+    document.getElementById('error-title').textContent = data.title;
+    document.getElementById('error-message').textContent = data.message;
+    if (data.action) {
+      document.getElementById('error-action').style.display = 'block';
+      document.getElementById('action-text').textContent = data.action;
+    }
+  </script>
+</body>
+</html>
