@@ -1,0 +1,84 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 600">
+  <!-- Solid background (required for BIMI) -->
+  <rect width="600" height="600" fill="#1a2a30"/>
+
+  <!-- Simplified geometric frame (solid colors, no gradients) -->
+  <g transform="translate(300, 300)">
+    <!-- Outer 8-pointed star -->
+    <polygon points="0,-180 45,-45 180,0 45,45 0,180 -45,45 -180,0 -45,-45"
+             fill="none" stroke="#3a5a65" stroke-width="2"/>
+    <!-- Inner 8-pointed star -->
+    <polygon points="0,-140 35,-35 140,0 35,35 0,140 -35,35 -140,0 -35,-35"
+             fill="none" stroke="#3a5a65" stroke-width="1.5"/>
+    <!-- Interlacing squares -->
+    <rect x="-125" y="-125" width="250" height="250"
+          fill="none" stroke="#3a5a65" stroke-width="1.5" transform="rotate(45)"/>
+    <rect x="-90" y="-90" width="180" height="180"
+          fill="none" stroke="#3a5a65" stroke-width="1" transform="rotate(45)"/>
+    <!-- Radial lines -->
+    <g stroke="#3a5a65" stroke-width="1">
+      <line x1="0" y1="0" x2="0" y2="-180"/>
+      <line x1="0" y1="0" x2="127" y2="-127"/>
+      <line x1="0" y1="0" x2="180" y2="0"/>
+      <line x1="0" y1="0" x2="127" y2="127"/>
+      <line x1="0" y1="0" x2="0" y2="180"/>
+      <line x1="0" y1="0" x2="-127" y2="127"/>
+      <line x1="0" y1="0" x2="-180" y2="0"/>
+      <line x1="0" y1="0" x2="-127" y2="-127"/>
+    </g>
+    <!-- Center octagon -->
+    <polygon points="0,-70 50,-50 70,0 50,50 0,70 -50,50 -70,0 -50,-50"
+             fill="none" stroke="#3a5a65" stroke-width="1.5"/>
+    <!-- Corner arabesque arcs -->
+    <g stroke="#3a5a65" stroke-width="1.5" fill="none">
+      <path d="M -180 -45 Q -120 -120, -45 -180"/>
+      <path d="M 180 -45 Q 120 -120, 45 -180"/>
+      <path d="M 180 45 Q 120 120, 45 180"/>
+      <path d="M -180 45 Q -120 120, -45 180"/>
+    </g>
+  </g>
+
+  <!-- Sweetpea flower (flat colors replacing gradients) -->
+  <g transform="translate(300, 300) scale(1.35)">
+    <!-- Stem -->
+    <path d="M 0 85 Q 8 130, -3 170" stroke="#5D7A6E" stroke-width="4" fill="none" stroke-linecap="round"/>
+    <!-- Leaf -->
+    <path d="M -3 140 Q -35 130, -50 155 Q -30 160, -3 145" fill="#7AAA98"/>
+    <path d="M -3 140 Q -35 130, -50 155" stroke="#9CBFAE" stroke-width="1.5" fill="none"/>
+    <!-- Tendril -->
+    <path d="M 0 85 C 25 95, 45 75, 60 90 S 85 115, 75 135" stroke="#8FAFB5" stroke-width="2" fill="none"/>
+    <path d="M 60 90 Q 68 82, 75 88" stroke="#8FAFB5" stroke-width="1.5" fill="none"/>
+
+    <!-- Left side petals (flat color replacing petal-ice gradient) -->
+    <path d="M -6 65 C -55 45, -80 -15, -35 -35 C -12 -46, 2 -15, -6 65" fill="#C5D5D8"/>
+    <path d="M -6 65 C -40 45, -60 0, -30 -20" stroke="#EEF2F3" stroke-width="2.5" fill="none"/>
+
+    <!-- Right side petals (flat color replacing petal-frost gradient) -->
+    <path d="M 6 65 C 55 45, 80 -15, 35 -35 C 12 -46, -2 -15, 6 65" fill="#A8C0C8"/>
+    <path d="M 6 65 C 40 45, 60 0, 30 -20" stroke="#EEF2F3" stroke-width="2.5" fill="none"/>
+
+    <!-- Upper left petal -->
+    <path d="M -6 25 C -50 5, -62 -55, -22 -78 C -6 -90, 6 -50, -6 25" fill="#A8C0C8"/>
+    <path d="M -6 25 C -35 5, -45 -35, -20 -55" stroke="#EEF2F3" stroke-width="2" fill="none"/>
+
+    <!-- Upper right petal -->
+    <path d="M 6 25 C 50 5, 62 -55, 22 -78 C 6 -90, -6 -50, 6 25" fill="#C5D5D8"/>
+    <path d="M 6 25 C 35 5, 45 -35, 20 -55" stroke="#EEF2F3" stroke-width="2" fill="none"/>
+
+    <!-- Keel (flat color replacing keel-glass gradient) -->
+    <path d="M 0 45 C -18 35, -24 5, 0 -8 C 24 5, 18 35, 0 45" fill="#D4E6F1"/>
+    <path d="M 0 45 C -12 35, -16 10, 0 0" stroke="#FFFFFF" stroke-width="1.5" fill="none"/>
+    <path d="M 0 45 C 12 35, 16 10, 0 0" stroke="#FFFFFF" stroke-width="1.5" fill="none"/>
+    <path d="M 0 -8 L 0 35" stroke="#D4E6F1" stroke-width="1" fill="none"/>
+
+    <!-- Highlights (solid white, no opacity) -->
+    <ellipse cx="-28" cy="-8" rx="10" ry="5" fill="#FFFFFF" transform="rotate(-25)"/>
+    <ellipse cx="28" cy="-8" rx="10" ry="5" fill="#F0F5F8" transform="rotate(25)"/>
+    <ellipse cx="-18" cy="-55" rx="6" ry="12" fill="#F0F5F8"/>
+    <ellipse cx="18" cy="-55" rx="6" ry="12" fill="#F0F5F8"/>
+    <ellipse cx="0" cy="18" rx="5" ry="8" fill="#FFFFFF"/>
+    <circle cx="0" cy="8" r="2.5" fill="#FFFFFF"/>
+    <path d="M -20 -70 Q 0 -85, 20 -70" stroke="#FFFFFF" stroke-width="2" fill="none" stroke-linecap="round"/>
+    <circle cx="0" cy="18" r="4" fill="#E8F6F3"/>
+  </g>
+</svg>
