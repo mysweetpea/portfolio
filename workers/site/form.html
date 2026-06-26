@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MySweetPea — Subscribe</title>
+<link rel="icon" type="image/svg+xml" href="/logo-favicon.svg" sizes="any">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg-deep:#020617;
+  --glass:rgba(255,255,255,.03);
+  --border:rgba(255,255,255,.08);
+  --text:#f8fafc;
+  --muted:#94a3b8;
+  --accent:#818cf8;
+  --accent2:#a78bfa;
+  --error:#fb7185;
+  --error-bg:rgba(251,113,133,.1);
+  --ok:#34d399;
+  --warn:#fbbf24;
+}
+body{
+  font-family:ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Arial,sans-serif;
+  background:var(--bg-deep);color:var(--text);
+  min-height:100vh;display:flex;align-items:center;justify-content:center;
+  padding:20px;position:relative;overflow-x:hidden;
+}
+body::before,body::after{
+  content:'';position:fixed;border-radius:50%;filter:blur(120px);opacity:.35;z-index:-1;pointer-events:none;
+}
+body::before{
+  width:600px;height:600px;background:radial-gradient(circle,#4c1d95,transparent 70%);top:-10%;left:-10%;
+  animation:float 20s infinite ease-in-out;
+}
+body::after{
+  width:500px;height:500px;background:radial-gradient(circle,#1e3a8a,transparent 70%);bottom:-10%;right:-10%;
+  animation:float 25s infinite ease-in-out reverse;
+}
+@keyframes float{
+  0%,100%{transform:translate(0,0)scale(1)}
+  33%{transform:translate(30px,-50px)scale(1.1)}
+  66%{transform:translate(-20px,20px)scale(.9)}
+}
+@keyframes up{from{opacity:0;transform:translateY(30px)}to{opacity:1;transform:translateY(0)}}
+@keyframes shake{
+  0%,100%{transform:translateX(0)}
+  25%{transform:translateX(-6px)}
+  75%{transform:translateX(6px)}
+}
+@keyframes drop{
+  from{opacity:0;transform:translateY(-10px);max-height:0}
+  to{opacity:1;transform:translateY(0);max-height:500px}
+}
+@keyframes spin{
+  to{transform:rotate(360deg)}
+}
+.card{
+  background:var(--glass);backdrop-filter:blur(20px)saturate(150%);
+  -webkit-backdrop-filter:blur(20px)saturate(150%);
+  border:1px solid var(--border);border-radius:24px;
+  padding:40px 36px;max-width:480px;width:100%;
+  box-shadow:0 8px 32px rgba(0,0,0,.4),inset 0 1px 0 rgba(255,255,255,.05);
+  animation:up .8s cubic-bezier(.16,1,.3,1) forwards;opacity:0;
+}
+.header{
+  display:flex;align-items:center;gap:12px;margin-bottom:20px;
+}
+.header img{width:70px;height:70px}
+.header h1{font-size:1.5rem;letter-spacing:-.02em}
+.subtitle{color:var(--muted);font-size:.95rem;margin-bottom:24px}
+.error-summary{
+  background:var(--error-bg);border:1px solid rgba(251,113,133,.25);
+  border-radius:12px;padding:0 16px;margin-bottom:20px;
+  overflow:hidden;max-height:0;opacity:0;transition:all .4s ease;
+}
+.error-summary.open{padding:14px 16px;max-height:300px;opacity:1}
+.error-summary h4{
+  color:var(--error);font-size:.9rem;margin-bottom:8px;display:flex;align-items:center;gap:6px;
+}
+.error-summary ul{list-style:none;padding-left:0}
+.error-summary li{
+  color:var(--error);font-size:.85rem;padding:4px 0;
+  display:flex;align-items:center;gap:8px;
+}
+.error-summary li::before{content:'•';color:var(--error);font-size:1.2rem;line-height:0}
+.field{margin-bottom:18px;opacity:0;animation:up .6s cubic-bezier(.16,1,.3,1) forwards;position:relative}
+.field:nth-child(2){animation-delay:.1s}
+.field:nth-child(3){animation-delay:.2s}
+.field:nth-child(4){animation-delay:.3s}
+.field:nth-child(5){animation-delay:.4s}
+label{
+  display:block;margin-bottom:6px;font-size:.72rem;font-weight:600;color:var(--muted);
+  text-transform:uppercase;letter-spacing:.06em;
+}
+.input-wrap{position:relative}
+input{
+  width:100%;padding:12px 14px;padding-right:34px;background:rgba(15,23,42,.5);
+  border:1px solid rgba(255,255,255,.1);border-radius:10px;color:var(--text);
+  font-size:.95rem;transition:all .3s ease;
+}
+input:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px rgba(129,140,248,.18)}
+input.valid{border-color:var(--ok)!important}
+input.invalid{border-color:var(--error)}
+input.warn{border-color:var(--warn)}
+.field-status{
+  position:absolute;right:10px;top:50%;transform:translateY(-50%);
+  display:none;align-items:center;pointer-events:none;
+}
+.field-status.show{display:flex}
+.status-icon{
+  width:16px;height:16px;border-radius:50%;display:flex;align-items:center;justify-content:center;
+  font-size:.65rem;font-weight:700;
+}
+.status-icon.ok{background:rgba(52,211,153,.2);color:var(--ok)}
+.status-icon.err{background:rgba(251,113,133,.2);color:var(--error)}
+.status-icon.warn{background:rgba(251,191,36,.2);color:var(--warn)}
+.status-spinner{
+  width:14px;height:14px;border:2px solid rgba(255,255,255,.1);
+  border-top-color:var(--accent);border-radius:50%;
+  animation:spin .6s linear infinite;
+}
+.inline-error{
+  color:var(--error);font-size:.82rem;margin-top:6px;display:none;
+  animation:drop .3s ease forwards;overflow:hidden;
+}
+.inline-error.show{display:block}
+.inline-warn{
+  color:var(--warn);font-size:.82rem;margin-top:6px;display:none;
+  animation:drop .3s ease forwards;overflow:hidden;
+}
+.inline-warn.show{display:block}
+.btn{
+  width:100%;padding:14px;margin-top:4px;
+  background:linear-gradient(135deg,var(--accent),var(--accent2));color:#0f172a;
+  border:none;border-radius:12px;font-size:1rem;font-weight:700;cursor:pointer;
+  transition:all .3s cubic-bezier(.16,1,.3,1);
+  box-shadow:0 4px 20px rgba(129,140,248,.25);
+  opacity:0;animation:up .6s ease .5s forwards;
+  position:relative;
+}
+.btn:hover:not(:disabled){transform:translateY(-2px);box-shadow:0 10px 30px rgba(129,140,248,.4)}
+.btn:disabled{
+  opacity:.45;cursor:not-allowed;transform:none;
+  background:linear-gradient(135deg,#475569,#334155);
+  box-shadow:none;
+}
+.btn-spinner{
+  display:none;width:16px;height:16px;border:2px solid rgba(15,23,42,.3);
+  border-top-color:#0f172a;border-radius:50%;
+  animation:spin .6s linear infinite;
+  position:absolute;left:50%;top:50%;margin-left:-8px;margin-top:-8px;
+}
+.btn.processing .btn-text{opacity:0}
+.btn.processing .btn-spinner{display:block}
+.footer{
+  margin-top:20px;text-align:center;font-size:.8rem;color:var(--muted);
+  opacity:0;animation:up .6s ease .6s forwards;
+}
+.footer a{color:var(--accent);text-decoration:none}
+.global-error{
+  background:var(--error-bg);border:1px solid rgba(251,113,133,.2);
+  border-radius:12px;padding:12px 16px;margin-bottom:20px;
+  color:var(--error);font-size:.9rem;display:none;
+  animation:drop .4s ease forwards;
+}
+.global-error.show{display:block}
+</style>
+</head>
+<body>
+<div class="card">
+  <div class="header">
+    <img src="logo.svg" alt="MySweetPea" width="70" height="70">
+    <div>
+      <h1>Request Access</h1>
+      <p class="subtitle">Enter your details and invite code below.</p>
+    </div>
+  </div>
+  <div class="global-error" id="globalErr"></div>
+  <div class="error-summary" id="errorSummary">
+    <h4>Please fix the following errors:</h4>
+    <ul id="errorList"></ul>
+  </div>
+  <form id="subForm" action="https://subscribe.mysweetpea.duckdns.org/webhook/subscribe" method="POST" novalidate>
+    <div class="field">
+      <label for="name">Name (First name only)</label>
+      <div class="input-wrap">
+        <input type="text" id="name" name="Name (First name only)" required placeholder="e.g. John" autocomplete="given-name">
+        <div class="field-status" id="name-status"><div class="status-icon ok">✓</div></div>
+      </div>
+      <div class="inline-error" id="name-err">Please enter your first name.</div>
+    </div>
+    <div class="field">
+      <label for="email">Email</label>
+      <div class="input-wrap">
+        <input type="email" id="email" name="Email" required placeholder="john@example.com" autocomplete="email">
+        <div class="field-status" id="email-status"><div class="status-icon ok">✓</div></div>
+      </div>
+      <div class="inline-error" id="email-err">Enter a valid email address.</div>
+    </div>
+    <div class="field">
+      <label for="username">Username</label>
+      <div class="input-wrap">
+        <input type="text" id="username" name="Username" required placeholder="john4life" minlength="3" autocomplete="username">
+        <div class="field-status" id="username-status"><div class="status-icon ok">✓</div></div>
+      </div>
+      <div class="inline-error" id="username-err">Username must be at least 3 characters.</div>
+    </div>
+    <div class="field">
+      <label for="invite_code">Invite Code</label>
+      <div class="input-wrap">
+        <input type="text" id="invite_code" name="Invite Code (Save this to reactivate account)" required placeholder="PEA-XXXXXXXX" autocomplete="off">
+        <div class="field-status" id="code-status">
+          <div class="status-spinner" id="code-spinner"></div>
+          <div class="status-icon ok" id="code-ok">✓</div>
+          <div class="status-icon err" id="code-err-icon">✕</div>
+          <div class="status-icon warn" id="code-warn">!</div>
+        </div>
+      </div>
+      <div class="inline-error" id="code-err">Invite code must be at least 4 characters (letters, numbers, hyphens).</div>
+      <div class="inline-warn" id="code-warn-text">Could not verify code. Server will validate on submit.</div>
+    </div>
+    <button type="submit" class="btn" id="submitBtn" disabled>
+      <span class="btn-text">Subscribe</span>
+      <div class="btn-spinner"></div>
+    </button>
+  </form>
+  <div class="footer">
+    Need an invite? Contact <a href="mailto:sweetpea@tuta.io">sweetpea@tuta.io</a>
+  </div>
+</div>
+<script>
+(function(){
+  const form=document.getElementById('subForm');
+  const btn=document.getElementById('submitBtn');
+  const globalErr=document.getElementById('globalErr');
+  const errorSummary=document.getElementById('errorSummary');
+  const errorList=document.getElementById('errorList');
+  const emailRe=/^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  const codeRe=/^[A-Za-z0-9-]+$/;
+  let codeTimer=null;
+  let serverCodeState={checked:false,valid:null,msg:''};
+  const fields=[
+    {id:'name',key:'Name (First name only)'},
+    {id:'email',key:'Email'},
+    {id:'username',key:'Username'},
+    {id:'invite_code',key:'Invite Code (Save this to reactivate account)'}
+  ];
+  function getEl(id){return document.getElementById(id);}
+  function validateField(id){
+    const el=getEl(id);
+    const val=el.value.trim();
+    let ok=true,msg='';
+    switch(id){
+      case 'name':
+        if(!val){ok=false;msg='Name is required.';}
+        break;
+      case 'email':
+        if(!emailRe.test(val)){ok=false;msg='Enter a valid email address.';}
+        break;
+      case 'username':
+        if(val.length<3){ok=false;msg='Username must be at least 3 characters.';}
+        break;
+      case 'invite_code':
+        if(val.length<4||!codeRe.test(val)){ok=false;msg='Invite code must be at least 4 characters (letters, numbers, hyphens).';}
+        break;
+    }
+    return {ok,msg,el};
+  }
+  function showFieldStatus(id,isValid,msg){
+    const el=getEl(id);
+    const err=document.getElementById(id+'-err');
+    const warn=document.getElementById(id+'-warn-text');
+    const status=document.getElementById(id+'-status');
+    if(status)status.classList.remove('show');
+    if(isValid===true){
+      el.classList.remove('invalid','warn');el.classList.add('valid');
+      if(err)err.classList.remove('show');
+      if(warn)warn.classList.remove('show');
+      if(status){
+        status.querySelectorAll('.status-spinner,.status-icon').forEach(e=>e.style.display='none');
+        const okIcon=status.querySelector('.status-icon.ok');
+        if(okIcon)okIcon.style.display='flex';
+        status.classList.add('show');
+      }
+    }else if(isValid===false){
+      el.classList.remove('valid','warn');el.classList.add('invalid');
+      if(err){err.textContent=msg;err.classList.add('show');}
+      if(warn)warn.classList.remove('show');
+      if(status){
+        status.querySelectorAll('.status-spinner,.status-icon').forEach(e=>e.style.display='none');
+        const errIcon=status.querySelector('.status-icon.err');
+        if(errIcon)errIcon.style.display='flex';
+        status.classList.add('show');
+      }
+    }else{
+      el.classList.remove('valid','invalid','warn');
+      if(err)err.classList.remove('show');
+      if(warn)warn.classList.remove('show');
+      if(status)status.classList.remove('show');
+    }
+  }
+  function clearFieldStatus(id){
+    const el=getEl(id);
+    el.classList.remove('valid','invalid','warn');
+    const err=document.getElementById(id+'-err');
+    if(err)err.classList.remove('show');
+    const warn=document.getElementById(id+'-warn-text');
+    if(warn)warn.classList.remove('show');
+    const status=document.getElementById(id+'-status');
+    if(status){
+      status.classList.remove('show');
+      status.querySelectorAll('.status-spinner,.status-icon').forEach(e=>e.style.display='');
+    }
+  }
+  function updateSummary(){
+    const errors=[];
+    fields.forEach(({id})=>{
+      const{ok,msg}=validateField(id);
+      if(!ok)errors.push(msg);
+      else if(id==='invite_code' && serverCodeState.checked && !serverCodeState.valid){
+        errors.push(serverCodeState.msg||'Invalid or already-used invite code.');
+      }
+    });
+    if(errors.length>0){
+      errorList.innerHTML=errors.map(m=>'<li>'+m+'</li>').join('');
+      errorSummary.classList.add('open');
+    }else{
+      errorSummary.classList.remove('open');
+      errorList.innerHTML='';
+    }
+    return errors.length===0;
+  }
+  function updateButton(){
+    const allOk=fields.every(({id})=>{
+      const v=validateField(id);
+      if(!v.ok)return false;
+      if(id==='invite_code' && serverCodeState.checked && !serverCodeState.valid)return false;
+      return true;
+    });
+    btn.disabled=!allOk;
+  }
+  window.addEventListener('pageshow',function(e){
+    if(e.persisted){
+      btn.disabled=false;
+      btn.classList.remove('processing');
+      btn.querySelector('.btn-text').textContent='Subscribe';
+      globalErr.classList.remove('show');
+    }
+  });
+  fields.forEach(({id})=>{
+    if(id==='invite_code')return;
+    const el=getEl(id);
+    el.addEventListener('input',()=>{
+      clearFieldStatus(id);
+      updateSummary();
+      updateButton();
+    });
+    el.addEventListener('blur',()=>{
+      const{ok,msg}=validateField(id);
+      showFieldStatus(id,ok,msg);
+      updateSummary();
+      updateButton();
+    });
+  });
+  const codeEl=getEl('invite_code');
+  const codeSpinner=document.getElementById('code-spinner');
+  const codeOkIcon=document.getElementById('code-ok');
+  const codeErrIcon=document.getElementById('code-err-icon');
+  const codeWarnIcon=document.getElementById('code-warn');
+  const codeWarnText=document.getElementById('code-warn-text');
+  async function checkServerCode(code){
+    try{
+      const ctrl=new AbortController();
+      const t=setTimeout(()=>ctrl.abort(),8000);
+      const r=await fetch('https://subscribe.mysweetpea.duckdns.org/webhook/check-code',{
+        method:'POST',
+        headers:{'Content-Type':'application/json'},
+        body:JSON.stringify({code}),
+        signal:ctrl.signal
+      });
+      clearTimeout(t);
+      if(!r.ok) throw new Error('HTTP '+r.status);
+      return await r.json();
+    }catch(e){
+      return {ok:true,msg:'Server check unavailable'};
+    }
+  }
+  codeEl.addEventListener('input',()=>{
+    serverCodeState={checked:false,valid:null,msg:''};
+    clearFieldStatus('invite_code');
+    if(codeSpinner)codeSpinner.style.display='block';
+    if(codeOkIcon)codeOkIcon.style.display='none';
+    if(codeErrIcon)codeErrIcon.style.display='none';
+    if(codeWarnIcon)codeWarnIcon.style.display='none';
+    const status=document.getElementById('code-status');
+    if(status)status.classList.add('show');
+    clearTimeout(codeTimer);
+    const val=codeEl.value.trim();
+    if(val.length<4){updateSummary();updateButton();return;}
+    codeTimer=setTimeout(async()=>{
+      if(!codeRe.test(val)){
+        if(codeSpinner)codeSpinner.style.display='none';
+        serverCodeState={checked:true,valid:false,msg:'Invalid format. Use letters, numbers, and hyphens only.'};
+        showFieldStatus('invite_code',false,serverCodeState.msg);
+        updateSummary();updateButton();return;
+      }
+      const res=await checkServerCode(val);
+      if(codeSpinner)codeSpinner.style.display='none';
+      if(res.ok===true && !res.msg){
+        serverCodeState={checked:true,valid:true,msg:''};
+        if(codeErrIcon)codeErrIcon.style.display='none';
+        if(codeWarnIcon)codeWarnIcon.style.display='none';
+        if(codeOkIcon)codeOkIcon.style.display='flex';
+        showFieldStatus('invite_code',true,'');
+      }else if(res.ok===false){
+        serverCodeState={checked:true,valid:false,msg:res.msg||'Invalid or already-used invite code.'};
+        if(codeOkIcon)codeOkIcon.style.display='none';
+        if(codeWarnIcon)codeWarnIcon.style.display='none';
+        if(codeErrIcon)codeErrIcon.style.display='flex';
+        showFieldStatus('invite_code',false,serverCodeState.msg);
+      }else{
+        serverCodeState={checked:false,valid:null,msg:''};
+        if(codeOkIcon)codeOkIcon.style.display='none';
+        if(codeErrIcon)codeErrIcon.style.display='none';
+        if(codeWarnIcon)codeWarnIcon.style.display='flex';
+        codeEl.classList.add('warn');
+        if(codeWarnText)codeWarnText.classList.add('show');
+      }
+      updateSummary();updateButton();
+    },400);
+  });
+  codeEl.addEventListener('blur',()=>{
+    const val=codeEl.value.trim();
+    if(val.length===0){
+      showFieldStatus('invite_code',false,'Invite code is required.');
+    }else if(val.length<4){
+      showFieldStatus('invite_code',false,'Code must be at least 4 characters.');
+    }else if(!codeRe.test(val)){
+      showFieldStatus('invite_code',false,'Invalid format. Use letters, numbers, and hyphens only.');
+    }else if(serverCodeState.checked && !serverCodeState.valid){
+      showFieldStatus('invite_code',false,serverCodeState.msg);
+    }else if(serverCodeState.checked && serverCodeState.valid){
+      showFieldStatus('invite_code',true,'');
+    }else{
+      clearFieldStatus('invite_code');
+    }
+    updateSummary();updateButton();
+  });
+  form.addEventListener('submit',function(e){
+    let ok=true;
+    fields.forEach(({id})=>{
+      const v=validateField(id);
+      if(!v.ok){showFieldStatus(id,false,v.msg);ok=false;}
+      else if(id==='invite_code' && serverCodeState.checked && !serverCodeState.valid){
+        showFieldStatus(id,false,serverCodeState.msg);ok=false;
+      }
+    });
+    updateSummary();
+    if(!ok){
+      e.preventDefault();
+      btn.style.animation='shake .4s ease';
+      setTimeout(()=>btn.style.animation='',400);
+      const firstInvalid=fields.find(({id})=>{
+        if(!validateField(id).ok)return true;
+        if(id==='invite_code' && serverCodeState.checked && !serverCodeState.valid)return true;
+        return false;
+      });
+      if(firstInvalid)getEl(firstInvalid.id).focus();
+      return;
+    }
+    btn.disabled=true;
+    btn.classList.add('processing');
+  });
+})();
+</script>
+</body>
+</html>
