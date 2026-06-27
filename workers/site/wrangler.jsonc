@@ -1,6 +1,7 @@
 {
   "name": "site",
   "compatibility_date": "2026-06-25",
+  "main": "src/index.js",
   "assets": {
     "directory": "./"
   },
