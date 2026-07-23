@@ -25,7 +25,7 @@
         .home-btn:hover { background: rgba(30, 30, 30, 0.9); border-color: var(--gold); transform: translateY(-2px); }
         .home-btn svg { width: 16px; height: 16px; }
         .container { max-width: 500px; width: 100%; text-align: center; position: relative; z-index: 1; }
-        .logo img { width: 140px; height: 140px; animation: float3D 6s ease-in-out infinite; filter: drop-shadow(0 0 25px rgba(212, 175, 55, 0.25)); }
+        .logo img { width: 180px; height: 180px; animation: float3D 6s ease-in-out infinite; filter: drop-shadow(0 0 30px rgba(212, 175, 55, 0.25)); }
         .card { background: rgba(20, 20, 20, 0.6); backdrop-filter: blur(16px) saturate(1.2); -webkit-backdrop-filter: blur(16px) saturate(1.2); border: 1px solid var(--border-gold); border-radius: var(--radius); padding: 36px; margin-top: 20px; box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.05), 0 8px 32px rgba(0, 0, 0, 0.3); }
         .check-icon { font-size: 2.5rem; margin-bottom: 14px; }
         .card h1 { font-size: 1.4rem; margin-bottom: 10px; }
@@ -41,7 +41,7 @@
         .btn:hover { background: rgba(212, 175, 55, 0.12); border-color: rgba(212, 175, 55, 0.5); box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.08), 0 4px 20px rgba(212, 175, 55, 0.15); transform: scale(1.02); }
         .footer { margin-top: 20px; font-size: 0.78rem; color: #666; }
         .footer a { color: var(--gold); text-decoration: none; }
-        @media (max-width: 768px) { .top-nav { top: 10px; right: 10px; } .home-btn { padding: 8px 14px; font-size: 0.78rem; } .logo img { width: 100px; height: 100px; } }
+        @media (max-width: 768px) { .top-nav { top: 10px; right: 10px; } .home-btn { padding: 8px 14px; font-size: 0.78rem; } .logo img { width: 120px; height: 120px; } }
     </style>
 </head>
 <body>
@@ -80,13 +80,43 @@
 
     <script>
         (function() {
-            var canvas = document.getElementById('petalCanvas'); var ctx = canvas.getContext('2d'); var petals = []; var W, H;
+            var canvas = document.getElementById('petalCanvas');
+            var ctx = canvas.getContext('2d');
+            var petals = [];
+            var W, H;
             function resize() { W = canvas.width = window.innerWidth; H = canvas.height = window.innerHeight; }
-            resize(); window.addEventListener('resize', resize);
-            function createPetal() { return { x: Math.random() * W, y: -20, size: 4 + Math.random() * 8, speedY: 0.5 + Math.random() * 1.5, speedX: -0.5 + Math.random() * 1, rotation: Math.random() * Math.PI * 2, rotSpeed: -0.02 + Math.random() * 0.04, opacity: 0.15 + Math.random() * 0.35, sway: Math.random() * Math.PI * 2, swaySpeed: 0.01 + Math.random() * 0.02 }; }
+            resize();
+            window.addEventListener('resize', resize);
+            function createPetal() {
+                return { x: Math.random() * W, y: -20, size: 4 + Math.random() * 8, speedY: 0.5 + Math.random() * 1.5, speedX: -0.5 + Math.random() * 1, rotation: Math.random() * Math.PI * 2, rotSpeed: -0.02 + Math.random() * 0.04, opacity: 0.15 + Math.random() * 0.35, sway: Math.random() * Math.PI * 2, swaySpeed: 0.01 + Math.random() * 0.02 };
+            }
             for (var i = 0; i < 40; i++) { var p = createPetal(); p.y = Math.random() * H; petals.push(p); }
-            function drawPetal(p) { ctx.save(); ctx.translate(p.x, p.y); ctx.rotate(p.rotation); ctx.globalAlpha = p.opacity; var grad = ctx.createRadialGradient(0, 0, 0, 0, 0, p.size); grad.addColorStop(0, '#f0d860'); grad.addColorStop(0.5, '#d4af37'); grad.addColorStop(1, 'rgba(212, 175, 55, 0.3)'); ctx.fillStyle = grad; ctx.beginPath(); ctx.moveTo(0, -p.size); ctx.bezierCurveTo(p.size * 0.6, -p.size * 0.5, p.size * 0.6, p.size * 0.5, 0, p.size); ctx.bezierCurveTo(-p.size * 0.6, p.size * 0.5, -p.size * 0.6, -p.size * 0.5, 0, -p.size); ctx.fill(); ctx.strokeStyle = 'rgba(212, 175, 55, 0.4)'; ctx.lineWidth = 0.5; ctx.stroke(); ctx.restore(); }
-            function animate() { ctx.clearRect(0, 0, W, H); petals.forEach(function(p, i) { p.sway += p.swaySpeed; p.x += p.speedX + Math.sin(p.sway) * 0.5; p.y += p.speedY; p.rotation += p.rotSpeed; if (p.y > H + 20) { petals[i] = createPetal(); } if (p.x < -20) p.x = W + 20; if (p.x > W + 20) p.x = -20; drawPetal(p); }); requestAnimationFrame(animate); }
+            function drawPetal(p) {
+                ctx.save(); ctx.translate(p.x, p.y); ctx.rotate(p.rotation); ctx.globalAlpha = p.opacity;
+                var grad = ctx.createRadialGradient(0, 0, 0, 0, 0, p.size);
+                grad.addColorStop(0, '#f0d860'); grad.addColorStop(0.5, '#d4af37'); grad.addColorStop(1, 'rgba(212, 175, 55, 0.3)');
+                ctx.fillStyle = grad; ctx.beginPath();
+                ctx.moveTo(0, -p.size);
+                ctx.bezierCurveTo(p.size * 0.6, -p.size * 0.5, p.size * 0.6, p.size * 0.5, 0, p.size);
+                ctx.bezierCurveTo(-p.size * 0.6, p.size * 0.5, -p.size * 0.6, -p.size * 0.5, 0, -p.size);
+                ctx.fill(); ctx.strokeStyle = 'rgba(212, 175, 55, 0.4)'; ctx.lineWidth = 0.5; ctx.stroke();
+                ctx.restore();
+            }
+            function animate() {
+                ctx.clearRect(0, 0, W, H);
+                for (var i = 0; i < petals.length; i++) {
+                    var p = petals[i];
+                    p.sway += p.swaySpeed;
+                    p.x += p.speedX + Math.sin(p.sway) * 0.5;
+                    p.y += p.speedY;
+                    p.rotation += p.rotSpeed;
+                    if (p.y > H + 20) { petals[i] = createPetal(); }
+                    if (p.x < -20) p.x = W + 20;
+                    if (p.x > W + 20) p.x = -20;
+                    drawPetal(p);
+                }
+                requestAnimationFrame(animate);
+            }
             animate();
         })();
 

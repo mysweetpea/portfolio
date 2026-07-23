@@ -34,7 +34,7 @@
         .tabs { display: flex; gap: 0; margin-bottom: 0; border-radius: var(--radius) var(--radius) 0 0; overflow: hidden; }
         .tab { flex: 1; padding: 12px 8px; background: rgba(20, 20, 20, 0.5); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.06); border-bottom: none; text-align: center; cursor: pointer; font-size: 0.8rem; color: var(--text-dim); transition: var(--transition); user-select: none; }
         .tab:hover { color: #ccc; background: rgba(30, 30, 30, 0.7); }
-        .tab.active { background: rgba(20, 20, 20, 0.85); color: var(--gold); font-weight: 600; }
+        .tab.active { background: rgba(20, 20, 20, 0.85); font-weight: 600; }
         .tab.active[data-tab="support"] { border-color: rgba(168, 85, 247, 0.4); color: var(--purple); }
         .tab.active[data-tab="seedling"] { border-color: rgba(34, 197, 94, 0.4); color: var(--green); }
         .tab.active[data-tab="code"] { border-color: rgba(236, 72, 153, 0.4); color: var(--pink); }
@@ -136,13 +136,13 @@
             <div class="card border-purple" id="mainCard">
                 <div class="error-banner" id="errorBanner"></div>
 
-                <!-- ═══ TAB 1: SUPPORT (Purple) ═══ -->
+                <!-- TAB 1: SUPPORT -->
                 <div class="tab-content active" id="tab-support">
                     <h2 class="glass-text">Support the Cause</h2>
                     <p class="subtitle">Donate any amount anonymously. No account needed.</p>
                     <div class="info-box">
                         Your contribution helps keep MySweetPea running and funds future improvements.
-                        Donations can be anonymous — no name or email required.
+                        Donations can be anonymous &#8212; no name or email required.
                     </div>
                     <div class="crypto-section">
                         <label class="glass-text">Cryptocurrency</label>
@@ -166,9 +166,9 @@
                     </div>
                 </div>
 
-                <!-- ═══ TAB 2: SEEDLING (Green) ═══ -->
+                <!-- TAB 2: SEEDLING -->
                 <div class="tab-content" id="tab-seedling">
-                    <h2 class="glass-text">Get Access — $5 Minimum</h2>
+                    <h2 class="glass-text">Get Access &#8212; $5 Minimum</h2>
                     <p class="subtitle">Donate $5+ to get access to non-media services.</p>
                     <div class="info-box">
                         <strong>How it works:</strong><br>
@@ -227,7 +227,7 @@
                     </form>
                 </div>
 
-                <!-- ═══ TAB 3: CODE (Pink) ═══ -->
+                <!-- TAB 3: CODE -->
                 <div class="tab-content" id="tab-code">
                     <h2 class="glass-text">Redeem Invite Code</h2>
                     <p class="subtitle">Have an invite code? Create your account now.</p>
@@ -270,10 +270,10 @@
             </div>
         </div>
 
-        <!-- ═══ FAQ ═══ -->
+        <!-- FAQ -->
         <div class="faq-section">
             <div class="faq-item"><div class="faq-question" onclick="toggleFAQ(this)">Why do you require a donation before access? <span class="arrow">&#x25BC;</span></div><div class="faq-answer"><p>The donation requirement helps prevent abuse and spam. Without it, anyone could create unlimited accounts, overload the server, and ruin the experience for everyone. A small contribution ensures that users are genuine and invested in the community.</p></div></div>
-            <div class="faq-item"><div class="faq-question" onclick="toggleFAQ(this)">Why do you need donations? <span class="arrow">&#x25BC;</span></div><div class="faq-answer"><p>Running these services costs money — server hardware, electricity, internet bandwidth, and domain registration. Donations help cover these costs and fund future improvements and new services. We do not run ads or sell your data.</p></div></div>
+            <div class="faq-item"><div class="faq-question" onclick="toggleFAQ(this)">Why do you need donations? <span class="arrow">&#x25BC;</span></div><div class="faq-answer"><p>Running these services costs money &#8212; server hardware, electricity, internet bandwidth, and domain registration. Donations help cover these costs and fund future improvements and new services. We do not run ads or sell your data.</p></div></div>
             <div class="faq-item"><div class="faq-question" onclick="toggleFAQ(this)">Why don't you accept credit cards? <span class="arrow">&#x25BC;</span></div><div class="faq-answer"><p>We prioritize privacy. Credit card payments require sharing your personal and financial information with payment processors, which creates a paper trail linking your identity to our services. Cryptocurrency donations (Monero and Bitcoin) allow us to maintain a privacy-first approach with no KYC requirements, no chargebacks, and no third-party data collection.</p></div></div>
             <div class="faq-item"><div class="faq-question" onclick="toggleFAQ(this)">How do I donate? <span class="arrow">&#x25BC;</span></div><div class="faq-answer"><p>We accept Monero (XMR) and Bitcoin (BTC). Visit the donation form to see our wallet addresses.</p></div></div>
             <div class="faq-item"><div class="faq-question" onclick="toggleFAQ(this)">What happens after I donate $5? <span class="arrow">&#x25BC;</span></div><div class="faq-answer"><p>Fill out the donation form with your details and transaction hash. We verify your donation and email you an invite code. Use the code to create your account.</p></div></div>
@@ -300,22 +300,54 @@
         document.getElementById('se-xmr-addr').textContent = truncateAddr(WALLETS.monero);
         document.getElementById('se-btc-addr').textContent = truncateAddr(WALLETS.bitcoin);
 
-        // ═══ Falling Petals ═══
+        // Falling Petals
         (function() {
-            var canvas = document.getElementById('petalCanvas'); var ctx = canvas.getContext('2d'); var petals = []; var W, H;
+            var canvas = document.getElementById('petalCanvas');
+            var ctx = canvas.getContext('2d');
+            var petals = [];
+            var W, H;
             function resize() { W = canvas.width = window.innerWidth; H = canvas.height = window.innerHeight; }
-            resize(); window.addEventListener('resize', resize);
-            function createPetal() { return { x: Math.random() * W, y: -20, size: 4 + Math.random() * 8, speedY: 0.5 + Math.random() * 1.5, speedX: -0.5 + Math.random() * 1, rotation: Math.random() * Math.PI * 2, rotSpeed: -0.02 + Math.random() * 0.04, opacity: 0.15 + Math.random() * 0.35, sway: Math.random() * Math.PI * 2, swaySpeed: 0.01 + Math.random() * 0.02 }; }
+            resize();
+            window.addEventListener('resize', resize);
+            function createPetal() {
+                return { x: Math.random() * W, y: -20, size: 4 + Math.random() * 8, speedY: 0.5 + Math.random() * 1.5, speedX: -0.5 + Math.random() * 1, rotation: Math.random() * Math.PI * 2, rotSpeed: -0.02 + Math.random() * 0.04, opacity: 0.15 + Math.random() * 0.35, sway: Math.random() * Math.PI * 2, swaySpeed: 0.01 + Math.random() * 0.02 };
+            }
             for (var i = 0; i < 40; i++) { var p = createPetal(); p.y = Math.random() * H; petals.push(p); }
-            function drawPetal(p) { ctx.save(); ctx.translate(p.x, p.y); ctx.rotate(p.rotation); ctx.globalAlpha = p.opacity; var grad = ctx.createRadialGradient(0, 0, 0, 0, 0, p.size); grad.addColorStop(0, '#f0d860'); grad.addColorStop(0.5, '#d4af37'); grad.addColorStop(1, 'rgba(212, 175, 55, 0.3)'); ctx.fillStyle = grad; ctx.beginPath(); ctx.moveTo(0, -p.size); ctx.bezierCurveTo(p.size * 0.6, -p.size * 0.5, p.size * 0.6, p.size * 0.5, 0, p.size); ctx.bezierCurveTo(-p.size * 0.6, p.size * 0.5, -p.size * 0.6, -p.size * 0.5, 0, -p.size); ctx.fill(); ctx.strokeStyle = 'rgba(212, 175, 55, 0.4)'; ctx.lineWidth = 0.5; ctx.stroke(); ctx.restore(); }
-            function animate() { ctx.clearRect(0, 0, W, H); petals.forEach(function(p, i) { p.sway += p.swaySpeed; p.x += p.speedX + Math.sin(p.sway) * 0.5; p.y += p.speedY; p.rotation += p.rotSpeed; if (p.y > H + 20) { petals[i] = createPetal(); } if (p.x < -20) p.x = W + 20; if (p.x > W + 20) p.x = -20; drawPetal(p); }); requestAnimationFrame(animate); }
+            function drawPetal(p) {
+                ctx.save(); ctx.translate(p.x, p.y); ctx.rotate(p.rotation); ctx.globalAlpha = p.opacity;
+                var grad = ctx.createRadialGradient(0, 0, 0, 0, 0, p.size);
+                grad.addColorStop(0, '#f0d860'); grad.addColorStop(0.5, '#d4af37'); grad.addColorStop(1, 'rgba(212, 175, 55, 0.3)');
+                ctx.fillStyle = grad; ctx.beginPath();
+                ctx.moveTo(0, -p.size);
+                ctx.bezierCurveTo(p.size * 0.6, -p.size * 0.5, p.size * 0.6, p.size * 0.5, 0, p.size);
+                ctx.bezierCurveTo(-p.size * 0.6, p.size * 0.5, -p.size * 0.6, -p.size * 0.5, 0, -p.size);
+                ctx.fill(); ctx.strokeStyle = 'rgba(212, 175, 55, 0.4)'; ctx.lineWidth = 0.5; ctx.stroke();
+                ctx.restore();
+            }
+            function animate() {
+                ctx.clearRect(0, 0, W, H);
+                for (var i = 0; i < petals.length; i++) {
+                    var p = petals[i];
+                    p.sway += p.swaySpeed;
+                    p.x += p.speedX + Math.sin(p.sway) * 0.5;
+                    p.y += p.speedY;
+                    p.rotation += p.rotSpeed;
+                    if (p.y > H + 20) { petals[i] = createPetal(); }
+                    if (p.x < -20) p.x = W + 20;
+                    if (p.x > W + 20) p.x = -20;
+                    drawPetal(p);
+                }
+                requestAnimationFrame(animate);
+            }
             animate();
         })();
 
-        // ═══ Tab Switching with Border Color ═══
+        // Tab Switching
         function switchTab(tabName) {
-            document.querySelectorAll('.tab').forEach(function(t) { t.classList.remove('active'); });
-            document.querySelectorAll('.tab-content').forEach(function(c) { c.classList.remove('active'); });
+            var tabs = document.querySelectorAll('.tab');
+            var contents = document.querySelectorAll('.tab-content');
+            for (var i = 0; i < tabs.length; i++) { tabs[i].classList.remove('active'); }
+            for (var j = 0; j < contents.length; j++) { contents[j].classList.remove('active'); }
             document.querySelector('[data-tab="' + tabName + '"]').classList.add('active');
             document.getElementById('tab-' + tabName).classList.add('active');
             document.getElementById('errorBanner').classList.remove('visible');
@@ -326,27 +358,43 @@
             else if (tabName === 'code') card.classList.add('border-pink');
         }
 
-        // ═══ Crypto Selection ═══
+        // Crypto Selection
         function selectCrypto(el, prefix) {
             var parent = el.parentElement;
-            parent.querySelectorAll('.crypto-option').forEach(function(o) { o.classList.remove('selected'); });
+            var opts = parent.querySelectorAll('.crypto-option');
+            for (var i = 0; i < opts.length; i++) { opts[i].classList.remove('selected'); }
             el.classList.add('selected');
             var type = el.getAttribute('data-type');
             document.getElementById(prefix + '-crypto-type').value = type;
             var wd = document.getElementById(prefix + '-wallet-display');
             var wa = document.getElementById(prefix + '-wallet-addr');
-            if (WALLETS[type] && WALLETS[type].indexOf('YOUR_') === -1) { wa.textContent = WALLETS[type]; wd.classList.add('visible'); } else { wd.classList.remove('visible'); }
+            if (WALLETS[type] && WALLETS[type].indexOf('YOUR_') === -1) {
+                wa.textContent = WALLETS[type];
+                wd.classList.add('visible');
+            } else {
+                wd.classList.remove('visible');
+            }
             if (prefix === 'seedling') checkSeedlingValidity();
         }
-        function copyWallet(el) { navigator.clipboard.writeText(el.textContent).then(function() { var o = el.textContent; el.textContent = 'Copied!'; setTimeout(function() { el.textContent = o; }, 1500); }); }
 
-        // ═══ URL Error Params ═══
+        function copyWallet(el) {
+            navigator.clipboard.writeText(el.textContent).then(function() {
+                var o = el.textContent;
+                el.textContent = 'Copied!';
+                setTimeout(function() { el.textContent = o; }, 1500);
+            });
+        }
+
+        // URL Error Params
         var urlParams = new URLSearchParams(window.location.search);
-        if (urlParams.get('reason') === 'validation') { document.getElementById('errorBanner').textContent = 'Please check your inputs and try again.'; document.getElementById('errorBanner').classList.add('visible'); }
+        if (urlParams.get('reason') === 'validation') {
+            document.getElementById('errorBanner').textContent = 'Please check your inputs and try again.';
+            document.getElementById('errorBanner').classList.add('visible');
+        }
 
-        // ═══ Live Validation ═══
+        // Validation
         var emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        var usernameRegex = /^[A-Za-z0-9_]+$//;
+        var usernameRegex = /^[A-Za-z0-9_]+$/;
         var codeRegex = /^[A-Za-z0-9-]+$/;
 
         function setValid(groupId) { var g = document.getElementById(groupId); g.classList.remove('has-error'); g.classList.add('is-valid'); }
@@ -355,16 +403,16 @@
 
         function validateName(input, groupId) {
             var val = input.value.trim();
-            if (val.length === 0) { setNeutral(groupId); return false; }
-            if (val.length >= 1) { setValid(groupId); return true; }
-            setInvalid(groupId); return false;
+            if (val.length === 0) { setNeutral(groupId); updateSubmitButtons(); return false; }
+            if (val.length >= 1) { setValid(groupId); updateSubmitButtons(); return true; }
+            setInvalid(groupId); updateSubmitButtons(); return false;
         }
 
         function validateEmail(input, groupId) {
             var val = input.value.trim();
-            if (val.length === 0) { setNeutral(groupId); return false; }
-            if (emailRegex.test(val)) { setValid(groupId); return true; }
-            setInvalid(groupId); return false;
+            if (val.length === 0) { setNeutral(groupId); updateSubmitButtons(); return false; }
+            if (emailRegex.test(val)) { setValid(groupId); updateSubmitButtons(); return true; }
+            setInvalid(groupId); updateSubmitButtons(); return false;
         }
 
         function validateUsername(input, groupId) {
@@ -374,12 +422,11 @@
             setInvalid(groupId); updateSubmitButtons(); return false;
         }
 
-        // ═══ Invite Code Live Validation (debounced API check) ═══
+        // Invite Code Live Validation
         var codeCheckTimer = null;
         var codeValid = false;
         function validateInviteCode(input) {
             var val = input.value.trim();
-            var group = document.getElementById('c-code-group');
             var errEl = document.getElementById('c-code-err');
             codeValid = false;
             updateSubmitButtons();
@@ -402,30 +449,36 @@
                     else { setInvalid('c-code-group'); errEl.textContent = data.msg || 'Invalid invite code.'; errEl.style.display = 'block'; errEl.style.color = '#e74c3c'; codeValid = false; }
                     updateSubmitButtons();
                 })
-                .catch(function() { setNeutral('c-code-group'); errEl.textContent = 'Could not verify code. Server will validate on submit.'; errEl.style.display = 'block'; errEl.style.color = '#888'; updateSubmitButtons(); });
+                .catch(function() {
+                    setNeutral('c-code-group');
+                    errEl.textContent = 'Could not verify code. Server will validate on submit.';
+                    errEl.style.display = 'block';
+                    errEl.style.color = '#888';
+                    updateSubmitButtons();
+                });
             }, 500);
         }
 
-        // ═══ Submit Button State ═══
         function isFieldValid(groupId) { return document.getElementById(groupId).classList.contains('is-valid'); }
+
         function updateSubmitButtons() {
-            // Seedling: name + email + username + crypto
             var seValid = isFieldValid('se-name-group') && isFieldValid('se-email-group') && isFieldValid('se-username-group') && document.getElementById('se-crypto-type').value !== '';
             document.getElementById('se-submit').disabled = !seValid;
-            // Code: code + name + email + username
             var cValid = codeValid && isFieldValid('c-name-group') && isFieldValid('c-email-group') && isFieldValid('c-username-group');
             document.getElementById('c-submit').disabled = !cValid;
         }
 
-        // ═══ Seedling form validation listeners ═══
-        document.getElementById('se-name').addEventListener('input', function() { validateName(this, 'se-name-group'); updateSubmitButtons(); });
-        document.getElementById('se-email').addEventListener('input', function() { validateEmail(this, 'se-email-group'); updateSubmitButtons(); });
+        function checkSeedlingValidity() { updateSubmitButtons(); }
 
-        // ═══ Code form validation listeners ═══
-        document.getElementById('c-name').addEventListener('input', function() { validateName(this, 'c-name-group'); updateSubmitButtons(); });
-        document.getElementById('c-email').addEventListener('input', function() { validateEmail(this, 'c-email-group'); updateSubmitButtons(); });
+        // Seedling form listeners
+        document.getElementById('se-name').addEventListener('input', function() { validateName(this, 'se-name-group'); });
+        document.getElementById('se-email').addEventListener('input', function() { validateEmail(this, 'se-email-group'); });
 
-        // ═══ FAQ ═══
+        // Code form listeners
+        document.getElementById('c-name').addEventListener('input', function() { validateName(this, 'c-name-group'); });
+        document.getElementById('c-email').addEventListener('input', function() { validateEmail(this, 'c-email-group'); });
+
+        // FAQ
         function toggleFAQ(el) { el.parentElement.classList.toggle('open'); }
     </script>
 </body>
