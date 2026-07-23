@@ -3,207 +3,69 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MySweetPea — Self-Hosted Services</title>
+    <title>MySweetPea — Pricing</title>
     <link rel="icon" type="image/svg+xml" href="/logo-favicon.svg">
     <style>
         *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
         :root {
-            --bg: #0a0a0a;
-            --gold: #d4af37;
-            --gold-dim: #b8941f;
-            --gold-glow: rgba(212, 175, 55, 0.15);
-            --text: #e0e0e0;
-            --text-dim: #888;
-            --text-faint: #555;
-            --border: rgba(255, 255, 255, 0.08);
-            --border-gold: rgba(212, 175, 55, 0.25);
-            --radius: 14px;
-            --radius-sm: 8px;
-            --transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            --purple: #a855f7;
-            --green: #22c56e;
-            --pink: #ec4899;
+            --bg: #0a0a0a; --gold: #d4af37; --gold-dim: #b8941f; --gold-glow: rgba(212, 175, 55, 0.15);
+            --text: #e0e0e0; --text-dim: #888; --text-faint: #555;
+            --border: rgba(255, 255, 255, 0.08); --border-gold: rgba(212, 175, 55, 0.25);
+            --radius: 14px; --radius-sm: 8px; --transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            --purple: #a855f7; --green: #22c56e; --pink: #ec4899;
         }
-
         html { scroll-behavior: smooth; }
-
-        body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
-            background: var(--bg);
-            color: var(--text);
-            min-height: 100vh;
-            line-height: 1.6;
-            overflow-x: hidden;
-        }
-
+        body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; line-height: 1.6; overflow-x: hidden; }
         #petalCanvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; pointer-events: none; }
         .content-wrapper { position: relative; z-index: 1; }
-
-        .bg-gradient {
-            position: fixed; top: 0; left: 0; right: 0; bottom: 0; z-index: -1;
-            background:
-                radial-gradient(ellipse 80% 50% at 50% -20%, rgba(212, 175, 55, 0.08), transparent),
-                radial-gradient(ellipse 60% 40% at 80% 100%, rgba(212, 175, 55, 0.04), transparent),
-                #0a0a0a;
-        }
-
+        .bg-gradient { position: fixed; top: 0; left: 0; right: 0; bottom: 0; z-index: -1; background: radial-gradient(ellipse 80% 50% at 50% -20%, rgba(212, 175, 55, 0.08), transparent), radial-gradient(ellipse 60% 40% at 80% 100%, rgba(212, 175, 55, 0.04), transparent), #0a0a0a; }
         @keyframes shimmer { 0% { background-position: -200% center; } 100% { background-position: 200% center; } }
-        @keyframes pulseGlow { 0%, 100% { box-shadow: 0 0 20px rgba(212, 175, 55, 0.08); } 50% { box-shadow: 0 0 40px rgba(212, 175, 55, 0.18); } }
         @keyframes float3D { 0%, 100% { transform: translateY(0) rotateX(0) rotateY(0); } 50% { transform: translateY(-10px) rotateX(2deg) rotateY(2deg); } }
+        @keyframes pulseGlow { 0%, 100% { box-shadow: 0 0 20px rgba(212, 175, 55, 0.08); } 50% { box-shadow: 0 0 40px rgba(212, 175, 55, 0.18); } }
+        .glass-text { background: linear-gradient(135deg, rgba(255,255,255,0.9) 0%, rgba(212,175,55,0.8) 30%, rgba(255,255,255,0.6) 50%, rgba(212,175,55,0.8) 70%, rgba(255,255,255,0.9) 100%); background-size: 200% auto; -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; text-shadow: 0 0 30px rgba(212, 175, 55, 0.15); animation: shimmer 6s linear infinite; filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.3)); }
+        .top-nav { position: fixed; top: 20px; right: 20px; z-index: 50; display: flex; gap: 8px; align-items: center; }
+        .nav-btn { padding: 8px 16px; background: rgba(20, 20, 20, 0.8); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border: 1px solid var(--border-gold); border-radius: var(--radius-sm); color: var(--gold); font-size: 0.82rem; font-weight: 600; text-decoration: none; transition: var(--transition); }
+        .nav-btn:hover { background: rgba(30, 30, 30, 0.9); border-color: var(--gold); transform: translateY(-2px); }
+        .float-3d { position: absolute; pointer-events: none; opacity: 0.06; z-index: 0; }
+        .float-3d svg { width: 100%; height: 100%; }
+        .float-3d.f1 { top: 15%; right: 5%; width: 120px; height: 120px; animation: float3D 8s ease-in-out infinite; }
+        .float-3d.f2 { top: 45%; left: 3%; width: 80px; height: 80px; animation: float3D 10s ease-in-out infinite reverse; }
+        .float-3d.f3 { top: 70%; right: 8%; width: 100px; height: 100px; animation: float3D 7s ease-in-out infinite 1s; }
+        .page-footer { text-align: center; padding: 40px 20px; font-size: 0.85rem; color: var(--text-faint); border-top: 1px solid rgba(255, 255, 255, 0.04); }
+        .page-footer a { color: var(--gold); text-decoration: none; transition: var(--transition); }
+        .page-footer a:hover { text-decoration: underline; }
+        .page-footer .footer-links { display: flex; justify-content: center; gap: 24px; margin-bottom: 12px; flex-wrap: wrap; }
+        @media (max-width: 768px) { .float-3d { display: none; } .top-nav { top: 10px; right: 10px; gap: 4px; } .nav-btn { padding: 6px 10px; font-size: 0.72rem; } }
+
         @keyframes pulseGlowGreen { 0%, 100% { box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.05), 0 8px 32px rgba(0, 0, 0, 0.3), 0 0 15px rgba(34, 197, 94, 0.08); } 50% { box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.05), 0 8px 32px rgba(0, 0, 0, 0.3), 0 0 30px rgba(34, 197, 94, 0.15); } }
-
-        @keyframes emoji3DRotate {
-            0%, 100% { transform: perspective(200px) rotateY(0deg) rotateX(0deg); }
-            25% { transform: perspective(200px) rotateY(8deg) rotateX(-3deg); }
-            50% { transform: perspective(200px) rotateY(0deg) rotateX(0deg); }
-            75% { transform: perspective(200px) rotateY(-8deg) rotateX(3deg); }
-        }
-
-        .tier-emoji-3d {
-            display: inline-block;
-            font-size: 2.5rem;
-            margin-bottom: 12px;
-            animation: emoji3DRotate 8s ease-in-out infinite;
-            filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.4));
-            transform-style: preserve-3d;
-        }
-
-        .glass-text {
-            background: linear-gradient(135deg, rgba(255,255,255,0.9) 0%, rgba(212,175,55,0.8) 30%, rgba(255,255,255,0.6) 50%, rgba(212,175,55,0.8) 70%, rgba(255,255,255,0.9) 100%);
-            background-size: 200% auto;
-            -webkit-background-clip: text; background-clip: text;
-            -webkit-text-fill-color: transparent;
-            text-shadow: 0 0 30px rgba(212, 175, 55, 0.15);
-            animation: shimmer 6s linear infinite;
-            filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.3));
-        }
-
-        .tier-name-supporter {
-            background: linear-gradient(135deg, rgba(255,255,255,0.9) 0%, rgba(168,85,247,0.8) 30%, rgba(255,255,255,0.6) 50%, rgba(168,85,247,0.8) 70%, rgba(255,255,255,0.9) 100%);
-            background-size: 200% auto;
-            -webkit-background-clip: text; background-clip: text;
-            -webkit-text-fill-color: transparent;
-            text-shadow: 0 0 25px rgba(168, 85, 247, 0.2);
-            animation: shimmer 6s linear infinite;
-            filter: drop-shadow(0 0 3px rgba(168, 85, 247, 0.4));
-        }
-
-        .tier-name-seedling {
-            background: linear-gradient(135deg, rgba(255,255,255,0.9) 0%, rgba(34,197,94,0.8) 30%, rgba(255,255,255,0.6) 50%, rgba(34,197,94,0.8) 70%, rgba(255,255,255,0.9) 100%);
-            background-size: 200% auto;
-            -webkit-background-clip: text; background-clip: text;
-            -webkit-text-fill-color: transparent;
-            text-shadow: 0 0 25px rgba(34, 197, 94, 0.2);
-            animation: shimmer 6s linear infinite;
-            filter: drop-shadow(0 0 3px rgba(34, 197, 94, 0.4));
-        }
-
-        .tier-name-sweetpea {
-            background: linear-gradient(135deg, rgba(255,255,255,0.9) 0%, rgba(236,72,153,0.8) 30%, rgba(255,255,255,0.6) 50%, rgba(236,72,153,0.8) 70%, rgba(255,255,255,0.9) 100%);
-            background-size: 200% auto;
-            -webkit-background-clip: text; background-clip: text;
-            -webkit-text-fill-color: transparent;
-            text-shadow: 0 0 25px rgba(236, 72, 153, 0.2);
-            animation: shimmer 6s linear infinite;
-            filter: drop-shadow(0 0 3px rgba(236, 72, 153, 0.4));
-        }
-
+        @keyframes emoji3DRotate { 0%, 100% { transform: perspective(200px) rotateY(0deg) rotateX(0deg); } 25% { transform: perspective(200px) rotateY(8deg) rotateX(-3deg); } 50% { transform: perspective(200px) rotateY(0deg) rotateX(0deg); } 75% { transform: perspective(200px) rotateY(-8deg) rotateX(3deg); } }
+        .tier-emoji-3d { display: inline-block; font-size: 2.5rem; margin-bottom: 12px; animation: emoji3DRotate 8s ease-in-out infinite; filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.4)); transform-style: preserve-3d; }
+        .tier-name-seedling { background: linear-gradient(135deg, rgba(255,255,255,0.9) 0%, rgba(34,197,94,0.8) 30%, rgba(255,255,255,0.6) 50%, rgba(34,197,94,0.8) 70%, rgba(255,255,255,0.9) 100%); background-size: 200% auto; -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; text-shadow: 0 0 25px rgba(34, 197, 94, 0.2); animation: shimmer 6s linear infinite; filter: drop-shadow(0 0 3px rgba(34, 197, 94, 0.4)); }
+        .tier-name-sweetpea { background: linear-gradient(135deg, rgba(255,255,255,0.9) 0%, rgba(236,72,153,0.8) 30%, rgba(255,255,255,0.6) 50%, rgba(236,72,153,0.8) 70%, rgba(255,255,255,0.9) 100%); background-size: 200% auto; -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; text-shadow: 0 0 25px rgba(236, 72, 153, 0.2); animation: shimmer 6s linear infinite; filter: drop-shadow(0 0 3px rgba(236, 72, 153, 0.4)); }
         .glow-card { position: relative; }
-        .glow-card::before {
-            content: ''; position: absolute; inset: 0; border-radius: inherit; padding: 1px;
-            background: radial-gradient(300px circle at var(--mouse-x, 50%) var(--mouse-y, 50%), rgba(212, 175, 55, 0.6), transparent 40%);
-            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-            -webkit-mask-composite: xor; mask-composite: exclude;
-            opacity: 0; transition: opacity 0.3s ease; pointer-events: none; z-index: 1;
-        }
+        .glow-card::before { content: ''; position: absolute; inset: 0; border-radius: inherit; padding: 1px; background: radial-gradient(300px circle at var(--mouse-x, 50%) var(--mouse-y, 50%), rgba(212, 175, 55, 0.6), transparent 40%); -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0); -webkit-mask-composite: xor; mask-composite: exclude; opacity: 0; transition: opacity 0.3s ease; pointer-events: none; z-index: 1; }
         .glow-card:hover::before { opacity: 1; }
-
         .vine-btn-wrapper { position: relative; display: inline-block; width: 100%; margin-top: auto; }
         .vine-btn-wrapper svg { position: absolute; top: -8px; left: -12px; width: calc(100% + 24px); height: calc(100% + 20px); pointer-events: none; opacity: 0; transition: opacity 0.4s ease; z-index: 2; }
         .vine-btn-wrapper:hover svg { opacity: 1; }
         .vine-btn-wrapper .btn { position: relative; z-index: 1; display: block; width: 100%; padding: 12px 28px; border: none; border-radius: var(--radius-sm); font-size: 0.92rem; font-weight: 600; text-decoration: none; transition: var(--transition); cursor: pointer; }
-
-        .btn-glass-supporter {
-            background: rgba(168, 85, 247, 0.05);
-            backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
-            color: var(--text);
-            border: 1px solid rgba(168, 85, 247, 0.2);
-            box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.05), 0 4px 16px rgba(0, 0, 0, 0.2);
-        }
-        .btn-glass-supporter:hover {
-            background: rgba(168, 85, 247, 0.12);
-            border-color: rgba(168, 85, 247, 0.5);
-            box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.08), 0 4px 20px rgba(168, 85, 247, 0.15);
-            transform: scale(1.02);
-        }
-
-        .btn-glass-seedling {
-            background: rgba(34, 197, 94, 0.05);
-            backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
-            color: var(--text);
-            border: 1px solid rgba(34, 197, 94, 0.2);
-            box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.05), 0 4px 16px rgba(0, 0, 0, 0.2);
-        }
-        .btn-glass-seedling:hover {
-            background: rgba(34, 197, 94, 0.12);
-            border-color: rgba(34, 197, 94, 0.5);
-            box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.08), 0 4px 20px rgba(34, 197, 94, 0.15);
-            transform: scale(1.02);
-        }
-
-        .btn-glass-sweetpea {
-            background: rgba(236, 72, 153, 0.05);
-            backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
-            color: var(--text);
-            border: 1px solid rgba(236, 72, 153, 0.2);
-            box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.05), 0 4px 16px rgba(0, 0, 0, 0.2);
-        }
-        .btn-glass-sweetpea:hover {
-            background: rgba(236, 72, 153, 0.12);
-            border-color: rgba(236, 72, 153, 0.5);
-            box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.08), 0 4px 20px rgba(236, 72, 153, 0.15);
-            transform: scale(1.02);
-        }
-
-        .top-nav { position: fixed; top: 20px; right: 20px; z-index: 50; display: flex; gap: 12px; align-items: center; }
-        .home-btn {
-            display: flex; align-items: center; gap: 8px; padding: 10px 20px;
-            background: rgba(20, 20, 20, 0.8); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
-            border: 1px solid var(--border-gold); border-radius: var(--radius-sm);
-            color: var(--gold); font-size: 0.85rem; font-weight: 600; text-decoration: none; transition: var(--transition);
-        }
-        .home-btn:hover { background: rgba(30, 30, 30, 0.9); border-color: var(--gold); transform: translateY(-2px); }
-        .home-btn svg { width: 16px; height: 16px; }
-
+        .btn-glass-seedling { background: rgba(34, 197, 94, 0.05); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); color: var(--text); border: 1px solid rgba(34, 197, 94, 0.2); box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.05), 0 4px 16px rgba(0, 0, 0, 0.2); }
+        .btn-glass-seedling:hover:not(:disabled) { background: rgba(34, 197, 94, 0.12); border-color: rgba(34, 197, 94, 0.5); box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.08), 0 4px 20px rgba(34, 197, 94, 0.15); transform: scale(1.02); }
+        .btn-glass-sweetpea { background: rgba(236, 72, 153, 0.05); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); color: var(--text); border: 1px solid rgba(236, 72, 153, 0.2); box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.05), 0 4px 16px rgba(0, 0, 0, 0.2); }
+        .btn-glass-sweetpea:hover:not(:disabled) { background: rgba(236, 72, 153, 0.12); border-color: rgba(236, 72, 153, 0.5); box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.08), 0 4px 20px rgba(236, 72, 153, 0.15); transform: scale(1.02); }
         .hero { text-align: center; padding: 60px 20px 30px; }
         .hero img.logo { width: 180px; height: 180px; margin-bottom: 16px; filter: drop-shadow(0 0 30px rgba(212, 175, 55, 0.25)); animation: float3D 6s ease-in-out infinite; }
         .hero h1 { font-size: 2.4rem; font-weight: 700; margin-bottom: 8px; }
         .hero p { font-size: 1rem; color: var(--text-dim); max-width: 500px; margin: 0 auto; }
-
-        .pricing-section { max-width: 1000px; margin: 0 auto; padding: 20px; }
-        .pricing-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-bottom: 80px; }
-
-        .pricing-card {
-            background: rgba(20, 20, 20, 0.6);
-            backdrop-filter: blur(16px) saturate(1.2); -webkit-backdrop-filter: blur(16px) saturate(1.2);
-            border: 2px solid; border-radius: var(--radius);
-            padding: 32px 24px; text-align: center; display: flex; flex-direction: column;
-            transition: var(--transition); position: relative; overflow: hidden;
-            box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.05), 0 8px 32px rgba(0, 0, 0, 0.3);
-        }
-
-        .pricing-card.tier-supporter { border-color: rgba(168, 85, 247, 0.4); }
-        .pricing-card.tier-supporter:hover { border-color: rgba(168, 85, 247, 0.7); box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.08), 0 12px 40px rgba(0, 0, 0, 0.4), 0 0 20px rgba(168, 85, 247, 0.1); }
-
+        .pricing-section { max-width: 800px; margin: 0 auto; padding: 20px; }
+        .pricing-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; margin-bottom: 80px; }
+        .pricing-card { background: rgba(20, 20, 20, 0.6); backdrop-filter: blur(16px) saturate(1.2); -webkit-backdrop-filter: blur(16px) saturate(1.2); border: 2px solid; border-radius: var(--radius); padding: 32px 24px; text-align: center; display: flex; flex-direction: column; transition: var(--transition); position: relative; overflow: hidden; box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.05), 0 8px 32px rgba(0, 0, 0, 0.3); }
         .pricing-card.tier-seedling { border-color: rgba(34, 197, 94, 0.4); animation: pulseGlowGreen 4s ease-in-out infinite; }
         .pricing-card.tier-seedling:hover { border-color: rgba(34, 197, 94, 0.7); box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.08), 0 12px 40px rgba(0, 0, 0, 0.4), 0 0 20px rgba(34, 197, 94, 0.1); }
-
         .pricing-card.tier-sweetpea { border-color: rgba(236, 72, 153, 0.4); }
         .pricing-card.tier-sweetpea:hover { border-color: rgba(236, 72, 153, 0.7); box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.08), 0 12px 40px rgba(0, 0, 0, 0.4), 0 0 20px rgba(236, 72, 153, 0.1); }
-
         .pricing-card:hover { transform: translateY(-6px); }
-
         .pricing-card .tier-name { font-size: 1.2rem; font-weight: 700; margin-bottom: 6px; }
         .pricing-card .price { font-size: 2.2rem; color: var(--text); font-weight: 800; margin: 10px 0 2px; }
         .pricing-card .price-period { font-size: 0.8rem; color: var(--text-dim); margin-bottom: 16px; }
@@ -211,23 +73,15 @@
         .pricing-card .features { text-align: left; margin-bottom: 24px; flex-grow: 1; list-style: none; }
         .pricing-card .features li { font-size: 0.82rem; color: var(--text-dim); margin-bottom: 8px; padding-left: 24px; position: relative; }
         .pricing-card .features li::before { content: '\2713'; position: absolute; left: 0; color: var(--gold); font-weight: 700; }
-
         .services-section { max-width: 1000px; margin: 0 auto; padding: 20px; }
         .section-title { font-size: 1.5rem; text-align: center; margin-bottom: 8px; font-weight: 700; }
         .section-subtitle { font-size: 0.9rem; color: var(--text-dim); text-align: center; margin-bottom: 32px; }
-
         .tier-divider { max-width: 1000px; margin: 40px auto 24px; padding: 0 20px; display: flex; align-items: center; gap: 16px; }
         .tier-divider .line { flex: 1; height: 1px; background: linear-gradient(90deg, transparent, var(--border-gold), transparent); }
         .tier-divider .label { font-size: 0.85rem; color: var(--gold); font-weight: 600; letter-spacing: 0.5px; white-space: nowrap; display: flex; align-items: center; gap: 8px; }
         .tier-divider .label .icon { font-size: 1.1rem; }
-
         .services-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 16px; }
-
-        .service-card {
-            background: rgba(20, 20, 20, 0.5); backdrop-filter: blur(12px) saturate(1.1); -webkit-backdrop-filter: blur(12px) saturate(1.1);
-            border: 1px solid var(--border); border-radius: var(--radius); padding: 24px; cursor: pointer;
-            transition: var(--transition); position: relative; overflow: hidden; box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.03);
-        }
+        .service-card { background: rgba(20, 20, 20, 0.5); backdrop-filter: blur(12px) saturate(1.1); -webkit-backdrop-filter: blur(12px) saturate(1.1); border: 1px solid var(--border); border-radius: var(--radius); padding: 24px; cursor: pointer; transition: var(--transition); position: relative; overflow: hidden; box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.03); }
         .service-card:hover { transform: translateY(-3px); background: rgba(28, 28, 28, 0.7); border-color: var(--border-gold); }
         .service-card .service-header { display: flex; align-items: center; gap: 14px; margin-bottom: 10px; }
         .service-card .service-icon { width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; background: rgba(255, 255, 255, 0.04); border-radius: 10px; flex-shrink: 0; }
@@ -238,30 +92,17 @@
         .tier-tag { display: inline-block; font-size: 0.65rem; padding: 3px 10px; border-radius: 4px; font-weight: 600; letter-spacing: 0.3px; }
         .tier-tag.seedling { background: rgba(31, 195, 49, 0.12); color: #1fc331; border: 1px solid rgba(31, 195, 49, 0.2); }
         .tier-tag.sweetpea { background: var(--gold-glow); color: var(--gold); border: 1px solid var(--border-gold); }
-        .tier-tag.coming-soon { background: rgba(100, 100, 100, 0.12); color: #999; border: 1px solid rgba(100, 100, 100, 0.2); }
         .service-card .learn-more { font-size: 0.75rem; color: var(--text-faint); margin-top: 8px; transition: var(--transition); }
         .service-card:hover .learn-more { color: var(--gold); }
-
-        /* ═══ Coming Soon Section ═══ */
         .coming-soon-section { max-width: 1000px; margin: 0 auto 60px; padding: 20px; }
         .coming-soon-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 16px; }
-        .coming-soon-card {
-            background: rgba(20, 20, 20, 0.3);
-            backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
-            border: 1px dashed rgba(212, 175, 55, 0.15);
-            border-radius: var(--radius);
-            padding: 24px;
-            transition: var(--transition);
-            position: relative;
-            overflow: hidden;
-        }
+        .coming-soon-card { background: rgba(20, 20, 20, 0.3); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); border: 1px dashed rgba(212, 175, 55, 0.15); border-radius: var(--radius); padding: 24px; transition: var(--transition); position: relative; overflow: hidden; }
         .coming-soon-card:hover { border-color: rgba(212, 175, 55, 0.3); background: rgba(28, 28, 28, 0.4); }
         .coming-soon-card .service-header { display: flex; align-items: center; gap: 14px; margin-bottom: 10px; }
         .coming-soon-card .service-icon { width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; background: rgba(255, 255, 255, 0.03); border-radius: 10px; flex-shrink: 0; }
         .coming-soon-card .service-icon img { width: 24px; height: 24px; filter: brightness(0) invert(1); opacity: 0.5; }
         .coming-soon-card h3 { font-size: 0.95rem; font-weight: 600; color: var(--text-dim); }
         .coming-soon-card p { font-size: 0.8rem; color: var(--text-faint); line-height: 1.4; }
-
         .modal-overlay { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0, 0, 0, 0.7); backdrop-filter: blur(4px); z-index: 100; align-items: center; justify-content: center; padding: 20px; }
         .modal-overlay.active { display: flex; }
         .modal { background: #141414; border: 1px solid var(--border-gold); border-radius: var(--radius); max-width: 520px; width: 100%; max-height: 85vh; overflow-y: auto; padding: 32px; position: relative; backdrop-filter: blur(20px); box-shadow: 0 24px 80px rgba(0, 0, 0, 0.5); }
@@ -285,7 +126,6 @@
         .modal-footer .btn-primary { background: linear-gradient(135deg, var(--gold), var(--gold-dim)); color: #0a0a0a; }
         .modal-footer .btn-primary:hover { transform: scale(1.02); box-shadow: 0 4px 16px rgba(212, 175, 55, 0.25); }
         .modal-footer .btn-secondary { background: rgba(255, 255, 255, 0.06); color: var(--text); border: 1px solid var(--border); }
-
         .faq-section { max-width: 720px; margin: 0 auto 60px; padding: 20px; }
         .faq-item { background: rgba(20, 20, 20, 0.5); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border: 1px solid var(--border); border-radius: var(--radius-sm); margin-bottom: 10px; overflow: hidden; transition: var(--transition); }
         .faq-item:hover { border-color: var(--border-gold); }
@@ -296,43 +136,23 @@
         .faq-answer { max-height: 0; overflow: hidden; transition: max-height 0.3s ease, padding 0.3s ease; padding: 0 20px; }
         .faq-item.open .faq-answer { max-height: 300px; padding: 0 20px 16px; }
         .faq-answer p { font-size: 0.84rem; color: var(--text-dim); line-height: 1.5; }
-
-        .footer { text-align: center; padding: 40px 20px; font-size: 0.85rem; color: var(--text-faint); border-top: 1px solid rgba(255, 255, 255, 0.04); }
-        .footer a { color: var(--gold); text-decoration: none; transition: var(--transition); }
-        .footer a:hover { text-decoration: underline; }
-        .footer .footer-links { display: flex; justify-content: center; gap: 24px; margin-bottom: 12px; flex-wrap: wrap; }
-
-        .float-3d { position: absolute; pointer-events: none; opacity: 0.06; z-index: 0; }
-        .float-3d svg { width: 100%; height: 100%; }
-        .float-3d.f1 { top: 15%; right: 5%; width: 120px; height: 120px; animation: float3D 8s ease-in-out infinite; }
-        .float-3d.f2 { top: 45%; left: 3%; width: 80px; height: 80px; animation: float3D 10s ease-in-out infinite reverse; }
-        .float-3d.f3 { top: 70%; right: 8%; width: 100px; height: 100px; animation: float3D 7s ease-in-out infinite 1s; }
-
-        @media (max-width: 768px) {
-            .pricing-grid { grid-template-columns: 1fr; }
-            .hero h1 { font-size: 1.6rem; }
-            .hero img.logo { width: 120px; height: 120px; }
-            .services-grid, .coming-soon-grid { grid-template-columns: 1fr; }
-            .modal { padding: 24px; }
-            .float-3d { display: none; }
-            .top-nav { top: 10px; right: 10px; }
-            .home-btn { padding: 8px 14px; font-size: 0.78rem; }
-        }
+        @media (max-width: 768px) { .pricing-grid { grid-template-columns: 1fr; } .hero h1 { font-size: 1.6rem; } .hero img.logo { width: 120px; height: 120px; } .services-grid, .coming-soon-grid { grid-template-columns: 1fr; } .modal { padding: 24px; } }
     </style>
 </head>
 <body>
     <div class="bg-gradient"></div>
     <canvas id="petalCanvas"></canvas>
 
-    <div class="float-3d f1"><svg viewBox="0 0 100 100" fill="none"><circle cx="50" cy="50" r="45" stroke="#d4af37" stroke-width="1.5" fill="none"/><path d="M50 15 C30 20, 25 40, 30 55 C35 68, 50 75, 50 75 C50 75, 65 68, 70 55 C75 40, 70 20, 50 15" fill="#d4af37"/></svg></div>
-    <div class="float-3d f2"><svg viewBox="0 0 100 100" fill="none"><circle cx="50" cy="50" r="45" stroke="#d4af37" stroke-width="1.5" fill="none"/><path d="M50 15 C30 20, 25 40, 30 55 C35 68, 50 75, 50 75 C50 75, 65 68, 70 55 C75 40, 70 20, 50 15" fill="#d4af37"/></svg></div>
-    <div class="float-3d f3"><svg viewBox="0 0 100 100" fill="none"><circle cx="50" cy="50" r="45" stroke="#d4af37" stroke-width="1.5" fill="none"/><path d="M50 15 C30 20, 25 40, 30 55 C35 68, 50 75, 50 75 C50 75, 65 68, 70 55 C75 40, 70 20, 50 15" fill="#d4af37"/></svg></div>
+    <div class="float-3d f1"><svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M50 10 C35 15, 28 30, 32 48 C36 60, 48 68, 50 70 C52 68, 64 60, 68 48 C72 30, 65 15, 50 10" fill="#d4af37" opacity="0.8"/><path d="M50 25 C44 28, 40 38, 44 48 C47 55, 50 58, 50 58 C50 58, 53 55, 56 48 C60 38, 56 28, 50 25" fill="#d4af37" opacity="0.5"/><path d="M50 10 C42 12, 38 22, 42 35 C45 42, 50 45, 50 45 C50 45, 55 42, 58 35 C62 22, 58 12, 50 10" fill="#d4af37" opacity="0.6"/><path d="M50 45 C45 48, 42 55, 45 62 C48 67, 50 68, 50 68 C50 68, 52 67, 55 62 C58 55, 55 48, 50 45" fill="#d4af37" opacity="0.4"/><line x1="50" y1="68" x2="50" y2="88" stroke="#d4af37" stroke-width="2"/><path d="M45 80 Q40 76, 37 82" stroke="#d4af37" stroke-width="1.5" fill="none"/><path d="M55 80 Q60 76, 63 82" stroke="#d4af37" stroke-width="1.5" fill="none"/><circle cx="37" cy="82" r="2" fill="#d4af37" opacity="0.6"/><circle cx="63" cy="82" r="2" fill="#d4af37" opacity="0.6"/></svg></div>
+    <div class="float-3d f2"><svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M50 10 C35 15, 28 30, 32 48 C36 60, 48 68, 50 70 C52 68, 64 60, 68 48 C72 30, 65 15, 50 10" fill="#d4af37" opacity="0.8"/><path d="M50 25 C44 28, 40 38, 44 48 C47 55, 50 58, 50 58 C50 58, 53 55, 56 48 C60 38, 56 28, 50 25" fill="#d4af37" opacity="0.5"/><path d="M50 10 C42 12, 38 22, 42 35 C45 42, 50 45, 50 45 C50 45, 55 42, 58 35 C62 22, 58 12, 50 10" fill="#d4af37" opacity="0.6"/><path d="M50 45 C45 48, 42 55, 45 62 C48 67, 50 68, 50 68 C50 68, 52 67, 55 62 C58 55, 55 48, 50 45" fill="#d4af37" opacity="0.4"/><line x1="50" y1="68" x2="50" y2="88" stroke="#d4af37" stroke-width="2"/><path d="M45 80 Q40 76, 37 82" stroke="#d4af37" stroke-width="1.5" fill="none"/><path d="M55 80 Q60 76, 63 82" stroke="#d4af37" stroke-width="1.5" fill="none"/><circle cx="37" cy="82" r="2" fill="#d4af37" opacity="0.6"/><circle cx="63" cy="82" r="2" fill="#d4af37" opacity="0.6"/></svg></div>
+    <div class="float-3d f3"><svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M50 10 C35 15, 28 30, 32 48 C36 60, 48 68, 50 70 C52 68, 64 60, 68 48 C72 30, 65 15, 50 10" fill="#d4af37" opacity="0.8"/><path d="M50 25 C44 28, 40 38, 44 48 C47 55, 50 58, 50 58 C50 58, 53 55, 56 48 C60 38, 56 28, 50 25" fill="#d4af37" opacity="0.5"/><path d="M50 10 C42 12, 38 22, 42 35 C45 42, 50 45, 50 45 C50 45, 55 42, 58 35 C62 22, 58 12, 50 10" fill="#d4af37" opacity="0.6"/><path d="M50 45 C45 48, 42 55, 45 62 C48 67, 50 68, 50 68 C50 68, 52 67, 55 62 C58 55, 55 48, 50 45" fill="#d4af37" opacity="0.4"/><line x1="50" y1="68" x2="50" y2="88" stroke="#d4af37" stroke-width="2"/><path d="M45 80 Q40 76, 37 82" stroke="#d4af37" stroke-width="1.5" fill="none"/><path d="M55 80 Q60 76, 63 82" stroke="#d4af37" stroke-width="1.5" fill="none"/><circle cx="37" cy="82" r="2" fill="#d4af37" opacity="0.6"/><circle cx="63" cy="82" r="2" fill="#d4af37" opacity="0.6"/></svg></div>
 
     <div class="top-nav">
-        <a href="https://mysweetpea.cc" class="home-btn">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12L12 3l9 9M5 10v10h14V10"/></svg>
-            Home
-        </a>
+        <a href="/index.html" class="nav-btn">Home</a>
+        <a href="/pricing.html" class="nav-btn">Pricing</a>
+        <a href="/support.html" class="nav-btn">Support</a>
+        <a href="/about.html" class="nav-btn">About</a>
+        <a href="/suggest.html" class="nav-btn">Suggest</a>
     </div>
 
     <div class="content-wrapper">
@@ -344,22 +164,7 @@
 
         <div class="pricing-section">
             <div class="pricing-grid">
-                <div class="pricing-card tier-supporter glow-card" id="card-supporter">
-                    <div class="tier-emoji-3d">&#x1F49B;</div>
-                    <div class="tier-name tier-name-supporter">Supporter</div>
-                    <div class="price">Any amount</div>
-                    <div class="price-period">One-time donation</div>
-                    <div class="desc">Support the cause. Every contribution helps keep the server running.</div>
-                    <ul class="features">
-                        <li>Help cover server costs</li>
-                        <li>Thank-you email</li>
-                    </ul>
-                    <div class="vine-btn-wrapper">
-                        <svg viewBox="0 0 200 60" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M10 30 Q30 10, 50 30 T90 30 T130 30 T170 30 T190 30" stroke="#d4af37" stroke-width="1.5" fill="none" opacity="0.6"/><path d="M10 30 Q30 50, 50 30 T90 30 T130 30 T170 30 T190 30" stroke="#d4af37" stroke-width="1" fill="none" opacity="0.4"/><circle cx="30" cy="18" r="3" fill="#d4af37" opacity="0.7"/><circle cx="70" cy="42" r="3" fill="#d4af37" opacity="0.7"/><circle cx="110" cy="18" r="3" fill="#d4af37" opacity="0.7"/><circle cx="150" cy="42" r="3" fill="#d4af37" opacity="0.7"/><path d="M30 18 Q25 12, 28 8" stroke="#d4af37" stroke-width="1" fill="none" opacity="0.5"/><path d="M70 42 Q75 48, 72 52" stroke="#d4af37" stroke-width="1" fill="none" opacity="0.5"/><path d="M110 18 Q105 12, 108 8" stroke="#d4af37" stroke-width="1" fill="none" opacity="0.5"/><path d="M150 42 Q155 48, 152 52" stroke="#d4af37" stroke-width="1" fill="none" opacity="0.5"/></svg>
-                        <a href="/form.html" class="btn btn-glass-supporter">Donate</a>
-                    </div>
-                </div>
-
+                <!-- Seedling (Green) -->
                 <div class="pricing-card tier-seedling glow-card" id="card-seedling">
                     <div class="tier-emoji-3d">&#x1F331;</div>
                     <div class="tier-name tier-name-seedling">Seedling</div>
@@ -378,12 +183,13 @@
                     </div>
                 </div>
 
+                <!-- Sweet Pea (Pink) -->
                 <div class="pricing-card tier-sweetpea glow-card" id="card-sweetpea">
                     <div class="tier-emoji-3d">&#x1F338;</div>
                     <div class="tier-name tier-name-sweetpea">Sweet Pea</div>
-                    <div class="price">Contact</div>
-                    <div class="price-period">One-time donation</div>
-                    <div class="desc">Full access to all services including media. Limited availability.</div>
+                    <div class="price">Contact Us</div>
+                    <div class="price-period">Pricing on request</div>
+                    <div class="desc">Full access to all services including media streaming. Limited availability &#8212; contact us to learn more.</div>
                     <ul class="features">
                         <li>Everything in Seedling</li>
                         <li>Jellyfin / Moonfin (Media Server)</li>
@@ -394,7 +200,7 @@
                     </ul>
                     <div class="vine-btn-wrapper">
                         <svg viewBox="0 0 200 60" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M10 30 Q30 10, 50 30 T90 30 T130 30 T170 30 T190 30" stroke="#d4af37" stroke-width="1.5" fill="none" opacity="0.6"/><path d="M10 30 Q30 50, 50 30 T90 30 T130 30 T170 30 T190 30" stroke="#d4af37" stroke-width="1" fill="none" opacity="0.4"/><circle cx="30" cy="18" r="3" fill="#d4af37" opacity="0.7"/><circle cx="70" cy="42" r="3" fill="#d4af37" opacity="0.7"/><circle cx="110" cy="18" r="3" fill="#d4af37" opacity="0.7"/><circle cx="150" cy="42" r="3" fill="#d4af37" opacity="0.7"/><path d="M30 18 Q25 12, 28 8" stroke="#d4af37" stroke-width="1" fill="none" opacity="0.5"/><path d="M70 42 Q75 48, 72 52" stroke="#d4af37" stroke-width="1" fill="none" opacity="0.5"/><path d="M110 18 Q105 12, 108 8" stroke="#d4af37" stroke-width="1" fill="none" opacity="0.5"/><path d="M150 42 Q155 48, 152 52" stroke="#d4af37" stroke-width="1" fill="none" opacity="0.5"/></svg>
-                        <a href="mailto:support@mysweetpea.cc" class="btn btn-glass-sweetpea">Contact Admin</a>
+                        <a href="mailto:support@mysweetpea.cc" class="btn btn-glass-sweetpea">Contact Us</a>
                     </div>
                 </div>
             </div>
@@ -520,7 +326,23 @@
             </div>
         </div>
 
-        <!-- FAQ -->
+        
+
+        <!-- Coming Soon -->
+        <div class="coming-soon-section">
+            <div class="tier-divider">
+                <div class="line"></div>
+                <div class="label"><span class="icon">&#x1F6A7;</span> Coming Soon</div>
+                <div class="line"></div>
+            </div>
+            <div class="coming-soon-grid">
+                <div class="coming-soon-card"><div class="service-header"><div class="service-icon"><img src="https://cdn.jsdelivr.net/npm/simple-icons@latest/icons/grafana.svg" alt="Grafana"></div><h3>Grafana</h3></div><p>Server monitoring and analytics dashboard. Visualize system health and performance metrics.</p></div>
+                <div class="coming-soon-card"><div class="service-header"><div class="service-icon"><img src="https://cdn.jsdelivr.net/npm/simple-icons@latest/icons/prometheus.svg" alt="Prometheus"></div><h3>Prometheus</h3></div><p>Time-series database for collecting and alerting on system metrics across the cluster.</p></div>
+                <div class="coming-soon-card"><div class="service-header"><div class="service-icon"><img src="https://cdn.jsdelivr.net/npm/simple-icons@latest/icons/syncthing.svg" alt="Syncthing"></div><h3>Syncthing</h3></div><p>Peer-to-peer file synchronization. Sync folders across devices without a central server.</p></div>
+                <div class="coming-soon-card"><div class="service-header"><div class="service-icon"><img src="https://cdn.jsdelivr.net/npm/simple-icons@latest/icons/stalwart.svg" alt="Stalwart" onerror="this.onerror=null;this.outerHTML='<svg viewBox=\'0 0 24 24\' fill=\'none\'><rect x=\'3\' y=\'5\' width=\'18\' height=\'14\' rx=\'2\' stroke=\'#d4af37\' stroke-width=\'1.5\'/><path d=\'M3 8h18\' stroke=\'#d4af37\' stroke-width=\'1.5\'/></svg>'"></div><h3>Stalwart Mail</h3></div><p>Self-hosted email server with IMAP, JMAP, and SMTP support. Your own private email domain.</p></div>
+            </div>
+        </div>
+
         <div class="faq-section">
             <h2 class="section-title glass-text">FAQ</h2>
 
@@ -555,19 +377,23 @@
             <div class="faq-item">
                 <div class="faq-question" onclick="toggleFAQ(this)">Can I get a refund? <span class="arrow">&#x25BC;</span></div>
                 <div class="faq-answer"><p>Crypto donations are irreversible. If you have a genuine issue, contact support@mysweetpea.cc.</p></div>
-            </div>
-        </div>
+            
 
-        <div class="footer">
+
+        <div class="page-footer">
             <div class="footer-links">
-                <a href="/form.html">Donate &amp; Get Access</a>
+                <a href="/pricing.html">Pricing</a>
+                <a href="/support.html">Support</a>
                 <a href="/about.html">About Us</a>
-                <a href="mailto:support@mysweetpea.cc">Support</a>
+                <a href="/suggest.html">Suggest a Service</a>
+                <a href="mailto:support@mysweetpea.cc">Contact</a>
             </div>
             <p>&copy; 2026 MySweetPea. Self-hosted with care.</p>
         </div>
+
     </div>
 
+    <!-- Modal -->
     <div class="modal-overlay" id="modalOverlay" onclick="closeModal(event)">
         <div class="modal" id="modalContent">
             <button class="modal-close" onclick="closeModalDirect()">&times;</button>
@@ -576,22 +402,27 @@
     </div>
 
     <script>
+
         (function() {
-            var canvas = document.getElementById('petalCanvas'); var ctx = canvas.getContext('2d'); var petals = []; var W, H;
+            var canvas = document.getElementById('petalCanvas');
+            var ctx = canvas.getContext('2d');
+            var petals = [];
+            var W, H;
             function resize() { W = canvas.width = window.innerWidth; H = canvas.height = window.innerHeight; }
             resize(); window.addEventListener('resize', resize);
             function createPetal() { return { x: Math.random() * W, y: -20, size: 4 + Math.random() * 8, speedY: 0.5 + Math.random() * 1.5, speedX: -0.5 + Math.random() * 1, rotation: Math.random() * Math.PI * 2, rotSpeed: -0.02 + Math.random() * 0.04, opacity: 0.15 + Math.random() * 0.35, sway: Math.random() * Math.PI * 2, swaySpeed: 0.01 + Math.random() * 0.02 }; }
             for (var i = 0; i < 40; i++) { var p = createPetal(); p.y = Math.random() * H; petals.push(p); }
             function drawPetal(p) { ctx.save(); ctx.translate(p.x, p.y); ctx.rotate(p.rotation); ctx.globalAlpha = p.opacity; var grad = ctx.createRadialGradient(0, 0, 0, 0, 0, p.size); grad.addColorStop(0, '#f0d860'); grad.addColorStop(0.5, '#d4af37'); grad.addColorStop(1, 'rgba(212, 175, 55, 0.3)'); ctx.fillStyle = grad; ctx.beginPath(); ctx.moveTo(0, -p.size); ctx.bezierCurveTo(p.size * 0.6, -p.size * 0.5, p.size * 0.6, p.size * 0.5, 0, p.size); ctx.bezierCurveTo(-p.size * 0.6, p.size * 0.5, -p.size * 0.6, -p.size * 0.5, 0, -p.size); ctx.fill(); ctx.strokeStyle = 'rgba(212, 175, 55, 0.4)'; ctx.lineWidth = 0.5; ctx.stroke(); ctx.restore(); }
-            function animate() { ctx.clearRect(0, 0, W, H); petals.forEach(function(p, i) { p.sway += p.swaySpeed; p.x += p.speedX + Math.sin(p.sway) * 0.5; p.y += p.speedY; p.rotation += p.rotSpeed; if (p.y > H + 20) { petals[i] = createPetal(); } if (p.x < -20) p.x = W + 20; if (p.x > W + 20) p.x = -20; drawPetal(p); }); requestAnimationFrame(animate); }
+            function animate() { ctx.clearRect(0, 0, W, H); for (var i = 0; i < petals.length; i++) { var p = petals[i]; p.sway += p.swaySpeed; p.x += p.speedX + Math.sin(p.sway) * 0.5; p.y += p.speedY; p.rotation += p.rotSpeed; if (p.y > H + 20) { petals[i] = createPetal(); } if (p.x < -20) p.x = W + 20; if (p.x > W + 20) p.x = -20; drawPetal(p); } requestAnimationFrame(animate); }
             animate();
         })();
+
 
         document.querySelectorAll('.glow-card').forEach(function(card) {
             card.addEventListener('mousemove', function(e) { var rect = card.getBoundingClientRect(); card.style.setProperty('--mouse-x', (e.clientX - rect.left) + 'px'); card.style.setProperty('--mouse-y', (e.clientY - rect.top) + 'px'); });
         });
 
-        var SERVICES = {
+var SERVICES = {
             vaultwarden: { name:'Vaultwarden', icon:'<img src="https://cdn.jsdelivr.net/npm/simple-icons@latest/icons/vaultwarden.svg" alt="Vaultwarden">', tier:'seedling', tierLabel:'Seedling +', desc:'Vaultwarden is a self-hosted password manager, compatible with Bitwarden. It remembers all your passwords so you do not have to. It generates strong, unhackable passwords for every site and autofills them in your browser. Your vault is encrypted end-to-end — even we cannot see your passwords.', tutorial:['Go to <a href="https://vault.mysweetpea.cc" target="_blank">https://vault.mysweetpea.cc</a>','Log in with your Authentik SSO account — this automatically creates your Vaultwarden account using your Authentik credentials for authentication','Once logged in, you can access your vault on the web, or install the <a href="https://bitwarden.com/download/" target="_blank">Bitwarden browser extension</a> for Chrome, Firefox, or Edge','In the extension settings, set the server URL to <code>https://vault.mysweetpea.cc</code> and log in with SSO','You can also download the Bitwarden mobile app for iOS or Android and connect to the same server','Start adding passwords, notes, and secure items to your vault'], url:'https://vault.mysweetpea.cc' },
             matrix: { name:'Matrix / Element', icon:'<img src="https://cdn.jsdelivr.net/npm/simple-icons@latest/icons/matrix.svg" alt="Matrix">', tier:'seedling', tierLabel:'Seedling +', desc:'Matrix is an open-source, end-to-end encrypted messaging protocol. Element is the client app. Think of it as a private Discord or Slack that you control. Create rooms, send direct messages, share files, and bridge to other platforms.', tutorial:['Go to <a href="https://chat.mysweetpea.cc" target="_blank">https://chat.mysweetpea.cc</a>','Click "Log In" — you will be redirected to Authentik SSO','Enter your MySweetPea credentials to authenticate','Once logged in, you can join rooms or create your own','Download the <a href="https://element.io/download" target="_blank">Element app</a> for desktop or mobile','In the app, set the homeserver to <code>matrix.mysweetpea.cc</code> and log in via SSO'], url:'https://chat.mysweetpea.cc' },
             affine: { name:'AFFiNE', icon:'<img src="https://cdn.jsdelivr.net/npm/simple-icons@latest/icons/affine.svg" alt="AFFiNE">', tier:'seedling', tierLabel:'Seedling +', desc:'AFFiNE is an open-source Notion alternative. Create documents, wikis, whiteboards, and knowledge bases. All your notes are stored privately on our server. It combines the best of Notion and Miro in one privacy-first workspace.', tutorial:['Go to <a href="https://notes.mysweetpea.cc" target="_blank">https://notes.mysweetpea.cc</a>','Click "Continue with OIDC" — do NOT click "Sign In"','You will be redirected to Authentik SSO — log in with your MySweetPea credentials','Create your first workspace','Start adding pages, blocks, and content','Use the whiteboard mode for visual brainstorming'], url:'https://notes.mysweetpea.cc' },
@@ -603,11 +434,13 @@
             immich: { name:'Immich', icon:'<img src="https://cdn.jsdelivr.net/npm/simple-icons@latest/icons/immich.svg" alt="Immich">', tier:'sweetpea', tierLabel:'Sweet Pea only', desc:'Immich is your private Google Photos. Automatically back up photos and videos from your phone, organize them with face recognition and object detection, and share albums with family. All your memories stay on our server.', tutorial:['Go to <a href="https://photos.mysweetpea.cc" target="_blank">https://photos.mysweetpea.cc</a>','Log in with your MySweetPea credentials','Download the <a href="https://immich.app/downloads/" target="_blank">Immich mobile app</a> for iOS or Android','In the app, set the server URL to <code>https://photos.mysweetpea.cc</code>','Log in and enable automatic backup in Settings','Your photos will upload automatically in the background'], url:'https://photos.mysweetpea.cc' }
         };
 
-        function openModal(key) { var s = SERVICES[key]; if (!s) return; var tc = s.tier === 'sweetpea' ? 'sweetpea' : 'seedling'; document.getElementById('modalInner').innerHTML = '<div class="modal-header"><div class="modal-icon">' + s.icon + '</div><div><h2>' + s.name + '</h2><span class="tier-tag ' + tc + '">' + s.tierLabel + '</span></div></div><div class="modal-body"><p>' + s.desc + '</p><div class="modal-tutorial"><h3>How to Get Started</h3><ol>' + s.tutorial.map(function(st){return '<li>'+st+'</li>';}).join('') + '</ol></div><div class="modal-footer"><a href="' + s.url + '" target="_blank" class="btn btn-primary">Open ' + s.name + '</a><a href="/form.html" class="btn btn-secondary">Get Access</a></div></div>'; document.getElementById('modalOverlay').classList.add('active'); document.body.style.overflow = 'hidden'; }
+        
+function openModal(key) { var s = SERVICES[key]; if (!s) return; var tc = s.tier === 'sweetpea' ? 'sweetpea' : 'seedling'; document.getElementById('modalInner').innerHTML = '<div class="modal-header"><div class="modal-icon">' + s.icon + '</div><div><h2>' + s.name + '</h2><span class="tier-tag ' + tc + '">' + s.tierLabel + '</span></div></div><div class="modal-body"><p>' + s.desc + '</p><div class="modal-tutorial"><h3>How to Get Started</h3><ol>' + s.tutorial.map(function(st){return '<li>'+st+'</li>';}).join('') + '</ol></div><div class="modal-footer"><a href="' + s.url + '" target="_blank" class="btn btn-primary">Open ' + s.name + '</a><a href="/form.html" class="btn btn-secondary">Get Access</a></div></div>'; document.getElementById('modalOverlay').classList.add('active'); document.body.style.overflow = 'hidden'; }
         function closeModal(e) { if (e.target === document.getElementById('modalOverlay')) closeModalDirect(); }
         function closeModalDirect() { document.getElementById('modalOverlay').classList.remove('active'); document.body.style.overflow = ''; }
         document.addEventListener('keydown', function(e) { if (e.key === 'Escape') closeModalDirect(); });
         function toggleFAQ(el) { el.parentElement.classList.toggle('open'); }
+    
     </script>
 </body>
 </html>

@@ -24,58 +24,44 @@
         @keyframes float3D { 0%, 100% { transform: translateY(0) rotateX(0) rotateY(0); } 50% { transform: translateY(-10px) rotateX(2deg) rotateY(2deg); } }
         @keyframes pulseGlow { 0%, 100% { box-shadow: 0 0 20px rgba(212, 175, 55, 0.08); } 50% { box-shadow: 0 0 40px rgba(212, 175, 55, 0.18); } }
         .glass-text { background: linear-gradient(135deg, rgba(255,255,255,0.9) 0%, rgba(212,175,55,0.8) 30%, rgba(255,255,255,0.6) 50%, rgba(212,175,55,0.8) 70%, rgba(255,255,255,0.9) 100%); background-size: 200% auto; -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; text-shadow: 0 0 30px rgba(212, 175, 55, 0.15); animation: shimmer 6s linear infinite; filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.3)); }
-
         .top-nav { position: fixed; top: 20px; right: 20px; z-index: 50; display: flex; gap: 8px; align-items: center; }
         .nav-btn { padding: 8px 16px; background: rgba(20, 20, 20, 0.8); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border: 1px solid var(--border-gold); border-radius: var(--radius-sm); color: var(--gold); font-size: 0.82rem; font-weight: 600; text-decoration: none; transition: var(--transition); }
         .nav-btn:hover { background: rgba(30, 30, 30, 0.9); border-color: var(--gold); transform: translateY(-2px); }
-        @media (max-width: 768px) { .top-nav { top: 10px; right: 10px; gap: 4px; } .nav-btn { padding: 6px 10px; font-size: 0.72rem; } }
-
         .float-3d { position: absolute; pointer-events: none; opacity: 0.06; z-index: 0; }
         .float-3d svg { width: 100%; height: 100%; }
         .float-3d.f1 { top: 15%; right: 5%; width: 120px; height: 120px; animation: float3D 8s ease-in-out infinite; }
         .float-3d.f2 { top: 45%; left: 3%; width: 80px; height: 80px; animation: float3D 10s ease-in-out infinite reverse; }
         .float-3d.f3 { top: 70%; right: 8%; width: 100px; height: 100px; animation: float3D 7s ease-in-out infinite 1s; }
-        @media (max-width: 768px) { .float-3d { display: none; } }
-
         .page-footer { text-align: center; padding: 40px 20px; font-size: 0.85rem; color: var(--text-faint); border-top: 1px solid rgba(255, 255, 255, 0.04); }
         .page-footer a { color: var(--gold); text-decoration: none; transition: var(--transition); }
         .page-footer a:hover { text-decoration: underline; }
         .page-footer .footer-links { display: flex; justify-content: center; gap: 24px; margin-bottom: 12px; flex-wrap: wrap; }
+        @media (max-width: 768px) { .float-3d { display: none; } .top-nav { top: 10px; right: 10px; gap: 4px; } .nav-btn { padding: 6px 10px; font-size: 0.72rem; } }
 
         .hero { text-align: center; padding: 80px 20px 30px; }
         .hero img.logo { width: 140px; height: 140px; margin-bottom: 16px; filter: drop-shadow(0 0 25px rgba(212, 175, 55, 0.25)); animation: float3D 6s ease-in-out infinite; }
         .hero h1 { font-size: 2.2rem; font-weight: 700; margin-bottom: 8px; }
         .hero p { font-size: 1rem; color: var(--text-dim); max-width: 500px; margin: 0 auto; }
-
         .content-section { max-width: 720px; margin: 0 auto 40px; padding: 20px; }
         .content-card { background: rgba(20, 20, 20, 0.5); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border: 1px solid var(--border); border-radius: var(--radius); padding: 32px; margin-bottom: 20px; transition: var(--transition); }
         .content-card:hover { border-color: var(--border-gold); }
         .content-card h2 { font-size: 1.3rem; color: var(--gold); margin-bottom: 16px; font-weight: 700; }
-        .content-card h3 { font-size: 1rem; color: var(--gold); margin-bottom: 10px; margin-top: 20px; font-weight: 600; }
         .content-card p { font-size: 0.9rem; color: var(--text-dim); line-height: 1.7; margin-bottom: 14px; }
         .content-card ul { list-style: none; margin-bottom: 14px; }
         .content-card ul li { font-size: 0.86rem; color: var(--text-dim); margin-bottom: 8px; padding-left: 20px; position: relative; }
         .content-card ul li::before { content: '\2022'; position: absolute; left: 0; color: var(--gold); font-size: 1.2em; }
         .content-card .highlight { color: var(--gold); font-weight: 600; }
-
-        .cost-table { width: 100%; border-collapse: collapse; margin: 16px 0; }
-        .cost-table th { text-align: left; font-size: 0.82rem; color: var(--gold); padding: 10px; border-bottom: 1px solid var(--border-gold); }
-        .cost-table td { font-size: 0.84rem; color: var(--text-dim); padding: 10px; border-bottom: 1px solid var(--border); }
-        .cost-table td:last-child { text-align: right; font-family: monospace; }
-
         .github-links { display: flex; gap: 16px; flex-wrap: wrap; margin-top: 20px; }
         .github-link { display: flex; align-items: center; gap: 10px; padding: 14px 20px; background: rgba(20, 20, 20, 0.6); border: 1px solid var(--border); border-radius: var(--radius-sm); text-decoration: none; color: var(--text); transition: var(--transition); }
         .github-link:hover { border-color: var(--border-gold); background: rgba(28, 28, 28, 0.8); transform: translateY(-2px); }
         .github-link svg { width: 24px; height: 24px; fill: var(--gold); }
         .github-link .info h4 { font-size: 0.88rem; color: var(--gold); font-weight: 600; }
         .github-link .info p { font-size: 0.76rem; color: var(--text-dim); margin: 0; }
-
         .vine-btn-wrapper { position: relative; display: inline-block; }
         .vine-btn-wrapper svg { position: absolute; top: -8px; left: -12px; width: calc(100% + 24px); height: calc(100% + 20px); pointer-events: none; opacity: 0; transition: opacity 0.4s ease; z-index: 2; }
         .vine-btn-wrapper:hover svg { opacity: 1; }
         .btn { position: relative; z-index: 1; display: inline-block; padding: 12px 28px; border: 1px solid rgba(212, 175, 55, 0.2); border-radius: var(--radius-sm); font-size: 0.92rem; font-weight: 600; text-decoration: none; transition: var(--transition); cursor: pointer; background: rgba(212, 175, 55, 0.05); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); color: var(--text); box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.05), 0 4px 16px rgba(0, 0, 0, 0.2); }
         .btn:hover { background: rgba(212, 175, 55, 0.12); border-color: rgba(212, 175, 55, 0.5); box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.08), 0 4px 20px rgba(212, 175, 55, 0.15); transform: scale(1.02); }
-
         @media (max-width: 768px) { .hero h1 { font-size: 1.6rem; } .hero img.logo { width: 100px; height: 100px; } .content-card { padding: 24px; } }
     </style>
 </head>
@@ -83,9 +69,9 @@
     <div class="bg-gradient"></div>
     <canvas id="petalCanvas"></canvas>
 
-    <div class="float-3d f1"><svg viewBox="0 0 100 100" fill="none"><circle cx="50" cy="50" r="45" stroke="#d4af37" stroke-width="1.5" fill="none"/><path d="M50 15 C30 20, 25 40, 30 55 C35 68, 50 75, 50 75 C50 75, 65 68, 70 55 C75 40, 70 20, 50 15" fill="#d4af37"/></svg></div>
-    <div class="float-3d f2"><svg viewBox="0 0 100 100" fill="none"><circle cx="50" cy="50" r="45" stroke="#d4af37" stroke-width="1.5" fill="none"/><path d="M50 15 C30 20, 25 40, 30 55 C35 68, 50 75, 50 75 C50 75, 65 68, 70 55 C75 40, 70 20, 50 15" fill="#d4af37"/></svg></div>
-    <div class="float-3d f3"><svg viewBox="0 0 100 100" fill="none"><circle cx="50" cy="50" r="45" stroke="#d4af37" stroke-width="1.5" fill="none"/><path d="M50 15 C30 20, 25 40, 30 55 C35 68, 50 75, 50 75 C50 75, 65 68, 70 55 C75 40, 70 20, 50 15" fill="#d4af37"/></svg></div>
+    <div class="float-3d f1"><svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M50 10 C35 15, 28 30, 32 48 C36 60, 48 68, 50 70 C52 68, 64 60, 68 48 C72 30, 65 15, 50 10" fill="#d4af37" opacity="0.8"/><path d="M50 25 C44 28, 40 38, 44 48 C47 55, 50 58, 50 58 C50 58, 53 55, 56 48 C60 38, 56 28, 50 25" fill="#d4af37" opacity="0.5"/><path d="M50 10 C42 12, 38 22, 42 35 C45 42, 50 45, 50 45 C50 45, 55 42, 58 35 C62 22, 58 12, 50 10" fill="#d4af37" opacity="0.6"/><path d="M50 45 C45 48, 42 55, 45 62 C48 67, 50 68, 50 68 C50 68, 52 67, 55 62 C58 55, 55 48, 50 45" fill="#d4af37" opacity="0.4"/><line x1="50" y1="68" x2="50" y2="88" stroke="#d4af37" stroke-width="2"/><path d="M45 80 Q40 76, 37 82" stroke="#d4af37" stroke-width="1.5" fill="none"/><path d="M55 80 Q60 76, 63 82" stroke="#d4af37" stroke-width="1.5" fill="none"/><circle cx="37" cy="82" r="2" fill="#d4af37" opacity="0.6"/><circle cx="63" cy="82" r="2" fill="#d4af37" opacity="0.6"/></svg></div>
+    <div class="float-3d f2"><svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M50 10 C35 15, 28 30, 32 48 C36 60, 48 68, 50 70 C52 68, 64 60, 68 48 C72 30, 65 15, 50 10" fill="#d4af37" opacity="0.8"/><path d="M50 25 C44 28, 40 38, 44 48 C47 55, 50 58, 50 58 C50 58, 53 55, 56 48 C60 38, 56 28, 50 25" fill="#d4af37" opacity="0.5"/><path d="M50 10 C42 12, 38 22, 42 35 C45 42, 50 45, 50 45 C50 45, 55 42, 58 35 C62 22, 58 12, 50 10" fill="#d4af37" opacity="0.6"/><path d="M50 45 C45 48, 42 55, 45 62 C48 67, 50 68, 50 68 C50 68, 52 67, 55 62 C58 55, 55 48, 50 45" fill="#d4af37" opacity="0.4"/><line x1="50" y1="68" x2="50" y2="88" stroke="#d4af37" stroke-width="2"/><path d="M45 80 Q40 76, 37 82" stroke="#d4af37" stroke-width="1.5" fill="none"/><path d="M55 80 Q60 76, 63 82" stroke="#d4af37" stroke-width="1.5" fill="none"/><circle cx="37" cy="82" r="2" fill="#d4af37" opacity="0.6"/><circle cx="63" cy="82" r="2" fill="#d4af37" opacity="0.6"/></svg></div>
+    <div class="float-3d f3"><svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M50 10 C35 15, 28 30, 32 48 C36 60, 48 68, 50 70 C52 68, 64 60, 68 48 C72 30, 65 15, 50 10" fill="#d4af37" opacity="0.8"/><path d="M50 25 C44 28, 40 38, 44 48 C47 55, 50 58, 50 58 C50 58, 53 55, 56 48 C60 38, 56 28, 50 25" fill="#d4af37" opacity="0.5"/><path d="M50 10 C42 12, 38 22, 42 35 C45 42, 50 45, 50 45 C50 45, 55 42, 58 35 C62 22, 58 12, 50 10" fill="#d4af37" opacity="0.6"/><path d="M50 45 C45 48, 42 55, 45 62 C48 67, 50 68, 50 68 C50 68, 52 67, 55 62 C58 55, 55 48, 50 45" fill="#d4af37" opacity="0.4"/><line x1="50" y1="68" x2="50" y2="88" stroke="#d4af37" stroke-width="2"/><path d="M45 80 Q40 76, 37 82" stroke="#d4af37" stroke-width="1.5" fill="none"/><path d="M55 80 Q60 76, 63 82" stroke="#d4af37" stroke-width="1.5" fill="none"/><circle cx="37" cy="82" r="2" fill="#d4af37" opacity="0.6"/><circle cx="63" cy="82" r="2" fill="#d4af37" opacity="0.6"/></svg></div>
 
     <div class="top-nav">
         <a href="/index.html" class="nav-btn">Home</a>
@@ -94,7 +80,6 @@
         <a href="/about.html" class="nav-btn">About</a>
         <a href="/suggest.html" class="nav-btn">Suggest</a>
     </div>
-
 
     <div class="content-wrapper">
         <div class="hero">
@@ -112,7 +97,7 @@
 
             <div class="content-card">
                 <h2 class="glass-text">Why Self-Hosting?</h2>
-                <p>I host everything <span class="highlight">locally on my own hardware</span>. I do not rent cloud servers or use third-party hosting providers to run the services. The only external cost is the Oracle VPS used as a relay for public access to Jellyfin.</p>
+                <p>I host everything <span class="highlight">locally on my own hardware</span>. I do not rent cloud servers or use third-party hosting providers to run the services. The only external cost is a small VPS used as a relay for public access to media streaming.</p>
                 <p>This means:</p>
                 <ul>
                     <li><span class="highlight">Full control</span> over the infrastructure and data</li>
@@ -124,33 +109,15 @@
 
             <div class="content-card">
                 <h2 class="glass-text">The Cost of Running MySweetPea</h2>
-                <p>Running these services is not free. Here is a breakdown of the actual costs:</p>
-                <table class="cost-table">
-                    <tr><th>Expense</th><th>Monthly Cost</th></tr>
-                    <tr><td>Electricity (3 servers, 24/7)</td><td>~$40-60</td></tr>
-                    <tr><td>Oracle VPS (public relay)</td><td>$0 (free tier)</td></tr>
-                    <tr><td>Domain registration (mysweetpea.cc)</td><td>~$1</td></tr>
-                    <tr><td>Internet bandwidth</td><td>Included in ISP plan</td></tr>
-                    <tr><td>Hardware depreciation</td><td>~$20-30 (amortized)</td></tr>
-                    <tr><td><strong>Total</strong></td><td><strong>~$60-90/mo</strong></td></tr>
-                </table>
-                <p>The hardware itself was a one-time investment &#8212; three mini PCs running K3s Kubernetes. The ongoing costs are electricity and domain renewal. Donations help offset these costs and fund future hardware upgrades and new services.</p>
-            </div>
-
-            <div class="content-card">
-                <h2 class="glass-text">The Infrastructure</h2>
-                <p>MySweetPea runs on a 3-node K3s Kubernetes cluster managed by ArgoCD GitOps. All manifests are stored in a public GitHub repository for full transparency.</p>
+                <p>Running these services is not free, which is why donations matter. The main expenses include:</p>
                 <ul>
-                    <li><span class="highlight">3 nodes</span> &#8212; k3s-master, k3s-worker-a, k3s-worker-b</li>
-                    <li><span class="highlight">K3s v1.36.1</span> &#8212; lightweight Kubernetes distribution</li>
-                    <li><span class="highlight">ArgoCD</span> &#8212; GitOps continuous deployment</li>
-                    <li><span class="highlight">Longhorn</span> &#8212; distributed block storage</li>
-                    <li><span class="highlight">Traefik</span> &#8212; ingress controller</li>
-                    <li><span class="highlight">MetalLB</span> &#8212; bare-metal load balancer</li>
-                    <li><span class="highlight">Authentik</span> &#8212; SSO and identity provider</li>
-                    <li><span class="highlight">Cloudflare</span> &#8212; DNS, CDN, and public access</li>
-                    <li><span class="highlight">Netbird VPN</span> &#8212; secure P2P connectivity (295 Mbps)</li>
+                    <li><span class="highlight">Electricity</span> &#8212; three servers running 24/7 consume a significant amount of power</li>
+                    <li><span class="highlight">Hardware</span> &#8212; the physical servers, networking equipment, and storage drives</li>
+                    <li><span class="highlight">Internet bandwidth</span> &#8212; serving media and services to multiple users requires a fast connection</li>
+                    <li><span class="highlight">Domain registration</span> &#8212; the mysweetpea.cc domain needs annual renewal</li>
+                    <li><span class="highlight">VPS relay</span> &#8212; a small virtual server for public access to media streaming (currently free tier)</li>
                 </ul>
+                <p>Donations help offset these ongoing costs and fund future hardware upgrades and new services. Without community support, this project would not be sustainable.</p>
             </div>
 
             <div class="content-card">
@@ -159,17 +126,11 @@
                 <div class="github-links">
                     <a href="https://github.com/mysweetpea/homelab-k8s" target="_blank" class="github-link">
                         <svg viewBox="0 0 24 24"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
-                        <div class="info">
-                            <h4>homelab-k8s</h4>
-                            <p>Kubernetes infrastructure &amp; GitOps manifests</p>
-                        </div>
+                        <div class="info"><h4>homelab-k8s</h4><p>Kubernetes infrastructure &amp; GitOps manifests</p></div>
                     </a>
                     <a href="https://github.com/mysweetpea/portfolio" target="_blank" class="github-link">
                         <svg viewBox="0 0 24 24"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
-                        <div class="info">
-                            <h4>portfolio</h4>
-                            <p>This website (Cloudflare Worker)</p>
-                        </div>
+                        <div class="info"><h4>portfolio</h4><p>This website (Cloudflare Worker)</p></div>
                     </a>
                 </div>
             </div>
