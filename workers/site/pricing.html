@@ -1,715 +1,370 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>MySweetPea — Pricing</title>
-<link rel="icon" type="image/svg+xml" href="/logo-favicon.svg" sizes="any">
-<style>
-*{margin:0;padding:0;box-sizing:border-box}
-:root{
-  --bg-deep:#020617;
-  --glass:rgba(255,255,255,.03);
-  --glass-hover:rgba(255,255,255,.06);
-  --border:rgba(255,255,255,.08);
-  --text:#f8fafc;
-  --muted:#94a3b8;
-  --accent:#818cf8;
-  --accent2:#a78bfa;
-  --ok:#34d399;
-  --gold:#fbbf24;
-}
-body{
-  font-family:ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Arial,sans-serif;
-  background:var(--bg-deep);color:var(--text);
-  min-height:100vh;padding:40px 20px;
-  position:relative;overflow-x:hidden;
-}
-body::before,body::after{
-  content:'';position:fixed;border-radius:50%;filter:blur(120px);opacity:.35;z-index:-1;pointer-events:none;
-}
-body::before{
-  width:700px;height:700px;background:radial-gradient(circle,#4c1d95,transparent 70%);top:-15%;left:-10%;
-  animation:float 22s infinite ease-in-out;
-}
-body::after{
-  width:600px;height:600px;background:radial-gradient(circle,#1e3a8a,transparent 70%);bottom:-15%;right:-10%;
-  animation:float 28s infinite ease-in-out reverse;
-}
-@keyframes float{
-  0%,100%{transform:translate(0,0)scale(1)}
-  33%{transform:translate(30px,-50px)scale(1.1)}
-  66%{transform:translate(-20px,20px)scale(.9)}
-}
-@keyframes up{from{opacity:0;transform:translateY(30px)}to{opacity:1;transform:translateY(0)}}
-@keyframes pop{from{opacity:0;transform:scale(.9)}to{opacity:1;transform:scale(1)}}
-@keyframes fade{from{opacity:0}to{opacity:1}}
-.container{max-width:620px;margin:0 auto}
-.header{
-  text-align:center;margin-bottom:36px;
-  animation:up .8s cubic-bezier(.16,1,.3,1) forwards;opacity:0;
-}
-.header .logo-wrap{
-  display:inline-block;margin-bottom:16px;
-  animation:pop .6s cubic-bezier(.16,1,.3,1) .2s forwards;opacity:0;
-}
-.header .logo-wrap img{width:160px;height:160px;display:block}
-.header h1{font-size:2.2rem;letter-spacing:-.02em;margin-bottom:10px}
-.header p{color:var(--muted);font-size:1.05rem;max-width:480px;margin:0 auto;line-height:1.6}
-.toggle-wrap{
-  display:flex;align-items:center;justify-content:center;gap:14px;
-  margin-bottom:32px;animation:up .6s ease .3s forwards;opacity:0;
-}
-.toggle-label{
-  font-size:.9rem;color:var(--muted);font-weight:600;cursor:pointer;
-  transition:color .3s;
-}
-.toggle-label.active{color:var(--text)}
-.toggle{
-  width:52px;height:28px;background:rgba(255,255,255,.1);border-radius:14px;
-  position:relative;cursor:pointer;transition:background .3s;
-  border:1px solid var(--border);
-}
-.toggle.on{background:linear-gradient(135deg,var(--accent),var(--accent2))}
-.toggle::after{
-  content:'';position:absolute;top:3px;left:3px;width:20px;height:20px;
-  background:#fff;border-radius:50%;transition:transform .3s cubic-bezier(.16,1,.3,1);
-  box-shadow:0 2px 6px rgba(0,0,0,.3);
-}
-.toggle.on::after{transform:translateX(24px)}
-.card-stage{
-  position:relative;min-height:540px;
-  animation:up .7s cubic-bezier(.16,1,.3,1) .2s forwards;opacity:0;
-}
-.card{
-  background:var(--glass);backdrop-filter:blur(20px)saturate(150%);
-  -webkit-backdrop-filter:blur(20px)saturate(150%);
-  border:1px solid var(--border);border-radius:24px;
-  padding:36px 28px;
-  box-shadow:0 8px 32px rgba(0,0,0,.3),inset 0 1px 0 rgba(255,255,255,.05);
-  transition:all .4s cubic-bezier(.16,1,.3,1);
-}
-.card.hidden{
-  position:absolute;top:0;left:0;width:100%;opacity:0;pointer-events:none;transform:translateY(10px);
-}
-.card.visible{
-  position:relative;opacity:1;pointer-events:auto;transform:translateY(0);
-}
-.plan-name{font-size:1.3rem;font-weight:700;margin-bottom:4px}
-.plan-desc{color:var(--muted);font-size:.9rem;margin-bottom:20px}
-.price{font-size:2.8rem;font-weight:800;letter-spacing:-.03em;margin-bottom:4px}
-.price span{font-size:1rem;color:var(--muted);font-weight:500;margin-left:4px}
-.price-note{color:var(--muted);font-size:.85rem;margin-bottom:28px}
-.service-list{list-style:none;margin-bottom:28px;display:flex;flex-direction:column;gap:10px}
-.service-item{
-  background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.06);
-  border-radius:16px;overflow:hidden;transition:border-color .25s,background .25s;
-}
-.service-item:hover{background:rgba(255,255,255,.04);border-color:rgba(255,255,255,.12)}
-.service-header{
-  width:100%;padding:14px 18px;text-align:left;background:none;border:none;
-  color:var(--text);cursor:pointer;display:flex;align-items:center;gap:14px;
-  transition:background .2s;
-}
-.service-header:hover{background:rgba(255,255,255,.03)}
-.service-icon{
-  width:44px;height:44px;border-radius:12px;display:flex;align-items:center;justify-content:center;
-  flex-shrink:0;box-shadow:0 4px 12px rgba(0,0,0,.25);
-  background:rgba(15,23,42,.6);padding:8px;
-}
-.service-icon img{width:28px;height:28px;object-fit:contain}
-.service-title{
-  font-size:.95rem;font-weight:600;flex:1;
-}
-.service-arrow{
-  font-size:1.1rem;color:var(--muted);transition:transform .3s;
-}
-.service-header.open .service-arrow{transform:rotate(90deg);color:var(--accent)}
-.service-detail{
-  max-height:0;overflow:hidden;transition:max-height .4s ease,padding .4s ease;
-  padding:0 18px;color:var(--muted);font-size:.88rem;line-height:1.55;
-}
-.service-detail.open{padding:0 18px 18px;max-height:480px}
-.service-detail strong{color:var(--text);font-weight:600}
-.service-detail .app-name{
-  display:block;font-size:.95rem;font-weight:700;color:var(--text);margin-bottom:6px;
-}
-.ui-preview{
-  width:100%;height:160px;border-radius:12px;margin:12px 0 10px;
-  position:relative;overflow:hidden;border:1px solid rgba(255,255,255,.08);
-  box-shadow:inset 0 1px 0 rgba(255,255,255,.06),0 4px 16px rgba(0,0,0,.2);
-}
-.preview-vault{
-  background:linear-gradient(170deg,#0f172a,#1e1b4b);
-  display:flex;flex-direction:column;
-}
-.pv-topbar{
-  height:22px;background:rgba(0,0,0,.3);display:flex;align-items:center;padding:0 10px;gap:8px;
-}
-.pv-tb-dot{width:6px;height:6px;border-radius:50%}
-.pv-tb-dot:nth-child(1){background:#fb7185}
-.pv-tb-dot:nth-child(2){background:#fbbf24}
-.pv-tb-dot:nth-child(3){background:#34d399}
-.pv-tb-title{font-size:.55rem;color:rgba(255,255,255,.3);margin-left:4px}
-.pv-body{flex:1;display:flex;padding:10px 12px;gap:12px}
-.pv-sidebar{
-  width:60px;display:flex;flex-direction:column;gap:4px;
-}
-.pv-sb-item{
-  height:18px;border-radius:4px;display:flex;align-items:center;gap:4px;padding:0 4px;
-}
-.pv-sb-item.active{background:rgba(129,140,248,.15)}
-.pv-sb-icon{width:10px;height:10px;border-radius:2px;background:rgba(255,255,255,.15)}
-.pv-sb-label{font-size:.45rem;color:rgba(255,255,255,.3)}
-.pv-main{flex:1;display:flex;flex-direction:column;gap:6px}
-.pv-search{
-  height:16px;background:rgba(255,255,255,.06);border-radius:4px;
-  display:flex;align-items:center;padding:0 6px;gap:4px;
-}
-.pv-search-icon{width:8px;height:8px;border:1px solid rgba(255,255,255,.15);border-radius:50%}
-.pv-search-text{width:30px;height:3px;background:rgba(255,255,255,.1);border-radius:2px}
-.pv-card{
-  background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.06);
-  border-radius:6px;padding:6px 8px;display:flex;align-items:center;gap:8px;
-}
-.pv-card-icon{
-  width:22px;height:22px;border-radius:5px;display:flex;align-items:center;justify-content:center;
-  font-size:.55rem;
-}
-.pv-card-icon.google{background:rgba(234,67,53,.2)}
-.pv-card-icon.github{background:rgba(255,255,255,.1)}
-.pv-card-icon.netflix{background:rgba(229,9,20,.2)}
-.pv-card-info{flex:1}
-.pv-card-name{font-size:.55rem;color:rgba(255,255,255,.7);font-weight:600}
-.pv-card-user{font-size:.45rem;color:rgba(255,255,255,.25)}
-.pv-card-dots{width:10px;height:10px;display:flex;flex-direction:column;align-items:center;gap:1px}
-.pv-card-dots span{width:2px;height:2px;background:rgba(255,255,255,.2);border-radius:50%}
-.preview-jelly{
-  background:#0a0a14;
-  display:flex;flex-direction:column;
-}
-.pj-topbar{
-  height:20px;background:rgba(0,0,0,.4);display:flex;align-items:center;padding:0 10px;gap:8px;
-}
-.pj-menu-icon{display:flex;flex-direction:column;gap:2px}
-.pj-menu-icon span{width:10px;height:1.5px;background:rgba(255,255,255,.4);border-radius:1px}
-.pj-tb-title{font-size:.55rem;color:rgba(255,255,255,.5);font-weight:600}
-.pj-body{flex:1;padding:8px 10px;overflow:hidden}
-.pj-section-title{font-size:.5rem;color:rgba(255,255,255,.4);font-weight:600;margin-bottom:6px;text-transform:uppercase;letter-spacing:.05em}
-.pj-row{display:flex;gap:6px;margin-bottom:8px}
-.pj-poster{
-  width:34px;height:48px;border-radius:4px;flex-shrink:0;
-  display:flex;align-items:flex-end;padding:2px 3px;
-}
-.pj-poster:nth-child(1){background:linear-gradient(135deg,#1e3a8a,#312e81)}
-.pj-poster:nth-child(2){background:linear-gradient(135deg,#7f1d1d,#991b1b)}
-.pj-poster:nth-child(3){background:linear-gradient(135deg,#064e3b,#065f46)}
-.pj-poster:nth-child(4){background:linear-gradient(135deg,#4c1d95,#5b21b6)}
-.pj-poster:nth-child(5){background:linear-gradient(135deg,#92400e,#b45309)}
-.pj-poster-label{font-size:.35rem;color:rgba(255,255,255,.5);font-weight:600}
-.pj-bar{
-  height:24px;background:rgba(0,0,0,.4);border-top:1px solid rgba(255,255,255,.04);
-  display:flex;align-items:center;padding:0 10px;gap:8px;
-}
-.pj-play{width:0;height:0;border-left:8px solid rgba(255,255,255,.6);border-top:5px solid transparent;border-bottom:5px solid transparent}
-.pj-progress{flex:1;height:3px;background:rgba(255,255,255,.1);border-radius:2px;position:relative}
-.pj-progress::after{content:'';position:absolute;left:0;top:0;width:35%;height:100%;background:rgba(129,140,248,.5);border-radius:2px}
-.pj-time{font-size:.45rem;color:rgba(255,255,255,.3)}
-.preview-seerr{
-  background:linear-gradient(150deg,#0f0f23,#0a0a1a);
-  display:flex;flex-direction:column;
-}
-.ps-topbar{
-  height:20px;background:rgba(0,0,0,.3);display:flex;align-items:center;padding:0 10px;gap:6px;
-}
-.ps-tb-tab{
-  font-size:.5rem;color:rgba(255,255,255,.3);padding:2px 6px;border-radius:3px;
-}
-.ps-tb-tab.active{color:rgba(255,255,255,.7);background:rgba(129,140,248,.15)}
-.ps-body{flex:1;display:flex;padding:8px 10px;gap:10px}
-.ps-poster{
-  width:48px;height:68px;border-radius:6px;flex-shrink:0;
-  background:linear-gradient(135deg,#1e1b4b,#312e81);
-  border:1px solid rgba(255,255,255,.1);box-shadow:0 4px 12px rgba(0,0,0,.3);
-  display:flex;align-items:flex-end;justify-content:center;padding-bottom:4px;
-}
-.ps-poster-label{font-size:.4rem;color:rgba(255,255,255,.4)}
-.ps-info{flex:1;display:flex;flex-direction:column;gap:5px}
-.ps-title{font-size:.6rem;color:rgba(255,255,255,.8);font-weight:700}
-.ps-meta{font-size:.45rem;color:rgba(255,255,255,.3)}
-.ps-status{
-  display:inline-block;font-size:.4rem;font-weight:700;text-transform:uppercase;letter-spacing:.04em;
-  padding:2px 6px;border-radius:8px;width:fit-content;
-}
-.ps-status.available{background:rgba(52,211,153,.15);color:#34d399;border:1px solid rgba(52,211,153,.2)}
-.ps-status.pending{background:rgba(251,191,36,.15);color:#fbbf24;border:1px solid rgba(251,191,36,.2)}
-.ps-desc{font-size:.45rem;color:rgba(255,255,255,.2);line-height:1.4}
-.ps-btn{
-  margin-top:auto;height:16px;background:rgba(129,140,248,.2);border:1px solid rgba(129,140,248,.3);
-  border-radius:6px;display:flex;align-items:center;justify-content:center;
-}
-.ps-btn-text{font-size:.45rem;color:rgba(255,255,255,.6);font-weight:600}
-.preview-element{
-  background:linear-gradient(150deg,#0d1f15,#0a1810);
-  display:flex;
-}
-.pe-sidebar{
-  width:55px;background:rgba(0,0,0,.2);border-right:1px solid rgba(255,255,255,.04);
-  display:flex;flex-direction:column;padding:6px 4px;gap:4px;
-}
-.pe-avatar-row{
-  display:flex;align-items:center;gap:4px;padding:3px 4px;border-radius:6px;
-}
-.pe-avatar-row.active{background:rgba(6,182,212,.12)}
-.pe-avatar{
-  width:16px;height:16px;border-radius:50%;flex-shrink:0;
-  display:flex;align-items:center;justify-content:center;font-size:.45rem;font-weight:700;
-}
-.pe-avatar:nth-child(1){background:linear-gradient(135deg,#f59e0b,#d97706)}
-.pe-avatar:nth-child(2){background:linear-gradient(135deg,#ec4899,#be185d)}
-.pe-avatar:nth-child(3){background:linear-gradient(135deg,#6366f1,#4338ca)}
-.pe-avatar-label{font-size:.45rem;color:rgba(255,255,255,.4)}
-.pe-chat{
-  flex:1;display:flex;flex-direction:column;padding:8px;gap:6px;justify-content:flex-end;
-}
-.pe-msg{
-  max-width:85%;padding:5px 8px;border-radius:8px;font-size:.5rem;line-height:1.3;
-}
-.pe-msg.them{
-  background:rgba(255,255,255,.05);align-self:flex-start;border-bottom-left-radius:2px;
-  color:rgba(255,255,255,.6);
-}
-.pe-msg.me{
-  background:rgba(6,182,212,.12);align-self:flex-end;border-bottom-right-radius:2px;
-  color:rgba(255,255,255,.7);
-}
-.pe-msg-sender{font-size:.4rem;color:rgba(255,255,255,.25);margin-bottom:2px}
-.pe-input-row{
-  display:flex;gap:4px;align-items:center;margin-top:2px;
-}
-.pe-input{
-  flex:1;height:20px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.06);
-  border-radius:8px;display:flex;align-items:center;padding:0 6px;
-}
-.pe-input-text{font-size:.45rem;color:rgba(255,255,255,.2)}
-.pe-send{
-  width:20px;height:20px;border-radius:50%;background:rgba(6,182,212,.15);
-  display:flex;align-items:center;justify-content:center;
-}
-.pe-send-arrow{width:0;height:0;border-left:5px solid rgba(6,182,212,.5);border-top:3px solid transparent;border-bottom:3px solid transparent}
-.preview-ai{
-  background:linear-gradient(150deg,#1a1a2e,#14142a);
-  display:flex;flex-direction:column;
-}
-.pai-topbar{
-  height:20px;background:rgba(0,0,0,.3);display:flex;align-items:center;padding:0 10px;gap:6px;
-}
-.pai-model{
-  font-size:.5rem;color:rgba(255,255,255,.4);padding:2px 6px;
-  background:rgba(255,255,255,.04);border-radius:4px;
-}
-.pai-body{flex:1;display:flex;flex-direction:column;padding:8px 10px;gap:8px;overflow:hidden}
-.pai-msg{display:flex;gap:6px;align-items:flex-start}
-.pai-avatar{
-  width:18px;height:18px;border-radius:50%;flex-shrink:0;
-  display:flex;align-items:center;justify-content:center;font-size:.5rem;
-}
-.pai-avatar.bot{background:linear-gradient(135deg,#818cf8,#6366f1)}
-.pai-avatar.user{background:rgba(255,255,255,.08)}
-.pai-bubble{
-  flex:1;padding:6px 8px;border-radius:8px;font-size:.5rem;line-height:1.4;
-}
-.pai-bubble.bot{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.05);color:rgba(255,255,255,.65)}
-.pai-bubble.user{background:rgba(129,140,248,.1);border:1px solid rgba(129,140,248,.12);color:rgba(255,255,255,.7)}
-.pai-input-row{
-  display:flex;gap:4px;align-items:center;padding:0 10px 8px;
-}
-.pai-input{
-  flex:1;height:24px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.06);
-  border-radius:10px;display:flex;align-items:center;padding:0 8px;
-}
-.pai-input-text{font-size:.45rem;color:rgba(255,255,255,.2)}
-.pai-send-btn{
-  width:24px;height:24px;border-radius:50%;background:rgba(129,140,248,.2);
-  display:flex;align-items:center;justify-content:center;
-}
-.pai-send-arrow{width:0;height:0;border-left:5px solid rgba(129,140,248,.6);border-top:3px solid transparent;border-bottom:3px solid transparent}
-.service-tag{
-  display:inline-block;font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;
-  padding:3px 8px;border-radius:6px;margin-top:10px;
-}
-.tag-private{background:rgba(52,211,153,.12);color:var(--ok);border:1px solid rgba(52,211,153,.2)}
-.tag-own{background:rgba(129,140,248,.12);color:var(--accent);border:1px solid rgba(129,140,248,.2)}
-.tag-local{background:rgba(6,182,212,.12);color:#22d3ee;border:1px solid rgba(6,182,212,.2)}
-.btn{
-  display:block;width:100%;padding:14px;text-align:center;
-  background:linear-gradient(135deg,var(--accent),var(--accent2));color:#0f172a;
-  text-decoration:none;border-radius:12px;font-weight:700;font-size:1rem;
-  border:none;cursor:pointer;transition:all .3s cubic-bezier(.16,1,.3,1);
-  box-shadow:0 4px 20px rgba(129,140,248,.25);
-}
-.btn:hover{transform:translateY(-2px);box-shadow:0 10px 30px rgba(129,140,248,.4)}
-.exclusive-badge{
-  display:inline-block;background:linear-gradient(135deg,var(--gold),#d97706);
-  color:#0f172a;font-size:.65rem;font-weight:800;text-transform:uppercase;letter-spacing:.08em;
-  padding:3px 10px;border-radius:20px;margin-bottom:14px;
-}
-.exclusive-title{font-size:1.4rem;font-weight:700;margin-bottom:8px}
-.exclusive-body{
-  color:var(--muted);font-size:.95rem;line-height:1.6;margin-bottom:24px;
-}
-.exclusive-body a{color:var(--accent);text-decoration:none;font-weight:600}
-.exclusive-body a:hover{text-decoration:underline}
-.divider{
-  height:1px;background:rgba(255,255,255,.08);margin:24px 0;
-}
-.mini-features{list-style:none}
-.mini-features li{
-  padding:6px 0;color:var(--text);font-size:.88rem;display:flex;align-items:center;gap:10px;
-}
-.mini-features li .check{color:var(--ok);font-weight:700}
-.faq{max-width:620px;margin:48px auto 0;animation:up .7s ease .5s forwards;opacity:0}
-.faq h2{text-align:center;font-size:1.4rem;margin-bottom:24px}
-.qa{
-  background:var(--glass);backdrop-filter:blur(20px)saturate(150%);
-  -webkit-backdrop-filter:blur(20px)saturate(150%);
-  border:1px solid var(--border);border-radius:14px;margin-bottom:12px;
-  overflow:hidden;box-shadow:0 4px 16px rgba(0,0,0,.2),inset 0 1px 0 rgba(255,255,255,.05);
-}
-.question{
-  width:100%;padding:16px 20px;text-align:left;background:none;border:none;
-  color:var(--text);font-size:.92rem;font-weight:600;cursor:pointer;
-  display:flex;justify-content:space-between;align-items:center;
-}
-.question::after{content:'+';font-size:1.2rem;color:var(--accent);transition:transform .3s}
-.question.open::after{transform:rotate(45deg)}
-.answer{
-  max-height:0;overflow:hidden;transition:max-height .35s ease,padding .35s ease;
-  padding:0 20px;color:var(--muted);font-size:.88rem;line-height:1.55;
-}
-.answer.open{padding:0 20px 16px;max-height:260px}
-.answer a{color:var(--accent);text-decoration:none;font-weight:600}
-.answer a:hover{text-decoration:underline}
-.footer{
-  text-align:center;margin-top:48px;color:var(--muted);font-size:.85rem;
-  animation:fade 1s ease .7s forwards;opacity:0;
-}
-.footer a{color:var(--accent);text-decoration:none}
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MySweetPea — Donate</title>
+    <link rel="icon" type="image/svg+xml" href="/logo-favicon.svg">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background: #0a0a0a;
+            color: #e0e0e0;
+            min-height: 100vh;
+        }
+
+        .hero { text-align: center; padding: 50px 20px 30px; }
+        .hero svg { width: 64px; height: 64px; }
+        .hero h1 { font-size: 1.8rem; color: #d4af37; margin-top: 14px; font-weight: 600; }
+        .hero p { font-size: 0.95rem; color: #888; margin-top: 6px; }
+
+        .pricing-section { max-width: 900px; margin: 0 auto; padding: 20px; }
+
+        .pricing-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 16px;
+            margin-bottom: 32px;
+        }
+
+        .pricing-card {
+            background: rgba(20, 20, 20, 0.85);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 14px;
+            padding: 28px 20px;
+            text-align: center;
+            backdrop-filter: blur(8px);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .pricing-card.featured {
+            border-color: rgba(212, 175, 55, 0.3);
+            box-shadow: 0 0 20px rgba(212, 175, 55, 0.05);
+        }
+
+        .pricing-card .badge {
+            display: inline-block;
+            padding: 3px 12px;
+            background: rgba(212, 175, 55, 0.12);
+            border: 1px solid rgba(212, 175, 55, 0.25);
+            border-radius: 16px;
+            font-size: 0.68rem;
+            color: #d4af37;
+            margin-bottom: 12px;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+            align-self: center;
+        }
+
+        .pricing-card .icon { font-size: 1.8rem; margin-bottom: 10px; }
+
+        .pricing-card .tier-name {
+            font-size: 1.1rem;
+            color: #d4af37;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .pricing-card .price {
+            font-size: 2rem;
+            color: #e0e0e0;
+            font-weight: 700;
+            margin: 8px 0;
+        }
+
+        .pricing-card .price-period {
+            font-size: 0.78rem;
+            color: #888;
+        }
+
+        .pricing-card .desc {
+            font-size: 0.82rem;
+            color: #aaa;
+            margin: 12px 0 16px;
+            line-height: 1.5;
+        }
+
+        .pricing-card .features {
+            text-align: left;
+            margin-bottom: 20px;
+            flex-grow: 1;
+        }
+
+        .pricing-card .features li {
+            list-style: none;
+            font-size: 0.78rem;
+            color: #999;
+            margin-bottom: 6px;
+            padding-left: 20px;
+            position: relative;
+        }
+
+        .pricing-card .features li::before {
+            content: '\u2713';
+            position: absolute;
+            left: 0;
+            color: #d4af37;
+        }
+
+        .pricing-card .features li.locked {
+            color: #555;
+        }
+
+        .pricing-card .features li.locked::before {
+            content: '\u2715';
+            color: #555;
+        }
+
+        .pricing-card .btn {
+            display: block;
+            padding: 11px 24px;
+            background: linear-gradient(135deg, #d4af37, #b8941f);
+            color: #0a0a0a;
+            border: none;
+            border-radius: 7px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            text-decoration: none;
+            transition: opacity 0.2s;
+            margin-top: auto;
+        }
+
+        .pricing-card .btn:hover { opacity: 0.9; }
+
+        .pricing-card .btn-secondary {
+            background: rgba(255, 255, 255, 0.08);
+            color: #ccc;
+            border: 1px solid rgba(255, 255, 255, 0.12);
+        }
+
+        .pricing-card .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.12);
+        }
+
+        .services-section { max-width: 900px; margin: 0 auto 40px; padding: 20px; }
+        .services-section h2 { font-size: 1.3rem; color: #d4af37; text-align: center; margin-bottom: 20px; }
+
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 16px;
+        }
+
+        .service-card {
+            background: rgba(20, 20, 20, 0.5);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 10px;
+            padding: 20px;
+            transition: border-color 0.2s;
+        }
+
+        .service-card:hover { border-color: rgba(212, 175, 55, 0.25); }
+
+        .service-card .icon { font-size: 1.5rem; margin-bottom: 8px; }
+        .service-card h3 { font-size: 0.92rem; color: #d4af37; margin-bottom: 4px; }
+        .service-card p { font-size: 0.76rem; color: #888; line-height: 1.4; }
+
+        .service-card .tier-tag {
+            display: inline-block;
+            font-size: 0.62rem;
+            padding: 2px 7px;
+            border-radius: 4px;
+            margin-top: 8px;
+        }
+
+        .tier-tag.seedling { background: rgba(31, 195, 49, 0.12); color: #1fc331; }
+        .tier-tag.sweetpea { background: rgba(212, 175, 55, 0.12); color: #d4af37; }
+
+        .faq-section { max-width: 700px; margin: 0 auto 50px; padding: 20px; }
+        .faq-section h2 { font-size: 1.3rem; color: #d4af37; text-align: center; margin-bottom: 20px; }
+        .faq-item { margin-bottom: 14px; }
+        .faq-item h4 { font-size: 0.86rem; color: #ccc; margin-bottom: 4px; }
+        .faq-item p { font-size: 0.8rem; color: #888; line-height: 1.4; }
+
+        .footer {
+            text-align: center;
+            padding: 30px 20px;
+            font-size: 0.82rem;
+            color: #666;
+            border-top: 1px solid rgba(255, 255, 255, 0.04);
+        }
+        .footer a { color: #d4af37; text-decoration: none; }
+
+        @media (max-width: 700px) {
+            .pricing-grid { grid-template-columns: 1fr; }
+            .pricing-card .price { font-size: 1.6rem; }
+        }
+    </style>
 </head>
 <body>
-<div class="container">
-  <div class="header">
-    <div class="logo-wrap">
-      <img src="logo.svg" alt="MySweetPea" width="160" height="160">
+    <div class="hero">
+        <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="50" cy="50" r="45" stroke="#d4af37" stroke-width="2" fill="rgba(212,175,55,0.05)"/>
+            <path d="M50 20 C35 25, 30 40, 35 55 C40 65, 50 70, 50 70 C50 70, 60 65, 65 55 C70 40, 65 25, 50 20" fill="#d4af37" opacity="0.8"/>
+            <path d="M50 35 C45 38, 43 45, 46 52 C48 57, 50 60, 50 60 C50 60, 52 57, 54 52 C57 45, 55 38, 50 35" fill="#0a0a0a" opacity="0.6"/>
+            <line x1="50" y1="70" x2="50" y2="85" stroke="#d4af37" stroke-width="2"/>
+            <path d="M45 78 Q40 75, 38 80" stroke="#d4af37" stroke-width="1.5" fill="none"/>
+            <path d="M55 78 Q60 75, 62 80" stroke="#d4af37" stroke-width="1.5" fill="none"/>
+        </svg>
+        <h1>MySweetPea</h1>
+        <p>Self-hosted services. Community-funded. Privacy-first.</p>
     </div>
-    <h1>Simple Pricing</h1>
-    <p>One plan. Every service. No hidden tiers.</p>
-  </div>
-  <div class="toggle-wrap">
-    <span class="toggle-label active" id="lblStandard">Standard</span>
-    <div class="toggle" id="billingToggle" onclick="toggleView()"></div>
-    <span class="toggle-label" id="lblExclusive">Exclusive</span>
-  </div>
-  <div class="card-stage">
-    <div class="card visible" id="standardCard">
-      <div class="plan-name">Standard</div>
-      <div class="plan-desc">Full access to the SweetPea ecosystem.</div>
-      <div class="price">$5<span>/mo</span></div>
-      <div class="price-note">Billed monthly. Cancel anytime.</div>
-      <ul class="service-list">
-        <li class="service-item">
-          <button class="service-header" onclick="toggleService(this)">
-            <div class="service-icon">
-              <img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@main/svg/vaultwarden.svg" alt="Vaultwarden" onerror="this.style.display='none';this.parentElement.innerHTML='<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"#fbbf24\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z\"/><circle cx=\"12\" cy=\"11\" r=\"2.5\" fill=\"#fbbf24\" stroke=\"none\"/><path d=\"M12 13.5v3\" stroke=\"#fbbf24\" stroke-width=\"1.5\"/></svg>
+
+    <div class="pricing-section">
+        <div class="pricing-grid">
+            <!-- Supporter -->
+            <div class="pricing-card">
+                <div class="badge">No Access</div>
+                <div class="icon">&#x1F49B;</div>
+                <div class="tier-name">Supporter</div>
+                <div class="price">Any amount</div>
+                <div class="price-period">One-time donation</div>
+                <div class="desc">Support the cause without getting service access.</div>
+                <ul class="features">
+                    <li>Help cover server costs</li>
+                    <li>Thank-you email</li>
+                    <li class="locked">No service access</li>
+                </ul>
+                <a href="/form.html" class="btn btn-secondary">Donate</a>
             </div>
-            <div class="service-title">Password Manager</div>
-            <div class="service-arrow">›</div>
-          </button>
-          <div class="service-detail">
-            <div class="ui-preview preview-vault">
-              <div class="pv-topbar">
-                <div class="pv-tb-dot"></div><div class="pv-tb-dot"></div><div class="pv-tb-dot"></div>
-                <div class="pv-tb-title">Vaultwarden</div>
-              </div>
-              <div class="pv-body">
-                <div class="pv-sidebar">
-                  <div class="pv-sb-item active"><div class="pv-sb-icon"></div><div class="pv-sb-label">Vault</div></div>
-                  <div class="pv-sb-item"><div class="pv-sb-icon"></div><div class="pv-sb-label">Send</div></div>
-                  <div class="pv-sb-item"><div class="pv-sb-icon"></div><div class="pv-sb-label">Tools</div></div>
-                  <div class="pv-sb-item"><div class="pv-sb-icon"></div><div class="pv-sb-label">Settings</div></div>
-                </div>
-                <div class="pv-main">
-                  <div class="pv-search"><div class="pv-search-icon"></div><div class="pv-search-text"></div></div>
-                  <div class="pv-card">
-                    <div class="pv-card-icon google">G</div>
-                    <div class="pv-card-info"><div class="pv-card-name">Google</div><div class="pv-card-user">alex@gmail.com</div></div>
-                    <div class="pv-card-dots"><span></span><span></span><span></span></div>
-                  </div>
-                  <div class="pv-card">
-                    <div class="pv-card-icon github">GH</div>
-                    <div class="pv-card-info"><div class="pv-card-name">GitHub</div><div class="pv-card-user">alex_dev</div></div>
-                    <div class="pv-card-dots"><span></span><span></span><span></span></div>
-                  </div>
-                  <div class="pv-card">
-                    <div class="pv-card-icon netflix">N</div>
-                    <div class="pv-card-info"><div class="pv-card-name">Netflix</div><div class="pv-card-user">alex@email.com</div></div>
-                    <div class="pv-card-dots"><span></span><span></span><span></span></div>
-                  </div>
-                </div>
-              </div>
+
+            <!-- Seedling -->
+            <div class="pricing-card featured">
+                <div class="badge">Most Popular</div>
+                <div class="icon">&#x1F331;</div>
+                <div class="tier-name">Seedling</div>
+                <div class="price">$5<span class="price-period">+ min</span></div>
+                <div class="price-period">One-time donation</div>
+                <div class="desc">Access to non-media community services.</div>
+                <ul class="features">
+                    <li>Password Manager</li>
+                    <li>Matrix Chat</li>
+                    <li>Notes &amp; Docs</li>
+                    <li>Watch Parties</li>
+                    <li class="locked">Media streaming</li>
+                </ul>
+                <a href="/form.html" class="btn">Get Access</a>
             </div>
-            <span class="app-name">Vaultwarden</span>
-            Stop forgetting passwords. Vaultwarden remembers everything, autofills login forms, and creates unhackable passwords for every site. Think of it as your personal 1Password, but <em>you</em> own the data. Access your vault from any device — phone, tablet, or desktop — with seamless browser integration.
-            <br><span class="service-tag tag-private">Zero-Knowledge Encryption</span>
-          </div>
-        </li>
-        <li class="service-item">
-          <button class="service-header" onclick="toggleService(this)">
-            <div class="service-icon">
-              <img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@main/svg/jellyfin.svg" alt="Jellyfin" onerror="this.style.display='none';this.parentElement.innerHTML='<svg viewBox=\"0 0 24 24\" fill=\"none\"><defs><linearGradient id=\"jf\" x1=\"0\" y1=\"0\" x2=\"1\" y2=\"1\"><stop offset=\"0%\" stop-color=\"#aa5cc3\"/><stop offset=\"100%\" stop-color=\"#00a4dc\"/></linearGradient></defs><circle cx=\"12\" cy=\"12\" r=\"10\" fill=\"url(#jf)\" opacity=\".2\"/><circle cx=\"12\" cy=\"12\" r=\"6\" fill=\"url(#jf)\"/><circle cx=\"12\" cy=\"12\" r=\"1.5\" fill=\"#fff\"/></svg>
+
+            <!-- Sweet Pea -->
+            <div class="pricing-card">
+                <div class="badge">Premium</div>
+                <div class="icon">&#x1F338;</div>
+                <div class="tier-name">Sweet Pea</div>
+                <div class="price">Contact</div>
+                <div class="price-period">One-time donation</div>
+                <div class="desc">Full access to all services including media. Limited availability.</div>
+                <ul class="features">
+                    <li>Everything in Seedling</li>
+                    <li>Media Server &amp; Request Portal</li>
+                    <li>File Sync (Nextcloud)</li>
+                    <li>AI Assistant</li>
+                    <li>Photo Backup (Immich)</li>
+                </ul>
+                <a href="mailto:sweetpea@tuta.io" class="btn btn-secondary">Contact Admin</a>
             </div>
-            <div class="service-title">Media Server</div>
-            <div class="service-arrow">›</div>
-          </button>
-          <div class="service-detail">
-            <div class="ui-preview preview-jelly">
-              <div class="pj-topbar">
-                <div class="pj-menu-icon"><span></span><span></span><span></span></div>
-                <div class="pj-tb-title">Jellyfin — My Media</div>
-              </div>
-              <div class="pj-body">
-                <div class="pj-section-title">Continue Watching</div>
-                <div class="pj-row">
-                  <div class="pj-poster"><div class="pj-poster-label">Inception</div></div>
-                  <div class="pj-poster"><div class="pj-poster-label">Stranger</div></div>
-                  <div class="pj-poster"><div class="pj-poster-label">Dune</div></div>
-                  <div class="pj-poster"><div class="pj-poster-label">Oppen</div></div>
-                  <div class="pj-poster"><div class="pj-poster-label">Matrix</div></div>
-                </div>
-                <div class="pj-section-title">Recommended For You</div>
-                <div class="pj-row">
-                  <div class="pj-poster"><div class="pj-poster-label">Interst</div></div>
-                  <div class="pj-poster"><div class="pj-poster-label">Dark K</div></div>
-                  <div class="pj-poster"><div class="pj-poster-label">Arrival</div></div>
-                  <div class="pj-poster"><div class="pj-poster-label">Blade</div></div>
-                  <div class="pj-poster"><div class="pj-poster-label">Tenet</div></div>
-                </div>
-              </div>
-              <div class="pj-bar">
-                <div class="pj-play"></div>
-                <div class="pj-progress"></div>
-                <div class="pj-time">1:24:32</div>
-              </div>
-            </div>
-            <span class="app-name">Jellyfin</span>
-            Your own private Netflix. Stream your movie and TV collection from anywhere — on your phone, tablet, or TV. No ads, no algorithms, just your library. Jellyfin automatically organizes your media with artwork, descriptions, and cast info. Supports 4K HDR, offline downloads, and multi-user profiles.
-            <br><span class="service-tag tag-own">You Own The Library</span>
-          </div>
-        </li>
-        <li class="service-item">
-          <button class="service-header" onclick="toggleService(this)">
-            <div class="service-icon">
-              <img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@main/svg/seerr.svg" alt="Seerr" onerror="this.style.display='none';this.parentElement.innerHTML='<svg viewBox=\"0 0 24 24\" fill=\"none\"><defs><linearGradient id=\"sr\" x1=\"0\" y1=\"0\" x2=\"1\" y2=\"1\"><stop offset=\"0%\" stop-color=\"#6366f1\"/><stop offset=\"100%\" stop-color=\"#a855f7\"/></linearGradient></defs><path d=\"M3 12c0-3 2.5-5 5-5s4 2 6 2 4-2 7-2\" stroke=\"url(#sr)\" stroke-width=\"2.5\" stroke-linecap=\"round\" fill=\"none\"/><path d=\"M3 17c0-3 2.5-5 5-5s4 2 6 2 4-2 7-2\" stroke=\"url(#sr)\" stroke-width=\"2.5\" stroke-linecap=\"round\" fill=\"none\" opacity=\".5\"/><circle cx=\"18\" cy=\"7\" r=\"2.5\" fill=\"url(#sr)\"/></svg>
-            </div>
-            <div class="service-title">Request Portal</div>
-            <div class="service-arrow">›</div>
-          </button>
-          <div class="service-detail">
-            <div class="ui-preview preview-seerr">
-              <div class="ps-topbar">
-                <div class="ps-tb-tab active">Discover</div>
-                <div class="ps-tb-tab">Requests</div>
-                <div class="ps-tb-tab">Users</div>
-              </div>
-              <div class="ps-body">
-                <div class="ps-poster"><div class="ps-poster-label">Dune II</div></div>
-                <div class="ps-info">
-                  <div class="ps-title">Dune: Part Two</div>
-                  <div class="ps-meta">2024 • Sci-Fi • 2h 46m</div>
-                  <div class="ps-status available">Available</div>
-                  <div class="ps-desc">Paul Atreides unites with the Fremen to seek revenge against those who destroyed his family.</div>
-                  <div class="ps-btn"><div class="ps-btn-text">Request</div></div>
-                </div>
-              </div>
-            </div>
-            <span class="app-name">Seerr</span>
-            Want to watch something new? Drop a request and it appears in your media library within hours. Browse trending movies and shows, see what's already available, and request anything missing. Like ordering at a restaurant, but for movies and shows — the kitchen is automated.
-            <br><span class="service-tag tag-private">Auto-Fulfilling</span>
-          </div>
-        </li>
-        <li class="service-item">
-          <button class="service-header" onclick="toggleService(this)">
-            <div class="service-icon">
-              <img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@main/svg/element.svg" alt="Element" onerror="this.style.display='none';this.parentElement.innerHTML='<svg viewBox=\"0 0 24 24\" fill=\"none\"><defs><linearGradient id=\"el\" x1=\"0\" y1=\"0\" x2=\"1\" y2=\"1\"><stop offset=\"0%\" stop-color=\"#0dbdab\"/><stop offset=\"100%\" stop-color=\"#0db244\"/></linearGradient></defs><path d=\"M12 2L2 12l10 10 10-10L12 2z\" fill=\"url(#el)\" opacity=\".2\"/><path d=\"M12 6L6 12l6 6 6-6-6-6z\" fill=\"url(#el)\"/><path d=\"M12 10l-2 2 2 2 2-2-2-2z\" fill=\"#fff\" opacity=\".8\"/></svg>
-            </div>
-            <div class="service-title">Matrix Chat</div>
-            <div class="service-arrow">›</div>
-          </button>
-          <div class="service-detail">
-            <div class="ui-preview preview-element">
-              <div class="pe-sidebar">
-                <div class="pe-avatar-row active">
-                  <div class="pe-avatar" style="background:linear-gradient(135deg,#f59e0b,#d97706)">A</div>
-                  <div class="pe-avatar-label">Alex</div>
-                </div>
-                <div class="pe-avatar-row">
-                  <div class="pe-avatar" style="background:linear-gradient(135deg,#ec4899,#be185d)">S</div>
-                  <div class="pe-avatar-label">Sarah</div>
-                </div>
-                <div class="pe-avatar-row">
-                  <div class="pe-avatar" style="background:linear-gradient(135deg,#6366f1,#4338ca)">M</div>
-                  <div class="pe-avatar-label">Mike</div>
-                </div>
-              </div>
-              <div class="pe-chat">
-                <div class="pe-msg them">
-                  <div class="pe-msg-sender">Sarah</div>
-                  Hey! Did you catch the new episode?
-                </div>
-                <div class="pe-msg me">
-                  <div class="pe-msg-sender">You</div>
-                  Not yet — no spoilers! 😅
-                </div>
-                <div class="pe-msg them">
-                  <div class="pe-msg-sender">Sarah</div>
-                  It's so good. Watch it tonight!
-                </div>
-                <div class="pe-input-row">
-                  <div class="pe-input"><div class="pe-input-text">Type a message...</div></div>
-                  <div class="pe-send"><div class="pe-send-arrow"></div></div>
-                </div>
-              </div>
-            </div>
-            <span class="app-name">Element (Matrix)</span>
-            A private Discord/Slack replacement built on the Matrix protocol. Message friends, share files, create rooms, and bridge to other platforms — all encrypted and hosted on your own server. No corporate surveillance, no data mining, no ads. Just communication the way it should be.
-            <br><span class="service-tag tag-own">End-to-End Encrypted</span>
-          </div>
-        </li>
-        <li class="service-item">
-          <button class="service-header" onclick="toggleService(this)">
-            <div class="service-icon">
-              <img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@main/svg/open-webui.svg" alt="Open WebUI" onerror="this.style.display='none';this.parentElement.innerHTML='<svg viewBox=\"0 0 24 24\" fill=\"none\"><defs><linearGradient id=\"ai\" x1=\"0\" y1=\"0\" x2=\"1\" y2=\"1\"><stop offset=\"0%\" stop-color=\"#22d3ee\"/><stop offset=\"100%\" stop-color=\"#818cf8\"/></linearGradient></defs><path d=\"M12 2a6 6 0 0 0-6 6c0 2.5 1.5 4.5 3.5 5.5-.5 1-1.5 2.5-1.5 4.5h8c0-2-1-3.5-1.5-4.5 2-1 3.5-3 3.5-5.5a6 6 0 0 0-6-6z\" fill=\"url(#ai)\" opacity=\".2\"/><path d=\"M12 4a4 4 0 0 0-4 4c0 1.5.8 2.8 2 3.5l.5.3-.3.6c-.4.8-.7 1.7-.7 2.6h4c0-.9-.3-1.8-.7-2.6l-.3-.6.5-.3c1.2-.7 2-2 2-3.5a4 4 0 0 0-4-4z\" fill=\"url(#ai)\"/><circle cx=\"12\" cy=\"10\" r=\"1.2\" fill=\"#fff\"/></svg>
-            </div>
-            <div class="service-title">AI Assistant</div>
-            <div class="service-arrow">›</div>
-          </button>
-          <div class="service-detail">
-            <div class="ui-preview preview-ai">
-              <div class="pai-topbar">
-                <div class="pai-model">Llama 3.2</div>
-                <div class="pai-model" style="opacity:.5">New Chat</div>
-              </div>
-              <div class="pai-body">
-                <div class="pai-msg">
-                  <div class="pai-avatar user">U</div>
-                  <div class="pai-bubble user">Can you summarize the key themes in Dune?</div>
-                </div>
-                <div class="pai-msg">
-                  <div class="pai-avatar bot">AI</div>
-                  <div class="pai-bubble bot">Dune explores power, ecology, and religion through Paul Atreides' journey on the desert planet Arrakis. Key themes include the dangers of messianic figures, the relationship between environment and culture, and the corrupting nature of absolute power.</div>
-                </div>
-              </div>
-              <div class="pai-input-row">
-                <div class="pai-input"><div class="pai-input-text">Ask anything...</div></div>
-                <div class="pai-send-btn"><div class="pai-send-arrow"></div></div>
-              </div>
-            </div>
-            <span class="app-name">Open WebUI</span>
-            A ChatGPT that lives in your homelab. Ask it to summarize articles, draft emails, write code, or brainstorm ideas — your conversations stay completely private and never leave the network. Supports multiple AI models, document uploads, and custom system prompts for specialized tasks.
-            <br><span class="service-tag tag-local">Local-Only Data</span>
-          </div>
-        </li>
-      </ul>
-      <a href="/form" class="btn">Get Standard Access</a>
+        </div>
     </div>
-    <div class="card hidden" id="exclusiveCard">
-      <div class="exclusive-badge">Invitation Only</div>
-      <div class="exclusive-title">Exclusive Membership</div>
-      <div class="exclusive-body">
-        Lifetime access is reserved for inner-circle members and is <strong>not available for public purchase</strong>.
-        <br><br>
-        If you believe you qualify or have received a personal invitation, please reach out directly:
-        <br><a href="mailto:sweetpea@tuta.io">sweetpea@tuta.io</a>
-      </div>
-      <div class="divider"></div>
-      <ul class="mini-features">
-        <li><span class="check">✓</span> Everything in Standard</li>
-        <li><span class="check">✓</span> Lifetime hardware-migration guarantee</li>
-        <li><span class="check">✓</span> Reserved for community insiders</li>
-      </ul>
+
+    <div class="services-section">
+        <h2>Available Services</h2>
+        <div class="services-grid">
+            <div class="service-card">
+                <div class="icon">&#x1F510;</div>
+                <h3>Password Manager</h3>
+                <p>Stop forgetting passwords. Autofills login forms and creates unhackable passwords for every site.</p>
+                <div class="tier-tag seedling">Seedling +</div>
+            </div>
+            <div class="service-card">
+                <div class="icon">&#x1F4AC;</div>
+                <h3>Matrix Chat</h3>
+                <p>A private Discord/Slack replacement. Message friends, share files, create rooms. All encrypted.</p>
+                <div class="tier-tag seedling">Seedling +</div>
+            </div>
+            <div class="service-card">
+                <div class="icon">&#x1F4DD;</div>
+                <h3>Notes &amp; Docs</h3>
+                <p>A Notion alternative you own. Create documents, wikis, and knowledge bases. All private.</p>
+                <div class="tier-tag seedling">Seedling +</div>
+            </div>
+            <div class="service-card">
+                <div class="icon">&#x1F3AC;</div>
+                <h3>Media Server</h3>
+                <p>Your own private Netflix. Stream movies and TV shows from anywhere. No ads, no algorithms.</p>
+                <div class="tier-tag sweetpea">Sweet Pea only</div>
+            </div>
+            <div class="service-card">
+                <div class="icon">&#x1F4E1;</div>
+                <h3>Request Portal</h3>
+                <p>Want to watch something new? Drop a request and it appears in the media library.</p>
+                <div class="tier-tag sweetpea">Sweet Pea only</div>
+            </div>
+            <div class="service-card">
+                <div class="icon">&#x2601;&#xFE0F;</div>
+                <h3>File Sync</h3>
+                <p>Your own Google Drive. Sync files across devices, share folders, all under your control.</p>
+                <div class="tier-tag sweetpea">Sweet Pea only</div>
+            </div>
+            <div class="service-card">
+                <div class="icon">&#x1F916;</div>
+                <h3>AI Assistant</h3>
+                <p>A ChatGPT that lives in your homelab. Private conversations that never leave the network.</p>
+                <div class="tier-tag sweetpea">Sweet Pea only</div>
+            </div>
+            <div class="service-card">
+                <div class="icon">&#x1F4F7;</div>
+                <h3>Photo Backup</h3>
+                <p>Your own Google Photos. Automatic backup from your phone, face recognition, all private.</p>
+                <div class="tier-tag sweetpea">Sweet Pea only</div>
+            </div>
+        </div>
     </div>
-  </div>
-  <div class="faq">
-    <h2>Frequently Asked Questions</h2>
-    <div class="qa">
-      <button class="question" onclick="toggleFaq(this)">How do I get an invite code?</button>
-      <div class="answer">Contact <a href="mailto:sweetpea@tuta.io">sweetpea@tuta.io</a> for an invitation code. We'll generate a unique code for you and send it to you via email.</div>
+
+    <div class="faq-section">
+        <h2>Frequently Asked Questions</h2>
+
+        <div class="faq-item">
+            <h4>How do I donate?</h4>
+            <p>We accept Monero (XMR) and Bitcoin (BTC). Visit the donation form to see our wallet addresses.</p>
+        </div>
+
+        <div class="faq-item">
+            <h4>What happens after I donate $5?</h4>
+            <p>Fill out the donation form with your details and transaction hash. We verify your donation and email you an invite code. Use the code to create your account.</p>
+        </div>
+
+        <div class="faq-item">
+            <h4>Is this a subscription?</h4>
+            <p>No. A single donation grants lifetime access. There are no recurring fees or billing cycles.</p>
+        </div>
+
+        <div class="faq-item">
+            <h4>How do I get Sweet Pea tier?</h4>
+            <p>Sweet Pea tier is limited due to resource constraints. Contact sweetpea@tuta.io to inquire about availability and pricing.</p>
+        </div>
+
+        <div class="faq-item">
+            <h4>Are donations tax-deductible?</h4>
+            <p>No. Contributions are not tax-deductible. They help cover server hosting costs and future improvements.</p>
+        </div>
+
+        <div class="faq-item">
+            <h4>Can I get a refund?</h4>
+            <p>Crypto donations are irreversible. If you have a genuine issue, contact sweetpea@tuta.io.</p>
+        </div>
+
+        <div class="faq-item">
+            <h4>I have more questions</h4>
+            <p>Contact sweetpea@tuta.io.</p>
+        </div>
     </div>
-    <div class="qa">
-      <button class="question" onclick="toggleFaq(this)">What happens if I stop paying?</button>
-      <div class="answer">Your account is suspended after a 7-day grace period. You can reactivate anytime by renewing.</div>
+
+    <div class="footer">
+        Ready to join? <a href="/form.html">Donate &amp; Get Access</a><br>
+        Questions? <a href="mailto:sweetpea@tuta.io">sweetpea@tuta.io</a>
     </div>
-    <div class="qa">
-      <button class="question" onclick="toggleFaq(this)">How is payment made?</button>
-      <div class="answer">You will Venmo or CashApp us. Contact <a href="mailto:sweetpea@tuta.io">sweetpea@tuta.io</a> for more details.</div>
-    </div>
-    <div class="qa">
-      <button class="question" onclick="toggleFaq(this)">Is there a refund policy?</button>
-      <div class="answer">Yes, you can request a refund at anytime. To request a refund contact <a href="mailto:sweetpea@tuta.io">sweetpea@tuta.io</a>.</div>
-    </div>
-    <div class="qa">
-      <button class="question" onclick="toggleFaq(this)">Will there be more services available?</button>
-      <div class="answer">Yes, we will always be adding and upgrading our services.</div>
-    </div>
-    <div class="qa">
-      <button class="question" onclick="toggleFaq(this)">I have more questions</button>
-      <div class="answer">Contact <a href="mailto:sweetpea@tuta.io">sweetpea@tuta.io</a>.</div>
-    </div>
-  </div>
-  <div class="footer">
-    Ready to join? <a href="/form">Request access</a> with your invite code.<br>
-    Questions? <a href="mailto:sweetpea@tuta.io">sweetpea@tuta.io</a>
-  </div>
-</div>
-<script>
-function toggleView(){
-  const t=document.getElementById('billingToggle');
-  const l1=document.getElementById('lblStandard');
-  const l2=document.getElementById('lblExclusive');
-  const standard=document.getElementById('standardCard');
-  const exclusive=document.getElementById('exclusiveCard');
-  const isOn=t.classList.toggle('on');
-  l1.classList.toggle('active',!isOn);
-  l2.classList.toggle('active',isOn);
-  if(isOn){
-    standard.classList.remove('visible');standard.classList.add('hidden');
-    setTimeout(()=>{exclusive.classList.remove('hidden');exclusive.classList.add('visible');},50);
-  }else{
-    exclusive.classList.remove('visible');exclusive.classList.add('hidden');
-    setTimeout(()=>{standard.classList.remove('hidden');standard.classList.add('visible');},50);
-  }
-}
-function toggleService(btn){
-  const detail=btn.nextElementSibling;
-  const open=detail.classList.contains('open');
-  document.querySelectorAll('.service-detail.open').forEach(d=>d.classList.remove('open'));
-  document.querySelectorAll('.service-header.open').forEach(b=>b.classList.remove('open'));
-  if(!open){
-    detail.classList.add('open');
-    btn.classList.add('open');
-  }
-}
-function toggleFaq(btn){
-  const ans=btn.nextElementSibling;
-  const open=ans.classList.contains('open');
-  document.querySelectorAll('.answer.open').forEach(a=>a.classList.remove('open'));
-  document.querySelectorAll('.question.open').forEach(q=>q.classList.remove('open'));
-  if(!open){
-    ans.classList.add('open');
-    btn.classList.add('open');
-  }
-}
-</script>
 </body>
 </html>
