@@ -3,222 +3,659 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MySweetPea — Donate</title>
+    <title>MySweetPea — Self-Hosted Services</title>
     <link rel="icon" type="image/svg+xml" href="/logo-favicon.svg">
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
+        /* ═══ Reset & Base ═══ */
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
-        body {
-            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
-            background: #0a0a0a;
-            color: #e0e0e0;
-            min-height: 100vh;
+        :root {
+            --bg: #0a0a0a;
+            --bg-card: rgba(20, 20, 20, 0.85);
+            --bg-card-hover: rgba(28, 28, 28, 0.9);
+            --gold: #d4af37;
+            --gold-dim: #b8941f;
+            --gold-glow: rgba(212, 175, 55, 0.15);
+            --text: #e0e0e0;
+            --text-dim: #888;
+            --text-faint: #555;
+            --border: rgba(255, 255, 255, 0.08);
+            --border-gold: rgba(212, 175, 55, 0.25);
+            --radius: 14px;
+            --radius-sm: 8px;
+            --transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
-        .hero { text-align: center; padding: 50px 20px 30px; }
-        .hero svg { width: 64px; height: 64px; }
-        .hero h1 { font-size: 1.8rem; color: #d4af37; margin-top: 14px; font-weight: 600; }
-        .hero p { font-size: 0.95rem; color: #888; margin-top: 6px; }
+        html { scroll-behavior: smooth; }
 
-        .pricing-section { max-width: 900px; margin: 0 auto; padding: 20px; }
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* ═══ Animated Background ═══ */
+        .bg-gradient {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            z-index: -1;
+            background:
+                radial-gradient(ellipse 80% 50% at 50% -20%, rgba(212, 175, 55, 0.08), transparent),
+                radial-gradient(ellipse 60% 40% at 80% 100%, rgba(212, 175, 55, 0.04), transparent),
+                #0a0a0a;
+        }
+
+        /* ═══ Animations ═══ */
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes shimmer {
+            0% { background-position: -200% center; }
+            100% { background-position: 200% center; }
+        }
+
+        @keyframes pulseGlow {
+            0%, 100% { box-shadow: 0 0 20px rgba(212, 175, 55, 0.08); }
+            50% { box-shadow: 0 0 40px rgba(212, 175, 55, 0.15); }
+        }
+
+        .fade-in { opacity: 0; animation: fadeInUp 0.8s ease forwards; }
+        .fade-in-delay-1 { animation-delay: 0.1s; }
+        .fade-in-delay-2 { animation-delay: 0.2s; }
+        .fade-in-delay-3 { animation-delay: 0.3s; }
+        .fade-in-delay-4 { animation-delay: 0.4s; }
+        .fade-in-delay-5 { animation-delay: 0.5s; }
+
+        /* ═══ Hero ═══ */
+        .hero {
+            text-align: center;
+            padding: 80px 20px 40px;
+        }
+
+        .hero img.logo {
+            width: 72px;
+            height: 72px;
+            margin-bottom: 16px;
+            filter: drop-shadow(0 0 20px rgba(212, 175, 55, 0.2));
+        }
+
+        .hero h1 {
+            font-size: 2.2rem;
+            font-weight: 700;
+            background: linear-gradient(90deg, #d4af37, #f0d860, #d4af37);
+            background-size: 200% auto;
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: shimmer 4s linear infinite;
+            margin-bottom: 8px;
+        }
+
+        .hero p {
+            font-size: 1rem;
+            color: var(--text-dim);
+            max-width: 500px;
+            margin: 0 auto;
+        }
+
+        /* ═══ Pricing Section ═══ */
+        .pricing-section {
+            max-width: 960px;
+            margin: 0 auto;
+            padding: 20px;
+        }
 
         .pricing-grid {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
-            gap: 16px;
-            margin-bottom: 32px;
+            gap: 20px;
+            margin-bottom: 60px;
         }
 
         .pricing-card {
-            background: rgba(20, 20, 20, 0.85);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            border-radius: 14px;
-            padding: 28px 20px;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 32px 24px;
             text-align: center;
-            backdrop-filter: blur(8px);
+            backdrop-filter: blur(12px);
             display: flex;
             flex-direction: column;
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
         }
 
+        .pricing-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--gold), transparent);
+            opacity: 0;
+            transition: var(--transition);
+        }
+
+        .pricing-card:hover {
+            transform: translateY(-4px);
+            background: var(--bg-card-hover);
+            border-color: var(--border-gold);
+        }
+
+        .pricing-card:hover::before { opacity: 1; }
+
         .pricing-card.featured {
-            border-color: rgba(212, 175, 55, 0.3);
-            box-shadow: 0 0 20px rgba(212, 175, 55, 0.05);
+            border-color: var(--border-gold);
+            animation: pulseGlow 4s ease-in-out infinite;
         }
 
         .pricing-card .badge {
             display: inline-block;
-            padding: 3px 12px;
-            background: rgba(212, 175, 55, 0.12);
-            border: 1px solid rgba(212, 175, 55, 0.25);
-            border-radius: 16px;
-            font-size: 0.68rem;
-            color: #d4af37;
-            margin-bottom: 12px;
-            letter-spacing: 0.5px;
+            padding: 4px 14px;
+            background: var(--gold-glow);
+            border: 1px solid var(--border-gold);
+            border-radius: 20px;
+            font-size: 0.7rem;
+            color: var(--gold);
+            margin-bottom: 16px;
+            letter-spacing: 0.8px;
             text-transform: uppercase;
             align-self: center;
+            font-weight: 600;
         }
 
-        .pricing-card .icon { font-size: 1.8rem; margin-bottom: 10px; }
+        .pricing-card .tier-icon { font-size: 2rem; margin-bottom: 12px; }
 
         .pricing-card .tier-name {
-            font-size: 1.1rem;
-            color: #d4af37;
-            font-weight: 600;
-            margin-bottom: 4px;
+            font-size: 1.2rem;
+            color: var(--gold);
+            font-weight: 700;
+            margin-bottom: 6px;
         }
 
         .pricing-card .price {
-            font-size: 2rem;
-            color: #e0e0e0;
-            font-weight: 700;
-            margin: 8px 0;
+            font-size: 2.2rem;
+            color: var(--text);
+            font-weight: 800;
+            margin: 10px 0 2px;
         }
 
         .pricing-card .price-period {
-            font-size: 0.78rem;
-            color: #888;
+            font-size: 0.8rem;
+            color: var(--text-dim);
+            margin-bottom: 16px;
         }
 
         .pricing-card .desc {
-            font-size: 0.82rem;
-            color: #aaa;
-            margin: 12px 0 16px;
+            font-size: 0.84rem;
+            color: var(--text-dim);
+            margin-bottom: 20px;
             line-height: 1.5;
         }
 
         .pricing-card .features {
             text-align: left;
-            margin-bottom: 20px;
+            margin-bottom: 24px;
             flex-grow: 1;
+            list-style: none;
         }
 
         .pricing-card .features li {
-            list-style: none;
-            font-size: 0.78rem;
-            color: #999;
-            margin-bottom: 6px;
-            padding-left: 20px;
+            font-size: 0.82rem;
+            color: var(--text-dim);
+            margin-bottom: 8px;
+            padding-left: 24px;
             position: relative;
         }
 
         .pricing-card .features li::before {
-            content: '\u2713';
+            content: '\2713';
             position: absolute;
             left: 0;
-            color: #d4af37;
+            color: var(--gold);
+            font-weight: 700;
         }
 
         .pricing-card .features li.locked {
-            color: #555;
+            color: var(--text-faint);
         }
 
         .pricing-card .features li.locked::before {
-            content: '\u2715';
-            color: #555;
+            content: '\2715';
+            color: var(--text-faint);
         }
 
         .pricing-card .btn {
             display: block;
-            padding: 11px 24px;
-            background: linear-gradient(135deg, #d4af37, #b8941f);
-            color: #0a0a0a;
+            padding: 12px 28px;
             border: none;
-            border-radius: 7px;
-            font-size: 0.9rem;
+            border-radius: var(--radius-sm);
+            font-size: 0.92rem;
             font-weight: 600;
             text-decoration: none;
-            transition: opacity 0.2s;
+            transition: var(--transition);
             margin-top: auto;
+            cursor: pointer;
         }
 
-        .pricing-card .btn:hover { opacity: 0.9; }
+        .pricing-card .btn-primary {
+            background: linear-gradient(135deg, var(--gold), var(--gold-dim));
+            color: #0a0a0a;
+        }
+
+        .pricing-card .btn-primary:hover {
+            transform: scale(1.02);
+            box-shadow: 0 4px 20px rgba(212, 175, 55, 0.3);
+        }
 
         .pricing-card .btn-secondary {
-            background: rgba(255, 255, 255, 0.08);
-            color: #ccc;
-            border: 1px solid rgba(255, 255, 255, 0.12);
+            background: rgba(255, 255, 255, 0.06);
+            color: var(--text);
+            border: 1px solid var(--border);
         }
 
         .pricing-card .btn-secondary:hover {
-            background: rgba(255, 255, 255, 0.12);
+            background: rgba(255, 255, 255, 0.1);
+            border-color: var(--border-gold);
         }
 
-        .services-section { max-width: 900px; margin: 0 auto 40px; padding: 20px; }
-        .services-section h2 { font-size: 1.3rem; color: #d4af37; text-align: center; margin-bottom: 20px; }
+        /* ═══ Services Section ═══ */
+        .services-section {
+            max-width: 960px;
+            margin: 0 auto 60px;
+            padding: 20px;
+        }
+
+        .section-title {
+            font-size: 1.5rem;
+            color: var(--gold);
+            text-align: center;
+            margin-bottom: 8px;
+            font-weight: 700;
+        }
+
+        .section-subtitle {
+            font-size: 0.9rem;
+            color: var(--text-dim);
+            text-align: center;
+            margin-bottom: 32px;
+        }
 
         .services-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
             gap: 16px;
         }
 
         .service-card {
-            background: rgba(20, 20, 20, 0.5);
-            border: 1px solid rgba(255, 255, 255, 0.06);
+            background: rgba(20, 20, 20, 0.6);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 24px;
+            cursor: pointer;
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .service-card::after {
+            content: '';
+            position: absolute;
+            bottom: 0; left: 0; right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--gold), transparent);
+            transform: scaleX(0);
+            transition: var(--transition);
+        }
+
+        .service-card:hover {
+            transform: translateY(-3px);
+            background: rgba(28, 28, 28, 0.8);
+            border-color: var(--border-gold);
+        }
+
+        .service-card:hover::after { transform: scaleX(1); }
+
+        .service-card .service-header {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            margin-bottom: 10px;
+        }
+
+        .service-card .service-icon {
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(255, 255, 255, 0.04);
             border-radius: 10px;
-            padding: 20px;
-            transition: border-color 0.2s;
+            flex-shrink: 0;
         }
 
-        .service-card:hover { border-color: rgba(212, 175, 55, 0.25); }
+        .service-card .service-icon img {
+            width: 24px;
+            height: 24px;
+            filter: brightness(0) invert(1);
+        }
 
-        .service-card .icon { font-size: 1.5rem; margin-bottom: 8px; }
-        .service-card h3 { font-size: 0.92rem; color: #d4af37; margin-bottom: 4px; }
-        .service-card p { font-size: 0.76rem; color: #888; line-height: 1.4; }
+        .service-card .service-icon .emoji {
+            font-size: 1.4rem;
+        }
 
-        .service-card .tier-tag {
+        .service-card h3 {
+            font-size: 0.95rem;
+            color: var(--gold);
+            font-weight: 600;
+        }
+
+        .service-card p {
+            font-size: 0.8rem;
+            color: var(--text-dim);
+            line-height: 1.4;
+            margin-bottom: 12px;
+        }
+
+        .tier-tag {
             display: inline-block;
-            font-size: 0.62rem;
-            padding: 2px 7px;
+            font-size: 0.65rem;
+            padding: 3px 10px;
             border-radius: 4px;
-            margin-top: 8px;
+            font-weight: 600;
+            letter-spacing: 0.3px;
         }
 
-        .tier-tag.seedling { background: rgba(31, 195, 49, 0.12); color: #1fc331; }
-        .tier-tag.sweetpea { background: rgba(212, 175, 55, 0.12); color: #d4af37; }
+        .tier-tag.seedling {
+            background: rgba(31, 195, 49, 0.12);
+            color: #1fc331;
+            border: 1px solid rgba(31, 195, 49, 0.2);
+        }
 
-        .faq-section { max-width: 700px; margin: 0 auto 50px; padding: 20px; }
-        .faq-section h2 { font-size: 1.3rem; color: #d4af37; text-align: center; margin-bottom: 20px; }
-        .faq-item { margin-bottom: 14px; }
-        .faq-item h4 { font-size: 0.86rem; color: #ccc; margin-bottom: 4px; }
-        .faq-item p { font-size: 0.8rem; color: #888; line-height: 1.4; }
+        .tier-tag.sweetpea {
+            background: var(--gold-glow);
+            color: var(--gold);
+            border: 1px solid var(--border-gold);
+        }
 
+        .service-card .learn-more {
+            font-size: 0.75rem;
+            color: var(--text-faint);
+            margin-top: 8px;
+            transition: var(--transition);
+        }
+
+        .service-card:hover .learn-more {
+            color: var(--gold);
+        }
+
+        /* ═══ Modal ═══ */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(4px);
+            z-index: 100;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+            animation: fadeInUp 0.3s ease;
+        }
+
+        .modal {
+            background: #141414;
+            border: 1px solid var(--border-gold);
+            border-radius: var(--radius);
+            max-width: 520px;
+            width: 100%;
+            max-height: 85vh;
+            overflow-y: auto;
+            padding: 32px;
+            position: relative;
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 16px; right: 16px;
+            background: none;
+            border: none;
+            color: var(--text-dim);
+            font-size: 1.4rem;
+            cursor: pointer;
+            transition: var(--transition);
+            line-height: 1;
+        }
+
+        .modal-close:hover { color: var(--gold); }
+
+        .modal-header {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 20px;
+        }
+
+        .modal-icon {
+            width: 56px;
+            height: 56px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(255, 255, 255, 0.04);
+            border-radius: 12px;
+            flex-shrink: 0;
+        }
+
+        .modal-icon img {
+            width: 32px;
+            height: 32px;
+            filter: brightness(0) invert(1);
+        }
+
+        .modal-icon .emoji { font-size: 1.8rem; }
+
+        .modal-header h2 {
+            font-size: 1.3rem;
+            color: var(--gold);
+            font-weight: 700;
+        }
+
+        .modal-header .tier-tag { margin-top: 4px; }
+
+        .modal-body p {
+            font-size: 0.88rem;
+            color: var(--text-dim);
+            line-height: 1.6;
+            margin-bottom: 16px;
+        }
+
+        .modal-tutorial {
+            background: rgba(10, 10, 10, 0.6);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .modal-tutorial h3 {
+            font-size: 0.85rem;
+            color: var(--gold);
+            margin-bottom: 12px;
+            font-weight: 600;
+        }
+
+        .modal-tutorial ol {
+            padding-left: 20px;
+        }
+
+        .modal-tutorial li {
+            font-size: 0.82rem;
+            color: var(--text-dim);
+            margin-bottom: 8px;
+            line-height: 1.5;
+        }
+
+        .modal-tutorial a {
+            color: var(--gold);
+            text-decoration: none;
+        }
+
+        .modal-tutorial a:hover { text-decoration: underline; }
+
+        .modal-footer {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+        }
+
+        .modal-footer .btn {
+            padding: 10px 24px;
+            border: none;
+            border-radius: var(--radius-sm);
+            font-size: 0.88rem;
+            font-weight: 600;
+            text-decoration: none;
+            transition: var(--transition);
+            cursor: pointer;
+        }
+
+        .modal-footer .btn-primary {
+            background: linear-gradient(135deg, var(--gold), var(--gold-dim));
+            color: #0a0a0a;
+        }
+
+        .modal-footer .btn-primary:hover {
+            transform: scale(1.02);
+            box-shadow: 0 4px 16px rgba(212, 175, 55, 0.25);
+        }
+
+        .modal-footer .btn-secondary {
+            background: rgba(255, 255, 255, 0.06);
+            color: var(--text);
+            border: 1px solid var(--border);
+        }
+
+        /* ═══ FAQ ═══ */
+        .faq-section {
+            max-width: 720px;
+            margin: 0 auto 60px;
+            padding: 20px;
+        }
+
+        .faq-item {
+            background: rgba(20, 20, 20, 0.5);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            margin-bottom: 10px;
+            overflow: hidden;
+            transition: var(--transition);
+        }
+
+        .faq-item:hover { border-color: var(--border-gold); }
+
+        .faq-question {
+            padding: 16px 20px;
+            font-size: 0.9rem;
+            color: var(--text);
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: var(--transition);
+            user-select: none;
+        }
+
+        .faq-question:hover { color: var(--gold); }
+
+        .faq-question .arrow {
+            transition: transform 0.3s ease;
+            color: var(--text-dim);
+            font-size: 0.8rem;
+        }
+
+        .faq-item.open .faq-question .arrow {
+            transform: rotate(180deg);
+            color: var(--gold);
+        }
+
+        .faq-answer {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease, padding 0.3s ease;
+            padding: 0 20px;
+        }
+
+        .faq-item.open .faq-answer {
+            max-height: 200px;
+            padding: 0 20px 16px;
+        }
+
+        .faq-answer p {
+            font-size: 0.84rem;
+            color: var(--text-dim);
+            line-height: 1.5;
+        }
+
+        /* ═══ Footer ═══ */
         .footer {
             text-align: center;
-            padding: 30px 20px;
-            font-size: 0.82rem;
-            color: #666;
+            padding: 40px 20px;
+            font-size: 0.85rem;
+            color: var(--text-faint);
             border-top: 1px solid rgba(255, 255, 255, 0.04);
         }
-        .footer a { color: #d4af37; text-decoration: none; }
 
-        @media (max-width: 700px) {
+        .footer a {
+            color: var(--gold);
+            text-decoration: none;
+            transition: var(--transition);
+        }
+
+        .footer a:hover { text-decoration: underline; }
+
+        .footer .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 24px;
+            margin-bottom: 12px;
+        }
+
+        /* ═══ Responsive ═══ */
+        @media (max-width: 768px) {
             .pricing-grid { grid-template-columns: 1fr; }
-            .pricing-card .price { font-size: 1.6rem; }
+            .hero h1 { font-size: 1.6rem; }
+            .services-grid { grid-template-columns: 1fr; }
+            .modal { padding: 24px; }
         }
     </style>
 </head>
 <body>
-    <div class="hero">
-        <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <circle cx="50" cy="50" r="45" stroke="#d4af37" stroke-width="2" fill="rgba(212,175,55,0.05)"/>
-            <path d="M50 20 C35 25, 30 40, 35 55 C40 65, 50 70, 50 70 C50 70, 60 65, 65 55 C70 40, 65 25, 50 20" fill="#d4af37" opacity="0.8"/>
-            <path d="M50 35 C45 38, 43 45, 46 52 C48 57, 50 60, 50 60 C50 60, 52 57, 54 52 C57 45, 55 38, 50 35" fill="#0a0a0a" opacity="0.6"/>
-            <line x1="50" y1="70" x2="50" y2="85" stroke="#d4af37" stroke-width="2"/>
-            <path d="M45 78 Q40 75, 38 80" stroke="#d4af37" stroke-width="1.5" fill="none"/>
-            <path d="M55 78 Q60 75, 62 80" stroke="#d4af37" stroke-width="1.5" fill="none"/>
-        </svg>
+    <div class="bg-gradient"></div>
+
+    <!-- ═══ Hero ═══ -->
+    <div class="hero fade-in">
+        <img src="/logo.svg" alt="MySweetPea" class="logo">
         <h1>MySweetPea</h1>
         <p>Self-hosted services. Community-funded. Privacy-first.</p>
     </div>
 
+    <!-- ═══ Pricing ═══ -->
     <div class="pricing-section">
         <div class="pricing-grid">
             <!-- Supporter -->
-            <div class="pricing-card">
+            <div class="pricing-card fade-in fade-in-delay-1">
                 <div class="badge">No Access</div>
-                <div class="icon">&#x1F49B;</div>
+                <div class="tier-icon">&#x1F49B;</div>
                 <div class="tier-name">Supporter</div>
                 <div class="price">Any amount</div>
                 <div class="price-period">One-time donation</div>
@@ -232,11 +669,11 @@
             </div>
 
             <!-- Seedling -->
-            <div class="pricing-card featured">
+            <div class="pricing-card featured fade-in fade-in-delay-2">
                 <div class="badge">Most Popular</div>
-                <div class="icon">&#x1F331;</div>
+                <div class="tier-icon">&#x1F331;</div>
                 <div class="tier-name">Seedling</div>
-                <div class="price">$5<span class="price-period">+ min</span></div>
+                <div class="price">$5<span style="font-size:0.9rem;color:var(--text-dim);">+ min</span></div>
                 <div class="price-period">One-time donation</div>
                 <div class="desc">Access to non-media community services.</div>
                 <ul class="features">
@@ -246,13 +683,13 @@
                     <li>Watch Parties</li>
                     <li class="locked">Media streaming</li>
                 </ul>
-                <a href="/form.html" class="btn">Get Access</a>
+                <a href="/form.html" class="btn btn-primary">Get Access</a>
             </div>
 
             <!-- Sweet Pea -->
-            <div class="pricing-card">
+            <div class="pricing-card fade-in fade-in-delay-3">
                 <div class="badge">Premium</div>
-                <div class="icon">&#x1F338;</div>
+                <div class="tier-icon">&#x1F338;</div>
                 <div class="tier-name">Sweet Pea</div>
                 <div class="price">Contact</div>
                 <div class="price-period">One-time donation</div>
@@ -264,107 +701,417 @@
                     <li>AI Assistant</li>
                     <li>Photo Backup (Immich)</li>
                 </ul>
-                <a href="mailto:sweetpea@tuta.io" class="btn btn-secondary">Contact Admin</a>
+                <a href="mailto:support@mysweetpea.cc" class="btn btn-secondary">Contact Admin</a>
             </div>
         </div>
     </div>
 
+    <!-- ═══ Services ═══ -->
     <div class="services-section">
-        <h2>Available Services</h2>
+        <h2 class="section-title fade-in">Available Services</h2>
+        <p class="section-subtitle fade-in">Click any service to learn more</p>
+
         <div class="services-grid">
-            <div class="service-card">
-                <div class="icon">&#x1F510;</div>
-                <h3>Password Manager</h3>
+            <!-- Vaultwarden -->
+            <div class="service-card" onclick="openModal('vaultwarden')">
+                <div class="service-header">
+                    <div class="service-icon"><img src="https://cdn.jsdelivr.net/npm/simple-icons@latest/icons/vaultwarden.svg" alt="Vaultwarden"></div>
+                    <h3>Password Manager</h3>
+                </div>
                 <p>Stop forgetting passwords. Autofills login forms and creates unhackable passwords for every site.</p>
-                <div class="tier-tag seedling">Seedling +</div>
+                <span class="tier-tag seedling">Seedling +</span>
+                <div class="learn-more">Learn more &rarr;</div>
             </div>
-            <div class="service-card">
-                <div class="icon">&#x1F4AC;</div>
-                <h3>Matrix Chat</h3>
+
+            <!-- Matrix -->
+            <div class="service-card" onclick="openModal('matrix')">
+                <div class="service-header">
+                    <div class="service-icon"><img src="https://cdn.jsdelivr.net/npm/simple-icons@latest/icons/matrix.svg" alt="Matrix"></div>
+                    <h3>Matrix Chat</h3>
+                </div>
                 <p>A private Discord/Slack replacement. Message friends, share files, create rooms. All encrypted.</p>
-                <div class="tier-tag seedling">Seedling +</div>
+                <span class="tier-tag seedling">Seedling +</span>
+                <div class="learn-more">Learn more &rarr;</div>
             </div>
-            <div class="service-card">
-                <div class="icon">&#x1F4DD;</div>
-                <h3>Notes &amp; Docs</h3>
+
+            <!-- AFFiNE -->
+            <div class="service-card" onclick="openModal('affine')">
+                <div class="service-header">
+                    <div class="service-icon"><img src="https://cdn.jsdelivr.net/npm/simple-icons@latest/icons/affine.svg" alt="AFFiNE"></div>
+                    <h3>Notes &amp; Docs</h3>
+                </div>
                 <p>A Notion alternative you own. Create documents, wikis, and knowledge bases. All private.</p>
-                <div class="tier-tag seedling">Seedling +</div>
+                <span class="tier-tag seedling">Seedling +</span>
+                <div class="learn-more">Learn more &rarr;</div>
             </div>
-            <div class="service-card">
-                <div class="icon">&#x1F3AC;</div>
-                <h3>Media Server</h3>
+
+            <!-- KoalaSync -->
+            <div class="service-card" onclick="openModal('koalasync')">
+                <div class="service-header">
+                    <div class="service-icon"><span class="emoji">&#x1F428;</span></div>
+                    <h3>Watch Parties</h3>
+                </div>
+                <p>Watch movies and shows together with friends in real-time. Synced playback for everyone.</p>
+                <span class="tier-tag seedling">Seedling +</span>
+                <div class="learn-more">Learn more &rarr;</div>
+            </div>
+
+            <!-- Jellyfin -->
+            <div class="service-card" onclick="openModal('jellyfin')">
+                <div class="service-header">
+                    <div class="service-icon"><img src="https://cdn.jsdelivr.net/npm/simple-icons@latest/icons/jellyfin.svg" alt="Jellyfin"></div>
+                    <h3>Media Server</h3>
+                </div>
                 <p>Your own private Netflix. Stream movies and TV shows from anywhere. No ads, no algorithms.</p>
-                <div class="tier-tag sweetpea">Sweet Pea only</div>
+                <span class="tier-tag sweetpea">Sweet Pea only</span>
+                <div class="learn-more">Learn more &rarr;</div>
             </div>
-            <div class="service-card">
-                <div class="icon">&#x1F4E1;</div>
-                <h3>Request Portal</h3>
+
+            <!-- Seerr -->
+            <div class="service-card" onclick="openModal('seerr')">
+                <div class="service-header">
+                    <div class="service-icon"><span class="emoji">&#x1F4FD;&#xFE0F;</span></div>
+                    <h3>Request Portal</h3>
+                </div>
                 <p>Want to watch something new? Drop a request and it appears in the media library.</p>
-                <div class="tier-tag sweetpea">Sweet Pea only</div>
+                <span class="tier-tag sweetpea">Sweet Pea only</span>
+                <div class="learn-more">Learn more &rarr;</div>
             </div>
-            <div class="service-card">
-                <div class="icon">&#x2601;&#xFE0F;</div>
-                <h3>File Sync</h3>
+
+            <!-- Nextcloud -->
+            <div class="service-card" onclick="openModal('nextcloud')">
+                <div class="service-header">
+                    <div class="service-icon"><img src="https://cdn.jsdelivr.net/npm/simple-icons@latest/icons/nextcloud.svg" alt="Nextcloud"></div>
+                    <h3>File Sync</h3>
+                </div>
                 <p>Your own Google Drive. Sync files across devices, share folders, all under your control.</p>
-                <div class="tier-tag sweetpea">Sweet Pea only</div>
+                <span class="tier-tag sweetpea">Sweet Pea only</span>
+                <div class="learn-more">Learn more &rarr;</div>
             </div>
-            <div class="service-card">
-                <div class="icon">&#x1F916;</div>
-                <h3>AI Assistant</h3>
+
+            <!-- Open WebUI -->
+            <div class="service-card" onclick="openModal('openwebui')">
+                <div class="service-header">
+                    <div class="service-icon"><span class="emoji">&#x1F916;</span></div>
+                    <h3>AI Assistant</h3>
+                </div>
                 <p>A ChatGPT that lives in your homelab. Private conversations that never leave the network.</p>
-                <div class="tier-tag sweetpea">Sweet Pea only</div>
+                <span class="tier-tag sweetpea">Sweet Pea only</span>
+                <div class="learn-more">Learn more &rarr;</div>
             </div>
-            <div class="service-card">
-                <div class="icon">&#x1F4F7;</div>
-                <h3>Photo Backup</h3>
+
+            <!-- Immich -->
+            <div class="service-card" onclick="openModal('immich')">
+                <div class="service-header">
+                    <div class="service-icon"><img src="https://cdn.jsdelivr.net/npm/simple-icons@latest/icons/immich.svg" alt="Immich"></div>
+                    <h3>Photo Backup</h3>
+                </div>
                 <p>Your own Google Photos. Automatic backup from your phone, face recognition, all private.</p>
-                <div class="tier-tag sweetpea">Sweet Pea only</div>
+                <span class="tier-tag sweetpea">Sweet Pea only</span>
+                <div class="learn-more">Learn more &rarr;</div>
             </div>
         </div>
     </div>
 
+    <!-- ═══ FAQ ═══ -->
     <div class="faq-section">
-        <h2>Frequently Asked Questions</h2>
+        <h2 class="section-title fade-in">FAQ</h2>
 
         <div class="faq-item">
-            <h4>How do I donate?</h4>
-            <p>We accept Monero (XMR) and Bitcoin (BTC). Visit the donation form to see our wallet addresses.</p>
+            <div class="faq-question" onclick="toggleFAQ(this)">
+                How do I donate? <span class="arrow">&#x25BC;</span>
+            </div>
+            <div class="faq-answer">
+                <p>We accept Monero (XMR) and Bitcoin (BTC). Visit the donation form to see our wallet addresses.</p>
+            </div>
         </div>
 
         <div class="faq-item">
-            <h4>What happens after I donate $5?</h4>
-            <p>Fill out the donation form with your details and transaction hash. We verify your donation and email you an invite code. Use the code to create your account.</p>
+            <div class="faq-question" onclick="toggleFAQ(this)">
+                What happens after I donate $5? <span class="arrow">&#x25BC;</span>
+            </div>
+            <div class="faq-answer">
+                <p>Fill out the donation form with your details and transaction hash. We verify your donation and email you an invite code. Use the code to create your account.</p>
+            </div>
         </div>
 
         <div class="faq-item">
-            <h4>Is this a subscription?</h4>
-            <p>No. A single donation grants lifetime access. There are no recurring fees or billing cycles.</p>
+            <div class="faq-question" onclick="toggleFAQ(this)">
+                Is this a subscription? <span class="arrow">&#x25BC;</span>
+            </div>
+            <div class="faq-answer">
+                <p>No. A single donation grants lifetime access. There are no recurring fees or billing cycles.</p>
+            </div>
         </div>
 
         <div class="faq-item">
-            <h4>How do I get Sweet Pea tier?</h4>
-            <p>Sweet Pea tier is limited due to resource constraints. Contact sweetpea@tuta.io to inquire about availability and pricing.</p>
+            <div class="faq-question" onclick="toggleFAQ(this)">
+                How do I get Sweet Pea tier? <span class="arrow">&#x25BC;</span>
+            </div>
+            <div class="faq-answer">
+                <p>Sweet Pea tier is limited due to resource constraints. Contact support@mysweetpea.cc to inquire about availability and pricing.</p>
+            </div>
         </div>
 
         <div class="faq-item">
-            <h4>Are donations tax-deductible?</h4>
-            <p>No. Contributions are not tax-deductible. They help cover server hosting costs and future improvements.</p>
+            <div class="faq-question" onclick="toggleFAQ(this)">
+                Are donations tax-deductible? <span class="arrow">&#x25BC;</span>
+            </div>
+            <div class="faq-answer">
+                <p>No. Contributions are not tax-deductible. They help cover server hosting costs and future improvements.</p>
+            </div>
         </div>
 
         <div class="faq-item">
-            <h4>Can I get a refund?</h4>
-            <p>Crypto donations are irreversible. If you have a genuine issue, contact sweetpea@tuta.io.</p>
-        </div>
-
-        <div class="faq-item">
-            <h4>I have more questions</h4>
-            <p>Contact sweetpea@tuta.io.</p>
+            <div class="faq-question" onclick="toggleFAQ(this)">
+                Can I get a refund? <span class="arrow">&#x25BC;</span>
+            </div>
+            <div class="faq-answer">
+                <p>Crypto donations are irreversible. If you have a genuine issue, contact support@mysweetpea.cc.</p>
+            </div>
         </div>
     </div>
 
+    <!-- ═══ Footer ═══ -->
     <div class="footer">
-        Ready to join? <a href="/form.html">Donate &amp; Get Access</a><br>
-        Questions? <a href="mailto:sweetpea@tuta.io">sweetpea@tuta.io</a>
+        <div class="footer-links">
+            <a href="/form.html">Donate &amp; Get Access</a>
+            <a href="mailto:support@mysweetpea.cc">Support</a>
+        </div>
+        <p>&copy; 2026 MySweetPea. Self-hosted with care.</p>
     </div>
+
+    <!-- ═══ Modal ═══ -->
+    <div class="modal-overlay" id="modalOverlay" onclick="closeModal(event)">
+        <div class="modal" id="modalContent">
+            <button class="modal-close" onclick="closeModalDirect()">&times;</button>
+            <div id="modalInner"></div>
+        </div>
+    </div>
+
+    <script>
+        // ═══ Service Data ═══
+        const SERVICES = {
+            vaultwarden: {
+                name: 'Vaultwarden',
+                icon: '<img src="https://cdn.jsdelivr.net/npm/simple-icons@latest/icons/vaultwarden.svg" alt="Vaultwarden">',
+                tier: 'seedling',
+                tierLabel: 'Seedling +',
+                desc: 'Vaultwarden is a self-hosted password manager, compatible with Bitwarden. It remembers all your passwords so you do not have to. It generates strong, unhackable passwords for every site and autofills them in your browser.',
+                tutorial: [
+                    'Log in to the <a href="https://auth.mysweetpea.cc" target="_blank">Authentik SSO Portal</a> with your credentials',
+                    'Click the Vaultwarden icon to access the password manager',
+                    'Install the <a href="https://bitwarden.com/download/" target="_blank">Bitwarden browser extension</a> for Chrome, Firefox, or Edge',
+                    'In the extension settings, set the server URL to <code>https://vault.mysweetpea.cc</code>',
+                    'Log in with your Authentik SSO credentials',
+                    'Start adding passwords, notes, and secure items to your vault'
+                ],
+                url: 'https://vault.mysweetpea.cc'
+            },
+            matrix: {
+                name: 'Matrix / Element',
+                icon: '<img src="https://cdn.jsdelivr.net/npm/simple-icons@latest/icons/matrix.svg" alt="Matrix">',
+                tier: 'seedling',
+                tierLabel: 'Seedling +',
+                desc: 'Matrix is an open-source, end-to-end encrypted messaging protocol. Element is the client app. Think of it as a private Discord or Slack that you control. Create rooms, send direct messages, share files, and bridge to other platforms.',
+                tutorial: [
+                    'Go to <a href="https://chat.mysweetpea.cc" target="_blank">https://chat.mysweetpea.cc</a>',
+                    'Click "Log In" — you will be redirected to Authentik SSO',
+                    'Enter your MySweetPea credentials to authenticate',
+                    'Once logged in, you can join rooms or create your own',
+                    'Download the <a href="https://element.io/download" target="_blank">Element app</a> for desktop or mobile',
+                    'In the app, set the homeserver to <code>matrix.mysweetpea.cc</code> and log in via SSO'
+                ],
+                url: 'https://chat.mysweetpea.cc'
+            },
+            affine: {
+                name: 'AFFiNE',
+                icon: '<img src="https://cdn.jsdelivr.net/npm/simple-icons@latest/icons/affine.svg" alt="AFFiNE">',
+                tier: 'seedling',
+                tierLabel: 'Seedling +',
+                desc: 'AFFiNE is an open-source Notion alternative. Create documents, wikis, whiteboards, and knowledge bases. All your notes are stored privately on our server. It combines the best of Notion and Miro in one privacy-first workspace.',
+                tutorial: [
+                    'Go to <a href="https://notes.mysweetpea.cc" target="_blank">https://notes.mysweetpea.cc</a>',
+                    'Click "Sign In" — you will be redirected to Authentik SSO',
+                    'Log in with your MySweetPea credentials',
+                    'Create your first workspace',
+                    'Start adding pages, blocks, and content',
+                    'Use the whiteboard mode for visual brainstorming'
+                ],
+                url: 'https://notes.mysweetpea.cc'
+            },
+            koalasync: {
+                name: 'KoalaSync',
+                icon: '<span class="emoji">&#x1F428;</span>',
+                tier: 'seedling',
+                tierLabel: 'Seedling +',
+                desc: 'KoalaSync lets you watch movies and shows together with friends in real-time. It synchronizes playback across all viewers so everyone sees the same scene at the same time. Works with Jellyfin, YouTube, Netflix, and any HTML5 video.',
+                tutorial: [
+                    'Go to <a href="https://sync.mysweetpea.cc" target="_blank">https://sync.mysweetpea.cc</a>',
+                    'Log in via Authentik SSO with your MySweetPea credentials',
+                    'Create a new room or join an existing one with a room code',
+                    'Share the room link with your friends',
+                    'Play a video from Jellyfin or paste a video URL',
+                    'Playback will sync automatically for all viewers'
+                ],
+                url: 'https://sync.mysweetpea.cc'
+            },
+            jellyfin: {
+                name: 'Jellyfin + Moonfin',
+                icon: '<img src="https://cdn.jsdelivr.net/npm/simple-icons@latest/icons/jellyfin.svg" alt="Jellyfin">',
+                tier: 'sweetpea',
+                tierLabel: 'Sweet Pea only',
+                desc: 'Jellyfin is your private Netflix. Stream movies and TV shows from anywhere, on any device. No ads, no tracking, no algorithms. Moonfin provides a premium, customized web interface with enhanced features like collections, ratings, and more.',
+                tutorial: [
+                    'Go to <a href="https://media.mysweetpea.cc" target="_blank">https://media.mysweetpea.cc</a>',
+                    'Log in with your Authentik credentials (LDAP login)',
+                    'Browse movies and TV shows in the library',
+                    'Use the Moonfin web interface at <code>/Moonfin/Web/</code> for a premium experience',
+                    'Install the <a href="https://jellyfin.org/downloads/" target="_blank">Jellyfin app</a> on your phone, tablet, or TV',
+                    'Set the server address to <code>https://media.mysweetpea.cc</code> and log in'
+                ],
+                url: 'https://media.mysweetpea.cc'
+            },
+            seerr: {
+                name: 'Seerr',
+                icon: '<span class="emoji">&#x1F4FD;&#xFE0F;</span>',
+                tier: 'sweetpea',
+                tierLabel: 'Sweet Pea only',
+                desc: 'Seerr is a request portal for media. Browse trending movies and TV shows, see what is already available, and request anything missing. Requests are automatically fulfilled and added to the media library.',
+                tutorial: [
+                    'Go to <a href="https://request.mysweetpea.cc" target="_blank">https://request.mysweetpea.cc</a>',
+                    'Log in with your Jellyfin credentials',
+                    'Browse the Discover page for trending content',
+                    'Click "Request" on any movie or show you want to watch',
+                    'Your request will be processed automatically',
+                    'You will receive a notification when the content is available in Jellyfin'
+                ],
+                url: 'https://request.mysweetpea.cc'
+            },
+            nextcloud: {
+                name: 'Nextcloud',
+                icon: '<img src="https://cdn.jsdelivr.net/npm/simple-icons@latest/icons/nextcloud.svg" alt="Nextcloud">',
+                tier: 'sweetpea',
+                tierLabel: 'Sweet Pea only',
+                desc: 'Nextcloud is your private Google Drive. Sync files across all your devices, share folders with others, and access your data from anywhere. All files are stored on our server under your control.',
+                tutorial: [
+                    'Go to <a href="https://cloud.mysweetpea.cc" target="_blank">https://cloud.mysweetpea.cc</a>',
+                    'Log in with your MySweetPea credentials',
+                    'Upload files by dragging them into the browser window',
+                    'Download the <a href="https://nextcloud.com/install/" target="_blank">Nextcloud desktop client</a> for automatic sync',
+                    'Install the Nextcloud mobile app for iOS or Android',
+                    'Set the server address to <code>https://cloud.mysweetpea.cc</code>'
+                ],
+                url: 'https://cloud.mysweetpea.cc'
+            },
+            openwebui: {
+                name: 'Open WebUI (Ollama)',
+                icon: '<span class="emoji">&#x1F916;</span>',
+                tier: 'sweetpea',
+                tierLabel: 'Sweet Pea only',
+                desc: 'Open WebUI is a ChatGPT-like interface powered by Ollama, running entirely on our server. Ask it to summarize articles, draft emails, write code, or brainstorm ideas. Your conversations stay completely private and never leave the network.',
+                tutorial: [
+                    'Go to <a href="https://ai.mysweetpea.cc" target="_blank">https://ai.mysweetpea.cc</a>',
+                    'Log in with your MySweetPea credentials',
+                    'Select an AI model from the dropdown (e.g., Llama 3.2)',
+                    'Start a new chat by typing your question or prompt',
+                    'You can upload documents for the AI to analyze',
+                    'Your conversation history is saved privately in your account'
+                ],
+                url: 'https://ai.mysweetpea.cc'
+            },
+            immich: {
+                name: 'Immich',
+                icon: '<img src="https://cdn.jsdelivr.net/npm/simple-icons@latest/icons/immich.svg" alt="Immich">',
+                tier: 'sweetpea',
+                tierLabel: 'Sweet Pea only',
+                desc: 'Immich is your private Google Photos. Automatically back up photos and videos from your phone, organize them with face recognition and object detection, and share albums with family. All your memories stay on our server.',
+                tutorial: [
+                    'Go to <a href="https://photos.mysweetpea.cc" target="_blank">https://photos.mysweetpea.cc</a>',
+                    'Log in with your MySweetPea credentials',
+                    'Download the <a href="https://immich.app/downloads/" target="_blank">Immich mobile app</a> for iOS or Android',
+                    'In the app, set the server URL to <code>https://photos.mysweetpea.cc</code>',
+                    'Log in and enable automatic backup in Settings',
+                    'Your photos will upload automatically in the background'
+                ],
+                url: 'https://photos.mysweetpea.cc'
+            }
+        };
+
+        // ═══ Modal Functions ═══
+        function openModal(serviceKey) {
+            const s = SERVICES[serviceKey];
+            if (!s) return;
+
+            const tierClass = s.tier === 'sweetpea' ? 'sweetpea' : 'seedling';
+            const inner = document.getElementById('modalInner');
+
+            inner.innerHTML = `
+                <div class="modal-header">
+                    <div class="modal-icon">${s.icon}</div>
+                    <div>
+                        <h2>${s.name}</h2>
+                        <span class="tier-tag ${tierClass}">${s.tierLabel}</span>
+                    </div>
+                </div>
+                <div class="modal-body">
+                    <p>${s.desc}</p>
+                    <div class="modal-tutorial">
+                        <h3>How to Get Started</h3>
+                        <ol>
+                            ${s.tutorial.map(step => `<li>${step}</li>`).join('')}
+                        </ol>
+                    </div>
+                    <div class="modal-footer">
+                        <a href="${s.url}" target="_blank" class="btn btn-primary">Open ${s.name}</a>
+                        <a href="/form.html" class="btn btn-secondary">Get Access</a>
+                    </div>
+                </div>
+            `;
+
+            document.getElementById('modalOverlay').classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeModal(event) {
+            if (event.target === document.getElementById('modalOverlay')) {
+                closeModalDirect();
+            }
+        }
+
+        function closeModalDirect() {
+            document.getElementById('modalOverlay').classList.remove('active');
+            document.body.style.overflow = '';
+        }
+
+        // Close on Escape
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') closeModalDirect();
+        });
+
+        // ═══ FAQ Toggle ═══
+        function toggleFAQ(el) {
+            const item = el.parentElement;
+            item.classList.toggle('open');
+        }
+
+        // ═══ Scroll Animations ═══
+        const observer = new IntersectionObserver(function(entries) {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, { threshold: 0.1 });
+
+        // Observe service cards and FAQ items
+        document.querySelectorAll('.service-card, .faq-item').forEach(el => {
+            el.style.opacity = '0';
+            el.style.transform = 'translateY(20px)';
+            el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+            observer.observe(el);
+        });
+    </script>
 </body>
 </html>
