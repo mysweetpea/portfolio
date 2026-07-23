@@ -1,478 +1,517 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>MySweetPea — Subscribe</title>
-<link rel="icon" type="image/svg+xml" href="/logo-favicon.svg" sizes="any">
-<style>
-*{margin:0;padding:0;box-sizing:border-box}
-:root{
-  --bg-deep:#020617;
-  --glass:rgba(255,255,255,.03);
-  --border:rgba(255,255,255,.08);
-  --text:#f8fafc;
-  --muted:#94a3b8;
-  --accent:#818cf8;
-  --accent2:#a78bfa;
-  --error:#fb7185;
-  --error-bg:rgba(251,113,133,.1);
-  --ok:#34d399;
-  --warn:#fbbf24;
-}
-body{
-  font-family:ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Arial,sans-serif;
-  background:var(--bg-deep);color:var(--text);
-  min-height:100vh;display:flex;align-items:center;justify-content:center;
-  padding:20px;position:relative;overflow-x:hidden;
-}
-body::before,body::after{
-  content:'';position:fixed;border-radius:50%;filter:blur(120px);opacity:.35;z-index:-1;pointer-events:none;
-}
-body::before{
-  width:600px;height:600px;background:radial-gradient(circle,#4c1d95,transparent 70%);top:-10%;left:-10%;
-  animation:float 20s infinite ease-in-out;
-}
-body::after{
-  width:500px;height:500px;background:radial-gradient(circle,#1e3a8a,transparent 70%);bottom:-10%;right:-10%;
-  animation:float 25s infinite ease-in-out reverse;
-}
-@keyframes float{
-  0%,100%{transform:translate(0,0)scale(1)}
-  33%{transform:translate(30px,-50px)scale(1.1)}
-  66%{transform:translate(-20px,20px)scale(.9)}
-}
-@keyframes up{from{opacity:0;transform:translateY(30px)}to{opacity:1;transform:translateY(0)}}
-@keyframes shake{
-  0%,100%{transform:translateX(0)}
-  25%{transform:translateX(-6px)}
-  75%{transform:translateX(6px)}
-}
-@keyframes drop{
-  from{opacity:0;transform:translateY(-10px);max-height:0}
-  to{opacity:1;transform:translateY(0);max-height:500px}
-}
-@keyframes spin{
-  to{transform:rotate(360deg)}
-}
-.card{
-  background:var(--glass);backdrop-filter:blur(20px)saturate(150%);
-  -webkit-backdrop-filter:blur(20px)saturate(150%);
-  border:1px solid var(--border);border-radius:24px;
-  padding:40px 36px;max-width:480px;width:100%;
-  box-shadow:0 8px 32px rgba(0,0,0,.4),inset 0 1px 0 rgba(255,255,255,.05);
-  animation:up .8s cubic-bezier(.16,1,.3,1) forwards;opacity:0;
-}
-.header{
-  display:flex;align-items:center;gap:12px;margin-bottom:20px;
-}
-.header img{width:70px;height:70px}
-.header h1{font-size:1.5rem;letter-spacing:-.02em}
-.subtitle{color:var(--muted);font-size:.95rem;margin-bottom:24px}
-.error-summary{
-  background:var(--error-bg);border:1px solid rgba(251,113,133,.25);
-  border-radius:12px;padding:0 16px;margin-bottom:20px;
-  overflow:hidden;max-height:0;opacity:0;transition:all .4s ease;
-}
-.error-summary.open{padding:14px 16px;max-height:300px;opacity:1}
-.error-summary h4{
-  color:var(--error);font-size:.9rem;margin-bottom:8px;display:flex;align-items:center;gap:6px;
-}
-.error-summary ul{list-style:none;padding-left:0}
-.error-summary li{
-  color:var(--error);font-size:.85rem;padding:4px 0;
-  display:flex;align-items:center;gap:8px;
-}
-.error-summary li::before{content:'•';color:var(--error);font-size:1.2rem;line-height:0}
-.field{margin-bottom:18px;opacity:0;animation:up .6s cubic-bezier(.16,1,.3,1) forwards;position:relative}
-.field:nth-child(2){animation-delay:.1s}
-.field:nth-child(3){animation-delay:.2s}
-.field:nth-child(4){animation-delay:.3s}
-.field:nth-child(5){animation-delay:.4s}
-label{
-  display:block;margin-bottom:6px;font-size:.72rem;font-weight:600;color:var(--muted);
-  text-transform:uppercase;letter-spacing:.06em;
-}
-.input-wrap{position:relative}
-input{
-  width:100%;padding:12px 14px;padding-right:34px;background:rgba(15,23,42,.5);
-  border:1px solid rgba(255,255,255,.1);border-radius:10px;color:var(--text);
-  font-size:.95rem;transition:all .3s ease;
-}
-input:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px rgba(129,140,248,.18)}
-input.valid{border-color:var(--ok)!important}
-input.invalid{border-color:var(--error)}
-input.warn{border-color:var(--warn)}
-.field-status{
-  position:absolute;right:10px;top:50%;transform:translateY(-50%);
-  display:none;align-items:center;pointer-events:none;
-}
-.field-status.show{display:flex}
-.status-icon{
-  width:16px;height:16px;border-radius:50%;display:flex;align-items:center;justify-content:center;
-  font-size:.65rem;font-weight:700;
-}
-.status-icon.ok{background:rgba(52,211,153,.2);color:var(--ok)}
-.status-icon.err{background:rgba(251,113,133,.2);color:var(--error)}
-.status-icon.warn{background:rgba(251,191,36,.2);color:var(--warn)}
-.status-spinner{
-  width:14px;height:14px;border:2px solid rgba(255,255,255,.1);
-  border-top-color:var(--accent);border-radius:50%;
-  animation:spin .6s linear infinite;
-}
-.inline-error{
-  color:var(--error);font-size:.82rem;margin-top:6px;display:none;
-  animation:drop .3s ease forwards;overflow:hidden;
-}
-.inline-error.show{display:block}
-.inline-warn{
-  color:var(--warn);font-size:.82rem;margin-top:6px;display:none;
-  animation:drop .3s ease forwards;overflow:hidden;
-}
-.inline-warn.show{display:block}
-.btn{
-  width:100%;padding:14px;margin-top:4px;
-  background:linear-gradient(135deg,var(--accent),var(--accent2));color:#0f172a;
-  border:none;border-radius:12px;font-size:1rem;font-weight:700;cursor:pointer;
-  transition:all .3s cubic-bezier(.16,1,.3,1);
-  box-shadow:0 4px 20px rgba(129,140,248,.25);
-  opacity:0;animation:up .6s ease .5s forwards;
-  position:relative;
-}
-.btn:hover:not(:disabled){transform:translateY(-2px);box-shadow:0 10px 30px rgba(129,140,248,.4)}
-.btn:disabled{
-  opacity:.45;cursor:not-allowed;transform:none;
-  background:linear-gradient(135deg,#475569,#334155);
-  box-shadow:none;
-}
-.btn-spinner{
-  display:none;width:16px;height:16px;border:2px solid rgba(15,23,42,.3);
-  border-top-color:#0f172a;border-radius:50%;
-  animation:spin .6s linear infinite;
-  position:absolute;left:50%;top:50%;margin-left:-8px;margin-top:-8px;
-}
-.btn.processing .btn-text{opacity:0}
-.btn.processing .btn-spinner{display:block}
-.footer{
-  margin-top:20px;text-align:center;font-size:.8rem;color:var(--muted);
-  opacity:0;animation:up .6s ease .6s forwards;
-}
-.footer a{color:var(--accent);text-decoration:none}
-.global-error{
-  background:var(--error-bg);border:1px solid rgba(251,113,133,.2);
-  border-radius:12px;padding:12px 16px;margin-bottom:20px;
-  color:var(--error);font-size:.9rem;display:none;
-  animation:drop .4s ease forwards;
-}
-.global-error.show{display:block}
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MySweetPea — Donate</title>
+    <link rel="icon" type="image/svg+xml" href="/logo-favicon.svg">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background: #0a0a0a;
+            color: #e0e0e0;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .container { max-width: 540px; width: 100%; }
+
+        .logo { text-align: center; margin-bottom: 28px; }
+        .logo svg { width: 56px; height: 56px; }
+        .logo h1 { font-size: 1.5rem; font-weight: 600; margin-top: 10px; color: #d4af37; }
+        .logo p { font-size: 0.82rem; color: #888; margin-top: 4px; }
+
+        .tabs {
+            display: flex;
+            gap: 0;
+            margin-bottom: 20px;
+            border-radius: 10px 10px 0 0;
+            overflow: hidden;
+        }
+
+        .tab {
+            flex: 1;
+            padding: 12px 8px;
+            background: rgba(20, 20, 20, 0.5);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-bottom: none;
+            text-align: center;
+            cursor: pointer;
+            font-size: 0.8rem;
+            color: #888;
+            transition: all 0.2s;
+            user-select: none;
+        }
+
+        .tab:hover { color: #ccc; background: rgba(30, 30, 30, 0.7); }
+
+        .tab.active {
+            background: rgba(20, 20, 20, 0.85);
+            border-color: rgba(212, 175, 55, 0.3);
+            color: #d4af37;
+            font-weight: 600;
+        }
+
+        .card {
+            background: rgba(20, 20, 20, 0.85);
+            border: 1px solid rgba(212, 175, 55, 0.2);
+            border-radius: 0 0 12px 12px;
+            padding: 28px;
+            backdrop-filter: blur(8px);
+        }
+
+        .card h2 { font-size: 1.05rem; color: #d4af37; margin-bottom: 6px; }
+        .card .subtitle { font-size: 0.82rem; color: #888; margin-bottom: 20px; }
+
+        .form-group { margin-bottom: 16px; }
+        .form-group label { display: block; font-size: 0.78rem; color: #aaa; margin-bottom: 5px; font-weight: 500; }
+        .form-group input {
+            width: 100%;
+            padding: 10px 12px;
+            background: rgba(10, 10, 10, 0.8);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 7px;
+            color: #e0e0e0;
+            font-size: 0.88rem;
+            transition: border-color 0.2s;
+        }
+        .form-group input:focus { outline: none; border-color: #d4af37; }
+        .form-group input::placeholder { color: #555; }
+        .form-group .hint { font-size: 0.72rem; color: #666; margin-top: 3px; }
+        .form-group .err { font-size: 0.72rem; color: #e74c3c; margin-top: 3px; display: none; }
+        .form-group.has-error input { border-color: #e74c3c; }
+        .form-group.has-error .err { display: block; }
+
+        .crypto-section { margin-bottom: 16px; }
+        .crypto-section label { display: block; font-size: 0.78rem; color: #aaa; margin-bottom: 7px; font-weight: 500; }
+        .crypto-options { display: flex; gap: 8px; flex-wrap: wrap; }
+        .crypto-option {
+            flex: 1;
+            min-width: 120px;
+            padding: 10px;
+            background: rgba(10, 10, 10, 0.8);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 7px;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-align: center;
+        }
+        .crypto-option:hover { border-color: rgba(212, 175, 55, 0.4); }
+        .crypto-option.selected { border-color: #d4af37; background: rgba(212, 175, 55, 0.08); }
+        .crypto-option .icon { font-size: 1.3rem; margin-bottom: 3px; }
+        .crypto-option .name { font-size: 0.76rem; color: #ccc; }
+        .crypto-option .addr { font-size: 0.62rem; color: #666; margin-top: 3px; word-break: break-all; font-family: monospace; }
+
+        .btn {
+            width: 100%;
+            padding: 13px;
+            background: linear-gradient(135deg, #d4af37, #b8941f);
+            color: #0a0a0a;
+            border: none;
+            border-radius: 7px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: opacity 0.2s;
+        }
+        .btn:hover { opacity: 0.9; }
+
+        .footer { text-align: center; margin-top: 18px; font-size: 0.78rem; color: #666; }
+        .footer a { color: #d4af37; text-decoration: none; }
+
+        .error-banner {
+            display: none;
+            background: rgba(231, 76, 60, 0.12);
+            border: 1px solid rgba(231, 76, 60, 0.25);
+            border-radius: 7px;
+            padding: 10px;
+            margin-bottom: 16px;
+            font-size: 0.82rem;
+            color: #e74c3c;
+        }
+        .error-banner.visible { display: block; }
+
+        .info-box {
+            background: rgba(212, 175, 55, 0.06);
+            border: 1px solid rgba(212, 175, 55, 0.15);
+            border-radius: 7px;
+            padding: 10px;
+            margin-bottom: 16px;
+            font-size: 0.76rem;
+            color: #b8a030;
+            line-height: 1.5;
+        }
+
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+
+        .wallet-display {
+            display: none;
+            background: rgba(10, 10, 10, 0.6);
+            border: 1px solid rgba(212, 175, 55, 0.15);
+            border-radius: 7px;
+            padding: 12px;
+            margin-bottom: 16px;
+        }
+        .wallet-display.visible { display: block; }
+        .wallet-display .wl { font-size: 0.72rem; color: #888; margin-bottom: 4px; }
+        .wallet-display .wa {
+            font-size: 0.78rem;
+            color: #d4af37;
+            font-family: monospace;
+            word-break: break-all;
+            cursor: pointer;
+        }
+        .wallet-display .wa:hover { text-decoration: underline; }
+        .wallet-display .copy-hint { font-size: 0.68rem; color: #555; margin-top: 4px; }
+    </style>
 </head>
 <body>
-<div class="card">
-  <div class="header">
-    <img src="logo.svg" alt="MySweetPea" width="70" height="70">
-    <div>
-      <h1>Request Access</h1>
-      <p class="subtitle">Enter your details and invite code below.</p>
-    </div>
-  </div>
-  <div class="global-error" id="globalErr"></div>
-  <div class="error-summary" id="errorSummary">
-    <h4>Please fix the following errors:</h4>
-    <ul id="errorList"></ul>
-  </div>
-  <form id="subForm" action="https://subscribe.mysweetpea.duckdns.org/webhook/subscribe" method="POST" novalidate>
-    <div class="field">
-      <label for="name">Name (First name only)</label>
-      <div class="input-wrap">
-        <input type="text" id="name" name="Name (First name only)" required placeholder="e.g. John" autocomplete="given-name">
-        <div class="field-status" id="name-status"><div class="status-icon ok">✓</div></div>
-      </div>
-      <div class="inline-error" id="name-err">Please enter your first name.</div>
-    </div>
-    <div class="field">
-      <label for="email">Email</label>
-      <div class="input-wrap">
-        <input type="email" id="email" name="Email" required placeholder="john@example.com" autocomplete="email">
-        <div class="field-status" id="email-status"><div class="status-icon ok">✓</div></div>
-      </div>
-      <div class="inline-error" id="email-err">Enter a valid email address.</div>
-    </div>
-    <div class="field">
-      <label for="username">Username</label>
-      <div class="input-wrap">
-        <input type="text" id="username" name="Username" required placeholder="john4life" minlength="3" autocomplete="username">
-        <div class="field-status" id="username-status"><div class="status-icon ok">✓</div></div>
-      </div>
-      <div class="inline-error" id="username-err">Username must be at least 3 characters.</div>
-    </div>
-    <div class="field">
-      <label for="invite_code">Invite Code</label>
-      <div class="input-wrap">
-        <input type="text" id="invite_code" name="Invite Code (Save this to reactivate account)" required placeholder="PEA-XXXXXXXX" autocomplete="off">
-        <div class="field-status" id="code-status">
-          <div class="status-spinner" id="code-spinner"></div>
-          <div class="status-icon ok" id="code-ok">✓</div>
-          <div class="status-icon err" id="code-err-icon">✕</div>
-          <div class="status-icon warn" id="code-warn">!</div>
+    <div class="container">
+        <div class="logo">
+            <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <circle cx="50" cy="50" r="45" stroke="#d4af37" stroke-width="2" fill="rgba(212,175,55,0.05)"/>
+                <path d="M50 20 C35 25, 30 40, 35 55 C40 65, 50 70, 50 70 C50 70, 60 65, 65 55 C70 40, 65 25, 50 20" fill="#d4af37" opacity="0.8"/>
+                <path d="M50 35 C45 38, 43 45, 46 52 C48 57, 50 60, 50 60 C50 60, 52 57, 54 52 C57 45, 55 38, 50 35" fill="#0a0a0a" opacity="0.6"/>
+                <line x1="50" y1="70" x2="50" y2="85" stroke="#d4af37" stroke-width="2"/>
+                <path d="M45 78 Q40 75, 38 80" stroke="#d4af37" stroke-width="1.5" fill="none"/>
+                <path d="M55 78 Q60 75, 62 80" stroke="#d4af37" stroke-width="1.5" fill="none"/>
+            </svg>
+            <h1>MySweetPea</h1>
+            <p>Support the community. Get access.</p>
         </div>
-      </div>
-      <div class="inline-error" id="code-err">Invite code must be at least 4 characters (letters, numbers, hyphens).</div>
-      <div class="inline-warn" id="code-warn-text">Could not verify code. Server will validate on submit.</div>
+
+        <div class="tabs">
+            <div class="tab active" data-tab="support" onclick="switchTab('support')">&#x1F49B; Support</div>
+            <div class="tab" data-tab="seedling" onclick="switchTab('seedling')">&#x1F331; Get Access ($5)</div>
+            <div class="tab" data-tab="code" onclick="switchTab('code')">&#x1F511; I Have a Code</div>
+        </div>
+
+        <div class="card">
+            <div class="error-banner" id="errorBanner"></div>
+
+            <!-- ═══ TAB 1: SUPPORT ═══ -->
+            <div class="tab-content active" id="tab-support">
+                <h2>Support the Cause</h2>
+                <p class="subtitle">Donate any amount to help cover server costs. No service access included.</p>
+
+                <div class="info-box">
+                    Your contribution helps keep MySweetPea running and funds future improvements.
+                    Supporters receive a thank-you email but no service access.
+                </div>
+
+                <form id="form-support" action="https://n8n.mysweetpea.cc/webhook/donate" method="POST">
+                    <input type="hidden" name="form_type" value="support">
+
+                    <div class="form-group" id="s-name-group">
+                        <label for="s-name">Name</label>
+                        <input type="text" id="s-name" name="name" placeholder="Your name" required>
+                        <div class="err">Please enter your name.</div>
+                    </div>
+
+                    <div class="form-group" id="s-email-group">
+                        <label for="s-email">Email</label>
+                        <input type="email" id="s-email" name="email" placeholder="you@example.com" required>
+                        <div class="err">Please enter a valid email.</div>
+                    </div>
+
+                    <div class="form-group" id="s-amount-group">
+                        <label for="s-amount">Donation Amount (USD)</label>
+                        <input type="number" id="s-amount" name="amount" placeholder="5.00" min="1" step="0.01" required>
+                        <div class="err">Please enter an amount.</div>
+                    </div>
+
+                    <div class="crypto-section">
+                        <label>Cryptocurrency</label>
+                        <div class="crypto-options">
+                            <div class="crypto-option" data-type="monero" onclick="selectCrypto(this, 'support')">
+                                <div class="icon">&#x1F9EA;</div>
+                                <div class="name">Monero (XMR)</div>
+                                <div class="addr" id="s-xmr-addr"></div>
+                            </div>
+                            <div class="crypto-option" data-type="bitcoin" onclick="selectCrypto(this, 'support')">
+                                <div class="icon">&#x20BF;</div>
+                                <div class="name">Bitcoin (BTC)</div>
+                                <div class="addr" id="s-btc-addr"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <input type="hidden" name="crypto_type" id="s-crypto-type" value="">
+
+                    <div class="wallet-display" id="s-wallet-display">
+                        <div class="wl">Send your donation to:</div>
+                        <div class="wa" id="s-wallet-addr" onclick="copyWallet(this)"></div>
+                        <div class="copy-hint">Click address to copy</div>
+                    </div>
+
+                    <div class="form-group" id="s-tx-group">
+                        <label for="s-tx">Transaction Hash (optional)</label>
+                        <input type="text" id="s-tx" name="transaction_hash" placeholder="Paste your TX hash for faster verification">
+                        <div class="hint">Helps us verify your donation faster.</div>
+                    </div>
+
+                    <button type="submit" class="btn">Submit Donation</button>
+                </form>
+            </div>
+
+            <!-- ═══ TAB 2: SEEDLING ═══ -->
+            <div class="tab-content" id="tab-seedling">
+                <h2>Get Access — $5 Minimum</h2>
+                <p class="subtitle">Donate $5+ to get access to non-media services.</p>
+
+                <div class="info-box">
+                    <strong>How it works:</strong><br>
+                    1. Send your $5 donation via crypto<br>
+                    2. Fill out the form below with your TX hash<br>
+                    3. We verify and email you an invite code<br>
+                    4. Use the code on the "I Have a Code" tab to create your account
+                </div>
+
+                <form id="form-seedling" action="https://n8n.mysweetpea.cc/webhook/donate" method="POST">
+                    <input type="hidden" name="form_type" value="seedling">
+
+                    <div class="form-group" id="se-name-group">
+                        <label for="se-name">Name</label>
+                        <input type="text" id="se-name" name="name" placeholder="Your name" required>
+                        <div class="err">Please enter your name.</div>
+                    </div>
+
+                    <div class="form-group" id="se-email-group">
+                        <label for="se-email">Email</label>
+                        <input type="email" id="se-email" name="email" placeholder="you@example.com" required>
+                        <div class="err">Please enter a valid email.</div>
+                    </div>
+
+                    <div class="form-group" id="se-username-group">
+                        <label for="se-username">Username</label>
+                        <input type="text" id="se-username" name="username" placeholder="Choose a username" required pattern="[A-Za-z0-9_]+">
+                        <div class="err">Min 3 chars, alphanumeric + underscore only.</div>
+                        <div class="hint">Letters, numbers, underscores. Min 3 characters.</div>
+                    </div>
+
+                    <div class="crypto-section">
+                        <label>Cryptocurrency</label>
+                        <div class="crypto-options">
+                            <div class="crypto-option" data-type="monero" onclick="selectCrypto(this, 'seedling')">
+                                <div class="icon">&#x1F9EA;</div>
+                                <div class="name">Monero (XMR)</div>
+                                <div class="addr" id="se-xmr-addr"></div>
+                            </div>
+                            <div class="crypto-option" data-type="bitcoin" onclick="selectCrypto(this, 'seedling')">
+                                <div class="icon">&#x20BF;</div>
+                                <div class="name">Bitcoin (BTC)</div>
+                                <div class="addr" id="se-btc-addr"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <input type="hidden" name="crypto_type" id="se-crypto-type" value="">
+
+                    <div class="wallet-display" id="se-wallet-display">
+                        <div class="wl">Send your $5+ donation to:</div>
+                        <div class="wa" id="se-wallet-addr" onclick="copyWallet(this)"></div>
+                        <div class="copy-hint">Click address to copy</div>
+                    </div>
+
+                    <div class="form-group" id="se-tx-group">
+                        <label for="se-tx">Transaction Hash (optional but recommended)</label>
+                        <input type="text" id="se-tx" name="transaction_hash" placeholder="Paste your TX hash for faster verification">
+                        <div class="hint">Helps us verify your donation faster.</div>
+                    </div>
+
+                    <button type="submit" class="btn">Submit Request</button>
+                </form>
+            </div>
+
+            <!-- ═══ TAB 3: CODE ═══ -->
+            <div class="tab-content" id="tab-code">
+                <h2>Redeem Invite Code</h2>
+                <p class="subtitle">Have an invite code? Create your account now.</p>
+
+                <div class="info-box">
+                    Enter your invite code and details below. Your account will be created instantly.
+                </div>
+
+                <form id="form-code" action="https://n8n.mysweetpea.cc/webhook/donate" method="POST">
+                    <input type="hidden" name="form_type" value="code">
+
+                    <div class="form-group" id="c-code-group">
+                        <label for="c-code">Invite Code</label>
+                        <input type="text" id="c-code" name="invite_code" placeholder="PEA-XXXXXXXX or FAM-XXXXXXXX" required>
+                        <div class="err">Please enter your invite code.</div>
+                    </div>
+
+                    <div class="form-group" id="c-name-group">
+                        <label for="c-name">Name</label>
+                        <input type="text" id="c-name" name="name" placeholder="Your name" required>
+                        <div class="err">Please enter your name.</div>
+                    </div>
+
+                    <div class="form-group" id="c-email-group">
+                        <label for="c-email">Email</label>
+                        <input type="email" id="c-email" name="email" placeholder="you@example.com" required>
+                        <div class="err">Please enter a valid email.</div>
+                    </div>
+
+                    <div class="form-group" id="c-username-group">
+                        <label for="c-username">Username</label>
+                        <input type="text" id="c-username" name="username" placeholder="Choose a username" required pattern="[A-Za-z0-9_]+">
+                        <div class="err">Min 3 chars, alphanumeric + underscore only.</div>
+                        <div class="hint">Letters, numbers, underscores. Min 3 characters.</div>
+                    </div>
+
+                    <button type="submit" class="btn">Create Account</button>
+                </form>
+            </div>
+        </div>
+
+        <div class="footer">
+            Questions? <a href="mailto:sweetpea@tuta.io">sweetpea@tuta.io</a>
+        </div>
     </div>
-    <button type="submit" class="btn" id="submitBtn" disabled>
-      <span class="btn-text">Subscribe</span>
-      <div class="btn-spinner"></div>
-    </button>
-  </form>
-  <div class="footer">
-    Need an invite? Contact <a href="mailto:sweetpea@tuta.io">sweetpea@tuta.io</a>
-  </div>
-</div>
-<script>
-(function(){
-  const form=document.getElementById('subForm');
-  const btn=document.getElementById('submitBtn');
-  const globalErr=document.getElementById('globalErr');
-  const errorSummary=document.getElementById('errorSummary');
-  const errorList=document.getElementById('errorList');
-  const emailRe=/^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  const codeRe=/^[A-Za-z0-9-]+$/;
-  let codeTimer=null;
-  let serverCodeState={checked:false,valid:null,msg:''};
-  const fields=[
-    {id:'name',key:'Name (First name only)'},
-    {id:'email',key:'Email'},
-    {id:'username',key:'Username'},
-    {id:'invite_code',key:'Invite Code (Save this to reactivate account)'}
-  ];
-  function getEl(id){return document.getElementById(id);}
-  function validateField(id){
-    const el=getEl(id);
-    const val=el.value.trim();
-    let ok=true,msg='';
-    switch(id){
-      case 'name':
-        if(!val){ok=false;msg='Name is required.';}
-        break;
-      case 'email':
-        if(!emailRe.test(val)){ok=false;msg='Enter a valid email address.';}
-        break;
-      case 'username':
-        if(val.length<3){ok=false;msg='Username must be at least 3 characters.';}
-        break;
-      case 'invite_code':
-        if(val.length<4||!codeRe.test(val)){ok=false;msg='Invite code must be at least 4 characters (letters, numbers, hyphens).';}
-        break;
-    }
-    return {ok,msg,el};
-  }
-  function showFieldStatus(id,isValid,msg){
-    const el=getEl(id);
-    const err=document.getElementById(id+'-err');
-    const warn=document.getElementById(id+'-warn-text');
-    const status=document.getElementById(id+'-status');
-    if(status)status.classList.remove('show');
-    if(isValid===true){
-      el.classList.remove('invalid','warn');el.classList.add('valid');
-      if(err)err.classList.remove('show');
-      if(warn)warn.classList.remove('show');
-      if(status){
-        status.querySelectorAll('.status-spinner,.status-icon').forEach(e=>e.style.display='none');
-        const okIcon=status.querySelector('.status-icon.ok');
-        if(okIcon)okIcon.style.display='flex';
-        status.classList.add('show');
-      }
-    }else if(isValid===false){
-      el.classList.remove('valid','warn');el.classList.add('invalid');
-      if(err){err.textContent=msg;err.classList.add('show');}
-      if(warn)warn.classList.remove('show');
-      if(status){
-        status.querySelectorAll('.status-spinner,.status-icon').forEach(e=>e.style.display='none');
-        const errIcon=status.querySelector('.status-icon.err');
-        if(errIcon)errIcon.style.display='flex';
-        status.classList.add('show');
-      }
-    }else{
-      el.classList.remove('valid','invalid','warn');
-      if(err)err.classList.remove('show');
-      if(warn)warn.classList.remove('show');
-      if(status)status.classList.remove('show');
-    }
-  }
-  function clearFieldStatus(id){
-    const el=getEl(id);
-    el.classList.remove('valid','invalid','warn');
-    const err=document.getElementById(id+'-err');
-    if(err)err.classList.remove('show');
-    const warn=document.getElementById(id+'-warn-text');
-    if(warn)warn.classList.remove('show');
-    const status=document.getElementById(id+'-status');
-    if(status){
-      status.classList.remove('show');
-      status.querySelectorAll('.status-spinner,.status-icon').forEach(e=>e.style.display='');
-    }
-  }
-  function updateSummary(){
-    const errors=[];
-    fields.forEach(({id})=>{
-      const{ok,msg}=validateField(id);
-      if(!ok)errors.push(msg);
-      else if(id==='invite_code' && serverCodeState.checked && !serverCodeState.valid){
-        errors.push(serverCodeState.msg||'Invalid or already-used invite code.');
-      }
-    });
-    if(errors.length>0){
-      errorList.innerHTML=errors.map(m=>'<li>'+m+'</li>').join('');
-      errorSummary.classList.add('open');
-    }else{
-      errorSummary.classList.remove('open');
-      errorList.innerHTML='';
-    }
-    return errors.length===0;
-  }
-  function updateButton(){
-    const allOk=fields.every(({id})=>{
-      const v=validateField(id);
-      if(!v.ok)return false;
-      if(id==='invite_code' && serverCodeState.checked && !serverCodeState.valid)return false;
-      return true;
-    });
-    btn.disabled=!allOk;
-  }
-  window.addEventListener('pageshow',function(e){
-    if(e.persisted){
-      btn.disabled=false;
-      btn.classList.remove('processing');
-      btn.querySelector('.btn-text').textContent='Subscribe';
-      globalErr.classList.remove('show');
-    }
-  });
-  fields.forEach(({id})=>{
-    if(id==='invite_code')return;
-    const el=getEl(id);
-    el.addEventListener('input',()=>{
-      clearFieldStatus(id);
-      updateSummary();
-      updateButton();
-    });
-    el.addEventListener('blur',()=>{
-      const{ok,msg}=validateField(id);
-      showFieldStatus(id,ok,msg);
-      updateSummary();
-      updateButton();
-    });
-  });
-  const codeEl=getEl('invite_code');
-  const codeSpinner=document.getElementById('code-spinner');
-  const codeOkIcon=document.getElementById('code-ok');
-  const codeErrIcon=document.getElementById('code-err-icon');
-  const codeWarnIcon=document.getElementById('code-warn');
-  const codeWarnText=document.getElementById('code-warn-text');
-  async function checkServerCode(code){
-    try{
-      const ctrl=new AbortController();
-      const t=setTimeout(()=>ctrl.abort(),8000);
-      const r=await fetch('https://subscribe.mysweetpea.duckdns.org/webhook/check-code',{
-        method:'POST',
-        headers:{'Content-Type':'application/json'},
-        body:JSON.stringify({code}),
-        signal:ctrl.signal
-      });
-      clearTimeout(t);
-      if(!r.ok) throw new Error('HTTP '+r.status);
-      return await r.json();
-    }catch(e){
-      return {ok:true,msg:'Server check unavailable'};
-    }
-  }
-  codeEl.addEventListener('input',()=>{
-    serverCodeState={checked:false,valid:null,msg:''};
-    clearFieldStatus('invite_code');
-    if(codeSpinner)codeSpinner.style.display='block';
-    if(codeOkIcon)codeOkIcon.style.display='none';
-    if(codeErrIcon)codeErrIcon.style.display='none';
-    if(codeWarnIcon)codeWarnIcon.style.display='none';
-    const status=document.getElementById('code-status');
-    if(status)status.classList.add('show');
-    clearTimeout(codeTimer);
-    const val=codeEl.value.trim();
-    if(val.length<4){updateSummary();updateButton();return;}
-    codeTimer=setTimeout(async()=>{
-      if(!codeRe.test(val)){
-        if(codeSpinner)codeSpinner.style.display='none';
-        serverCodeState={checked:true,valid:false,msg:'Invalid format. Use letters, numbers, and hyphens only.'};
-        showFieldStatus('invite_code',false,serverCodeState.msg);
-        updateSummary();updateButton();return;
-      }
-      const res=await checkServerCode(val);
-      if(codeSpinner)codeSpinner.style.display='none';
-      if(res.ok===true && !res.msg){
-        serverCodeState={checked:true,valid:true,msg:''};
-        if(codeErrIcon)codeErrIcon.style.display='none';
-        if(codeWarnIcon)codeWarnIcon.style.display='none';
-        if(codeOkIcon)codeOkIcon.style.display='flex';
-        showFieldStatus('invite_code',true,'');
-      }else if(res.ok===false){
-        serverCodeState={checked:true,valid:false,msg:res.msg||'Invalid or already-used invite code.'};
-        if(codeOkIcon)codeOkIcon.style.display='none';
-        if(codeWarnIcon)codeWarnIcon.style.display='none';
-        if(codeErrIcon)codeErrIcon.style.display='flex';
-        showFieldStatus('invite_code',false,serverCodeState.msg);
-      }else{
-        serverCodeState={checked:false,valid:null,msg:''};
-        if(codeOkIcon)codeOkIcon.style.display='none';
-        if(codeErrIcon)codeErrIcon.style.display='none';
-        if(codeWarnIcon)codeWarnIcon.style.display='flex';
-        codeEl.classList.add('warn');
-        if(codeWarnText)codeWarnText.classList.add('show');
-      }
-      updateSummary();updateButton();
-    },400);
-  });
-  codeEl.addEventListener('blur',()=>{
-    const val=codeEl.value.trim();
-    if(val.length===0){
-      showFieldStatus('invite_code',false,'Invite code is required.');
-    }else if(val.length<4){
-      showFieldStatus('invite_code',false,'Code must be at least 4 characters.');
-    }else if(!codeRe.test(val)){
-      showFieldStatus('invite_code',false,'Invalid format. Use letters, numbers, and hyphens only.');
-    }else if(serverCodeState.checked && !serverCodeState.valid){
-      showFieldStatus('invite_code',false,serverCodeState.msg);
-    }else if(serverCodeState.checked && serverCodeState.valid){
-      showFieldStatus('invite_code',true,'');
-    }else{
-      clearFieldStatus('invite_code');
-    }
-    updateSummary();updateButton();
-  });
-  form.addEventListener('submit',function(e){
-    let ok=true;
-    fields.forEach(({id})=>{
-      const v=validateField(id);
-      if(!v.ok){showFieldStatus(id,false,v.msg);ok=false;}
-      else if(id==='invite_code' && serverCodeState.checked && !serverCodeState.valid){
-        showFieldStatus(id,false,serverCodeState.msg);ok=false;
-      }
-    });
-    updateSummary();
-    if(!ok){
-      e.preventDefault();
-      btn.style.animation='shake .4s ease';
-      setTimeout(()=>btn.style.animation='',400);
-      const firstInvalid=fields.find(({id})=>{
-        if(!validateField(id).ok)return true;
-        if(id==='invite_code' && serverCodeState.checked && !serverCodeState.valid)return true;
-        return false;
-      });
-      if(firstInvalid)getEl(firstInvalid.id).focus();
-      return;
-    }
-    btn.disabled=true;
-    btn.classList.add('processing');
-  });
-})();
-</script>
+
+    <script>
+        // ── Wallet addresses (replace with your actual addresses) ──
+        const WALLETS = {
+            monero: 'YOUR_XMR_WALLET_ADDRESS_HERE',
+            bitcoin: 'YOUR_BTC_WALLET_ADDRESS_HERE'
+        };
+
+        function truncateAddr(addr) {
+            if (!addr || addr.includes('YOUR_')) return 'Coming soon';
+            return addr.substring(0, 8) + '...' + addr.substring(addr.length - 6);
+        }
+
+        // Initialize truncated addresses
+        document.getElementById('s-xmr-addr').textContent = truncateAddr(WALLETS.monero);
+        document.getElementById('s-btc-addr').textContent = truncateAddr(WALLETS.bitcoin);
+        document.getElementById('se-xmr-addr').textContent = truncateAddr(WALLETS.monero);
+        document.getElementById('se-btc-addr').textContent = truncateAddr(WALLETS.bitcoin);
+
+        // ── Tab switching ──
+        function switchTab(tabName) {
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+            document.querySelector('[data-tab="' + tabName + '"]').classList.add('active');
+            document.getElementById('tab-' + tabName).classList.add('active');
+            document.getElementById('errorBanner').classList.remove('visible');
+        }
+
+        // ── Crypto selection ──
+        function selectCrypto(el, prefix) {
+            const parent = el.parentElement;
+            parent.querySelectorAll('.crypto-option').forEach(o => o.classList.remove('selected'));
+            el.classList.add('selected');
+            const type = el.getAttribute('data-type');
+            document.getElementById(prefix + '-crypto-type').value = type;
+            const walletDisplay = document.getElementById(prefix + '-wallet-display');
+            const walletAddr = document.getElementById(prefix + '-wallet-addr');
+            if (WALLETS[type] && !WALLETS[type].includes('YOUR_')) {
+                walletAddr.textContent = WALLETS[type];
+                walletDisplay.classList.add('visible');
+            } else {
+                walletDisplay.classList.remove('visible');
+            }
+        }
+
+        // ── Copy wallet address ──
+        function copyWallet(el) {
+            navigator.clipboard.writeText(el.textContent).then(() => {
+                const original = el.textContent;
+                el.textContent = 'Copied!';
+                setTimeout(() => { el.textContent = original; }, 1500);
+            });
+        }
+
+        // ── URL error params ──
+        const urlParams = new URLSearchParams(window.location.search);
+        if (urlParams.get('reason') === 'validation') {
+            document.getElementById('errorBanner').textContent = 'Please check your inputs and try again.';
+            document.getElementById('errorBanner').classList.add('visible');
+        } else if (urlParams.get('reason') === 'invalid_code') {
+            switchTab('code');
+            document.getElementById('errorBanner').textContent = 'Invalid or already used invite code.';
+            document.getElementById('errorBanner').classList.add('visible');
+        }
+
+        // ── Form validation ──
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        const usernameRegex = /^[A-Za-z0-9_]+$/;
+
+        function validateField(groupId, condition) {
+            const group = document.getElementById(groupId);
+            if (condition) {
+                group.classList.remove('has-error');
+                return true;
+            } else {
+                group.classList.add('has-error');
+                return false;
+            }
+        }
+
+        // Support form
+        document.getElementById('form-support').addEventListener('submit', function(e) {
+            let valid = true;
+            const banner = document.getElementById('errorBanner');
+            banner.classList.remove('visible');
+
+            valid &= validateField('s-name-group', document.getElementById('s-name').value.trim().length > 0);
+            valid &= validateField('s-email-group', emailRegex.test(document.getElementById('s-email').value.trim()));
+            valid &= validateField('s-amount-group', parseFloat(document.getElementById('s-amount').value) >= 1);
+
+            const cryptoType = document.getElementById('s-crypto-type').value;
+            if (!cryptoType) {
+                banner.textContent = 'Please select a cryptocurrency.';
+                banner.classList.add('visible');
+                valid = false;
+            }
+
+            if (!valid) e.preventDefault();
+        });
+
+        // Seedling form
+        document.getElementById('form-seedling').addEventListener('submit', function(e) {
+            let valid = true;
+            const banner = document.getElementById('errorBanner');
+            banner.classList.remove('visible');
+
+            valid &= validateField('se-name-group', document.getElementById('se-name').value.trim().length > 0);
+            valid &= validateField('se-email-group', emailRegex.test(document.getElementById('se-email').value.trim()));
+            valid &= validateField('se-username-group',
+                document.getElementById('se-username').value.trim().length >= 3 &&
+                usernameRegex.test(document.getElementById('se-username').value.trim()));
+
+            const cryptoType = document.getElementById('se-crypto-type').value;
+            if (!cryptoType) {
+                banner.textContent = 'Please select a cryptocurrency.';
+                banner.classList.add('visible');
+                valid = false;
+            }
+
+            if (!valid) e.preventDefault();
+        });
+
+        // Code form
+        document.getElementById('form-code').addEventListener('submit', function(e) {
+            let valid = true;
+            const banner = document.getElementById('errorBanner');
+            banner.classList.remove('visible');
+
+            valid &= validateField('c-code-group', document.getElementById('c-code').value.trim().length >= 4);
+            valid &= validateField('c-name-group', document.getElementById('c-name').value.trim().length > 0);
+            valid &= validateField('c-email-group', emailRegex.test(document.getElementById('c-email').value.trim()));
+            valid &= validateField('c-username-group',
+                document.getElementById('c-username').value.trim().length >= 3 &&
+                usernameRegex.test(document.getElementById('c-username').value.trim()));
+
+            if (!valid) e.preventDefault();
+        });
+    </script>
 </body>
 </html>
