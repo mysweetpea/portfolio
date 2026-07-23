@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MySweetPea — Suggest a Service</title>
+    <link rel="icon" type="image/svg+xml" href="/logo-favicon.svg">
+    <style>
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+        :root {
+            --bg: #0a0a0a; --gold: #d4af37; --gold-dim: #b8941f; --gold-glow: rgba(212, 175, 55, 0.15);
+            --text: #e0e0e0; --text-dim: #888; --text-faint: #555;
+            --border: rgba(255, 255, 255, 0.08); --border-gold: rgba(212, 175, 55, 0.25);
+            --radius: 14px; --radius-sm: 8px; --transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            --purple: #a855f7; --green: #22c56e; --pink: #ec4899;
+        }
+        html { scroll-behavior: smooth; }
+        body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; line-height: 1.6; overflow-x: hidden; }
+        #petalCanvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; pointer-events: none; }
+        .content-wrapper { position: relative; z-index: 1; }
+        .bg-gradient { position: fixed; top: 0; left: 0; right: 0; bottom: 0; z-index: -1; background: radial-gradient(ellipse 80% 50% at 50% -20%, rgba(212, 175, 55, 0.08), transparent), radial-gradient(ellipse 60% 40% at 80% 100%, rgba(212, 175, 55, 0.04), transparent), #0a0a0a; }
+        @keyframes shimmer { 0% { background-position: -200% center; } 100% { background-position: 200% center; } }
+        @keyframes float3D { 0%, 100% { transform: translateY(0) rotateX(0) rotateY(0); } 50% { transform: translateY(-10px) rotateX(2deg) rotateY(2deg); } }
+        @keyframes pulseGlow { 0%, 100% { box-shadow: 0 0 20px rgba(212, 175, 55, 0.08); } 50% { box-shadow: 0 0 40px rgba(212, 175, 55, 0.18); } }
+        .glass-text { background: linear-gradient(135deg, rgba(255,255,255,0.9) 0%, rgba(212,175,55,0.8) 30%, rgba(255,255,255,0.6) 50%, rgba(212,175,55,0.8) 70%, rgba(255,255,255,0.9) 100%); background-size: 200% auto; -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; text-shadow: 0 0 30px rgba(212, 175, 55, 0.15); animation: shimmer 6s linear infinite; filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.3)); }
+
+        .top-nav { position: fixed; top: 20px; right: 20px; z-index: 50; display: flex; gap: 8px; align-items: center; }
+        .nav-btn { padding: 8px 16px; background: rgba(20, 20, 20, 0.8); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border: 1px solid var(--border-gold); border-radius: var(--radius-sm); color: var(--gold); font-size: 0.82rem; font-weight: 600; text-decoration: none; transition: var(--transition); }
+        .nav-btn:hover { background: rgba(30, 30, 30, 0.9); border-color: var(--gold); transform: translateY(-2px); }
+        @media (max-width: 768px) { .top-nav { top: 10px; right: 10px; gap: 4px; } .nav-btn { padding: 6px 10px; font-size: 0.72rem; } }
+
+        .float-3d { position: absolute; pointer-events: none; opacity: 0.06; z-index: 0; }
+        .float-3d svg { width: 100%; height: 100%; }
+        .float-3d.f1 { top: 15%; right: 5%; width: 120px; height: 120px; animation: float3D 8s ease-in-out infinite; }
+        .float-3d.f2 { top: 45%; left: 3%; width: 80px; height: 80px; animation: float3D 10s ease-in-out infinite reverse; }
+        .float-3d.f3 { top: 70%; right: 8%; width: 100px; height: 100px; animation: float3D 7s ease-in-out infinite 1s; }
+        @media (max-width: 768px) { .float-3d { display: none; } }
+
+        .page-footer { text-align: center; padding: 40px 20px; font-size: 0.85rem; color: var(--text-faint); border-top: 1px solid rgba(255, 255, 255, 0.04); }
+        .page-footer a { color: var(--gold); text-decoration: none; transition: var(--transition); }
+        .page-footer a:hover { text-decoration: underline; }
+        .page-footer .footer-links { display: flex; justify-content: center; gap: 24px; margin-bottom: 12px; flex-wrap: wrap; }
+
+        .hero { text-align: center; padding: 80px 20px 30px; }
+        .hero img.logo { width: 140px; height: 140px; margin-bottom: 16px; filter: drop-shadow(0 0 25px rgba(212, 175, 55, 0.25)); animation: float3D 6s ease-in-out infinite; }
+        .hero h1 { font-size: 2.2rem; font-weight: 700; margin-bottom: 8px; }
+        .hero p { font-size: 1rem; color: var(--text-dim); max-width: 500px; margin: 0 auto; }
+
+        .container { max-width: 560px; margin: 0 auto; padding: 20px; }
+
+        .card { background: rgba(20, 20, 20, 0.6); backdrop-filter: blur(16px) saturate(1.2); -webkit-backdrop-filter: blur(16px) saturate(1.2); border: 2px solid var(--border-gold); border-radius: var(--radius); padding: 32px; box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.05), 0 8px 32px rgba(0, 0, 0, 0.3); }
+        .card h2 { font-size: 1.1rem; margin-bottom: 6px; }
+        .card .subtitle { font-size: 0.84rem; color: var(--text-dim); margin-bottom: 20px; }
+
+        .form-group { margin-bottom: 18px; position: relative; }
+        .form-group label { display: block; font-size: 0.82rem; margin-bottom: 6px; font-weight: 500; }
+        .form-group input, .form-group textarea, .form-group select {
+            width: 100%; padding: 12px 14px;
+            background: rgba(10, 10, 10, 0.8);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: var(--radius-sm);
+            color: var(--text); font-size: 0.9rem;
+            transition: border-color 0.2s;
+            font-family: inherit;
+        }
+        .form-group input:focus, .form-group textarea:focus, .form-group select:focus { outline: none; border-color: var(--gold); }
+        .form-group input::placeholder, .form-group textarea::placeholder { color: #555; }
+        .form-group textarea { min-height: 120px; resize: vertical; }
+        .form-group select { cursor: pointer; }
+        .form-group select option { background: #141414; }
+        .form-group .hint { font-size: 0.74rem; color: #666; margin-top: 4px; }
+        .form-group .err { font-size: 0.74rem; color: #e74c3c; margin-top: 4px; display: none; }
+        .form-group.has-error input, .form-group.has-error textarea, .form-group.has-error select { border-color: #e74c3c; }
+        .form-group.has-error .err { display: block; }
+        .form-group.is-valid input, .form-group.is-valid textarea, .form-group.is-valid select { border-color: var(--green); box-shadow: 0 0 10px rgba(34, 197, 94, 0.15); }
+        .validation-icon { position: absolute; right: 14px; top: 40px; font-size: 1rem; display: none; }
+        .form-group.has-error .validation-icon { display: block; color: #e74c3c; }
+        .form-group.is-valid .validation-icon { display: block; color: var(--green); }
+
+        .info-box { background: rgba(212, 175, 55, 0.06); border: 1px solid rgba(212, 175, 55, 0.15); border-radius: var(--radius-sm); padding: 14px; margin-bottom: 20px; font-size: 0.82rem; color: #b8a030; line-height: 1.6; }
+
+        .vine-btn-wrapper { position: relative; width: 100%; }
+        .vine-btn-wrapper svg { position: absolute; top: -8px; left: -12px; width: calc(100% + 24px); height: calc(100% + 20px); pointer-events: none; opacity: 0; transition: opacity 0.4s ease; z-index: 2; }
+        .vine-btn-wrapper:hover svg { opacity: 1; }
+        .vine-btn-wrapper .btn { position: relative; z-index: 1; width: 100%; padding: 14px; border: none; border-radius: var(--radius-sm); font-size: 0.95rem; font-weight: 600; cursor: pointer; transition: var(--transition); display: block; text-align: center; }
+        .btn:disabled { opacity: 0.4; cursor: not-allowed; transform: none !important; }
+        .btn-glass-suggest { background: rgba(212, 175, 55, 0.05); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); color: var(--text); border: 1px solid rgba(212, 175, 55, 0.2); box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.05), 0 4px 16px rgba(0, 0, 0, 0.2); }
+        .btn-glass-suggest:hover:not(:disabled) { background: rgba(212, 175, 55, 0.12); border-color: rgba(212, 175, 55, 0.5); box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.08), 0 4px 20px rgba(212, 175, 55, 0.15); transform: scale(1.02); }
+
+        .error-banner { display: none; background: rgba(231, 76, 60, 0.12); border: 1px solid rgba(231, 76, 60, 0.25); border-radius: var(--radius-sm); padding: 10px; margin-bottom: 16px; font-size: 0.82rem; color: #e74c3c; }
+        .error-banner.visible { display: block; }
+
+        .success-banner { display: none; background: rgba(34, 197, 94, 0.12); border: 1px solid rgba(34, 197, 94, 0.25); border-radius: var(--radius-sm); padding: 14px; margin-bottom: 16px; font-size: 0.86rem; color: #1fc331; }
+        .success-banner.visible { display: block; }
+
+        @media (max-width: 768px) { .hero h1 { font-size: 1.6rem; } .hero img.logo { width: 100px; height: 100px; } .container { padding: 10px; } .card { padding: 24px; } }
+    </style>
+</head>
+<body>
+    <div class="bg-gradient"></div>
+    <canvas id="petalCanvas"></canvas>
+
+    <div class="float-3d f1"><svg viewBox="0 0 100 100" fill="none"><circle cx="50" cy="50" r="45" stroke="#d4af37" stroke-width="1.5" fill="none"/><path d="M50 15 C30 20, 25 40, 30 55 C35 68, 50 75, 50 75 C50 75, 65 68, 70 55 C75 40, 70 20, 50 15" fill="#d4af37"/></svg></div>
+    <div class="float-3d f2"><svg viewBox="0 0 100 100" fill="none"><circle cx="50" cy="50" r="45" stroke="#d4af37" stroke-width="1.5" fill="none"/><path d="M50 15 C30 20, 25 40, 30 55 C35 68, 50 75, 50 75 C50 75, 65 68, 70 55 C75 40, 70 20, 50 15" fill="#d4af37"/></svg></div>
+    <div class="float-3d f3"><svg viewBox="0 0 100 100" fill="none"><circle cx="50" cy="50" r="45" stroke="#d4af37" stroke-width="1.5" fill="none"/><path d="M50 15 C30 20, 25 40, 30 55 C35 68, 50 75, 50 75 C50 75, 65 68, 70 55 C75 40, 70 20, 50 15" fill="#d4af37"/></svg></div>
+
+    <div class="top-nav">
+        <a href="/index.html" class="nav-btn">Home</a>
+        <a href="/pricing.html" class="nav-btn">Pricing</a>
+        <a href="/support.html" class="nav-btn">Support</a>
+        <a href="/about.html" class="nav-btn">About</a>
+        <a href="/suggest.html" class="nav-btn">Suggest</a>
+    </div>
+
+
+    <div class="content-wrapper">
+        <div class="hero">
+            <img src="/logo.svg" alt="MySweetPea" class="logo">
+            <h1 class="glass-text">Suggest a Service</h1>
+            <p>Have an idea for a service we should self-host? Let us know!</p>
+        </div>
+
+        <div class="container">
+            <div class="card">
+                <div class="error-banner" id="errorBanner"></div>
+                <div class="success-banner" id="successBanner">Thank you! Your suggestion has been submitted. We will review it and consider adding it to MySweetPea.</div>
+
+                <h2 class="glass-text">Service Suggestion</h2>
+                <p class="subtitle">Suggest a self-hosted service you would like to see on MySweetPea.</p>
+
+                <div class="info-box">
+                    <strong>Before suggesting:</strong> Check if the service is open source and can be self-hosted.
+                    We prioritize privacy-focused, community-driven projects.
+                </div>
+
+                <form id="form-suggest" action="https://n8n.mysweetpea.cc/webhook/suggest" method="POST">
+                    <div class="form-group" id="service-name-group">
+                        <label class="glass-text" for="service-name">Service Name</label>
+                        <input type="text" id="service-name" name="service_name" placeholder="e.g., Mastodon, Gitea, BookStack" required oninput="validateField(this, 'service-name-group', 2)">
+                        <span class="validation-icon"></span>
+                        <div class="err">Please enter a service name (min 2 characters).</div>
+                    </div>
+
+                    <div class="form-group" id="service-url-group">
+                        <label class="glass-text" for="service-url">Project URL (optional)</label>
+                        <input type="url" id="service-url" name="service_url" placeholder="https://github.com/example/project">
+                        <span class="validation-icon"></span>
+                        <div class="hint">Link to the project's website or GitHub repo.</div>
+                    </div>
+
+                    <div class="form-group" id="category-group">
+                        <label class="glass-text" for="category">Category</label>
+                        <select id="category" name="category" required onchange="validateSelect(this, 'category-group')">
+                            <option value="">Select a category...</option>
+                            <option value="media">Media &amp; Entertainment</option>
+                            <option value="productivity">Productivity</option>
+                            <option value="communication">Communication</option>
+                            <option value="security">Security &amp; Privacy</option>
+                            <option value="development">Development</option>
+                            <option value="monitoring">Monitoring &amp; Analytics</option>
+                            <option value="storage">File Storage &amp; Sync</option>
+                            <option value="other">Other</option>
+                        </select>
+                        <span class="validation-icon"></span>
+                        <div class="err">Please select a category.</div>
+                    </div>
+
+                    <div class="form-group" id="explanation-group">
+                        <label class="glass-text" for="explanation">Why should we host this?</label>
+                        <textarea id="explanation" name="explanation" placeholder="Explain what this service does, why it would be useful for the community, and why you think we should host it." required oninput="validateField(this, 'explanation-group', 10)"></textarea>
+                        <span class="validation-icon"></span>
+                        <div class="err">Please provide an explanation (min 10 characters).</div>
+                    </div>
+
+                    <div class="form-group" id="your-name-group">
+                        <label class="glass-text" for="your-name">Your Name (optional)</label>
+                        <input type="text" id="your-name" name="suggester_name" placeholder="Anonymous">
+                        <div class="hint">Leave blank to submit anonymously.</div>
+                    </div>
+
+                    <div class="form-group" id="your-email-group">
+                        <label class="glass-text" for="your-email">Your Email (optional)</label>
+                        <input type="email" id="your-email" name="suggester_email" placeholder="you@example.com">
+                        <div class="hint">Only if you want us to follow up with you.</div>
+                    </div>
+
+                    <div class="vine-btn-wrapper">
+                        <svg viewBox="0 0 200 60" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M10 30 Q30 10, 50 30 T90 30 T130 30 T170 30 T190 30" stroke="#d4af37" stroke-width="1.5" fill="none" opacity="0.6"/><path d="M10 30 Q30 50, 50 30 T90 30 T130 30 T170 30 T190 30" stroke="#d4af37" stroke-width="1" fill="none" opacity="0.4"/><circle cx="30" cy="18" r="3" fill="#d4af37" opacity="0.7"/><circle cx="70" cy="42" r="3" fill="#d4af37" opacity="0.7"/><circle cx="110" cy="18" r="3" fill="#d4af37" opacity="0.7"/><circle cx="150" cy="42" r="3" fill="#d4af37" opacity="0.7"/></svg>
+                        <button type="submit" class="btn btn-glass-suggest" id="suggest-submit" disabled>Submit Suggestion</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <div class="page-footer">
+            <div class="footer-links">
+                <a href="/pricing.html">Pricing</a>
+                <a href="/support.html">Support</a>
+                <a href="/about.html">About Us</a>
+                <a href="/suggest.html">Suggest a Service</a>
+                <a href="mailto:support@mysweetpea.cc">Contact</a>
+            </div>
+            <p>&copy; 2026 MySweetPea. Self-hosted with care.</p>
+        </div>
+
+    </div>
+    <script>
+
+        (function() {
+            var canvas = document.getElementById('petalCanvas');
+            var ctx = canvas.getContext('2d');
+            var petals = [];
+            var W, H;
+            function resize() { W = canvas.width = window.innerWidth; H = canvas.height = window.innerHeight; }
+            resize(); window.addEventListener('resize', resize);
+            function createPetal() { return { x: Math.random() * W, y: -20, size: 4 + Math.random() * 8, speedY: 0.5 + Math.random() * 1.5, speedX: -0.5 + Math.random() * 1, rotation: Math.random() * Math.PI * 2, rotSpeed: -0.02 + Math.random() * 0.04, opacity: 0.15 + Math.random() * 0.35, sway: Math.random() * Math.PI * 2, swaySpeed: 0.01 + Math.random() * 0.02 }; }
+            for (var i = 0; i < 40; i++) { var p = createPetal(); p.y = Math.random() * H; petals.push(p); }
+            function drawPetal(p) { ctx.save(); ctx.translate(p.x, p.y); ctx.rotate(p.rotation); ctx.globalAlpha = p.opacity; var grad = ctx.createRadialGradient(0, 0, 0, 0, 0, p.size); grad.addColorStop(0, '#f0d860'); grad.addColorStop(0.5, '#d4af37'); grad.addColorStop(1, 'rgba(212, 175, 55, 0.3)'); ctx.fillStyle = grad; ctx.beginPath(); ctx.moveTo(0, -p.size); ctx.bezierCurveTo(p.size * 0.6, -p.size * 0.5, p.size * 0.6, p.size * 0.5, 0, p.size); ctx.bezierCurveTo(-p.size * 0.6, p.size * 0.5, -p.size * 0.6, -p.size * 0.5, 0, -p.size); ctx.fill(); ctx.strokeStyle = 'rgba(212, 175, 55, 0.4)'; ctx.lineWidth = 0.5; ctx.stroke(); ctx.restore(); }
+            function animate() { ctx.clearRect(0, 0, W, H); for (var i = 0; i < petals.length; i++) { var p = petals[i]; p.sway += p.swaySpeed; p.x += p.speedX + Math.sin(p.sway) * 0.5; p.y += p.speedY; p.rotation += p.rotSpeed; if (p.y > H + 20) { petals[i] = createPetal(); } if (p.x < -20) p.x = W + 20; if (p.x > W + 20) p.x = -20; drawPetal(p); } requestAnimationFrame(animate); }
+            animate();
+        })();
+
+
+        function setValid(groupId) { var g = document.getElementById(groupId); g.classList.remove('has-error'); g.classList.add('is-valid'); }
+        function setInvalid(groupId) { var g = document.getElementById(groupId); g.classList.remove('is-valid'); g.classList.add('has-error'); }
+        function setNeutral(groupId) { var g = document.getElementById(groupId); g.classList.remove('is-valid', 'has-error'); }
+
+        function validateField(input, groupId, minLen) {
+            var val = input.value.trim();
+            if (val.length === 0) { setNeutral(groupId); updateSubmit(); return false; }
+            if (val.length >= minLen) { setValid(groupId); updateSubmit(); return true; }
+            setInvalid(groupId); updateSubmit(); return false;
+        }
+
+        function validateSelect(select, groupId) {
+            var val = select.value;
+            if (val) { setValid(groupId); updateSubmit(); return true; }
+            setInvalid(groupId); updateSubmit(); return false;
+        }
+
+        function isFieldValid(groupId) { return document.getElementById(groupId).classList.contains('is-valid'); }
+
+        function updateSubmit() {
+            var valid = isFieldValid('service-name-group') && isFieldValid('category-group') && isFieldValid('explanation-group');
+            document.getElementById('suggest-submit').disabled = !valid;
+        }
+
+        document.getElementById('form-suggest').addEventListener('submit', function(e) {
+            e.preventDefault();
+            var btn = document.getElementById('suggest-submit');
+            btn.disabled = true;
+            btn.textContent = 'Submitting...';
+
+            var formData = new FormData(this);
+            var data = {};
+            formData.forEach(function(value, key) { data[key] = value; });
+
+            fetch('https://n8n.mysweetpea.cc/webhook/suggest', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data)
+            })
+            .then(function(r) {
+                if (r.ok || r.redirected) {
+                    document.getElementById('successBanner').classList.add('visible');
+                    document.getElementById('errorBanner').classList.remove('visible');
+                    document.getElementById('form-suggest').reset();
+                    document.querySelectorAll('.form-group').forEach(function(g) { g.classList.remove('is-valid', 'has-error'); });
+                    btn.textContent = 'Submit Suggestion';
+                    btn.disabled = true;
+                } else {
+                    throw new Error('Server error');
+                }
+            })
+            .catch(function(err) {
+                document.getElementById('errorBanner').textContent = 'Could not submit suggestion. Please try again later.';
+                document.getElementById('errorBanner').classList.add('visible');
+                btn.textContent = 'Submit Suggestion';
+                btn.disabled = false;
+            });
+        });
+    </script>
+</body>
+</html>

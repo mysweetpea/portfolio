@@ -2,10 +2,173 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta http-equiv="refresh" content="0; url=/pricing.html">
-    <title>MySweetPea</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MySweetPea — Self-Hosted Services</title>
+    <link rel="icon" type="image/svg+xml" href="/logo-favicon.svg">
+    <style>
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+        .hero { text-align: center; padding: 100px 20px 40px; }
+        .hero img.logo { width: 180px; height: 180px; margin-bottom: 20px; filter: drop-shadow(0 0 30px rgba(212, 175, 55, 0.25)); animation: float3D 6s ease-in-out infinite; }
+        .hero h1 { font-size: 3rem; font-weight: 700; margin-bottom: 12px; }
+        .hero p.tagline { font-size: 1.1rem; color: var(--text-dim); max-width: 600px; margin: 0 auto 30px; }
+
+        .hero-buttons { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; }
+        .hero-btn { padding: 14px 32px; border-radius: var(--radius-sm); font-size: 1rem; font-weight: 600; text-decoration: none; transition: var(--transition); display: inline-flex; align-items: center; gap: 8px; }
+        .hero-btn-primary { background: linear-gradient(135deg, var(--gold), var(--gold-dim)); color: #0a0a0a; }
+        .hero-btn-primary:hover { transform: scale(1.05); box-shadow: 0 4px 20px rgba(212, 175, 55, 0.3); }
+        .hero-btn-secondary { background: rgba(255, 255, 255, 0.06); color: var(--text); border: 1px solid var(--border); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); }
+        .hero-btn-secondary:hover { background: rgba(255, 255, 255, 0.1); border-color: var(--border-gold); transform: scale(1.05); }
+
+        .features-section { max-width: 900px; margin: 60px auto; padding: 20px; }
+        .section-title { font-size: 1.8rem; text-align: center; margin-bottom: 8px; font-weight: 700; }
+        .section-subtitle { font-size: 0.95rem; color: var(--text-dim); text-align: center; margin-bottom: 40px; }
+
+        .features-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; }
+        .feature-card { background: rgba(20, 20, 20, 0.5); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border: 1px solid var(--border); border-radius: var(--radius); padding: 28px; text-align: center; transition: var(--transition); }
+        .feature-card:hover { transform: translateY(-4px); border-color: var(--border-gold); background: rgba(28, 28, 28, 0.7); }
+        .feature-card .icon { font-size: 2rem; margin-bottom: 12px; }
+        .feature-card h3 { font-size: 1rem; color: var(--gold); margin-bottom: 8px; font-weight: 600; }
+        .feature-card p { font-size: 0.84rem; color: var(--text-dim); line-height: 1.5; }
+
+        .stats-section { max-width: 800px; margin: 60px auto; padding: 20px; }
+        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 20px; text-align: center; }
+        .stat-card { background: rgba(20, 20, 20, 0.5); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border: 1px solid var(--border); border-radius: var(--radius); padding: 24px; }
+        .stat-card .number { font-size: 2rem; color: var(--gold); font-weight: 800; }
+        .stat-card .label { font-size: 0.8rem; color: var(--text-dim); margin-top: 4px; }
+
+        .cta-section { max-width: 700px; margin: 60px auto; padding: 20px; text-align: center; }
+        .cta-card { background: rgba(20, 20, 20, 0.6); backdrop-filter: blur(16px) saturate(1.2); -webkit-backdrop-filter: blur(16px) saturate(1.2); border: 1px solid var(--border-gold); border-radius: var(--radius); padding: 40px; box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.05), 0 8px 32px rgba(0, 0, 0, 0.3); }
+        .cta-card h2 { font-size: 1.5rem; margin-bottom: 12px; }
+        .cta-card p { font-size: 0.92rem; color: var(--text-dim); margin-bottom: 24px; }
+        .cta-buttons { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+        .cta-btn { padding: 12px 28px; border-radius: var(--radius-sm); font-size: 0.92rem; font-weight: 600; text-decoration: none; transition: var(--transition); }
+        .cta-btn-primary { background: linear-gradient(135deg, var(--gold), var(--gold-dim)); color: #0a0a0a; }
+        .cta-btn-primary:hover { transform: scale(1.05); box-shadow: 0 4px 20px rgba(212, 175, 55, 0.3); }
+        .cta-btn-secondary { background: rgba(255, 255, 255, 0.06); color: var(--text); border: 1px solid var(--border); }
+        .cta-btn-secondary:hover { background: rgba(255, 255, 255, 0.1); border-color: var(--border-gold); }
+
+        @media (max-width: 768px) { .hero h1 { font-size: 2rem; } .hero img.logo { width: 120px; height: 120px; } .hero-buttons { flex-direction: column; align-items: center; } }
+
+    </style>
 </head>
 <body>
-    <p>Redirecting to <a href="/pricing.html">donation page</a>...</p>
+    <div class="bg-gradient"></div>
+    <canvas id="petalCanvas"></canvas>
+
+    <div class="float-3d f1"><svg viewBox="0 0 100 100" fill="none"><circle cx="50" cy="50" r="45" stroke="#d4af37" stroke-width="1.5" fill="none"/><path d="M50 15 C30 20, 25 40, 30 55 C35 68, 50 75, 50 75 C50 75, 65 68, 70 55 C75 40, 70 20, 50 15" fill="#d4af37"/></svg></div>
+    <div class="float-3d f2"><svg viewBox="0 0 100 100" fill="none"><circle cx="50" cy="50" r="45" stroke="#d4af37" stroke-width="1.5" fill="none"/><path d="M50 15 C30 20, 25 40, 30 55 C35 68, 50 75, 50 75 C50 75, 65 68, 70 55 C75 40, 70 20, 50 15" fill="#d4af37"/></svg></div>
+    <div class="float-3d f3"><svg viewBox="0 0 100 100" fill="none"><circle cx="50" cy="50" r="45" stroke="#d4af37" stroke-width="1.5" fill="none"/><path d="M50 15 C30 20, 25 40, 30 55 C35 68, 50 75, 50 75 C50 75, 65 68, 70 55 C75 40, 70 20, 50 15" fill="#d4af37"/></svg></div>
+
+    <div class="top-nav">
+        <a href="/index.html" class="nav-btn">Home</a>
+        <a href="/pricing.html" class="nav-btn">Pricing</a>
+        <a href="/support.html" class="nav-btn">Support</a>
+        <a href="/about.html" class="nav-btn">About</a>
+        <a href="/suggest.html" class="nav-btn">Suggest</a>
+    </div>
+
+
+    <div class="content-wrapper">
+        <div class="hero">
+            <img src="/logo.svg" alt="MySweetPea" class="logo">
+            <h1 class="glass-text">MySweetPea</h1>
+            <p class="tagline">Self-hosted services. Community-funded. Privacy-first. No ads, no tracking, no data selling. Just your data, on your terms.</p>
+            <div class="hero-buttons">
+                <a href="/pricing.html" class="hero-btn hero-btn-primary">Explore Services</a>
+                <a href="/about.html" class="hero-btn hero-btn-secondary">Learn More</a>
+            </div>
+        </div>
+
+        <div class="features-section">
+            <h2 class="section-title glass-text">Why MySweetPea?</h2>
+            <p class="section-subtitle">Privacy, control, and community — without the corporate overhead</p>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="icon">&#x1F512;</div>
+                    <h3>Privacy First</h3>
+                    <p>Your data never leaves our server. No tracking, no analytics, no data selling. Everything is encrypted and private.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="icon">&#x1F3E0;</div>
+                    <h3>Self-Hosted</h3>
+                    <p>All services run on our own hardware. No cloud providers, no third-party servers. We control the infrastructure end to end.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="icon">&#x1F4B0;</div>
+                    <h3>Community-Funded</h3>
+                    <p>No subscriptions. No ads. A one-time donation keeps the server running and funds future improvements.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="icon">&#x1F513;</div>
+                    <h3>Open Source</h3>
+                    <p>Every service we run is open source. Our infrastructure code is public on GitHub for full transparency.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="icon">&#x1F9EA;</div>
+                    <h3>Crypto Donations</h3>
+                    <p>We accept Monero and Bitcoin. No KYC, no chargebacks, no paper trail. Anonymous and private by design.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="icon">&#x1F4AC;</div>
+                    <h3>Community Driven</h3>
+                    <p>Suggest new services, vote on features, and help shape the future of MySweetPea. Your voice matters.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="stats-section">
+            <h2 class="section-title glass-text">By the Numbers</h2>
+            <div class="stats-grid">
+                <div class="stat-card"><div class="number">9+</div><div class="label">Services Available</div></div>
+                <div class="stat-card"><div class="number">3</div><div class="label">K8s Nodes</div></div>
+                <div class="stat-card"><div class="number">100%</div><div class="label">Open Source</div></div>
+                <div class="stat-card"><div class="number">$0</div><div class="label">Monthly Fees</div></div>
+                <div class="stat-card"><div class="number">0</div><div class="label">Ads Shown</div></div>
+                <div class="stat-card"><div class="number">0</div><div class="label">Data Sold</div></div>
+            </div>
+        </div>
+
+        <div class="cta-section">
+            <div class="cta-card">
+                <h2 class="glass-text">Ready to Join?</h2>
+                <p>A single $5 donation grants lifetime access to all non-media services. No subscriptions, no recurring fees.</p>
+                <div class="cta-buttons">
+                    <a href="/pricing.html" class="cta-btn cta-btn-primary">View Pricing</a>
+                    <a href="/support.html" class="cta-btn cta-btn-secondary">Support Us</a>
+                    <a href="/suggest.html" class="cta-btn cta-btn-secondary">Suggest a Service</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="page-footer">
+            <div class="footer-links">
+                <a href="/pricing.html">Pricing</a>
+                <a href="/support.html">Support</a>
+                <a href="/about.html">About Us</a>
+                <a href="/suggest.html">Suggest a Service</a>
+                <a href="mailto:support@mysweetpea.cc">Contact</a>
+            </div>
+            <p>&copy; 2026 MySweetPea. Self-hosted with care.</p>
+        </div>
+
+    </div>
+    <script>
+
+        (function() {
+            var canvas = document.getElementById('petalCanvas');
+            var ctx = canvas.getContext('2d');
+            var petals = [];
+            var W, H;
+            function resize() { W = canvas.width = window.innerWidth; H = canvas.height = window.innerHeight; }
+            resize(); window.addEventListener('resize', resize);
+            function createPetal() { return { x: Math.random() * W, y: -20, size: 4 + Math.random() * 8, speedY: 0.5 + Math.random() * 1.5, speedX: -0.5 + Math.random() * 1, rotation: Math.random() * Math.PI * 2, rotSpeed: -0.02 + Math.random() * 0.04, opacity: 0.15 + Math.random() * 0.35, sway: Math.random() * Math.PI * 2, swaySpeed: 0.01 + Math.random() * 0.02 }; }
+            for (var i = 0; i < 40; i++) { var p = createPetal(); p.y = Math.random() * H; petals.push(p); }
+            function drawPetal(p) { ctx.save(); ctx.translate(p.x, p.y); ctx.rotate(p.rotation); ctx.globalAlpha = p.opacity; var grad = ctx.createRadialGradient(0, 0, 0, 0, 0, p.size); grad.addColorStop(0, '#f0d860'); grad.addColorStop(0.5, '#d4af37'); grad.addColorStop(1, 'rgba(212, 175, 55, 0.3)'); ctx.fillStyle = grad; ctx.beginPath(); ctx.moveTo(0, -p.size); ctx.bezierCurveTo(p.size * 0.6, -p.size * 0.5, p.size * 0.6, p.size * 0.5, 0, p.size); ctx.bezierCurveTo(-p.size * 0.6, p.size * 0.5, -p.size * 0.6, -p.size * 0.5, 0, -p.size); ctx.fill(); ctx.strokeStyle = 'rgba(212, 175, 55, 0.4)'; ctx.lineWidth = 0.5; ctx.stroke(); ctx.restore(); }
+            function animate() { ctx.clearRect(0, 0, W, H); for (var i = 0; i < petals.length; i++) { var p = petals[i]; p.sway += p.swaySpeed; p.x += p.speedX + Math.sin(p.sway) * 0.5; p.y += p.speedY; p.rotation += p.rotSpeed; if (p.y > H + 20) { petals[i] = createPetal(); } if (p.x < -20) p.x = W + 20; if (p.x > W + 20) p.x = -20; drawPetal(p); } requestAnimationFrame(animate); }
+            animate();
+        })();
+
+    </script>
 </body>
 </html>

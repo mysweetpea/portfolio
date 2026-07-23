@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MySweetPea — Support Us</title>
+    <link rel="icon" type="image/svg+xml" href="/logo-favicon.svg">
+    <style>
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+        :root {
+            --bg: #0a0a0a; --gold: #d4af37; --gold-dim: #b8941f; --gold-glow: rgba(212, 175, 55, 0.15);
+            --text: #e0e0e0; --text-dim: #888; --text-faint: #555;
+            --border: rgba(255, 255, 255, 0.08); --border-gold: rgba(212, 175, 55, 0.25);
+            --radius: 14px; --radius-sm: 8px; --transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            --purple: #a855f7; --green: #22c56e; --pink: #ec4899;
+        }
+        html { scroll-behavior: smooth; }
+        body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; line-height: 1.6; overflow-x: hidden; }
+        #petalCanvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; pointer-events: none; }
+        .content-wrapper { position: relative; z-index: 1; }
+        .bg-gradient { position: fixed; top: 0; left: 0; right: 0; bottom: 0; z-index: -1; background: radial-gradient(ellipse 80% 50% at 50% -20%, rgba(212, 175, 55, 0.08), transparent), radial-gradient(ellipse 60% 40% at 80% 100%, rgba(212, 175, 55, 0.04), transparent), #0a0a0a; }
+        @keyframes shimmer { 0% { background-position: -200% center; } 100% { background-position: 200% center; } }
+        @keyframes float3D { 0%, 100% { transform: translateY(0) rotateX(0) rotateY(0); } 50% { transform: translateY(-10px) rotateX(2deg) rotateY(2deg); } }
+        @keyframes pulseGlow { 0%, 100% { box-shadow: 0 0 20px rgba(212, 175, 55, 0.08); } 50% { box-shadow: 0 0 40px rgba(212, 175, 55, 0.18); } }
+        .glass-text { background: linear-gradient(135deg, rgba(255,255,255,0.9) 0%, rgba(212,175,55,0.8) 30%, rgba(255,255,255,0.6) 50%, rgba(212,175,55,0.8) 70%, rgba(255,255,255,0.9) 100%); background-size: 200% auto; -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; text-shadow: 0 0 30px rgba(212, 175, 55, 0.15); animation: shimmer 6s linear infinite; filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.3)); }
+
+        .top-nav { position: fixed; top: 20px; right: 20px; z-index: 50; display: flex; gap: 8px; align-items: center; }
+        .nav-btn { padding: 8px 16px; background: rgba(20, 20, 20, 0.8); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border: 1px solid var(--border-gold); border-radius: var(--radius-sm); color: var(--gold); font-size: 0.82rem; font-weight: 600; text-decoration: none; transition: var(--transition); }
+        .nav-btn:hover { background: rgba(30, 30, 30, 0.9); border-color: var(--gold); transform: translateY(-2px); }
+        @media (max-width: 768px) { .top-nav { top: 10px; right: 10px; gap: 4px; } .nav-btn { padding: 6px 10px; font-size: 0.72rem; } }
+
+        .float-3d { position: absolute; pointer-events: none; opacity: 0.06; z-index: 0; }
+        .float-3d svg { width: 100%; height: 100%; }
+        .float-3d.f1 { top: 15%; right: 5%; width: 120px; height: 120px; animation: float3D 8s ease-in-out infinite; }
+        .float-3d.f2 { top: 45%; left: 3%; width: 80px; height: 80px; animation: float3D 10s ease-in-out infinite reverse; }
+        .float-3d.f3 { top: 70%; right: 8%; width: 100px; height: 100px; animation: float3D 7s ease-in-out infinite 1s; }
+        @media (max-width: 768px) { .float-3d { display: none; } }
+
+        .page-footer { text-align: center; padding: 40px 20px; font-size: 0.85rem; color: var(--text-faint); border-top: 1px solid rgba(255, 255, 255, 0.04); }
+        .page-footer a { color: var(--gold); text-decoration: none; transition: var(--transition); }
+        .page-footer a:hover { text-decoration: underline; }
+        .page-footer .footer-links { display: flex; justify-content: center; gap: 24px; margin-bottom: 12px; flex-wrap: wrap; }
+
+        .hero { text-align: center; padding: 80px 20px 30px; }
+        .hero img.logo { width: 140px; height: 140px; margin-bottom: 16px; filter: drop-shadow(0 0 25px rgba(212, 175, 55, 0.25)); animation: float3D 6s ease-in-out infinite; }
+        .hero h1 { font-size: 2.2rem; font-weight: 700; margin-bottom: 8px; }
+        .hero p { font-size: 1rem; color: var(--text-dim); max-width: 500px; margin: 0 auto; }
+
+        .container { max-width: 540px; margin: 0 auto; padding: 20px; }
+
+        .card { background: rgba(20, 20, 20, 0.6); backdrop-filter: blur(16px) saturate(1.2); -webkit-backdrop-filter: blur(16px) saturate(1.2); border: 2px solid rgba(168, 85, 247, 0.4); border-radius: var(--radius); padding: 32px; box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.05), 0 8px 32px rgba(0, 0, 0, 0.3), 0 0 15px rgba(168, 85, 247, 0.08); }
+        .card h2 { font-size: 1.1rem; margin-bottom: 6px; }
+        .card .subtitle { font-size: 0.84rem; color: var(--text-dim); margin-bottom: 20px; }
+
+        .crypto-section { margin-bottom: 20px; }
+        .crypto-section label { display: block; font-size: 0.82rem; margin-bottom: 10px; font-weight: 500; }
+        .crypto-options { display: flex; gap: 12px; flex-wrap: wrap; }
+        .crypto-option { flex: 1; min-width: 140px; padding: 16px; background: rgba(10, 10, 10, 0.8); border: 2px solid rgba(255, 255, 255, 0.1); border-radius: var(--radius-sm); cursor: pointer; transition: var(--transition); text-align: center; }
+        .crypto-option:hover { border-color: rgba(212, 175, 55, 0.4); }
+        .crypto-option.selected { border-color: var(--gold); background: rgba(212, 175, 55, 0.08); }
+        .crypto-option .icon { font-size: 1.8rem; margin-bottom: 6px; }
+        .crypto-option .name { font-size: 0.86rem; color: #ccc; font-weight: 600; }
+        .crypto-option .addr { font-size: 0.68rem; color: #666; margin-top: 4px; word-break: break-all; font-family: monospace; }
+
+        .wallet-display { display: none; background: rgba(10, 10, 10, 0.6); border: 1px solid rgba(212, 175, 55, 0.15); border-radius: var(--radius-sm); padding: 16px; margin-bottom: 20px; }
+        .wallet-display.visible { display: block; }
+        .wallet-display .wl { font-size: 0.78rem; color: #888; margin-bottom: 6px; }
+        .wallet-display .wa { font-size: 0.88rem; color: var(--gold); font-family: monospace; word-break: break-all; cursor: pointer; padding: 8px; background: rgba(10, 10, 10, 0.6); border-radius: var(--radius-sm); border: 1px solid rgba(212, 175, 55, 0.1); }
+        .wallet-display .wa:hover { border-color: rgba(212, 175, 55, 0.3); }
+        .wallet-display .copy-hint { font-size: 0.72rem; color: #555; margin-top: 6px; }
+
+        .info-box { background: rgba(212, 175, 55, 0.06); border: 1px solid rgba(212, 175, 55, 0.15); border-radius: var(--radius-sm); padding: 14px; margin-bottom: 16px; font-size: 0.82rem; color: #b8a030; line-height: 1.6; }
+
+        .faq-section { max-width: 540px; margin: 40px auto 30px; padding: 0 20px; }
+        .faq-item { background: rgba(20, 20, 20, 0.5); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border: 1px solid var(--border); border-radius: var(--radius-sm); margin-bottom: 10px; overflow: hidden; transition: var(--transition); }
+        .faq-item:hover { border-color: var(--border-gold); }
+        .faq-question { padding: 14px 18px; font-size: 0.85rem; color: var(--text); cursor: pointer; display: flex; justify-content: space-between; align-items: center; transition: var(--transition); user-select: none; }
+        .faq-question:hover { color: var(--gold); }
+        .faq-question .arrow { transition: transform 0.3s ease; color: var(--text-dim); font-size: 0.75rem; }
+        .faq-item.open .faq-question .arrow { transform: rotate(180deg); color: var(--gold); }
+        .faq-answer { max-height: 0; overflow: hidden; transition: max-height 0.3s ease, padding 0.3s ease; padding: 0 18px; }
+        .faq-item.open .faq-answer { max-height: 300px; padding: 0 18px 14px; }
+        .faq-answer p { font-size: 0.8rem; color: var(--text-dim); line-height: 1.5; }
+
+        @media (max-width: 768px) { .hero h1 { font-size: 1.6rem; } .hero img.logo { width: 100px; height: 100px; } .container { padding: 10px; } .crypto-options { flex-direction: column; } }
+    </style>
+</head>
+<body>
+    <div class="bg-gradient"></div>
+    <canvas id="petalCanvas"></canvas>
+
+    <div class="float-3d f1"><svg viewBox="0 0 100 100" fill="none"><circle cx="50" cy="50" r="45" stroke="#d4af37" stroke-width="1.5" fill="none"/><path d="M50 15 C30 20, 25 40, 30 55 C35 68, 50 75, 50 75 C50 75, 65 68, 70 55 C75 40, 70 20, 50 15" fill="#d4af37"/></svg></div>
+    <div class="float-3d f2"><svg viewBox="0 0 100 100" fill="none"><circle cx="50" cy="50" r="45" stroke="#d4af37" stroke-width="1.5" fill="none"/><path d="M50 15 C30 20, 25 40, 30 55 C35 68, 50 75, 50 75 C50 75, 65 68, 70 55 C75 40, 70 20, 50 15" fill="#d4af37"/></svg></div>
+    <div class="float-3d f3"><svg viewBox="0 0 100 100" fill="none"><circle cx="50" cy="50" r="45" stroke="#d4af37" stroke-width="1.5" fill="none"/><path d="M50 15 C30 20, 25 40, 30 55 C35 68, 50 75, 50 75 C50 75, 65 68, 70 55 C75 40, 70 20, 50 15" fill="#d4af37"/></svg></div>
+
+    <div class="top-nav">
+        <a href="/index.html" class="nav-btn">Home</a>
+        <a href="/pricing.html" class="nav-btn">Pricing</a>
+        <a href="/support.html" class="nav-btn">Support</a>
+        <a href="/about.html" class="nav-btn">About</a>
+        <a href="/suggest.html" class="nav-btn">Suggest</a>
+    </div>
+
+
+    <div class="content-wrapper">
+        <div class="hero">
+            <img src="/logo.svg" alt="MySweetPea" class="logo">
+            <h1 class="glass-text">Support MySweetPea</h1>
+            <p>Donate any amount anonymously. No account needed.</p>
+        </div>
+
+        <div class="container">
+            <div class="card">
+                <h2 class="glass-text">Support the Cause</h2>
+                <p class="subtitle">Your contribution helps keep MySweetPea running and funds future improvements.</p>
+
+                <div class="info-box">
+                    Donations are completely anonymous. No name, email, or account required.
+                    Just send crypto to the wallet address and you are done. Thank you for your support!
+                </div>
+
+                <div class="crypto-section">
+                    <label class="glass-text">Select Cryptocurrency</label>
+                    <div class="crypto-options">
+                        <div class="crypto-option" data-type="monero" onclick="selectCrypto(this)">
+                            <div class="icon">&#x1F9EA;</div>
+                            <div class="name">Monero (XMR)</div>
+                            <div class="addr" id="xmr-addr"></div>
+                        </div>
+                        <div class="crypto-option" data-type="bitcoin" onclick="selectCrypto(this)">
+                            <div class="icon">&#x20BF;</div>
+                            <div class="name">Bitcoin (BTC)</div>
+                            <div class="addr" id="btc-addr"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="wallet-display" id="wallet-display">
+                    <div class="wl">Send your donation to:</div>
+                    <div class="wa" id="wallet-addr" onclick="copyWallet(this)"></div>
+                    <div class="copy-hint">Click address to copy to clipboard</div>
+                </div>
+
+                <div class="info-box" style="margin-top: 20px;">
+                    <strong>Why crypto?</strong> We prioritize privacy. Crypto donations (especially Monero) are anonymous, irreversible, and require no personal information. No KYC, no chargebacks, no paper trail.
+                </div>
+            </div>
+        </div>
+
+        <div class="faq-section">
+            <div class="faq-item"><div class="faq-question" onclick="toggleFAQ(this)">Why do you need donations? <span class="arrow">&#x25BC;</span></div><div class="faq-answer"><p>Running these services costs money &#8212; server hardware, electricity, internet bandwidth, and domain registration. Donations help cover these costs and fund future improvements and new services. We do not run ads or sell your data.</p></div></div>
+            <div class="faq-item"><div class="faq-question" onclick="toggleFAQ(this)">Why don't you accept credit cards? <span class="arrow">&#x25BC;</span></div><div class="faq-answer"><p>We prioritize privacy. Credit card payments require sharing your personal and financial information with payment processors, which creates a paper trail linking your identity to our services. Cryptocurrency donations (Monero and Bitcoin) allow us to maintain a privacy-first approach with no KYC requirements, no chargebacks, and no third-party data collection.</p></div></div>
+            <div class="faq-item"><div class="faq-question" onclick="toggleFAQ(this)">Is my donation anonymous? <span class="arrow">&#x25BC;</span></div><div class="faq-answer"><p>Yes. Crypto donations are anonymous by default. Monero (XMR) is fully anonymous &#8212; sender, receiver, and amount are all hidden. Bitcoin (BTC) is pseudonymous &#8212; your wallet address is visible but not linked to your identity.</p></div></div>
+            <div class="faq-item"><div class="faq-question" onclick="toggleFAQ(this)">Can I get a refund? <span class="arrow">&#x25BC;</span></div><div class="faq-answer"><p>Crypto donations are irreversible. If you have a genuine issue, contact support@mysweetpea.cc.</p></div></div>
+        </div>
+
+        <div class="page-footer">
+            <div class="footer-links">
+                <a href="/pricing.html">Pricing</a>
+                <a href="/support.html">Support</a>
+                <a href="/about.html">About Us</a>
+                <a href="/suggest.html">Suggest a Service</a>
+                <a href="mailto:support@mysweetpea.cc">Contact</a>
+            </div>
+            <p>&copy; 2026 MySweetPea. Self-hosted with care.</p>
+        </div>
+
+    </div>
+    <script>
+        var WALLETS = { monero: 'YOUR_XMR_WALLET_ADDRESS_HERE', bitcoin: 'YOUR_BTC_WALLET_ADDRESS_HERE' };
+        function truncateAddr(a) { if (!a || a.indexOf('YOUR_') !== -1) return 'Coming soon'; return a.substring(0, 8) + '...' + a.substring(a.length - 6); }
+        document.getElementById('xmr-addr').textContent = truncateAddr(WALLETS.monero);
+        document.getElementById('btc-addr').textContent = truncateAddr(WALLETS.bitcoin);
+
+        function selectCrypto(el) {
+            var opts = document.querySelectorAll('.crypto-option');
+            for (var i = 0; i < opts.length; i++) { opts[i].classList.remove('selected'); }
+            el.classList.add('selected');
+            var type = el.getAttribute('data-type');
+            var wd = document.getElementById('wallet-display');
+            var wa = document.getElementById('wallet-addr');
+            if (WALLETS[type] && WALLETS[type].indexOf('YOUR_') === -1) { wa.textContent = WALLETS[type]; wd.classList.add('visible'); } else { wd.classList.remove('visible'); }
+        }
+
+        function copyWallet(el) { navigator.clipboard.writeText(el.textContent).then(function() { var o = el.textContent; el.textContent = 'Copied!'; setTimeout(function() { el.textContent = o; }, 1500); }); }
+        function toggleFAQ(el) { el.parentElement.classList.toggle('open'); }
+
+
+        (function() {
+            var canvas = document.getElementById('petalCanvas');
+            var ctx = canvas.getContext('2d');
+            var petals = [];
+            var W, H;
+            function resize() { W = canvas.width = window.innerWidth; H = canvas.height = window.innerHeight; }
+            resize(); window.addEventListener('resize', resize);
+            function createPetal() { return { x: Math.random() * W, y: -20, size: 4 + Math.random() * 8, speedY: 0.5 + Math.random() * 1.5, speedX: -0.5 + Math.random() * 1, rotation: Math.random() * Math.PI * 2, rotSpeed: -0.02 + Math.random() * 0.04, opacity: 0.15 + Math.random() * 0.35, sway: Math.random() * Math.PI * 2, swaySpeed: 0.01 + Math.random() * 0.02 }; }
+            for (var i = 0; i < 40; i++) { var p = createPetal(); p.y = Math.random() * H; petals.push(p); }
+            function drawPetal(p) { ctx.save(); ctx.translate(p.x, p.y); ctx.rotate(p.rotation); ctx.globalAlpha = p.opacity; var grad = ctx.createRadialGradient(0, 0, 0, 0, 0, p.size); grad.addColorStop(0, '#f0d860'); grad.addColorStop(0.5, '#d4af37'); grad.addColorStop(1, 'rgba(212, 175, 55, 0.3)'); ctx.fillStyle = grad; ctx.beginPath(); ctx.moveTo(0, -p.size); ctx.bezierCurveTo(p.size * 0.6, -p.size * 0.5, p.size * 0.6, p.size * 0.5, 0, p.size); ctx.bezierCurveTo(-p.size * 0.6, p.size * 0.5, -p.size * 0.6, -p.size * 0.5, 0, -p.size); ctx.fill(); ctx.strokeStyle = 'rgba(212, 175, 55, 0.4)'; ctx.lineWidth = 0.5; ctx.stroke(); ctx.restore(); }
+            function animate() { ctx.clearRect(0, 0, W, H); for (var i = 0; i < petals.length; i++) { var p = petals[i]; p.sway += p.swaySpeed; p.x += p.speedX + Math.sin(p.sway) * 0.5; p.y += p.speedY; p.rotation += p.rotSpeed; if (p.y > H + 20) { petals[i] = createPetal(); } if (p.x < -20) p.x = W + 20; if (p.x > W + 20) p.x = -20; drawPetal(p); } requestAnimationFrame(animate); }
+            animate();
+        })();
+
+    </script>
+</body>
+</html>
