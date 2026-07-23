@@ -6,7 +6,6 @@
     <title>MySweetPea — Self-Hosted Services</title>
     <link rel="icon" type="image/svg+xml" href="/logo-favicon.svg">
     <style>
-        /* ═══ Reset & Base ═══ */
         *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
         :root {
@@ -37,6 +36,18 @@
             overflow-x: hidden;
         }
 
+        /* ═══ Petal Canvas ═══ */
+        #petalCanvas {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        /* ═══ Content wrapper above canvas ═══ */
+        .content-wrapper { position: relative; z-index: 1; }
+
         /* ═══ Animated Background ═══ */
         .bg-gradient {
             position: fixed;
@@ -53,39 +64,40 @@
             from { opacity: 0; transform: translateY(30px); }
             to { opacity: 1; transform: translateY(0); }
         }
-
         @keyframes shimmer {
             0% { background-position: -200% center; }
             100% { background-position: 200% center; }
         }
-
         @keyframes pulseGlow {
             0%, 100% { box-shadow: 0 0 20px rgba(212, 175, 55, 0.08); }
-            50% { box-shadow: 0 0 40px rgba(212, 175, 55, 0.15); }
+            50% { box-shadow: 0 0 40px rgba(212, 175, 55, 0.18); }
+        }
+        @keyframes float3D {
+            0%, 100% { transform: translateY(0) rotateX(0) rotateY(0); }
+            50% { transform: translateY(-10px) rotateX(2deg) rotateY(2deg); }
         }
 
         .fade-in { opacity: 0; animation: fadeInUp 0.8s ease forwards; }
         .fade-in-delay-1 { animation-delay: 0.1s; }
         .fade-in-delay-2 { animation-delay: 0.2s; }
         .fade-in-delay-3 { animation-delay: 0.3s; }
-        .fade-in-delay-4 { animation-delay: 0.4s; }
-        .fade-in-delay-5 { animation-delay: 0.5s; }
 
         /* ═══ Hero ═══ */
         .hero {
             text-align: center;
-            padding: 80px 20px 40px;
+            padding: 60px 20px 30px;
         }
 
         .hero img.logo {
-            width: 72px;
-            height: 72px;
+            width: 140px;
+            height: 140px;
             margin-bottom: 16px;
-            filter: drop-shadow(0 0 20px rgba(212, 175, 55, 0.2));
+            filter: drop-shadow(0 0 30px rgba(212, 175, 55, 0.25));
+            animation: float3D 6s ease-in-out infinite;
         }
 
         .hero h1 {
-            font-size: 2.2rem;
+            font-size: 2.4rem;
             font-weight: 700;
             background: linear-gradient(90deg, #d4af37, #f0d860, #d4af37);
             background-size: 200% auto;
@@ -105,7 +117,7 @@
 
         /* ═══ Pricing Section ═══ */
         .pricing-section {
-            max-width: 960px;
+            max-width: 1000px;
             margin: 0 auto;
             padding: 20px;
         }
@@ -114,7 +126,7 @@
             display: grid;
             grid-template-columns: repeat(3, 1fr);
             gap: 20px;
-            margin-bottom: 60px;
+            margin-bottom: 80px;
         }
 
         .pricing-card {
@@ -142,7 +154,7 @@
         }
 
         .pricing-card:hover {
-            transform: translateY(-4px);
+            transform: translateY(-6px);
             background: var(--bg-card-hover);
             border-color: var(--border-gold);
         }
@@ -170,33 +182,10 @@
         }
 
         .pricing-card .tier-icon { font-size: 2rem; margin-bottom: 12px; }
-
-        .pricing-card .tier-name {
-            font-size: 1.2rem;
-            color: var(--gold);
-            font-weight: 700;
-            margin-bottom: 6px;
-        }
-
-        .pricing-card .price {
-            font-size: 2.2rem;
-            color: var(--text);
-            font-weight: 800;
-            margin: 10px 0 2px;
-        }
-
-        .pricing-card .price-period {
-            font-size: 0.8rem;
-            color: var(--text-dim);
-            margin-bottom: 16px;
-        }
-
-        .pricing-card .desc {
-            font-size: 0.84rem;
-            color: var(--text-dim);
-            margin-bottom: 20px;
-            line-height: 1.5;
-        }
+        .pricing-card .tier-name { font-size: 1.2rem; color: var(--gold); font-weight: 700; margin-bottom: 6px; }
+        .pricing-card .price { font-size: 2.2rem; color: var(--text); font-weight: 800; margin: 10px 0 2px; }
+        .pricing-card .price-period { font-size: 0.8rem; color: var(--text-dim); margin-bottom: 16px; }
+        .pricing-card .desc { font-size: 0.84rem; color: var(--text-dim); margin-bottom: 20px; line-height: 1.5; }
 
         .pricing-card .features {
             text-align: left;
@@ -221,14 +210,8 @@
             font-weight: 700;
         }
 
-        .pricing-card .features li.locked {
-            color: var(--text-faint);
-        }
-
-        .pricing-card .features li.locked::before {
-            content: '\2715';
-            color: var(--text-faint);
-        }
+        .pricing-card .features li.locked { color: var(--text-faint); }
+        .pricing-card .features li.locked::before { content: '\2715'; color: var(--text-faint); }
 
         .pricing-card .btn {
             display: block;
@@ -264,10 +247,25 @@
             border-color: var(--border-gold);
         }
 
+        /* ═══ Page Flip Section ═══ */
+        .page-flip-container {
+            perspective: 2000px;
+            margin-bottom: 80px;
+            padding: 0 20px;
+        }
+
+        .page-flip {
+            transform-origin: top center;
+            transition: transform 0.1s linear;
+            transform-style: preserve-3d;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
         /* ═══ Services Section ═══ */
         .services-section {
-            max-width: 960px;
-            margin: 0 auto 60px;
+            max-width: 1000px;
+            margin: 0 auto;
             padding: 20px;
         }
 
@@ -285,6 +283,35 @@
             text-align: center;
             margin-bottom: 32px;
         }
+
+        /* ═══ Tier Divider ═══ */
+        .tier-divider {
+            max-width: 1000px;
+            margin: 40px auto 24px;
+            padding: 0 20px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .tier-divider .line {
+            flex: 1;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--border-gold), transparent);
+        }
+
+        .tier-divider .label {
+            font-size: 0.85rem;
+            color: var(--gold);
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            white-space: nowrap;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .tier-divider .label .icon { font-size: 1.1rem; }
 
         .services-grid {
             display: grid;
@@ -345,8 +372,9 @@
             filter: brightness(0) invert(1);
         }
 
-        .service-card .service-icon .emoji {
-            font-size: 1.4rem;
+        .service-card .service-icon svg {
+            width: 24px;
+            height: 24px;
         }
 
         .service-card h3 {
@@ -390,9 +418,7 @@
             transition: var(--transition);
         }
 
-        .service-card:hover .learn-more {
-            color: var(--gold);
-        }
+        .service-card:hover .learn-more { color: var(--gold); }
 
         /* ═══ Modal ═══ */
         .modal-overlay {
@@ -462,7 +488,7 @@
             filter: brightness(0) invert(1);
         }
 
-        .modal-icon .emoji { font-size: 1.8rem; }
+        .modal-icon svg { width: 32px; height: 32px; }
 
         .modal-header h2 {
             font-size: 1.3rem;
@@ -494,9 +520,7 @@
             font-weight: 600;
         }
 
-        .modal-tutorial ol {
-            padding-left: 20px;
-        }
+        .modal-tutorial ol { padding-left: 20px; }
 
         .modal-tutorial li {
             font-size: 0.82rem;
@@ -505,11 +529,7 @@
             line-height: 1.5;
         }
 
-        .modal-tutorial a {
-            color: var(--gold);
-            text-decoration: none;
-        }
-
+        .modal-tutorial a { color: var(--gold); text-decoration: none; }
         .modal-tutorial a:hover { text-decoration: underline; }
 
         .modal-footer {
@@ -615,12 +635,7 @@
             border-top: 1px solid rgba(255, 255, 255, 0.04);
         }
 
-        .footer a {
-            color: var(--gold);
-            text-decoration: none;
-            transition: var(--transition);
-        }
-
+        .footer a { color: var(--gold); text-decoration: none; transition: var(--transition); }
         .footer a:hover { text-decoration: underline; }
 
         .footer .footer-links {
@@ -630,255 +645,272 @@
             margin-bottom: 12px;
         }
 
-        /* ═══ Responsive ═══ */
+        /* ═══ 3D Floating Elements ═══ */
+        .float-3d {
+            position: absolute;
+            pointer-events: none;
+            opacity: 0.06;
+            z-index: 0;
+        }
+
+        .float-3d svg { width: 100%; height: 100%; }
+
+        .float-3d.f1 { top: 15%; right: 5%; width: 120px; height: 120px; animation: float3D 8s ease-in-out infinite; }
+        .float-3d.f2 { top: 45%; left: 3%; width: 80px; height: 80px; animation: float3D 10s ease-in-out infinite reverse; }
+        .float-3d.f3 { top: 70%; right: 8%; width: 100px; height: 100px; animation: float3D 7s ease-in-out infinite 1s; }
+
         @media (max-width: 768px) {
             .pricing-grid { grid-template-columns: 1fr; }
             .hero h1 { font-size: 1.6rem; }
+            .hero img.logo { width: 100px; height: 100px; }
             .services-grid { grid-template-columns: 1fr; }
             .modal { padding: 24px; }
+            .float-3d { display: none; }
         }
     </style>
 </head>
 <body>
     <div class="bg-gradient"></div>
+    <canvas id="petalCanvas"></canvas>
 
-    <!-- ═══ Hero ═══ -->
-    <div class="hero fade-in">
-        <img src="/logo.svg" alt="MySweetPea" class="logo">
-        <h1>MySweetPea</h1>
-        <p>Self-hosted services. Community-funded. Privacy-first.</p>
-    </div>
+    <!-- 3D Floating Elements -->
+    <div class="float-3d f1"><svg viewBox="0 0 100 100" fill="none"><circle cx="50" cy="50" r="45" stroke="#d4af37" stroke-width="1.5" fill="none"/><path d="M50 15 C30 20, 25 40, 30 55 C35 68, 50 75, 50 75 C50 75, 65 68, 70 55 C75 40, 70 20, 50 15" fill="#d4af37"/></svg></div>
+    <div class="float-3d f2"><svg viewBox="0 0 100 100" fill="none"><circle cx="50" cy="50" r="45" stroke="#d4af37" stroke-width="1.5" fill="none"/><path d="M50 15 C30 20, 25 40, 30 55 C35 68, 50 75, 50 75 C50 75, 65 68, 70 55 C75 40, 70 20, 50 15" fill="#d4af37"/></svg></div>
+    <div class="float-3d f3"><svg viewBox="0 0 100 100" fill="none"><circle cx="50" cy="50" r="45" stroke="#d4af37" stroke-width="1.5" fill="none"/><path d="M50 15 C30 20, 25 40, 30 55 C35 68, 50 75, 50 75 C50 75, 65 68, 70 55 C75 40, 70 20, 50 15" fill="#d4af37"/></svg></div>
 
-    <!-- ═══ Pricing ═══ -->
-    <div class="pricing-section">
-        <div class="pricing-grid">
-            <!-- Supporter -->
-            <div class="pricing-card fade-in fade-in-delay-1">
-                <div class="badge">No Access</div>
-                <div class="tier-icon">&#x1F49B;</div>
-                <div class="tier-name">Supporter</div>
-                <div class="price">Any amount</div>
-                <div class="price-period">One-time donation</div>
-                <div class="desc">Support the cause without getting service access.</div>
-                <ul class="features">
-                    <li>Help cover server costs</li>
-                    <li>Thank-you email</li>
-                    <li class="locked">No service access</li>
-                </ul>
-                <a href="/form.html" class="btn btn-secondary">Donate</a>
-            </div>
-
-            <!-- Seedling -->
-            <div class="pricing-card featured fade-in fade-in-delay-2">
-                <div class="badge">Most Popular</div>
-                <div class="tier-icon">&#x1F331;</div>
-                <div class="tier-name">Seedling</div>
-                <div class="price">$5<span style="font-size:0.9rem;color:var(--text-dim);">+ min</span></div>
-                <div class="price-period">One-time donation</div>
-                <div class="desc">Access to non-media community services.</div>
-                <ul class="features">
-                    <li>Password Manager</li>
-                    <li>Matrix Chat</li>
-                    <li>Notes &amp; Docs</li>
-                    <li>Watch Parties</li>
-                    <li class="locked">Media streaming</li>
-                </ul>
-                <a href="/form.html" class="btn btn-primary">Get Access</a>
-            </div>
-
-            <!-- Sweet Pea -->
-            <div class="pricing-card fade-in fade-in-delay-3">
-                <div class="badge">Premium</div>
-                <div class="tier-icon">&#x1F338;</div>
-                <div class="tier-name">Sweet Pea</div>
-                <div class="price">Contact</div>
-                <div class="price-period">One-time donation</div>
-                <div class="desc">Full access to all services including media. Limited availability.</div>
-                <ul class="features">
-                    <li>Everything in Seedling</li>
-                    <li>Media Server &amp; Request Portal</li>
-                    <li>File Sync (Nextcloud)</li>
-                    <li>AI Assistant</li>
-                    <li>Photo Backup (Immich)</li>
-                </ul>
-                <a href="mailto:support@mysweetpea.cc" class="btn btn-secondary">Contact Admin</a>
-            </div>
+    <div class="content-wrapper">
+        <!-- ═══ Hero ═══ -->
+        <div class="hero fade-in">
+            <img src="/logo.svg" alt="MySweetPea" class="logo">
+            <h1>MySweetPea</h1>
+            <p>Self-hosted services. Community-funded. Privacy-first.</p>
         </div>
-    </div>
 
-    <!-- ═══ Services ═══ -->
-    <div class="services-section">
-        <h2 class="section-title fade-in">Available Services</h2>
-        <p class="section-subtitle fade-in">Click any service to learn more</p>
-
-        <div class="services-grid">
-            <!-- Vaultwarden -->
-            <div class="service-card" onclick="openModal('vaultwarden')">
-                <div class="service-header">
-                    <div class="service-icon"><img src="https://cdn.jsdelivr.net/npm/simple-icons@latest/icons/vaultwarden.svg" alt="Vaultwarden"></div>
-                    <h3>Password Manager</h3>
+        <!-- ═══ Pricing ═══ -->
+        <div class="pricing-section">
+            <div class="pricing-grid">
+                <!-- Supporter -->
+                <div class="pricing-card fade-in fade-in-delay-1">
+                    <div class="badge">No Access</div>
+                    <div class="tier-icon">&#x1F49B;</div>
+                    <div class="tier-name">Supporter</div>
+                    <div class="price">Any amount</div>
+                    <div class="price-period">One-time donation</div>
+                    <div class="desc">Support the cause without getting service access.</div>
+                    <ul class="features">
+                        <li>Help cover server costs</li>
+                        <li>Thank-you email</li>
+                        <li class="locked">No service access</li>
+                    </ul>
+                    <a href="/form.html" class="btn btn-secondary">Donate</a>
                 </div>
-                <p>Stop forgetting passwords. Autofills login forms and creates unhackable passwords for every site.</p>
-                <span class="tier-tag seedling">Seedling +</span>
-                <div class="learn-more">Learn more &rarr;</div>
-            </div>
 
-            <!-- Matrix -->
-            <div class="service-card" onclick="openModal('matrix')">
-                <div class="service-header">
-                    <div class="service-icon"><img src="https://cdn.jsdelivr.net/npm/simple-icons@latest/icons/matrix.svg" alt="Matrix"></div>
-                    <h3>Matrix Chat</h3>
+                <!-- Seedling -->
+                <div class="pricing-card featured fade-in fade-in-delay-2">
+                    <div class="badge">Most Popular</div>
+                    <div class="tier-icon">&#x1F331;</div>
+                    <div class="tier-name">Seedling</div>
+                    <div class="price">$5<span style="font-size:0.9rem;color:var(--text-dim);">+ min</span></div>
+                    <div class="price-period">One-time donation</div>
+                    <div class="desc">Access to non-media community services.</div>
+                    <ul class="features">
+                        <li>Password Manager</li>
+                        <li>Matrix Chat</li>
+                        <li>Notes &amp; Docs</li>
+                        <li>Watch Parties</li>
+                        <li class="locked">Media streaming</li>
+                    </ul>
+                    <a href="/form.html" class="btn btn-primary">Get Access</a>
                 </div>
-                <p>A private Discord/Slack replacement. Message friends, share files, create rooms. All encrypted.</p>
-                <span class="tier-tag seedling">Seedling +</span>
-                <div class="learn-more">Learn more &rarr;</div>
-            </div>
 
-            <!-- AFFiNE -->
-            <div class="service-card" onclick="openModal('affine')">
-                <div class="service-header">
-                    <div class="service-icon"><img src="https://cdn.jsdelivr.net/npm/simple-icons@latest/icons/affine.svg" alt="AFFiNE"></div>
-                    <h3>Notes &amp; Docs</h3>
+                <!-- Sweet Pea -->
+                <div class="pricing-card fade-in fade-in-delay-3">
+                    <div class="badge">Premium</div>
+                    <div class="tier-icon">&#x1F338;</div>
+                    <div class="tier-name">Sweet Pea</div>
+                    <div class="price">Contact</div>
+                    <div class="price-period">One-time donation</div>
+                    <div class="desc">Full access to all services including media. Limited availability.</div>
+                    <ul class="features">
+                        <li>Everything in Seedling</li>
+                        <li>Media Server &amp; Request Portal</li>
+                        <li>File Sync (Nextcloud)</li>
+                        <li>AI Assistant</li>
+                        <li>Photo Backup (Immich)</li>
+                    </ul>
+                    <a href="mailto:support@mysweetpea.cc" class="btn btn-secondary">Contact Admin</a>
                 </div>
-                <p>A Notion alternative you own. Create documents, wikis, and knowledge bases. All private.</p>
-                <span class="tier-tag seedling">Seedling +</span>
-                <div class="learn-more">Learn more &rarr;</div>
-            </div>
-
-            <!-- KoalaSync -->
-            <div class="service-card" onclick="openModal('koalasync')">
-                <div class="service-header">
-                    <div class="service-icon"><span class="emoji">&#x1F428;</span></div>
-                    <h3>Watch Parties</h3>
-                </div>
-                <p>Watch movies and shows together with friends in real-time. Synced playback for everyone.</p>
-                <span class="tier-tag seedling">Seedling +</span>
-                <div class="learn-more">Learn more &rarr;</div>
-            </div>
-
-            <!-- Jellyfin -->
-            <div class="service-card" onclick="openModal('jellyfin')">
-                <div class="service-header">
-                    <div class="service-icon"><img src="https://cdn.jsdelivr.net/npm/simple-icons@latest/icons/jellyfin.svg" alt="Jellyfin"></div>
-                    <h3>Media Server</h3>
-                </div>
-                <p>Your own private Netflix. Stream movies and TV shows from anywhere. No ads, no algorithms.</p>
-                <span class="tier-tag sweetpea">Sweet Pea only</span>
-                <div class="learn-more">Learn more &rarr;</div>
-            </div>
-
-            <!-- Seerr -->
-            <div class="service-card" onclick="openModal('seerr')">
-                <div class="service-header">
-                    <div class="service-icon"><span class="emoji">&#x1F4FD;&#xFE0F;</span></div>
-                    <h3>Request Portal</h3>
-                </div>
-                <p>Want to watch something new? Drop a request and it appears in the media library.</p>
-                <span class="tier-tag sweetpea">Sweet Pea only</span>
-                <div class="learn-more">Learn more &rarr;</div>
-            </div>
-
-            <!-- Nextcloud -->
-            <div class="service-card" onclick="openModal('nextcloud')">
-                <div class="service-header">
-                    <div class="service-icon"><img src="https://cdn.jsdelivr.net/npm/simple-icons@latest/icons/nextcloud.svg" alt="Nextcloud"></div>
-                    <h3>File Sync</h3>
-                </div>
-                <p>Your own Google Drive. Sync files across devices, share folders, all under your control.</p>
-                <span class="tier-tag sweetpea">Sweet Pea only</span>
-                <div class="learn-more">Learn more &rarr;</div>
-            </div>
-
-            <!-- Open WebUI -->
-            <div class="service-card" onclick="openModal('openwebui')">
-                <div class="service-header">
-                    <div class="service-icon"><span class="emoji">&#x1F916;</span></div>
-                    <h3>AI Assistant</h3>
-                </div>
-                <p>A ChatGPT that lives in your homelab. Private conversations that never leave the network.</p>
-                <span class="tier-tag sweetpea">Sweet Pea only</span>
-                <div class="learn-more">Learn more &rarr;</div>
-            </div>
-
-            <!-- Immich -->
-            <div class="service-card" onclick="openModal('immich')">
-                <div class="service-header">
-                    <div class="service-icon"><img src="https://cdn.jsdelivr.net/npm/simple-icons@latest/icons/immich.svg" alt="Immich"></div>
-                    <h3>Photo Backup</h3>
-                </div>
-                <p>Your own Google Photos. Automatic backup from your phone, face recognition, all private.</p>
-                <span class="tier-tag sweetpea">Sweet Pea only</span>
-                <div class="learn-more">Learn more &rarr;</div>
-            </div>
-        </div>
-    </div>
-
-    <!-- ═══ FAQ ═══ -->
-    <div class="faq-section">
-        <h2 class="section-title fade-in">FAQ</h2>
-
-        <div class="faq-item">
-            <div class="faq-question" onclick="toggleFAQ(this)">
-                How do I donate? <span class="arrow">&#x25BC;</span>
-            </div>
-            <div class="faq-answer">
-                <p>We accept Monero (XMR) and Bitcoin (BTC). Visit the donation form to see our wallet addresses.</p>
             </div>
         </div>
 
-        <div class="faq-item">
-            <div class="faq-question" onclick="toggleFAQ(this)">
-                What happens after I donate $5? <span class="arrow">&#x25BC;</span>
-            </div>
-            <div class="faq-answer">
-                <p>Fill out the donation form with your details and transaction hash. We verify your donation and email you an invite code. Use the code to create your account.</p>
-            </div>
-        </div>
+        <!-- ═══ Page Flip Container ═══ -->
+        <div class="page-flip-container" id="pageFlipContainer">
+            <div class="page-flip" id="pageFlip">
+                <!-- ═══ Seedling Services ═══ -->
+                <div class="services-section">
+                    <h2 class="section-title">Available Services</h2>
+                    <p class="section-subtitle">Click any service to learn more</p>
 
-        <div class="faq-item">
-            <div class="faq-question" onclick="toggleFAQ(this)">
-                Is this a subscription? <span class="arrow">&#x25BC;</span>
-            </div>
-            <div class="faq-answer">
-                <p>No. A single donation grants lifetime access. There are no recurring fees or billing cycles.</p>
-            </div>
-        </div>
+                    <div class="tier-divider">
+                        <div class="line"></div>
+                        <div class="label"><span class="icon">&#x1F331;</span> Seedling Tier</div>
+                        <div class="line"></div>
+                    </div>
 
-        <div class="faq-item">
-            <div class="faq-question" onclick="toggleFAQ(this)">
-                How do I get Sweet Pea tier? <span class="arrow">&#x25BC;</span>
-            </div>
-            <div class="faq-answer">
-                <p>Sweet Pea tier is limited due to resource constraints. Contact support@mysweetpea.cc to inquire about availability and pricing.</p>
-            </div>
-        </div>
+                    <div class="services-grid">
+                        <!-- Vaultwarden -->
+                        <div class="service-card" onclick="openModal('vaultwarden')">
+                            <div class="service-header">
+                                <div class="service-icon"><img src="https://cdn.jsdelivr.net/npm/simple-icons@latest/icons/vaultwarden.svg" alt="Vaultwarden"></div>
+                                <h3>Password Manager</h3>
+                            </div>
+                            <p>Stop forgetting passwords. Autofills login forms and creates unhackable passwords for every site.</p>
+                            <span class="tier-tag seedling">Seedling +</span>
+                            <div class="learn-more">Learn more &rarr;</div>
+                        </div>
 
-        <div class="faq-item">
-            <div class="faq-question" onclick="toggleFAQ(this)">
-                Are donations tax-deductible? <span class="arrow">&#x25BC;</span>
-            </div>
-            <div class="faq-answer">
-                <p>No. Contributions are not tax-deductible. They help cover server hosting costs and future improvements.</p>
-            </div>
-        </div>
+                        <!-- Matrix -->
+                        <div class="service-card" onclick="openModal('matrix')">
+                            <div class="service-header">
+                                <div class="service-icon"><img src="https://cdn.jsdelivr.net/npm/simple-icons@latest/icons/matrix.svg" alt="Matrix"></div>
+                                <h3>Matrix Chat</h3>
+                            </div>
+                            <p>A private Discord/Slack replacement. Message friends, share files, create rooms. All encrypted.</p>
+                            <span class="tier-tag seedling">Seedling +</span>
+                            <div class="learn-more">Learn more &rarr;</div>
+                        </div>
 
-        <div class="faq-item">
-            <div class="faq-question" onclick="toggleFAQ(this)">
-                Can I get a refund? <span class="arrow">&#x25BC;</span>
-            </div>
-            <div class="faq-answer">
-                <p>Crypto donations are irreversible. If you have a genuine issue, contact support@mysweetpea.cc.</p>
-            </div>
-        </div>
-    </div>
+                        <!-- AFFiNE -->
+                        <div class="service-card" onclick="openModal('affine')">
+                            <div class="service-header">
+                                <div class="service-icon"><img src="https://cdn.jsdelivr.net/npm/simple-icons@latest/icons/affine.svg" alt="AFFiNE"></div>
+                                <h3>Notes &amp; Docs</h3>
+                            </div>
+                            <p>A Notion alternative you own. Create documents, wikis, and knowledge bases. All private.</p>
+                            <span class="tier-tag seedling">Seedling +</span>
+                            <div class="learn-more">Learn more &rarr;</div>
+                        </div>
 
-    <!-- ═══ Footer ═══ -->
-    <div class="footer">
-        <div class="footer-links">
-            <a href="/form.html">Donate &amp; Get Access</a>
-            <a href="mailto:support@mysweetpea.cc">Support</a>
+                        <!-- KoalaSync -->
+                        <div class="service-card" onclick="openModal('koalasync')">
+                            <div class="service-header">
+                                <div class="service-icon"><svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="12" r="10" stroke="#d4af37" stroke-width="1.5"/><path d="M8 12 L12 8 L16 12 L12 16 Z" fill="#d4af37"/></svg></div>
+                                <h3>Watch Parties</h3>
+                            </div>
+                            <p>Watch movies and shows together with friends in real-time. Synced playback for everyone.</p>
+                            <span class="tier-tag seedling">Seedling +</span>
+                            <div class="learn-more">Learn more &rarr;</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ═══ Sweet Pea Divider ═══ -->
+                <div class="tier-divider" style="margin-top: 60px;">
+                    <div class="line"></div>
+                    <div class="label"><span class="icon">&#x1F338;</span> Sweet Pea Tier</div>
+                    <div class="line"></div>
+                </div>
+
+                <!-- ═══ Sweet Pea Services ═══ -->
+                <div class="services-section" style="padding-top: 0;">
+                    <div class="services-grid">
+                        <!-- Jellyfin -->
+                        <div class="service-card" onclick="openModal('jellyfin')">
+                            <div class="service-header">
+                                <div class="service-icon"><img src="https://cdn.jsdelivr.net/npm/simple-icons@latest/icons/jellyfin.svg" alt="Jellyfin"></div>
+                                <h3>Media Server</h3>
+                            </div>
+                            <p>Your own private Netflix. Stream movies and TV shows from anywhere. No ads, no algorithms.</p>
+                            <span class="tier-tag sweetpea">Sweet Pea only</span>
+                            <div class="learn-more">Learn more &rarr;</div>
+                        </div>
+
+                        <!-- Seerr -->
+                        <div class="service-card" onclick="openModal('seerr')">
+                            <div class="service-header">
+                                <div class="service-icon"><svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="3" y="3" width="18" height="18" rx="3" stroke="#d4af37" stroke-width="1.5"/><path d="M8 12 L12 8 L16 12 L12 16 Z" fill="#d4af37"/></svg></div>
+                                <h3>Request Portal</h3>
+                            </div>
+                            <p>Want to watch something new? Drop a request and it appears in the media library.</p>
+                            <span class="tier-tag sweetpea">Sweet Pea only</span>
+                            <div class="learn-more">Learn more &rarr;</div>
+                        </div>
+
+                        <!-- Nextcloud -->
+                        <div class="service-card" onclick="openModal('nextcloud')">
+                            <div class="service-header">
+                                <div class="service-icon"><img src="https://cdn.jsdelivr.net/npm/simple-icons@latest/icons/nextcloud.svg" alt="Nextcloud"></div>
+                                <h3>File Sync</h3>
+                            </div>
+                            <p>Your own Google Drive. Sync files across devices, share folders, all under your control.</p>
+                            <span class="tier-tag sweetpea">Sweet Pea only</span>
+                            <div class="learn-more">Learn more &rarr;</div>
+                        </div>
+
+                        <!-- Open WebUI -->
+                        <div class="service-card" onclick="openModal('openwebui')">
+                            <div class="service-header">
+                                <div class="service-icon"><svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="12" r="10" stroke="#d4af37" stroke-width="1.5"/><path d="M8 10 Q8 8 10 8 L14 8 Q16 8 16 10 L16 13 Q16 15 14 15 L12 15 L12 17" fill="none" stroke="#d4af37" stroke-width="1.5"/><circle cx="12" cy="19" r="1" fill="#d4af37"/></svg></div>
+                                <h3>AI Assistant</h3>
+                            </div>
+                            <p>A ChatGPT that lives in your homelab. Private conversations that never leave the network.</p>
+                            <span class="tier-tag sweetpea">Sweet Pea only</span>
+                            <div class="learn-more">Learn more &rarr;</div>
+                        </div>
+
+                        <!-- Immich -->
+                        <div class="service-card" onclick="openModal('immich')">
+                            <div class="service-header">
+                                <div class="service-icon"><img src="https://cdn.jsdelivr.net/npm/simple-icons@latest/icons/immich.svg" alt="Immich"></div>
+                                <h3>Photo Backup</h3>
+                            </div>
+                            <p>Your own Google Photos. Automatic backup from your phone, face recognition, all private.</p>
+                            <span class="tier-tag sweetpea">Sweet Pea only</span>
+                            <div class="learn-more">Learn more &rarr;</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ═══ FAQ ═══ -->
+                <div class="faq-section">
+                    <h2 class="section-title">FAQ</h2>
+
+                    <div class="faq-item">
+                        <div class="faq-question" onclick="toggleFAQ(this)">How do I donate? <span class="arrow">&#x25BC;</span></div>
+                        <div class="faq-answer"><p>We accept Monero (XMR) and Bitcoin (BTC). Visit the donation form to see our wallet addresses.</p></div>
+                    </div>
+                    <div class="faq-item">
+                        <div class="faq-question" onclick="toggleFAQ(this)">What happens after I donate $5? <span class="arrow">&#x25BC;</span></div>
+                        <div class="faq-answer"><p>Fill out the donation form with your details and transaction hash. We verify your donation and email you an invite code. Use the code to create your account.</p></div>
+                    </div>
+                    <div class="faq-item">
+                        <div class="faq-question" onclick="toggleFAQ(this)">Is this a subscription? <span class="arrow">&#x25BC;</span></div>
+                        <div class="faq-answer"><p>No. A single donation grants lifetime access. There are no recurring fees or billing cycles.</p></div>
+                    </div>
+                    <div class="faq-item">
+                        <div class="faq-question" onclick="toggleFAQ(this)">How do I get Sweet Pea tier? <span class="arrow">&#x25BC;</span></div>
+                        <div class="faq-answer"><p>Sweet Pea tier is limited due to resource constraints. Contact support@mysweetpea.cc to inquire about availability and pricing.</p></div>
+                    </div>
+                    <div class="faq-item">
+                        <div class="faq-question" onclick="toggleFAQ(this)">Are donations tax-deductible? <span class="arrow">&#x25BC;</span></div>
+                        <div class="faq-answer"><p>No. Contributions are not tax-deductible. They help cover server hosting costs and future improvements.</p></div>
+                    </div>
+                    <div class="faq-item">
+                        <div class="faq-question" onclick="toggleFAQ(this)">Can I get a refund? <span class="arrow">&#x25BC;</span></div>
+                        <div class="faq-answer"><p>Crypto donations are irreversible. If you have a genuine issue, contact support@mysweetpea.cc.</p></div>
+                    </div>
+                </div>
+
+                <!-- ═══ Footer ═══ -->
+                <div class="footer">
+                    <div class="footer-links">
+                        <a href="/form.html">Donate &amp; Get Access</a>
+                        <a href="mailto:support@mysweetpea.cc">Support</a>
+                    </div>
+                    <p>&copy; 2026 MySweetPea. Self-hosted with care.</p>
+                </div>
+            </div>
         </div>
-        <p>&copy; 2026 MySweetPea. Self-hosted with care.</p>
     </div>
 
     <!-- ═══ Modal ═══ -->
@@ -890,13 +922,140 @@
     </div>
 
     <script>
+        // ═══ Falling Petals Canvas ═══
+        (function() {
+            const canvas = document.getElementById('petalCanvas');
+            const ctx = canvas.getContext('2d');
+            let petals = [];
+            let W, H;
+
+            function resize() {
+                W = canvas.width = window.innerWidth;
+                H = canvas.height = window.innerHeight;
+            }
+            resize();
+            window.addEventListener('resize', resize);
+
+            function createPetal() {
+                return {
+                    x: Math.random() * W,
+                    y: -20,
+                    size: 4 + Math.random() * 8,
+                    speedY: 0.5 + Math.random() * 1.5,
+                    speedX: -0.5 + Math.random() * 1,
+                    rotation: Math.random() * Math.PI * 2,
+                    rotSpeed: -0.02 + Math.random() * 0.04,
+                    opacity: 0.15 + Math.random() * 0.35,
+                    sway: Math.random() * Math.PI * 2,
+                    swaySpeed: 0.01 + Math.random() * 0.02
+                };
+            }
+
+            for (let i = 0; i < 40; i++) {
+                const p = createPetal();
+                p.y = Math.random() * H;
+                petals.push(p);
+            }
+
+            function drawPetal(p) {
+                ctx.save();
+                ctx.translate(p.x, p.y);
+                ctx.rotate(p.rotation);
+                ctx.globalAlpha = p.opacity;
+
+                const grad = ctx.createRadialGradient(0, 0, 0, 0, 0, p.size);
+                grad.addColorStop(0, '#f0d860');
+                grad.addColorStop(0.5, '#d4af37');
+                grad.addColorStop(1, 'rgba(212, 175, 55, 0.3)');
+
+                ctx.fillStyle = grad;
+                ctx.beginPath();
+                ctx.moveTo(0, -p.size);
+                ctx.bezierCurveTo(p.size * 0.6, -p.size * 0.5, p.size * 0.6, p.size * 0.5, 0, p.size);
+                ctx.bezierCurveTo(-p.size * 0.6, p.size * 0.5, -p.size * 0.6, -p.size * 0.5, 0, -p.size);
+                ctx.fill();
+
+                ctx.strokeStyle = 'rgba(212, 175, 55, 0.4)';
+                ctx.lineWidth = 0.5;
+                ctx.stroke();
+
+                ctx.restore();
+            }
+
+            function animate() {
+                ctx.clearRect(0, 0, W, H);
+
+                petals.forEach(function(p, i) {
+                    p.sway += p.swaySpeed;
+                    p.x += p.speedX + Math.sin(p.sway) * 0.5;
+                    p.y += p.speedY;
+                    p.rotation += p.rotSpeed;
+
+                    if (p.y > H + 20) {
+                        petals[i] = createPetal();
+                    }
+                    if (p.x < -20) p.x = W + 20;
+                    if (p.x > W + 20) p.x = -20;
+
+                    drawPetal(p);
+                });
+
+                requestAnimationFrame(animate);
+            }
+            animate();
+        })();
+
+        // ═══ Page Flip Scroll Effect ═══
+        (function() {
+            const container = document.getElementById('pageFlipContainer');
+            const pageFlip = document.getElementById('pageFlip');
+            let ticking = false;
+
+            function updateFlip() {
+                const rect = container.getBoundingClientRect();
+                const windowHeight = window.innerHeight;
+
+                // When container top is near bottom of viewport, start flipping
+                const triggerPoint = windowHeight * 0.85;
+                const endPoint = windowHeight * 0.3;
+
+                if (rect.top > triggerPoint) {
+                    // Not yet visible — fully flipped down
+                    pageFlip.style.transform = 'perspective(2000px) rotateX(75deg) translateY(60px)';
+                    pageFlip.style.opacity = '0.3';
+                } else if (rect.top < endPoint) {
+                    // Fully visible — no flip
+                    pageFlip.style.transform = 'perspective(2000px) rotateX(0deg) translateY(0)';
+                    pageFlip.style.opacity = '1';
+                } else {
+                    // In between — interpolate
+                    const progress = (triggerPoint - rect.top) / (triggerPoint - endPoint);
+                    const angle = 75 * (1 - progress);
+                    const translateY = 60 * (1 - progress);
+                    const opacity = 0.3 + 0.7 * progress;
+                    pageFlip.style.transform = 'perspective(2000px) rotateX(' + angle + 'deg) translateY(' + translateY + 'px)';
+                    pageFlip.style.opacity = opacity;
+                }
+
+                ticking = false;
+            }
+
+            window.addEventListener('scroll', function() {
+                if (!ticking) {
+                    requestAnimationFrame(updateFlip);
+                    ticking = true;
+                }
+            });
+
+            updateFlip();
+        })();
+
         // ═══ Service Data ═══
         const SERVICES = {
             vaultwarden: {
                 name: 'Vaultwarden',
                 icon: '<img src="https://cdn.jsdelivr.net/npm/simple-icons@latest/icons/vaultwarden.svg" alt="Vaultwarden">',
-                tier: 'seedling',
-                tierLabel: 'Seedling +',
+                tier: 'seedling', tierLabel: 'Seedling +',
                 desc: 'Vaultwarden is a self-hosted password manager, compatible with Bitwarden. It remembers all your passwords so you do not have to. It generates strong, unhackable passwords for every site and autofills them in your browser.',
                 tutorial: [
                     'Log in to the <a href="https://auth.mysweetpea.cc" target="_blank">Authentik SSO Portal</a> with your credentials',
@@ -911,8 +1070,7 @@
             matrix: {
                 name: 'Matrix / Element',
                 icon: '<img src="https://cdn.jsdelivr.net/npm/simple-icons@latest/icons/matrix.svg" alt="Matrix">',
-                tier: 'seedling',
-                tierLabel: 'Seedling +',
+                tier: 'seedling', tierLabel: 'Seedling +',
                 desc: 'Matrix is an open-source, end-to-end encrypted messaging protocol. Element is the client app. Think of it as a private Discord or Slack that you control. Create rooms, send direct messages, share files, and bridge to other platforms.',
                 tutorial: [
                     'Go to <a href="https://chat.mysweetpea.cc" target="_blank">https://chat.mysweetpea.cc</a>',
@@ -927,8 +1085,7 @@
             affine: {
                 name: 'AFFiNE',
                 icon: '<img src="https://cdn.jsdelivr.net/npm/simple-icons@latest/icons/affine.svg" alt="AFFiNE">',
-                tier: 'seedling',
-                tierLabel: 'Seedling +',
+                tier: 'seedling', tierLabel: 'Seedling +',
                 desc: 'AFFiNE is an open-source Notion alternative. Create documents, wikis, whiteboards, and knowledge bases. All your notes are stored privately on our server. It combines the best of Notion and Miro in one privacy-first workspace.',
                 tutorial: [
                     'Go to <a href="https://notes.mysweetpea.cc" target="_blank">https://notes.mysweetpea.cc</a>',
@@ -942,9 +1099,8 @@
             },
             koalasync: {
                 name: 'KoalaSync',
-                icon: '<span class="emoji">&#x1F428;</span>',
-                tier: 'seedling',
-                tierLabel: 'Seedling +',
+                icon: '<svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" stroke="#d4af37" stroke-width="1.5"/><path d="M8 12 L12 8 L16 12 L12 16 Z" fill="#d4af37"/></svg>',
+                tier: 'seedling', tierLabel: 'Seedling +',
                 desc: 'KoalaSync lets you watch movies and shows together with friends in real-time. It synchronizes playback across all viewers so everyone sees the same scene at the same time. Works with Jellyfin, YouTube, Netflix, and any HTML5 video.',
                 tutorial: [
                     'Go to <a href="https://sync.mysweetpea.cc" target="_blank">https://sync.mysweetpea.cc</a>',
@@ -959,8 +1115,7 @@
             jellyfin: {
                 name: 'Jellyfin + Moonfin',
                 icon: '<img src="https://cdn.jsdelivr.net/npm/simple-icons@latest/icons/jellyfin.svg" alt="Jellyfin">',
-                tier: 'sweetpea',
-                tierLabel: 'Sweet Pea only',
+                tier: 'sweetpea', tierLabel: 'Sweet Pea only',
                 desc: 'Jellyfin is your private Netflix. Stream movies and TV shows from anywhere, on any device. No ads, no tracking, no algorithms. Moonfin provides a premium, customized web interface with enhanced features like collections, ratings, and more.',
                 tutorial: [
                     'Go to <a href="https://media.mysweetpea.cc" target="_blank">https://media.mysweetpea.cc</a>',
@@ -974,9 +1129,8 @@
             },
             seerr: {
                 name: 'Seerr',
-                icon: '<span class="emoji">&#x1F4FD;&#xFE0F;</span>',
-                tier: 'sweetpea',
-                tierLabel: 'Sweet Pea only',
+                icon: '<svg viewBox="0 0 24 24" fill="none"><rect x="3" y="3" width="18" height="18" rx="3" stroke="#d4af37" stroke-width="1.5"/><path d="M8 12 L12 8 L16 12 L12 16 Z" fill="#d4af37"/></svg>',
+                tier: 'sweetpea', tierLabel: 'Sweet Pea only',
                 desc: 'Seerr is a request portal for media. Browse trending movies and TV shows, see what is already available, and request anything missing. Requests are automatically fulfilled and added to the media library.',
                 tutorial: [
                     'Go to <a href="https://request.mysweetpea.cc" target="_blank">https://request.mysweetpea.cc</a>',
@@ -991,8 +1145,7 @@
             nextcloud: {
                 name: 'Nextcloud',
                 icon: '<img src="https://cdn.jsdelivr.net/npm/simple-icons@latest/icons/nextcloud.svg" alt="Nextcloud">',
-                tier: 'sweetpea',
-                tierLabel: 'Sweet Pea only',
+                tier: 'sweetpea', tierLabel: 'Sweet Pea only',
                 desc: 'Nextcloud is your private Google Drive. Sync files across all your devices, share folders with others, and access your data from anywhere. All files are stored on our server under your control.',
                 tutorial: [
                     'Go to <a href="https://cloud.mysweetpea.cc" target="_blank">https://cloud.mysweetpea.cc</a>',
@@ -1006,9 +1159,8 @@
             },
             openwebui: {
                 name: 'Open WebUI (Ollama)',
-                icon: '<span class="emoji">&#x1F916;</span>',
-                tier: 'sweetpea',
-                tierLabel: 'Sweet Pea only',
+                icon: '<svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" stroke="#d4af37" stroke-width="1.5"/><path d="M8 10 Q8 8 10 8 L14 8 Q16 8 16 10 L16 13 Q16 15 14 15 L12 15 L12 17" stroke="#d4af37" stroke-width="1.5" fill="none"/><circle cx="12" cy="19" r="1" fill="#d4af37"/></svg>',
+                tier: 'sweetpea', tierLabel: 'Sweet Pea only',
                 desc: 'Open WebUI is a ChatGPT-like interface powered by Ollama, running entirely on our server. Ask it to summarize articles, draft emails, write code, or brainstorm ideas. Your conversations stay completely private and never leave the network.',
                 tutorial: [
                     'Go to <a href="https://ai.mysweetpea.cc" target="_blank">https://ai.mysweetpea.cc</a>',
@@ -1023,8 +1175,7 @@
             immich: {
                 name: 'Immich',
                 icon: '<img src="https://cdn.jsdelivr.net/npm/simple-icons@latest/icons/immich.svg" alt="Immich">',
-                tier: 'sweetpea',
-                tierLabel: 'Sweet Pea only',
+                tier: 'sweetpea', tierLabel: 'Sweet Pea only',
                 desc: 'Immich is your private Google Photos. Automatically back up photos and videos from your phone, organize them with face recognition and object detection, and share albums with family. All your memories stay on our server.',
                 tutorial: [
                     'Go to <a href="https://photos.mysweetpea.cc" target="_blank">https://photos.mysweetpea.cc</a>',
@@ -1038,45 +1189,22 @@
             }
         };
 
-        // ═══ Modal Functions ═══
-        function openModal(serviceKey) {
-            const s = SERVICES[serviceKey];
+        // ═══ Modal ═══
+        function openModal(key) {
+            const s = SERVICES[key];
             if (!s) return;
-
-            const tierClass = s.tier === 'sweetpea' ? 'sweetpea' : 'seedling';
-            const inner = document.getElementById('modalInner');
-
-            inner.innerHTML = `
-                <div class="modal-header">
-                    <div class="modal-icon">${s.icon}</div>
-                    <div>
-                        <h2>${s.name}</h2>
-                        <span class="tier-tag ${tierClass}">${s.tierLabel}</span>
-                    </div>
-                </div>
-                <div class="modal-body">
-                    <p>${s.desc}</p>
-                    <div class="modal-tutorial">
-                        <h3>How to Get Started</h3>
-                        <ol>
-                            ${s.tutorial.map(step => `<li>${step}</li>`).join('')}
-                        </ol>
-                    </div>
-                    <div class="modal-footer">
-                        <a href="${s.url}" target="_blank" class="btn btn-primary">Open ${s.name}</a>
-                        <a href="/form.html" class="btn btn-secondary">Get Access</a>
-                    </div>
-                </div>
-            `;
-
+            const tc = s.tier === 'sweetpea' ? 'sweetpea' : 'seedling';
+            document.getElementById('modalInner').innerHTML =
+                '<div class="modal-header"><div class="modal-icon">' + s.icon + '</div><div><h2>' + s.name + '</h2><span class="tier-tag ' + tc + '">' + s.tierLabel + '</span></div></div>' +
+                '<div class="modal-body"><p>' + s.desc + '</p>' +
+                '<div class="modal-tutorial"><h3>How to Get Started</h3><ol>' + s.tutorial.map(function(st){return '<li>'+st+'</li>';}).join('') + '</ol></div>' +
+                '<div class="modal-footer"><a href="' + s.url + '" target="_blank" class="btn btn-primary">Open ' + s.name + '</a><a href="/form.html" class="btn btn-secondary">Get Access</a></div></div>';
             document.getElementById('modalOverlay').classList.add('active');
             document.body.style.overflow = 'hidden';
         }
 
-        function closeModal(event) {
-            if (event.target === document.getElementById('modalOverlay')) {
-                closeModalDirect();
-            }
+        function closeModal(e) {
+            if (e.target === document.getElementById('modalOverlay')) closeModalDirect();
         }
 
         function closeModalDirect() {
@@ -1084,20 +1212,14 @@
             document.body.style.overflow = '';
         }
 
-        // Close on Escape
-        document.addEventListener('keydown', function(e) {
-            if (e.key === 'Escape') closeModalDirect();
-        });
+        document.addEventListener('keydown', function(e) { if (e.key === 'Escape') closeModalDirect(); });
 
-        // ═══ FAQ Toggle ═══
-        function toggleFAQ(el) {
-            const item = el.parentElement;
-            item.classList.toggle('open');
-        }
+        // ═══ FAQ ═══
+        function toggleFAQ(el) { el.parentElement.classList.toggle('open'); }
 
         // ═══ Scroll Animations ═══
         const observer = new IntersectionObserver(function(entries) {
-            entries.forEach(entry => {
+            entries.forEach(function(entry) {
                 if (entry.isIntersecting) {
                     entry.target.style.opacity = '1';
                     entry.target.style.transform = 'translateY(0)';
@@ -1105,8 +1227,7 @@
             });
         }, { threshold: 0.1 });
 
-        // Observe service cards and FAQ items
-        document.querySelectorAll('.service-card, .faq-item').forEach(el => {
+        document.querySelectorAll('.service-card, .faq-item').forEach(function(el) {
             el.style.opacity = '0';
             el.style.transform = 'translateY(20px)';
             el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
