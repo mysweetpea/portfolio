@@ -7,273 +7,117 @@
     <link rel="icon" type="image/svg+xml" href="/logo-favicon.svg">
     <style>
         *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
-
         :root {
-            --bg: #0a0a0a;
-            --gold: #d4af37;
-            --gold-dim: #b8941f;
-            --gold-glow: rgba(212, 175, 55, 0.15);
-            --text: #e0e0e0;
-            --text-dim: #888;
-            --text-faint: #555;
-            --border: rgba(255, 255, 255, 0.08);
-            --border-gold: rgba(212, 175, 55, 0.25);
-            --radius: 14px;
-            --radius-sm: 8px;
-            --transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            --purple: #a855f7;
-            --green: #22c56e;
-            --pink: #ec4899;
+            --bg: #0a0a0a; --gold: #d4af37; --gold-dim: #b8941f; --gold-glow: rgba(212, 175, 55, 0.15);
+            --text: #e0e0e0; --text-dim: #888; --text-faint: #555;
+            --border: rgba(255, 255, 255, 0.08); --border-gold: rgba(212, 175, 55, 0.25);
+            --radius: 14px; --radius-sm: 8px; --transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            --purple: #a855f7; --green: #22c56e; --pink: #ec4899;
         }
-
         html { scroll-behavior: smooth; }
-
-        body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
-            background: var(--bg);
-            color: var(--text);
-            min-height: 100vh;
-            line-height: 1.6;
-            overflow-x: hidden;
-        }
-
+        body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; line-height: 1.6; overflow-x: hidden; }
         #petalCanvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; pointer-events: none; }
         .content-wrapper { position: relative; z-index: 1; }
-
-        .bg-gradient {
-            position: fixed; top: 0; left: 0; right: 0; bottom: 0; z-index: -1;
-            background:
-                radial-gradient(ellipse 80% 50% at 50% -20%, rgba(212, 175, 55, 0.08), transparent),
-                radial-gradient(ellipse 60% 40% at 80% 100%, rgba(212, 175, 55, 0.04), transparent),
-                #0a0a0a;
-        }
-
+        .bg-gradient { position: fixed; top: 0; left: 0; right: 0; bottom: 0; z-index: -1; background: radial-gradient(ellipse 80% 50% at 50% -20%, rgba(212, 175, 55, 0.08), transparent), radial-gradient(ellipse 60% 40% at 80% 100%, rgba(212, 175, 55, 0.04), transparent), #0a0a0a; }
         @keyframes shimmer { 0% { background-position: -200% center; } 100% { background-position: 200% center; } }
         @keyframes float3D { 0%, 100% { transform: translateY(0) rotateX(0) rotateY(0); } 50% { transform: translateY(-10px) rotateX(2deg) rotateY(2deg); } }
-
-        .glass-text {
-            background: linear-gradient(135deg, rgba(255,255,255,0.9) 0%, rgba(212,175,55,0.8) 30%, rgba(255,255,255,0.6) 50%, rgba(212,175,55,0.8) 70%, rgba(255,255,255,0.9) 100%);
-            background-size: 200% auto;
-            -webkit-background-clip: text; background-clip: text;
-            -webkit-text-fill-color: transparent;
-            text-shadow: 0 0 30px rgba(212, 175, 55, 0.15);
-            animation: shimmer 6s linear infinite;
-            filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.3));
-        }
-
-        /* ═══ Top Nav ═══ */
-        .top-nav { position: fixed; top: 20px; right: 20px; z-index: 50; display: flex; gap: 12px; align-items: center; }
-        .home-btn {
-            display: flex; align-items: center; gap: 8px; padding: 10px 20px;
-            background: rgba(20, 20, 20, 0.8); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
-            border: 1px solid var(--border-gold); border-radius: var(--radius-sm);
-            color: var(--gold); font-size: 0.85rem; font-weight: 600; text-decoration: none; transition: var(--transition);
-        }
+        .glass-text { background: linear-gradient(135deg, rgba(255,255,255,0.9) 0%, rgba(212,175,55,0.8) 30%, rgba(255,255,255,0.6) 50%, rgba(212,175,55,0.8) 70%, rgba(255,255,255,0.9) 100%); background-size: 200% auto; -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; text-shadow: 0 0 30px rgba(212, 175, 55, 0.15); animation: shimmer 6s linear infinite; filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.3)); }
+        .top-nav { position: fixed; top: 20px; right: 20px; z-index: 50; }
+        .home-btn { display: flex; align-items: center; gap: 8px; padding: 10px 20px; background: rgba(20, 20, 20, 0.8); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border: 1px solid var(--border-gold); border-radius: var(--radius-sm); color: var(--gold); font-size: 0.85rem; font-weight: 600; text-decoration: none; transition: var(--transition); }
         .home-btn:hover { background: rgba(30, 30, 30, 0.9); border-color: var(--gold); transform: translateY(-2px); }
         .home-btn svg { width: 16px; height: 16px; }
-
-        /* ═══ Hero ═══ */
         .hero { text-align: center; padding: 60px 20px 20px; }
-        .hero img.logo { width: 100px; height: 100px; margin-bottom: 12px; filter: drop-shadow(0 0 20px rgba(212, 175, 55, 0.2)); animation: float3D 6s ease-in-out infinite; }
-        .hero h1 { font-size: 1.8rem; font-weight: 700; margin-bottom: 4px; }
+        .hero img.logo { width: 140px; height: 140px; margin-bottom: 12px; filter: drop-shadow(0 0 25px rgba(212, 175, 55, 0.25)); animation: float3D 6s ease-in-out infinite; }
+        .hero h1 { font-size: 2rem; font-weight: 700; margin-bottom: 4px; }
         .hero p { font-size: 0.9rem; color: var(--text-dim); }
-
-        /* ═══ Container ═══ */
-        .container { max-width: 540px; margin: 0 auto; padding: 20px; }
-
-        /* ═══ Tabs ═══ */
+        .container { max-width: 560px; margin: 0 auto; padding: 20px; }
         .tabs { display: flex; gap: 0; margin-bottom: 0; border-radius: var(--radius) var(--radius) 0 0; overflow: hidden; }
-        .tab {
-            flex: 1; padding: 12px 8px;
-            background: rgba(20, 20, 20, 0.5);
-            backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 255, 255, 0.06);
-            border-bottom: none;
-            text-align: center; cursor: pointer;
-            font-size: 0.8rem; color: var(--text-dim);
-            transition: var(--transition); user-select: none;
-        }
+        .tab { flex: 1; padding: 12px 8px; background: rgba(20, 20, 20, 0.5); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.06); border-bottom: none; text-align: center; cursor: pointer; font-size: 0.8rem; color: var(--text-dim); transition: var(--transition); user-select: none; }
         .tab:hover { color: #ccc; background: rgba(30, 30, 30, 0.7); }
-        .tab.active {
-            background: rgba(20, 20, 20, 0.85);
-            border-color: var(--border-gold);
-            color: var(--gold); font-weight: 600;
-        }
-
-        /* ═══ Card ═══ */
-        .card {
-            background: rgba(20, 20, 20, 0.6);
-            backdrop-filter: blur(16px) saturate(1.2); -webkit-backdrop-filter: blur(16px) saturate(1.2);
-            border: 1px solid var(--border-gold);
-            border-radius: 0 0 var(--radius) var(--radius);
-            padding: 28px;
-            box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.05), 0 8px 32px rgba(0, 0, 0, 0.3);
-        }
-
+        .tab.active { background: rgba(20, 20, 20, 0.85); color: var(--gold); font-weight: 600; }
+        .tab.active[data-tab="support"] { border-color: rgba(168, 85, 247, 0.4); color: var(--purple); }
+        .tab.active[data-tab="seedling"] { border-color: rgba(34, 197, 94, 0.4); color: var(--green); }
+        .tab.active[data-tab="code"] { border-color: rgba(236, 72, 153, 0.4); color: var(--pink); }
+        .card { background: rgba(20, 20, 20, 0.6); backdrop-filter: blur(16px) saturate(1.2); -webkit-backdrop-filter: blur(16px) saturate(1.2); border: 2px solid var(--border-gold); border-radius: 0 0 var(--radius) var(--radius); padding: 28px; box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.05), 0 8px 32px rgba(0, 0, 0, 0.3); transition: border-color 0.3s ease, box-shadow 0.3s ease; }
+        .card.border-purple { border-color: rgba(168, 85, 247, 0.4); box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.05), 0 8px 32px rgba(0, 0, 0, 0.3), 0 0 15px rgba(168, 85, 247, 0.08); }
+        .card.border-green { border-color: rgba(34, 197, 94, 0.4); box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.05), 0 8px 32px rgba(0, 0, 0, 0.3), 0 0 15px rgba(34, 197, 94, 0.08); }
+        .card.border-pink { border-color: rgba(236, 72, 153, 0.4); box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.05), 0 8px 32px rgba(0, 0, 0, 0.3), 0 0 15px rgba(236, 72, 153, 0.08); }
         .card h2 { font-size: 1.05rem; margin-bottom: 6px; }
         .card .subtitle { font-size: 0.82rem; color: var(--text-dim); margin-bottom: 20px; }
-
-        /* ═══ Form ═══ */
-        .form-group { margin-bottom: 16px; }
-        .form-group label { display: block; font-size: 0.78rem; color: #aaa; margin-bottom: 5px; font-weight: 500; }
-        .form-group input {
-            width: 100%; padding: 10px 12px;
-            background: rgba(10, 10, 10, 0.8);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: var(--radius-sm);
-            color: var(--text); font-size: 0.88rem;
-            transition: border-color 0.2s;
-        }
+        .form-group { margin-bottom: 16px; position: relative; }
+        .form-group label { display: block; font-size: 0.78rem; margin-bottom: 5px; font-weight: 500; }
+        .form-group input { width: 100%; padding: 10px 36px 10px 12px; background: rgba(10, 10, 10, 0.8); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: var(--radius-sm); color: var(--text); font-size: 0.88rem; transition: border-color 0.2s, box-shadow 0.2s; }
         .form-group input:focus { outline: none; border-color: var(--gold); }
         .form-group input::placeholder { color: #555; }
         .form-group .hint { font-size: 0.72rem; color: #666; margin-top: 3px; }
         .form-group .err { font-size: 0.72rem; color: #e74c3c; margin-top: 3px; display: none; }
-        .form-group.has-error input { border-color: #e74c3c; }
+        .form-group.has-error input { border-color: #e74c3c; box-shadow: 0 0 10px rgba(231, 76, 60, 0.15); }
         .form-group.has-error .err { display: block; }
-
-        /* ═══ Crypto Section ═══ */
+        .form-group.is-valid input { border-color: var(--green); box-shadow: 0 0 10px rgba(34, 197, 94, 0.15); }
+        .validation-icon { position: absolute; right: 12px; top: 38px; font-size: 1rem; display: none; }
+        .form-group.has-error .validation-icon { display: block; color: #e74c3c; }
+        .form-group.is-valid .validation-icon { display: block; color: var(--green); }
         .crypto-section { margin-bottom: 16px; }
-        .crypto-section label { display: block; font-size: 0.78rem; color: #aaa; margin-bottom: 7px; font-weight: 500; }
+        .crypto-section label { display: block; font-size: 0.78rem; margin-bottom: 7px; font-weight: 500; }
         .crypto-options { display: flex; gap: 8px; flex-wrap: wrap; }
-        .crypto-option {
-            flex: 1; min-width: 120px; padding: 10px;
-            background: rgba(10, 10, 10, 0.8);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: var(--radius-sm);
-            cursor: pointer; transition: var(--transition); text-align: center;
-        }
+        .crypto-option { flex: 1; min-width: 120px; padding: 10px; background: rgba(10, 10, 10, 0.8); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: var(--radius-sm); cursor: pointer; transition: var(--transition); text-align: center; }
         .crypto-option:hover { border-color: rgba(212, 175, 55, 0.4); }
         .crypto-option.selected { border-color: var(--gold); background: rgba(212, 175, 55, 0.08); }
         .crypto-option .icon { font-size: 1.3rem; margin-bottom: 3px; }
         .crypto-option .name { font-size: 0.76rem; color: #ccc; }
         .crypto-option .addr { font-size: 0.62rem; color: #666; margin-top: 3px; word-break: break-all; font-family: monospace; }
-
-        /* ═══ Wallet Display ═══ */
-        .wallet-display {
-            display: none;
-            background: rgba(10, 10, 10, 0.6);
-            border: 1px solid rgba(212, 175, 55, 0.15);
-            border-radius: var(--radius-sm);
-            padding: 12px; margin-bottom: 16px;
-        }
+        .wallet-display { display: none; background: rgba(10, 10, 10, 0.6); border: 1px solid rgba(212, 175, 55, 0.15); border-radius: var(--radius-sm); padding: 12px; margin-bottom: 16px; }
         .wallet-display.visible { display: block; }
         .wallet-display .wl { font-size: 0.72rem; color: #888; margin-bottom: 4px; }
         .wallet-display .wa { font-size: 0.78rem; color: var(--gold); font-family: monospace; word-break: break-all; cursor: pointer; }
         .wallet-display .wa:hover { text-decoration: underline; }
         .wallet-display .copy-hint { font-size: 0.68rem; color: #555; margin-top: 4px; }
-
-        /* ═══ Info Box ═══ */
-        .info-box {
-            background: rgba(212, 175, 55, 0.06);
-            border: 1px solid rgba(212, 175, 55, 0.15);
-            border-radius: var(--radius-sm);
-            padding: 12px; margin-bottom: 16px;
-            font-size: 0.76rem; color: #b8a030; line-height: 1.5;
-        }
-
-        /* ═══ Error Banner ═══ */
-        .error-banner {
-            display: none;
-            background: rgba(231, 76, 60, 0.12);
-            border: 1px solid rgba(231, 76, 60, 0.25);
-            border-radius: var(--radius-sm);
-            padding: 10px; margin-bottom: 16px;
-            font-size: 0.82rem; color: #e74c3c;
-        }
+        .info-box { background: rgba(212, 175, 55, 0.06); border: 1px solid rgba(212, 175, 55, 0.15); border-radius: var(--radius-sm); padding: 12px; margin-bottom: 16px; font-size: 0.76rem; color: #b8a030; line-height: 1.5; }
+        .error-banner { display: none; background: rgba(231, 76, 60, 0.12); border: 1px solid rgba(231, 76, 60, 0.25); border-radius: var(--radius-sm); padding: 10px; margin-bottom: 16px; font-size: 0.82rem; color: #e74c3c; }
         .error-banner.visible { display: block; }
-
-        /* ═══ Tab Content ═══ */
         .tab-content { display: none; }
         .tab-content.active { display: block; }
-
-        /* ═══ Vine Button ═══ */
         .vine-btn-wrapper { position: relative; width: 100%; }
         .vine-btn-wrapper svg { position: absolute; top: -8px; left: -12px; width: calc(100% + 24px); height: calc(100% + 20px); pointer-events: none; opacity: 0; transition: opacity 0.4s ease; z-index: 2; }
         .vine-btn-wrapper:hover svg { opacity: 1; }
-        .vine-btn-wrapper .btn {
-            position: relative; z-index: 1; width: 100%; padding: 13px;
-            border: none; border-radius: var(--radius-sm);
-            font-size: 0.95rem; font-weight: 600;
-            cursor: pointer; transition: var(--transition);
-            text-decoration: none; display: block; text-align: center;
-        }
-
-        .btn-glass-supporter {
-            background: rgba(168, 85, 247, 0.05);
-            backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
-            color: var(--text);
-            border: 1px solid rgba(168, 85, 247, 0.2);
-            box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.05), 0 4px 16px rgba(0, 0, 0, 0.2);
-        }
-        .btn-glass-supporter:hover {
-            background: rgba(168, 85, 247, 0.12);
-            border-color: rgba(168, 85, 247, 0.5);
-            box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.08), 0 4px 20px rgba(168, 85, 247, 0.15);
-            transform: scale(1.02);
-        }
-
-        .btn-glass-seedling {
-            background: rgba(34, 197, 94, 0.05);
-            backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
-            color: var(--text);
-            border: 1px solid rgba(34, 197, 94, 0.2);
-            box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.05), 0 4px 16px rgba(0, 0, 0, 0.2);
-        }
-        .btn-glass-seedling:hover {
-            background: rgba(34, 197, 94, 0.12);
-            border-color: rgba(34, 197, 94, 0.5);
-            box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.08), 0 4px 20px rgba(34, 197, 94, 0.15);
-            transform: scale(1.02);
-        }
-
-        .btn-glass-code {
-            background: rgba(212, 175, 55, 0.05);
-            backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
-            color: var(--text);
-            border: 1px solid rgba(212, 175, 55, 0.2);
-            box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.05), 0 4px 16px rgba(0, 0, 0, 0.2);
-        }
-        .btn-glass-code:hover {
-            background: rgba(212, 175, 55, 0.12);
-            border-color: rgba(212, 175, 55, 0.5);
-            box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.08), 0 4px 20px rgba(212, 175, 55, 0.15);
-            transform: scale(1.02);
-        }
-
-        /* ═══ Footer ═══ */
+        .vine-btn-wrapper .btn { position: relative; z-index: 1; width: 100%; padding: 13px; border: none; border-radius: var(--radius-sm); font-size: 0.95rem; font-weight: 600; cursor: pointer; transition: var(--transition); text-decoration: none; display: block; text-align: center; }
+        .btn:disabled { opacity: 0.4; cursor: not-allowed; transform: none !important; box-shadow: none !important; }
+        .btn-glass-supporter { background: rgba(168, 85, 247, 0.05); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); color: var(--text); border: 1px solid rgba(168, 85, 247, 0.2); box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.05), 0 4px 16px rgba(0, 0, 0, 0.2); }
+        .btn-glass-supporter:hover:not(:disabled) { background: rgba(168, 85, 247, 0.12); border-color: rgba(168, 85, 247, 0.5); box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.08), 0 4px 20px rgba(168, 85, 247, 0.15); transform: scale(1.02); }
+        .btn-glass-seedling { background: rgba(34, 197, 94, 0.05); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); color: var(--text); border: 1px solid rgba(34, 197, 94, 0.2); box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.05), 0 4px 16px rgba(0, 0, 0, 0.2); }
+        .btn-glass-seedling:hover:not(:disabled) { background: rgba(34, 197, 94, 0.12); border-color: rgba(34, 197, 94, 0.5); box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.08), 0 4px 20px rgba(34, 197, 94, 0.15); transform: scale(1.02); }
+        .btn-glass-code { background: rgba(236, 72, 153, 0.05); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); color: var(--text); border: 1px solid rgba(236, 72, 153, 0.2); box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.05), 0 4px 16px rgba(0, 0, 0, 0.2); }
+        .btn-glass-code:hover:not(:disabled) { background: rgba(236, 72, 153, 0.12); border-color: rgba(236, 72, 153, 0.5); box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.08), 0 4px 20px rgba(236, 72, 153, 0.15); transform: scale(1.02); }
         .footer { text-align: center; margin-top: 18px; font-size: 0.78rem; color: #666; }
         .footer a { color: var(--gold); text-decoration: none; }
-
-        /* ═══ 3D Floats ═══ */
+        .footer .footer-links { display: flex; justify-content: center; gap: 24px; margin-bottom: 12px; flex-wrap: wrap; }
+        .faq-section { max-width: 560px; margin: 40px auto 30px; padding: 0 20px; }
+        .faq-item { background: rgba(20, 20, 20, 0.5); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border: 1px solid var(--border); border-radius: var(--radius-sm); margin-bottom: 10px; overflow: hidden; transition: var(--transition); }
+        .faq-item:hover { border-color: var(--border-gold); }
+        .faq-question { padding: 14px 18px; font-size: 0.85rem; color: var(--text); cursor: pointer; display: flex; justify-content: space-between; align-items: center; transition: var(--transition); user-select: none; }
+        .faq-question:hover { color: var(--gold); }
+        .faq-question .arrow { transition: transform 0.3s ease; color: var(--text-dim); font-size: 0.75rem; }
+        .faq-item.open .faq-question .arrow { transform: rotate(180deg); color: var(--gold); }
+        .faq-answer { max-height: 0; overflow: hidden; transition: max-height 0.3s ease, padding 0.3s ease; padding: 0 18px; }
+        .faq-item.open .faq-answer { max-height: 300px; padding: 0 18px 14px; }
+        .faq-answer p { font-size: 0.8rem; color: var(--text-dim); line-height: 1.5; }
         .float-3d { position: absolute; pointer-events: none; opacity: 0.04; z-index: 0; }
         .float-3d svg { width: 100%; height: 100%; }
         .float-3d.f1 { top: 10%; right: 3%; width: 80px; height: 80px; animation: float3D 8s ease-in-out infinite; }
         .float-3d.f2 { bottom: 10%; left: 3%; width: 60px; height: 60px; animation: float3D 10s ease-in-out infinite reverse; }
-
-        @media (max-width: 768px) {
-            .hero h1 { font-size: 1.4rem; }
-            .hero img.logo { width: 80px; height: 80px; }
-            .container { padding: 10px; }
-            .tab { font-size: 0.72rem; padding: 10px 4px; }
-            .float-3d { display: none; }
-            .top-nav { top: 10px; right: 10px; }
-            .home-btn { padding: 8px 14px; font-size: 0.78rem; }
-        }
+        .page-footer { text-align: center; padding: 30px 20px; font-size: 0.85rem; color: var(--text-faint); border-top: 1px solid rgba(255, 255, 255, 0.04); }
+        .page-footer a { color: var(--gold); text-decoration: none; transition: var(--transition); }
+        .page-footer a:hover { text-decoration: underline; }
+        .page-footer .footer-links { display: flex; justify-content: center; gap: 24px; margin-bottom: 12px; flex-wrap: wrap; }
+        @media (max-width: 768px) { .hero h1 { font-size: 1.4rem; } .hero img.logo { width: 100px; height: 100px; } .container { padding: 10px; } .tab { font-size: 0.72rem; padding: 10px 4px; } .float-3d { display: none; } .top-nav { top: 10px; right: 10px; } .home-btn { padding: 8px 14px; font-size: 0.78rem; } }
     </style>
 </head>
 <body>
     <div class="bg-gradient"></div>
     <canvas id="petalCanvas"></canvas>
-
     <div class="float-3d f1"><svg viewBox="0 0 100 100" fill="none"><circle cx="50" cy="50" r="45" stroke="#d4af37" stroke-width="1.5" fill="none"/><path d="M50 15 C30 20, 25 40, 30 55 C35 68, 50 75, 50 75 C50 75, 65 68, 70 55 C75 40, 70 20, 50 15" fill="#d4af37"/></svg></div>
     <div class="float-3d f2"><svg viewBox="0 0 100 100" fill="none"><circle cx="50" cy="50" r="45" stroke="#d4af37" stroke-width="1.5" fill="none"/><path d="M50 15 C30 20, 25 40, 30 55 C35 68, 50 75, 50 75 C50 75, 65 68, 70 55 C75 40, 70 20, 50 15" fill="#d4af37"/></svg></div>
-
-    <div class="top-nav">
-        <a href="https://mysweetpea.cc" class="home-btn">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12L12 3l9 9M5 10v10h14V10"/></svg>
-            Home
-        </a>
-    </div>
+    <div class="top-nav"><a href="https://mysweetpea.cc" class="home-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12L12 3l9 9M5 10v10h14V10"/></svg> Home</a></div>
 
     <div class="content-wrapper">
         <div class="hero">
@@ -289,82 +133,43 @@
                 <div class="tab" data-tab="code" onclick="switchTab('code')">&#x1F511; I Have a Code</div>
             </div>
 
-            <div class="card">
+            <div class="card border-purple" id="mainCard">
                 <div class="error-banner" id="errorBanner"></div>
 
-                <!-- ═══ TAB 1: SUPPORT ═══ -->
+                <!-- ═══ TAB 1: SUPPORT (Purple) ═══ -->
                 <div class="tab-content active" id="tab-support">
                     <h2 class="glass-text">Support the Cause</h2>
-                    <p class="subtitle">Donate any amount to help cover server costs. No service access included.</p>
-
+                    <p class="subtitle">Donate any amount anonymously. No account needed.</p>
                     <div class="info-box">
                         Your contribution helps keep MySweetPea running and funds future improvements.
-                        Supporters receive a thank-you email but no service access.
+                        Donations can be anonymous — no name or email required.
                     </div>
-
-                    <form id="form-support" action="https://n8n.mysweetpea.cc/webhook/donate" method="POST">
-                        <input type="hidden" name="form_type" value="support">
-
-                        <div class="form-group" id="s-name-group">
-                            <label for="s-name">Name</label>
-                            <input type="text" id="s-name" name="name" placeholder="Your name" required>
-                            <div class="err">Please enter your name.</div>
-                        </div>
-
-                        <div class="form-group" id="s-email-group">
-                            <label for="s-email">Email</label>
-                            <input type="email" id="s-email" name="email" placeholder="you@example.com" required>
-                            <div class="err">Please enter a valid email.</div>
-                        </div>
-
-                        <div class="form-group" id="s-amount-group">
-                            <label for="s-amount">Donation Amount (USD)</label>
-                            <input type="number" id="s-amount" name="amount" placeholder="5.00" min="1" step="0.01" required>
-                            <div class="err">Please enter an amount.</div>
-                        </div>
-
-                        <div class="crypto-section">
-                            <label>Cryptocurrency</label>
-                            <div class="crypto-options">
-                                <div class="crypto-option" data-type="monero" onclick="selectCrypto(this, 'support')">
-                                    <div class="icon">&#x1F9EA;</div>
-                                    <div class="name">Monero (XMR)</div>
-                                    <div class="addr" id="s-xmr-addr"></div>
-                                </div>
-                                <div class="crypto-option" data-type="bitcoin" onclick="selectCrypto(this, 'support')">
-                                    <div class="icon">&#x20BF;</div>
-                                    <div class="name">Bitcoin (BTC)</div>
-                                    <div class="addr" id="s-btc-addr"></div>
-                                </div>
+                    <div class="crypto-section">
+                        <label class="glass-text">Cryptocurrency</label>
+                        <div class="crypto-options">
+                            <div class="crypto-option" data-type="monero" onclick="selectCrypto(this, 'support')">
+                                <div class="icon">&#x1F9EA;</div><div class="name">Monero (XMR)</div><div class="addr" id="s-xmr-addr"></div>
+                            </div>
+                            <div class="crypto-option" data-type="bitcoin" onclick="selectCrypto(this, 'support')">
+                                <div class="icon">&#x20BF;</div><div class="name">Bitcoin (BTC)</div><div class="addr" id="s-btc-addr"></div>
                             </div>
                         </div>
-
-                        <input type="hidden" name="crypto_type" id="s-crypto-type" value="">
-
-                        <div class="wallet-display" id="s-wallet-display">
-                            <div class="wl">Send your donation to:</div>
-                            <div class="wa" id="s-wallet-addr" onclick="copyWallet(this)"></div>
-                            <div class="copy-hint">Click address to copy</div>
-                        </div>
-
-                        <div class="form-group" id="s-tx-group">
-                            <label for="s-tx">Transaction Hash (optional)</label>
-                            <input type="text" id="s-tx" name="transaction_hash" placeholder="Paste your TX hash for faster verification">
-                            <div class="hint">Helps us verify your donation faster.</div>
-                        </div>
-
-                        <div class="vine-btn-wrapper">
-                            <svg viewBox="0 0 200 60" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M10 30 Q30 10, 50 30 T90 30 T130 30 T170 30 T190 30" stroke="#d4af37" stroke-width="1.5" fill="none" opacity="0.6"/><path d="M10 30 Q30 50, 50 30 T90 30 T130 30 T170 30 T190 30" stroke="#d4af37" stroke-width="1" fill="none" opacity="0.4"/><circle cx="30" cy="18" r="3" fill="#d4af37" opacity="0.7"/><circle cx="70" cy="42" r="3" fill="#d4af37" opacity="0.7"/><circle cx="110" cy="18" r="3" fill="#d4af37" opacity="0.7"/><circle cx="150" cy="42" r="3" fill="#d4af37" opacity="0.7"/><path d="M30 18 Q25 12, 28 8" stroke="#d4af37" stroke-width="1" fill="none" opacity="0.5"/><path d="M70 42 Q75 48, 72 52" stroke="#d4af37" stroke-width="1" fill="none" opacity="0.5"/><path d="M110 18 Q105 12, 108 8" stroke="#d4af37" stroke-width="1" fill="none" opacity="0.5"/><path d="M150 42 Q155 48, 152 52" stroke="#d4af37" stroke-width="1" fill="none" opacity="0.5"/></svg>
-                            <button type="submit" class="btn btn-glass-supporter">Submit Donation</button>
-                        </div>
-                    </form>
+                    </div>
+                    <div class="wallet-display" id="s-wallet-display">
+                        <div class="wl">Send your donation to:</div>
+                        <div class="wa" id="s-wallet-addr" onclick="copyWallet(this)"></div>
+                        <div class="copy-hint">Click address to copy</div>
+                    </div>
+                    <div class="info-box" style="margin-top: 16px;">
+                        Thank you for your support! Your donation is anonymous.
+                        If you want a thank-you email, contact support@mysweetpea.cc after donating.
+                    </div>
                 </div>
 
-                <!-- ═══ TAB 2: SEEDLING ═══ -->
+                <!-- ═══ TAB 2: SEEDLING (Green) ═══ -->
                 <div class="tab-content" id="tab-seedling">
                     <h2 class="glass-text">Get Access — $5 Minimum</h2>
                     <p class="subtitle">Donate $5+ to get access to non-media services.</p>
-
                     <div class="info-box">
                         <strong>How it works:</strong><br>
                         1. Send your $5 donation via crypto<br>
@@ -372,129 +177,124 @@
                         3. We verify and email you an invite code<br>
                         4. Use the code on the "I Have a Code" tab to create your account
                     </div>
-
                     <form id="form-seedling" action="https://n8n.mysweetpea.cc/webhook/donate" method="POST">
                         <input type="hidden" name="form_type" value="seedling">
-
                         <div class="form-group" id="se-name-group">
-                            <label for="se-name">Name</label>
+                            <label class="glass-text" for="se-name">Name</label>
                             <input type="text" id="se-name" name="name" placeholder="Your name" required>
+                            <span class="validation-icon"></span>
                             <div class="err">Please enter your name.</div>
                         </div>
-
                         <div class="form-group" id="se-email-group">
-                            <label for="se-email">Email</label>
+                            <label class="glass-text" for="se-email">Email</label>
                             <input type="email" id="se-email" name="email" placeholder="you@example.com" required>
+                            <span class="validation-icon"></span>
                             <div class="err">Please enter a valid email.</div>
                         </div>
-
                         <div class="form-group" id="se-username-group">
-                            <label for="se-username">Username</label>
-                            <input type="text" id="se-username" name="username" placeholder="Choose a username" required pattern="[A-Za-z0-9_]+">
+                            <label class="glass-text" for="se-username">Username</label>
+                            <input type="text" id="se-username" name="username" placeholder="Choose a username" required oninput="validateUsername(this, 'se-username-group')">
+                            <span class="validation-icon"></span>
                             <div class="err">Min 3 chars, alphanumeric + underscore only.</div>
                             <div class="hint">Letters, numbers, underscores. Min 3 characters.</div>
                         </div>
-
                         <div class="crypto-section">
-                            <label>Cryptocurrency</label>
+                            <label class="glass-text">Cryptocurrency</label>
                             <div class="crypto-options">
                                 <div class="crypto-option" data-type="monero" onclick="selectCrypto(this, 'seedling')">
-                                    <div class="icon">&#x1F9EA;</div>
-                                    <div class="name">Monero (XMR)</div>
-                                    <div class="addr" id="se-xmr-addr"></div>
+                                    <div class="icon">&#x1F9EA;</div><div class="name">Monero (XMR)</div><div class="addr" id="se-xmr-addr"></div>
                                 </div>
                                 <div class="crypto-option" data-type="bitcoin" onclick="selectCrypto(this, 'seedling')">
-                                    <div class="icon">&#x20BF;</div>
-                                    <div class="name">Bitcoin (BTC)</div>
-                                    <div class="addr" id="se-btc-addr"></div>
+                                    <div class="icon">&#x20BF;</div><div class="name">Bitcoin (BTC)</div><div class="addr" id="se-btc-addr"></div>
                                 </div>
                             </div>
                         </div>
-
                         <input type="hidden" name="crypto_type" id="se-crypto-type" value="">
-
                         <div class="wallet-display" id="se-wallet-display">
                             <div class="wl">Send your $5+ donation to:</div>
                             <div class="wa" id="se-wallet-addr" onclick="copyWallet(this)"></div>
                             <div class="copy-hint">Click address to copy</div>
                         </div>
-
                         <div class="form-group" id="se-tx-group">
-                            <label for="se-tx">Transaction Hash (optional but recommended)</label>
+                            <label class="glass-text" for="se-tx">Transaction Hash (optional but recommended)</label>
                             <input type="text" id="se-tx" name="transaction_hash" placeholder="Paste your TX hash for faster verification">
                             <div class="hint">Helps us verify your donation faster.</div>
                         </div>
-
                         <div class="vine-btn-wrapper">
-                            <svg viewBox="0 0 200 60" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M10 30 Q30 10, 50 30 T90 30 T130 30 T170 30 T190 30" stroke="#d4af37" stroke-width="1.5" fill="none" opacity="0.6"/><path d="M10 30 Q30 50, 50 30 T90 30 T130 30 T170 30 T190 30" stroke="#d4af37" stroke-width="1" fill="none" opacity="0.4"/><circle cx="30" cy="18" r="3" fill="#d4af37" opacity="0.7"/><circle cx="70" cy="42" r="3" fill="#d4af37" opacity="0.7"/><circle cx="110" cy="18" r="3" fill="#d4af37" opacity="0.7"/><circle cx="150" cy="42" r="3" fill="#d4af37" opacity="0.7"/><path d="M30 18 Q25 12, 28 8" stroke="#d4af37" stroke-width="1" fill="none" opacity="0.5"/><path d="M70 42 Q75 48, 72 52" stroke="#d4af37" stroke-width="1" fill="none" opacity="0.5"/><path d="M110 18 Q105 12, 108 8" stroke="#d4af37" stroke-width="1" fill="none" opacity="0.5"/><path d="M150 42 Q155 48, 152 52" stroke="#d4af37" stroke-width="1" fill="none" opacity="0.5"/></svg>
-                            <button type="submit" class="btn btn-glass-seedling">Submit Request</button>
+                            <svg viewBox="0 0 200 60" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M10 30 Q30 10, 50 30 T90 30 T130 30 T170 30 T190 30" stroke="#d4af37" stroke-width="1.5" fill="none" opacity="0.6"/><path d="M10 30 Q30 50, 50 30 T90 30 T130 30 T170 30 T190 30" stroke="#d4af37" stroke-width="1" fill="none" opacity="0.4"/><circle cx="30" cy="18" r="3" fill="#d4af37" opacity="0.7"/><circle cx="70" cy="42" r="3" fill="#d4af37" opacity="0.7"/><circle cx="110" cy="18" r="3" fill="#d4af37" opacity="0.7"/><circle cx="150" cy="42" r="3" fill="#d4af37" opacity="0.7"/></svg>
+                            <button type="submit" class="btn btn-glass-seedling" id="se-submit" disabled>Submit Request</button>
                         </div>
                     </form>
                 </div>
 
-                <!-- ═══ TAB 3: CODE ═══ -->
+                <!-- ═══ TAB 3: CODE (Pink) ═══ -->
                 <div class="tab-content" id="tab-code">
                     <h2 class="glass-text">Redeem Invite Code</h2>
                     <p class="subtitle">Have an invite code? Create your account now.</p>
-
                     <div class="info-box">
                         Enter your invite code and details below. Your account will be created instantly.
                     </div>
-
                     <form id="form-code" action="https://n8n.mysweetpea.cc/webhook/donate" method="POST">
                         <input type="hidden" name="form_type" value="code">
-
                         <div class="form-group" id="c-code-group">
-                            <label for="c-code">Invite Code</label>
-                            <input type="text" id="c-code" name="invite_code" placeholder="PEA-XXXXXXXX or FAM-XXXXXXXX" required>
-                            <div class="err">Please enter your invite code.</div>
+                            <label class="glass-text" for="c-code">Invite Code</label>
+                            <input type="text" id="c-code" name="invite_code" placeholder="PEA-XXXXXXXX or FAM-XXXXXXXX" required oninput="validateInviteCode(this)">
+                            <span class="validation-icon"></span>
+                            <div class="err" id="c-code-err">Checking invite code...</div>
                         </div>
-
                         <div class="form-group" id="c-name-group">
-                            <label for="c-name">Name</label>
-                            <input type="text" id="c-name" name="name" placeholder="Your name" required>
+                            <label class="glass-text" for="c-name">Name</label>
+                            <input type="text" id="c-name" name="name" placeholder="Your name" required oninput="validateName(this, 'c-name-group')">
+                            <span class="validation-icon"></span>
                             <div class="err">Please enter your name.</div>
                         </div>
-
                         <div class="form-group" id="c-email-group">
-                            <label for="c-email">Email</label>
-                            <input type="email" id="c-email" name="email" placeholder="you@example.com" required>
+                            <label class="glass-text" for="c-email">Email</label>
+                            <input type="email" id="c-email" name="email" placeholder="you@example.com" required oninput="validateEmail(this, 'c-email-group')">
+                            <span class="validation-icon"></span>
                             <div class="err">Please enter a valid email.</div>
                         </div>
-
                         <div class="form-group" id="c-username-group">
-                            <label for="c-username">Username</label>
-                            <input type="text" id="c-username" name="username" placeholder="Choose a username" required pattern="[A-Za-z0-9_]+">
+                            <label class="glass-text" for="c-username">Username</label>
+                            <input type="text" id="c-username" name="username" placeholder="Choose a username" required oninput="validateUsername(this, 'c-username-group')">
+                            <span class="validation-icon"></span>
                             <div class="err">Min 3 chars, alphanumeric + underscore only.</div>
                             <div class="hint">Letters, numbers, underscores. Min 3 characters.</div>
                         </div>
-
                         <div class="vine-btn-wrapper">
-                            <svg viewBox="0 0 200 60" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M10 30 Q30 10, 50 30 T90 30 T130 30 T170 30 T190 30" stroke="#d4af37" stroke-width="1.5" fill="none" opacity="0.6"/><path d="M10 30 Q30 50, 50 30 T90 30 T130 30 T170 30 T190 30" stroke="#d4af37" stroke-width="1" fill="none" opacity="0.4"/><circle cx="30" cy="18" r="3" fill="#d4af37" opacity="0.7"/><circle cx="70" cy="42" r="3" fill="#d4af37" opacity="0.7"/><circle cx="110" cy="18" r="3" fill="#d4af37" opacity="0.7"/><circle cx="150" cy="42" r="3" fill="#d4af37" opacity="0.7"/><path d="M30 18 Q25 12, 28 8" stroke="#d4af37" stroke-width="1" fill="none" opacity="0.5"/><path d="M70 42 Q75 48, 72 52" stroke="#d4af37" stroke-width="1" fill="none" opacity="0.5"/><path d="M110 18 Q105 12, 108 8" stroke="#d4af37" stroke-width="1" fill="none" opacity="0.5"/><path d="M150 42 Q155 48, 152 52" stroke="#d4af37" stroke-width="1" fill="none" opacity="0.5"/></svg>
-                            <button type="submit" class="btn btn-glass-code">Create Account</button>
+                            <svg viewBox="0 0 200 60" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M10 30 Q30 10, 50 30 T90 30 T130 30 T170 30 T190 30" stroke="#d4af37" stroke-width="1.5" fill="none" opacity="0.6"/><path d="M10 30 Q30 50, 50 30 T90 30 T130 30 T170 30 T190 30" stroke="#d4af37" stroke-width="1" fill="none" opacity="0.4"/><circle cx="30" cy="18" r="3" fill="#d4af37" opacity="0.7"/><circle cx="70" cy="42" r="3" fill="#d4af37" opacity="0.7"/><circle cx="110" cy="18" r="3" fill="#d4af37" opacity="0.7"/><circle cx="150" cy="42" r="3" fill="#d4af37" opacity="0.7"/></svg>
+                            <button type="submit" class="btn btn-glass-code" id="c-submit" disabled>Create Account</button>
                         </div>
                     </form>
                 </div>
             </div>
+        </div>
 
-            <div class="footer">
-                Questions? <a href="mailto:support@mysweetpea.cc">support@mysweetpea.cc</a>
+        <!-- ═══ FAQ ═══ -->
+        <div class="faq-section">
+            <div class="faq-item"><div class="faq-question" onclick="toggleFAQ(this)">Why do you require a donation before access? <span class="arrow">&#x25BC;</span></div><div class="faq-answer"><p>The donation requirement helps prevent abuse and spam. Without it, anyone could create unlimited accounts, overload the server, and ruin the experience for everyone. A small contribution ensures that users are genuine and invested in the community.</p></div></div>
+            <div class="faq-item"><div class="faq-question" onclick="toggleFAQ(this)">Why do you need donations? <span class="arrow">&#x25BC;</span></div><div class="faq-answer"><p>Running these services costs money — server hardware, electricity, internet bandwidth, and domain registration. Donations help cover these costs and fund future improvements and new services. We do not run ads or sell your data.</p></div></div>
+            <div class="faq-item"><div class="faq-question" onclick="toggleFAQ(this)">Why don't you accept credit cards? <span class="arrow">&#x25BC;</span></div><div class="faq-answer"><p>We prioritize privacy. Credit card payments require sharing your personal and financial information with payment processors, which creates a paper trail linking your identity to our services. Cryptocurrency donations (Monero and Bitcoin) allow us to maintain a privacy-first approach with no KYC requirements, no chargebacks, and no third-party data collection.</p></div></div>
+            <div class="faq-item"><div class="faq-question" onclick="toggleFAQ(this)">How do I donate? <span class="arrow">&#x25BC;</span></div><div class="faq-answer"><p>We accept Monero (XMR) and Bitcoin (BTC). Visit the donation form to see our wallet addresses.</p></div></div>
+            <div class="faq-item"><div class="faq-question" onclick="toggleFAQ(this)">What happens after I donate $5? <span class="arrow">&#x25BC;</span></div><div class="faq-answer"><p>Fill out the donation form with your details and transaction hash. We verify your donation and email you an invite code. Use the code to create your account.</p></div></div>
+            <div class="faq-item"><div class="faq-question" onclick="toggleFAQ(this)">Is this a subscription? <span class="arrow">&#x25BC;</span></div><div class="faq-answer"><p>No. A single donation grants lifetime access. There are no recurring fees or billing cycles.</p></div></div>
+            <div class="faq-item"><div class="faq-question" onclick="toggleFAQ(this)">How do I get Sweet Pea tier? <span class="arrow">&#x25BC;</span></div><div class="faq-answer"><p>Sweet Pea tier is limited due to resource constraints. Contact support@mysweetpea.cc to inquire about availability and pricing.</p></div></div>
+            <div class="faq-item"><div class="faq-question" onclick="toggleFAQ(this)">Can I get a refund? <span class="arrow">&#x25BC;</span></div><div class="faq-answer"><p>Crypto donations are irreversible. If you have a genuine issue, contact support@mysweetpea.cc.</p></div></div>
+        </div>
+
+        <div class="page-footer">
+            <div class="footer-links">
+                <a href="/form.html">Donate &amp; Get Access</a>
+                <a href="/about.html">About Us</a>
+                <a href="mailto:support@mysweetpea.cc">Support</a>
             </div>
+            <p>&copy; 2026 MySweetPea. Self-hosted with care.</p>
         </div>
     </div>
 
     <script>
-        // ═══ Wallet Addresses ═══
-        var WALLETS = {
-            monero: 'YOUR_XMR_WALLET_ADDRESS_HERE',
-            bitcoin: 'YOUR_BTC_WALLET_ADDRESS_HERE'
-        };
-
-        function truncateAddr(addr) {
-            if (!addr || addr.indexOf('YOUR_') !== -1) return 'Coming soon';
-            return addr.substring(0, 8) + '...' + addr.substring(addr.length - 6);
-        }
-
+        var WALLETS = { monero: 'YOUR_XMR_WALLET_ADDRESS_HERE', bitcoin: 'YOUR_BTC_WALLET_ADDRESS_HERE' };
+        function truncateAddr(a) { if (!a || a.indexOf('YOUR_') !== -1) return 'Coming soon'; return a.substring(0, 8) + '...' + a.substring(a.length - 6); }
         document.getElementById('s-xmr-addr').textContent = truncateAddr(WALLETS.monero);
         document.getElementById('s-btc-addr').textContent = truncateAddr(WALLETS.bitcoin);
         document.getElementById('se-xmr-addr').textContent = truncateAddr(WALLETS.monero);
@@ -512,13 +312,18 @@
             animate();
         })();
 
-        // ═══ Tab Switching ═══
+        // ═══ Tab Switching with Border Color ═══
         function switchTab(tabName) {
             document.querySelectorAll('.tab').forEach(function(t) { t.classList.remove('active'); });
             document.querySelectorAll('.tab-content').forEach(function(c) { c.classList.remove('active'); });
             document.querySelector('[data-tab="' + tabName + '"]').classList.add('active');
             document.getElementById('tab-' + tabName).classList.add('active');
             document.getElementById('errorBanner').classList.remove('visible');
+            var card = document.getElementById('mainCard');
+            card.classList.remove('border-purple', 'border-green', 'border-pink');
+            if (tabName === 'support') card.classList.add('border-purple');
+            else if (tabName === 'seedling') card.classList.add('border-green');
+            else if (tabName === 'code') card.classList.add('border-pink');
         }
 
         // ═══ Crypto Selection ═══
@@ -528,74 +333,100 @@
             el.classList.add('selected');
             var type = el.getAttribute('data-type');
             document.getElementById(prefix + '-crypto-type').value = type;
-            var walletDisplay = document.getElementById(prefix + '-wallet-display');
-            var walletAddr = document.getElementById(prefix + '-wallet-addr');
-            if (WALLETS[type] && WALLETS[type].indexOf('YOUR_') === -1) {
-                walletAddr.textContent = WALLETS[type];
-                walletDisplay.classList.add('visible');
-            } else {
-                walletDisplay.classList.remove('visible');
-            }
+            var wd = document.getElementById(prefix + '-wallet-display');
+            var wa = document.getElementById(prefix + '-wallet-addr');
+            if (WALLETS[type] && WALLETS[type].indexOf('YOUR_') === -1) { wa.textContent = WALLETS[type]; wd.classList.add('visible'); } else { wd.classList.remove('visible'); }
+            if (prefix === 'seedling') checkSeedlingValidity();
         }
-
-        // ═══ Copy Wallet ═══
-        function copyWallet(el) {
-            navigator.clipboard.writeText(el.textContent).then(function() {
-                var original = el.textContent;
-                el.textContent = 'Copied!';
-                setTimeout(function() { el.textContent = original; }, 1500);
-            });
-        }
+        function copyWallet(el) { navigator.clipboard.writeText(el.textContent).then(function() { var o = el.textContent; el.textContent = 'Copied!'; setTimeout(function() { el.textContent = o; }, 1500); }); }
 
         // ═══ URL Error Params ═══
         var urlParams = new URLSearchParams(window.location.search);
-        if (urlParams.get('reason') === 'validation') {
-            document.getElementById('errorBanner').textContent = 'Please check your inputs and try again.';
-            document.getElementById('errorBanner').classList.add('visible');
-        } else if (urlParams.get('reason') === 'invalid_code') {
-            switchTab('code');
-            document.getElementById('errorBanner').textContent = 'Invalid or already used invite code.';
-            document.getElementById('errorBanner').classList.add('visible');
-        }
+        if (urlParams.get('reason') === 'validation') { document.getElementById('errorBanner').textContent = 'Please check your inputs and try again.'; document.getElementById('errorBanner').classList.add('visible'); }
 
-        // ═══ Form Validation ═══
+        // ═══ Live Validation ═══
         var emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        var usernameRegex = /^[A-Za-z0-9_]+$/;
+        var usernameRegex = /^[A-Za-z0-9_]+$//;
+        var codeRegex = /^[A-Za-z0-9-]+$/;
 
-        function validateField(groupId, condition) {
-            var group = document.getElementById(groupId);
-            if (condition) { group.classList.remove('has-error'); return true; }
-            else { group.classList.add('has-error'); return false; }
+        function setValid(groupId) { var g = document.getElementById(groupId); g.classList.remove('has-error'); g.classList.add('is-valid'); }
+        function setInvalid(groupId) { var g = document.getElementById(groupId); g.classList.remove('is-valid'); g.classList.add('has-error'); }
+        function setNeutral(groupId) { var g = document.getElementById(groupId); g.classList.remove('is-valid', 'has-error'); }
+
+        function validateName(input, groupId) {
+            var val = input.value.trim();
+            if (val.length === 0) { setNeutral(groupId); return false; }
+            if (val.length >= 1) { setValid(groupId); return true; }
+            setInvalid(groupId); return false;
         }
 
-        document.getElementById('form-support').addEventListener('submit', function(e) {
-            var valid = true; var banner = document.getElementById('errorBanner'); banner.classList.remove('visible');
-            valid = validateField('s-name-group', document.getElementById('s-name').value.trim().length > 0) && valid;
-            valid = validateField('s-email-group', emailRegex.test(document.getElementById('s-email').value.trim())) && valid;
-            valid = validateField('s-amount-group', parseFloat(document.getElementById('s-amount').value) >= 1) && valid;
-            var cryptoType = document.getElementById('s-crypto-type').value;
-            if (!cryptoType) { banner.textContent = 'Please select a cryptocurrency.'; banner.classList.add('visible'); valid = false; }
-            if (!valid) e.preventDefault();
-        });
+        function validateEmail(input, groupId) {
+            var val = input.value.trim();
+            if (val.length === 0) { setNeutral(groupId); return false; }
+            if (emailRegex.test(val)) { setValid(groupId); return true; }
+            setInvalid(groupId); return false;
+        }
 
-        document.getElementById('form-seedling').addEventListener('submit', function(e) {
-            var valid = true; var banner = document.getElementById('errorBanner'); banner.classList.remove('visible');
-            valid = validateField('se-name-group', document.getElementById('se-name').value.trim().length > 0) && valid;
-            valid = validateField('se-email-group', emailRegex.test(document.getElementById('se-email').value.trim())) && valid;
-            valid = validateField('se-username-group', document.getElementById('se-username').value.trim().length >= 3 && usernameRegex.test(document.getElementById('se-username').value.trim())) && valid;
-            var cryptoType = document.getElementById('se-crypto-type').value;
-            if (!cryptoType) { banner.textContent = 'Please select a cryptocurrency.'; banner.classList.add('visible'); valid = false; }
-            if (!valid) e.preventDefault();
-        });
+        function validateUsername(input, groupId) {
+            var val = input.value.trim();
+            if (val.length === 0) { setNeutral(groupId); updateSubmitButtons(); return false; }
+            if (val.length >= 3 && usernameRegex.test(val)) { setValid(groupId); updateSubmitButtons(); return true; }
+            setInvalid(groupId); updateSubmitButtons(); return false;
+        }
 
-        document.getElementById('form-code').addEventListener('submit', function(e) {
-            var valid = true; var banner = document.getElementById('errorBanner'); banner.classList.remove('visible');
-            valid = validateField('c-code-group', document.getElementById('c-code').value.trim().length >= 4) && valid;
-            valid = validateField('c-name-group', document.getElementById('c-name').value.trim().length > 0) && valid;
-            valid = validateField('c-email-group', emailRegex.test(document.getElementById('c-email').value.trim())) && valid;
-            valid = validateField('c-username-group', document.getElementById('c-username').value.trim().length >= 3 && usernameRegex.test(document.getElementById('c-username').value.trim())) && valid;
-            if (!valid) e.preventDefault();
-        });
+        // ═══ Invite Code Live Validation (debounced API check) ═══
+        var codeCheckTimer = null;
+        var codeValid = false;
+        function validateInviteCode(input) {
+            var val = input.value.trim();
+            var group = document.getElementById('c-code-group');
+            var errEl = document.getElementById('c-code-err');
+            codeValid = false;
+            updateSubmitButtons();
+            if (val.length < 4) { setNeutral('c-code-group'); errEl.textContent = 'Invite code must be at least 4 characters.'; errEl.style.display = 'block'; return; }
+            if (!codeRegex.test(val)) { setInvalid('c-code-group'); errEl.textContent = 'Invalid characters in code.'; errEl.style.display = 'block'; return; }
+            setNeutral('c-code-group');
+            errEl.textContent = 'Checking invite code...';
+            errEl.style.display = 'block';
+            errEl.style.color = '#888';
+            if (codeCheckTimer) clearTimeout(codeCheckTimer);
+            codeCheckTimer = setTimeout(function() {
+                fetch('https://n8n.mysweetpea.cc/webhook/check-code', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ code: val })
+                })
+                .then(function(r) { return r.json(); })
+                .then(function(data) {
+                    if (data.ok) { setValid('c-code-group'); errEl.style.display = 'none'; codeValid = true; }
+                    else { setInvalid('c-code-group'); errEl.textContent = data.msg || 'Invalid invite code.'; errEl.style.display = 'block'; errEl.style.color = '#e74c3c'; codeValid = false; }
+                    updateSubmitButtons();
+                })
+                .catch(function() { setNeutral('c-code-group'); errEl.textContent = 'Could not verify code. Server will validate on submit.'; errEl.style.display = 'block'; errEl.style.color = '#888'; updateSubmitButtons(); });
+            }, 500);
+        }
+
+        // ═══ Submit Button State ═══
+        function isFieldValid(groupId) { return document.getElementById(groupId).classList.contains('is-valid'); }
+        function updateSubmitButtons() {
+            // Seedling: name + email + username + crypto
+            var seValid = isFieldValid('se-name-group') && isFieldValid('se-email-group') && isFieldValid('se-username-group') && document.getElementById('se-crypto-type').value !== '';
+            document.getElementById('se-submit').disabled = !seValid;
+            // Code: code + name + email + username
+            var cValid = codeValid && isFieldValid('c-name-group') && isFieldValid('c-email-group') && isFieldValid('c-username-group');
+            document.getElementById('c-submit').disabled = !cValid;
+        }
+
+        // ═══ Seedling form validation listeners ═══
+        document.getElementById('se-name').addEventListener('input', function() { validateName(this, 'se-name-group'); updateSubmitButtons(); });
+        document.getElementById('se-email').addEventListener('input', function() { validateEmail(this, 'se-email-group'); updateSubmitButtons(); });
+
+        // ═══ Code form validation listeners ═══
+        document.getElementById('c-name').addEventListener('input', function() { validateName(this, 'c-name-group'); updateSubmitButtons(); });
+        document.getElementById('c-email').addEventListener('input', function() { validateEmail(this, 'c-email-group'); updateSubmitButtons(); });
+
+        // ═══ FAQ ═══
+        function toggleFAQ(el) { el.parentElement.classList.toggle('open'); }
     </script>
 </body>
 </html>
