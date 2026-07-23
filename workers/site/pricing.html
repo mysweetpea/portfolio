@@ -53,7 +53,6 @@
         @keyframes float3D { 0%, 100% { transform: translateY(0) rotateX(0) rotateY(0); } 50% { transform: translateY(-10px) rotateX(2deg) rotateY(2deg); } }
         @keyframes pulseGlowGreen { 0%, 100% { box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.05), 0 8px 32px rgba(0, 0, 0, 0.3), 0 0 15px rgba(34, 197, 94, 0.08); } 50% { box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.05), 0 8px 32px rgba(0, 0, 0, 0.3), 0 0 30px rgba(34, 197, 94, 0.15); } }
 
-        /* ═══ 3D Emoji with Light Reflection ═══ */
         @keyframes emoji3DRotate {
             0%, 100% { transform: perspective(200px) rotateY(0deg) rotateX(0deg); }
             25% { transform: perspective(200px) rotateY(8deg) rotateX(-3deg); }
@@ -61,16 +60,7 @@
             75% { transform: perspective(200px) rotateY(-8deg) rotateX(3deg); }
         }
 
-        @keyframes lightSweep {
-            0% { left: -60%; opacity: 0; }
-            20% { opacity: 0.8; }
-            50% { opacity: 0.4; }
-            80% { opacity: 0.8; }
-            100% { left: 160%; opacity: 0; }
-        }
-
         .tier-emoji-3d {
-            position: relative;
             display: inline-block;
             font-size: 2.5rem;
             margin-bottom: 12px;
@@ -79,24 +69,6 @@
             transform-style: preserve-3d;
         }
 
-        .tier-emoji-3d::after {
-            content: '';
-            position: absolute;
-            top: 0; left: -60%;
-            width: 50%; height: 100%;
-            background: linear-gradient(
-                105deg,
-                transparent 30%,
-                rgba(255, 255, 255, 0.5) 50%,
-                transparent 70%
-            );
-            border-radius: 50%;
-            pointer-events: none;
-            animation: lightSweep 4s ease-in-out infinite;
-            mix-blend-mode: overlay;
-        }
-
-        /* ═══ Liquid Glass Text with Colored Border ═══ */
         .glass-text {
             background: linear-gradient(135deg, rgba(255,255,255,0.9) 0%, rgba(212,175,55,0.8) 30%, rgba(255,255,255,0.6) 50%, rgba(212,175,55,0.8) 70%, rgba(255,255,255,0.9) 100%);
             background-size: 200% auto;
@@ -137,7 +109,6 @@
             filter: drop-shadow(0 0 3px rgba(236, 72, 153, 0.4));
         }
 
-        /* ═══ Mouse Glow Border ═══ */
         .glow-card { position: relative; }
         .glow-card::before {
             content: ''; position: absolute; inset: 0; border-radius: inherit; padding: 1px;
@@ -148,13 +119,11 @@
         }
         .glow-card:hover::before { opacity: 1; }
 
-        /* ═══ Vine Button ═══ */
         .vine-btn-wrapper { position: relative; display: inline-block; width: 100%; margin-top: auto; }
         .vine-btn-wrapper svg { position: absolute; top: -8px; left: -12px; width: calc(100% + 24px); height: calc(100% + 20px); pointer-events: none; opacity: 0; transition: opacity 0.4s ease; z-index: 2; }
         .vine-btn-wrapper:hover svg { opacity: 1; }
         .vine-btn-wrapper .btn { position: relative; z-index: 1; display: block; width: 100%; padding: 12px 28px; border: none; border-radius: var(--radius-sm); font-size: 0.92rem; font-weight: 600; text-decoration: none; transition: var(--transition); cursor: pointer; }
 
-        /* ═══ Liquid Glass Buttons with Tier Color Hint ═══ */
         .btn-glass-supporter {
             background: rgba(168, 85, 247, 0.05);
             backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
@@ -170,13 +139,17 @@
         }
 
         .btn-glass-seedling {
-            background: linear-gradient(135deg, var(--gold), var(--gold-dim));
-            color: #0a0a0a;
-            box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.1), 0 4px 16px rgba(0, 0, 0, 0.2);
+            background: rgba(34, 197, 94, 0.05);
+            backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+            color: var(--text);
+            border: 1px solid rgba(34, 197, 94, 0.2);
+            box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.05), 0 4px 16px rgba(0, 0, 0, 0.2);
         }
         .btn-glass-seedling:hover {
+            background: rgba(34, 197, 94, 0.12);
+            border-color: rgba(34, 197, 94, 0.5);
+            box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.08), 0 4px 20px rgba(34, 197, 94, 0.15);
             transform: scale(1.02);
-            box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.15), 0 4px 20px rgba(212, 175, 55, 0.3);
         }
 
         .btn-glass-sweetpea {
@@ -193,7 +166,6 @@
             transform: scale(1.02);
         }
 
-        /* ═══ Top Nav ═══ */
         .top-nav { position: fixed; top: 20px; right: 20px; z-index: 50; display: flex; gap: 12px; align-items: center; }
         .home-btn {
             display: flex; align-items: center; gap: 8px; padding: 10px 20px;
@@ -204,13 +176,11 @@
         .home-btn:hover { background: rgba(30, 30, 30, 0.9); border-color: var(--gold); transform: translateY(-2px); }
         .home-btn svg { width: 16px; height: 16px; }
 
-        /* ═══ Hero ═══ */
         .hero { text-align: center; padding: 60px 20px 30px; }
         .hero img.logo { width: 180px; height: 180px; margin-bottom: 16px; filter: drop-shadow(0 0 30px rgba(212, 175, 55, 0.25)); animation: float3D 6s ease-in-out infinite; }
         .hero h1 { font-size: 2.4rem; font-weight: 700; margin-bottom: 8px; }
         .hero p { font-size: 1rem; color: var(--text-dim); max-width: 500px; margin: 0 auto; }
 
-        /* ═══ Pricing ═══ */
         .pricing-section { max-width: 1000px; margin: 0 auto; padding: 20px; }
         .pricing-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-bottom: 80px; }
 
@@ -242,7 +212,6 @@
         .pricing-card .features li { font-size: 0.82rem; color: var(--text-dim); margin-bottom: 8px; padding-left: 24px; position: relative; }
         .pricing-card .features li::before { content: '\2713'; position: absolute; left: 0; color: var(--gold); font-weight: 700; }
 
-        /* ═══ Services ═══ */
         .services-section { max-width: 1000px; margin: 0 auto; padding: 20px; }
         .section-title { font-size: 1.5rem; text-align: center; margin-bottom: 8px; font-weight: 700; }
         .section-subtitle { font-size: 0.9rem; color: var(--text-dim); text-align: center; margin-bottom: 32px; }
@@ -269,10 +238,30 @@
         .tier-tag { display: inline-block; font-size: 0.65rem; padding: 3px 10px; border-radius: 4px; font-weight: 600; letter-spacing: 0.3px; }
         .tier-tag.seedling { background: rgba(31, 195, 49, 0.12); color: #1fc331; border: 1px solid rgba(31, 195, 49, 0.2); }
         .tier-tag.sweetpea { background: var(--gold-glow); color: var(--gold); border: 1px solid var(--border-gold); }
+        .tier-tag.coming-soon { background: rgba(100, 100, 100, 0.12); color: #999; border: 1px solid rgba(100, 100, 100, 0.2); }
         .service-card .learn-more { font-size: 0.75rem; color: var(--text-faint); margin-top: 8px; transition: var(--transition); }
         .service-card:hover .learn-more { color: var(--gold); }
 
-        /* ═══ Modal ═══ */
+        /* ═══ Coming Soon Section ═══ */
+        .coming-soon-section { max-width: 1000px; margin: 0 auto 60px; padding: 20px; }
+        .coming-soon-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 16px; }
+        .coming-soon-card {
+            background: rgba(20, 20, 20, 0.3);
+            backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+            border: 1px dashed rgba(212, 175, 55, 0.15);
+            border-radius: var(--radius);
+            padding: 24px;
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+        }
+        .coming-soon-card:hover { border-color: rgba(212, 175, 55, 0.3); background: rgba(28, 28, 28, 0.4); }
+        .coming-soon-card .service-header { display: flex; align-items: center; gap: 14px; margin-bottom: 10px; }
+        .coming-soon-card .service-icon { width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; background: rgba(255, 255, 255, 0.03); border-radius: 10px; flex-shrink: 0; }
+        .coming-soon-card .service-icon img { width: 24px; height: 24px; filter: brightness(0) invert(1); opacity: 0.5; }
+        .coming-soon-card h3 { font-size: 0.95rem; font-weight: 600; color: var(--text-dim); }
+        .coming-soon-card p { font-size: 0.8rem; color: var(--text-faint); line-height: 1.4; }
+
         .modal-overlay { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0, 0, 0, 0.7); backdrop-filter: blur(4px); z-index: 100; align-items: center; justify-content: center; padding: 20px; }
         .modal-overlay.active { display: flex; }
         .modal { background: #141414; border: 1px solid var(--border-gold); border-radius: var(--radius); max-width: 520px; width: 100%; max-height: 85vh; overflow-y: auto; padding: 32px; position: relative; backdrop-filter: blur(20px); box-shadow: 0 24px 80px rgba(0, 0, 0, 0.5); }
@@ -297,7 +286,6 @@
         .modal-footer .btn-primary:hover { transform: scale(1.02); box-shadow: 0 4px 16px rgba(212, 175, 55, 0.25); }
         .modal-footer .btn-secondary { background: rgba(255, 255, 255, 0.06); color: var(--text); border: 1px solid var(--border); }
 
-        /* ═══ FAQ ═══ */
         .faq-section { max-width: 720px; margin: 0 auto 60px; padding: 20px; }
         .faq-item { background: rgba(20, 20, 20, 0.5); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border: 1px solid var(--border); border-radius: var(--radius-sm); margin-bottom: 10px; overflow: hidden; transition: var(--transition); }
         .faq-item:hover { border-color: var(--border-gold); }
@@ -309,7 +297,6 @@
         .faq-item.open .faq-answer { max-height: 300px; padding: 0 20px 16px; }
         .faq-answer p { font-size: 0.84rem; color: var(--text-dim); line-height: 1.5; }
 
-        /* ═══ Footer ═══ */
         .footer { text-align: center; padding: 40px 20px; font-size: 0.85rem; color: var(--text-faint); border-top: 1px solid rgba(255, 255, 255, 0.04); }
         .footer a { color: var(--gold); text-decoration: none; transition: var(--transition); }
         .footer a:hover { text-decoration: underline; }
@@ -325,7 +312,7 @@
             .pricing-grid { grid-template-columns: 1fr; }
             .hero h1 { font-size: 1.6rem; }
             .hero img.logo { width: 120px; height: 120px; }
-            .services-grid { grid-template-columns: 1fr; }
+            .services-grid, .coming-soon-grid { grid-template-columns: 1fr; }
             .modal { padding: 24px; }
             .float-3d { display: none; }
             .top-nav { top: 10px; right: 10px; }
@@ -357,7 +344,6 @@
 
         <div class="pricing-section">
             <div class="pricing-grid">
-                <!-- Supporter (Purple) -->
                 <div class="pricing-card tier-supporter glow-card" id="card-supporter">
                     <div class="tier-emoji-3d">&#x1F49B;</div>
                     <div class="tier-name tier-name-supporter">Supporter</div>
@@ -369,17 +355,11 @@
                         <li>Thank-you email</li>
                     </ul>
                     <div class="vine-btn-wrapper">
-                        <svg viewBox="0 0 200 60" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M10 30 Q30 10, 50 30 T90 30 T130 30 T170 30 T190 30" stroke="#d4af37" stroke-width="1.5" fill="none" opacity="0.6"/>
-                            <path d="M10 30 Q30 50, 50 30 T90 30 T130 30 T170 30 T190 30" stroke="#d4af37" stroke-width="1" fill="none" opacity="0.4"/>
-                            <circle cx="30" cy="18" r="3" fill="#d4af37" opacity="0.7"/><circle cx="70" cy="42" r="3" fill="#d4af37" opacity="0.7"/><circle cx="110" cy="18" r="3" fill="#d4af37" opacity="0.7"/><circle cx="150" cy="42" r="3" fill="#d4af37" opacity="0.7"/>
-                            <path d="M30 18 Q25 12, 28 8" stroke="#d4af37" stroke-width="1" fill="none" opacity="0.5"/><path d="M70 42 Q75 48, 72 52" stroke="#d4af37" stroke-width="1" fill="none" opacity="0.5"/><path d="M110 18 Q105 12, 108 8" stroke="#d4af37" stroke-width="1" fill="none" opacity="0.5"/><path d="M150 42 Q155 48, 152 52" stroke="#d4af37" stroke-width="1" fill="none" opacity="0.5"/>
-                        </svg>
+                        <svg viewBox="0 0 200 60" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M10 30 Q30 10, 50 30 T90 30 T130 30 T170 30 T190 30" stroke="#d4af37" stroke-width="1.5" fill="none" opacity="0.6"/><path d="M10 30 Q30 50, 50 30 T90 30 T130 30 T170 30 T190 30" stroke="#d4af37" stroke-width="1" fill="none" opacity="0.4"/><circle cx="30" cy="18" r="3" fill="#d4af37" opacity="0.7"/><circle cx="70" cy="42" r="3" fill="#d4af37" opacity="0.7"/><circle cx="110" cy="18" r="3" fill="#d4af37" opacity="0.7"/><circle cx="150" cy="42" r="3" fill="#d4af37" opacity="0.7"/><path d="M30 18 Q25 12, 28 8" stroke="#d4af37" stroke-width="1" fill="none" opacity="0.5"/><path d="M70 42 Q75 48, 72 52" stroke="#d4af37" stroke-width="1" fill="none" opacity="0.5"/><path d="M110 18 Q105 12, 108 8" stroke="#d4af37" stroke-width="1" fill="none" opacity="0.5"/><path d="M150 42 Q155 48, 152 52" stroke="#d4af37" stroke-width="1" fill="none" opacity="0.5"/></svg>
                         <a href="/form.html" class="btn btn-glass-supporter">Donate</a>
                     </div>
                 </div>
 
-                <!-- Seedling (Green) -->
                 <div class="pricing-card tier-seedling glow-card" id="card-seedling">
                     <div class="tier-emoji-3d">&#x1F331;</div>
                     <div class="tier-name tier-name-seedling">Seedling</div>
@@ -393,17 +373,11 @@
                         <li>KoalaSync (Watch Parties)</li>
                     </ul>
                     <div class="vine-btn-wrapper">
-                        <svg viewBox="0 0 200 60" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M10 30 Q30 10, 50 30 T90 30 T130 30 T170 30 T190 30" stroke="#d4af37" stroke-width="1.5" fill="none" opacity="0.6"/>
-                            <path d="M10 30 Q30 50, 50 30 T90 30 T130 30 T170 30 T190 30" stroke="#d4af37" stroke-width="1" fill="none" opacity="0.4"/>
-                            <circle cx="30" cy="18" r="3" fill="#d4af37" opacity="0.7"/><circle cx="70" cy="42" r="3" fill="#d4af37" opacity="0.7"/><circle cx="110" cy="18" r="3" fill="#d4af37" opacity="0.7"/><circle cx="150" cy="42" r="3" fill="#d4af37" opacity="0.7"/>
-                            <path d="M30 18 Q25 12, 28 8" stroke="#d4af37" stroke-width="1" fill="none" opacity="0.5"/><path d="M70 42 Q75 48, 72 52" stroke="#d4af37" stroke-width="1" fill="none" opacity="0.5"/><path d="M110 18 Q105 12, 108 8" stroke="#d4af37" stroke-width="1" fill="none" opacity="0.5"/><path d="M150 42 Q155 48, 152 52" stroke="#d4af37" stroke-width="1" fill="none" opacity="0.5"/>
-                        </svg>
+                        <svg viewBox="0 0 200 60" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M10 30 Q30 10, 50 30 T90 30 T130 30 T170 30 T190 30" stroke="#d4af37" stroke-width="1.5" fill="none" opacity="0.6"/><path d="M10 30 Q30 50, 50 30 T90 30 T130 30 T170 30 T190 30" stroke="#d4af37" stroke-width="1" fill="none" opacity="0.4"/><circle cx="30" cy="18" r="3" fill="#d4af37" opacity="0.7"/><circle cx="70" cy="42" r="3" fill="#d4af37" opacity="0.7"/><circle cx="110" cy="18" r="3" fill="#d4af37" opacity="0.7"/><circle cx="150" cy="42" r="3" fill="#d4af37" opacity="0.7"/><path d="M30 18 Q25 12, 28 8" stroke="#d4af37" stroke-width="1" fill="none" opacity="0.5"/><path d="M70 42 Q75 48, 72 52" stroke="#d4af37" stroke-width="1" fill="none" opacity="0.5"/><path d="M110 18 Q105 12, 108 8" stroke="#d4af37" stroke-width="1" fill="none" opacity="0.5"/><path d="M150 42 Q155 48, 152 52" stroke="#d4af37" stroke-width="1" fill="none" opacity="0.5"/></svg>
                         <a href="/form.html" class="btn btn-glass-seedling">Get Access</a>
                     </div>
                 </div>
 
-                <!-- Sweet Pea (Pink) -->
                 <div class="pricing-card tier-sweetpea glow-card" id="card-sweetpea">
                     <div class="tier-emoji-3d">&#x1F338;</div>
                     <div class="tier-name tier-name-sweetpea">Sweet Pea</div>
@@ -419,12 +393,7 @@
                         <li>Immich (Photo Backup)</li>
                     </ul>
                     <div class="vine-btn-wrapper">
-                        <svg viewBox="0 0 200 60" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M10 30 Q30 10, 50 30 T90 30 T130 30 T170 30 T190 30" stroke="#d4af37" stroke-width="1.5" fill="none" opacity="0.6"/>
-                            <path d="M10 30 Q30 50, 50 30 T90 30 T130 30 T170 30 T190 30" stroke="#d4af37" stroke-width="1" fill="none" opacity="0.4"/>
-                            <circle cx="30" cy="18" r="3" fill="#d4af37" opacity="0.7"/><circle cx="70" cy="42" r="3" fill="#d4af37" opacity="0.7"/><circle cx="110" cy="18" r="3" fill="#d4af37" opacity="0.7"/><circle cx="150" cy="42" r="3" fill="#d4af37" opacity="0.7"/>
-                            <path d="M30 18 Q25 12, 28 8" stroke="#d4af37" stroke-width="1" fill="none" opacity="0.5"/><path d="M70 42 Q75 48, 72 52" stroke="#d4af37" stroke-width="1" fill="none" opacity="0.5"/><path d="M110 18 Q105 12, 108 8" stroke="#d4af37" stroke-width="1" fill="none" opacity="0.5"/><path d="M150 42 Q155 48, 152 52" stroke="#d4af37" stroke-width="1" fill="none" opacity="0.5"/>
-                        </svg>
+                        <svg viewBox="0 0 200 60" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M10 30 Q30 10, 50 30 T90 30 T130 30 T170 30 T190 30" stroke="#d4af37" stroke-width="1.5" fill="none" opacity="0.6"/><path d="M10 30 Q30 50, 50 30 T90 30 T130 30 T170 30 T190 30" stroke="#d4af37" stroke-width="1" fill="none" opacity="0.4"/><circle cx="30" cy="18" r="3" fill="#d4af37" opacity="0.7"/><circle cx="70" cy="42" r="3" fill="#d4af37" opacity="0.7"/><circle cx="110" cy="18" r="3" fill="#d4af37" opacity="0.7"/><circle cx="150" cy="42" r="3" fill="#d4af37" opacity="0.7"/><path d="M30 18 Q25 12, 28 8" stroke="#d4af37" stroke-width="1" fill="none" opacity="0.5"/><path d="M70 42 Q75 48, 72 52" stroke="#d4af37" stroke-width="1" fill="none" opacity="0.5"/><path d="M110 18 Q105 12, 108 8" stroke="#d4af37" stroke-width="1" fill="none" opacity="0.5"/><path d="M150 42 Q155 48, 152 52" stroke="#d4af37" stroke-width="1" fill="none" opacity="0.5"/></svg>
                         <a href="mailto:support@mysweetpea.cc" class="btn btn-glass-sweetpea">Contact Admin</a>
                     </div>
                 </div>
@@ -511,6 +480,46 @@
             </div>
         </div>
 
+        <!-- ═══ Coming Soon ═══ -->
+        <div class="coming-soon-section">
+            <div class="tier-divider">
+                <div class="line"></div>
+                <div class="label"><span class="icon">&#x1F6A7;</span> Coming Soon</div>
+                <div class="line"></div>
+            </div>
+
+            <div class="coming-soon-grid">
+                <div class="coming-soon-card">
+                    <div class="service-header">
+                        <div class="service-icon"><img src="https://cdn.jsdelivr.net/npm/simple-icons@latest/icons/grafana.svg" alt="Grafana"></div>
+                        <h3>Grafana</h3>
+                    </div>
+                    <p>Server monitoring and analytics dashboard. Visualize system health and performance metrics.</p>
+                </div>
+                <div class="coming-soon-card">
+                    <div class="service-header">
+                        <div class="service-icon"><img src="https://cdn.jsdelivr.net/npm/simple-icons@latest/icons/prometheus.svg" alt="Prometheus"></div>
+                        <h3>Prometheus</h3>
+                    </div>
+                    <p>Time-series database for collecting and alerting on system metrics across the cluster.</p>
+                </div>
+                <div class="coming-soon-card">
+                    <div class="service-header">
+                        <div class="service-icon"><img src="https://cdn.jsdelivr.net/npm/simple-icons@latest/icons/syncthing.svg" alt="Syncthing"></div>
+                        <h3>Syncthing</h3>
+                    </div>
+                    <p>Peer-to-peer file synchronization. Sync folders across devices without a central server.</p>
+                </div>
+                <div class="coming-soon-card">
+                    <div class="service-header">
+                        <div class="service-icon"><img src="https://cdn.jsdelivr.net/npm/simple-icons@latest/icons/stalwart.svg" alt="Stalwart" onerror="this.onerror=null;this.outerHTML='<svg viewBox=\'0 0 24 24\' fill=\'none\'><rect x=\'3\' y=\'5\' width=\'18\' height=\'14\' rx=\'2\' stroke=\'#d4af37\' stroke-width=\'1.5\'/><path d=\'M3 8h18\' stroke=\'#d4af37\' stroke-width=\'1.5\'/></svg>'"></div>
+                        <h3>Stalwart Mail</h3>
+                    </div>
+                    <p>Self-hosted email server with IMAP, JMAP, and SMTP support. Your own private email domain.</p>
+                </div>
+            </div>
+        </div>
+
         <!-- FAQ -->
         <div class="faq-section">
             <h2 class="section-title glass-text">FAQ</h2>
@@ -583,11 +592,11 @@
         });
 
         var SERVICES = {
-            vaultwarden: { name:'Vaultwarden', icon:'<img src="https://cdn.jsdelivr.net/npm/simple-icons@latest/icons/vaultwarden.svg" alt="Vaultwarden">', tier:'seedling', tierLabel:'Seedling +', desc:'Vaultwarden is a self-hosted password manager, compatible with Bitwarden. It remembers all your passwords so you do not have to. It generates strong, unhackable passwords for every site and autofills them in your browser.', tutorial:['Log in to the <a href="https://auth.mysweetpea.cc" target="_blank">Authentik SSO Portal</a> with your credentials','Click the Vaultwarden icon to access the password manager','Install the <a href="https://bitwarden.com/download/" target="_blank">Bitwarden browser extension</a> for Chrome, Firefox, or Edge','In the extension settings, set the server URL to <code>https://vault.mysweetpea.cc</code>','Log in with your Authentik SSO credentials','Start adding passwords, notes, and secure items to your vault'], url:'https://vault.mysweetpea.cc' },
+            vaultwarden: { name:'Vaultwarden', icon:'<img src="https://cdn.jsdelivr.net/npm/simple-icons@latest/icons/vaultwarden.svg" alt="Vaultwarden">', tier:'seedling', tierLabel:'Seedling +', desc:'Vaultwarden is a self-hosted password manager, compatible with Bitwarden. It remembers all your passwords so you do not have to. It generates strong, unhackable passwords for every site and autofills them in your browser. Your vault is encrypted end-to-end — even we cannot see your passwords.', tutorial:['Go to <a href="https://vault.mysweetpea.cc" target="_blank">https://vault.mysweetpea.cc</a>','Log in with your Authentik SSO account — this automatically creates your Vaultwarden account using your Authentik credentials for authentication','Once logged in, you can access your vault on the web, or install the <a href="https://bitwarden.com/download/" target="_blank">Bitwarden browser extension</a> for Chrome, Firefox, or Edge','In the extension settings, set the server URL to <code>https://vault.mysweetpea.cc</code> and log in with SSO','You can also download the Bitwarden mobile app for iOS or Android and connect to the same server','Start adding passwords, notes, and secure items to your vault'], url:'https://vault.mysweetpea.cc' },
             matrix: { name:'Matrix / Element', icon:'<img src="https://cdn.jsdelivr.net/npm/simple-icons@latest/icons/matrix.svg" alt="Matrix">', tier:'seedling', tierLabel:'Seedling +', desc:'Matrix is an open-source, end-to-end encrypted messaging protocol. Element is the client app. Think of it as a private Discord or Slack that you control. Create rooms, send direct messages, share files, and bridge to other platforms.', tutorial:['Go to <a href="https://chat.mysweetpea.cc" target="_blank">https://chat.mysweetpea.cc</a>','Click "Log In" — you will be redirected to Authentik SSO','Enter your MySweetPea credentials to authenticate','Once logged in, you can join rooms or create your own','Download the <a href="https://element.io/download" target="_blank">Element app</a> for desktop or mobile','In the app, set the homeserver to <code>matrix.mysweetpea.cc</code> and log in via SSO'], url:'https://chat.mysweetpea.cc' },
-            affine: { name:'AFFiNE', icon:'<img src="https://cdn.jsdelivr.net/npm/simple-icons@latest/icons/affine.svg" alt="AFFiNE">', tier:'seedling', tierLabel:'Seedling +', desc:'AFFiNE is an open-source Notion alternative. Create documents, wikis, whiteboards, and knowledge bases. All your notes are stored privately on our server. It combines the best of Notion and Miro in one privacy-first workspace.', tutorial:['Go to <a href="https://notes.mysweetpea.cc" target="_blank">https://notes.mysweetpea.cc</a>','Click "Sign In" — you will be redirected to Authentik SSO','Log in with your MySweetPea credentials','Create your first workspace','Start adding pages, blocks, and content','Use the whiteboard mode for visual brainstorming'], url:'https://notes.mysweetpea.cc' },
-            koalasync: { name:'KoalaSync', icon:'<svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" stroke="#d4af37" stroke-width="1.5"/><path d="M8 12 L12 8 L16 12 L12 16 Z" fill="#d4af37"/></svg>', tier:'seedling', tierLabel:'Seedling +', desc:'KoalaSync lets you watch movies and shows together with friends in real-time. It synchronizes playback across all viewers so everyone sees the same scene at the same time. Works with Jellyfin, YouTube, Netflix, and any HTML5 video.', tutorial:['Go to <a href="https://sync.mysweetpea.cc" target="_blank">https://sync.mysweetpea.cc</a>','Log in via Authentik SSO with your MySweetPea credentials','Create a new room or join an existing one with a room code','Share the room link with your friends','Play a video from Jellyfin or paste a video URL','Playback will sync automatically for all viewers'], url:'https://sync.mysweetpea.cc' },
-            jellyfin: { name:'Jellyfin / Moonfin', icon:'<img src="https://cdn.jsdelivr.net/npm/simple-icons@latest/icons/jellyfin.svg" alt="Jellyfin">', tier:'sweetpea', tierLabel:'Sweet Pea only', desc:'Jellyfin is your private Netflix. Stream movies and TV shows from anywhere, on any device. No ads, no tracking, no algorithms. Moonfin provides a premium, customized web interface with enhanced features like collections, ratings, and more.', tutorial:['Go to <a href="https://media.mysweetpea.cc" target="_blank">https://media.mysweetpea.cc</a>','Log in with your Authentik credentials (LDAP login)','Browse movies and TV shows in the library','Use the Moonfin web interface at <code>/Moonfin/Web/</code> for a premium experience','Install the <a href="https://jellyfin.org/downloads/" target="_blank">Jellyfin app</a> on your phone, tablet, or TV','Set the server address to <code>https://media.mysweetpea.cc</code> and log in'], url:'https://media.mysweetpea.cc' },
+            affine: { name:'AFFiNE', icon:'<img src="https://cdn.jsdelivr.net/npm/simple-icons@latest/icons/affine.svg" alt="AFFiNE">', tier:'seedling', tierLabel:'Seedling +', desc:'AFFiNE is an open-source Notion alternative. Create documents, wikis, whiteboards, and knowledge bases. All your notes are stored privately on our server. It combines the best of Notion and Miro in one privacy-first workspace.', tutorial:['Go to <a href="https://notes.mysweetpea.cc" target="_blank">https://notes.mysweetpea.cc</a>','Click "Continue with OIDC" — do NOT click "Sign In"','You will be redirected to Authentik SSO — log in with your MySweetPea credentials','Create your first workspace','Start adding pages, blocks, and content','Use the whiteboard mode for visual brainstorming'], url:'https://notes.mysweetpea.cc' },
+            koalasync: { name:'KoalaSync', icon:'<svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" stroke="#d4af37" stroke-width="1.5"/><path d="M8 12 L12 8 L16 12 L12 16 Z" fill="#d4af37"/></svg>', tier:'seedling', tierLabel:'Seedling +', desc:'KoalaSync lets you watch movies and shows together with friends in real-time. It synchronizes playback across all viewers so everyone sees the same scene at the same time. Works with Jellyfin, YouTube, Netflix, and any HTML5 video.', tutorial:['Go to <a href="https://sync.mysweetpea.cc" target="_blank">https://sync.mysweetpea.cc</a>','Log in via Authentik SSO with your MySweetPea credentials','Create a new room — when prompted for the server URL, enter <code>wss://sync.mysweetpea.cc</code>','Share the room link with your friends','Play a video from Jellyfin or paste a video URL','Playback will sync automatically for all viewers'], url:'https://sync.mysweetpea.cc' },
+            jellyfin: { name:'Jellyfin / Moonfin', icon:'<img src="https://cdn.jsdelivr.net/npm/simple-icons@latest/icons/jellyfin.svg" alt="Jellyfin">', tier:'sweetpea', tierLabel:'Sweet Pea only', desc:'Jellyfin is your private Netflix — a free, open-source media server that streams your movie and TV collection to any device. Moonfin is a premium web interface that runs on top of Jellyfin, providing a polished, modern experience with enhanced features like collections, ratings from multiple sources, and a customizable home screen. We recommend using Moonfin for the best experience.', tutorial:['Go to <a href="https://media.mysweetpea.cc/Moonfin/Web/" target="_blank">https://media.mysweetpea.cc/Moonfin/Web/</a> — this is Moonfin, the recommended interface','Log in with your Authentik credentials (LDAP login)','Moonfin connects to Jellyfin automatically — it is a custom frontend that uses Jellyfin as the backend media server','Browse movies and TV shows, create collections, and view ratings from IMDb, Rotten Tomatoes, and more','For the standard Jellyfin interface, visit <a href="https://media.mysweetpea.cc" target="_blank">https://media.mysweetpea.cc</a>','Install the <a href="https://jellyfin.org/downloads/" target="_blank">Jellyfin app</a> on your phone, tablet, or TV and set the server to <code>https://media.mysweetpea.cc</code>'], url:'https://media.mysweetpea.cc/Moonfin/Web/' },
             seerr: { name:'Seerr', icon:'<svg viewBox="0 0 24 24" fill="none"><rect x="3" y="3" width="18" height="18" rx="3" stroke="#d4af37" stroke-width="1.5"/><path d="M8 12 L12 8 L16 12 L12 16 Z" fill="#d4af37"/></svg>', tier:'sweetpea', tierLabel:'Sweet Pea only', desc:'Seerr is a request portal for media. Browse trending movies and TV shows, see what is already available, and request anything missing. Requests are automatically fulfilled and added to the media library.', tutorial:['Go to <a href="https://request.mysweetpea.cc" target="_blank">https://request.mysweetpea.cc</a>','Log in with your Jellyfin credentials','Browse the Discover page for trending content','Click "Request" on any movie or show you want to watch','Your request will be processed automatically','You will receive a notification when the content is available in Jellyfin'], url:'https://request.mysweetpea.cc' },
             nextcloud: { name:'Nextcloud', icon:'<img src="https://cdn.jsdelivr.net/npm/simple-icons@latest/icons/nextcloud.svg" alt="Nextcloud">', tier:'sweetpea', tierLabel:'Sweet Pea only', desc:'Nextcloud is your private Google Drive. Sync files across all your devices, share folders with others, and access your data from anywhere. All files are stored on our server under your control.', tutorial:['Go to <a href="https://cloud.mysweetpea.cc" target="_blank">https://cloud.mysweetpea.cc</a>','Log in with your MySweetPea credentials','Upload files by dragging them into the browser window','Download the <a href="https://nextcloud.com/install/" target="_blank">Nextcloud desktop client</a> for automatic sync','Install the Nextcloud mobile app for iOS or Android','Set the server address to <code>https://cloud.mysweetpea.cc</code>'], url:'https://cloud.mysweetpea.cc' },
             openwebui: { name:'Open WebUI', icon:'<svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" stroke="#d4af37" stroke-width="1.5"/><path d="M8 10 Q8 8 10 8 L14 8 Q16 8 16 10 L16 13 Q16 15 14 15 L12 15 L12 17" stroke="#d4af37" stroke-width="1.5" fill="none"/><circle cx="12" cy="19" r="1" fill="#d4af37"/></svg>', tier:'sweetpea', tierLabel:'Sweet Pea only', desc:'Open WebUI is a ChatGPT-like interface powered by Ollama, running entirely on our server. Ask it to summarize articles, draft emails, write code, or brainstorm ideas. Your conversations stay completely private and never leave the network.', tutorial:['Go to <a href="https://ai.mysweetpea.cc" target="_blank">https://ai.mysweetpea.cc</a>','Log in with your MySweetPea credentials','Select an AI model from the dropdown (e.g., Llama 3.2)','Start a new chat by typing your question or prompt','You can upload documents for the AI to analyze','Your conversation history is saved privately in your account'], url:'https://ai.mysweetpea.cc' },
