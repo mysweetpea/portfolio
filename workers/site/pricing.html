@@ -21,6 +21,9 @@
             --radius: 14px;
             --radius-sm: 8px;
             --transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            --purple: #a855f7;
+            --green: #22c56e;
+            --pink: #ec4899;
         }
 
         html { scroll-behavior: smooth; }
@@ -48,7 +51,52 @@
         @keyframes shimmer { 0% { background-position: -200% center; } 100% { background-position: 200% center; } }
         @keyframes pulseGlow { 0%, 100% { box-shadow: 0 0 20px rgba(212, 175, 55, 0.08); } 50% { box-shadow: 0 0 40px rgba(212, 175, 55, 0.18); } }
         @keyframes float3D { 0%, 100% { transform: translateY(0) rotateX(0) rotateY(0); } 50% { transform: translateY(-10px) rotateX(2deg) rotateY(2deg); } }
+        @keyframes pulseGlowGreen { 0%, 100% { box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.05), 0 8px 32px rgba(0, 0, 0, 0.3), 0 0 15px rgba(34, 197, 94, 0.08); } 50% { box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.05), 0 8px 32px rgba(0, 0, 0, 0.3), 0 0 30px rgba(34, 197, 94, 0.15); } }
 
+        /* ═══ 3D Emoji with Light Reflection ═══ */
+        @keyframes emoji3DRotate {
+            0%, 100% { transform: perspective(200px) rotateY(0deg) rotateX(0deg); }
+            25% { transform: perspective(200px) rotateY(8deg) rotateX(-3deg); }
+            50% { transform: perspective(200px) rotateY(0deg) rotateX(0deg); }
+            75% { transform: perspective(200px) rotateY(-8deg) rotateX(3deg); }
+        }
+
+        @keyframes lightSweep {
+            0% { left: -60%; opacity: 0; }
+            20% { opacity: 0.8; }
+            50% { opacity: 0.4; }
+            80% { opacity: 0.8; }
+            100% { left: 160%; opacity: 0; }
+        }
+
+        .tier-emoji-3d {
+            position: relative;
+            display: inline-block;
+            font-size: 2.5rem;
+            margin-bottom: 12px;
+            animation: emoji3DRotate 8s ease-in-out infinite;
+            filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.4));
+            transform-style: preserve-3d;
+        }
+
+        .tier-emoji-3d::after {
+            content: '';
+            position: absolute;
+            top: 0; left: -60%;
+            width: 50%; height: 100%;
+            background: linear-gradient(
+                105deg,
+                transparent 30%,
+                rgba(255, 255, 255, 0.5) 50%,
+                transparent 70%
+            );
+            border-radius: 50%;
+            pointer-events: none;
+            animation: lightSweep 4s ease-in-out infinite;
+            mix-blend-mode: overlay;
+        }
+
+        /* ═══ Liquid Glass Text with Colored Border ═══ */
         .glass-text {
             background: linear-gradient(135deg, rgba(255,255,255,0.9) 0%, rgba(212,175,55,0.8) 30%, rgba(255,255,255,0.6) 50%, rgba(212,175,55,0.8) 70%, rgba(255,255,255,0.9) 100%);
             background-size: 200% auto;
@@ -57,6 +105,36 @@
             text-shadow: 0 0 30px rgba(212, 175, 55, 0.15);
             animation: shimmer 6s linear infinite;
             filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.3));
+        }
+
+        .tier-name-supporter {
+            background: linear-gradient(135deg, rgba(255,255,255,0.9) 0%, rgba(168,85,247,0.8) 30%, rgba(255,255,255,0.6) 50%, rgba(168,85,247,0.8) 70%, rgba(255,255,255,0.9) 100%);
+            background-size: 200% auto;
+            -webkit-background-clip: text; background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 0 25px rgba(168, 85, 247, 0.2);
+            animation: shimmer 6s linear infinite;
+            filter: drop-shadow(0 0 3px rgba(168, 85, 247, 0.4));
+        }
+
+        .tier-name-seedling {
+            background: linear-gradient(135deg, rgba(255,255,255,0.9) 0%, rgba(34,197,94,0.8) 30%, rgba(255,255,255,0.6) 50%, rgba(34,197,94,0.8) 70%, rgba(255,255,255,0.9) 100%);
+            background-size: 200% auto;
+            -webkit-background-clip: text; background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 0 25px rgba(34, 197, 94, 0.2);
+            animation: shimmer 6s linear infinite;
+            filter: drop-shadow(0 0 3px rgba(34, 197, 94, 0.4));
+        }
+
+        .tier-name-sweetpea {
+            background: linear-gradient(135deg, rgba(255,255,255,0.9) 0%, rgba(236,72,153,0.8) 30%, rgba(255,255,255,0.6) 50%, rgba(236,72,153,0.8) 70%, rgba(255,255,255,0.9) 100%);
+            background-size: 200% auto;
+            -webkit-background-clip: text; background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 0 25px rgba(236, 72, 153, 0.2);
+            animation: shimmer 6s linear infinite;
+            filter: drop-shadow(0 0 3px rgba(236, 72, 153, 0.4));
         }
 
         /* ═══ Mouse Glow Border ═══ */
@@ -75,39 +153,60 @@
         .vine-btn-wrapper svg { position: absolute; top: -8px; left: -12px; width: calc(100% + 24px); height: calc(100% + 20px); pointer-events: none; opacity: 0; transition: opacity 0.4s ease; z-index: 2; }
         .vine-btn-wrapper:hover svg { opacity: 1; }
         .vine-btn-wrapper .btn { position: relative; z-index: 1; display: block; width: 100%; padding: 12px 28px; border: none; border-radius: var(--radius-sm); font-size: 0.92rem; font-weight: 600; text-decoration: none; transition: var(--transition); cursor: pointer; }
-        .vine-btn-wrapper .btn-primary { background: linear-gradient(135deg, var(--gold), var(--gold-dim)); color: #0a0a0a; }
-        .vine-btn-wrapper .btn-primary:hover { transform: scale(1.02); box-shadow: 0 4px 20px rgba(212, 175, 55, 0.3); }
-        .vine-btn-wrapper .btn-secondary { background: rgba(255, 255, 255, 0.06); color: var(--text); border: 1px solid var(--border); }
-        .vine-btn-wrapper .btn-secondary:hover { background: rgba(255, 255, 255, 0.1); border-color: var(--border-gold); }
+
+        /* ═══ Liquid Glass Buttons with Tier Color Hint ═══ */
+        .btn-glass-supporter {
+            background: rgba(168, 85, 247, 0.05);
+            backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+            color: var(--text);
+            border: 1px solid rgba(168, 85, 247, 0.2);
+            box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.05), 0 4px 16px rgba(0, 0, 0, 0.2);
+        }
+        .btn-glass-supporter:hover {
+            background: rgba(168, 85, 247, 0.12);
+            border-color: rgba(168, 85, 247, 0.5);
+            box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.08), 0 4px 20px rgba(168, 85, 247, 0.15);
+            transform: scale(1.02);
+        }
+
+        .btn-glass-seedling {
+            background: linear-gradient(135deg, var(--gold), var(--gold-dim));
+            color: #0a0a0a;
+            box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.1), 0 4px 16px rgba(0, 0, 0, 0.2);
+        }
+        .btn-glass-seedling:hover {
+            transform: scale(1.02);
+            box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.15), 0 4px 20px rgba(212, 175, 55, 0.3);
+        }
+
+        .btn-glass-sweetpea {
+            background: rgba(236, 72, 153, 0.05);
+            backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+            color: var(--text);
+            border: 1px solid rgba(236, 72, 153, 0.2);
+            box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.05), 0 4px 16px rgba(0, 0, 0, 0.2);
+        }
+        .btn-glass-sweetpea:hover {
+            background: rgba(236, 72, 153, 0.12);
+            border-color: rgba(236, 72, 153, 0.5);
+            box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.08), 0 4px 20px rgba(236, 72, 153, 0.15);
+            transform: scale(1.02);
+        }
 
         /* ═══ Top Nav ═══ */
-        .top-nav {
-            position: fixed; top: 20px; right: 20px; z-index: 50;
-            display: flex; gap: 12px; align-items: center;
-        }
+        .top-nav { position: fixed; top: 20px; right: 20px; z-index: 50; display: flex; gap: 12px; align-items: center; }
         .home-btn {
-            display: flex; align-items: center; gap: 8px;
-            padding: 10px 20px;
-            background: rgba(20, 20, 20, 0.8);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            border: 1px solid var(--border-gold);
-            border-radius: var(--radius-sm);
-            color: var(--gold);
-            font-size: 0.85rem; font-weight: 600;
-            text-decoration: none;
-            transition: var(--transition);
+            display: flex; align-items: center; gap: 8px; padding: 10px 20px;
+            background: rgba(20, 20, 20, 0.8); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+            border: 1px solid var(--border-gold); border-radius: var(--radius-sm);
+            color: var(--gold); font-size: 0.85rem; font-weight: 600; text-decoration: none; transition: var(--transition);
         }
         .home-btn:hover { background: rgba(30, 30, 30, 0.9); border-color: var(--gold); transform: translateY(-2px); }
         .home-btn svg { width: 16px; height: 16px; }
 
         /* ═══ Hero ═══ */
         .hero { text-align: center; padding: 60px 20px 30px; }
-        .hero img.logo {
-            width: 180px; height: 180px; margin-bottom: 16px;
-            filter: drop-shadow(0 0 30px rgba(212, 175, 55, 0.25));
-            animation: float3D 6s ease-in-out infinite;
-        }
+        .hero img.logo { width: 180px; height: 180px; margin-bottom: 16px; filter: drop-shadow(0 0 30px rgba(212, 175, 55, 0.25)); animation: float3D 6s ease-in-out infinite; }
         .hero h1 { font-size: 2.4rem; font-weight: 700; margin-bottom: 8px; }
         .hero p { font-size: 1rem; color: var(--text-dim); max-width: 500px; margin: 0 auto; }
 
@@ -117,35 +216,24 @@
 
         .pricing-card {
             background: rgba(20, 20, 20, 0.6);
-            backdrop-filter: blur(16px) saturate(1.2);
-            -webkit-backdrop-filter: blur(16px) saturate(1.2);
-            border: 2px solid;
-            border-radius: var(--radius);
-            padding: 32px 24px;
-            text-align: center;
-            display: flex; flex-direction: column;
-            transition: var(--transition);
-            position: relative;
-            overflow: hidden;
+            backdrop-filter: blur(16px) saturate(1.2); -webkit-backdrop-filter: blur(16px) saturate(1.2);
+            border: 2px solid; border-radius: var(--radius);
+            padding: 32px 24px; text-align: center; display: flex; flex-direction: column;
+            transition: var(--transition); position: relative; overflow: hidden;
             box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.05), 0 8px 32px rgba(0, 0, 0, 0.3);
         }
 
-        /* ═══ Tier-Specific Border Colors ═══ */
         .pricing-card.tier-supporter { border-color: rgba(168, 85, 247, 0.4); }
         .pricing-card.tier-supporter:hover { border-color: rgba(168, 85, 247, 0.7); box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.08), 0 12px 40px rgba(0, 0, 0, 0.4), 0 0 20px rgba(168, 85, 247, 0.1); }
 
-        .pricing-card.tier-seedling { border-color: rgba(34, 197, 94, 0.4); }
+        .pricing-card.tier-seedling { border-color: rgba(34, 197, 94, 0.4); animation: pulseGlowGreen 4s ease-in-out infinite; }
         .pricing-card.tier-seedling:hover { border-color: rgba(34, 197, 94, 0.7); box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.08), 0 12px 40px rgba(0, 0, 0, 0.4), 0 0 20px rgba(34, 197, 94, 0.1); }
-        .pricing-card.tier-seedling { animation: pulseGlowGreen 4s ease-in-out infinite; }
-
-        @keyframes pulseGlowGreen { 0%, 100% { box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.05), 0 8px 32px rgba(0, 0, 0, 0.3), 0 0 15px rgba(34, 197, 94, 0.08); } 50% { box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.05), 0 8px 32px rgba(0, 0, 0, 0.3), 0 0 30px rgba(34, 197, 94, 0.15); } }
 
         .pricing-card.tier-sweetpea { border-color: rgba(236, 72, 153, 0.4); }
         .pricing-card.tier-sweetpea:hover { border-color: rgba(236, 72, 153, 0.7); box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.08), 0 12px 40px rgba(0, 0, 0, 0.4), 0 0 20px rgba(236, 72, 153, 0.1); }
 
         .pricing-card:hover { transform: translateY(-6px); }
 
-        .pricing-card .tier-icon { font-size: 2rem; margin-bottom: 12px; }
         .pricing-card .tier-name { font-size: 1.2rem; font-weight: 700; margin-bottom: 6px; }
         .pricing-card .price { font-size: 2.2rem; color: var(--text); font-weight: 800; margin: 10px 0 2px; }
         .pricing-card .price-period { font-size: 0.8rem; color: var(--text-dim); margin-bottom: 16px; }
@@ -167,17 +255,9 @@
         .services-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 16px; }
 
         .service-card {
-            background: rgba(20, 20, 20, 0.5);
-            backdrop-filter: blur(12px) saturate(1.1);
-            -webkit-backdrop-filter: blur(12px) saturate(1.1);
-            border: 1px solid var(--border);
-            border-radius: var(--radius);
-            padding: 24px;
-            cursor: pointer;
-            transition: var(--transition);
-            position: relative;
-            overflow: hidden;
-            box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.03);
+            background: rgba(20, 20, 20, 0.5); backdrop-filter: blur(12px) saturate(1.1); -webkit-backdrop-filter: blur(12px) saturate(1.1);
+            border: 1px solid var(--border); border-radius: var(--radius); padding: 24px; cursor: pointer;
+            transition: var(--transition); position: relative; overflow: hidden; box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.03);
         }
         .service-card:hover { transform: translateY(-3px); background: rgba(28, 28, 28, 0.7); border-color: var(--border-gold); }
         .service-card .service-header { display: flex; align-items: center; gap: 14px; margin-bottom: 10px; }
@@ -233,7 +313,7 @@
         .footer { text-align: center; padding: 40px 20px; font-size: 0.85rem; color: var(--text-faint); border-top: 1px solid rgba(255, 255, 255, 0.04); }
         .footer a { color: var(--gold); text-decoration: none; transition: var(--transition); }
         .footer a:hover { text-decoration: underline; }
-        .footer .footer-links { display: flex; justify-content: center; gap: 24px; margin-bottom: 12px; }
+        .footer .footer-links { display: flex; justify-content: center; gap: 24px; margin-bottom: 12px; flex-wrap: wrap; }
 
         .float-3d { position: absolute; pointer-events: none; opacity: 0.06; z-index: 0; }
         .float-3d svg { width: 100%; height: 100%; }
@@ -261,7 +341,6 @@
     <div class="float-3d f2"><svg viewBox="0 0 100 100" fill="none"><circle cx="50" cy="50" r="45" stroke="#d4af37" stroke-width="1.5" fill="none"/><path d="M50 15 C30 20, 25 40, 30 55 C35 68, 50 75, 50 75 C50 75, 65 68, 70 55 C75 40, 70 20, 50 15" fill="#d4af37"/></svg></div>
     <div class="float-3d f3"><svg viewBox="0 0 100 100" fill="none"><circle cx="50" cy="50" r="45" stroke="#d4af37" stroke-width="1.5" fill="none"/><path d="M50 15 C30 20, 25 40, 30 55 C35 68, 50 75, 50 75 C50 75, 65 68, 70 55 C75 40, 70 20, 50 15" fill="#d4af37"/></svg></div>
 
-    <!-- ═══ Top Nav: Home Button ═══ -->
     <div class="top-nav">
         <a href="https://mysweetpea.cc" class="home-btn">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12L12 3l9 9M5 10v10h14V10"/></svg>
@@ -278,10 +357,10 @@
 
         <div class="pricing-section">
             <div class="pricing-grid">
-                <!-- Supporter (Purple Border) -->
+                <!-- Supporter (Purple) -->
                 <div class="pricing-card tier-supporter glow-card" id="card-supporter">
-                    <div class="tier-icon">&#x1F49B;</div>
-                    <div class="tier-name glass-text">Supporter</div>
+                    <div class="tier-emoji-3d">&#x1F49B;</div>
+                    <div class="tier-name tier-name-supporter">Supporter</div>
                     <div class="price">Any amount</div>
                     <div class="price-period">One-time donation</div>
                     <div class="desc">Support the cause. Every contribution helps keep the server running.</div>
@@ -296,14 +375,14 @@
                             <circle cx="30" cy="18" r="3" fill="#d4af37" opacity="0.7"/><circle cx="70" cy="42" r="3" fill="#d4af37" opacity="0.7"/><circle cx="110" cy="18" r="3" fill="#d4af37" opacity="0.7"/><circle cx="150" cy="42" r="3" fill="#d4af37" opacity="0.7"/>
                             <path d="M30 18 Q25 12, 28 8" stroke="#d4af37" stroke-width="1" fill="none" opacity="0.5"/><path d="M70 42 Q75 48, 72 52" stroke="#d4af37" stroke-width="1" fill="none" opacity="0.5"/><path d="M110 18 Q105 12, 108 8" stroke="#d4af37" stroke-width="1" fill="none" opacity="0.5"/><path d="M150 42 Q155 48, 152 52" stroke="#d4af37" stroke-width="1" fill="none" opacity="0.5"/>
                         </svg>
-                        <a href="/form.html" class="btn btn-secondary">Donate</a>
+                        <a href="/form.html" class="btn btn-glass-supporter">Donate</a>
                     </div>
                 </div>
 
-                <!-- Seedling (Green Border) -->
+                <!-- Seedling (Green) -->
                 <div class="pricing-card tier-seedling glow-card" id="card-seedling">
-                    <div class="tier-icon">&#x1F331;</div>
-                    <div class="tier-name glass-text">Seedling</div>
+                    <div class="tier-emoji-3d">&#x1F331;</div>
+                    <div class="tier-name tier-name-seedling">Seedling</div>
                     <div class="price">$5<span style="font-size:0.9rem;color:var(--text-dim);">+ min</span></div>
                     <div class="price-period">One-time donation</div>
                     <div class="desc">Access to non-media community services.</div>
@@ -320,14 +399,14 @@
                             <circle cx="30" cy="18" r="3" fill="#d4af37" opacity="0.7"/><circle cx="70" cy="42" r="3" fill="#d4af37" opacity="0.7"/><circle cx="110" cy="18" r="3" fill="#d4af37" opacity="0.7"/><circle cx="150" cy="42" r="3" fill="#d4af37" opacity="0.7"/>
                             <path d="M30 18 Q25 12, 28 8" stroke="#d4af37" stroke-width="1" fill="none" opacity="0.5"/><path d="M70 42 Q75 48, 72 52" stroke="#d4af37" stroke-width="1" fill="none" opacity="0.5"/><path d="M110 18 Q105 12, 108 8" stroke="#d4af37" stroke-width="1" fill="none" opacity="0.5"/><path d="M150 42 Q155 48, 152 52" stroke="#d4af37" stroke-width="1" fill="none" opacity="0.5"/>
                         </svg>
-                        <a href="/form.html" class="btn btn-primary">Get Access</a>
+                        <a href="/form.html" class="btn btn-glass-seedling">Get Access</a>
                     </div>
                 </div>
 
-                <!-- Sweet Pea (Pink Border) -->
+                <!-- Sweet Pea (Pink) -->
                 <div class="pricing-card tier-sweetpea glow-card" id="card-sweetpea">
-                    <div class="tier-icon">&#x1F338;</div>
-                    <div class="tier-name glass-text">Sweet Pea</div>
+                    <div class="tier-emoji-3d">&#x1F338;</div>
+                    <div class="tier-name tier-name-sweetpea">Sweet Pea</div>
                     <div class="price">Contact</div>
                     <div class="price-period">One-time donation</div>
                     <div class="desc">Full access to all services including media. Limited availability.</div>
@@ -346,13 +425,13 @@
                             <circle cx="30" cy="18" r="3" fill="#d4af37" opacity="0.7"/><circle cx="70" cy="42" r="3" fill="#d4af37" opacity="0.7"/><circle cx="110" cy="18" r="3" fill="#d4af37" opacity="0.7"/><circle cx="150" cy="42" r="3" fill="#d4af37" opacity="0.7"/>
                             <path d="M30 18 Q25 12, 28 8" stroke="#d4af37" stroke-width="1" fill="none" opacity="0.5"/><path d="M70 42 Q75 48, 72 52" stroke="#d4af37" stroke-width="1" fill="none" opacity="0.5"/><path d="M110 18 Q105 12, 108 8" stroke="#d4af37" stroke-width="1" fill="none" opacity="0.5"/><path d="M150 42 Q155 48, 152 52" stroke="#d4af37" stroke-width="1" fill="none" opacity="0.5"/>
                         </svg>
-                        <a href="mailto:support@mysweetpea.cc" class="btn btn-secondary">Contact Admin</a>
+                        <a href="mailto:support@mysweetpea.cc" class="btn btn-glass-sweetpea">Contact Admin</a>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- ═══ Seedling Services ═══ -->
+        <!-- Seedling Services -->
         <div class="services-section">
             <h2 class="section-title glass-text">Available Services</h2>
             <p class="section-subtitle">Click any service to learn more</p>
@@ -432,7 +511,7 @@
             </div>
         </div>
 
-        <!-- ═══ FAQ ═══ -->
+        <!-- FAQ -->
         <div class="faq-section">
             <h2 class="section-title glass-text">FAQ</h2>
 
@@ -473,6 +552,7 @@
         <div class="footer">
             <div class="footer-links">
                 <a href="/form.html">Donate &amp; Get Access</a>
+                <a href="/about.html">About Us</a>
                 <a href="mailto:support@mysweetpea.cc">Support</a>
             </div>
             <p>&copy; 2026 MySweetPea. Self-hosted with care.</p>
