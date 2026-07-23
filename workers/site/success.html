@@ -6,72 +6,64 @@
     <title>MySweetPea — Request Received</title>
     <link rel="icon" type="image/svg+xml" href="/logo-favicon.svg">
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+        :root {
+            --bg: #0a0a0a; --gold: #d4af37; --gold-dim: #b8941f; --gold-glow: rgba(212, 175, 55, 0.15);
+            --text: #e0e0e0; --text-dim: #888; --text-faint: #555;
+            --border: rgba(255, 255, 255, 0.08); --border-gold: rgba(212, 175, 55, 0.25);
+            --radius: 14px; --radius-sm: 8px; --transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        html { scroll-behavior: smooth; }
         body {
-            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
-            background: #0a0a0a;
-            color: #e0e0e0;
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+            background: var(--bg); color: var(--text); min-height: 100vh; line-height: 1.6; overflow-x: hidden;
+            display: flex; align-items: center; justify-content: center; padding: 20px;
         }
-        .container { max-width: 500px; width: 100%; text-align: center; }
-        .logo svg { width: 56px; height: 56px; }
-        .card {
-            background: rgba(20, 20, 20, 0.85);
-            border: 1px solid rgba(212, 175, 55, 0.2);
-            border-radius: 12px;
-            padding: 36px;
-            margin-top: 20px;
-            backdrop-filter: blur(8px);
-        }
+        #petalCanvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; pointer-events: none; }
+        .bg-gradient { position: fixed; top: 0; left: 0; right: 0; bottom: 0; z-index: -1; background: radial-gradient(ellipse 80% 50% at 50% -20%, rgba(212, 175, 55, 0.08), transparent), radial-gradient(ellipse 60% 40% at 80% 100%, rgba(212, 175, 55, 0.04), transparent), #0a0a0a; }
+        @keyframes shimmer { 0% { background-position: -200% center; } 100% { background-position: 200% center; } }
+        @keyframes float3D { 0%, 100% { transform: translateY(0) rotateX(0) rotateY(0); } 50% { transform: translateY(-10px) rotateX(2deg) rotateY(2deg); } }
+        .glass-text { background: linear-gradient(135deg, rgba(255,255,255,0.9) 0%, rgba(212,175,55,0.8) 30%, rgba(255,255,255,0.6) 50%, rgba(212,175,55,0.8) 70%, rgba(255,255,255,0.9) 100%); background-size: 200% auto; -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; text-shadow: 0 0 30px rgba(212, 175, 55, 0.15); animation: shimmer 6s linear infinite; filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.3)); }
+        .top-nav { position: fixed; top: 20px; right: 20px; z-index: 50; }
+        .home-btn { display: flex; align-items: center; gap: 8px; padding: 10px 20px; background: rgba(20, 20, 20, 0.8); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border: 1px solid var(--border-gold); border-radius: var(--radius-sm); color: var(--gold); font-size: 0.85rem; font-weight: 600; text-decoration: none; transition: var(--transition); }
+        .home-btn:hover { background: rgba(30, 30, 30, 0.9); border-color: var(--gold); transform: translateY(-2px); }
+        .home-btn svg { width: 16px; height: 16px; }
+        .container { max-width: 500px; width: 100%; text-align: center; position: relative; z-index: 1; }
+        .logo svg { width: 80px; height: 80px; animation: float3D 6s ease-in-out infinite; filter: drop-shadow(0 0 20px rgba(212, 175, 55, 0.2)); }
+        .card { background: rgba(20, 20, 20, 0.6); backdrop-filter: blur(16px) saturate(1.2); -webkit-backdrop-filter: blur(16px) saturate(1.2); border: 1px solid var(--border-gold); border-radius: var(--radius); padding: 36px; margin-top: 20px; box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.05), 0 8px 32px rgba(0, 0, 0, 0.3); }
         .check-icon { font-size: 2.5rem; margin-bottom: 14px; }
-        .card h1 { font-size: 1.4rem; color: #d4af37; margin-bottom: 10px; }
-        .card p { font-size: 0.88rem; color: #aaa; line-height: 1.5; margin-bottom: 20px; }
-        .steps {
-            text-align: left;
-            background: rgba(10, 10, 10, 0.5);
-            border-radius: 8px;
-            padding: 18px;
-            margin-bottom: 20px;
-        }
-        .steps h3 { font-size: 0.82rem; color: #d4af37; margin-bottom: 10px; }
+        .card h1 { font-size: 1.4rem; margin-bottom: 10px; }
+        .card p { font-size: 0.88rem; color: var(--text-dim); line-height: 1.5; margin-bottom: 20px; }
+        .steps { text-align: left; background: rgba(10, 10, 10, 0.5); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 18px; margin-bottom: 20px; }
+        .steps h3 { font-size: 0.82rem; color: var(--gold); margin-bottom: 10px; font-weight: 600; }
         .steps ol { padding-left: 18px; }
-        .steps li { font-size: 0.82rem; color: #aaa; margin-bottom: 6px; line-height: 1.4; }
-        .btn {
-            display: inline-block;
-            padding: 11px 28px;
-            background: linear-gradient(135deg, #d4af37, #b8941f);
-            color: #0a0a0a;
-            border: none;
-            border-radius: 7px;
-            font-size: 0.9rem;
-            font-weight: 600;
-            text-decoration: none;
-        }
-        .btn:hover { opacity: 0.9; }
+        .steps li { font-size: 0.82rem; color: var(--text-dim); margin-bottom: 6px; line-height: 1.4; }
+        .vine-btn-wrapper { position: relative; display: inline-block; }
+        .vine-btn-wrapper svg { position: absolute; top: -8px; left: -12px; width: calc(100% + 24px); height: calc(100% + 20px); pointer-events: none; opacity: 0; transition: opacity 0.4s ease; z-index: 2; }
+        .vine-btn-wrapper:hover svg { opacity: 1; }
+        .btn { position: relative; z-index: 1; display: inline-block; padding: 11px 28px; border: 1px solid rgba(212, 175, 55, 0.2); border-radius: var(--radius-sm); font-size: 0.9rem; font-weight: 600; text-decoration: none; transition: var(--transition); cursor: pointer; background: rgba(212, 175, 55, 0.05); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); color: var(--text); box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.05), 0 4px 16px rgba(0, 0, 0, 0.2); }
+        .btn:hover { background: rgba(212, 175, 55, 0.12); border-color: rgba(212, 175, 55, 0.5); box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.08), 0 4px 20px rgba(212, 175, 55, 0.15); transform: scale(1.02); }
         .footer { margin-top: 20px; font-size: 0.78rem; color: #666; }
-        .footer a { color: #d4af37; text-decoration: none; }
+        .footer a { color: var(--gold); text-decoration: none; }
+        @media (max-width: 768px) { .top-nav { top: 10px; right: 10px; } .home-btn { padding: 8px 14px; font-size: 0.78rem; } }
     </style>
 </head>
 <body>
+    <div class="bg-gradient"></div>
+    <canvas id="petalCanvas"></canvas>
+
+    <div class="top-nav">
+        <a href="https://mysweetpea.cc" class="home-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12L12 3l9 9M5 10v10h14V10"/></svg> Home</a>
+    </div>
+
     <div class="container">
         <div class="logo">
-            <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <circle cx="50" cy="50" r="45" stroke="#d4af37" stroke-width="2" fill="rgba(212,175,55,0.05)"/>
-                <path d="M50 20 C35 25, 30 40, 35 55 C40 65, 50 70, 50 70 C50 70, 60 65, 65 55 C70 40, 65 25, 50 20" fill="#d4af37" opacity="0.8"/>
-                <path d="M50 35 C45 38, 43 45, 46 52 C48 57, 50 60, 50 60 C50 60, 52 57, 54 52 C57 45, 55 38, 50 35" fill="#0a0a0a" opacity="0.6"/>
-                <line x1="50" y1="70" x2="50" y2="85" stroke="#d4af37" stroke-width="2"/>
-                <path d="M45 78 Q40 75, 38 80" stroke="#d4af37" stroke-width="1.5" fill="none"/>
-                <path d="M55 78 Q60 75, 62 80" stroke="#d4af37" stroke-width="1.5" fill="none"/>
-            </svg>
+            <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="50" cy="50" r="45" stroke="#d4af37" stroke-width="2" fill="rgba(212,175,55,0.05)"/><path d="M50 20 C35 25, 30 40, 35 55 C40 65, 50 70, 50 70 C50 70, 60 65, 65 55 C70 40, 65 25, 50 20" fill="#d4af37" opacity="0.8"/><path d="M50 35 C45 38, 43 45, 46 52 C48 57, 50 60, 50 60 C50 60, 52 57, 54 52 C57 45, 55 38, 50 35" fill="#0a0a0a" opacity="0.6"/><line x1="50" y1="70" x2="50" y2="85" stroke="#d4af37" stroke-width="2"/><path d="M45 78 Q40 75, 38 80" stroke="#d4af37" stroke-width="1.5" fill="none"/><path d="M55 78 Q60 75, 62 80" stroke="#d4af37" stroke-width="1.5" fill="none"/></svg>
         </div>
 
         <div class="card">
             <div class="check-icon" id="checkIcon">&#x2705;</div>
-            <h1 id="title">Request Received!</h1>
+            <h1 class="glass-text" id="title">Request Received!</h1>
             <p id="message">Thank you. We will verify your contribution and get back to you shortly.</p>
 
             <div class="steps" id="stepsBox">
@@ -84,22 +76,34 @@
                 </ol>
             </div>
 
-            <a href="https://mysweetpea.cc/pricing.html" class="btn">Back to Home</a>
+            <div class="vine-btn-wrapper">
+                <svg viewBox="0 0 200 60" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M10 30 Q30 10, 50 30 T90 30 T130 30 T170 30 T190 30" stroke="#d4af37" stroke-width="1.5" fill="none" opacity="0.6"/><path d="M10 30 Q30 50, 50 30 T90 30 T130 30 T170 30 T190 30" stroke="#d4af37" stroke-width="1" fill="none" opacity="0.4"/><circle cx="30" cy="18" r="3" fill="#d4af37" opacity="0.7"/><circle cx="70" cy="42" r="3" fill="#d4af37" opacity="0.7"/><circle cx="110" cy="18" r="3" fill="#d4af37" opacity="0.7"/><circle cx="150" cy="42" r="3" fill="#d4af37" opacity="0.7"/></svg>
+                <a href="https://mysweetpea.cc/pricing.html" class="btn">Back to Home</a>
+            </div>
         </div>
 
-        <div class="footer">
-            Questions? <a href="mailto:sweetpea@tuta.io">sweetpea@tuta.io</a>
-        </div>
+        <div class="footer">Questions? <a href="mailto:support@mysweetpea.cc">support@mysweetpea.cc</a></div>
     </div>
 
     <script>
-        const urlParams = new URLSearchParams(window.location.search);
-        const type = urlParams.get('type');
-        const title = document.getElementById('title');
-        const message = document.getElementById('message');
-        const stepsBox = document.getElementById('stepsBox');
-        const stepsList = document.getElementById('stepsList');
-        const checkIcon = document.getElementById('checkIcon');
+        (function() {
+            var canvas = document.getElementById('petalCanvas'); var ctx = canvas.getContext('2d'); var petals = []; var W, H;
+            function resize() { W = canvas.width = window.innerWidth; H = canvas.height = window.innerHeight; }
+            resize(); window.addEventListener('resize', resize);
+            function createPetal() { return { x: Math.random() * W, y: -20, size: 4 + Math.random() * 8, speedY: 0.5 + Math.random() * 1.5, speedX: -0.5 + Math.random() * 1, rotation: Math.random() * Math.PI * 2, rotSpeed: -0.02 + Math.random() * 0.04, opacity: 0.15 + Math.random() * 0.35, sway: Math.random() * Math.PI * 2, swaySpeed: 0.01 + Math.random() * 0.02 }; }
+            for (var i = 0; i < 40; i++) { var p = createPetal(); p.y = Math.random() * H; petals.push(p); }
+            function drawPetal(p) { ctx.save(); ctx.translate(p.x, p.y); ctx.rotate(p.rotation); ctx.globalAlpha = p.opacity; var grad = ctx.createRadialGradient(0, 0, 0, 0, 0, p.size); grad.addColorStop(0, '#f0d860'); grad.addColorStop(0.5, '#d4af37'); grad.addColorStop(1, 'rgba(212, 175, 55, 0.3)'); ctx.fillStyle = grad; ctx.beginPath(); ctx.moveTo(0, -p.size); ctx.bezierCurveTo(p.size * 0.6, -p.size * 0.5, p.size * 0.6, p.size * 0.5, 0, p.size); ctx.bezierCurveTo(-p.size * 0.6, p.size * 0.5, -p.size * 0.6, -p.size * 0.5, 0, -p.size); ctx.fill(); ctx.strokeStyle = 'rgba(212, 175, 55, 0.4)'; ctx.lineWidth = 0.5; ctx.stroke(); ctx.restore(); }
+            function animate() { ctx.clearRect(0, 0, W, H); petals.forEach(function(p, i) { p.sway += p.swaySpeed; p.x += p.speedX + Math.sin(p.sway) * 0.5; p.y += p.speedY; p.rotation += p.rotSpeed; if (p.y > H + 20) { petals[i] = createPetal(); } if (p.x < -20) p.x = W + 20; if (p.x > W + 20) p.x = -20; drawPetal(p); }); requestAnimationFrame(animate); }
+            animate();
+        })();
+
+        var urlParams = new URLSearchParams(window.location.search);
+        var type = urlParams.get('type');
+        var title = document.getElementById('title');
+        var message = document.getElementById('message');
+        var stepsBox = document.getElementById('stepsBox');
+        var stepsList = document.getElementById('stepsList');
+        var checkIcon = document.getElementById('checkIcon');
 
         if (type === 'support') {
             checkIcon.innerHTML = '&#x1F49B;';

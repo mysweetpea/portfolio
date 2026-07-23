@@ -6,413 +6,531 @@
     <title>MySweetPea — Donate</title>
     <link rel="icon" type="image/svg+xml" href="/logo-favicon.svg">
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+        :root {
+            --bg: #0a0a0a;
+            --gold: #d4af37;
+            --gold-dim: #b8941f;
+            --gold-glow: rgba(212, 175, 55, 0.15);
+            --text: #e0e0e0;
+            --text-dim: #888;
+            --text-faint: #555;
+            --border: rgba(255, 255, 255, 0.08);
+            --border-gold: rgba(212, 175, 55, 0.25);
+            --radius: 14px;
+            --radius-sm: 8px;
+            --transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            --purple: #a855f7;
+            --green: #22c56e;
+            --pink: #ec4899;
+        }
+
+        html { scroll-behavior: smooth; }
 
         body {
-            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
-            background: #0a0a0a;
-            color: #e0e0e0;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+            background: var(--bg);
+            color: var(--text);
             min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
+            line-height: 1.6;
+            overflow-x: hidden;
         }
 
-        .container { max-width: 540px; width: 100%; }
+        #petalCanvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; pointer-events: none; }
+        .content-wrapper { position: relative; z-index: 1; }
 
-        .logo { text-align: center; margin-bottom: 28px; }
-        .logo svg { width: 56px; height: 56px; }
-        .logo h1 { font-size: 1.5rem; font-weight: 600; margin-top: 10px; color: #d4af37; }
-        .logo p { font-size: 0.82rem; color: #888; margin-top: 4px; }
-
-        .tabs {
-            display: flex;
-            gap: 0;
-            margin-bottom: 20px;
-            border-radius: 10px 10px 0 0;
-            overflow: hidden;
+        .bg-gradient {
+            position: fixed; top: 0; left: 0; right: 0; bottom: 0; z-index: -1;
+            background:
+                radial-gradient(ellipse 80% 50% at 50% -20%, rgba(212, 175, 55, 0.08), transparent),
+                radial-gradient(ellipse 60% 40% at 80% 100%, rgba(212, 175, 55, 0.04), transparent),
+                #0a0a0a;
         }
 
+        @keyframes shimmer { 0% { background-position: -200% center; } 100% { background-position: 200% center; } }
+        @keyframes float3D { 0%, 100% { transform: translateY(0) rotateX(0) rotateY(0); } 50% { transform: translateY(-10px) rotateX(2deg) rotateY(2deg); } }
+
+        .glass-text {
+            background: linear-gradient(135deg, rgba(255,255,255,0.9) 0%, rgba(212,175,55,0.8) 30%, rgba(255,255,255,0.6) 50%, rgba(212,175,55,0.8) 70%, rgba(255,255,255,0.9) 100%);
+            background-size: 200% auto;
+            -webkit-background-clip: text; background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 0 30px rgba(212, 175, 55, 0.15);
+            animation: shimmer 6s linear infinite;
+            filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.3));
+        }
+
+        /* ═══ Top Nav ═══ */
+        .top-nav { position: fixed; top: 20px; right: 20px; z-index: 50; display: flex; gap: 12px; align-items: center; }
+        .home-btn {
+            display: flex; align-items: center; gap: 8px; padding: 10px 20px;
+            background: rgba(20, 20, 20, 0.8); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+            border: 1px solid var(--border-gold); border-radius: var(--radius-sm);
+            color: var(--gold); font-size: 0.85rem; font-weight: 600; text-decoration: none; transition: var(--transition);
+        }
+        .home-btn:hover { background: rgba(30, 30, 30, 0.9); border-color: var(--gold); transform: translateY(-2px); }
+        .home-btn svg { width: 16px; height: 16px; }
+
+        /* ═══ Hero ═══ */
+        .hero { text-align: center; padding: 60px 20px 20px; }
+        .hero img.logo { width: 100px; height: 100px; margin-bottom: 12px; filter: drop-shadow(0 0 20px rgba(212, 175, 55, 0.2)); animation: float3D 6s ease-in-out infinite; }
+        .hero h1 { font-size: 1.8rem; font-weight: 700; margin-bottom: 4px; }
+        .hero p { font-size: 0.9rem; color: var(--text-dim); }
+
+        /* ═══ Container ═══ */
+        .container { max-width: 540px; margin: 0 auto; padding: 20px; }
+
+        /* ═══ Tabs ═══ */
+        .tabs { display: flex; gap: 0; margin-bottom: 0; border-radius: var(--radius) var(--radius) 0 0; overflow: hidden; }
         .tab {
-            flex: 1;
-            padding: 12px 8px;
+            flex: 1; padding: 12px 8px;
             background: rgba(20, 20, 20, 0.5);
+            backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
             border: 1px solid rgba(255, 255, 255, 0.06);
             border-bottom: none;
-            text-align: center;
-            cursor: pointer;
-            font-size: 0.8rem;
-            color: #888;
-            transition: all 0.2s;
-            user-select: none;
+            text-align: center; cursor: pointer;
+            font-size: 0.8rem; color: var(--text-dim);
+            transition: var(--transition); user-select: none;
         }
-
         .tab:hover { color: #ccc; background: rgba(30, 30, 30, 0.7); }
-
         .tab.active {
             background: rgba(20, 20, 20, 0.85);
-            border-color: rgba(212, 175, 55, 0.3);
-            color: #d4af37;
-            font-weight: 600;
+            border-color: var(--border-gold);
+            color: var(--gold); font-weight: 600;
         }
 
+        /* ═══ Card ═══ */
         .card {
-            background: rgba(20, 20, 20, 0.85);
-            border: 1px solid rgba(212, 175, 55, 0.2);
-            border-radius: 0 0 12px 12px;
+            background: rgba(20, 20, 20, 0.6);
+            backdrop-filter: blur(16px) saturate(1.2); -webkit-backdrop-filter: blur(16px) saturate(1.2);
+            border: 1px solid var(--border-gold);
+            border-radius: 0 0 var(--radius) var(--radius);
             padding: 28px;
-            backdrop-filter: blur(8px);
+            box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.05), 0 8px 32px rgba(0, 0, 0, 0.3);
         }
 
-        .card h2 { font-size: 1.05rem; color: #d4af37; margin-bottom: 6px; }
-        .card .subtitle { font-size: 0.82rem; color: #888; margin-bottom: 20px; }
+        .card h2 { font-size: 1.05rem; margin-bottom: 6px; }
+        .card .subtitle { font-size: 0.82rem; color: var(--text-dim); margin-bottom: 20px; }
 
+        /* ═══ Form ═══ */
         .form-group { margin-bottom: 16px; }
         .form-group label { display: block; font-size: 0.78rem; color: #aaa; margin-bottom: 5px; font-weight: 500; }
         .form-group input {
-            width: 100%;
-            padding: 10px 12px;
+            width: 100%; padding: 10px 12px;
             background: rgba(10, 10, 10, 0.8);
             border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 7px;
-            color: #e0e0e0;
-            font-size: 0.88rem;
+            border-radius: var(--radius-sm);
+            color: var(--text); font-size: 0.88rem;
             transition: border-color 0.2s;
         }
-        .form-group input:focus { outline: none; border-color: #d4af37; }
+        .form-group input:focus { outline: none; border-color: var(--gold); }
         .form-group input::placeholder { color: #555; }
         .form-group .hint { font-size: 0.72rem; color: #666; margin-top: 3px; }
         .form-group .err { font-size: 0.72rem; color: #e74c3c; margin-top: 3px; display: none; }
         .form-group.has-error input { border-color: #e74c3c; }
         .form-group.has-error .err { display: block; }
 
+        /* ═══ Crypto Section ═══ */
         .crypto-section { margin-bottom: 16px; }
         .crypto-section label { display: block; font-size: 0.78rem; color: #aaa; margin-bottom: 7px; font-weight: 500; }
         .crypto-options { display: flex; gap: 8px; flex-wrap: wrap; }
         .crypto-option {
-            flex: 1;
-            min-width: 120px;
-            padding: 10px;
+            flex: 1; min-width: 120px; padding: 10px;
             background: rgba(10, 10, 10, 0.8);
             border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 7px;
-            cursor: pointer;
-            transition: all 0.2s;
-            text-align: center;
+            border-radius: var(--radius-sm);
+            cursor: pointer; transition: var(--transition); text-align: center;
         }
         .crypto-option:hover { border-color: rgba(212, 175, 55, 0.4); }
-        .crypto-option.selected { border-color: #d4af37; background: rgba(212, 175, 55, 0.08); }
+        .crypto-option.selected { border-color: var(--gold); background: rgba(212, 175, 55, 0.08); }
         .crypto-option .icon { font-size: 1.3rem; margin-bottom: 3px; }
         .crypto-option .name { font-size: 0.76rem; color: #ccc; }
         .crypto-option .addr { font-size: 0.62rem; color: #666; margin-top: 3px; word-break: break-all; font-family: monospace; }
 
-        .btn {
-            width: 100%;
-            padding: 13px;
-            background: linear-gradient(135deg, #d4af37, #b8941f);
-            color: #0a0a0a;
-            border: none;
-            border-radius: 7px;
-            font-size: 0.95rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: opacity 0.2s;
-        }
-        .btn:hover { opacity: 0.9; }
-
-        .footer { text-align: center; margin-top: 18px; font-size: 0.78rem; color: #666; }
-        .footer a { color: #d4af37; text-decoration: none; }
-
-        .error-banner {
-            display: none;
-            background: rgba(231, 76, 60, 0.12);
-            border: 1px solid rgba(231, 76, 60, 0.25);
-            border-radius: 7px;
-            padding: 10px;
-            margin-bottom: 16px;
-            font-size: 0.82rem;
-            color: #e74c3c;
-        }
-        .error-banner.visible { display: block; }
-
-        .info-box {
-            background: rgba(212, 175, 55, 0.06);
-            border: 1px solid rgba(212, 175, 55, 0.15);
-            border-radius: 7px;
-            padding: 10px;
-            margin-bottom: 16px;
-            font-size: 0.76rem;
-            color: #b8a030;
-            line-height: 1.5;
-        }
-
-        .tab-content { display: none; }
-        .tab-content.active { display: block; }
-
+        /* ═══ Wallet Display ═══ */
         .wallet-display {
             display: none;
             background: rgba(10, 10, 10, 0.6);
             border: 1px solid rgba(212, 175, 55, 0.15);
-            border-radius: 7px;
-            padding: 12px;
-            margin-bottom: 16px;
+            border-radius: var(--radius-sm);
+            padding: 12px; margin-bottom: 16px;
         }
         .wallet-display.visible { display: block; }
         .wallet-display .wl { font-size: 0.72rem; color: #888; margin-bottom: 4px; }
-        .wallet-display .wa {
-            font-size: 0.78rem;
-            color: #d4af37;
-            font-family: monospace;
-            word-break: break-all;
-            cursor: pointer;
-        }
+        .wallet-display .wa { font-size: 0.78rem; color: var(--gold); font-family: monospace; word-break: break-all; cursor: pointer; }
         .wallet-display .wa:hover { text-decoration: underline; }
         .wallet-display .copy-hint { font-size: 0.68rem; color: #555; margin-top: 4px; }
+
+        /* ═══ Info Box ═══ */
+        .info-box {
+            background: rgba(212, 175, 55, 0.06);
+            border: 1px solid rgba(212, 175, 55, 0.15);
+            border-radius: var(--radius-sm);
+            padding: 12px; margin-bottom: 16px;
+            font-size: 0.76rem; color: #b8a030; line-height: 1.5;
+        }
+
+        /* ═══ Error Banner ═══ */
+        .error-banner {
+            display: none;
+            background: rgba(231, 76, 60, 0.12);
+            border: 1px solid rgba(231, 76, 60, 0.25);
+            border-radius: var(--radius-sm);
+            padding: 10px; margin-bottom: 16px;
+            font-size: 0.82rem; color: #e74c3c;
+        }
+        .error-banner.visible { display: block; }
+
+        /* ═══ Tab Content ═══ */
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+
+        /* ═══ Vine Button ═══ */
+        .vine-btn-wrapper { position: relative; width: 100%; }
+        .vine-btn-wrapper svg { position: absolute; top: -8px; left: -12px; width: calc(100% + 24px); height: calc(100% + 20px); pointer-events: none; opacity: 0; transition: opacity 0.4s ease; z-index: 2; }
+        .vine-btn-wrapper:hover svg { opacity: 1; }
+        .vine-btn-wrapper .btn {
+            position: relative; z-index: 1; width: 100%; padding: 13px;
+            border: none; border-radius: var(--radius-sm);
+            font-size: 0.95rem; font-weight: 600;
+            cursor: pointer; transition: var(--transition);
+            text-decoration: none; display: block; text-align: center;
+        }
+
+        .btn-glass-supporter {
+            background: rgba(168, 85, 247, 0.05);
+            backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+            color: var(--text);
+            border: 1px solid rgba(168, 85, 247, 0.2);
+            box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.05), 0 4px 16px rgba(0, 0, 0, 0.2);
+        }
+        .btn-glass-supporter:hover {
+            background: rgba(168, 85, 247, 0.12);
+            border-color: rgba(168, 85, 247, 0.5);
+            box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.08), 0 4px 20px rgba(168, 85, 247, 0.15);
+            transform: scale(1.02);
+        }
+
+        .btn-glass-seedling {
+            background: rgba(34, 197, 94, 0.05);
+            backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+            color: var(--text);
+            border: 1px solid rgba(34, 197, 94, 0.2);
+            box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.05), 0 4px 16px rgba(0, 0, 0, 0.2);
+        }
+        .btn-glass-seedling:hover {
+            background: rgba(34, 197, 94, 0.12);
+            border-color: rgba(34, 197, 94, 0.5);
+            box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.08), 0 4px 20px rgba(34, 197, 94, 0.15);
+            transform: scale(1.02);
+        }
+
+        .btn-glass-code {
+            background: rgba(212, 175, 55, 0.05);
+            backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+            color: var(--text);
+            border: 1px solid rgba(212, 175, 55, 0.2);
+            box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.05), 0 4px 16px rgba(0, 0, 0, 0.2);
+        }
+        .btn-glass-code:hover {
+            background: rgba(212, 175, 55, 0.12);
+            border-color: rgba(212, 175, 55, 0.5);
+            box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.08), 0 4px 20px rgba(212, 175, 55, 0.15);
+            transform: scale(1.02);
+        }
+
+        /* ═══ Footer ═══ */
+        .footer { text-align: center; margin-top: 18px; font-size: 0.78rem; color: #666; }
+        .footer a { color: var(--gold); text-decoration: none; }
+
+        /* ═══ 3D Floats ═══ */
+        .float-3d { position: absolute; pointer-events: none; opacity: 0.04; z-index: 0; }
+        .float-3d svg { width: 100%; height: 100%; }
+        .float-3d.f1 { top: 10%; right: 3%; width: 80px; height: 80px; animation: float3D 8s ease-in-out infinite; }
+        .float-3d.f2 { bottom: 10%; left: 3%; width: 60px; height: 60px; animation: float3D 10s ease-in-out infinite reverse; }
+
+        @media (max-width: 768px) {
+            .hero h1 { font-size: 1.4rem; }
+            .hero img.logo { width: 80px; height: 80px; }
+            .container { padding: 10px; }
+            .tab { font-size: 0.72rem; padding: 10px 4px; }
+            .float-3d { display: none; }
+            .top-nav { top: 10px; right: 10px; }
+            .home-btn { padding: 8px 14px; font-size: 0.78rem; }
+        }
     </style>
 </head>
 <body>
-    <div class="container">
-        <div class="logo">
-            <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <circle cx="50" cy="50" r="45" stroke="#d4af37" stroke-width="2" fill="rgba(212,175,55,0.05)"/>
-                <path d="M50 20 C35 25, 30 40, 35 55 C40 65, 50 70, 50 70 C50 70, 60 65, 65 55 C70 40, 65 25, 50 20" fill="#d4af37" opacity="0.8"/>
-                <path d="M50 35 C45 38, 43 45, 46 52 C48 57, 50 60, 50 60 C50 60, 52 57, 54 52 C57 45, 55 38, 50 35" fill="#0a0a0a" opacity="0.6"/>
-                <line x1="50" y1="70" x2="50" y2="85" stroke="#d4af37" stroke-width="2"/>
-                <path d="M45 78 Q40 75, 38 80" stroke="#d4af37" stroke-width="1.5" fill="none"/>
-                <path d="M55 78 Q60 75, 62 80" stroke="#d4af37" stroke-width="1.5" fill="none"/>
-            </svg>
-            <h1>MySweetPea</h1>
+    <div class="bg-gradient"></div>
+    <canvas id="petalCanvas"></canvas>
+
+    <div class="float-3d f1"><svg viewBox="0 0 100 100" fill="none"><circle cx="50" cy="50" r="45" stroke="#d4af37" stroke-width="1.5" fill="none"/><path d="M50 15 C30 20, 25 40, 30 55 C35 68, 50 75, 50 75 C50 75, 65 68, 70 55 C75 40, 70 20, 50 15" fill="#d4af37"/></svg></div>
+    <div class="float-3d f2"><svg viewBox="0 0 100 100" fill="none"><circle cx="50" cy="50" r="45" stroke="#d4af37" stroke-width="1.5" fill="none"/><path d="M50 15 C30 20, 25 40, 30 55 C35 68, 50 75, 50 75 C50 75, 65 68, 70 55 C75 40, 70 20, 50 15" fill="#d4af37"/></svg></div>
+
+    <div class="top-nav">
+        <a href="https://mysweetpea.cc" class="home-btn">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12L12 3l9 9M5 10v10h14V10"/></svg>
+            Home
+        </a>
+    </div>
+
+    <div class="content-wrapper">
+        <div class="hero">
+            <img src="/logo.svg" alt="MySweetPea" class="logo">
+            <h1 class="glass-text">MySweetPea</h1>
             <p>Support the community. Get access.</p>
         </div>
 
-        <div class="tabs">
-            <div class="tab active" data-tab="support" onclick="switchTab('support')">&#x1F49B; Support</div>
-            <div class="tab" data-tab="seedling" onclick="switchTab('seedling')">&#x1F331; Get Access ($5)</div>
-            <div class="tab" data-tab="code" onclick="switchTab('code')">&#x1F511; I Have a Code</div>
-        </div>
+        <div class="container">
+            <div class="tabs">
+                <div class="tab active" data-tab="support" onclick="switchTab('support')">&#x1F49B; Support</div>
+                <div class="tab" data-tab="seedling" onclick="switchTab('seedling')">&#x1F331; Get Access ($5)</div>
+                <div class="tab" data-tab="code" onclick="switchTab('code')">&#x1F511; I Have a Code</div>
+            </div>
 
-        <div class="card">
-            <div class="error-banner" id="errorBanner"></div>
+            <div class="card">
+                <div class="error-banner" id="errorBanner"></div>
 
-            <!-- ═══ TAB 1: SUPPORT ═══ -->
-            <div class="tab-content active" id="tab-support">
-                <h2>Support the Cause</h2>
-                <p class="subtitle">Donate any amount to help cover server costs. No service access included.</p>
+                <!-- ═══ TAB 1: SUPPORT ═══ -->
+                <div class="tab-content active" id="tab-support">
+                    <h2 class="glass-text">Support the Cause</h2>
+                    <p class="subtitle">Donate any amount to help cover server costs. No service access included.</p>
 
-                <div class="info-box">
-                    Your contribution helps keep MySweetPea running and funds future improvements.
-                    Supporters receive a thank-you email but no service access.
-                </div>
-
-                <form id="form-support" action="https://n8n.mysweetpea.cc/webhook/donate" method="POST">
-                    <input type="hidden" name="form_type" value="support">
-
-                    <div class="form-group" id="s-name-group">
-                        <label for="s-name">Name</label>
-                        <input type="text" id="s-name" name="name" placeholder="Your name" required>
-                        <div class="err">Please enter your name.</div>
+                    <div class="info-box">
+                        Your contribution helps keep MySweetPea running and funds future improvements.
+                        Supporters receive a thank-you email but no service access.
                     </div>
 
-                    <div class="form-group" id="s-email-group">
-                        <label for="s-email">Email</label>
-                        <input type="email" id="s-email" name="email" placeholder="you@example.com" required>
-                        <div class="err">Please enter a valid email.</div>
-                    </div>
+                    <form id="form-support" action="https://n8n.mysweetpea.cc/webhook/donate" method="POST">
+                        <input type="hidden" name="form_type" value="support">
 
-                    <div class="form-group" id="s-amount-group">
-                        <label for="s-amount">Donation Amount (USD)</label>
-                        <input type="number" id="s-amount" name="amount" placeholder="5.00" min="1" step="0.01" required>
-                        <div class="err">Please enter an amount.</div>
-                    </div>
+                        <div class="form-group" id="s-name-group">
+                            <label for="s-name">Name</label>
+                            <input type="text" id="s-name" name="name" placeholder="Your name" required>
+                            <div class="err">Please enter your name.</div>
+                        </div>
 
-                    <div class="crypto-section">
-                        <label>Cryptocurrency</label>
-                        <div class="crypto-options">
-                            <div class="crypto-option" data-type="monero" onclick="selectCrypto(this, 'support')">
-                                <div class="icon">&#x1F9EA;</div>
-                                <div class="name">Monero (XMR)</div>
-                                <div class="addr" id="s-xmr-addr"></div>
-                            </div>
-                            <div class="crypto-option" data-type="bitcoin" onclick="selectCrypto(this, 'support')">
-                                <div class="icon">&#x20BF;</div>
-                                <div class="name">Bitcoin (BTC)</div>
-                                <div class="addr" id="s-btc-addr"></div>
+                        <div class="form-group" id="s-email-group">
+                            <label for="s-email">Email</label>
+                            <input type="email" id="s-email" name="email" placeholder="you@example.com" required>
+                            <div class="err">Please enter a valid email.</div>
+                        </div>
+
+                        <div class="form-group" id="s-amount-group">
+                            <label for="s-amount">Donation Amount (USD)</label>
+                            <input type="number" id="s-amount" name="amount" placeholder="5.00" min="1" step="0.01" required>
+                            <div class="err">Please enter an amount.</div>
+                        </div>
+
+                        <div class="crypto-section">
+                            <label>Cryptocurrency</label>
+                            <div class="crypto-options">
+                                <div class="crypto-option" data-type="monero" onclick="selectCrypto(this, 'support')">
+                                    <div class="icon">&#x1F9EA;</div>
+                                    <div class="name">Monero (XMR)</div>
+                                    <div class="addr" id="s-xmr-addr"></div>
+                                </div>
+                                <div class="crypto-option" data-type="bitcoin" onclick="selectCrypto(this, 'support')">
+                                    <div class="icon">&#x20BF;</div>
+                                    <div class="name">Bitcoin (BTC)</div>
+                                    <div class="addr" id="s-btc-addr"></div>
+                                </div>
                             </div>
                         </div>
-                    </div>
 
-                    <input type="hidden" name="crypto_type" id="s-crypto-type" value="">
+                        <input type="hidden" name="crypto_type" id="s-crypto-type" value="">
 
-                    <div class="wallet-display" id="s-wallet-display">
-                        <div class="wl">Send your donation to:</div>
-                        <div class="wa" id="s-wallet-addr" onclick="copyWallet(this)"></div>
-                        <div class="copy-hint">Click address to copy</div>
-                    </div>
+                        <div class="wallet-display" id="s-wallet-display">
+                            <div class="wl">Send your donation to:</div>
+                            <div class="wa" id="s-wallet-addr" onclick="copyWallet(this)"></div>
+                            <div class="copy-hint">Click address to copy</div>
+                        </div>
 
-                    <div class="form-group" id="s-tx-group">
-                        <label for="s-tx">Transaction Hash (optional)</label>
-                        <input type="text" id="s-tx" name="transaction_hash" placeholder="Paste your TX hash for faster verification">
-                        <div class="hint">Helps us verify your donation faster.</div>
-                    </div>
+                        <div class="form-group" id="s-tx-group">
+                            <label for="s-tx">Transaction Hash (optional)</label>
+                            <input type="text" id="s-tx" name="transaction_hash" placeholder="Paste your TX hash for faster verification">
+                            <div class="hint">Helps us verify your donation faster.</div>
+                        </div>
 
-                    <button type="submit" class="btn">Submit Donation</button>
-                </form>
-            </div>
-
-            <!-- ═══ TAB 2: SEEDLING ═══ -->
-            <div class="tab-content" id="tab-seedling">
-                <h2>Get Access — $5 Minimum</h2>
-                <p class="subtitle">Donate $5+ to get access to non-media services.</p>
-
-                <div class="info-box">
-                    <strong>How it works:</strong><br>
-                    1. Send your $5 donation via crypto<br>
-                    2. Fill out the form below with your TX hash<br>
-                    3. We verify and email you an invite code<br>
-                    4. Use the code on the "I Have a Code" tab to create your account
+                        <div class="vine-btn-wrapper">
+                            <svg viewBox="0 0 200 60" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M10 30 Q30 10, 50 30 T90 30 T130 30 T170 30 T190 30" stroke="#d4af37" stroke-width="1.5" fill="none" opacity="0.6"/><path d="M10 30 Q30 50, 50 30 T90 30 T130 30 T170 30 T190 30" stroke="#d4af37" stroke-width="1" fill="none" opacity="0.4"/><circle cx="30" cy="18" r="3" fill="#d4af37" opacity="0.7"/><circle cx="70" cy="42" r="3" fill="#d4af37" opacity="0.7"/><circle cx="110" cy="18" r="3" fill="#d4af37" opacity="0.7"/><circle cx="150" cy="42" r="3" fill="#d4af37" opacity="0.7"/><path d="M30 18 Q25 12, 28 8" stroke="#d4af37" stroke-width="1" fill="none" opacity="0.5"/><path d="M70 42 Q75 48, 72 52" stroke="#d4af37" stroke-width="1" fill="none" opacity="0.5"/><path d="M110 18 Q105 12, 108 8" stroke="#d4af37" stroke-width="1" fill="none" opacity="0.5"/><path d="M150 42 Q155 48, 152 52" stroke="#d4af37" stroke-width="1" fill="none" opacity="0.5"/></svg>
+                            <button type="submit" class="btn btn-glass-supporter">Submit Donation</button>
+                        </div>
+                    </form>
                 </div>
 
-                <form id="form-seedling" action="https://n8n.mysweetpea.cc/webhook/donate" method="POST">
-                    <input type="hidden" name="form_type" value="seedling">
+                <!-- ═══ TAB 2: SEEDLING ═══ -->
+                <div class="tab-content" id="tab-seedling">
+                    <h2 class="glass-text">Get Access — $5 Minimum</h2>
+                    <p class="subtitle">Donate $5+ to get access to non-media services.</p>
 
-                    <div class="form-group" id="se-name-group">
-                        <label for="se-name">Name</label>
-                        <input type="text" id="se-name" name="name" placeholder="Your name" required>
-                        <div class="err">Please enter your name.</div>
+                    <div class="info-box">
+                        <strong>How it works:</strong><br>
+                        1. Send your $5 donation via crypto<br>
+                        2. Fill out the form below with your TX hash<br>
+                        3. We verify and email you an invite code<br>
+                        4. Use the code on the "I Have a Code" tab to create your account
                     </div>
 
-                    <div class="form-group" id="se-email-group">
-                        <label for="se-email">Email</label>
-                        <input type="email" id="se-email" name="email" placeholder="you@example.com" required>
-                        <div class="err">Please enter a valid email.</div>
-                    </div>
+                    <form id="form-seedling" action="https://n8n.mysweetpea.cc/webhook/donate" method="POST">
+                        <input type="hidden" name="form_type" value="seedling">
 
-                    <div class="form-group" id="se-username-group">
-                        <label for="se-username">Username</label>
-                        <input type="text" id="se-username" name="username" placeholder="Choose a username" required pattern="[A-Za-z0-9_]+">
-                        <div class="err">Min 3 chars, alphanumeric + underscore only.</div>
-                        <div class="hint">Letters, numbers, underscores. Min 3 characters.</div>
-                    </div>
+                        <div class="form-group" id="se-name-group">
+                            <label for="se-name">Name</label>
+                            <input type="text" id="se-name" name="name" placeholder="Your name" required>
+                            <div class="err">Please enter your name.</div>
+                        </div>
 
-                    <div class="crypto-section">
-                        <label>Cryptocurrency</label>
-                        <div class="crypto-options">
-                            <div class="crypto-option" data-type="monero" onclick="selectCrypto(this, 'seedling')">
-                                <div class="icon">&#x1F9EA;</div>
-                                <div class="name">Monero (XMR)</div>
-                                <div class="addr" id="se-xmr-addr"></div>
-                            </div>
-                            <div class="crypto-option" data-type="bitcoin" onclick="selectCrypto(this, 'seedling')">
-                                <div class="icon">&#x20BF;</div>
-                                <div class="name">Bitcoin (BTC)</div>
-                                <div class="addr" id="se-btc-addr"></div>
+                        <div class="form-group" id="se-email-group">
+                            <label for="se-email">Email</label>
+                            <input type="email" id="se-email" name="email" placeholder="you@example.com" required>
+                            <div class="err">Please enter a valid email.</div>
+                        </div>
+
+                        <div class="form-group" id="se-username-group">
+                            <label for="se-username">Username</label>
+                            <input type="text" id="se-username" name="username" placeholder="Choose a username" required pattern="[A-Za-z0-9_]+">
+                            <div class="err">Min 3 chars, alphanumeric + underscore only.</div>
+                            <div class="hint">Letters, numbers, underscores. Min 3 characters.</div>
+                        </div>
+
+                        <div class="crypto-section">
+                            <label>Cryptocurrency</label>
+                            <div class="crypto-options">
+                                <div class="crypto-option" data-type="monero" onclick="selectCrypto(this, 'seedling')">
+                                    <div class="icon">&#x1F9EA;</div>
+                                    <div class="name">Monero (XMR)</div>
+                                    <div class="addr" id="se-xmr-addr"></div>
+                                </div>
+                                <div class="crypto-option" data-type="bitcoin" onclick="selectCrypto(this, 'seedling')">
+                                    <div class="icon">&#x20BF;</div>
+                                    <div class="name">Bitcoin (BTC)</div>
+                                    <div class="addr" id="se-btc-addr"></div>
+                                </div>
                             </div>
                         </div>
-                    </div>
 
-                    <input type="hidden" name="crypto_type" id="se-crypto-type" value="">
+                        <input type="hidden" name="crypto_type" id="se-crypto-type" value="">
 
-                    <div class="wallet-display" id="se-wallet-display">
-                        <div class="wl">Send your $5+ donation to:</div>
-                        <div class="wa" id="se-wallet-addr" onclick="copyWallet(this)"></div>
-                        <div class="copy-hint">Click address to copy</div>
-                    </div>
+                        <div class="wallet-display" id="se-wallet-display">
+                            <div class="wl">Send your $5+ donation to:</div>
+                            <div class="wa" id="se-wallet-addr" onclick="copyWallet(this)"></div>
+                            <div class="copy-hint">Click address to copy</div>
+                        </div>
 
-                    <div class="form-group" id="se-tx-group">
-                        <label for="se-tx">Transaction Hash (optional but recommended)</label>
-                        <input type="text" id="se-tx" name="transaction_hash" placeholder="Paste your TX hash for faster verification">
-                        <div class="hint">Helps us verify your donation faster.</div>
-                    </div>
+                        <div class="form-group" id="se-tx-group">
+                            <label for="se-tx">Transaction Hash (optional but recommended)</label>
+                            <input type="text" id="se-tx" name="transaction_hash" placeholder="Paste your TX hash for faster verification">
+                            <div class="hint">Helps us verify your donation faster.</div>
+                        </div>
 
-                    <button type="submit" class="btn">Submit Request</button>
-                </form>
-            </div>
-
-            <!-- ═══ TAB 3: CODE ═══ -->
-            <div class="tab-content" id="tab-code">
-                <h2>Redeem Invite Code</h2>
-                <p class="subtitle">Have an invite code? Create your account now.</p>
-
-                <div class="info-box">
-                    Enter your invite code and details below. Your account will be created instantly.
+                        <div class="vine-btn-wrapper">
+                            <svg viewBox="0 0 200 60" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M10 30 Q30 10, 50 30 T90 30 T130 30 T170 30 T190 30" stroke="#d4af37" stroke-width="1.5" fill="none" opacity="0.6"/><path d="M10 30 Q30 50, 50 30 T90 30 T130 30 T170 30 T190 30" stroke="#d4af37" stroke-width="1" fill="none" opacity="0.4"/><circle cx="30" cy="18" r="3" fill="#d4af37" opacity="0.7"/><circle cx="70" cy="42" r="3" fill="#d4af37" opacity="0.7"/><circle cx="110" cy="18" r="3" fill="#d4af37" opacity="0.7"/><circle cx="150" cy="42" r="3" fill="#d4af37" opacity="0.7"/><path d="M30 18 Q25 12, 28 8" stroke="#d4af37" stroke-width="1" fill="none" opacity="0.5"/><path d="M70 42 Q75 48, 72 52" stroke="#d4af37" stroke-width="1" fill="none" opacity="0.5"/><path d="M110 18 Q105 12, 108 8" stroke="#d4af37" stroke-width="1" fill="none" opacity="0.5"/><path d="M150 42 Q155 48, 152 52" stroke="#d4af37" stroke-width="1" fill="none" opacity="0.5"/></svg>
+                            <button type="submit" class="btn btn-glass-seedling">Submit Request</button>
+                        </div>
+                    </form>
                 </div>
 
-                <form id="form-code" action="https://n8n.mysweetpea.cc/webhook/donate" method="POST">
-                    <input type="hidden" name="form_type" value="code">
+                <!-- ═══ TAB 3: CODE ═══ -->
+                <div class="tab-content" id="tab-code">
+                    <h2 class="glass-text">Redeem Invite Code</h2>
+                    <p class="subtitle">Have an invite code? Create your account now.</p>
 
-                    <div class="form-group" id="c-code-group">
-                        <label for="c-code">Invite Code</label>
-                        <input type="text" id="c-code" name="invite_code" placeholder="PEA-XXXXXXXX or FAM-XXXXXXXX" required>
-                        <div class="err">Please enter your invite code.</div>
+                    <div class="info-box">
+                        Enter your invite code and details below. Your account will be created instantly.
                     </div>
 
-                    <div class="form-group" id="c-name-group">
-                        <label for="c-name">Name</label>
-                        <input type="text" id="c-name" name="name" placeholder="Your name" required>
-                        <div class="err">Please enter your name.</div>
-                    </div>
+                    <form id="form-code" action="https://n8n.mysweetpea.cc/webhook/donate" method="POST">
+                        <input type="hidden" name="form_type" value="code">
 
-                    <div class="form-group" id="c-email-group">
-                        <label for="c-email">Email</label>
-                        <input type="email" id="c-email" name="email" placeholder="you@example.com" required>
-                        <div class="err">Please enter a valid email.</div>
-                    </div>
+                        <div class="form-group" id="c-code-group">
+                            <label for="c-code">Invite Code</label>
+                            <input type="text" id="c-code" name="invite_code" placeholder="PEA-XXXXXXXX or FAM-XXXXXXXX" required>
+                            <div class="err">Please enter your invite code.</div>
+                        </div>
 
-                    <div class="form-group" id="c-username-group">
-                        <label for="c-username">Username</label>
-                        <input type="text" id="c-username" name="username" placeholder="Choose a username" required pattern="[A-Za-z0-9_]+">
-                        <div class="err">Min 3 chars, alphanumeric + underscore only.</div>
-                        <div class="hint">Letters, numbers, underscores. Min 3 characters.</div>
-                    </div>
+                        <div class="form-group" id="c-name-group">
+                            <label for="c-name">Name</label>
+                            <input type="text" id="c-name" name="name" placeholder="Your name" required>
+                            <div class="err">Please enter your name.</div>
+                        </div>
 
-                    <button type="submit" class="btn">Create Account</button>
-                </form>
+                        <div class="form-group" id="c-email-group">
+                            <label for="c-email">Email</label>
+                            <input type="email" id="c-email" name="email" placeholder="you@example.com" required>
+                            <div class="err">Please enter a valid email.</div>
+                        </div>
+
+                        <div class="form-group" id="c-username-group">
+                            <label for="c-username">Username</label>
+                            <input type="text" id="c-username" name="username" placeholder="Choose a username" required pattern="[A-Za-z0-9_]+">
+                            <div class="err">Min 3 chars, alphanumeric + underscore only.</div>
+                            <div class="hint">Letters, numbers, underscores. Min 3 characters.</div>
+                        </div>
+
+                        <div class="vine-btn-wrapper">
+                            <svg viewBox="0 0 200 60" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M10 30 Q30 10, 50 30 T90 30 T130 30 T170 30 T190 30" stroke="#d4af37" stroke-width="1.5" fill="none" opacity="0.6"/><path d="M10 30 Q30 50, 50 30 T90 30 T130 30 T170 30 T190 30" stroke="#d4af37" stroke-width="1" fill="none" opacity="0.4"/><circle cx="30" cy="18" r="3" fill="#d4af37" opacity="0.7"/><circle cx="70" cy="42" r="3" fill="#d4af37" opacity="0.7"/><circle cx="110" cy="18" r="3" fill="#d4af37" opacity="0.7"/><circle cx="150" cy="42" r="3" fill="#d4af37" opacity="0.7"/><path d="M30 18 Q25 12, 28 8" stroke="#d4af37" stroke-width="1" fill="none" opacity="0.5"/><path d="M70 42 Q75 48, 72 52" stroke="#d4af37" stroke-width="1" fill="none" opacity="0.5"/><path d="M110 18 Q105 12, 108 8" stroke="#d4af37" stroke-width="1" fill="none" opacity="0.5"/><path d="M150 42 Q155 48, 152 52" stroke="#d4af37" stroke-width="1" fill="none" opacity="0.5"/></svg>
+                            <button type="submit" class="btn btn-glass-code">Create Account</button>
+                        </div>
+                    </form>
+                </div>
             </div>
-        </div>
 
-        <div class="footer">
-            Questions? <a href="mailto:sweetpea@tuta.io">sweetpea@tuta.io</a>
+            <div class="footer">
+                Questions? <a href="mailto:support@mysweetpea.cc">support@mysweetpea.cc</a>
+            </div>
         </div>
     </div>
 
     <script>
-        // ── Wallet addresses (replace with your actual addresses) ──
-        const WALLETS = {
+        // ═══ Wallet Addresses ═══
+        var WALLETS = {
             monero: 'YOUR_XMR_WALLET_ADDRESS_HERE',
             bitcoin: 'YOUR_BTC_WALLET_ADDRESS_HERE'
         };
 
         function truncateAddr(addr) {
-            if (!addr || addr.includes('YOUR_')) return 'Coming soon';
+            if (!addr || addr.indexOf('YOUR_') !== -1) return 'Coming soon';
             return addr.substring(0, 8) + '...' + addr.substring(addr.length - 6);
         }
 
-        // Initialize truncated addresses
         document.getElementById('s-xmr-addr').textContent = truncateAddr(WALLETS.monero);
         document.getElementById('s-btc-addr').textContent = truncateAddr(WALLETS.bitcoin);
         document.getElementById('se-xmr-addr').textContent = truncateAddr(WALLETS.monero);
         document.getElementById('se-btc-addr').textContent = truncateAddr(WALLETS.bitcoin);
 
-        // ── Tab switching ──
+        // ═══ Falling Petals ═══
+        (function() {
+            var canvas = document.getElementById('petalCanvas'); var ctx = canvas.getContext('2d'); var petals = []; var W, H;
+            function resize() { W = canvas.width = window.innerWidth; H = canvas.height = window.innerHeight; }
+            resize(); window.addEventListener('resize', resize);
+            function createPetal() { return { x: Math.random() * W, y: -20, size: 4 + Math.random() * 8, speedY: 0.5 + Math.random() * 1.5, speedX: -0.5 + Math.random() * 1, rotation: Math.random() * Math.PI * 2, rotSpeed: -0.02 + Math.random() * 0.04, opacity: 0.15 + Math.random() * 0.35, sway: Math.random() * Math.PI * 2, swaySpeed: 0.01 + Math.random() * 0.02 }; }
+            for (var i = 0; i < 40; i++) { var p = createPetal(); p.y = Math.random() * H; petals.push(p); }
+            function drawPetal(p) { ctx.save(); ctx.translate(p.x, p.y); ctx.rotate(p.rotation); ctx.globalAlpha = p.opacity; var grad = ctx.createRadialGradient(0, 0, 0, 0, 0, p.size); grad.addColorStop(0, '#f0d860'); grad.addColorStop(0.5, '#d4af37'); grad.addColorStop(1, 'rgba(212, 175, 55, 0.3)'); ctx.fillStyle = grad; ctx.beginPath(); ctx.moveTo(0, -p.size); ctx.bezierCurveTo(p.size * 0.6, -p.size * 0.5, p.size * 0.6, p.size * 0.5, 0, p.size); ctx.bezierCurveTo(-p.size * 0.6, p.size * 0.5, -p.size * 0.6, -p.size * 0.5, 0, -p.size); ctx.fill(); ctx.strokeStyle = 'rgba(212, 175, 55, 0.4)'; ctx.lineWidth = 0.5; ctx.stroke(); ctx.restore(); }
+            function animate() { ctx.clearRect(0, 0, W, H); petals.forEach(function(p, i) { p.sway += p.swaySpeed; p.x += p.speedX + Math.sin(p.sway) * 0.5; p.y += p.speedY; p.rotation += p.rotSpeed; if (p.y > H + 20) { petals[i] = createPetal(); } if (p.x < -20) p.x = W + 20; if (p.x > W + 20) p.x = -20; drawPetal(p); }); requestAnimationFrame(animate); }
+            animate();
+        })();
+
+        // ═══ Tab Switching ═══
         function switchTab(tabName) {
-            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-            document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+            document.querySelectorAll('.tab').forEach(function(t) { t.classList.remove('active'); });
+            document.querySelectorAll('.tab-content').forEach(function(c) { c.classList.remove('active'); });
             document.querySelector('[data-tab="' + tabName + '"]').classList.add('active');
             document.getElementById('tab-' + tabName).classList.add('active');
             document.getElementById('errorBanner').classList.remove('visible');
         }
 
-        // ── Crypto selection ──
+        // ═══ Crypto Selection ═══
         function selectCrypto(el, prefix) {
-            const parent = el.parentElement;
-            parent.querySelectorAll('.crypto-option').forEach(o => o.classList.remove('selected'));
+            var parent = el.parentElement;
+            parent.querySelectorAll('.crypto-option').forEach(function(o) { o.classList.remove('selected'); });
             el.classList.add('selected');
-            const type = el.getAttribute('data-type');
+            var type = el.getAttribute('data-type');
             document.getElementById(prefix + '-crypto-type').value = type;
-            const walletDisplay = document.getElementById(prefix + '-wallet-display');
-            const walletAddr = document.getElementById(prefix + '-wallet-addr');
-            if (WALLETS[type] && !WALLETS[type].includes('YOUR_')) {
+            var walletDisplay = document.getElementById(prefix + '-wallet-display');
+            var walletAddr = document.getElementById(prefix + '-wallet-addr');
+            if (WALLETS[type] && WALLETS[type].indexOf('YOUR_') === -1) {
                 walletAddr.textContent = WALLETS[type];
                 walletDisplay.classList.add('visible');
             } else {
@@ -420,17 +538,17 @@
             }
         }
 
-        // ── Copy wallet address ──
+        // ═══ Copy Wallet ═══
         function copyWallet(el) {
-            navigator.clipboard.writeText(el.textContent).then(() => {
-                const original = el.textContent;
+            navigator.clipboard.writeText(el.textContent).then(function() {
+                var original = el.textContent;
                 el.textContent = 'Copied!';
-                setTimeout(() => { el.textContent = original; }, 1500);
+                setTimeout(function() { el.textContent = original; }, 1500);
             });
         }
 
-        // ── URL error params ──
-        const urlParams = new URLSearchParams(window.location.search);
+        // ═══ URL Error Params ═══
+        var urlParams = new URLSearchParams(window.location.search);
         if (urlParams.get('reason') === 'validation') {
             document.getElementById('errorBanner').textContent = 'Please check your inputs and try again.';
             document.getElementById('errorBanner').classList.add('visible');
@@ -440,76 +558,42 @@
             document.getElementById('errorBanner').classList.add('visible');
         }
 
-        // ── Form validation ──
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        const usernameRegex = /^[A-Za-z0-9_]+$/;
+        // ═══ Form Validation ═══
+        var emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        var usernameRegex = /^[A-Za-z0-9_]+$/;
 
         function validateField(groupId, condition) {
-            const group = document.getElementById(groupId);
-            if (condition) {
-                group.classList.remove('has-error');
-                return true;
-            } else {
-                group.classList.add('has-error');
-                return false;
-            }
+            var group = document.getElementById(groupId);
+            if (condition) { group.classList.remove('has-error'); return true; }
+            else { group.classList.add('has-error'); return false; }
         }
 
-        // Support form
         document.getElementById('form-support').addEventListener('submit', function(e) {
-            let valid = true;
-            const banner = document.getElementById('errorBanner');
-            banner.classList.remove('visible');
-
-            valid &= validateField('s-name-group', document.getElementById('s-name').value.trim().length > 0);
-            valid &= validateField('s-email-group', emailRegex.test(document.getElementById('s-email').value.trim()));
-            valid &= validateField('s-amount-group', parseFloat(document.getElementById('s-amount').value) >= 1);
-
-            const cryptoType = document.getElementById('s-crypto-type').value;
-            if (!cryptoType) {
-                banner.textContent = 'Please select a cryptocurrency.';
-                banner.classList.add('visible');
-                valid = false;
-            }
-
+            var valid = true; var banner = document.getElementById('errorBanner'); banner.classList.remove('visible');
+            valid = validateField('s-name-group', document.getElementById('s-name').value.trim().length > 0) && valid;
+            valid = validateField('s-email-group', emailRegex.test(document.getElementById('s-email').value.trim())) && valid;
+            valid = validateField('s-amount-group', parseFloat(document.getElementById('s-amount').value) >= 1) && valid;
+            var cryptoType = document.getElementById('s-crypto-type').value;
+            if (!cryptoType) { banner.textContent = 'Please select a cryptocurrency.'; banner.classList.add('visible'); valid = false; }
             if (!valid) e.preventDefault();
         });
 
-        // Seedling form
         document.getElementById('form-seedling').addEventListener('submit', function(e) {
-            let valid = true;
-            const banner = document.getElementById('errorBanner');
-            banner.classList.remove('visible');
-
-            valid &= validateField('se-name-group', document.getElementById('se-name').value.trim().length > 0);
-            valid &= validateField('se-email-group', emailRegex.test(document.getElementById('se-email').value.trim()));
-            valid &= validateField('se-username-group',
-                document.getElementById('se-username').value.trim().length >= 3 &&
-                usernameRegex.test(document.getElementById('se-username').value.trim()));
-
-            const cryptoType = document.getElementById('se-crypto-type').value;
-            if (!cryptoType) {
-                banner.textContent = 'Please select a cryptocurrency.';
-                banner.classList.add('visible');
-                valid = false;
-            }
-
+            var valid = true; var banner = document.getElementById('errorBanner'); banner.classList.remove('visible');
+            valid = validateField('se-name-group', document.getElementById('se-name').value.trim().length > 0) && valid;
+            valid = validateField('se-email-group', emailRegex.test(document.getElementById('se-email').value.trim())) && valid;
+            valid = validateField('se-username-group', document.getElementById('se-username').value.trim().length >= 3 && usernameRegex.test(document.getElementById('se-username').value.trim())) && valid;
+            var cryptoType = document.getElementById('se-crypto-type').value;
+            if (!cryptoType) { banner.textContent = 'Please select a cryptocurrency.'; banner.classList.add('visible'); valid = false; }
             if (!valid) e.preventDefault();
         });
 
-        // Code form
         document.getElementById('form-code').addEventListener('submit', function(e) {
-            let valid = true;
-            const banner = document.getElementById('errorBanner');
-            banner.classList.remove('visible');
-
-            valid &= validateField('c-code-group', document.getElementById('c-code').value.trim().length >= 4);
-            valid &= validateField('c-name-group', document.getElementById('c-name').value.trim().length > 0);
-            valid &= validateField('c-email-group', emailRegex.test(document.getElementById('c-email').value.trim()));
-            valid &= validateField('c-username-group',
-                document.getElementById('c-username').value.trim().length >= 3 &&
-                usernameRegex.test(document.getElementById('c-username').value.trim()));
-
+            var valid = true; var banner = document.getElementById('errorBanner'); banner.classList.remove('visible');
+            valid = validateField('c-code-group', document.getElementById('c-code').value.trim().length >= 4) && valid;
+            valid = validateField('c-name-group', document.getElementById('c-name').value.trim().length > 0) && valid;
+            valid = validateField('c-email-group', emailRegex.test(document.getElementById('c-email').value.trim())) && valid;
+            valid = validateField('c-username-group', document.getElementById('c-username').value.trim().length >= 3 && usernameRegex.test(document.getElementById('c-username').value.trim())) && valid;
             if (!valid) e.preventDefault();
         });
     </script>
