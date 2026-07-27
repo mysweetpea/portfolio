@@ -170,11 +170,38 @@
             document.getElementById('s-submit').disabled = !valid;
         }
         document.getElementById('s-submit').addEventListener('click', function() {
-            this.textContent = 'Submitting...'; this.disabled = true;
-            setTimeout(function() {
-                document.getElementById('successMsg').classList.add('show');
-                document.querySelector('.card').style.display = 'none';
-                window.scrollTo({ top: 0, behavior: 'smooth' });
+            var btn = this;
+            btn.textContent = 'Submitting...'; btn.disabled = true;
+            var payload = {
+                service_name: document.getElementById('s-name').value.trim(),
+                category: document.getElementById('s-category').value.trim(),
+                reason: document.getElementById('s-reason').value.trim(),
+                your_name: document.getElementById('s-yourname').value.trim() || '',
+                your_email: document.getElementById('s-youremail') ? document.getElementById('s-youremail').value.trim() : ''
+            };
+            fetch('https://subscribe.mysweetpea.cc/webhook/suggest', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            })
+            .then(function(r) { return r.json(); })
+            .then(function(data) {
+                if (data.ok) {
+                    document.getElementById('successMsg').classList.add('show');
+                    document.querySelector('.card').style.display = 'none';
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                } else {
+                    btn.textContent = data.msg || 'Submission failed';
+                    btn.disabled = false;
+                    setTimeout(function() { btn.textContent = 'Submit Suggestion'; }, 3000);
+                }
+            })
+            .catch(function(err) {
+                btn.textContent = 'Network error. Try again.';
+                btn.disabled = false;
+                setTimeout(function() { btn.textContent = 'Submit Suggestion'; }, 3000);
+            });
+        });
             }, 1500);
         });
         (function() { var c=document.getElementById('petalCanvas'),ctx=c.getContext('2d'),p=[],W,H; function r(){W=c.width=window.innerWidth;H=c.height=window.innerHeight;} r(); window.addEventListener('resize',r); function cp(){return{x:Math.random()*W,y:-20,size:4+Math.random()*8,sY:0.5+Math.random()*1.5,sX:-0.5+Math.random()*1,rot:Math.random()*Math.PI*2,rS:-0.02+Math.random()*0.04,op:0.12+Math.random()*0.25,sw:Math.random()*Math.PI*2,swS:0.01+Math.random()*0.02};} for(var i=0;i<40;i++){var pt=cp();pt.y=Math.random()*H;p.push(pt);} function dp(pt){ctx.save();ctx.translate(pt.x,pt.y);ctx.rotate(pt.rot);ctx.globalAlpha=pt.op;var g=ctx.createRadialGradient(0,0,0,0,0,pt.size);g.addColorStop(0,'#F0F8F6');g.addColorStop(0.5,'#5EB8A8');g.addColorStop(1,'rgba(94,184,168,0.3)');ctx.fillStyle=g;ctx.beginPath();ctx.moveTo(0,-pt.size);ctx.bezierCurveTo(pt.size*0.6,-pt.size*0.5,pt.size*0.6,pt.size*0.5,0,pt.size);ctx.bezierCurveTo(-pt.size*0.6,pt.size*0.5,-pt.size*0.6,-pt.size*0.5,0,-pt.size);ctx.fill();ctx.strokeStyle='rgba(94,184,168,0.4)';ctx.lineWidth=0.5;ctx.stroke();ctx.restore();} function a(){ctx.clearRect(0,0,W,H);for(var i=0;i<p.length;i++){var pt=p[i];pt.sw+=pt.swS;pt.x+=pt.sX+Math.sin(pt.sw)*0.5;pt.y+=pt.sY;pt.rot+=pt.rS;if(pt.y>H+20)p[i]=cp();if(pt.x<-20)pt.x=W+20;if(pt.x>W+20)pt.x=-20;dp(pt);}requestAnimationFrame(a);} a(); })();
