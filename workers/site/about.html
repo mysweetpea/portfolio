@@ -7,174 +7,137 @@
     <link rel="icon" type="image/svg+xml" href="/logo-favicon.svg">
     <style>
         *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
-
         :root {
             --bg: #0A1214; --primary: #5EB8A8; --primary-dim: #3E8E86; --primary-glow: rgba(94, 184, 168, 0.15);
-            --text: #F0F8F6; --text-dim: #7A9B95; --text-faint: #4A6B65;
-            --border: rgba(94, 184, 168, 0.08); --border-gold: rgba(94, 184, 168, 0.25);
-            --radius: 14px; --radius-sm: 8px; --transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            --ice: #5EB8E8; --sage: #5ED39E; --teal: #5EB8A8;
+            --primary-bright: #7FD4C5; --text: #F0F8F6; --text-dim: #7A9B95; --text-faint: #4A6B65;
+            --border: rgba(94, 184, 168, 0.08); --border-primary: rgba(94, 184, 168, 0.25);
+            --radius: 16px; --radius-sm: 10px; --transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
         }
         html { scroll-behavior: smooth; }
-        body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; line-height: 1.6; overflow-x: hidden; }
+        body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; line-height: 1.7; overflow-x: hidden; }
+        .scroll-progress { position: fixed; top: 0; left: 0; height: 3px; width: 0%; background: linear-gradient(90deg, var(--primary), var(--primary-bright)); z-index: 100; transition: width 0.1s; box-shadow: 0 0 10px var(--primary-glow); }
         #petalCanvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; pointer-events: none; }
         .content-wrapper { position: relative; z-index: 1; }
-        .bg-gradient { position: fixed; top: 0; left: 0; right: 0; bottom: 0; z-index: -1; background: radial-gradient(ellipse 80% 50% at 50% -20%, rgba(94, 184, 168, 0.08), transparent), radial-gradient(ellipse 60% 40% at 80% 100%, rgba(94, 184, 168, 0.04), transparent), #0A1214; }
+        .bg-gradient { position: fixed; top: 0; left: 0; right: 0; bottom: 0; z-index: -1; background: radial-gradient(ellipse 80% 50% at 50% -20%, rgba(94, 184, 168, 0.08), transparent), radial-gradient(ellipse 60% 40% at 80% 100%, rgba(94, 211, 158, 0.04), transparent), var(--bg); }
         @keyframes shimmer { 0% { background-position: -200% center; } 100% { background-position: 200% center; } }
         @keyframes float3D { 0%, 100% { transform: translateY(0) rotateX(0) rotateY(0); } 50% { transform: translateY(-10px) rotateX(2deg) rotateY(2deg); } }
-        @keyframes pulseGlow { 0%, 100% { box-shadow: 0 0 20px rgba(94, 184, 168, 0.08); } 50% { box-shadow: 0 0 40px rgba(94, 184, 168, 0.18); } }
-        .glass-text { background: linear-gradient(135deg, rgba(255,255,255,0.9) 0%, rgba(143,175,181,0.8) 30%, rgba(255,255,255,0.6) 50%, rgba(143,175,181,0.8) 70%, rgba(255,255,255,0.9) 100%); background-size: 200% auto; -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; text-shadow: 0 0 30px rgba(94, 184, 168, 0.15); animation: shimmer 6s linear infinite; filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.3)); }
-        .top-nav { position: fixed; top: 20px; right: 20px; z-index: 50; display: flex; gap: 8px; align-items: center; }
-        .nav-btn { padding: 8px 16px; background: rgba(20, 20, 20, 0.8); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border: 1px solid var(--border-primary); border-radius: var(--radius-sm); color: var(--primary); font-size: 0.82rem; font-weight: 600; text-decoration: none; transition: var(--transition); }
-        .nav-btn:hover { background: rgba(30, 30, 30, 0.9); border-color: var(--primary); transform: translateY(-2px); }
-        .float-3d { position: absolute; pointer-events: none; opacity: 0.06; z-index: 0; }
-        .float-3d svg { width: 100%; height: 100%; }
-        .float-3d.f1 { top: 15%; right: 5%; width: 120px; height: 120px; animation: float3D 8s ease-in-out infinite; }
-        .float-3d.f2 { top: 45%; left: 3%; width: 80px; height: 80px; animation: float3D 10s ease-in-out infinite reverse; }
-        .float-3d.f3 { top: 70%; right: 8%; width: 100px; height: 100px; animation: float3D 7s ease-in-out infinite 1s; }
-        .page-footer { text-align: center; padding: 40px 20px; font-size: 0.85rem; color: var(--text-faint); border-top: 1px solid rgba(255, 255, 255, 0.04); }
+        .glass-text { background: linear-gradient(135deg, rgba(240,248,246,0.95) 0%, rgba(94,184,168,0.8) 30%, rgba(240,248,246,0.6) 50%, rgba(94,184,168,0.8) 70%, rgba(240,248,246,0.95) 100%); background-size: 200% auto; -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; text-shadow: 0 0 30px rgba(94, 184, 168, 0.15); animation: shimmer 6s linear infinite; filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.3)); }
+        .top-nav { position: fixed; top: 0; left: 0; right: 0; z-index: 50; display: flex; justify-content: space-between; align-items: center; padding: 16px 24px; background: rgba(10, 18, 20, 0.6); backdrop-filter: blur(20px) saturate(1.5); -webkit-backdrop-filter: blur(20px) saturate(1.5); border-bottom: 1px solid var(--border); transition: var(--transition); }
+        .nav-logo { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+        .nav-logo img { width: 32px; height: 32px; filter: drop-shadow(0 0 8px var(--primary-glow)); }
+        .nav-logo span { font-size: 1rem; font-weight: 700; color: var(--text); letter-spacing: -0.3px; }
+        .nav-links { display: flex; gap: 6px; align-items: center; }
+        .nav-btn { padding: 8px 16px; background: transparent; border: 1px solid transparent; border-radius: var(--radius-sm); color: var(--text-dim); font-size: 0.85rem; font-weight: 500; text-decoration: none; transition: var(--transition); cursor: pointer; }
+        .nav-btn:hover { color: var(--primary); background: var(--primary-glow); border-color: var(--border-primary); transform: translateY(-1px); }
+        .nav-btn.active { color: var(--primary); border-color: var(--border-primary); }
+        .hero { text-align: center; padding: 120px 24px 20px; }
+        .hero img.logo { width: 160px; height: 160px; margin-bottom: 16px; filter: drop-shadow(0 0 30px rgba(94, 184, 168, 0.25)); animation: float3D 6s ease-in-out infinite; }
+        .hero h1 { font-size: 2rem; font-weight: 700; margin-bottom: 8px; }
+        .hero p { font-size: 1rem; color: var(--text-dim); }
+        .content-section { max-width: 700px; margin: 0 auto; padding: 40px 24px; }
+        .content-section h2 { font-size: 1.4rem; font-weight: 700; margin-bottom: 16px; color: var(--primary); }
+        .content-section p { font-size: 0.92rem; color: var(--text-dim); margin-bottom: 16px; line-height: 1.8; }
+        .content-section ul { list-style: none; margin-bottom: 16px; }
+        .content-section ul li { font-size: 0.88rem; color: var(--text-dim); margin-bottom: 10px; padding-left: 24px; position: relative; line-height: 1.6; }
+        .content-section ul li::before { content: '\2713'; position: absolute; left: 0; color: var(--primary); font-weight: 700; }
+        .card { background: rgba(15, 26, 28, 0.5); backdrop-filter: blur(16px) saturate(1.2); -webkit-backdrop-filter: blur(16px) saturate(1.2); border: 1px solid var(--border); border-radius: var(--radius); padding: 32px 28px; margin-bottom: 32px; box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3); transition: var(--transition); }
+        .card:hover { border-color: var(--border-primary); }
+        .github-links { display: flex; gap: 16px; flex-wrap: wrap; margin-top: 20px; }
+        .github-link { flex: 1; min-width: 200px; display: flex; align-items: center; gap: 12px; padding: 16px 20px; background: rgba(10, 18, 20, 0.6); border: 1px solid var(--border); border-radius: var(--radius-sm); text-decoration: none; color: var(--text); transition: var(--transition); }
+        .github-link:hover { border-color: var(--border-primary); background: rgba(15, 26, 28, 0.8); transform: translateY(-2px); }
+        .github-link .icon { font-size: 1.5rem; }
+        .github-link .info { display: flex; flex-direction: column; }
+        .github-link .repo { font-size: 0.9rem; font-weight: 600; color: var(--primary); }
+        .github-link .desc { font-size: 0.78rem; color: var(--text-dim); }
+        .cta-section { max-width: 700px; margin: 0 auto 80px; padding: 24px; text-align: center; }
+        .cta-card { background: rgba(15, 26, 28, 0.6); backdrop-filter: blur(20px) saturate(1.3); -webkit-backdrop-filter: blur(20px) saturate(1.3); border: 1px solid var(--border-primary); border-radius: var(--radius); padding: 40px; position: relative; overflow: hidden; box-shadow: 0 8px 40px rgba(0, 0, 0, 0.3); }
+        .cta-card h2 { font-size: 1.5rem; margin-bottom: 12px; }
+        .cta-card p { font-size: 0.92rem; color: var(--text-dim); margin-bottom: 24px; }
+        .cta-btn { display: inline-block; padding: 14px 32px; border-radius: var(--radius-sm); font-size: 0.95rem; font-weight: 600; text-decoration: none; transition: var(--transition); background: linear-gradient(135deg, var(--primary), var(--primary-dim)); color: var(--bg); }
+        .cta-btn:hover { transform: scale(1.05); box-shadow: 0 4px 20px rgba(94, 184, 168, 0.3); }
+        .page-footer { text-align: center; padding: 40px 20px; font-size: 0.85rem; color: var(--text-faint); border-top: 1px solid var(--border); }
         .page-footer a { color: var(--primary); text-decoration: none; transition: var(--transition); }
         .page-footer a:hover { text-decoration: underline; }
         .page-footer .footer-links { display: flex; justify-content: center; gap: 24px; margin-bottom: 12px; flex-wrap: wrap; }
-        @media (max-width: 768px) { .float-3d { display: none; } .top-nav { top: 10px; right: 10px; gap: 4px; } .nav-btn { padding: 6px 10px; font-size: 0.72rem; } }
-
-        .hero { text-align: center; padding: 80px 20px 30px; }
-        .hero img.logo { width: 180px; height: 180px; margin-bottom: 16px; filter: drop-shadow(0 0 25px rgba(94, 184, 168, 0.25)); animation: float3D 6s ease-in-out infinite; }
-        .hero h1 { font-size: 2.2rem; font-weight: 700; margin-bottom: 8px; }
-        .hero p { font-size: 1rem; color: #7A9B95; max-width: 500px; margin: 0 auto; }
-        .content-section { max-width: 720px; margin: 0 auto 40px; padding: 20px; }
-        .content-card { background: rgba(20, 20, 20, 0.5); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border: 1px solid var(--border); border-radius: var(--radius); padding: 32px; margin-bottom: 20px; transition: var(--transition); }
-        .content-card:hover { border-color: var(--border-primary); }
-        .content-card h2 { font-size: 1.3rem; color: var(--primary); margin-bottom: 16px; font-weight: 700; }
-        .content-card p { font-size: 0.9rem; color: #7A9B95; line-height: 1.7; margin-bottom: 14px; }
-        .content-card ul { list-style: none; margin-bottom: 14px; }
-        .content-card ul li { font-size: 0.86rem; color: #7A9B95; margin-bottom: 8px; padding-left: 20px; position: relative; }
-        .content-card ul li::before { content: '\2022'; position: absolute; left: 0; color: var(--primary); font-size: 1.2em; }
-        .content-card .highlight { color: var(--primary); font-weight: 600; }
-        .github-links { display: flex; gap: 16px; flex-wrap: wrap; margin-top: 20px; }
-        .github-link { display: flex; align-items: center; gap: 10px; padding: 14px 20px; background: rgba(20, 20, 20, 0.6); border: 1px solid var(--border); border-radius: var(--radius-sm); text-decoration: none; color: var(--text); transition: var(--transition); }
-        .github-link:hover { border-color: var(--border-primary); background: rgba(28, 28, 28, 0.8); transform: translateY(-2px); }
-        .github-link svg { width: 24px; height: 24px; fill: var(--primary); }
-        .github-link .info h4 { font-size: 0.88rem; color: var(--primary); font-weight: 600; }
-        .github-link .info p { font-size: 0.76rem; color: #7A9B95; margin: 0; }
-        .vine-btn-wrapper { position: relative; display: inline-block; }
-        .vine-btn-wrapper svg { position: absolute; top: -8px; left: -12px; width: calc(100% + 24px); height: calc(100% + 20px); pointer-events: none; opacity: 0; transition: opacity 0.4s ease; z-index: 2; }
-        .vine-btn-wrapper:hover svg { opacity: 1; }
-        .btn { position: relative; z-index: 1; display: inline-block; padding: 12px 28px; border: 1px solid rgba(94, 184, 168, 0.2); border-radius: var(--radius-sm); font-size: 0.92rem; font-weight: 600; text-decoration: none; transition: var(--transition); cursor: pointer; background: rgba(94, 184, 168, 0.05); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); color: var(--text); box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.05), 0 4px 16px rgba(0, 0, 0, 0.2); }
-        .btn:hover { background: rgba(94, 184, 168, 0.12); border-color: rgba(94, 184, 168, 0.5); box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.08), 0 4px 20px rgba(94, 184, 168, 0.15); transform: scale(1.02); }
-@media (max-width: 768px) { .hero h1 { font-size: 1.6rem; } .hero img.logo { width: 120px; height: 120px; } .content-card { padding: 24px; } }
+        .reveal { opacity: 0; transform: translateY(40px); transition: opacity 0.8s ease, transform 0.8s ease; }
+        .reveal.visible { opacity: 1; transform: translateY(0); }
+        .reveal-delay-1 { transition-delay: 0.1s; }
+        .reveal-delay-2 { transition-delay: 0.2s; }
+        .float-3d { position: absolute; pointer-events: none; opacity: 0.05; z-index: 0; }
+        .float-3d svg { width: 100%; height: 100%; }
+        .float-3d.f1 { top: 15%; right: 5%; width: 120px; height: 120px; animation: float3D 8s ease-in-out infinite; }
+        .float-3d.f2 { top: 45%; left: 3%; width: 80px; height: 80px; animation: float3D 10s ease-in-out infinite reverse; }
+        @media (max-width: 768px) { .top-nav { padding: 12px 16px; flex-direction: column; gap: 8px; } .nav-links { flex-wrap: wrap; justify-content: center; gap: 4px; } .nav-btn { padding: 6px 12px; font-size: 0.78rem; } .hero { padding: 100px 20px 10px; } .hero h1 { font-size: 1.6rem; } .hero img.logo { width: 120px; height: 120px; } .github-links { flex-direction: column; } .cta-card { padding: 28px 20px; } .float-3d { display: none; } }
     </style>
 </head>
 <body>
+    <div class="scroll-progress" id="scrollProgress"></div>
     <div class="bg-gradient"></div>
     <canvas id="petalCanvas"></canvas>
-
     <div class="float-3d f1"><svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M50 10 C35 15, 28 30, 32 48 C36 60, 48 68, 50 70 C52 68, 64 60, 68 48 C72 30, 65 15, 50 10" fill="#5EB8A8" opacity="0.8"/><path d="M50 25 C44 28, 40 38, 44 48 C47 55, 50 58, 50 58 C50 58, 53 55, 56 48 C60 38, 56 28, 50 25" fill="#5EB8A8" opacity="0.5"/><path d="M50 10 C42 12, 38 22, 42 35 C45 42, 50 45, 50 45 C50 45, 55 42, 58 35 C62 22, 58 12, 50 10" fill="#5EB8A8" opacity="0.6"/><path d="M50 45 C45 48, 42 55, 45 62 C48 67, 50 68, 50 68 C50 68, 52 67, 55 62 C58 55, 55 48, 50 45" fill="#5EB8A8" opacity="0.4"/><line x1="50" y1="68" x2="50" y2="88" stroke="#5EB8A8" stroke-width="2"/><path d="M45 80 Q40 76, 37 82" stroke="#5EB8A8" stroke-width="1.5" fill="none"/><path d="M55 80 Q60 76, 63 82" stroke="#5EB8A8" stroke-width="1.5" fill="none"/><circle cx="37" cy="82" r="2" fill="#5EB8A8" opacity="0.6"/><circle cx="63" cy="82" r="2" fill="#5EB8A8" opacity="0.6"/></svg></div>
     <div class="float-3d f2"><svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M50 10 C35 15, 28 30, 32 48 C36 60, 48 68, 50 70 C52 68, 64 60, 68 48 C72 30, 65 15, 50 10" fill="#5EB8A8" opacity="0.8"/><path d="M50 25 C44 28, 40 38, 44 48 C47 55, 50 58, 50 58 C50 58, 53 55, 56 48 C60 38, 56 28, 50 25" fill="#5EB8A8" opacity="0.5"/><path d="M50 10 C42 12, 38 22, 42 35 C45 42, 50 45, 50 45 C50 45, 55 42, 58 35 C62 22, 58 12, 50 10" fill="#5EB8A8" opacity="0.6"/><path d="M50 45 C45 48, 42 55, 45 62 C48 67, 50 68, 50 68 C50 68, 52 67, 55 62 C58 55, 55 48, 50 45" fill="#5EB8A8" opacity="0.4"/><line x1="50" y1="68" x2="50" y2="88" stroke="#5EB8A8" stroke-width="2"/><path d="M45 80 Q40 76, 37 82" stroke="#5EB8A8" stroke-width="1.5" fill="none"/><path d="M55 80 Q60 76, 63 82" stroke="#5EB8A8" stroke-width="1.5" fill="none"/><circle cx="37" cy="82" r="2" fill="#5EB8A8" opacity="0.6"/><circle cx="63" cy="82" r="2" fill="#5EB8A8" opacity="0.6"/></svg></div>
-    <div class="float-3d f3"><svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M50 10 C35 15, 28 30, 32 48 C36 60, 48 68, 50 70 C52 68, 64 60, 68 48 C72 30, 65 15, 50 10" fill="#5EB8A8" opacity="0.8"/><path d="M50 25 C44 28, 40 38, 44 48 C47 55, 50 58, 50 58 C50 58, 53 55, 56 48 C60 38, 56 28, 50 25" fill="#5EB8A8" opacity="0.5"/><path d="M50 10 C42 12, 38 22, 42 35 C45 42, 50 45, 50 45 C50 45, 55 42, 58 35 C62 22, 58 12, 50 10" fill="#5EB8A8" opacity="0.6"/><path d="M50 45 C45 48, 42 55, 45 62 C48 67, 50 68, 50 68 C50 68, 52 67, 55 62 C58 55, 55 48, 50 45" fill="#5EB8A8" opacity="0.4"/><line x1="50" y1="68" x2="50" y2="88" stroke="#5EB8A8" stroke-width="2"/><path d="M45 80 Q40 76, 37 82" stroke="#5EB8A8" stroke-width="1.5" fill="none"/><path d="M55 80 Q60 76, 63 82" stroke="#5EB8A8" stroke-width="1.5" fill="none"/><circle cx="37" cy="82" r="2" fill="#5EB8A8" opacity="0.6"/><circle cx="63" cy="82" r="2" fill="#5EB8A8" opacity="0.6"/></svg></div>
-
-    <div class="top-nav">
-        <a href="/index.html" class="nav-btn">Home</a>
-        <a href="/pricing.html" class="nav-btn">Pricing</a>
-        <a href="/support.html" class="nav-btn">Support</a>
-        <a href="/about.html" class="nav-btn">About</a>
-        <a href="/suggest.html" class="nav-btn">Suggest</a>
-    </div>
-
+    <nav class="top-nav">
+        <a href="/index.html" class="nav-logo"><img src="/logo.svg" alt="MySweetPea"><span>MySweetPea</span></a>
+        <div class="nav-links"><a href="/index.html" class="nav-btn">Home</a><a href="/pricing.html" class="nav-btn">Pricing</a><a href="/support.html" class="nav-btn">Support</a><a href="/about.html" class="nav-btn active">About</a><a href="/suggest.html" class="nav-btn">Suggest</a></div>
+    </nav>
     <div class="content-wrapper">
-        <div class="hero">
-            <img src="/logo.svg" alt="MySweetPea" class="logo">
-            <h1 class="glass-text">About MySweetPea</h1>
-            <p>Self-hosted services for a privacy-first community.</p>
-        </div>
-
+        <div class="hero"><img src="/logo.svg" alt="MySweetPea" class="logo"><h1 class="glass-text">About MySweetPea</h1><p>Self-hosted services for a privacy-first community.</p></div>
         <div class="content-section">
-            <div class="content-card">
-                <h2 class="glass-text">Our Mission</h2>
-                <p>I care deeply about privacy. In today's world, your personal data is the product. Companies track what you do, what you watch, who you talk to, and what you search for. I wanted to change that. MySweetPea is my way of giving you private, secure alternatives to the services you use every day &#8212; without the tracking, the ads, or the corporate data mining.</p>
+            <div class="card reveal">
+                <h2>Our Mission</h2>
+                <p>I care deeply about privacy. In today's world, your personal data is the product. Companies track what you do, what you watch, who you talk to, and what you search for. I wanted to change that. MySweetPea is my way of giving you private, secure alternatives to the services you use every day — without the tracking, the ads, or the corporate data mining.</p>
                 <p>I also genuinely enjoy doing this. Building and maintaining this project is something I genuinely enjoy. Every service running here is one less reason to depend on a big tech company that does not have your best interests at heart.</p>
             </div>
-
-            <div class="content-card">
-                <h2 class="glass-text">Why Self-Hosting?</h2>
-                <p>I host everything <span class="highlight">locally on my own hardware</span>. I do not rent cloud servers from Amazon, Google, or Microsoft. The only external service is a small relay server that helps people access the media streaming from outside my home network.</p>
+            <div class="card reveal reveal-delay-1">
+                <h2>Why Self-Hosting?</h2>
+                <p>I host everything locally on my own hardware. I do not rent cloud servers from Amazon, Google, or Microsoft. The only external service is a small relay server that helps people access the media streaming from outside my home network.</p>
                 <p>This means:</p>
                 <ul>
-                    <li><span class="highlight">Full control</span> over the infrastructure and your data
-                    <li><span class="highlight">No third-party access</span> to your data &#8212; not even mine, since services like the password manager use encryption that even I cannot break</li>
-                    <li><span class="highlight">No vendor lock-in</span> &#8212; if I shut down tomorrow, you still have your data</li>
-                    <li><span class="highlight">Transparency</span> &#8212; all infrastructure code is public on GitHub for anyone to inspect</li>
+                    <li>Full control over the infrastructure and your data</li>
+                    <li>No third-party access to your data — not even mine, since services like the password manager use encryption that even I cannot break</li>
+                    <li>No vendor lock-in — if I shut down tomorrow, you still have your data</li>
+                    <li>Transparency — all infrastructure code is public on GitHub for anyone to inspect</li>
                 </ul>
             </div>
-
-            <div class="content-card">
-                <h2 class="glass-text">The Cost of Running MySweetPea</h2>
+            <div class="card reveal reveal-delay-2">
+                <h2>The Cost of Running MySweetPea</h2>
                 <p>Running these services is not free, which is why donations matter. Here are the main expenses:</p>
                 <ul>
-                    <li><span class="highlight">Electricity</span> &#8212; three servers running 24 hours a day, 7 days a week use a lot of power</li>
-                    <li><span class="highlight">Hardware</span> &#8212; the physical servers, networking equipment, and storage drives that need occasional upgrades</li>
-                    <li><span class="highlight">Internet bandwidth</span> &#8212; streaming movies and serving services to multiple users at once requires a fast, reliable connection</li>
-                    <li><span class="highlight">Domain registration</span> &#8212; the mysweetpea.cc web address needs to be renewed every year</li>
-                    <li><span class="highlight">Relay server</span> &#8212; a small server that helps people outside my home network access the media streaming</li>
+                    <li>Electricity — three servers running 24 hours a day, 7 days a week use a lot of power</li>
+                    <li>Hardware — the physical servers, networking equipment, and storage drives that need occasional upgrades</li>
+                    <li>Internet bandwidth — streaming movies and serving services to multiple users at once requires a fast, reliable connection</li>
+                    <li>Domain registration — the mysweetpea.cc web address needs to be renewed every year</li>
+                    <li>Relay server — a small server that helps people outside my home network access the media streaming</li>
                 </ul>
                 <p>Donations help cover these ongoing costs and fund future improvements and new services. Without community support, this project would not be sustainable. Every dollar helps keep MySweetPea running.</p>
             </div>
-
-            <div class="content-card">
-                <h2 class="glass-text">Open Source</h2>
+            <div class="card reveal">
+                <h2>Open Source</h2>
                 <p>Every service we run is open source, meaning the code is freely available for anyone to inspect. Our infrastructure code is public on GitHub, so you can see exactly how everything is set up and secured. No black boxes, no hidden tracking, full transparency.</p>
                 <div class="github-links">
-                    <a href="https://github.com/mysweetpea/homelab-k8s" target="_blank" class="github-link">
-                        <svg viewBox="0 0 24 24"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
-                        <div class="info"><h4>homelab-k8s</h4><p>All the code that runs the servers and services</p></div>
-                    </a>
-                    <a href="https://github.com/mysweetpea/portfolio" target="_blank" class="github-link">
-                        <svg viewBox="0 0 24 24"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
-                        <div class="info"><h4>portfolio</h4><p>The code for this website</p></div>
-                    </a>
+                    <a href="https://github.com/mysweetpea/homelab-k8s" target="_blank" class="github-link"><div class="icon">&#x1F5A5;</div><div class="info"><div class="repo">homelab-k8s</div><div class="desc">All the code that runs the servers and services</div></div></a>
+                    <a href="https://github.com/mysweetpea/portfolio" target="_blank" class="github-link"><div class="icon">&#x1F310;</div><div class="info"><div class="repo">portfolio</div><div class="desc">The code for this website</div></div></a>
                 </div>
             </div>
-
-            <div class="content-card" style="text-align: center;">
+        </div>
+        <div class="cta-section">
+            <div class="cta-card reveal">
                 <h2 class="glass-text">Support the Project</h2>
                 <p>If you believe in privacy-first, community-funded services, consider supporting MySweetPea with a donation.</p>
-                <div class="vine-btn-wrapper" style="margin-top: 16px;">
-                    <svg viewBox="0 0 200 60" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M10 30 Q30 10, 50 30 T90 30 T130 30 T170 30 T190 30" stroke="#5EB8A8" stroke-width="1.5" fill="none" opacity="0.6"/><path d="M10 30 Q30 50, 50 30 T90 30 T130 30 T170 30 T190 30" stroke="#5EB8A8" stroke-width="1" fill="none" opacity="0.4"/><circle cx="30" cy="18" r="3" fill="#5EB8A8" opacity="0.7"/><circle cx="70" cy="42" r="3" fill="#5EB8A8" opacity="0.7"/><circle cx="110" cy="18" r="3" fill="#5EB8A8" opacity="0.7"/><circle cx="150" cy="42" r="3" fill="#5EB8A8" opacity="0.7"/></svg>
-                    <a href="/support.html" class="btn">Donate Now</a>
-                </div>
+                <a href="/support.html" class="cta-btn">Donate Now</a>
             </div>
         </div>
-
-
-        <div style="height: 60px;"></div>
         <div class="page-footer">
-            <div class="footer-links">
-                <a href="/pricing.html">Pricing</a>
-                <a href="/support.html">Support</a>
-                <a href="/about.html">About Us</a>
-                <a href="/suggest.html">Suggest a Service</a>
-                <a href="mailto:support@mysweetpea.cc">Contact</a>
-            </div>
+            <div class="footer-links"><a href="/pricing.html">Pricing</a><a href="/support.html">Support</a><a href="/about.html">About Us</a><a href="/suggest.html">Suggest a Service</a><a href="mailto:support@mysweetpea.cc">Contact</a></div>
             <p>&copy; 2026 MySweetPea. Self-hosted with care.</p>
         </div>
-
     </div>
     <script>
-
-        (function() {
-            var canvas = document.getElementById('petalCanvas');
-            var ctx = canvas.getContext('2d');
-            var petals = [];
-            var W, H;
-            function resize() { W = canvas.width = window.innerWidth; H = canvas.height = window.innerHeight; }
-            resize(); window.addEventListener('resize', resize);
-            function createPetal() { return { x: Math.random() * W, y: -20, size: 4 + Math.random() * 8, speedY: 0.5 + Math.random() * 1.5, speedX: -0.5 + Math.random() * 1, rotation: Math.random() * Math.PI * 2, rotSpeed: -0.02 + Math.random() * 0.04, opacity: 0.15 + Math.random() * 0.35, sway: Math.random() * Math.PI * 2, swaySpeed: 0.01 + Math.random() * 0.02 }; }
-            for (var i = 0; i < 40; i++) { var p = createPetal(); p.y = Math.random() * H; petals.push(p); }
-            function drawPetal(p) { ctx.save(); ctx.translate(p.x, p.y); ctx.rotate(p.rotation); ctx.globalAlpha = p.opacity; var grad = ctx.createRadialGradient(0, 0, 0, 0, 0, p.size); grad.addColorStop(0, '#F0F8F6'); grad.addColorStop(0.5, '#5EB8A8'); grad.addColorStop(1, 'rgba(94, 184, 168, 0.3)'); ctx.fillStyle = grad; ctx.beginPath(); ctx.moveTo(0, -p.size); ctx.bezierCurveTo(p.size * 0.6, -p.size * 0.5, p.size * 0.6, p.size * 0.5, 0, p.size); ctx.bezierCurveTo(-p.size * 0.6, p.size * 0.5, -p.size * 0.6, -p.size * 0.5, 0, -p.size); ctx.fill(); ctx.strokeStyle = 'rgba(94, 184, 168, 0.4)'; ctx.lineWidth = 0.5; ctx.stroke(); ctx.restore(); }
-            function animate() { ctx.clearRect(0, 0, W, H); for (var i = 0; i < petals.length; i++) { var p = petals[i]; p.sway += p.swaySpeed; p.x += p.speedX + Math.sin(p.sway) * 0.5; p.y += p.speedY; p.rotation += p.rotSpeed; if (p.y > H + 20) { petals[i] = createPetal(); } if (p.x < -20) p.x = W + 20; if (p.x > W + 20) p.x = -20; drawPetal(p); } requestAnimationFrame(animate); }
-            animate();
-        })();
-
+        const sp = document.getElementById('scrollProgress');
+        window.addEventListener('scroll', function() { sp.style.width = (window.scrollY / (document.documentElement.scrollHeight - window.innerHeight)) * 100 + '%'; });
+        const ro = new IntersectionObserver(function(e) { e.forEach(function(en) { if (en.isIntersecting) { en.target.classList.add('visible'); ro.unobserve(en.target); } }); }, { threshold: 0.15 });
+        document.querySelectorAll('.reveal').forEach(function(el) { ro.observe(el); });
+        (function() { var c=document.getElementById('petalCanvas'),ctx=c.getContext('2d'),p=[],W,H; function r(){W=c.width=window.innerWidth;H=c.height=window.innerHeight;} r(); window.addEventListener('resize',r); function cp(){return{x:Math.random()*W,y:-20,size:4+Math.random()*8,sY:0.5+Math.random()*1.5,sX:-0.5+Math.random()*1,rot:Math.random()*Math.PI*2,rS:-0.02+Math.random()*0.04,op:0.12+Math.random()*0.25,sw:Math.random()*Math.PI*2,swS:0.01+Math.random()*0.02};} for(var i=0;i<40;i++){var pt=cp();pt.y=Math.random()*H;p.push(pt);} function dp(pt){ctx.save();ctx.translate(pt.x,pt.y);ctx.rotate(pt.rot);ctx.globalAlpha=pt.op;var g=ctx.createRadialGradient(0,0,0,0,0,pt.size);g.addColorStop(0,'#F0F8F6');g.addColorStop(0.5,'#5EB8A8');g.addColorStop(1,'rgba(94,184,168,0.3)');ctx.fillStyle=g;ctx.beginPath();ctx.moveTo(0,-pt.size);ctx.bezierCurveTo(pt.size*0.6,-pt.size*0.5,pt.size*0.6,pt.size*0.5,0,pt.size);ctx.bezierCurveTo(-pt.size*0.6,pt.size*0.5,-pt.size*0.6,-pt.size*0.5,0,-pt.size);ctx.fill();ctx.strokeStyle='rgba(94,184,168,0.4)';ctx.lineWidth=0.5;ctx.stroke();ctx.restore();} function a(){ctx.clearRect(0,0,W,H);for(var i=0;i<p.length;i++){var pt=p[i];pt.sw+=pt.swS;pt.x+=pt.sX+Math.sin(pt.sw)*0.5;pt.y+=pt.sY;pt.rot+=pt.rS;if(pt.y>H+20)p[i]=cp();if(pt.x<-20)pt.x=W+20;if(pt.x>W+20)pt.x=-20;dp(pt);}requestAnimationFrame(a);} a(); })();
     </script>
 </body>
 </html>
