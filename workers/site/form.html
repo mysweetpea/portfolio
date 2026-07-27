@@ -442,7 +442,7 @@
                     input.classList.add('valid'); icon.classList.add('show', 'valid'); icon.innerHTML = '&#x2713;';
                     hint.classList.remove('error'); hint.classList.add('success');
                     if (type === 'username') hint.textContent = 'Letters, numbers, underscores. Min 3 characters.';
-                    if (type === 'invitecode') hint.textContent = 'Valid invite code format.';
+                    if (type === 'invitecode') { hint.textContent = 'Checking invite code...'; checkInviteCodeServer(val); }
                     if (type === 'email') hint.textContent = 'Valid email address.';
                     if (type === 'name') hint.textContent = 'Looks good!';
                 } else {
@@ -476,18 +476,132 @@
             document.getElementById('hc-submit').disabled = !hcValid;
         }
 
-        // Submit handlers
+        // ═══════════════════════════════════════════════════════════
+        // WEBHOOK CONFIGURATION
+        // ═══════════════════════════════════════════════════════════
+        var WEBHOOK_BASE = 'https://subscribe.mysweetpea.cc/webhook';
+        var ENDPOINTS = {
+            donationRequest: WEBHOOK_BASE + '/donation-request',
+            redeemCode: WEBHOOK_BASE + '/redeem-code',
+            checkCode: WEBHOOK_BASE + '/check-code'
+        };
+
+        // ═══════════════════════════════════════════════════════════
+        // INVITE CODE SERVER-SIDE VALIDATION
+        // ═══════════════════════════════════════════════════════════
+        var codeCheckTimer = null;
+        function checkInviteCodeServer(code) {
+            clearTimeout(codeCheckTimer);
+            codeCheckTimer = setTimeout(function() {
+                fetch(ENDPOINTS.checkCode, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ code: code })
+                })
+                .then(function(r) { return r.json(); })
+                .then(function(data) {
+                    var input = document.getElementById('hc-code');
+                    var icon = document.getElementById('hc-code-icon');
+                    var hint = document.getElementById('hc-code-hint');
+                    if (input.value.trim() === code) {
+                        if (data.ok) {
+                            input.classList.remove('invalid');
+                            input.classList.add('valid');
+                            icon.classList.remove('invalid');
+                            icon.classList.add('show', 'valid');
+                            icon.innerHTML = '&#x2713;';
+                            hint.classList.remove('error');
+                            hint.classList.add('success');
+                            hint.textContent = 'Invite code verified!';
+                        } else {
+                            input.classList.remove('valid');
+                            input.classList.add('invalid');
+                            icon.classList.remove('valid');
+                            icon.classList.add('show', 'invalid');
+                            icon.innerHTML = '&#x2717;';
+                            hint.classList.remove('success');
+                            hint.classList.add('error');
+                            hint.textContent = data.msg || 'Invalid invite code.';
+                        }
+                        checkSubmitState();
+                    }
+                })
+                .catch(function() {});
+            }, 500);
+        }
+
+        // ═══════════════════════════════════════════════════════════
+        // SUBMIT HANDLERS
+        // ═══════════════════════════════════════════════════════════
         document.getElementById('ga-submit').addEventListener('click', function() {
-            this.textContent = 'Submitting...'; this.disabled = true;
-            setTimeout(function() {
-                window.location.href = '/success.html';
-            }, 1500);
+            var btn = this;
+            btn.textContent = 'Submitting...'; btn.disabled = true;
+            var payload = {
+                name: document.getElementById('ga-name').value.trim(),
+                email: document.getElementById('ga-email').value.trim(),
+                username: document.getElementById('ga-username').value.trim(),
+                crypto_type: currentCrypto,
+                tx_hash: document.getElementById('ga-txhash').value.trim() || ''
+            };
+            fetch(ENDPOINTS.donationRequest, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            })
+            .then(function(r) { return r.json(); })
+            .then(function(data) {
+                if (data.ok) {
+                    btn.classList.add('success');
+                    btn.textContent = '✓ Request Submitted!';
+                    setTimeout(function() {
+                        window.location.href = '/success.html?type=donation';
+                    }, 1500);
+                } else {
+                    btn.textContent = data.msg || 'Submission failed';
+                    btn.disabled = false;
+                    setTimeout(function() { btn.textContent = 'Submit Request'; }, 3000);
+                }
+            })
+            .catch(function(err) {
+                btn.textContent = 'Network error. Try again.';
+                btn.disabled = false;
+                setTimeout(function() { btn.textContent = 'Submit Request'; }, 3000);
+            });
         });
+
         document.getElementById('hc-submit').addEventListener('click', function() {
-            this.textContent = 'Creating account...'; this.disabled = true;
-            setTimeout(function() {
-                window.location.href = '/success.html';
-            }, 1500);
+            var btn = this;
+            btn.textContent = 'Creating account...'; btn.disabled = true;
+            var payload = {
+                invite_code: document.getElementById('hc-code').value.trim(),
+                name: document.getElementById('hc-name').value.trim(),
+                email: document.getElementById('hc-email').value.trim(),
+                username: document.getElementById('hc-username').value.trim()
+            };
+            fetch(ENDPOINTS.redeemCode, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            })
+            .then(function(r) { return r.json(); })
+            .then(function(data) {
+                if (data.ok) {
+                    btn.classList.add('success');
+                    btn.textContent = '✓ Account Created!';
+                    setTimeout(function() {
+                        window.location.href = '/success.html?type=redeem';
+                    }, 1500);
+                } else {
+                    btn.textContent = data.msg || 'Account creation failed';
+                    btn.disabled = false;
+                    setTimeout(function() { btn.textContent = 'Create Account'; }, 3000);
+                }
+            })
+            .catch(function(err) {
+                btn.textContent = 'Network error. Try again.';
+                btn.disabled = false;
+                setTimeout(function() { btn.textContent = 'Create Account'; }, 3000);
+            });
         });
 
         // Falling Petals
