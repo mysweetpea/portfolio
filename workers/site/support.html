@@ -9,21 +9,21 @@
         *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
         :root {
-            --bg: #0d1416; --primary: #8FAFB5; --primary-dim: #6B9AA6; --primary-glow: rgba(143, 175, 181, 0.15);
-            --text: #EEF2F3; --text-dim: #8FAFB5; --text-faint: #6B9AA6;
-            --border: rgba(143, 175, 181, 0.08); --border-gold: rgba(143, 175, 181, 0.25);
+            --bg: #0A1214; --primary: #5EB8A8; --primary-dim: #3E8E86; --primary-glow: rgba(94, 184, 168, 0.15);
+            --text: #F0F8F6; --text-dim: #7A9B95; --text-faint: #4A6B65;
+            --border: rgba(94, 184, 168, 0.08); --border-gold: rgba(94, 184, 168, 0.25);
             --radius: 14px; --radius-sm: 8px; --transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            --ice: #D4E6F1; --sage: #A3C9B6; --teal: #8FAFB5;
+            --ice: #5EB8E8; --sage: #5ED39E; --teal: #5EB8A8;
         }
         html { scroll-behavior: smooth; }
         body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; line-height: 1.6; overflow-x: hidden; }
         #petalCanvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; pointer-events: none; }
         .content-wrapper { position: relative; z-index: 1; }
-        .bg-gradient { position: fixed; top: 0; left: 0; right: 0; bottom: 0; z-index: -1; background: radial-gradient(ellipse 80% 50% at 50% -20%, rgba(143, 175, 181, 0.08), transparent), radial-gradient(ellipse 60% 40% at 80% 100%, rgba(143, 175, 181, 0.04), transparent), #0d1416; }
+        .bg-gradient { position: fixed; top: 0; left: 0; right: 0; bottom: 0; z-index: -1; background: radial-gradient(ellipse 80% 50% at 50% -20%, rgba(94, 184, 168, 0.08), transparent), radial-gradient(ellipse 60% 40% at 80% 100%, rgba(94, 184, 168, 0.04), transparent), #0A1214; }
         @keyframes shimmer { 0% { background-position: -200% center; } 100% { background-position: 200% center; } }
         @keyframes float3D { 0%, 100% { transform: translateY(0) rotateX(0) rotateY(0); } 50% { transform: translateY(-10px) rotateX(2deg) rotateY(2deg); } }
-        @keyframes pulseGlow { 0%, 100% { box-shadow: 0 0 20px rgba(143, 175, 181, 0.08); } 50% { box-shadow: 0 0 40px rgba(143, 175, 181, 0.18); } }
-        .glass-text { background: linear-gradient(135deg, rgba(255,255,255,0.9) 0%, rgba(143,175,181,0.8) 30%, rgba(255,255,255,0.6) 50%, rgba(143,175,181,0.8) 70%, rgba(255,255,255,0.9) 100%); background-size: 200% auto; -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; text-shadow: 0 0 30px rgba(143, 175, 181, 0.15); animation: shimmer 6s linear infinite; filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.3)); }
+        @keyframes pulseGlow { 0%, 100% { box-shadow: 0 0 20px rgba(94, 184, 168, 0.08); } 50% { box-shadow: 0 0 40px rgba(94, 184, 168, 0.18); } }
+        .glass-text { background: linear-gradient(135deg, rgba(255,255,255,0.9) 0%, rgba(143,175,181,0.8) 30%, rgba(255,255,255,0.6) 50%, rgba(143,175,181,0.8) 70%, rgba(255,255,255,0.9) 100%); background-size: 200% auto; -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; text-shadow: 0 0 30px rgba(94, 184, 168, 0.15); animation: shimmer 6s linear infinite; filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.3)); }
 
         .top-nav { position: fixed; top: 20px; right: 20px; z-index: 50; display: flex; gap: 8px; align-items: center; }
         .nav-btn { padding: 8px 16px; background: rgba(20, 20, 20, 0.8); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border: 1px solid var(--border-primary); border-radius: var(--radius-sm); color: var(--primary); font-size: 0.82rem; font-weight: 600; text-decoration: none; transition: var(--transition); }
@@ -43,45 +43,45 @@
         .page-footer .footer-links { display: flex; justify-content: center; gap: 24px; margin-bottom: 12px; flex-wrap: wrap; }
 
         .hero { text-align: center; padding: 80px 20px 30px; }
-        .hero img.logo { width: 180px; height: 180px; margin-bottom: 16px; filter: drop-shadow(0 0 25px rgba(143, 175, 181, 0.25)); animation: float3D 6s ease-in-out infinite; }
+        .hero img.logo { width: 180px; height: 180px; margin-bottom: 16px; filter: drop-shadow(0 0 25px rgba(94, 184, 168, 0.25)); animation: float3D 6s ease-in-out infinite; }
         .hero h1 { font-size: 2.2rem; font-weight: 700; margin-bottom: 8px; }
-        .hero p { font-size: 1rem; color: var(--text-dim); max-width: 500px; margin: 0 auto; }
+        .hero p { font-size: 1rem; color: #7A9B95; max-width: 500px; margin: 0 auto; }
 
         .container { max-width: 540px; margin: 0 auto; padding: 20px; }
 
-        .card { background: rgba(20, 20, 20, 0.6); backdrop-filter: blur(16px) saturate(1.2); -webkit-backdrop-filter: blur(16px) saturate(1.2); border: 2px solid rgba(212, 230, 241, 0.4); border-radius: var(--radius); padding: 32px; box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.05), 0 8px 32px rgba(0, 0, 0, 0.3), 0 0 15px rgba(212, 230, 241, 0.08); }
+        .card { background: rgba(20, 20, 20, 0.6); backdrop-filter: blur(16px) saturate(1.2); -webkit-backdrop-filter: blur(16px) saturate(1.2); border: 2px solid rgba(94, 184, 232, 0.4); border-radius: var(--radius); padding: 32px; box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.05), 0 8px 32px rgba(0, 0, 0, 0.3), 0 0 15px rgba(94, 184, 232, 0.08); }
         .card h2 { font-size: 1.1rem; margin-bottom: 6px; }
-        .card .subtitle { font-size: 0.84rem; color: var(--text-dim); margin-bottom: 20px; }
+        .card .subtitle { font-size: 0.84rem; color: #7A9B95; margin-bottom: 20px; }
 
         .crypto-section { margin-bottom: 20px; }
         .crypto-section label { display: block; font-size: 0.82rem; margin-bottom: 10px; font-weight: 500; }
         .crypto-options { display: flex; gap: 12px; flex-wrap: wrap; }
         .crypto-option { flex: 1; min-width: 140px; padding: 16px; background: rgba(10, 10, 10, 0.8); border: 2px solid rgba(255, 255, 255, 0.1); border-radius: var(--radius-sm); cursor: pointer; transition: var(--transition); text-align: center; }
-        .crypto-option:hover { border-color: rgba(143, 175, 181, 0.4); }
-        .crypto-option.selected { border-color: var(--primary); background: rgba(143, 175, 181, 0.08); }
+        .crypto-option:hover { border-color: rgba(94, 184, 168, 0.4); }
+        .crypto-option.selected { border-color: var(--primary); background: rgba(94, 184, 168, 0.08); }
         .crypto-option .icon { font-size: 1.8rem; margin-bottom: 6px; }
         .crypto-option .name { font-size: 0.86rem; color: #ccc; font-weight: 600; }
         .crypto-option .addr { font-size: 0.68rem; color: #666; margin-top: 4px; word-break: break-all; font-family: monospace; }
 
-        .wallet-display { display: none; background: rgba(10, 10, 10, 0.6); border: 1px solid rgba(143, 175, 181, 0.15); border-radius: var(--radius-sm); padding: 16px; margin-bottom: 20px; }
+        .wallet-display { display: none; background: rgba(10, 10, 10, 0.6); border: 1px solid rgba(94, 184, 168, 0.15); border-radius: var(--radius-sm); padding: 16px; margin-bottom: 20px; }
         .wallet-display.visible { display: block; }
-        .wallet-display .wl { font-size: 0.78rem; color: #8FAFB5; margin-bottom: 6px; }
-        .wallet-display .wa { font-size: 0.88rem; color: var(--primary); font-family: monospace; word-break: break-all; cursor: pointer; padding: 8px; background: rgba(10, 10, 10, 0.6); border-radius: var(--radius-sm); border: 1px solid rgba(143, 175, 181, 0.1); }
-        .wallet-display .wa:hover { border-color: rgba(143, 175, 181, 0.3); }
-        .wallet-display .copy-hint { font-size: 0.72rem; color: #6B9AA6; margin-top: 6px; }
+        .wallet-display .wl { font-size: 0.78rem; color: #5EB8A8; margin-bottom: 6px; }
+        .wallet-display .wa { font-size: 0.88rem; color: var(--primary); font-family: monospace; word-break: break-all; cursor: pointer; padding: 8px; background: rgba(10, 10, 10, 0.6); border-radius: var(--radius-sm); border: 1px solid rgba(94, 184, 168, 0.1); }
+        .wallet-display .wa:hover { border-color: rgba(94, 184, 168, 0.3); }
+        .wallet-display .copy-hint { font-size: 0.72rem; color: #3E8E86; margin-top: 6px; }
 
-        .info-box { background: rgba(143, 175, 181, 0.06); border: 1px solid rgba(143, 175, 181, 0.15); border-radius: var(--radius-sm); padding: 14px; margin-bottom: 16px; font-size: 0.82rem; color: #8FAFB5; line-height: 1.6; }
+        .info-box { background: rgba(94, 184, 168, 0.06); border: 1px solid rgba(94, 184, 168, 0.15); border-radius: var(--radius-sm); padding: 14px; margin-bottom: 16px; font-size: 0.82rem; color: #5EB8A8; line-height: 1.6; }
 
         .faq-section { max-width: 540px; margin: 40px auto 30px; padding: 0 20px; }
         .faq-item { background: rgba(20, 20, 20, 0.5); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border: 1px solid var(--border); border-radius: var(--radius-sm); margin-bottom: 10px; overflow: hidden; transition: var(--transition); }
         .faq-item:hover { border-color: var(--border-primary); }
         .faq-question { padding: 14px 18px; font-size: 0.85rem; color: var(--text); cursor: pointer; display: flex; justify-content: space-between; align-items: center; transition: var(--transition); user-select: none; }
         .faq-question:hover { color: var(--primary); }
-        .faq-question .arrow { transition: transform 0.3s ease; color: var(--text-dim); font-size: 0.75rem; }
+        .faq-question .arrow { transition: transform 0.3s ease; color: #7A9B95; font-size: 0.75rem; }
         .faq-item.open .faq-question .arrow { transform: rotate(180deg); color: var(--primary); }
         .faq-answer { max-height: 0; overflow: hidden; transition: max-height 0.3s ease, padding 0.3s ease; padding: 0 18px; }
         .faq-item.open .faq-answer { max-height: 300px; padding: 0 18px 14px; }
-        .faq-answer p { font-size: 0.8rem; color: var(--text-dim); line-height: 1.5; }
+        .faq-answer p { font-size: 0.8rem; color: #7A9B95; line-height: 1.5; }
 
 @media (max-width: 768px) { .hero h1 { font-size: 1.6rem; } .hero img.logo { width: 120px; height: 120px; } .container { padding: 10px; } .crypto-options { flex-direction: column; } }
     </style>
@@ -90,9 +90,9 @@
     <div class="bg-gradient"></div>
     <canvas id="petalCanvas"></canvas>
 
-<div class="float-3d f1"><svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M50 10 C35 15, 28 30, 32 48 C36 60, 48 68, 50 70 C52 68, 64 60, 68 48 C72 30, 65 15, 50 10" fill="#8FAFB5" opacity="0.8"/><path d="M50 25 C44 28, 40 38, 44 48 C47 55, 50 58, 50 58 C50 58, 53 55, 56 48 C60 38, 56 28, 50 25" fill="#8FAFB5" opacity="0.5"/><path d="M50 10 C42 12, 38 22, 42 35 C45 42, 50 45, 50 45 C50 45, 55 42, 58 35 C62 22, 58 12, 50 10" fill="#8FAFB5" opacity="0.6"/><path d="M50 45 C45 48, 42 55, 45 62 C48 67, 50 68, 50 68 C50 68, 52 67, 55 62 C58 55, 55 48, 50 45" fill="#8FAFB5" opacity="0.4"/><line x1="50" y1="68" x2="50" y2="88" stroke="#8FAFB5" stroke-width="2"/><path d="M45 80 Q40 76, 37 82" stroke="#8FAFB5" stroke-width="1.5" fill="none"/><path d="M55 80 Q60 76, 63 82" stroke="#8FAFB5" stroke-width="1.5" fill="none"/><circle cx="37" cy="82" r="2" fill="#8FAFB5" opacity="0.6"/><circle cx="63" cy="82" r="2" fill="#8FAFB5" opacity="0.6"/></svg></div>
-    <div class="float-3d f2"><svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M50 10 C35 15, 28 30, 32 48 C36 60, 48 68, 50 70 C52 68, 64 60, 68 48 C72 30, 65 15, 50 10" fill="#8FAFB5" opacity="0.8"/><path d="M50 25 C44 28, 40 38, 44 48 C47 55, 50 58, 50 58 C50 58, 53 55, 56 48 C60 38, 56 28, 50 25" fill="#8FAFB5" opacity="0.5"/><path d="M50 10 C42 12, 38 22, 42 35 C45 42, 50 45, 50 45 C50 45, 55 42, 58 35 C62 22, 58 12, 50 10" fill="#8FAFB5" opacity="0.6"/><path d="M50 45 C45 48, 42 55, 45 62 C48 67, 50 68, 50 68 C50 68, 52 67, 55 62 C58 55, 55 48, 50 45" fill="#8FAFB5" opacity="0.4"/><line x1="50" y1="68" x2="50" y2="88" stroke="#8FAFB5" stroke-width="2"/><path d="M45 80 Q40 76, 37 82" stroke="#8FAFB5" stroke-width="1.5" fill="none"/><path d="M55 80 Q60 76, 63 82" stroke="#8FAFB5" stroke-width="1.5" fill="none"/><circle cx="37" cy="82" r="2" fill="#8FAFB5" opacity="0.6"/><circle cx="63" cy="82" r="2" fill="#8FAFB5" opacity="0.6"/></svg></div>
-    <div class="float-3d f3"><svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M50 10 C35 15, 28 30, 32 48 C36 60, 48 68, 50 70 C52 68, 64 60, 68 48 C72 30, 65 15, 50 10" fill="#8FAFB5" opacity="0.8"/><path d="M50 25 C44 28, 40 38, 44 48 C47 55, 50 58, 50 58 C50 58, 53 55, 56 48 C60 38, 56 28, 50 25" fill="#8FAFB5" opacity="0.5"/><path d="M50 10 C42 12, 38 22, 42 35 C45 42, 50 45, 50 45 C50 45, 55 42, 58 35 C62 22, 58 12, 50 10" fill="#8FAFB5" opacity="0.6"/><path d="M50 45 C45 48, 42 55, 45 62 C48 67, 50 68, 50 68 C50 68, 52 67, 55 62 C58 55, 55 48, 50 45" fill="#8FAFB5" opacity="0.4"/><line x1="50" y1="68" x2="50" y2="88" stroke="#8FAFB5" stroke-width="2"/><path d="M45 80 Q40 76, 37 82" stroke="#8FAFB5" stroke-width="1.5" fill="none"/><path d="M55 80 Q60 76, 63 82" stroke="#8FAFB5" stroke-width="1.5" fill="none"/><circle cx="37" cy="82" r="2" fill="#8FAFB5" opacity="0.6"/><circle cx="63" cy="82" r="2" fill="#8FAFB5" opacity="0.6"/></svg></div>
+<div class="float-3d f1"><svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M50 10 C35 15, 28 30, 32 48 C36 60, 48 68, 50 70 C52 68, 64 60, 68 48 C72 30, 65 15, 50 10" fill="#5EB8A8" opacity="0.8"/><path d="M50 25 C44 28, 40 38, 44 48 C47 55, 50 58, 50 58 C50 58, 53 55, 56 48 C60 38, 56 28, 50 25" fill="#5EB8A8" opacity="0.5"/><path d="M50 10 C42 12, 38 22, 42 35 C45 42, 50 45, 50 45 C50 45, 55 42, 58 35 C62 22, 58 12, 50 10" fill="#5EB8A8" opacity="0.6"/><path d="M50 45 C45 48, 42 55, 45 62 C48 67, 50 68, 50 68 C50 68, 52 67, 55 62 C58 55, 55 48, 50 45" fill="#5EB8A8" opacity="0.4"/><line x1="50" y1="68" x2="50" y2="88" stroke="#5EB8A8" stroke-width="2"/><path d="M45 80 Q40 76, 37 82" stroke="#5EB8A8" stroke-width="1.5" fill="none"/><path d="M55 80 Q60 76, 63 82" stroke="#5EB8A8" stroke-width="1.5" fill="none"/><circle cx="37" cy="82" r="2" fill="#5EB8A8" opacity="0.6"/><circle cx="63" cy="82" r="2" fill="#5EB8A8" opacity="0.6"/></svg></div>
+    <div class="float-3d f2"><svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M50 10 C35 15, 28 30, 32 48 C36 60, 48 68, 50 70 C52 68, 64 60, 68 48 C72 30, 65 15, 50 10" fill="#5EB8A8" opacity="0.8"/><path d="M50 25 C44 28, 40 38, 44 48 C47 55, 50 58, 50 58 C50 58, 53 55, 56 48 C60 38, 56 28, 50 25" fill="#5EB8A8" opacity="0.5"/><path d="M50 10 C42 12, 38 22, 42 35 C45 42, 50 45, 50 45 C50 45, 55 42, 58 35 C62 22, 58 12, 50 10" fill="#5EB8A8" opacity="0.6"/><path d="M50 45 C45 48, 42 55, 45 62 C48 67, 50 68, 50 68 C50 68, 52 67, 55 62 C58 55, 55 48, 50 45" fill="#5EB8A8" opacity="0.4"/><line x1="50" y1="68" x2="50" y2="88" stroke="#5EB8A8" stroke-width="2"/><path d="M45 80 Q40 76, 37 82" stroke="#5EB8A8" stroke-width="1.5" fill="none"/><path d="M55 80 Q60 76, 63 82" stroke="#5EB8A8" stroke-width="1.5" fill="none"/><circle cx="37" cy="82" r="2" fill="#5EB8A8" opacity="0.6"/><circle cx="63" cy="82" r="2" fill="#5EB8A8" opacity="0.6"/></svg></div>
+    <div class="float-3d f3"><svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M50 10 C35 15, 28 30, 32 48 C36 60, 48 68, 50 70 C52 68, 64 60, 68 48 C72 30, 65 15, 50 10" fill="#5EB8A8" opacity="0.8"/><path d="M50 25 C44 28, 40 38, 44 48 C47 55, 50 58, 50 58 C50 58, 53 55, 56 48 C60 38, 56 28, 50 25" fill="#5EB8A8" opacity="0.5"/><path d="M50 10 C42 12, 38 22, 42 35 C45 42, 50 45, 50 45 C50 45, 55 42, 58 35 C62 22, 58 12, 50 10" fill="#5EB8A8" opacity="0.6"/><path d="M50 45 C45 48, 42 55, 45 62 C48 67, 50 68, 50 68 C50 68, 52 67, 55 62 C58 55, 55 48, 50 45" fill="#5EB8A8" opacity="0.4"/><line x1="50" y1="68" x2="50" y2="88" stroke="#5EB8A8" stroke-width="2"/><path d="M45 80 Q40 76, 37 82" stroke="#5EB8A8" stroke-width="1.5" fill="none"/><path d="M55 80 Q60 76, 63 82" stroke="#5EB8A8" stroke-width="1.5" fill="none"/><circle cx="37" cy="82" r="2" fill="#5EB8A8" opacity="0.6"/><circle cx="63" cy="82" r="2" fill="#5EB8A8" opacity="0.6"/></svg></div>
 
 <div class="top-nav">
         <a href="/index.html" class="nav-btn">Home</a>
@@ -198,7 +198,7 @@
             resize(); window.addEventListener('resize', resize);
             function createPetal() { return { x: Math.random() * W, y: -20, size: 4 + Math.random() * 8, speedY: 0.5 + Math.random() * 1.5, speedX: -0.5 + Math.random() * 1, rotation: Math.random() * Math.PI * 2, rotSpeed: -0.02 + Math.random() * 0.04, opacity: 0.15 + Math.random() * 0.35, sway: Math.random() * Math.PI * 2, swaySpeed: 0.01 + Math.random() * 0.02 }; }
             for (var i = 0; i < 40; i++) { var p = createPetal(); p.y = Math.random() * H; petals.push(p); }
-            function drawPetal(p) { ctx.save(); ctx.translate(p.x, p.y); ctx.rotate(p.rotation); ctx.globalAlpha = p.opacity; var grad = ctx.createRadialGradient(0, 0, 0, 0, 0, p.size); grad.addColorStop(0, '#EEF2F3'); grad.addColorStop(0.5, '#8FAFB5'); grad.addColorStop(1, 'rgba(143, 175, 181, 0.3)'); ctx.fillStyle = grad; ctx.beginPath(); ctx.moveTo(0, -p.size); ctx.bezierCurveTo(p.size * 0.6, -p.size * 0.5, p.size * 0.6, p.size * 0.5, 0, p.size); ctx.bezierCurveTo(-p.size * 0.6, p.size * 0.5, -p.size * 0.6, -p.size * 0.5, 0, -p.size); ctx.fill(); ctx.strokeStyle = 'rgba(143, 175, 181, 0.4)'; ctx.lineWidth = 0.5; ctx.stroke(); ctx.restore(); }
+            function drawPetal(p) { ctx.save(); ctx.translate(p.x, p.y); ctx.rotate(p.rotation); ctx.globalAlpha = p.opacity; var grad = ctx.createRadialGradient(0, 0, 0, 0, 0, p.size); grad.addColorStop(0, '#F0F8F6'); grad.addColorStop(0.5, '#5EB8A8'); grad.addColorStop(1, 'rgba(94, 184, 168, 0.3)'); ctx.fillStyle = grad; ctx.beginPath(); ctx.moveTo(0, -p.size); ctx.bezierCurveTo(p.size * 0.6, -p.size * 0.5, p.size * 0.6, p.size * 0.5, 0, p.size); ctx.bezierCurveTo(-p.size * 0.6, p.size * 0.5, -p.size * 0.6, -p.size * 0.5, 0, -p.size); ctx.fill(); ctx.strokeStyle = 'rgba(94, 184, 168, 0.4)'; ctx.lineWidth = 0.5; ctx.stroke(); ctx.restore(); }
             function animate() { ctx.clearRect(0, 0, W, H); for (var i = 0; i < petals.length; i++) { var p = petals[i]; p.sway += p.swaySpeed; p.x += p.speedX + Math.sin(p.sway) * 0.5; p.y += p.speedY; p.rotation += p.rotSpeed; if (p.y > H + 20) { petals[i] = createPetal(); } if (p.x < -20) p.x = W + 20; if (p.x > W + 20) p.x = -20; drawPetal(p); } requestAnimationFrame(animate); }
             animate();
         })();
