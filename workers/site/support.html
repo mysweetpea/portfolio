@@ -143,7 +143,7 @@
         document.querySelectorAll('.reveal').forEach(function(el) { revealObserver.observe(el); });
         document.querySelectorAll('.glow-card').forEach(function(card) { card.addEventListener('mousemove', function(e) { var r = card.getBoundingClientRect(); card.style.setProperty('--mouse-x', (e.clientX - r.left) + 'px'); card.style.setProperty('--mouse-y', (e.clientY - r.top) + 'px'); }); });
         function toggleFAQ(el) { el.parentElement.classList.toggle('open'); }
-        var WALLETS = { monero: 'YOUR_XMR_WALLET_ADDRESS_HERE', bitcoin: 'YOUR_BTC_WALLET_ADDRESS_HERE' };
+        var WALLETS = { monero: 'Coming Soon', bitcoin: 'Coming Soon' };
         function selectCrypto(el, type) { document.querySelectorAll('.crypto-option').forEach(function(o) { o.classList.remove('selected'); }); el.classList.add('selected'); document.getElementById('wallet-addr').textContent = WALLETS[type]; }
         function copyWallet() { var a = document.getElementById('wallet-addr').textContent; navigator.clipboard.writeText(a).then(function() { var e = document.getElementById('wallet-addr'); var o = e.textContent; e.textContent = 'Copied!'; setTimeout(function() { e.textContent = o; }, 1500); }); }
         document.getElementById('wallet-addr').textContent = WALLETS.monero;
