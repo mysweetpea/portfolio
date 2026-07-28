@@ -5,11 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MySweetPea — About Us</title>
     <meta name="description" content="Learn why MySweetPea exists: privacy-first, self-hosted services running on our own hardware, funded by the community.">
-    <meta name="theme-color" content="#0A1214">
+    <meta name="theme-color" content="#0C1316">
     <meta property="og:title" content="MySweetPea — About Us">
     <meta property="og:description" content="Learn why MySweetPea exists: privacy-first, self-hosted services running on our own hardware, funded by the community.">
     <meta property="og:type" content="website">
-    <meta property="og:url" content="https://mysweetpea.cc/about.html">
+    <meta property="og:url" content="https://mysweetpea.cc/">
     <link rel="icon" type="image/svg+xml" href="/logo-favicon.svg">
     <link rel="preload" as="image" href="/logo.svg">
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -17,36 +17,30 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/assets/css/site.css">
     <style>
-        .hero { text-align: center; padding: 120px 24px 20px; }
-        .hero img.logo { width: 160px; height: 160px; margin-bottom: 16px; filter: drop-shadow(0 0 30px rgba(94, 184, 168, 0.25)); animation: float3D 6s ease-in-out infinite; }
-        .hero h1 { font-size: 2rem; font-weight: 700; margin-bottom: 8px; }
-        .hero p { font-size: 1rem; color: var(--text-dim); }
-        .content-section { max-width: 700px; margin: 0 auto; padding: 40px 24px; }
-        .content-section h2 { font-size: 1.4rem; font-weight: 700; margin-bottom: 16px; color: var(--primary); }
-        .content-section p { font-size: 0.92rem; color: var(--text-dim); margin-bottom: 16px; line-height: 1.8; }
-        .content-section ul { list-style: none; margin-bottom: 16px; }
-        .content-section ul li { font-size: 0.88rem; color: var(--text-dim); margin-bottom: 10px; padding-left: 24px; position: relative; line-height: 1.6; }
-        .content-section ul li::before { content: '\2713'; position: absolute; left: 0; color: var(--primary); font-weight: 700; }
-        .card { background: rgba(15, 26, 28, 0.5); backdrop-filter: blur(16px) saturate(1.2); -webkit-backdrop-filter: blur(16px) saturate(1.2); border: 1px solid var(--border); border-radius: var(--radius); padding: 32px 28px; margin-bottom: 32px; box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3); transition: var(--transition); }
-        .card:hover { border-color: var(--border-primary); }
-        .github-links { display: flex; gap: 16px; flex-wrap: wrap; margin-top: 20px; }
-        .github-link { flex: 1; min-width: 200px; display: flex; align-items: center; gap: 12px; padding: 16px 20px; background: rgba(10, 18, 20, 0.6); border: 1px solid var(--border); border-radius: var(--radius-sm); text-decoration: none; color: var(--text); transition: var(--transition); }
-        .github-link:hover { border-color: var(--border-primary); background: rgba(15, 26, 28, 0.8); transform: translateY(-2px); }
-        .github-link .icon { font-size: 1.5rem; }
-        .github-link .info { display: flex; flex-direction: column; }
-        .github-link .repo { font-size: 0.9rem; font-weight: 600; color: var(--primary); }
-        .github-link .desc { font-size: 0.78rem; color: var(--text-dim); }
-        .cta-section { max-width: 700px; margin: 0 auto 80px; padding: 24px; text-align: center; }
-        .cta-card { background: rgba(15, 26, 28, 0.6); backdrop-filter: blur(20px) saturate(1.3); -webkit-backdrop-filter: blur(20px) saturate(1.3); border: 1px solid var(--border-primary); border-radius: var(--radius); padding: 40px; position: relative; overflow: hidden; box-shadow: 0 8px 40px rgba(0, 0, 0, 0.3); }
-        .cta-card h2 { font-size: 1.5rem; margin-bottom: 12px; }
-        .cta-card p { font-size: 0.92rem; color: var(--text-dim); margin-bottom: 24px; }
-        @media (max-width: 768px) {
-            .hero { padding: 100px 20px 10px; }
-            .hero h1 { font-size: 1.6rem; }
-            .hero img.logo { width: 120px; height: 120px; }
-            .github-links { flex-direction: column; }
-            .cta-card { padding: 28px 20px; }
-        }
+.hero { text-align: center; padding: 120px 24px 20px; }
+.hero img.logo { width: 160px; height: 160px; margin-bottom: 16px; filter: drop-shadow(0 8px 24px rgba(197, 213, 216, 0.12)); animation: float3D 7s ease-in-out infinite; }
+.hero h1 { font-size: 2rem; font-weight: 700; margin-bottom: 8px; letter-spacing: -0.6px; }
+.hero p { font-size: 1rem; color: var(--text-dim); }
+.content-section { max-width: 700px; margin: 0 auto; padding: 40px 24px; }
+.content-section h2 { font-size: 1.4rem; font-weight: 700; margin-bottom: 16px; color: var(--primary); letter-spacing: -0.4px; }
+.content-section p { font-size: 0.92rem; color: var(--text-dim); margin-bottom: 16px; line-height: 1.8; }
+.content-section ul { list-style: none; margin-bottom: 16px; }
+.content-section ul li { font-size: 0.88rem; color: var(--text-dim); margin-bottom: 10px; padding-left: 24px; position: relative; line-height: 1.6; }
+.content-section ul li::before { content: '\2713'; position: absolute; left: 0; color: var(--primary); font-weight: 700; }
+.card { background: var(--card-bg); backdrop-filter: blur(16px) saturate(1.2); -webkit-backdrop-filter: blur(16px) saturate(1.2); border: 1px solid var(--border); border-radius: var(--radius); padding: 32px 28px; margin-bottom: 32px; box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3); transition: var(--transition); }
+.card:hover { border-color: var(--border-primary); }
+.github-links { display: flex; gap: 16px; flex-wrap: wrap; margin-top: 20px; }
+.github-link { flex: 1; min-width: 200px; display: flex; align-items: center; gap: 12px; padding: 16px 20px; background: rgba(14, 22, 26, 0.6); border: 1px solid var(--border); border-radius: var(--radius-sm); text-decoration: none; color: var(--text); transition: var(--transition); }
+.github-link:hover { border-color: var(--border-primary); background: rgba(19, 30, 34, 0.85); transform: translateY(-2px); }
+.github-link .icon { font-size: 1.5rem; }
+.github-link .info { display: flex; flex-direction: column; }
+.github-link .repo { font-size: 0.9rem; font-weight: 600; color: var(--primary); }
+.github-link .desc { font-size: 0.78rem; color: var(--text-dim); }
+.cta-section { max-width: 700px; margin: 0 auto 80px; padding: 24px; text-align: center; }
+.cta-card { background: var(--card-bg); backdrop-filter: blur(20px) saturate(1.3); -webkit-backdrop-filter: blur(20px) saturate(1.3); border: 1px solid var(--border-primary); border-radius: var(--radius); padding: 40px; position: relative; overflow: hidden; box-shadow: 0 8px 40px rgba(0, 0, 0, 0.3); }
+.cta-card h2 { font-size: 1.5rem; margin-bottom: 12px; }
+.cta-card p { font-size: 0.92rem; color: var(--text-dim); margin-bottom: 24px; }
+@media (max-width: 768px) { .hero { padding: 100px 20px 10px; } .hero h1 { font-size: 1.6rem; } .hero img.logo { width: 120px; height: 120px; } .github-links { flex-direction: column; } .cta-card { padding: 28px 20px; } }
     </style>
 </head>
 <body>
@@ -54,8 +48,8 @@
     <div class="scroll-progress" id="scrollProgress" aria-hidden="true"></div>
     <div class="bg-gradient" aria-hidden="true"></div>
     <canvas id="petalCanvas" aria-hidden="true"></canvas>
-    <div class="float-3d f1" aria-hidden="true"><svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M50 10 C35 15, 28 30, 32 48 C36 60, 48 68, 50 70 C52 68, 64 60, 68 48 C72 30, 65 15, 50 10" fill="#5EB8A8" opacity="0.8"/><path d="M50 25 C44 28, 40 38, 44 48 C47 55, 50 58, 50 58 C50 58, 53 55, 56 48 C60 38, 56 28, 50 25" fill="#5EB8A8" opacity="0.5"/><path d="M50 10 C42 12, 38 22, 42 35 C45 42, 50 45, 50 45 C50 45, 55 42, 58 35 C62 22, 58 12, 50 10" fill="#5EB8A8" opacity="0.6"/><path d="M50 45 C45 48, 42 55, 45 62 C48 67, 50 68, 50 68 C50 68, 52 67, 55 62 C58 55, 55 48, 50 45" fill="#5EB8A8" opacity="0.4"/><line x1="50" y1="68" x2="50" y2="88" stroke="#5EB8A8" stroke-width="2"/><path d="M45 80 Q40 76, 37 82" stroke="#5EB8A8" stroke-width="1.5" fill="none"/><path d="M55 80 Q60 76, 63 82" stroke="#5EB8A8" stroke-width="1.5" fill="none"/><circle cx="37" cy="82" r="2" fill="#5EB8A8" opacity="0.6"/><circle cx="63" cy="82" r="2" fill="#5EB8A8" opacity="0.6"/></svg></div>
-    <div class="float-3d f2" aria-hidden="true"><svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M50 10 C35 15, 28 30, 32 48 C36 60, 48 68, 50 70 C52 68, 64 60, 68 48 C72 30, 65 15, 50 10" fill="#5EB8A8" opacity="0.8"/><path d="M50 25 C44 28, 40 38, 44 48 C47 55, 50 58, 50 58 C50 58, 53 55, 56 48 C60 38, 56 28, 50 25" fill="#5EB8A8" opacity="0.5"/><path d="M50 10 C42 12, 38 22, 42 35 C45 42, 50 45, 50 45 C50 45, 55 42, 58 35 C62 22, 58 12, 50 10" fill="#5EB8A8" opacity="0.6"/><path d="M50 45 C45 48, 42 55, 45 62 C48 67, 50 68, 50 68 C50 68, 52 67, 55 62 C58 55, 55 48, 50 45" fill="#5EB8A8" opacity="0.4"/><line x1="50" y1="68" x2="50" y2="88" stroke="#5EB8A8" stroke-width="2"/><path d="M45 80 Q40 76, 37 82" stroke="#5EB8A8" stroke-width="1.5" fill="none"/><path d="M55 80 Q60 76, 63 82" stroke="#5EB8A8" stroke-width="1.5" fill="none"/><circle cx="37" cy="82" r="2" fill="#5EB8A8" opacity="0.6"/><circle cx="63" cy="82" r="2" fill="#5EB8A8" opacity="0.6"/></svg></div>
+    <div class="float-3d f1" aria-hidden="true"><svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M50 10 C35 15, 28 30, 32 48 C36 60, 48 68, 50 70 C52 68, 64 60, 68 48 C72 30, 65 15, 50 10" fill="#8FAFB5" opacity="0.8"/><path d="M50 25 C44 28, 40 38, 44 48 C47 55, 50 58, 50 58 C50 58, 53 55, 56 48 C60 38, 56 28, 50 25" fill="#8FAFB5" opacity="0.5"/><path d="M50 10 C42 12, 38 22, 42 35 C45 42, 50 45, 50 45 C50 45, 55 42, 58 35 C62 22, 58 12, 50 10" fill="#8FAFB5" opacity="0.6"/><path d="M50 45 C45 48, 42 55, 45 62 C48 67, 50 68, 50 68 C50 68, 52 67, 55 62 C58 55, 55 48, 50 45" fill="#8FAFB5" opacity="0.4"/><line x1="50" y1="68" x2="50" y2="88" stroke="#8FAFB5" stroke-width="2"/><path d="M45 80 Q40 76, 37 82" stroke="#8FAFB5" stroke-width="1.5" fill="none"/><path d="M55 80 Q60 76, 63 82" stroke="#8FAFB5" stroke-width="1.5" fill="none"/><circle cx="37" cy="82" r="2" fill="#8FAFB5" opacity="0.6"/><circle cx="63" cy="82" r="2" fill="#8FAFB5" opacity="0.6"/></svg></div>
+    <div class="float-3d f2" aria-hidden="true"><svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M50 10 C35 15, 28 30, 32 48 C36 60, 48 68, 50 70 C52 68, 64 60, 68 48 C72 30, 65 15, 50 10" fill="#8FAFB5" opacity="0.8"/><path d="M50 25 C44 28, 40 38, 44 48 C47 55, 50 58, 50 58 C50 58, 53 55, 56 48 C60 38, 56 28, 50 25" fill="#8FAFB5" opacity="0.5"/><path d="M50 10 C42 12, 38 22, 42 35 C45 42, 50 45, 50 45 C50 45, 55 42, 58 35 C62 22, 58 12, 50 10" fill="#8FAFB5" opacity="0.6"/><path d="M50 45 C45 48, 42 55, 45 62 C48 67, 50 68, 50 68 C50 68, 52 67, 55 62 C58 55, 55 48, 50 45" fill="#8FAFB5" opacity="0.4"/><line x1="50" y1="68" x2="50" y2="88" stroke="#8FAFB5" stroke-width="2"/><path d="M45 80 Q40 76, 37 82" stroke="#8FAFB5" stroke-width="1.5" fill="none"/><path d="M55 80 Q60 76, 63 82" stroke="#8FAFB5" stroke-width="1.5" fill="none"/><circle cx="37" cy="82" r="2" fill="#8FAFB5" opacity="0.6"/><circle cx="63" cy="82" r="2" fill="#8FAFB5" opacity="0.6"/></svg></div>
     <nav class="top-nav" aria-label="Primary navigation">
         <a href="/index.html" class="nav-logo">
             <img src="/logo.svg" alt="" width="32" height="32">
@@ -69,12 +63,8 @@
             <a href="/suggest.html" class="nav-btn">Suggest</a>
         </div>
     </nav>
-    <main id="main-content" class="content-wrapper">
-        <div class="hero">
-            <img src="/logo.svg" alt="MySweetPea logo" class="logo" width="160" height="160">
-            <h1 class="glass-text">About MySweetPea</h1>
-            <p>Self-hosted services for a privacy-first community.</p>
-        </div>
+<main id="main-content" class="content-wrapper">
+        <div class="hero"><img src="/logo.svg" alt="MySweetPea logo" class="logo" width="160" height="160"><h1 class="glass-text">About MySweetPea</h1><p>Self-hosted services for a privacy-first community.</p></div>
         <div class="content-section">
             <div class="card reveal">
                 <h2>Our Mission</h2>
@@ -120,7 +110,7 @@
                 <a href="/support.html" class="cta-btn">Donate Now</a>
             </div>
         </div>
-    </main>
+        </main>
     <footer class="page-footer">
         <div class="footer-links">
             <a href="/index.html">Home</a>
