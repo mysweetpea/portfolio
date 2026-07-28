@@ -3,59 +3,22 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MySweetPea — Pricing</title>
+    <title>MySweetPea — Pricing & Services</title>
+    <meta name="description" content="One small donation, lifetime access. Explore MySweetPea's self-hosted services and pricing tiers.">
+    <meta name="theme-color" content="#0A1214">
+    <meta property="og:title" content="MySweetPea — Pricing & Services">
+    <meta property="og:description" content="One small donation, lifetime access. Explore MySweetPea's self-hosted services and pricing tiers.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://mysweetpea.cc/pricing.html">
     <link rel="icon" type="image/svg+xml" href="/logo-favicon.svg">
+    <link rel="preload" as="image" href="/logo.svg">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/assets/css/site.css">
     <style>
-        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
-
-        :root {
-            --bg: #0A1214;
-            --primary: #5EB8A8;
-            --primary-dim: #3E8E86;
-            --primary-glow: rgba(94, 184, 168, 0.15);
-            --primary-bright: #7FD4C5;
-            --text: #F0F8F6;
-            --text-dim: #7A9B95;
-            --text-faint: #4A6B65;
-            --border: rgba(94, 184, 168, 0.08);
-            --border-primary: rgba(94, 184, 168, 0.25);
-            --radius: 16px;
-            --radius-sm: 10px;
-            --transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-            --ice: #5EB8E8;
-            --sage: #5ED39E;
-            --teal: #5EB8A8;
-            --sweetpea: #3E9E96;
-        }
-
-        html { scroll-behavior: smooth; }
-        body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
-            background: var(--bg); color: var(--text);
-            min-height: 100vh; line-height: 1.7; overflow-x: hidden;
-        }
-
-        .scroll-progress { position: fixed; top: 0; left: 0; height: 3px; width: 0%; background: linear-gradient(90deg, var(--primary), var(--primary-bright)); z-index: 100; transition: width 0.1s; box-shadow: 0 0 10px var(--primary-glow); }
-        #petalCanvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; pointer-events: none; }
-        .content-wrapper { position: relative; z-index: 1; }
-        .bg-gradient { position: fixed; top: 0; left: 0; right: 0; bottom: 0; z-index: -1; background: radial-gradient(ellipse 80% 50% at 50% -20%, rgba(94, 184, 168, 0.08), transparent), radial-gradient(ellipse 60% 40% at 80% 100%, rgba(94, 211, 158, 0.04), transparent), var(--bg); }
-
-        @keyframes shimmer { 0% { background-position: -200% center; } 100% { background-position: 200% center; } }
-        @keyframes float3D { 0%, 100% { transform: translateY(0) rotateX(0) rotateY(0); } 50% { transform: translateY(-10px) rotateX(2deg) rotateY(2deg); } }
-        @keyframes pulseGlowGreen { 0%, 100% { box-shadow: inset 0 1px 0 0 rgba(255,255,255,0.05), 0 8px 32px rgba(0,0,0,0.3), 0 0 15px rgba(94,211,158,0.08); } 50% { box-shadow: inset 0 1px 0 0 rgba(255,255,255,0.05), 0 8px 32px rgba(0,0,0,0.3), 0 0 30px rgba(94,211,158,0.15); } }
         @keyframes emoji3DRotate { 0%, 100% { transform: perspective(200px) rotateY(0deg) rotateX(0deg); } 25% { transform: perspective(200px) rotateY(8deg) rotateX(-3deg); } 50% { transform: perspective(200px) rotateY(0deg) rotateX(3deg); } 75% { transform: perspective(200px) rotateY(-8deg) rotateX(-3deg); } }
-
-        .glass-text { background: linear-gradient(135deg, rgba(240,248,246,0.95) 0%, rgba(94,184,168,0.8) 30%, rgba(240,248,246,0.6) 50%, rgba(94,184,168,0.8) 70%, rgba(240,248,246,0.95) 100%); background-size: 200% auto; -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; text-shadow: 0 0 30px rgba(94, 184, 168, 0.15); animation: shimmer 6s linear infinite; filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.3)); }
-
-        /* Nav */
-        .top-nav { position: fixed; top: 0; left: 0; right: 0; z-index: 50; display: flex; justify-content: space-between; align-items: center; padding: 16px 24px; background: rgba(10, 18, 20, 0.6); backdrop-filter: blur(20px) saturate(1.5); -webkit-backdrop-filter: blur(20px) saturate(1.5); border-bottom: 1px solid var(--border); transition: var(--transition); }
-        .nav-logo { display: flex; align-items: center; gap: 10px; text-decoration: none; }
-        .nav-logo img { width: 32px; height: 32px; filter: drop-shadow(0 0 8px var(--primary-glow)); }
-        .nav-logo span { font-size: 1rem; font-weight: 700; color: var(--text); letter-spacing: -0.3px; }
-        .nav-links { display: flex; gap: 6px; align-items: center; }
-        .nav-btn { padding: 8px 16px; background: transparent; border: 1px solid transparent; border-radius: var(--radius-sm); color: var(--text-dim); font-size: 0.85rem; font-weight: 500; text-decoration: none; transition: var(--transition); cursor: pointer; }
-        .nav-btn:hover { color: var(--primary); background: var(--primary-glow); border-color: var(--border-primary); transform: translateY(-1px); }
-        .nav-btn.active { color: var(--primary); border-color: var(--border-primary); }
+        @keyframes pulseGlowGreen { 0%, 100% { box-shadow: 0 0 20px rgba(94, 211, 158, 0.08); } 50% { box-shadow: 0 0 40px rgba(94, 211, 158, 0.18); } }
 
         /* Hero */
         .hero { text-align: center; padding: 120px 24px 30px; }
@@ -64,7 +27,7 @@
         .hero p { font-size: 1rem; color: var(--text-dim); max-width: 500px; margin: 0 auto; }
 
         /* Info Box */
-        .info-box { max-width: 600px; margin: 30px auto; background: rgba(94, 184, 168, 0.06); border: 1px solid rgba(94, 184, 168, 0.15); border-radius: var(--radius-sm); padding: 20px; font-size: 0.88rem; color: #7A9B95; line-height: 1.6; }
+        .info-box { max-width: 600px; margin: 30px auto; background: rgba(94, 184, 168, 0.06); border: 1px solid rgba(94, 184, 168, 0.15); border-radius: var(--radius-sm); padding: 20px; font-size: 0.88rem; color: var(--text-dim); line-height: 1.6; }
         .info-box strong { color: var(--primary); }
 
         /* Pricing */
@@ -78,8 +41,8 @@
         .pricing-card:hover { transform: translateY(-6px); }
         .tier-emoji-3d { display: inline-block; font-size: 2.5rem; margin-bottom: 12px; animation: emoji3DRotate 8s ease-in-out infinite; filter: drop-shadow(0 4px 8px rgba(0,0,0,0.4)); transform-style: preserve-3d; }
         .tier-name { font-size: 1.2rem; font-weight: 700; margin-bottom: 6px; }
-        .tier-name-seedling { background: linear-gradient(135deg, rgba(240,248,246,0.9) 0%, rgba(94,211,158,0.8) 30%, rgba(240,248,246,0.6) 50%, rgba(94,211,158,0.8) 70%, rgba(240,248,246,0.9) 100%); background-size: 200% auto; -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; text-shadow: 0 0 25px rgba(94,211,158,0.2); animation: shimmer 6s linear infinite; filter: drop-shadow(0 0 3px rgba(94,211,158,0.4)); }
-        .tier-name-sweetpea { background: linear-gradient(135deg, rgba(240,248,246,0.9) 0%, rgba(62,158,150,0.8) 30%, rgba(240,248,246,0.6) 50%, rgba(62,158,150,0.8) 70%, rgba(240,248,246,0.9) 100%); background-size: 200% auto; -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; text-shadow: 0 0 25px rgba(62,158,150,0.2); animation: shimmer 6s linear infinite; filter: drop-shadow(0 0 3px rgba(62,158,150,0.4)); }
+        .tier-name-seedling { background: linear-gradient(135deg, rgba(240,248,246,0.9) 0%, rgba(94,211,158,0.8) 30%, rgba(240,248,246,0.6) 50%, rgba(94,211,158,0.8) 70%, rgba(240,248,246,0.9) 100%); background-size: 200% auto; -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; animation: shimmer 6s linear infinite; filter: drop-shadow(0 0 3px rgba(94,211,158,0.4)); }
+        .tier-name-sweetpea { background: linear-gradient(135deg, rgba(240,248,246,0.9) 0%, rgba(62,158,150,0.8) 30%, rgba(240,248,246,0.6) 50%, rgba(62,158,150,0.8) 70%, rgba(240,248,246,0.9) 100%); background-size: 200% auto; -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; animation: shimmer 6s linear infinite; filter: drop-shadow(0 0 3px rgba(62,158,150,0.4)); }
         .pricing-card .price { font-size: 2.2rem; color: var(--text); font-weight: 800; margin: 10px 0 2px; }
         .pricing-card .price-period { font-size: 0.8rem; color: var(--text-dim); margin-bottom: 16px; }
         .pricing-card .desc { font-size: 0.84rem; color: var(--text-dim); margin-bottom: 20px; line-height: 1.5; }
@@ -148,12 +111,6 @@
         .faq-item.open .faq-answer { max-height: 300px; padding: 0 20px 16px; }
         .faq-answer p { font-size: 0.84rem; color: var(--text-dim); line-height: 1.5; }
 
-        /* Footer */
-        .page-footer { text-align: center; padding: 40px 20px; font-size: 0.85rem; color: var(--text-faint); border-top: 1px solid var(--border); margin-top: 40px; }
-        .page-footer a { color: var(--primary); text-decoration: none; transition: var(--transition); }
-        .page-footer a:hover { text-decoration: underline; }
-        .page-footer .footer-links { display: flex; justify-content: center; gap: 24px; margin-bottom: 12px; flex-wrap: wrap; }
-
         /* Modal */
         .modal-overlay { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0, 0, 0, 0.7); backdrop-filter: blur(4px); z-index: 100; align-items: center; justify-content: center; padding: 20px; }
         .modal-overlay.active { display: flex; }
@@ -179,64 +136,46 @@
         .modal-footer .btn-primary:hover { transform: scale(1.02); box-shadow: 0 4px 16px rgba(94, 184, 168, 0.25); }
         .modal-footer .btn-secondary { background: rgba(255, 255, 255, 0.06); color: var(--text); border: 1px solid var(--border); }
 
-        /* Reveal */
-        .reveal { opacity: 0; transform: translateY(40px); transition: opacity 0.8s ease, transform 0.8s ease; }
-        .reveal.visible { opacity: 1; transform: translateY(0); }
-        .reveal-delay-1 { transition-delay: 0.1s; }
-        .reveal-delay-2 { transition-delay: 0.2s; }
-        .reveal-delay-3 { transition-delay: 0.3s; }
-
-        /* Float 3D */
-        .float-3d { position: absolute; pointer-events: none; opacity: 0.05; z-index: 0; }
-        .float-3d svg { width: 100%; height: 100%; }
-        .float-3d.f1 { top: 15%; right: 5%; width: 120px; height: 120px; animation: float3D 8s ease-in-out infinite; }
-        .float-3d.f2 { top: 45%; left: 3%; width: 80px; height: 80px; animation: float3D 10s ease-in-out infinite reverse; }
-        .float-3d.f3 { top: 70%; right: 8%; width: 100px; height: 100px; animation: float3D 7s ease-in-out infinite 1s; }
-
         @media (max-width: 768px) {
-            .top-nav { padding: 12px 16px; flex-direction: column; gap: 8px; }
-            .nav-links { flex-wrap: wrap; justify-content: center; gap: 4px; }
-            .nav-btn { padding: 6px 12px; font-size: 0.78rem; }
             .hero { padding: 100px 20px 20px; }
             .hero h1 { font-size: 1.6rem; }
             .hero img.logo { width: 120px; height: 120px; }
             .pricing-grid { grid-template-columns: 1fr; }
             .services-grid, .coming-soon-grid { grid-template-columns: 1fr; }
             .modal { padding: 24px; }
-            .float-3d { display: none; }
         }
     </style>
 </head>
 <body>
-    <div class="scroll-progress" id="scrollProgress"></div>
-    <div class="bg-gradient"></div>
-    <canvas id="petalCanvas"></canvas>
-
-    <div class="float-3d f1"><svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M50 10 C35 15, 28 30, 32 48 C36 60, 48 68, 50 70 C52 68, 64 60, 68 48 C72 30, 65 15, 50 10" fill="#5EB8A8" opacity="0.8"/><path d="M50 25 C44 28, 40 38, 44 48 C47 55, 50 58, 50 58 C50 58, 53 55, 56 48 C60 38, 56 28, 50 25" fill="#5EB8A8" opacity="0.5"/><path d="M50 10 C42 12, 38 22, 42 35 C45 42, 50 45, 50 45 C50 45, 55 42, 58 35 C62 22, 58 12, 50 10" fill="#5EB8A8" opacity="0.6"/><path d="M50 45 C45 48, 42 55, 45 62 C48 67, 50 68, 50 68 C50 68, 52 67, 55 62 C58 55, 55 48, 50 45" fill="#5EB8A8" opacity="0.4"/><line x1="50" y1="68" x2="50" y2="88" stroke="#5EB8A8" stroke-width="2"/><path d="M45 80 Q40 76, 37 82" stroke="#5EB8A8" stroke-width="1.5" fill="none"/><path d="M55 80 Q60 76, 63 82" stroke="#5EB8A8" stroke-width="1.5" fill="none"/><circle cx="37" cy="82" r="2" fill="#5EB8A8" opacity="0.6"/><circle cx="63" cy="82" r="2" fill="#5EB8A8" opacity="0.6"/></svg></div>
-    <div class="float-3d f2"><svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M50 10 C35 15, 28 30, 32 48 C36 60, 48 68, 50 70 C52 68, 64 60, 68 48 C72 30, 65 15, 50 10" fill="#5EB8A8" opacity="0.8"/><path d="M50 25 C44 28, 40 38, 44 48 C47 55, 50 58, 50 58 C50 58, 53 55, 56 48 C60 38, 56 28, 50 25" fill="#5EB8A8" opacity="0.5"/><path d="M50 10 C42 12, 38 22, 42 35 C45 42, 50 45, 50 45 C50 45, 55 42, 58 35 C62 22, 58 12, 50 10" fill="#5EB8A8" opacity="0.6"/><path d="M50 45 C45 48, 42 55, 45 62 C48 67, 50 68, 50 68 C50 68, 52 67, 55 62 C58 55, 55 48, 50 45" fill="#5EB8A8" opacity="0.4"/><line x1="50" y1="68" x2="50" y2="88" stroke="#5EB8A8" stroke-width="2"/><path d="M45 80 Q40 76, 37 82" stroke="#5EB8A8" stroke-width="1.5" fill="none"/><path d="M55 80 Q60 76, 63 82" stroke="#5EB8A8" stroke-width="1.5" fill="none"/><circle cx="37" cy="82" r="2" fill="#5EB8A8" opacity="0.6"/><circle cx="63" cy="82" r="2" fill="#5EB8A8" opacity="0.6"/></svg></div>
-    <div class="float-3d f3"><svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M50 10 C35 15, 28 30, 32 48 C36 60, 48 68, 50 70 C52 68, 64 60, 68 48 C72 30, 65 15, 50 10" fill="#5EB8A8" opacity="0.8"/><path d="M50 25 C44 28, 40 38, 44 48 C47 55, 50 58, 50 58 C50 58, 53 55, 56 48 C60 38, 56 28, 50 25" fill="#5EB8A8" opacity="0.5"/><path d="M50 10 C42 12, 38 22, 42 35 C45 42, 50 45, 50 45 C50 45, 55 42, 58 35 C62 22, 58 12, 50 10" fill="#5EB8A8" opacity="0.6"/><path d="M50 45 C45 48, 42 55, 45 62 C48 67, 50 68, 50 68 C50 68, 52 67, 55 62 C58 55, 55 48, 50 45" fill="#5EB8A8" opacity="0.4"/><line x1="50" y1="68" x2="50" y2="88" stroke="#5EB8A8" stroke-width="2"/><path d="M45 80 Q40 76, 37 82" stroke="#5EB8A8" stroke-width="1.5" fill="none"/><path d="M55 80 Q60 76, 63 82" stroke="#5EB8A8" stroke-width="1.5" fill="none"/><circle cx="37" cy="82" r="2" fill="#5EB8A8" opacity="0.6"/><circle cx="63" cy="82" r="2" fill="#5EB8A8" opacity="0.6"/></svg></div>
-
-    <nav class="top-nav">
-        <a href="/index.html" class="nav-logo"><img src="/logo.svg" alt="MySweetPea"><span>MySweetPea</span></a>
+    <a href="#main-content" class="skip-link">Skip to content</a>
+    <div class="scroll-progress" id="scrollProgress" aria-hidden="true"></div>
+    <div class="bg-gradient" aria-hidden="true"></div>
+    <canvas id="petalCanvas" aria-hidden="true"></canvas>
+    <div class="float-3d f1" aria-hidden="true"><svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M50 10 C35 15, 28 30, 32 48 C36 60, 48 68, 50 70 C52 68, 64 60, 68 48 C72 30, 65 15, 50 10" fill="#5EB8A8" opacity="0.8"/><path d="M50 25 C44 28, 40 38, 44 48 C47 55, 50 58, 50 58 C50 58, 53 55, 56 48 C60 38, 56 28, 50 25" fill="#5EB8A8" opacity="0.5"/><path d="M50 10 C42 12, 38 22, 42 35 C45 42, 50 45, 50 45 C50 45, 55 42, 58 35 C62 22, 58 12, 50 10" fill="#5EB8A8" opacity="0.6"/><path d="M50 45 C45 48, 42 55, 45 62 C48 67, 50 68, 50 68 C50 68, 52 67, 55 62 C58 55, 55 48, 50 45" fill="#5EB8A8" opacity="0.4"/><line x1="50" y1="68" x2="50" y2="88" stroke="#5EB8A8" stroke-width="2"/><path d="M45 80 Q40 76, 37 82" stroke="#5EB8A8" stroke-width="1.5" fill="none"/><path d="M55 80 Q60 76, 63 82" stroke="#5EB8A8" stroke-width="1.5" fill="none"/><circle cx="37" cy="82" r="2" fill="#5EB8A8" opacity="0.6"/><circle cx="63" cy="82" r="2" fill="#5EB8A8" opacity="0.6"/></svg></div>
+    <div class="float-3d f2" aria-hidden="true"><svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M50 10 C35 15, 28 30, 32 48 C36 60, 48 68, 50 70 C52 68, 64 60, 68 48 C72 30, 65 15, 50 10" fill="#5EB8A8" opacity="0.8"/><path d="M50 25 C44 28, 40 38, 44 48 C47 55, 50 58, 50 58 C50 58, 53 55, 56 48 C60 38, 56 28, 50 25" fill="#5EB8A8" opacity="0.5"/><path d="M50 10 C42 12, 38 22, 42 35 C45 42, 50 45, 50 45 C50 45, 55 42, 58 35 C62 22, 58 12, 50 10" fill="#5EB8A8" opacity="0.6"/><path d="M50 45 C45 48, 42 55, 45 62 C48 67, 50 68, 50 68 C50 68, 52 67, 55 62 C58 55, 55 48, 50 45" fill="#5EB8A8" opacity="0.4"/><line x1="50" y1="68" x2="50" y2="88" stroke="#5EB8A8" stroke-width="2"/><path d="M45 80 Q40 76, 37 82" stroke="#5EB8A8" stroke-width="1.5" fill="none"/><path d="M55 80 Q60 76, 63 82" stroke="#5EB8A8" stroke-width="1.5" fill="none"/><circle cx="37" cy="82" r="2" fill="#5EB8A8" opacity="0.6"/><circle cx="63" cy="82" r="2" fill="#5EB8A8" opacity="0.6"/></svg></div>
+    <nav class="top-nav" aria-label="Primary navigation">
+        <a href="/index.html" class="nav-logo">
+            <img src="/logo.svg" alt="" width="32" height="32">
+            <span>MySweetPea</span>
+        </a>
         <div class="nav-links">
             <a href="/index.html" class="nav-btn">Home</a>
-            <a href="/pricing.html" class="nav-btn active">Pricing</a>
+            <a href="/pricing.html" class="nav-btn active" aria-current="page">Pricing</a>
             <a href="/support.html" class="nav-btn">Support</a>
             <a href="/about.html" class="nav-btn">About</a>
             <a href="/suggest.html" class="nav-btn">Suggest</a>
         </div>
     </nav>
-
-    <div class="content-wrapper">
+    <main id="main-content" class="content-wrapper">
         <div class="hero">
-            <img src="/logo.svg" alt="MySweetPea" class="logo">
+            <img src="/logo.svg" alt="MySweetPea logo" class="logo" width="180" height="180">
             <h1 class="glass-text">MySweetPea</h1>
             <p>Self-hosted services. Community-funded. Privacy-first.</p>
         </div>
 
         <div class="pricing-section">
             <div class="info-box reveal">
-                <strong style="color: #5EB8A8;">Why $5?</strong><br>
+                <strong>Why $5?</strong><br>
                 A small donation helps prevent spam and abuse, ensuring that users are genuine and invested in the community. It also helps cover server costs like electricity, hardware, and bandwidth. Unlike corporate services that sell your data or show ads, we rely entirely on community support.
             </div>
 
@@ -287,28 +226,28 @@
 
             <div class="tier-divider reveal"><div class="line"></div><div class="label"><span class="icon">&#x1F331;</span> Seedling Tier</div><div class="line"></div></div>
             <div class="services-grid">
-                <div class="service-card glow-card reveal reveal-delay-1" onclick="openModal('vaultwarden')"><div class="service-header"><div class="service-icon"><img src="https://cdn.jsdelivr.net/npm/simple-icons@latest/icons/vaultwarden.svg" alt="Vaultwarden"></div><h3 class="glass-text">Vaultwarden</h3></div><p>A password manager that remembers all your passwords so you do not have to. It creates strong, unique passwords for every website and fills them in automatically.</p><span class="tier-tag seedling">Seedling</span> <span class="tier-tag sweetpea">Sweet Pea</span><div class="learn-more">Learn more &rarr;</div></div>
-                <div class="service-card glow-card reveal reveal-delay-2" onclick="openModal('matrix')"><div class="service-header"><div class="service-icon"><img src="https://cdn.jsdelivr.net/npm/simple-icons@latest/icons/matrix.svg" alt="Matrix"></div><h3 class="glass-text">Matrix / Element</h3></div><p>A private chat app like Discord or Slack, but encrypted and under your control. Message friends, share files, and create rooms without anyone watching.</p><span class="tier-tag seedling">Seedling</span> <span class="tier-tag sweetpea">Sweet Pea</span><div class="learn-more">Learn more &rarr;</div></div>
-                <div class="service-card glow-card reveal reveal-delay-3" onclick="openModal('affine')"><div class="service-header"><div class="service-icon"><img src="https://cdn.jsdelivr.net/npm/simple-icons@latest/icons/affine.svg" alt="AFFiNE"></div><h3 class="glass-text">AFFiNE</h3></div><p>A Notion alternative you own. Create documents, wikis, and whiteboards. All your notes are private and stored on our server, not a corporate cloud.</p><span class="tier-tag seedling">Seedling</span> <span class="tier-tag sweetpea">Sweet Pea</span><div class="learn-more">Learn more &rarr;</div></div>
-                <div class="service-card glow-card reveal reveal-delay-1" onclick="openModal('koalasync')"><div class="service-header"><div class="service-icon"><svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" stroke="#5EB8A8" stroke-width="1.5"/><path d="M8 12 L12 8 L16 12 L12 16 Z" fill="#5EB8A8"/></svg></div><h3 class="glass-text">KoalaSync</h3></div><p>Watch movies and shows together with friends in real-time. Everyone sees the same scene at the same time, like being in the same room.</p><span class="tier-tag seedling">Seedling</span> <span class="tier-tag sweetpea">Sweet Pea</span><div class="learn-more">Learn more &rarr;</div></div>
+                <div class="service-card glow-card reveal reveal-delay-1" role="button" tabindex="0" onclick="openModal('vaultwarden')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();openModal('vaultwarden');}"><div class="service-header"><div class="service-icon"><img src="https://cdn.jsdelivr.net/npm/simple-icons@latest/icons/vaultwarden.svg" alt=""></div><h3>Vaultwarden</h3></div><p>A password manager that remembers all your passwords so you do not have to. It creates strong, unique passwords for every website and fills them in automatically.</p><span class="tier-tag seedling">Seedling</span> <span class="tier-tag sweetpea">Sweet Pea</span><div class="learn-more">Learn more &rarr;</div></div>
+                <div class="service-card glow-card reveal reveal-delay-2" role="button" tabindex="0" onclick="openModal('matrix')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();openModal('matrix');}"><div class="service-header"><div class="service-icon"><img src="https://cdn.jsdelivr.net/npm/simple-icons@latest/icons/matrix.svg" alt=""></div><h3>Matrix / Element</h3></div><p>A private chat app like Discord or Slack, but encrypted and under your control. Message friends, share files, and create rooms without anyone watching.</p><span class="tier-tag seedling">Seedling</span> <span class="tier-tag sweetpea">Sweet Pea</span><div class="learn-more">Learn more &rarr;</div></div>
+                <div class="service-card glow-card reveal reveal-delay-3" role="button" tabindex="0" onclick="openModal('affine')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();openModal('affine');}"><div class="service-header"><div class="service-icon"><img src="https://cdn.jsdelivr.net/npm/simple-icons@latest/icons/affine.svg" alt=""></div><h3>AFFiNE</h3></div><p>A Notion alternative you own. Create documents, wikis, and whiteboards. All your notes are private and stored on our server, not a corporate cloud.</p><span class="tier-tag seedling">Seedling</span> <span class="tier-tag sweetpea">Sweet Pea</span><div class="learn-more">Learn more &rarr;</div></div>
+                <div class="service-card glow-card reveal reveal-delay-1" role="button" tabindex="0" onclick="openModal('koalasync')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();openModal('koalasync');}"><div class="service-header"><div class="service-icon"><svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" stroke="#5EB8A8" stroke-width="1.5"/><path d="M8 12 L12 8 L16 12 L12 16 Z" fill="#5EB8A8"/></svg></div><h3>KoalaSync</h3></div><p>Watch movies and shows together with friends in real-time. Everyone sees the same scene at the same time, like being in the same room.</p><span class="tier-tag seedling">Seedling</span> <span class="tier-tag sweetpea">Sweet Pea</span><div class="learn-more">Learn more &rarr;</div></div>
             </div>
 
             <div class="tier-divider reveal" style="margin-top: 60px;"><div class="line"></div><div class="label"><span class="icon">&#x1F338;</span> Sweet Pea Tier</div><div class="line"></div></div>
             <div class="services-grid">
-                <div class="service-card glow-card reveal reveal-delay-1" onclick="openModal('jellyfin')"><div class="service-header"><div class="service-icon"><img src="https://cdn.jsdelivr.net/npm/simple-icons@latest/icons/jellyfin.svg" alt="Jellyfin"></div><h3 class="glass-text">Jellyfin / Moonfin</h3></div><p>Your own private Netflix. Stream movies and TV shows from anywhere, on any device. No ads, no recommendations you did not ask for, just your library.</p><span class="tier-tag sweetpea">Sweet Pea</span><div class="learn-more">Learn more &rarr;</div></div>
-                <div class="service-card glow-card reveal reveal-delay-2" onclick="openModal('seerr')"><div class="service-header"><div class="service-icon"><svg viewBox="0 0 24 24" fill="none"><rect x="3" y="3" width="18" height="18" rx="3" stroke="#5EB8A8" stroke-width="1.5"/><path d="M8 12 L12 8 L16 12 L12 16 Z" fill="#5EB8A8"/></svg></div><h3 class="glass-text">Seerr</h3></div><p>Want to watch something that is not in the library yet? Browse trending movies and shows, request it, and it appears automatically.</p><span class="tier-tag sweetpea">Sweet Pea</span><div class="learn-more">Learn more &rarr;</div></div>
-                <div class="service-card glow-card reveal reveal-delay-3" onclick="openModal('nextcloud')"><div class="service-header"><div class="service-icon"><img src="https://cdn.jsdelivr.net/npm/simple-icons@latest/icons/nextcloud.svg" alt="Nextcloud"></div><h3 class="glass-text">Nextcloud</h3></div><p>Your own Google Drive. Sync files across all your devices, share folders with others, and access your data from anywhere. No storage limits, no privacy concerns.</p><span class="tier-tag sweetpea">Sweet Pea</span><div class="learn-more">Learn more &rarr;</div></div>
-                <div class="service-card glow-card reveal reveal-delay-1" onclick="openModal('openwebui')"><div class="service-header"><div class="service-icon"><svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" stroke="#5EB8A8" stroke-width="1.5"/><path d="M8 10 Q8 8 10 8 L14 8 Q16 8 16 10 L16 13 Q16 15 14 15 L12 15 L12 17" stroke="#5EB8A8" stroke-width="1.5" fill="none"/><circle cx="12" cy="19" r="1" fill="#5EB8A8"/></svg></div><h3 class="glass-text">Open WebUI</h3></div><p>A private AI assistant like ChatGPT, but running on our own server. Ask it questions, draft emails, summarize articles. Your conversations never leave our network.</p><span class="tier-tag sweetpea">Sweet Pea</span><div class="learn-more">Learn more &rarr;</div></div>
-                <div class="service-card glow-card reveal reveal-delay-2" onclick="openModal('immich')"><div class="service-header"><div class="service-icon"><img src="https://cdn.jsdelivr.net/npm/simple-icons@latest/icons/immich.svg" alt="Immich"></div><h3 class="glass-text">Immich</h3></div><p>Your own Google Photos. Automatically back up photos from your phone, search by face, organize by location. All your memories stay private on our server.</p><span class="tier-tag sweetpea">Sweet Pea</span><div class="learn-more">Learn more &rarr;</div></div>
+                <div class="service-card glow-card reveal reveal-delay-1" role="button" tabindex="0" onclick="openModal('jellyfin')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();openModal('jellyfin');}"><div class="service-header"><div class="service-icon"><img src="https://cdn.jsdelivr.net/npm/simple-icons@latest/icons/jellyfin.svg" alt=""></div><h3>Jellyfin / Moonfin</h3></div><p>Your own private Netflix. Stream movies and TV shows from anywhere, on any device. No ads, no recommendations you did not ask for, just your library.</p><span class="tier-tag sweetpea">Sweet Pea</span><div class="learn-more">Learn more &rarr;</div></div>
+                <div class="service-card glow-card reveal reveal-delay-2" role="button" tabindex="0" onclick="openModal('seerr')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();openModal('seerr');}"><div class="service-header"><div class="service-icon"><svg viewBox="0 0 24 24" fill="none"><rect x="3" y="3" width="18" height="18" rx="3" stroke="#5EB8A8" stroke-width="1.5"/><path d="M8 12 L12 8 L16 12 L12 16 Z" fill="#5EB8A8"/></svg></div><h3>Seerr</h3></div><p>Want to watch something that is not in the library yet? Browse trending movies and shows, request it, and it appears automatically.</p><span class="tier-tag sweetpea">Sweet Pea</span><div class="learn-more">Learn more &rarr;</div></div>
+                <div class="service-card glow-card reveal reveal-delay-3" role="button" tabindex="0" onclick="openModal('nextcloud')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();openModal('nextcloud');}"><div class="service-header"><div class="service-icon"><img src="https://cdn.jsdelivr.net/npm/simple-icons@latest/icons/nextcloud.svg" alt=""></div><h3>Nextcloud</h3></div><p>Your own Google Drive. Sync files across all your devices, share folders with others, and access your data from anywhere. No storage limits, no privacy concerns.</p><span class="tier-tag sweetpea">Sweet Pea</span><div class="learn-more">Learn more &rarr;</div></div>
+                <div class="service-card glow-card reveal reveal-delay-1" role="button" tabindex="0" onclick="openModal('openwebui')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();openModal('openwebui');}"><div class="service-header"><div class="service-icon"><svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" stroke="#5EB8A8" stroke-width="1.5"/><path d="M8 10 Q8 8 10 8 L14 8 Q16 8 16 10 L16 13 Q16 15 14 15 L12 15 L12 17" stroke="#5EB8A8" stroke-width="1.5" fill="none"/><circle cx="12" cy="19" r="1" fill="#5EB8A8"/></svg></div><h3>Open WebUI</h3></div><p>A private AI assistant like ChatGPT, but running on our own server. Ask it questions, draft emails, summarize articles. Your conversations never leave our network.</p><span class="tier-tag sweetpea">Sweet Pea</span><div class="learn-more">Learn more &rarr;</div></div>
+                <div class="service-card glow-card reveal reveal-delay-2" role="button" tabindex="0" onclick="openModal('immich')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();openModal('immich');}"><div class="service-header"><div class="service-icon"><img src="https://cdn.jsdelivr.net/npm/simple-icons@latest/icons/immich.svg" alt=""></div><h3>Immich</h3></div><p>Your own Google Photos. Automatically back up photos from your phone, search by face, organize by location. All your memories stay private on our server.</p><span class="tier-tag sweetpea">Sweet Pea</span><div class="learn-more">Learn more &rarr;</div></div>
             </div>
         </div>
 
         <div class="coming-soon-section">
             <div class="tier-divider reveal"><div class="line"></div><div class="label"><span class="icon">&#x1F6A7;</span> Coming Soon</div><div class="line"></div></div>
             <div class="coming-soon-grid">
-                <div class="coming-soon-card reveal reveal-delay-1"><div class="service-header"><div class="service-icon"><img src="https://cdn.jsdelivr.net/npm/simple-icons@latest/icons/grafana.svg" alt="Grafana"></div><h3>Grafana</h3></div><p>Server monitoring and analytics dashboard. Visualize system health and performance metrics.</p></div>
-                <div class="coming-soon-card reveal reveal-delay-2"><div class="service-header"><div class="service-icon"><img src="https://cdn.jsdelivr.net/npm/simple-icons@latest/icons/prometheus.svg" alt="Prometheus"></div><h3>Prometheus</h3></div><p>Time-series database for collecting and alerting on system metrics across the cluster.</p></div>
-                <div class="coming-soon-card reveal reveal-delay-3"><div class="service-header"><div class="service-icon"><img src="https://cdn.jsdelivr.net/npm/simple-icons@latest/icons/syncthing.svg" alt="Syncthing"></div><h3>Syncthing</h3></div><p>Peer-to-peer file synchronization. Sync folders across devices without a central server.</p></div>
+                <div class="coming-soon-card reveal reveal-delay-1"><div class="service-header"><div class="service-icon"><img src="https://cdn.jsdelivr.net/npm/simple-icons@latest/icons/grafana.svg" alt=""></div><h3>Grafana</h3></div><p>Server monitoring and analytics dashboard. Visualize system health and performance metrics.</p></div>
+                <div class="coming-soon-card reveal reveal-delay-2"><div class="service-header"><div class="service-icon"><img src="https://cdn.jsdelivr.net/npm/simple-icons@latest/icons/prometheus.svg" alt=""></div><h3>Prometheus</h3></div><p>Time-series database for collecting and alerting on system metrics across the cluster.</p></div>
+                <div class="coming-soon-card reveal reveal-delay-3"><div class="service-header"><div class="service-icon"><img src="https://cdn.jsdelivr.net/npm/simple-icons@latest/icons/syncthing.svg" alt=""></div><h3>Syncthing</h3></div><p>Peer-to-peer file synchronization. Sync folders across devices without a central server.</p></div>
                 <div class="coming-soon-card reveal reveal-delay-1"><div class="service-header"><div class="service-icon"><svg viewBox="0 0 24 24" fill="none"><rect x="3" y="5" width="18" height="14" rx="2" stroke="#5EB8A8" stroke-width="1.5"/><path d="M3 8h18" stroke="#5EB8A8" stroke-width="1.5"/></svg></div><h3>Stalwart Mail</h3></div><p>Self-hosted email server with IMAP, JMAP, and SMTP support. Your own private email domain.</p></div>
             </div>
         </div>
@@ -328,64 +267,40 @@
         </div>
 
         <div style="height: 60px;"></div>
-        <div class="page-footer">
-            <div class="footer-links">
-                <a href="/pricing.html">Pricing</a>
-                <a href="/support.html">Support</a>
-                <a href="/about.html">About Us</a>
-                <a href="/suggest.html">Suggest a Service</a>
-                <a href="mailto:support@mysweetpea.cc">Contact</a>
-            </div>
-            <p>&copy; 2026 MySweetPea. Self-hosted with care.</p>
+    </main>
+    <footer class="page-footer">
+        <div class="footer-links">
+            <a href="/index.html">Home</a>
+            <a href="/pricing.html">Pricing</a>
+            <a href="/support.html">Support</a>
+            <a href="/about.html">About</a>
+            <a href="/suggest.html">Suggest</a>
         </div>
-    </div>
+        <p>&copy; 2026 MySweetPea. Privacy-first, self-hosted, community funded.</p>
+    </footer>
 
-    <div class="modal-overlay" id="modalOverlay" onclick="closeModal(event)">
-        <div class="modal" id="modalContent">
-            <button class="modal-close" onclick="closeModalDirect()">&times;</button>
+    <div class="modal-overlay" id="modalOverlay" role="dialog" aria-modal="true" onclick="closeModal(event)">
+        <div class="modal">
+            <button class="modal-close" onclick="closeModalDirect()" aria-label="Close dialog">&times;</button>
             <div id="modalInner"></div>
         </div>
     </div>
-
+    <script src="/assets/js/site.js" defer></script>
     <script>
-        // Scroll Progress
-        const scrollProgress = document.getElementById('scrollProgress');
-        window.addEventListener('scroll', function() {
-            const scrolled = (window.scrollY / (document.documentElement.scrollHeight - window.innerHeight)) * 100;
-            scrollProgress.style.width = scrolled + '%';
-        });
-
-        // Reveal Animations
-        const revealObserver = new IntersectionObserver(function(entries) {
-            entries.forEach(function(entry) {
-                if (entry.isIntersecting) { entry.target.classList.add('visible'); revealObserver.unobserve(entry.target); }
-            });
-        }, { threshold: 0.15, rootMargin: '0px 0px -50px 0px' });
-        document.querySelectorAll('.reveal').forEach(function(el) { revealObserver.observe(el); });
-
-        // Glow Card Mouse Tracking
-        document.querySelectorAll('.glow-card').forEach(function(card) {
-            card.addEventListener('mousemove', function(e) {
-                var rect = card.getBoundingClientRect();
-                card.style.setProperty('--mouse-x', (e.clientX - rect.left) + 'px');
-                card.style.setProperty('--mouse-y', (e.clientY - rect.top) + 'px');
-            });
-        });
-
         // FAQ Toggle
         function toggleFAQ(el) { el.parentElement.classList.toggle('open'); }
 
         // Modal
         var SERVICES = {
-            vaultwarden: { name:'Vaultwarden', icon:'<img src="https://cdn.jsdelivr.net/npm/simple-icons@latest/icons/vaultwarden.svg" alt="Vaultwarden">', tier:'seedling', tierLabel:'Seedling', desc:'Vaultwarden is a password manager that remembers all your passwords so you do not have to. Think of it as a secure vault for your digital life. It creates strong, unique passwords for every website and fills them in automatically. Your vault is encrypted end-to-end — even we cannot see your passwords.', tutorial:['Go to <a href="https://vault.mysweetpea.cc" target="_blank">https://vault.mysweetpea.cc</a>','Log in with your Authentik SSO account — this automatically creates your Vaultwarden account using your Authentik credentials for authentication','Once logged in, you can access your vault on the web, or install the <a href="https://bitwarden.com/download/" target="_blank">Bitwarden browser extension</a> for Chrome, Firefox, or Edge','In the extension settings, set the server URL to <code>https://vault.mysweetpea.cc</code> and log in with SSO','You can also download the Bitwarden mobile app for iOS or Android and connect to the same server','Start adding passwords, notes, and secure items to your vault'], url:'https://vault.mysweetpea.cc' },
-            matrix: { name:'Matrix / Element', icon:'<img src="https://cdn.jsdelivr.net/npm/simple-icons@latest/icons/matrix.svg" alt="Matrix">', tier:'seedling', tierLabel:'Seedling', desc:'Matrix is a private, encrypted chat system. Element is the app you use to access it. Think of it as Discord or Slack, but nobody can read your messages except you and the people you chat with. Create rooms, send messages, share files, all encrypted.', tutorial:['Go to <a href="https://chat.mysweetpea.cc" target="_blank">https://chat.mysweetpea.cc</a>','Click "Log In" — you will be redirected to Authentik SSO','Enter your MySweetPea credentials to authenticate','Once logged in, you can join rooms or create your own','Download the <a href="https://element.io/download" target="_blank">Element app</a> for desktop or mobile','In the app, set the homeserver to <code>matrix.mysweetpea.cc</code> and log in via SSO'], url:'https://chat.mysweetpea.cc' },
-            affine: { name:'AFFiNE', icon:'<img src="https://cdn.jsdelivr.net/npm/simple-icons@latest/icons/affine.svg" alt="AFFiNE">', tier:'seedling', tierLabel:'Seedling', desc:'AFFiNE is a free alternative to Notion. Create documents, wikis, whiteboards, and knowledge bases. All your notes are stored privately on our server, not on a corporate cloud. It is like having Notion and Miro in one private workspace.', tutorial:['Go to <a href="https://notes.mysweetpea.cc" target="_blank">https://notes.mysweetpea.cc</a>','Click "Continue with OIDC" — do NOT click "Sign In"','You will be redirected to Authentik SSO — log in with your MySweetPea credentials','Create your first workspace','Start adding pages, blocks, and content','Use the whiteboard mode for visual brainstorming'], url:'https://notes.mysweetpea.cc' },
-            koalasync: { name:'KoalaSync', icon:'<svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" stroke="#5EB8A8" stroke-width="1.5"/><path d="M8 12 L12 8 L16 12 L12 16 Z" fill="#5EB8A8"/></svg>', tier:'seedling', tierLabel:'Seedling', desc:'KoalaSync lets you watch movies and shows together with friends in real-time. Everyone sees the same scene at the same time, as if you were in the same room. Works with Jellyfin, YouTube, and other video sites.', tutorial:['Go to <a href="https://sync.mysweetpea.cc" target="_blank">https://sync.mysweetpea.cc</a>','Log in via Authentik SSO with your MySweetPea credentials','Create a new room — when prompted for the server URL, enter <code>wss://sync.mysweetpea.cc</code>','Share the room link with your friends','Play a video from Jellyfin or paste a video URL','Playback will sync automatically for all viewers'], url:'https://sync.mysweetpea.cc' },
-            jellyfin: { name:'Jellyfin / Moonfin', icon:'<img src="https://cdn.jsdelivr.net/npm/simple-icons@latest/icons/jellyfin.svg" alt="Jellyfin">', tier:'sweetpea', tierLabel:'Sweet Pea', desc:'Jellyfin is your own private Netflix — a free, open-source media server that streams your movie and TV collection to any device. Moonfin is a premium web interface that runs on top of Jellyfin, providing a polished, modern experience with enhanced features like collections, ratings from multiple sources, and a customizable home screen. We recommend using Moonfin for the best experience.', tutorial:['Go to <a href="https://media.mysweetpea.cc/Moonfin/Web/" target="_blank">https://media.mysweetpea.cc/Moonfin/Web/</a> — this is Moonfin, the recommended interface','Log in with your Authentik credentials (LDAP login)','Moonfin connects to Jellyfin automatically — it is a custom frontend that uses Jellyfin as the backend media server','Browse movies and TV shows, create collections, and view ratings from IMDb, Rotten Tomatoes, and more','For the standard Jellyfin interface, visit <a href="https://media.mysweetpea.cc" target="_blank">https://media.mysweetpea.cc</a>','Install the <a href="https://jellyfin.org/downloads/" target="_blank">Jellyfin app</a> on your phone, tablet, or TV and set the server to <code>https://media.mysweetpea.cc</code>'], url:'https://media.mysweetpea.cc/Moonfin/Web/' },
-            seerr: { name:'Seerr', icon:'<svg viewBox="0 0 24 24" fill="none"><rect x="3" y="3" width="18" height="18" rx="3" stroke="#5EB8A8" stroke-width="1.5"/><path d="M8 12 L12 8 L16 12 L12 16 Z" fill="#5EB8A8"/></svg>', tier:'sweetpea', tierLabel:'Sweet Pea', desc:'Seerr is like a wish list for movies and shows. Browse what is trending, see what is already available, and request anything you want to watch. Your request is processed automatically and the content appears in Jellyfin.', tutorial:['Go to <a href="https://request.mysweetpea.cc" target="_blank">https://request.mysweetpea.cc</a>','Log in with your Jellyfin credentials','Browse the Discover page for trending content','Click "Request" on any movie or show you want to watch','Your request will be processed automatically','You will receive a notification when the content is available in Jellyfin'], url:'https://request.mysweetpea.cc' },
-            nextcloud: { name:'Nextcloud', icon:'<img src="https://cdn.jsdelivr.net/npm/simple-icons@latest/icons/nextcloud.svg" alt="Nextcloud">', tier:'sweetpea', tierLabel:'Sweet Pea', desc:'Nextcloud is your own private Google Drive. Sync files across all your devices, share folders with others, and access your data from anywhere. No storage limits, no privacy concerns, no corporate data mining.', tutorial:['Go to <a href="https://cloud.mysweetpea.cc" target="_blank">https://cloud.mysweetpea.cc</a>','Log in with your MySweetPea credentials','Upload files by dragging them into the browser window','Download the <a href="https://nextcloud.com/install/" target="_blank">Nextcloud desktop client</a> for automatic sync','Install the Nextcloud mobile app for iOS or Android','Set the server address to <code>https://cloud.mysweetpea.cc</code>'], url:'https://cloud.mysweetpea.cc' },
-            openwebui: { name:'Open WebUI', icon:'<svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" stroke="#5EB8A8" stroke-width="1.5"/><path d="M8 10 Q8 8 10 8 L14 8 Q16 8 16 10 L16 13 Q16 15 14 15 L12 15 L12 17" stroke="#5EB8A8" stroke-width="1.5" fill="none"/><circle cx="12" cy="19" r="1" fill="#5EB8A8"/></svg>', tier:'sweetpea', tierLabel:'Sweet Pea', desc:'Open WebUI is a private AI assistant, like ChatGPT but running entirely on our own server. Ask it questions, draft emails, write code, or brainstorm ideas. Your conversations stay completely private and never leave our network.', tutorial:['Go to <a href="https://ai.mysweetpea.cc" target="_blank">https://ai.mysweetpea.cc</a>','Log in with your MySweetPea credentials','Select an AI model from the dropdown (e.g., Llama 3.2)','Start a new chat by typing your question or prompt','You can upload documents for the AI to analyze','Your conversation history is saved privately in your account'], url:'https://ai.mysweetpea.cc' },
-            immich: { name:'Immich', icon:'<img src="https://cdn.jsdelivr.net/npm/simple-icons@latest/icons/immich.svg" alt="Immich">', tier:'sweetpea', tierLabel:'Sweet Pea', desc:'Immich is your own private Google Photos. Automatically back up photos and videos from your phone, organize them with face recognition, search by location, and share albums with family. All your memories stay private on our server, not on a corporate cloud.', tutorial:['Go to <a href="https://photos.mysweetpea.cc" target="_blank">https://photos.mysweetpea.cc</a>','Log in with your MySweetPea credentials','Download the <a href="https://immich.app/downloads/" target="_blank">Immich mobile app</a> for iOS or Android','In the app, set the server URL to <code>https://photos.mysweetpea.cc</code>','Log in and enable automatic backup in Settings','Your photos will upload automatically in the background'], url:'https://photos.mysweetpea.cc' }
+            vaultwarden: { name:'Vaultwarden', icon:'<img src="https://cdn.jsdelivr.net/npm/simple-icons@latest/icons/vaultwarden.svg" alt="">', tier:'seedling', tierLabel:'Seedling', desc:'Vaultwarden is a password manager that remembers all your passwords so you do not have to. Think of it as a secure vault for your digital life. It creates strong, unique passwords for every website and fills them in automatically. Your vault is encrypted end-to-end — even we cannot see your passwords.', tutorial:['Go to <a href="https://vault.mysweetpea.cc" target="_blank" rel="noopener noreferrer">https://vault.mysweetpea.cc</a>','Log in with your Authentik SSO account — this automatically creates your Vaultwarden account using your Authentik credentials for authentication','Once logged in, you can access your vault on the web, or install the <a href="https://bitwarden.com/download/" target="_blank" rel="noopener noreferrer">Bitwarden browser extension</a> for Chrome, Firefox, or Edge','In the extension settings, set the server URL to <code>https://vault.mysweetpea.cc</code> and log in with SSO','You can also download the Bitwarden mobile app for iOS or Android and connect to the same server','Start adding passwords, notes, and secure items to your vault'], url:'https://vault.mysweetpea.cc' },
+            matrix: { name:'Matrix / Element', icon:'<img src="https://cdn.jsdelivr.net/npm/simple-icons@latest/icons/matrix.svg" alt="">', tier:'seedling', tierLabel:'Seedling', desc:'Matrix is a private, encrypted chat system. Element is the app you use to access it. Think of it as Discord or Slack, but nobody can read your messages except you and the people you chat with. Create rooms, send messages, share files, all encrypted.', tutorial:['Go to <a href="https://chat.mysweetpea.cc" target="_blank" rel="noopener noreferrer">https://chat.mysweetpea.cc</a>','Click "Log In" — you will be redirected to Authentik SSO','Enter your MySweetPea credentials to authenticate','Once logged in, you can join rooms or create your own','Download the <a href="https://element.io/download" target="_blank" rel="noopener noreferrer">Element app</a> for desktop or mobile','In the app, set the homeserver to <code>matrix.mysweetpea.cc</code> and log in via SSO'], url:'https://chat.mysweetpea.cc' },
+            affine: { name:'AFFiNE', icon:'<img src="https://cdn.jsdelivr.net/npm/simple-icons@latest/icons/affine.svg" alt="">', tier:'seedling', tierLabel:'Seedling', desc:'AFFiNE is a free alternative to Notion. Create documents, wikis, whiteboards, and knowledge bases. All your notes are stored privately on our server, not on a corporate cloud. It is like having Notion and Miro in one private workspace.', tutorial:['Go to <a href="https://notes.mysweetpea.cc" target="_blank" rel="noopener noreferrer">https://notes.mysweetpea.cc</a>','Click "Continue with OIDC" — do NOT click "Sign In"','You will be redirected to Authentik SSO — log in with your MySweetPea credentials','Create your first workspace','Start adding pages, blocks, and content','Use the whiteboard mode for visual brainstorming'], url:'https://notes.mysweetpea.cc' },
+            koalasync: { name:'KoalaSync', icon:'<svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" stroke="#5EB8A8" stroke-width="1.5"/><path d="M8 12 L12 8 L16 12 L12 16 Z" fill="#5EB8A8"/></svg>', tier:'seedling', tierLabel:'Seedling', desc:'KoalaSync lets you watch movies and shows together with friends in real-time. Everyone sees the same scene at the same time, as if you were in the same room. Works with Jellyfin, YouTube, and other video sites.', tutorial:['Go to <a href="https://sync.mysweetpea.cc" target="_blank" rel="noopener noreferrer">https://sync.mysweetpea.cc</a>','Log in via Authentik SSO with your MySweetPea credentials','Create a new room — when prompted for the server URL, enter <code>wss://sync.mysweetpea.cc</code>','Share the room link with your friends','Play a video from Jellyfin or paste a video URL','Playback will sync automatically for all viewers'], url:'https://sync.mysweetpea.cc' },
+            jellyfin: { name:'Jellyfin / Moonfin', icon:'<img src="https://cdn.jsdelivr.net/npm/simple-icons@latest/icons/jellyfin.svg" alt="">', tier:'sweetpea', tierLabel:'Sweet Pea', desc:'Jellyfin is your own private Netflix — a free, open-source media server that streams your movie and TV collection to any device. Moonfin is a premium web interface that runs on top of Jellyfin, providing a polished, modern experience with enhanced features like collections, ratings from multiple sources, and a customizable home screen. We recommend using Moonfin for the best experience.', tutorial:['Go to <a href="https://media.mysweetpea.cc/Moonfin/Web/" target="_blank" rel="noopener noreferrer">https://media.mysweetpea.cc/Moonfin/Web/</a> — this is Moonfin, the recommended interface','Log in with your Authentik credentials (LDAP login)','Moonfin connects to Jellyfin automatically — it is a custom frontend that uses Jellyfin as the backend media server','Browse movies and TV shows, create collections, and view ratings from IMDb, Rotten Tomatoes, and more','For the standard Jellyfin interface, visit <a href="https://media.mysweetpea.cc" target="_blank" rel="noopener noreferrer">https://media.mysweetpea.cc</a>','Install the <a href="https://jellyfin.org/downloads/" target="_blank" rel="noopener noreferrer">Jellyfin app</a> on your phone, tablet, or TV and set the server to <code>https://media.mysweetpea.cc</code>'], url:'https://media.mysweetpea.cc/Moonfin/Web/' },
+            seerr: { name:'Seerr', icon:'<svg viewBox="0 0 24 24" fill="none"><rect x="3" y="3" width="18" height="18" rx="3" stroke="#5EB8A8" stroke-width="1.5"/><path d="M8 12 L12 8 L16 12 L12 16 Z" fill="#5EB8A8"/></svg>', tier:'sweetpea', tierLabel:'Sweet Pea', desc:'Seerr is like a wish list for movies and shows. Browse what is trending, see what is already available, and request anything you want to watch. Your request is processed automatically and the content appears in Jellyfin.', tutorial:['Go to <a href="https://request.mysweetpea.cc" target="_blank" rel="noopener noreferrer">https://request.mysweetpea.cc</a>','Log in with your Jellyfin credentials','Browse the Discover page for trending content','Click "Request" on any movie or show you want to watch','Your request will be processed automatically','You will receive a notification when the content is available in Jellyfin'], url:'https://request.mysweetpea.cc' },
+            nextcloud: { name:'Nextcloud', icon:'<img src="https://cdn.jsdelivr.net/npm/simple-icons@latest/icons/nextcloud.svg" alt="">', tier:'sweetpea', tierLabel:'Sweet Pea', desc:'Nextcloud is your own private Google Drive. Sync files across all your devices, share folders with others, and access your data from anywhere. No storage limits, no privacy concerns, no corporate data mining.', tutorial:['Go to <a href="https://cloud.mysweetpea.cc" target="_blank" rel="noopener noreferrer">https://cloud.mysweetpea.cc</a>','Log in with your MySweetPea credentials','Upload files by dragging them into the browser window','Download the <a href="https://nextcloud.com/install/" target="_blank" rel="noopener noreferrer">Nextcloud desktop client</a> for automatic sync','Install the Nextcloud mobile app for iOS or Android','Set the server address to <code>https://cloud.mysweetpea.cc</code>'], url:'https://cloud.mysweetpea.cc' },
+            openwebui: { name:'Open WebUI', icon:'<svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" stroke="#5EB8A8" stroke-width="1.5"/><path d="M8 10 Q8 8 10 8 L14 8 Q16 8 16 10 L16 13 Q16 15 14 15 L12 15 L12 17" stroke="#5EB8A8" stroke-width="1.5" fill="none"/><circle cx="12" cy="19" r="1" fill="#5EB8A8"/></svg>', tier:'sweetpea', tierLabel:'Sweet Pea', desc:'Open WebUI is a private AI assistant, like ChatGPT but running entirely on our own server. Ask it questions, draft emails, write code, or brainstorm ideas. Your conversations stay completely private and never leave our network.', tutorial:['Go to <a href="https://ai.mysweetpea.cc" target="_blank" rel="noopener noreferrer">https://ai.mysweetpea.cc</a>','Log in with your MySweetPea credentials','Select an AI model from the dropdown (e.g., Llama 3.2)','Start a new chat by typing your question or prompt','You can upload documents for the AI to analyze','Your conversation history is saved privately in your account'], url:'https://ai.mysweetpea.cc' },
+            immich: { name:'Immich', icon:'<img src="https://cdn.jsdelivr.net/npm/simple-icons@latest/icons/immich.svg" alt="">', tier:'sweetpea', tierLabel:'Sweet Pea', desc:'Immich is your own private Google Photos. Automatically back up photos and videos from your phone, organize them with face recognition, search by location, and share albums with family. All your memories stay private on our server, not on a corporate cloud.', tutorial:['Go to <a href="https://photos.mysweetpea.cc" target="_blank" rel="noopener noreferrer">https://photos.mysweetpea.cc</a>','Log in with your MySweetPea credentials','Download the <a href="https://immich.app/downloads/" target="_blank" rel="noopener noreferrer">Immich mobile app</a> for iOS or Android','In the app, set the server URL to <code>https://photos.mysweetpea.cc</code>','Log in and enable automatic backup in Settings','Your photos will upload automatically in the background'], url:'https://photos.mysweetpea.cc' }
         };
 
         function openModal(key) {
@@ -394,27 +309,14 @@
             document.getElementById('modalInner').innerHTML =
                 '<div class="modal-header"><div class="modal-icon">' + s.icon + '</div><div><h2>' + s.name + '</h2><span class="tier-tag ' + tc + '">' + s.tierLabel + '</span></div></div>' +
                 '<div class="modal-body"><p>' + s.desc + '</p><div class="modal-tutorial"><h3>How to Get Started</h3><ol>' + s.tutorial.map(function(st){return '<li>'+st+'</li>';}).join('') + '</ol></div>' +
-                '<div class="modal-footer"><a href="' + s.url + '" target="_blank" class="btn btn-primary">Open ' + s.name + '</a><a href="/form.html" class="btn btn-secondary">Get Access</a></div></div>';
+                '<div class="modal-footer"><a href="' + s.url + '" target="_blank" rel="noopener noreferrer" class="btn btn-primary">Open ' + s.name + '</a><a href="/form.html" class="btn btn-secondary">Get Access</a></div></div>';
             document.getElementById('modalOverlay').classList.add('active');
             document.body.style.overflow = 'hidden';
+            document.querySelector('.modal-close').focus();
         }
         function closeModal(e) { if (e.target === document.getElementById('modalOverlay')) closeModalDirect(); }
         function closeModalDirect() { document.getElementById('modalOverlay').classList.remove('active'); document.body.style.overflow = ''; }
         document.addEventListener('keydown', function(e) { if (e.key === 'Escape') closeModalDirect(); });
-
-        // Falling Petals
-        (function() {
-            var canvas = document.getElementById('petalCanvas');
-            var ctx = canvas.getContext('2d');
-            var petals = []; var W, H;
-            function resize() { W = canvas.width = window.innerWidth; H = canvas.height = window.innerHeight; }
-            resize(); window.addEventListener('resize', resize);
-            function createPetal() { return { x: Math.random() * W, y: -20, size: 4 + Math.random() * 8, speedY: 0.5 + Math.random() * 1.5, speedX: -0.5 + Math.random() * 1, rotation: Math.random() * Math.PI * 2, rotSpeed: -0.02 + Math.random() * 0.04, opacity: 0.12 + Math.random() * 0.25, sway: Math.random() * Math.PI * 2, swaySpeed: 0.01 + Math.random() * 0.02 }; }
-            for (var i = 0; i < 40; i++) { var p = createPetal(); p.y = Math.random() * H; petals.push(p); }
-            function drawPetal(p) { ctx.save(); ctx.translate(p.x, p.y); ctx.rotate(p.rotation); ctx.globalAlpha = p.opacity; var grad = ctx.createRadialGradient(0, 0, 0, 0, 0, p.size); grad.addColorStop(0, '#F0F8F6'); grad.addColorStop(0.5, '#5EB8A8'); grad.addColorStop(1, 'rgba(94, 184, 168, 0.3)'); ctx.fillStyle = grad; ctx.beginPath(); ctx.moveTo(0, -p.size); ctx.bezierCurveTo(p.size * 0.6, -p.size * 0.5, p.size * 0.6, p.size * 0.5, 0, p.size); ctx.bezierCurveTo(-p.size * 0.6, p.size * 0.5, -p.size * 0.6, -p.size * 0.5, 0, -p.size); ctx.fill(); ctx.strokeStyle = 'rgba(94, 184, 168, 0.4)'; ctx.lineWidth = 0.5; ctx.stroke(); ctx.restore(); }
-            function animate() { ctx.clearRect(0, 0, W, H); for (var i = 0; i < petals.length; i++) { var p = petals[i]; p.sway += p.swaySpeed; p.x += p.speedX + Math.sin(p.sway) * 0.5; p.y += p.speedY; p.rotation += p.rotSpeed; if (p.y > H + 20) petals[i] = createPetal(); if (p.x < -20) p.x = W + 20; if (p.x > W + 20) p.x = -20; drawPetal(p); } requestAnimationFrame(animate); }
-            animate();
-        })();
     </script>
 </body>
 </html>
