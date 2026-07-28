@@ -10,151 +10,15 @@
     <meta property="og:description" content="One small donation, lifetime access. Explore MySweetPea's self-hosted services and pricing tiers.">
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://mysweetpea.cc/">
+    <meta property="og:image" content="https://mysweetpea.cc/logo.svg">
     <link rel="icon" type="image/svg+xml" href="/logo-favicon.svg">
     <link rel="preload" as="image" href="/logo.svg">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/assets/css/site.css">
-    <style>
-@keyframes emoji3DRotate { 0%, 100% { transform: perspective(200px) rotateY(0deg) rotateX(0deg); } 25% { transform: perspective(200px) rotateY(8deg) rotateX(-3deg); } 50% { transform: perspective(200px) rotateY(0deg) rotateX(3deg); } 75% { transform: perspective(200px) rotateY(-8deg) rotateX(-3deg); } }
-/* Hero */
-        .hero { text-align: center; padding: 120px 24px 30px; }
-.hero img.logo { width: 180px; height: 180px; margin-bottom: 16px; filter: drop-shadow(0 8px 24px rgba(197, 213, 216, 0.12)); animation: float3D 7s ease-in-out infinite; }
-.hero h1 { font-size: 2.4rem; font-weight: 700; margin-bottom: 8px; }
-.hero p { font-size: 1rem; color: var(--text-dim); max-width: 500px; margin: 0 auto; }
-/* Info Box */
-        .info-box { max-width: 600px; margin: 30px auto; background: rgba(143, 175, 181, 0.06); border: 1px solid rgba(143, 175, 181, 0.15); border-radius: var(--radius-sm); padding: 20px; font-size: 0.88rem; color: var(--text-dim); line-height: 1.6; }
-.info-box strong { color: var(--primary); }
-/* Pricing */
-        .pricing-section { max-width: 800px; margin: 0 auto; padding: 20px; }
-.pricing-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 24px; margin-bottom: 80px; }
-.pricing-card { background: var(--card-bg); backdrop-filter: blur(16px) saturate(1.2); -webkit-backdrop-filter: blur(16px) saturate(1.2); border: 2px solid; border-radius: var(--radius); padding: 36px 28px; text-align: center; display: flex; flex-direction: column; transition: var(--transition); position: relative; overflow: hidden; box-shadow: inset 0 1px 0 0 rgba(255,255,255,0.05), 0 8px 32px rgba(0,0,0,0.3); }
-.pricing-card.tier-seedling { border-color: rgba(163, 201, 182, 0.4); animation: pulseGlowGreen 4s ease-in-out infinite; }
-.pricing-card.tier-seedling:hover { border-color: rgba(163, 201, 182, 0.7); box-shadow: inset 0 1px 0 0 rgba(255,255,255,0.08), 0 12px 40px rgba(0,0,0,0.4), 0 0 20px rgba(163, 201, 182,0.1); }
-.pricing-card.tier-sweetpea { border-color: rgba(107, 154, 166, 0.4); }
-.pricing-card.tier-sweetpea:hover { border-color: rgba(107, 154, 166, 0.7); box-shadow: inset 0 1px 0 0 rgba(255,255,255,0.08), 0 12px 40px rgba(0,0,0,0.4), 0 0 20px rgba(107, 154, 166,0.1); }
-.pricing-card:hover { transform: translateY(-6px); }
-.tier-emoji-3d { display: inline-block; font-size: 2.5rem; margin-bottom: 12px; animation: emoji3DRotate 8s ease-in-out infinite; filter: drop-shadow(0 4px 8px rgba(0,0,0,0.4)); transform-style: preserve-3d; }
-.tier-name { font-size: 1.2rem; font-weight: 700; margin-bottom: 6px; }
-.tier-name-seedling { background: linear-gradient(135deg, rgba(240,248,246,0.9) 0%, rgba(163, 201, 182,0.8) 30%, rgba(240,248,246,0.6) 50%, rgba(163, 201, 182,0.8) 70%, rgba(240,248,246,0.9) 100%); background-size: 200% auto; -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; text-shadow: 0 0 25px rgba(163, 201, 182,0.2); animation: shimmer 6s linear infinite; filter: drop-shadow(0 0 3px rgba(163, 201, 182,0.4)); }
-.tier-name-sweetpea { background: linear-gradient(135deg, rgba(240,248,246,0.9) 0%, rgba(107, 154, 166,0.8) 30%, rgba(240,248,246,0.6) 50%, rgba(107, 154, 166,0.8) 70%, rgba(240,248,246,0.9) 100%); background-size: 200% auto; -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; text-shadow: 0 0 25px rgba(107, 154, 166,0.2); animation: shimmer 6s linear infinite; filter: drop-shadow(0 0 3px rgba(107, 154, 166,0.4)); }
-.pricing-card .price { font-size: 2.2rem; color: var(--text); font-weight: 800; margin: 10px 0 2px; }
-.pricing-card .price-period { font-size: 0.8rem; color: var(--text-dim); margin-bottom: 16px; }
-.pricing-card .desc { font-size: 0.84rem; color: var(--text-dim); margin-bottom: 20px; line-height: 1.5; }
-.pricing-card .features { text-align: left; margin-bottom: 24px; flex-grow: 1; list-style: none; }
-.pricing-card .features li { font-size: 0.82rem; color: var(--text-dim); margin-bottom: 8px; padding-left: 24px; position: relative; }
-.pricing-card .features li::before { content: '\2713'; position: absolute; left: 0; color: var(--primary); font-weight: 700; }
-/* Vine Button */
-        .vine-btn-wrapper { position: relative; display: inline-block; width: 100%; margin-top: auto; }
-.vine-btn-wrapper svg { position: absolute; top: -8px; left: -12px; width: calc(100% + 24px); height: calc(100% + 20px); pointer-events: none; opacity: 0; transition: opacity 0.4s ease; z-index: 2; }
-.vine-btn-wrapper:hover svg { opacity: 1; }
-.vine-btn-wrapper .btn { position: relative; z-index: 1; display: block; width: 100%; padding: 14px 28px; border: none; border-radius: var(--radius-sm); font-size: 0.92rem; font-weight: 600; text-decoration: none; transition: var(--transition); cursor: pointer; text-align: center; }
-.btn-glass-seedling { background: rgba(163, 201, 182, 0.05); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); color: var(--text); border: 1px solid rgba(163, 201, 182, 0.2); box-shadow: inset 0 1px 0 0 rgba(255,255,255,0.05), 0 4px 16px rgba(0,0,0,0.2); }
-.btn-glass-seedling:hover:not(:disabled) { background: rgba(163, 201, 182, 0.12); border-color: rgba(163, 201, 182, 0.5); box-shadow: inset 0 1px 0 0 rgba(255,255,255,0.08), 0 4px 20px rgba(163, 201, 182,0.15); transform: scale(1.02); }
-.btn-glass-sweetpea { background: rgba(107, 154, 166, 0.05); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); color: var(--text); border: 1px solid rgba(107, 154, 166, 0.2); box-shadow: inset 0 1px 0 0 rgba(255,255,255,0.05), 0 4px 16px rgba(0,0,0,0.2); }
-.btn-glass-sweetpea:hover:not(:disabled) { background: rgba(107, 154, 166, 0.12); border-color: rgba(107, 154, 166, 0.5); box-shadow: inset 0 1px 0 0 rgba(255,255,255,0.08), 0 4px 20px rgba(107, 154, 166,0.15); transform: scale(1.02); }
-/* Glow Card */
-        .glow-card { position: relative; }
-.glow-card::before { content: ''; position: absolute; inset: 0; border-radius: inherit; padding: 1px; background: radial-gradient(300px circle at var(--mouse-x, 50%) var(--mouse-y, 50%), rgba(143, 175, 181, 0.6), transparent 40%); -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0); -webkit-mask-composite: xor; mask-composite: exclude; opacity: 0; transition: opacity 0.3s ease; pointer-events: none; z-index: 1; }
-.glow-card:hover::before { opacity: 1; }
-/* Services */
-        .services-section { max-width: 1000px; margin: 0 auto; padding: 20px; }
-.section-title { font-size: 1.5rem; text-align: center; margin-bottom: 8px; font-weight: 700; }
-.section-subtitle { font-size: 0.95rem; color: var(--text-dim); text-align: center; margin-bottom: 32px; }
-.tier-divider { max-width: 1000px; margin: 40px auto 24px; padding: 0 20px; display: flex; align-items: center; gap: 16px; }
-.tier-divider .line { flex: 1; height: 1px; background: linear-gradient(90deg, transparent, var(--border-primary), transparent); }
-.tier-divider .label { font-size: 0.85rem; color: var(--primary); font-weight: 600; letter-spacing: 0.5px; white-space: nowrap; display: flex; align-items: center; gap: 8px; }
-.tier-divider .label .icon { font-size: 1.1rem; }
-.services-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 16px; }
-.service-card { background: var(--card-bg); backdrop-filter: blur(12px) saturate(1.1); -webkit-backdrop-filter: blur(12px) saturate(1.1); border: 1px solid var(--border); border-radius: var(--radius); padding: 24px; cursor: pointer; transition: var(--transition); position: relative; overflow: hidden; box-shadow: inset 0 1px 0 0 rgba(255,255,255,0.03); }
-.service-card:hover { transform: translateY(-3px); background: rgba(24, 36, 42, 0.7); border-color: var(--border-primary); }
-.service-card .service-header { display: flex; align-items: center; gap: 14px; margin-bottom: 10px; }
-.service-card .service-icon { width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; background: rgba(255,255,255,0.04); border-radius: 10px; flex-shrink: 0; }
-.service-card .service-icon img { width: 24px; height: 24px; filter: brightness(0) invert(1); }
-.service-card .service-icon svg { width: 24px; height: 24px; }
-.service-card h3 { font-size: 0.95rem; font-weight: 600; }
-.service-card p { font-size: 0.8rem; color: var(--text-dim); line-height: 1.4; margin-bottom: 12px; }
-.tier-tag { display: inline-block; font-size: 0.65rem; padding: 3px 10px; border-radius: 4px; font-weight: 600; letter-spacing: 0.3px; }
-.tier-tag.seedling { background: rgba(163, 201, 182, 0.12); color: #A3C9B6; border: 1px solid rgba(163, 201, 182, 0.2); }
-.tier-tag.sweetpea { background: var(--primary-glow); color: var(--primary); border: 1px solid var(--border-primary); }
-.service-card .learn-more { font-size: 0.75rem; color: var(--text-faint); margin-top: 8px; transition: var(--transition); }
-.service-card:hover .learn-more { color: var(--primary); }
-/* Coming Soon */
-        .coming-soon-section { max-width: 1000px; margin: 0 auto 60px; padding: 20px; }
-.coming-soon-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 16px; }
-.coming-soon-card { background: rgba(19, 30, 34, 0.35); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); border: 1px dashed rgba(143, 175, 181, 0.15); border-radius: var(--radius); padding: 24px; transition: var(--transition); position: relative; overflow: hidden; }
-.coming-soon-card:hover { border-color: rgba(143, 175, 181, 0.3); background: rgba(24, 36, 42, 0.45); }
-.coming-soon-card .service-header { display: flex; align-items: center; gap: 14px; margin-bottom: 10px; }
-.coming-soon-card .service-icon { width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; background: rgba(255,255,255,0.03); border-radius: 10px; flex-shrink: 0; }
-.coming-soon-card .service-icon img { width: 24px; height: 24px; filter: brightness(0) invert(1); opacity: 0.5; }
-.coming-soon-card h3 { font-size: 0.95rem; font-weight: 600; color: var(--text-dim); }
-.coming-soon-card p { font-size: 0.8rem; color: var(--text-faint); line-height: 1.4; }
-/* FAQ */
-        .faq-section { max-width: 720px; margin: 0 auto 80px; padding: 20px; }
-.faq-item { background: var(--card-bg); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border: 1px solid var(--border); border-radius: var(--radius-sm); margin-bottom: 10px; overflow: hidden; transition: var(--transition); }
-.faq-item:hover { border-color: var(--border-primary); }
-.faq-question { padding: 16px 20px; font-size: 0.9rem; color: var(--text); cursor: pointer; display: flex; justify-content: space-between; align-items: center; transition: var(--transition); user-select: none; }
-.faq-question:hover { color: var(--primary); }
-.faq-question .arrow { transition: transform 0.3s ease; color: var(--text-dim); font-size: 0.8rem; }
-.faq-item.open .faq-question .arrow { transform: rotate(180deg); color: var(--primary); }
-.faq-answer { max-height: 0; overflow: hidden; transition: max-height 0.3s ease, padding 0.3s ease; padding: 0 20px; }
-.faq-item.open .faq-answer { max-height: 300px; padding: 0 20px 16px; }
-.faq-answer p { font-size: 0.84rem; color: var(--text-dim); line-height: 1.5; }
-/* Modal */
-        .modal-overlay { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0, 0, 0, 0.7); backdrop-filter: blur(4px); z-index: 100; align-items: center; justify-content: center; padding: 20px; }
-.modal-overlay.active { display: flex; }
-.modal { background: #101A1E; border: 1px solid var(--border-primary); border-radius: var(--radius); max-width: 520px; width: 100%; max-height: 85vh; overflow-y: auto; padding: 32px; position: relative; backdrop-filter: blur(20px); box-shadow: 0 24px 80px rgba(0, 0, 0, 0.5); }
-.modal-close { position: absolute; top: 16px; right: 16px; background: none; border: none; color: var(--text-dim); font-size: 1.4rem; cursor: pointer; transition: var(--transition); line-height: 1; }
-.modal-close:hover { color: var(--primary); }
-.modal-header { display: flex; align-items: center; gap: 16px; margin-bottom: 20px; }
-.modal-icon { width: 56px; height: 56px; display: flex; align-items: center; justify-content: center; background: rgba(255,255,255,0.04); border-radius: 12px; flex-shrink: 0; }
-.modal-icon img { width: 32px; height: 32px; filter: brightness(0) invert(1); }
-.modal-icon svg { width: 32px; height: 32px; }
-.modal-header h2 { font-size: 1.3rem; color: var(--primary); font-weight: 700; }
-.modal-header .tier-tag { margin-top: 4px; }
-.modal-body p { font-size: 0.88rem; color: var(--text-dim); line-height: 1.6; margin-bottom: 16px; }
-.modal-tutorial { background: rgba(14, 22, 26, 0.6); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 20px; margin-bottom: 20px; }
-.modal-tutorial h3 { font-size: 0.85rem; color: var(--primary); margin-bottom: 12px; font-weight: 600; }
-.modal-tutorial ol { padding-left: 20px; }
-.modal-tutorial li { font-size: 0.82rem; color: var(--text-dim); margin-bottom: 8px; line-height: 1.5; }
-.modal-tutorial a { color: var(--primary); text-decoration: none; }
-.modal-tutorial a:hover { text-decoration: underline; }
-.modal-footer { display: flex; gap: 12px; align-items: center; }
-.modal-footer .btn { padding: 10px 24px; border: none; border-radius: var(--radius-sm); font-size: 0.88rem; font-weight: 600; text-decoration: none; transition: var(--transition); cursor: pointer; }
-.modal-footer .btn-primary { background: linear-gradient(135deg, var(--primary), var(--primary-dim)); color: var(--bg); }
-.modal-footer .btn-primary:hover { transform: scale(1.02); box-shadow: 0 4px 16px rgba(143, 175, 181, 0.25); }
-.modal-footer .btn-secondary { background: rgba(255, 255, 255, 0.06); color: var(--text); border: 1px solid var(--border); }
-@media (max-width: 768px) {
-            .hero { padding: 100px 20px 20px; }
-            .hero h1 { font-size: 1.6rem; }
-            .hero img.logo { width: 120px; height: 120px; }
-            .pricing-grid { grid-template-columns: 1fr; }
-            .services-grid, .coming-soon-grid { grid-template-columns: 1fr; }
-            .modal { padding: 24px; }
-        }
-    
-        /* Service-card interaction and embedded service icons */
-        .service-card { cursor: pointer; }
-        .service-card:focus-visible { outline: 2px solid var(--primary); outline-offset: 3px; }
-        .service-card .service-icon, .modal-icon { color: var(--text); }
-    
-        /* Repository-hosted brand marks */
-        .service-card .service-icon img[alt="KoalaSync logo"],
-        .service-card .service-icon img[alt="Seerr logo"],
-        .modal-icon img[alt="KoalaSync logo"],
-        .modal-icon img[alt="Seerr logo"] {
-            filter: brightness(0) invert(1);
-            object-fit: contain;
-        }
-        .service-card .service-icon img[alt="Open WebUI logo"],
-        .modal-icon img[alt="Open WebUI logo"] {
-            filter: none;
-            object-fit: contain;
-        }
-    </style>
 </head>
-<body>
+<body data-page="pricing">
     <a href="#main-content" class="skip-link">Skip to content</a>
     <div class="scroll-progress" id="scrollProgress" aria-hidden="true"></div>
     <div class="bg-gradient" aria-hidden="true"></div>
@@ -166,7 +30,12 @@
             <img src="/logo.svg" alt="" width="32" height="32">
             <span>MySweetPea</span>
         </a>
-        <div class="nav-links">
+        <button class="nav-toggle" aria-expanded="false" aria-controls="nav-links" aria-label="Toggle navigation menu">
+            <span class="nav-toggle-bar"></span>
+            <span class="nav-toggle-bar"></span>
+            <span class="nav-toggle-bar"></span>
+        </button>
+        <div class="nav-links" id="nav-links">
             <a href="/index.html" class="nav-btn">Home</a>
             <a href="/pricing.html" class="nav-btn active" aria-current="page">Pricing</a>
             <a href="/support.html" class="nav-btn">Support</a>
