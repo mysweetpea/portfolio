@@ -105,6 +105,42 @@
         });
     }
 
+
+    /* === Mobile hamburger navigation === */
+    var navToggle = document.querySelector('.nav-toggle');
+    var navLinks = document.getElementById('nav-links');
+    if (navToggle && navLinks) {
+        navToggle.addEventListener('click', function () {
+            var open = navLinks.classList.toggle('nav-open');
+            navToggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+        });
+
+        /* Close menu when a link is chosen */
+        navLinks.addEventListener('click', function (event) {
+            if (event.target.closest('a')) {
+                navLinks.classList.remove('nav-open');
+                navToggle.setAttribute('aria-expanded', 'false');
+            }
+        });
+
+        /* Close on Escape and return focus to the toggle */
+        document.addEventListener('keydown', function (event) {
+            if (event.key === 'Escape' && navLinks.classList.contains('nav-open')) {
+                navLinks.classList.remove('nav-open');
+                navToggle.setAttribute('aria-expanded', 'false');
+                navToggle.focus();
+            }
+        });
+
+        /* Reset state if resized back to desktop */
+        window.addEventListener('resize', function () {
+            if (window.innerWidth > 768) {
+                navLinks.classList.remove('nav-open');
+                navToggle.setAttribute('aria-expanded', 'false');
+            }
+        }, { passive: true });
+    }
+
     /* === Falling frost petals canvas === */
     var canvas = document.getElementById('petalCanvas');
     if (!canvas) return;
