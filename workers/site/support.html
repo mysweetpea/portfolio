@@ -3,34 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MySweetPea — Support Us</title>
+    <title>MySweetPea — Support</title>
+    <meta name="description" content="Support MySweetPea's privacy-first, self-hosted services with a crypto donation — Monero or Bitcoin.">
+    <meta name="theme-color" content="#0A1214">
+    <meta property="og:title" content="MySweetPea — Support">
+    <meta property="og:description" content="Support MySweetPea's privacy-first, self-hosted services with a crypto donation — Monero or Bitcoin.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://mysweetpea.cc/support.html">
     <link rel="icon" type="image/svg+xml" href="/logo-favicon.svg">
+    <link rel="preload" as="image" href="/logo.svg">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/assets/css/site.css">
     <style>
-        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
-        :root {
-            --bg: #0A1214; --primary: #5EB8A8; --primary-dim: #3E8E86; --primary-glow: rgba(94, 184, 168, 0.15);
-            --primary-bright: #7FD4C5; --text: #F0F8F6; --text-dim: #7A9B95; --text-faint: #4A6B65;
-            --border: rgba(94, 184, 168, 0.08); --border-primary: rgba(94, 184, 168, 0.25);
-            --radius: 16px; --radius-sm: 10px; --transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-            --ice: #5EB8E8; --sage: #5ED39E; --teal: #5EB8A8;
-        }
-        html { scroll-behavior: smooth; }
-        body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; line-height: 1.7; overflow-x: hidden; }
-        .scroll-progress { position: fixed; top: 0; left: 0; height: 3px; width: 0%; background: linear-gradient(90deg, var(--primary), var(--primary-bright)); z-index: 100; transition: width 0.1s; box-shadow: 0 0 10px var(--primary-glow); }
-        #petalCanvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; pointer-events: none; }
-        .content-wrapper { position: relative; z-index: 1; }
-        .bg-gradient { position: fixed; top: 0; left: 0; right: 0; bottom: 0; z-index: -1; background: radial-gradient(ellipse 80% 50% at 50% -20%, rgba(94, 184, 168, 0.08), transparent), radial-gradient(ellipse 60% 40% at 80% 100%, rgba(94, 211, 158, 0.04), transparent), var(--bg); }
-        @keyframes shimmer { 0% { background-position: -200% center; } 100% { background-position: 200% center; } }
-        @keyframes float3D { 0%, 100% { transform: translateY(0) rotateX(0) rotateY(0); } 50% { transform: translateY(-10px) rotateX(2deg) rotateY(2deg); } }
-        .glass-text { background: linear-gradient(135deg, rgba(240,248,246,0.95) 0%, rgba(94,184,168,0.8) 30%, rgba(240,248,246,0.6) 50%, rgba(94,184,168,0.8) 70%, rgba(240,248,246,0.95) 100%); background-size: 200% auto; -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; text-shadow: 0 0 30px rgba(94, 184, 168, 0.15); animation: shimmer 6s linear infinite; filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.3)); }
-        .top-nav { position: fixed; top: 0; left: 0; right: 0; z-index: 50; display: flex; justify-content: space-between; align-items: center; padding: 16px 24px; background: rgba(10, 18, 20, 0.6); backdrop-filter: blur(20px) saturate(1.5); -webkit-backdrop-filter: blur(20px) saturate(1.5); border-bottom: 1px solid var(--border); transition: var(--transition); }
-        .nav-logo { display: flex; align-items: center; gap: 10px; text-decoration: none; }
-        .nav-logo img { width: 32px; height: 32px; filter: drop-shadow(0 0 8px var(--primary-glow)); }
-        .nav-logo span { font-size: 1rem; font-weight: 700; color: var(--text); letter-spacing: -0.3px; }
-        .nav-links { display: flex; gap: 6px; align-items: center; }
-        .nav-btn { padding: 8px 16px; background: transparent; border: 1px solid transparent; border-radius: var(--radius-sm); color: var(--text-dim); font-size: 0.85rem; font-weight: 500; text-decoration: none; transition: var(--transition); cursor: pointer; }
-        .nav-btn:hover { color: var(--primary); background: var(--primary-glow); border-color: var(--border-primary); transform: translateY(-1px); }
-        .nav-btn.active { color: var(--primary); border-color: var(--border-primary); }
         .hero { text-align: center; padding: 120px 24px 20px; }
         .hero img.logo { width: 160px; height: 160px; margin-bottom: 16px; filter: drop-shadow(0 0 30px rgba(94, 184, 168, 0.25)); animation: float3D 6s ease-in-out infinite; }
         .hero h1 { font-size: 2rem; font-weight: 700; margin-bottom: 8px; }
@@ -51,7 +37,6 @@
         .crypto-option .name { font-size: 0.86rem; color: #ccc; font-weight: 600; }
         .wallet-display { display: none; background: rgba(10, 18, 20, 0.6); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 20px; margin-bottom: 24px; }
         .wallet-display.visible { display: block; animation: fadeInUp 0.3s ease; }
-        @keyframes fadeInUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
         .wallet-display .wl { font-size: 0.78rem; color: var(--text-dim); margin-bottom: 8px; }
         .wallet-display .wa { font-size: 0.88rem; color: var(--primary); font-family: monospace; word-break: break-all; cursor: pointer; padding: 12px; background: rgba(94, 184, 168, 0.05); border-radius: 8px; transition: var(--transition); border: 1px solid rgba(94, 184, 168, 0.1); }
         .wallet-display .wa:hover { background: rgba(94, 184, 168, 0.1); border-color: var(--border-primary); }
@@ -69,38 +54,38 @@
         .faq-answer { max-height: 0; overflow: hidden; transition: max-height 0.3s ease, padding 0.3s ease; padding: 0 20px; }
         .faq-item.open .faq-answer { max-height: 300px; padding: 0 20px 16px; }
         .faq-answer p { font-size: 0.84rem; color: var(--text-dim); line-height: 1.5; }
-        .page-footer { text-align: center; padding: 40px 20px; font-size: 0.85rem; color: var(--text-faint); border-top: 1px solid var(--border); }
-        .page-footer a { color: var(--primary); text-decoration: none; transition: var(--transition); }
-        .page-footer a:hover { text-decoration: underline; }
-        .page-footer .footer-links { display: flex; justify-content: center; gap: 24px; margin-bottom: 12px; flex-wrap: wrap; }
-        .reveal { opacity: 0; transform: translateY(40px); transition: opacity 0.8s ease, transform 0.8s ease; }
-        .reveal.visible { opacity: 1; transform: translateY(0); }
-        .float-3d { position: absolute; pointer-events: none; opacity: 0.05; z-index: 0; }
-        .float-3d svg { width: 100%; height: 100%; }
-        .float-3d.f1 { top: 15%; right: 5%; width: 120px; height: 120px; animation: float3D 8s ease-in-out infinite; }
-        .float-3d.f2 { top: 45%; left: 3%; width: 80px; height: 80px; animation: float3D 10s ease-in-out infinite reverse; }
-        @media (max-width: 768px) { .top-nav { padding: 12px 16px; flex-direction: column; gap: 8px; } .nav-links { flex-wrap: wrap; justify-content: center; gap: 4px; } .nav-btn { padding: 6px 12px; font-size: 0.78rem; } .hero { padding: 100px 20px 10px; } .hero h1 { font-size: 1.6rem; } .hero img.logo { width: 120px; height: 120px; } .crypto-options { flex-direction: column; } .card { padding: 24px 20px; } .float-3d { display: none; } }
+        @media (max-width: 768px) {
+            .hero { padding: 100px 20px 10px; }
+            .hero h1 { font-size: 1.6rem; }
+            .hero img.logo { width: 120px; height: 120px; }
+            .crypto-options { flex-direction: column; }
+            .card { padding: 24px 20px; }
+        }
     </style>
 </head>
 <body>
-    <div class="scroll-progress" id="scrollProgress"></div>
-    <div class="bg-gradient"></div>
-    <canvas id="petalCanvas"></canvas>
-    <div class="float-3d f1"><svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M50 10 C35 15, 28 30, 32 48 C36 60, 48 68, 50 70 C52 68, 64 60, 68 48 C72 30, 65 15, 50 10" fill="#5EB8A8" opacity="0.8"/><path d="M50 25 C44 28, 40 38, 44 48 C47 55, 50 58, 50 58 C50 58, 53 55, 56 48 C60 38, 56 28, 50 25" fill="#5EB8A8" opacity="0.5"/><path d="M50 10 C42 12, 38 22, 42 35 C45 42, 50 45, 50 45 C50 45, 55 42, 58 35 C62 22, 58 12, 50 10" fill="#5EB8A8" opacity="0.6"/><path d="M50 45 C45 48, 42 55, 45 62 C48 67, 50 68, 50 68 C50 68, 52 67, 55 62 C58 55, 55 48, 50 45" fill="#5EB8A8" opacity="0.4"/><line x1="50" y1="68" x2="50" y2="88" stroke="#5EB8A8" stroke-width="2"/><path d="M45 80 Q40 76, 37 82" stroke="#5EB8A8" stroke-width="1.5" fill="none"/><path d="M55 80 Q60 76, 63 82" stroke="#5EB8A8" stroke-width="1.5" fill="none"/><circle cx="37" cy="82" r="2" fill="#5EB8A8" opacity="0.6"/><circle cx="63" cy="82" r="2" fill="#5EB8A8" opacity="0.6"/></svg></div>
-    <div class="float-3d f2"><svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M50 10 C35 15, 28 30, 32 48 C36 60, 48 68, 50 70 C52 68, 64 60, 68 48 C72 30, 65 15, 50 10" fill="#5EB8A8" opacity="0.8"/><path d="M50 25 C44 28, 40 38, 44 48 C47 55, 50 58, 50 58 C50 58, 53 55, 56 48 C60 38, 56 28, 50 25" fill="#5EB8A8" opacity="0.5"/><path d="M50 10 C42 12, 38 22, 42 35 C45 42, 50 45, 50 45 C50 45, 55 42, 58 35 C62 22, 58 12, 50 10" fill="#5EB8A8" opacity="0.6"/><path d="M50 45 C45 48, 42 55, 45 62 C48 67, 50 68, 50 68 C50 68, 52 67, 55 62 C58 55, 55 48, 50 45" fill="#5EB8A8" opacity="0.4"/><line x1="50" y1="68" x2="50" y2="88" stroke="#5EB8A8" stroke-width="2"/><path d="M45 80 Q40 76, 37 82" stroke="#5EB8A8" stroke-width="1.5" fill="none"/><path d="M55 80 Q60 76, 63 82" stroke="#5EB8A8" stroke-width="1.5" fill="none"/><circle cx="37" cy="82" r="2" fill="#5EB8A8" opacity="0.6"/><circle cx="63" cy="82" r="2" fill="#5EB8A8" opacity="0.6"/></svg></div>
-    <nav class="top-nav">
-        <a href="/index.html" class="nav-logo"><img src="/logo.svg" alt="MySweetPea"><span>MySweetPea</span></a>
+    <a href="#main-content" class="skip-link">Skip to content</a>
+    <div class="scroll-progress" id="scrollProgress" aria-hidden="true"></div>
+    <div class="bg-gradient" aria-hidden="true"></div>
+    <canvas id="petalCanvas" aria-hidden="true"></canvas>
+    <div class="float-3d f1" aria-hidden="true"><svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M50 10 C35 15, 28 30, 32 48 C36 60, 48 68, 50 70 C52 68, 64 60, 68 48 C72 30, 65 15, 50 10" fill="#5EB8A8" opacity="0.8"/><path d="M50 25 C44 28, 40 38, 44 48 C47 55, 50 58, 50 58 C50 58, 53 55, 56 48 C60 38, 56 28, 50 25" fill="#5EB8A8" opacity="0.5"/><path d="M50 10 C42 12, 38 22, 42 35 C45 42, 50 45, 50 45 C50 45, 55 42, 58 35 C62 22, 58 12, 50 10" fill="#5EB8A8" opacity="0.6"/><path d="M50 45 C45 48, 42 55, 45 62 C48 67, 50 68, 50 68 C50 68, 52 67, 55 62 C58 55, 55 48, 50 45" fill="#5EB8A8" opacity="0.4"/><line x1="50" y1="68" x2="50" y2="88" stroke="#5EB8A8" stroke-width="2"/><path d="M45 80 Q40 76, 37 82" stroke="#5EB8A8" stroke-width="1.5" fill="none"/><path d="M55 80 Q60 76, 63 82" stroke="#5EB8A8" stroke-width="1.5" fill="none"/><circle cx="37" cy="82" r="2" fill="#5EB8A8" opacity="0.6"/><circle cx="63" cy="82" r="2" fill="#5EB8A8" opacity="0.6"/></svg></div>
+    <div class="float-3d f2" aria-hidden="true"><svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M50 10 C35 15, 28 30, 32 48 C36 60, 48 68, 50 70 C52 68, 64 60, 68 48 C72 30, 65 15, 50 10" fill="#5EB8A8" opacity="0.8"/><path d="M50 25 C44 28, 40 38, 44 48 C47 55, 50 58, 50 58 C50 58, 53 55, 56 48 C60 38, 56 28, 50 25" fill="#5EB8A8" opacity="0.5"/><path d="M50 10 C42 12, 38 22, 42 35 C45 42, 50 45, 50 45 C50 45, 55 42, 58 35 C62 22, 58 12, 50 10" fill="#5EB8A8" opacity="0.6"/><path d="M50 45 C45 48, 42 55, 45 62 C48 67, 50 68, 50 68 C50 68, 52 67, 55 62 C58 55, 55 48, 50 45" fill="#5EB8A8" opacity="0.4"/><line x1="50" y1="68" x2="50" y2="88" stroke="#5EB8A8" stroke-width="2"/><path d="M45 80 Q40 76, 37 82" stroke="#5EB8A8" stroke-width="1.5" fill="none"/><path d="M55 80 Q60 76, 63 82" stroke="#5EB8A8" stroke-width="1.5" fill="none"/><circle cx="37" cy="82" r="2" fill="#5EB8A8" opacity="0.6"/><circle cx="63" cy="82" r="2" fill="#5EB8A8" opacity="0.6"/></svg></div>
+    <nav class="top-nav" aria-label="Primary navigation">
+        <a href="/index.html" class="nav-logo">
+            <img src="/logo.svg" alt="" width="32" height="32">
+            <span>MySweetPea</span>
+        </a>
         <div class="nav-links">
             <a href="/index.html" class="nav-btn">Home</a>
             <a href="/pricing.html" class="nav-btn">Pricing</a>
-            <a href="/support.html" class="nav-btn active">Support</a>
+            <a href="/support.html" class="nav-btn active" aria-current="page">Support</a>
             <a href="/about.html" class="nav-btn">About</a>
             <a href="/suggest.html" class="nav-btn">Suggest</a>
         </div>
     </nav>
-    <div class="content-wrapper">
+    <main id="main-content" class="content-wrapper">
         <div class="hero">
-            <img src="/logo.svg" alt="MySweetPea" class="logo">
+            <img src="/logo.svg" alt="MySweetPea logo" class="logo" width="160" height="160">
             <h1 class="glass-text">Support MySweetPea</h1>
             <p>Donate any amount anonymously. No account needed.</p>
         </div>
@@ -109,18 +94,18 @@
                 <h2>Support the Cause</h2>
                 <p class="subtitle">Your contribution helps keep MySweetPea running and funds future improvements.</p>
                 <div class="info-box">Donations are completely anonymous. No name, email, or account required. Just send crypto to the wallet address and you are done. Thank you for your support!</div>
-                <div class="crypto-section-label">Select Cryptocurrency</div>
-                <div class="crypto-options">
-                    <div class="crypto-option selected" data-type="monero" onclick="selectCrypto(this, 'monero')"><div class="icon">&#x1F9EA;</div><div class="name">Monero (XMR)</div></div>
-                    <div class="crypto-option" data-type="bitcoin" onclick="selectCrypto(this, 'bitcoin')"><div class="icon">&#x20BF;</div><div class="name">Bitcoin (BTC)</div></div>
+                <div class="crypto-section-label" id="crypto-label">Select Cryptocurrency</div>
+                <div class="crypto-options" role="group" aria-labelledby="crypto-label">
+                    <div class="crypto-option selected" data-type="monero" role="button" tabindex="0" onclick="selectCrypto(this, 'monero')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();selectCrypto(this,'monero');}"><div class="icon">&#x1F9EA;</div><div class="name">Monero (XMR)</div></div>
+                    <div class="crypto-option" data-type="bitcoin" role="button" tabindex="0" onclick="selectCrypto(this, 'bitcoin')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();selectCrypto(this,'bitcoin');}"><div class="icon">&#x20BF;</div><div class="name">Bitcoin (BTC)</div></div>
                 </div>
                 <div class="wallet-display visible" id="wallet-display">
                     <div class="wl">Send your donation to:</div>
-                    <div class="wa" id="wallet-addr" onclick="copyWallet()">Loading...</div>
+                    <div class="wa" id="wallet-addr" role="button" tabindex="0" onclick="copyWallet()" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();copyWallet();}">Loading...</div>
                     <div class="copy-hint">Click address to copy to clipboard</div>
                 </div>
                 <div class="thank-you">
-                    <div class="heart">&#x1F338;</div>
+                    <div class="heart" aria-hidden="true">&#x1F338;</div>
                     <p>Why crypto? We prioritize privacy. Crypto donations (especially Monero) are anonymous, irreversible, and require no personal information. No KYC, no chargebacks, no paper trail.</p>
                 </div>
             </div>
@@ -131,23 +116,35 @@
             <div class="faq-item"><div class="faq-question" onclick="toggleFAQ(this)">Is my donation anonymous? <span class="arrow">&#9660;</span></div><div class="faq-answer"><p>Yes. Crypto donations are anonymous by default. Monero (XMR) is fully anonymous — sender, receiver, and amount are all hidden. Bitcoin (BTC) is pseudonymous — your wallet address is visible but not linked to your identity.</p></div></div>
             <div class="faq-item"><div class="faq-question" onclick="toggleFAQ(this)">Can I get a refund? <span class="arrow">&#9660;</span></div><div class="faq-answer"><p>Crypto donations are irreversible. If you have a genuine issue, contact support@mysweetpea.cc.</p></div></div>
         </div>
-        <div class="page-footer">
-            <div class="footer-links"><a href="/pricing.html">Pricing</a><a href="/support.html">Support</a><a href="/about.html">About Us</a><a href="/suggest.html">Suggest a Service</a><a href="mailto:support@mysweetpea.cc">Contact</a></div>
-            <p>&copy; 2026 MySweetPea. Self-hosted with care.</p>
+    </main>
+    <footer class="page-footer">
+        <div class="footer-links">
+            <a href="/index.html">Home</a>
+            <a href="/pricing.html">Pricing</a>
+            <a href="/support.html">Support</a>
+            <a href="/about.html">About</a>
+            <a href="/suggest.html">Suggest</a>
         </div>
-    </div>
+        <p>&copy; 2026 MySweetPea. Privacy-first, self-hosted, community funded.</p>
+    </footer>
+    <script src="/assets/js/site.js" defer></script>
     <script>
-        const scrollProgress = document.getElementById('scrollProgress');
-        window.addEventListener('scroll', function() { const s = (window.scrollY / (document.documentElement.scrollHeight - window.innerHeight)) * 100; scrollProgress.style.width = s + '%'; });
-        const revealObserver = new IntersectionObserver(function(entries) { entries.forEach(function(e) { if (e.isIntersecting) { e.target.classList.add('visible'); revealObserver.unobserve(e.target); } }); }, { threshold: 0.15 });
-        document.querySelectorAll('.reveal').forEach(function(el) { revealObserver.observe(el); });
-        document.querySelectorAll('.glow-card').forEach(function(card) { card.addEventListener('mousemove', function(e) { var r = card.getBoundingClientRect(); card.style.setProperty('--mouse-x', (e.clientX - r.left) + 'px'); card.style.setProperty('--mouse-y', (e.clientY - r.top) + 'px'); }); });
         function toggleFAQ(el) { el.parentElement.classList.toggle('open'); }
         var WALLETS = { monero: 'Coming Soon', bitcoin: 'Coming Soon' };
-        function selectCrypto(el, type) { document.querySelectorAll('.crypto-option').forEach(function(o) { o.classList.remove('selected'); }); el.classList.add('selected'); document.getElementById('wallet-addr').textContent = WALLETS[type]; }
-        function copyWallet() { var a = document.getElementById('wallet-addr').textContent; navigator.clipboard.writeText(a).then(function() { var e = document.getElementById('wallet-addr'); var o = e.textContent; e.textContent = 'Copied!'; setTimeout(function() { e.textContent = o; }, 1500); }); }
+        function selectCrypto(el, type) {
+            document.querySelectorAll('.crypto-option').forEach(function(o) { o.classList.remove('selected'); });
+            el.classList.add('selected');
+            document.getElementById('wallet-addr').textContent = WALLETS[type];
+        }
+        function copyWallet() {
+            var a = document.getElementById('wallet-addr').textContent;
+            navigator.clipboard.writeText(a).then(function() {
+                var e = document.getElementById('wallet-addr');
+                var o = e.textContent; e.textContent = 'Copied!';
+                setTimeout(function() { e.textContent = o; }, 1500);
+            });
+        }
         document.getElementById('wallet-addr').textContent = WALLETS.monero;
-        (function() { var c = document.getElementById('petalCanvas'), ctx = c.getContext('2d'), p = [], W, H; function r() { W = c.width = window.innerWidth; H = c.height = window.innerHeight; } r(); window.addEventListener('resize', r); function cp() { return { x: Math.random()*W, y: -20, size: 4+Math.random()*8, sY: 0.5+Math.random()*1.5, sX: -0.5+Math.random()*1, rot: Math.random()*Math.PI*2, rS: -0.02+Math.random()*0.04, op: 0.12+Math.random()*0.25, sw: Math.random()*Math.PI*2, swS: 0.01+Math.random()*0.02 }; } for (var i=0; i<40; i++) { var pt = cp(); pt.y = Math.random()*H; p.push(pt); } function dp(pt) { ctx.save(); ctx.translate(pt.x, pt.y); ctx.rotate(pt.rot); ctx.globalAlpha = pt.op; var g = ctx.createRadialGradient(0,0,0,0,0,pt.size); g.addColorStop(0,'#F0F8F6'); g.addColorStop(0.5,'#5EB8A8'); g.addColorStop(1,'rgba(94,184,168,0.3)'); ctx.fillStyle = g; ctx.beginPath(); ctx.moveTo(0,-pt.size); ctx.bezierCurveTo(pt.size*0.6,-pt.size*0.5,pt.size*0.6,pt.size*0.5,0,pt.size); ctx.bezierCurveTo(-pt.size*0.6,pt.size*0.5,-pt.size*0.6,-pt.size*0.5,0,-pt.size); ctx.fill(); ctx.strokeStyle='rgba(94,184,168,0.4)'; ctx.lineWidth=0.5; ctx.stroke(); ctx.restore(); } function a() { ctx.clearRect(0,0,W,H); for (var i=0; i<p.length; i++) { var pt=p[i]; pt.sw+=pt.swS; pt.x+=pt.sX+Math.sin(pt.sw)*0.5; pt.y+=pt.sY; pt.rot+=pt.rS; if(pt.y>H+20) p[i]=cp(); if(pt.x<-20) pt.x=W+20; if(pt.x>W+20) pt.x=-20; dp(pt); } requestAnimationFrame(a); } a(); })();
     </script>
 </body>
 </html>
