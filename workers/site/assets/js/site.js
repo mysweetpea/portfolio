@@ -1,11 +1,12 @@
 /* ==========================================================================
    MySweetPea — Shared Site Script (site.js)
    Handles: scroll progress bar, nav shrink, reveal animations,
-            glow-card hover, falling petal canvas
-            (pauses when the tab is hidden to save battery)
+            glow-card tracking, falling frost-petal canvas
    ========================================================================== */
 (function () {
     'use strict';
+
+    var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
 
     /* === Scroll progress bar === */
     var progress = document.getElementById('scrollProgress');
@@ -33,7 +34,7 @@
     /* === Scroll reveal animations === */
     var revealEls = document.querySelectorAll('.reveal');
     if (revealEls.length) {
-        if (!('IntersectionObserver' in window)) {
+        if (reduceMotion.matches || !('IntersectionObserver' in window)) {
             revealEls.forEach(function (el) { el.classList.add('visible'); });
         } else {
             var revealObserver = new IntersectionObserver(function (entries) {
@@ -57,13 +58,14 @@
         });
     });
 
-    /* === Falling petals canvas === */
+    /* === Falling frost petals canvas === */
     var canvas = document.getElementById('petalCanvas');
     if (!canvas) return;
 
     var ctx = canvas.getContext('2d');
     var petals = [];
     var W, H, rafId = null;
+    var PETAL_COUNT = 22;
 
     function resize() {
         W = canvas.width = window.innerWidth;
@@ -74,14 +76,14 @@
         return {
             x: Math.random() * W,
             y: -20,
-            size: 4 + Math.random() * 8,
-            speedY: 0.5 + Math.random() * 1.5,
-            speedX: -0.5 + Math.random() * 1,
+            size: 3 + Math.random() * 6,
+            speedY: 0.35 + Math.random() * 0.9,
+            speedX: -0.3 + Math.random() * 0.6,
             rotation: Math.random() * Math.PI * 2,
-            rotSpeed: -0.02 + Math.random() * 0.04,
-            opacity: 0.12 + Math.random() * 0.25,
+            rotSpeed: -0.012 + Math.random() * 0.024,
+            opacity: 0.08 + Math.random() * 0.16,
             sway: Math.random() * Math.PI * 2,
-            swaySpeed: 0.01 + Math.random() * 0.02
+            swaySpeed: 0.008 + Math.random() * 0.014
         };
     }
 
@@ -91,18 +93,15 @@
         ctx.rotate(p.rotation);
         ctx.globalAlpha = p.opacity;
         var grad = ctx.createRadialGradient(0, 0, 0, 0, 0, p.size);
-        grad.addColorStop(0, '#F0F8F6');
-        grad.addColorStop(0.5, '#5EB8A8');
-        grad.addColorStop(1, 'rgba(94, 184, 168, 0.3)');
+        grad.addColorStop(0, '#EEF2F3');
+        grad.addColorStop(0.5, '#C5D5D8');
+        grad.addColorStop(1, 'rgba(143, 175, 181, 0.25)');
         ctx.fillStyle = grad;
         ctx.beginPath();
         ctx.moveTo(0, -p.size);
         ctx.bezierCurveTo(p.size * 0.6, -p.size * 0.5, p.size * 0.6, p.size * 0.5, 0, p.size);
         ctx.bezierCurveTo(-p.size * 0.6, p.size * 0.5, -p.size * 0.6, -p.size * 0.5, 0, -p.size);
         ctx.fill();
-        ctx.strokeStyle = 'rgba(94,184,168,0.4)';
-        ctx.lineWidth = 0.5;
-        ctx.stroke();
         ctx.restore();
     }
 
@@ -111,7 +110,7 @@
         for (var i = 0; i < petals.length; i++) {
             var p = petals[i];
             p.sway += p.swaySpeed;
-            p.x += p.speedX + Math.sin(p.sway) * 0.5;
+            p.x += p.speedX + Math.sin(p.sway) * 0.4;
             p.y += p.speedY;
             p.rotation += p.rotSpeed;
             if (p.y > H + 20) petals[i] = createPetal();
@@ -123,9 +122,9 @@
     }
 
     function start() {
-        if (rafId !== null || document.hidden) return;
+        if (rafId !== null || reduceMotion.matches || document.hidden) return;
         resize();
-        for (var i = 0; i < 40; i++) {
+        for (var i = 0; i < PETAL_COUNT; i++) {
             var p = createPetal();
             p.y = Math.random() * H;
             petals.push(p);
@@ -144,9 +143,12 @@
 
     window.addEventListener('resize', resize, { passive: true });
 
-    /* Pause when tab hidden to save battery/CPU */
     document.addEventListener('visibilitychange', function () {
         if (document.hidden) stop(); else start();
+    });
+
+    reduceMotion.addEventListener('change', function (e) {
+        if (e.matches) stop(); else start();
     });
 
     start();
