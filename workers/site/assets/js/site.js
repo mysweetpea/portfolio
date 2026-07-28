@@ -2,12 +2,10 @@
    MySweetPea — Shared Site Script (site.js)
    Handles: scroll progress bar, nav shrink, reveal animations,
             glow-card hover, falling petal canvas
-            (with reduced-motion + tab-visibility guards)
+            (pauses when the tab is hidden to save battery)
    ========================================================================== */
 (function () {
     'use strict';
-
-    var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
 
     /* === Scroll progress bar === */
     var progress = document.getElementById('scrollProgress');
@@ -35,7 +33,7 @@
     /* === Scroll reveal animations === */
     var revealEls = document.querySelectorAll('.reveal');
     if (revealEls.length) {
-        if (reduceMotion.matches || !('IntersectionObserver' in window)) {
+        if (!('IntersectionObserver' in window)) {
             revealEls.forEach(function (el) { el.classList.add('visible'); });
         } else {
             var revealObserver = new IntersectionObserver(function (entries) {
@@ -125,7 +123,7 @@
     }
 
     function start() {
-        if (rafId !== null || reduceMotion.matches || document.hidden) return;
+        if (rafId !== null || document.hidden) return;
         resize();
         for (var i = 0; i < 40; i++) {
             var p = createPetal();
@@ -149,11 +147,6 @@
     /* Pause when tab hidden to save battery/CPU */
     document.addEventListener('visibilitychange', function () {
         if (document.hidden) stop(); else start();
-    });
-
-    /* Respect reduced-motion changes at runtime */
-    reduceMotion.addEventListener('change', function (e) {
-        if (e.matches) stop(); else start();
     });
 
     start();
