@@ -1,28 +1,33 @@
 /* ==========================================================================
    MySweetPea — Shared Site Styles (site.css)
+   Theme: Nordic Frost — palette drawn from logo.svg
    ========================================================================== */
 
 *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
 :root {
-    --bg: #0A1214;
-    --primary: #5EB8A8;
-    --primary-dim: #3E8E86;
-    --primary-glow: rgba(94, 184, 168, 0.15);
-    --primary-bright: #7FD4C5;
-    --text: #F0F8F6;
-    --text-dim: #9DBDB7;
-    --text-faint: #6E8F89;
-    --border: rgba(94, 184, 168, 0.08);
-    --border-primary: rgba(94, 184, 168, 0.25);
-    --radius: 16px;
-    --radius-sm: 10px;
-    --transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-    --ice: #5EB8E8;
-    --sage: #5ED39E;
-    --teal: #5EB8A8;
-    --error: #E87A7A;
-    --success: #5ED39E;
+    /* Logo-derived palette */
+    --bg: #0C1316;
+    --primary: #8FAFB5;              /* nordic teal (logo petal base) */
+    --primary-dim: #6B9AA6;          /* frost teal */
+    --primary-bright: #C5D5D8;       /* frost highlight */
+    --primary-glow: rgba(143, 175, 181, 0.12);
+    --ice: #EEF2F3;                  /* petal ice white */
+    --sage: #A3C9B6;                 /* stem sage */
+    --sage-dim: #5D7A6E;
+    --slate: #85929E;                /* keel slate */
+    --text: #EDF3F4;
+    --text-dim: #A9BEC2;             /* WCAG AA on --bg */
+    --text-faint: #74878C;
+    --border: rgba(143, 175, 181, 0.09);
+    --border-primary: rgba(143, 175, 181, 0.28);
+    --card-bg: rgba(19, 30, 34, 0.55);
+    --card-bg-hover: rgba(24, 38, 43, 0.7);
+    --radius: 18px;
+    --radius-sm: 12px;
+    --transition: 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+    --error: #D98C8C;
+    --success: #A3C9B6;
 }
 
 html { scroll-behavior: smooth; }
@@ -34,298 +39,195 @@ body {
     min-height: 100vh;
     line-height: 1.7;
     overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
 }
 
-/* Accessibility: Skip link */
+/* === Accessibility: skip link === */
 .skip-link {
-    position: absolute;
-    top: -60px;
-    left: 16px;
-    z-index: 200;
-    background: var(--primary);
-    color: var(--bg);
-    padding: 10px 18px;
-    border-radius: var(--radius-sm);
-    font-weight: 600;
-    text-decoration: none;
+    position: absolute; top: -60px; left: 16px; z-index: 200;
+    background: var(--primary); color: var(--bg);
+    padding: 10px 18px; border-radius: var(--radius-sm);
+    font-weight: 600; text-decoration: none;
     transition: top 0.2s ease;
 }
-
 .skip-link:focus-visible { top: 12px; }
 
-/* Keyboard focus */
+/* === Keyboard focus === */
 :focus-visible {
     outline: 2px solid var(--primary-bright);
     outline-offset: 2px;
     border-radius: 4px;
 }
 
-/* Scroll progress bar */
+/* === Scroll progress bar === */
 .scroll-progress {
-    position: fixed;
-    top: 0;
-    left: 0;
-    height: 3px;
-    width: 0%;
-    background: linear-gradient(90deg, var(--primary), var(--primary-bright));
-    z-index: 100;
-    transition: width 0.1s;
-    box-shadow: 0 0 10px var(--primary-glow);
+    position: fixed; top: 0; left: 0; height: 2px; width: 0%;
+    background: linear-gradient(90deg, var(--primary-dim), var(--primary-bright));
+    z-index: 100; transition: width 0.1s;
 }
 
-/* Decorative background */
+/* === Decorative background === */
 #petalCanvas {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    z-index: 0;
-    pointer-events: none;
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    z-index: 0; pointer-events: none;
 }
-
-.content-wrapper {
-    position: relative;
-    z-index: 1;
-}
-
+.content-wrapper { position: relative; z-index: 1; }
 .bg-gradient {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    z-index: -1;
+    position: fixed; top: 0; left: 0; right: 0; bottom: 0; z-index: -1;
     background:
-        radial-gradient(ellipse 80% 50% at 50% -20%, rgba(94, 184, 168, 0.08), transparent),
-        radial-gradient(ellipse 60% 40% at 80% 100%, rgba(94, 211, 158, 0.04), transparent),
+        radial-gradient(ellipse 70% 45% at 50% -15%, rgba(143, 175, 181, 0.07), transparent),
+        radial-gradient(ellipse 55% 35% at 85% 105%, rgba(163, 201, 182, 0.04), transparent),
         var(--bg);
 }
 
-/* Keyframes */
+/* === Keyframes === */
 @keyframes shimmer {
     0% { background-position: -200% center; }
     100% { background-position: 200% center; }
 }
-
 @keyframes float3D {
     0%, 100% { transform: translateY(0) rotateX(0) rotateY(0); }
-    50% { transform: translateY(-10px) rotateX(2deg) rotateY(2deg); }
+    50% { transform: translateY(-8px) rotateX(1.5deg) rotateY(1.5deg); }
 }
-
-@keyframes pulseGlow {
-    0%, 100% { box-shadow: 0 0 20px rgba(94, 184, 168, 0.08); }
-    50% { box-shadow: 0 0 40px rgba(94, 184, 168, 0.18); }
-}
-
 @keyframes fadeInUp {
     from { opacity: 0; transform: translateY(30px); }
     to { opacity: 1; transform: translateY(0); }
 }
-
 @keyframes shake {
     0%, 100% { transform: translateX(0); }
     25% { transform: translateX(-6px); }
     75% { transform: translateX(6px); }
 }
+/* Kept for backwards-compat with page-level animation references */
+@keyframes pulseGlow {
+    0%, 100% { box-shadow: 0 0 18px rgba(163, 201, 182, 0.06); }
+    50% { box-shadow: 0 0 30px rgba(163, 201, 182, 0.12); }
+}
 
-/* Hero-level text accent */
+/* === Shimmer text — hero-level accent only === */
 .glass-text {
-    background: linear-gradient(
-        135deg,
-        rgba(240, 248, 246, 0.95) 0%,
-        rgba(94, 184, 168, 0.8) 30%,
-        rgba(240, 248, 246, 0.6) 50%,
-        rgba(94, 184, 168, 0.8) 70%,
-        rgba(240, 248, 246, 0.95) 100%
-    );
+    background: linear-gradient(135deg,
+        rgba(238,242,243,0.95) 0%, rgba(143,175,181,0.75) 30%,
+        rgba(238,242,243,0.55) 50%, rgba(143,175,181,0.75) 70%,
+        rgba(238,242,243,0.95) 100%);
     background-size: 200% auto;
     -webkit-background-clip: text;
     background-clip: text;
     -webkit-text-fill-color: transparent;
-    animation: shimmer 6s linear infinite;
-    filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.3));
+    animation: shimmer 7s linear infinite;
+    letter-spacing: -0.5px;
 }
 
-/* Top navigation */
+/* === Top navigation === */
 .top-nav {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    z-index: 50;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 16px 24px;
-    background: rgba(10, 18, 20, 0.6);
-    backdrop-filter: blur(20px) saturate(1.5);
-    -webkit-backdrop-filter: blur(20px) saturate(1.5);
+    position: fixed; top: 0; left: 0; right: 0; z-index: 50;
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 18px 32px;
+    background: rgba(12, 19, 22, 0.55);
+    backdrop-filter: blur(20px) saturate(1.4);
+    -webkit-backdrop-filter: blur(20px) saturate(1.4);
     border-bottom: 1px solid var(--border);
     transition: var(--transition);
 }
-
-.top-nav.nav-scrolled { padding: 10px 24px; }
-
-.nav-logo {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    text-decoration: none;
-}
-
-.nav-logo img {
-    width: 32px;
-    height: 32px;
-    filter: drop-shadow(0 0 8px var(--primary-glow));
-}
-
+.top-nav.nav-scrolled { padding: 10px 32px; background: rgba(12, 19, 22, 0.8); }
+.nav-logo { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+.nav-logo img { width: 32px; height: 32px; }
 .nav-logo span {
-    font-size: 1rem;
-    font-weight: 700;
-    color: var(--text);
-    letter-spacing: -0.3px;
+    font-size: 1.05rem; font-weight: 700; color: var(--text);
+    letter-spacing: -0.4px;
 }
-
-.nav-links {
-    display: flex;
-    gap: 6px;
-    align-items: center;
-}
-
+.nav-links { display: flex; gap: 4px; align-items: center; }
 .nav-btn {
     padding: 8px 16px;
     background: transparent;
     border: 1px solid transparent;
     border-radius: var(--radius-sm);
     color: var(--text-dim);
-    font-size: 0.85rem;
-    font-weight: 500;
+    font-size: 0.87rem; font-weight: 500;
     text-decoration: none;
     transition: var(--transition);
     cursor: pointer;
 }
-
 .nav-btn:hover {
-    color: var(--primary);
+    color: var(--primary-bright);
     background: var(--primary-glow);
-    border-color: var(--border-primary);
-    transform: translateY(-1px);
 }
-
 .nav-btn.active {
-    color: var(--primary);
-    border-color: var(--border-primary);
+    color: var(--primary-bright);
+    background: var(--primary-glow);
+    border-color: var(--border);
 }
 
-/* Shared buttons */
+/* === Shared buttons === */
 .cta-btn {
-    display: inline-block;
-    padding: 14px 32px;
+    display: inline-block; padding: 15px 36px;
     border-radius: var(--radius-sm);
-    font-size: 0.95rem;
-    font-weight: 600;
+    font-size: 0.95rem; font-weight: 600;
+    letter-spacing: 0.2px;
     text-decoration: none;
     transition: var(--transition);
     background: linear-gradient(135deg, var(--primary), var(--primary-dim));
     color: var(--bg);
 }
-
 .cta-btn:hover {
-    transform: scale(1.05);
-    box-shadow: 0 4px 20px rgba(94, 184, 168, 0.3);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 24px rgba(143, 175, 181, 0.25);
 }
-
-/* Footer */
+/* === Footer === */
 .page-footer {
     text-align: center;
-    padding: 40px 20px;
+    padding: 48px 24px;
     font-size: 0.85rem;
     color: var(--text-faint);
     border-top: 1px solid var(--border);
 }
-
-.page-footer a {
-    color: var(--primary);
-    text-decoration: none;
-    transition: var(--transition);
-}
-
-.page-footer a:hover { text-decoration: underline; }
-
+.page-footer a { color: var(--primary); text-decoration: none; transition: var(--transition); }
+.page-footer a:hover { color: var(--primary-bright); }
 .page-footer .footer-links {
-    display: flex;
-    justify-content: center;
-    gap: 24px;
-    margin-bottom: 12px;
-    flex-wrap: wrap;
+    display: flex; justify-content: center; gap: 28px;
+    margin-bottom: 14px; flex-wrap: wrap;
 }
 
-/* Scroll reveals */
+/* === Scroll reveal === */
 .reveal {
-    opacity: 0;
-    transform: translateY(40px);
-    transition: opacity 0.8s ease, transform 0.8s ease;
+    opacity: 0; transform: translateY(28px);
+    transition: opacity 0.7s ease, transform 0.7s ease;
 }
-
-.reveal.visible {
-    opacity: 1;
-    transform: translateY(0);
-}
-
+.reveal.visible { opacity: 1; transform: translateY(0); }
 .reveal-delay-1 { transition-delay: 0.1s; }
 .reveal-delay-2 { transition-delay: 0.2s; }
 .reveal-delay-3 { transition-delay: 0.3s; }
 
-/* Floating decorative shapes */
-.float-3d {
-    position: absolute;
-    pointer-events: none;
-    opacity: 0.05;
-    z-index: 0;
+/* === Floating decorative shapes === */
+.float-3d { position: absolute; pointer-events: none; opacity: 0.035; z-index: 0; }
+.float-3d svg { width: 100%; height: 100%; }
+.float-3d.f1 { top: 15%; right: 5%; width: 120px; height: 120px; animation: float3D 9s ease-in-out infinite; }
+.float-3d.f2 { top: 45%; left: 3%; width: 80px; height: 80px; animation: float3D 11s ease-in-out infinite reverse; }
+
+/* === Reduced motion === */
+@media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+    .glass-text {
+        animation: none;
+        background: none;
+        -webkit-text-fill-color: var(--text);
+        filter: none;
+    }
+    .reveal { opacity: 1; transform: none; }
+    #petalCanvas { display: none; }
+    .float-3d { animation: none; }
 }
 
-.float-3d svg {
-    width: 100%;
-    height: 100%;
-}
-
-.float-3d.f1 {
-    top: 15%;
-    right: 5%;
-    width: 120px;
-    height: 120px;
-    animation: float3D 8s ease-in-out infinite;
-}
-
-.float-3d.f2 {
-    top: 45%;
-    left: 3%;
-    width: 80px;
-    height: 80px;
-    animation: float3D 10s ease-in-out infinite reverse;
-}
-
-/* Mobile */
+/* === Mobile === */
 @media (max-width: 768px) {
-    .top-nav {
-        padding: 12px 16px;
-        flex-direction: column;
-        gap: 8px;
-    }
-
+    .top-nav { padding: 12px 16px; flex-direction: column; gap: 8px; }
     .top-nav.nav-scrolled { padding: 10px 16px; }
-
-    .nav-links {
-        flex-wrap: wrap;
-        justify-content: center;
-        gap: 4px;
-    }
-
-    .nav-btn {
-        padding: 6px 12px;
-        font-size: 0.78rem;
-    }
-
+    .nav-links { flex-wrap: wrap; justify-content: center; gap: 4px; }
+    .nav-btn { padding: 6px 12px; font-size: 0.78rem; }
     .float-3d { display: none; }
 }
