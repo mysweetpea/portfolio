@@ -31,11 +31,19 @@
         }, { passive: true });
     }
 
-    /* === Scroll reveal animations === */
-    var revealEls = document.querySelectorAll('.reveal');
+    /* === Scroll reveal animations ===
+       Strategy: staggered reveal on load for above-fold elements,
+       IntersectionObserver for the rest, plus a safety-net timer that
+       force-reveals everything so content can never get stuck hidden. */
+    var revealEls = Array.prototype.slice.call(document.querySelectorAll('.reveal'));
+
+    function forceRevealAll() {
+        revealEls.forEach(function (el) { el.classList.add('visible'); });
+    }
+
     if (revealEls.length) {
         if (reduceMotion.matches || !('IntersectionObserver' in window)) {
-            revealEls.forEach(function (el) { el.classList.add('visible'); });
+            forceRevealAll();
         } else {
             var revealObserver = new IntersectionObserver(function (entries) {
                 entries.forEach(function (entry) {
@@ -44,8 +52,24 @@
                         revealObserver.unobserve(entry.target);
                     }
                 });
-            }, { threshold: 0.15, rootMargin: '0px 0px -50px 0px' });
+            }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+
             revealEls.forEach(function (el) { revealObserver.observe(el); });
+
+            /* Reveal anything already in the viewport immediately after load
+               (covers browsers where the observer races first paint) */
+            window.addEventListener('load', function () {
+                revealEls.forEach(function (el) {
+                    var rect = el.getBoundingClientRect();
+                    if (rect.top < window.innerHeight && rect.bottom > 0) {
+                        el.classList.add('visible');
+                        revealObserver.unobserve(el);
+                    }
+                });
+            });
+
+            /* Safety net: nothing stays hidden longer than 2.5s */
+            setTimeout(forceRevealAll, 2500);
         }
     }
 
@@ -57,7 +81,6 @@
             card.style.setProperty('--mouse-y', (e.clientY - rect.top) + 'px');
         });
     });
-
     /* === Falling frost petals canvas === */
     var canvas = document.getElementById('petalCanvas');
     if (!canvas) return;
@@ -122,8 +145,9 @@
     }
 
     function start() {
-        if (rafId !== null || reduceMotion.matches || document.hidden) return;
+        if (rafId !== null || reduceMotion.matches) return;
         resize();
+        petals.length = 0;
         for (var i = 0; i < PETAL_COUNT; i++) {
             var p = createPetal();
             p.y = Math.random() * H;
@@ -143,13 +167,20 @@
 
     window.addEventListener('resize', resize, { passive: true });
 
+    /* Pause when tab hidden, always restart when visible */
     document.addEventListener('visibilitychange', function () {
         if (document.hidden) stop(); else start();
     });
 
+    /* Respect reduced-motion changes at runtime */
     reduceMotion.addEventListener('change', function (e) {
         if (e.matches) stop(); else start();
     });
 
+    /* Start on load — and again shortly after, in case the first
+       attempt ran before the canvas had its final dimensions */
     start();
+    window.addEventListener('load', function () {
+        if (rafId === null) start();
+    });
 })();
