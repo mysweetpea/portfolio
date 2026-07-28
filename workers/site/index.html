@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MySweetPea — Self-Hosted Services</title>
     <meta name="description" content="Private, self-hosted alternatives to the services you use every day. No ads, no tracking, no subscriptions — community funded.">
-    <meta name="theme-color" content="#0A1214">
+    <meta name="theme-color" content="#0C1316">
     <meta property="og:title" content="MySweetPea — Self-Hosted Services">
     <meta property="og:description" content="Private, self-hosted alternatives to the services you use every day. No ads, no tracking, no subscriptions — community funded.">
     <meta property="og:type" content="website">
@@ -17,124 +17,118 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/assets/css/site.css">
     <style>
-        @keyframes scaleIn { from { opacity: 0; transform: scale(0.9); } to { opacity: 1; transform: scale(1); } }
-        @keyframes gradientShift { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
-
-        /* === Hero === */
+@keyframes scaleIn { from { opacity: 0; transform: scale(0.9); } to { opacity: 1; transform: scale(1); } }
+@keyframes gradientShift { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
+/* === Hero === */
         .hero {
             text-align: center; padding: 140px 24px 60px;
             min-height: 90vh; display: flex; flex-direction: column;
             justify-content: center; align-items: center;
         }
-        .hero img.logo {
-            width: 200px; height: 200px; margin-bottom: 24px;
-            filter: drop-shadow(0 0 40px rgba(94, 184, 168, 0.25));
-            animation: float3D 6s ease-in-out infinite;
+.hero img.logo {
+            width: 220px; height: 220px; margin-bottom: 28px;
+            filter: drop-shadow(0 8px 30px rgba(197, 213, 216, 0.12));
+            animation: float3D 7s ease-in-out infinite;
         }
-        .hero h1 { font-size: 3.5rem; font-weight: 800; margin-bottom: 16px; letter-spacing: -1px; }
-        .hero p.tagline {
-            font-size: 1.2rem; color: var(--text-dim); max-width: 600px;
-            margin: 0 auto 36px; line-height: 1.7;
+.hero h1 { font-size: 4.25rem; font-weight: 800; margin-bottom: 20px; letter-spacing: -2px; line-height: 1.05; }
+.hero p.tagline {
+            font-size: 1.25rem; color: var(--text-dim); max-width: 620px;
+            margin: 0 auto 40px; line-height: 1.75;
         }
-        .hero-buttons { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; }
-        .hero-btn {
+.hero-buttons { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; }
+.hero-btn {
             padding: 16px 36px; border-radius: var(--radius-sm);
             font-size: 1.05rem; font-weight: 600; text-decoration: none;
             transition: var(--transition); display: inline-flex; align-items: center; gap: 8px;
             cursor: pointer; border: none;
         }
-        .hero-btn-primary {
+.hero-btn-primary {
             background: linear-gradient(135deg, var(--primary), var(--primary-dim));
             color: var(--bg); position: relative; overflow: hidden;
         }
-        .hero-btn-primary::before {
+.hero-btn-primary::before {
             content: ''; position: absolute; top: 0; left: -100%; width: 100%; height: 100%;
             background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
             transition: left 0.6s;
         }
-        .hero-btn-primary:hover::before { left: 100%; }
-        .hero-btn-primary:hover { transform: translateY(-3px) scale(1.03); box-shadow: 0 8px 30px rgba(94, 184, 168, 0.35); }
-        .hero-btn-secondary {
+.hero-btn-primary:hover::before { left: 100%; }
+.hero-btn-primary:hover { transform: translateY(-3px); box-shadow: 0 8px 30px rgba(143, 175, 181, 0.28); }
+.hero-btn-secondary {
             background: rgba(255, 255, 255, 0.04); color: var(--text);
             border: 1px solid var(--border); backdrop-filter: blur(10px);
             -webkit-backdrop-filter: blur(10px);
         }
-        .hero-btn-secondary:hover {
+.hero-btn-secondary:hover {
             background: rgba(255, 255, 255, 0.08); border-color: var(--border-primary);
-            transform: translateY(-3px) scale(1.03);
+            transform: translateY(-3px);
         }
-
-        /* === Features === */
-        .features-section { max-width: 1000px; margin: 0 auto; padding: 80px 24px; }
-        .section-title { font-size: 2rem; text-align: center; margin-bottom: 12px; font-weight: 700; }
-        .section-subtitle { font-size: 1rem; color: var(--text-dim); text-align: center; margin-bottom: 48px; }
-        .features-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; }
-        .feature-card {
-            background: rgba(15, 26, 28, 0.5); backdrop-filter: blur(16px) saturate(1.2);
+/* === Features === */
+        .features-section { max-width: 1040px; margin: 0 auto; padding: 90px 24px; }
+.section-title { font-size: 2.2rem; text-align: center; margin-bottom: 12px; font-weight: 700; letter-spacing: -0.8px; }
+.section-subtitle { font-size: 1rem; color: var(--text-dim); text-align: center; margin-bottom: 52px; }
+.features-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; }
+.feature-card {
+            background: var(--card-bg); backdrop-filter: blur(16px) saturate(1.2);
             -webkit-backdrop-filter: blur(16px) saturate(1.2);
             border: 1px solid var(--border); border-radius: var(--radius);
             padding: 32px 28px; text-align: center; transition: var(--transition);
             position: relative; overflow: hidden;
         }
-        .feature-card::before {
+.feature-card::before {
             content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
             background: linear-gradient(90deg, transparent, var(--primary), transparent);
             opacity: 0; transition: opacity 0.4s;
         }
-        .feature-card:hover::before { opacity: 1; }
-        .feature-card:hover {
-            transform: translateY(-6px); border-color: var(--border-primary);
-            background: rgba(20, 35, 38, 0.6);
+.feature-card:hover::before { opacity: 1; }
+.feature-card:hover {
+            transform: translateY(-5px); border-color: var(--border-primary);
+            background: var(--card-bg-hover);
             box-shadow: 0 12px 40px rgba(0, 0, 0, 0.3);
         }
-        .feature-card .icon {
+.feature-card .icon {
             font-size: 2.2rem; margin-bottom: 16px; display: inline-block;
             transition: transform 0.4s;
         }
-        .feature-card:hover .icon { transform: scale(1.15) translateY(-2px); }
-        .feature-card h3 { font-size: 1.1rem; color: var(--primary); margin-bottom: 10px; font-weight: 600; }
-        .feature-card p { font-size: 0.88rem; color: var(--text-dim); line-height: 1.6; }
-
-        /* === Stats === */
-        .stats-section { max-width: 800px; margin: 0 auto; padding: 40px 24px 80px; }
-        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 20px; text-align: center; }
-        .stat-card {
-            background: rgba(15, 26, 28, 0.5); backdrop-filter: blur(12px);
+.feature-card:hover .icon { transform: scale(1.12) translateY(-2px); }
+.feature-card h3 { font-size: 1.1rem; color: var(--primary); margin-bottom: 10px; font-weight: 600; }
+.feature-card p { font-size: 0.88rem; color: var(--text-dim); line-height: 1.6; }
+/* === Stats === */
+        .stats-section { max-width: 800px; margin: 0 auto; padding: 40px 24px 90px; }
+.stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 20px; text-align: center; }
+.stat-card {
+            background: var(--card-bg); backdrop-filter: blur(12px);
             -webkit-backdrop-filter: blur(12px);
             border: 1px solid var(--border); border-radius: var(--radius);
             padding: 28px 20px; transition: var(--transition);
         }
-        .stat-card:hover { border-color: var(--border-primary); transform: translateY(-4px); }
-        .stat-card .number { font-size: 2.2rem; color: var(--primary); font-weight: 800; }
-        .stat-card .label { font-size: 0.82rem; color: var(--text-dim); margin-top: 6px; }
-
-        /* === CTA === */
-        .cta-section { max-width: 700px; margin: 0 auto 80px; padding: 24px; text-align: center; }
-        .cta-card {
-            background: rgba(15, 26, 28, 0.6); backdrop-filter: blur(20px) saturate(1.3);
+.stat-card:hover { border-color: var(--border-primary); transform: translateY(-4px); }
+.stat-card .number { font-size: 2.2rem; color: var(--primary); font-weight: 800; }
+.stat-card .label { font-size: 0.82rem; color: var(--text-dim); margin-top: 6px; }
+/* === CTA === */
+        .cta-section { max-width: 700px; margin: 0 auto 90px; padding: 24px; text-align: center; }
+.cta-card {
+            background: var(--card-bg); backdrop-filter: blur(20px) saturate(1.3);
             -webkit-backdrop-filter: blur(20px) saturate(1.3);
             border: 1px solid var(--border-primary); border-radius: var(--radius);
-            padding: 48px 40px; position: relative; overflow: hidden;
+            padding: 52px 44px; position: relative; overflow: hidden;
             box-shadow: 0 8px 40px rgba(0, 0, 0, 0.3);
         }
-        .cta-card::before {
+.cta-card::before {
             content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%;
-            background: radial-gradient(ellipse at center, rgba(94, 184, 168, 0.06), transparent 60%);
-            animation: pulseGlow 4s ease-in-out infinite;
+            background: radial-gradient(ellipse at center, rgba(143, 175, 181, 0.05), transparent 60%);
         }
-        .cta-card h2 { font-size: 1.6rem; margin-bottom: 16px; position: relative; }
-        .cta-card p { font-size: 0.95rem; color: var(--text-dim); margin-bottom: 28px; position: relative; }
-        .cta-buttons { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; position: relative; }
-
-        /* === Mobile === */
+.cta-card h2 { font-size: 1.7rem; margin-bottom: 16px; position: relative; letter-spacing: -0.5px; }
+.cta-card p { font-size: 0.95rem; color: var(--text-dim); margin-bottom: 30px; position: relative; }
+.cta-buttons { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; position: relative; }
+/* === Mobile === */
         @media (max-width: 768px) {
             .hero { padding: 120px 20px 40px; }
-            .hero h1 { font-size: 2.2rem; }
-            .hero p.tagline { font-size: 1rem; }
-            .hero img.logo { width: 140px; height: 140px; }
+            .hero h1 { font-size: 2.4rem; letter-spacing: -1px; }
+            .hero p.tagline { font-size: 1.05rem; }
+            .hero img.logo { width: 150px; height: 150px; }
             .hero-buttons { flex-direction: column; align-items: center; }
             .hero-btn { width: 100%; max-width: 280px; justify-content: center; }
-            .features-section, .stats-section, .cta-section { padding: 40px 16px; }
+            .features-section, .stats-section, .cta-section { padding: 48px 16px; }
             .cta-card { padding: 32px 24px; }
             .cta-buttons { flex-direction: column; }
             .cta-btn { width: 100%; }
@@ -146,8 +140,8 @@
     <div class="scroll-progress" id="scrollProgress" aria-hidden="true"></div>
     <div class="bg-gradient" aria-hidden="true"></div>
     <canvas id="petalCanvas" aria-hidden="true"></canvas>
-    <div class="float-3d f1" aria-hidden="true"><svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M50 10 C35 15, 28 30, 32 48 C36 60, 48 68, 50 70 C52 68, 64 60, 68 48 C72 30, 65 15, 50 10" fill="#5EB8A8" opacity="0.8"/><path d="M50 25 C44 28, 40 38, 44 48 C47 55, 50 58, 50 58 C50 58, 53 55, 56 48 C60 38, 56 28, 50 25" fill="#5EB8A8" opacity="0.5"/><path d="M50 10 C42 12, 38 22, 42 35 C45 42, 50 45, 50 45 C50 45, 55 42, 58 35 C62 22, 58 12, 50 10" fill="#5EB8A8" opacity="0.6"/><path d="M50 45 C45 48, 42 55, 45 62 C48 67, 50 68, 50 68 C50 68, 52 67, 55 62 C58 55, 55 48, 50 45" fill="#5EB8A8" opacity="0.4"/><line x1="50" y1="68" x2="50" y2="88" stroke="#5EB8A8" stroke-width="2"/><path d="M45 80 Q40 76, 37 82" stroke="#5EB8A8" stroke-width="1.5" fill="none"/><path d="M55 80 Q60 76, 63 82" stroke="#5EB8A8" stroke-width="1.5" fill="none"/><circle cx="37" cy="82" r="2" fill="#5EB8A8" opacity="0.6"/><circle cx="63" cy="82" r="2" fill="#5EB8A8" opacity="0.6"/></svg></div>
-    <div class="float-3d f2" aria-hidden="true"><svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M50 10 C35 15, 28 30, 32 48 C36 60, 48 68, 50 70 C52 68, 64 60, 68 48 C72 30, 65 15, 50 10" fill="#5EB8A8" opacity="0.8"/><path d="M50 25 C44 28, 40 38, 44 48 C47 55, 50 58, 50 58 C50 58, 53 55, 56 48 C60 38, 56 28, 50 25" fill="#5EB8A8" opacity="0.5"/></svg></div>
+    <div class="float-3d f1" aria-hidden="true"><svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M50 10 C35 15, 28 30, 32 48 C36 60, 48 68, 50 70 C52 68, 64 60, 68 48 C72 30, 65 15, 50 10" fill="#8FAFB5" opacity="0.8"/><path d="M50 25 C44 28, 40 38, 44 48 C47 55, 50 58, 50 58 C50 58, 53 55, 56 48 C60 38, 56 28, 50 25" fill="#8FAFB5" opacity="0.5"/><path d="M50 10 C42 12, 38 22, 42 35 C45 42, 50 45, 50 45 C50 45, 55 42, 58 35 C62 22, 58 12, 50 10" fill="#8FAFB5" opacity="0.6"/><path d="M50 45 C45 48, 42 55, 45 62 C48 67, 50 68, 50 68 C50 68, 52 67, 55 62 C58 55, 55 48, 50 45" fill="#8FAFB5" opacity="0.4"/><line x1="50" y1="68" x2="50" y2="88" stroke="#8FAFB5" stroke-width="2"/><path d="M45 80 Q40 76, 37 82" stroke="#8FAFB5" stroke-width="1.5" fill="none"/><path d="M55 80 Q60 76, 63 82" stroke="#8FAFB5" stroke-width="1.5" fill="none"/><circle cx="37" cy="82" r="2" fill="#8FAFB5" opacity="0.6"/><circle cx="63" cy="82" r="2" fill="#8FAFB5" opacity="0.6"/></svg></div>
+    <div class="float-3d f2" aria-hidden="true"><svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M50 10 C35 15, 28 30, 32 48 C36 60, 48 68, 50 70 C52 68, 64 60, 68 48 C72 30, 65 15, 50 10" fill="#8FAFB5" opacity="0.8"/><path d="M50 25 C44 28, 40 38, 44 48 C47 55, 50 58, 50 58 C50 58, 53 55, 56 48 C60 38, 56 28, 50 25" fill="#8FAFB5" opacity="0.5"/><path d="M50 10 C42 12, 38 22, 42 35 C45 42, 50 45, 50 45 C50 45, 55 42, 58 35 C62 22, 58 12, 50 10" fill="#8FAFB5" opacity="0.6"/><path d="M50 45 C45 48, 42 55, 45 62 C48 67, 50 68, 50 68 C50 68, 52 67, 55 62 C58 55, 55 48, 50 45" fill="#8FAFB5" opacity="0.4"/><line x1="50" y1="68" x2="50" y2="88" stroke="#8FAFB5" stroke-width="2"/><path d="M45 80 Q40 76, 37 82" stroke="#8FAFB5" stroke-width="1.5" fill="none"/><path d="M55 80 Q60 76, 63 82" stroke="#8FAFB5" stroke-width="1.5" fill="none"/><circle cx="37" cy="82" r="2" fill="#8FAFB5" opacity="0.6"/><circle cx="63" cy="82" r="2" fill="#8FAFB5" opacity="0.6"/></svg></div>
     <nav class="top-nav" aria-label="Primary navigation">
         <a href="/index.html" class="nav-logo">
             <img src="/logo.svg" alt="" width="32" height="32">
@@ -161,9 +155,9 @@
             <a href="/suggest.html" class="nav-btn">Suggest</a>
         </div>
     </nav>
-    <main id="main-content" class="content-wrapper">
+<main id="main-content" class="content-wrapper">
         <div class="hero">
-            <img src="/logo.svg" alt="MySweetPea logo" class="logo" width="200" height="200">
+            <img src="/logo.svg" alt="MySweetPea logo" class="logo" width="220" height="220">
             <h1 class="glass-text">MySweetPea</h1>
             <p class="tagline">Private alternatives to the services you use every day. No ads, no tracking, no subscriptions. Your data stays yours.</p>
             <div class="hero-buttons">
@@ -176,37 +170,38 @@
             <h2 class="section-title glass-text reveal">Why MySweetPea?</h2>
             <p class="section-subtitle reveal reveal-delay-1">Privacy, control, and community — without the corporate overhead</p>
             <div class="features-grid">
-                <div class="feature-card reveal reveal-delay-1"><div class="icon">&#x1F512;</div><h3>Privacy First</h3><p>Your data stays on our server, not on some corporate cloud. No tracking, no ads, no data selling. Everything you do here is private.</p></div>
-                <div class="feature-card reveal reveal-delay-2"><div class="icon">&#x1F3E0;</div><h3>Self-Hosted</h3><p>All services run on hardware we own, not rented from big tech companies. This means full control and no middleman.</p></div>
-                <div class="feature-card reveal reveal-delay-3"><div class="icon">&#x1F4B0;</div><h3>Community-Funded</h3><p>No monthly subscriptions. No ads. A single donation gives you lifetime access and helps keep the server running.</p></div>
-                <div class="feature-card reveal reveal-delay-1"><div class="icon">&#x1F513;</div><h3>Open Source</h3><p>Every service we use is free and open source. You can verify exactly how everything works on our public GitHub.</p></div>
-                <div class="feature-card reveal reveal-delay-2"><div class="icon">&#x1F9EA;</div><h3>Crypto Donations</h3><p>We accept Monero and Bitcoin. No personal info required, no credit checks, no paper trail. Your donation is anonymous.</p></div>
-                <div class="feature-card reveal reveal-delay-3"><div class="icon">&#x1F91D;</div><h3>Community Driven</h3><p>You can suggest new services, vote on features, and help shape what MySweetPea becomes. This platform belongs to its users.</p></div>
+                <div class="feature-card reveal reveal-delay-1"><div class="icon" aria-hidden="true">&#x1F512;</div><h3>Privacy First</h3><p>Your data stays on our server, not on some corporate cloud. No tracking, no ads, no data selling. Everything you do here is private.</p></div>
+                <div class="feature-card reveal reveal-delay-2"><div class="icon" aria-hidden="true">&#x1F3E0;</div><h3>Self-Hosted</h3><p>All services run on hardware we own, not rented from big tech companies. This means full control and no middleman.</p></div>
+                <div class="feature-card reveal reveal-delay-3"><div class="icon" aria-hidden="true">&#x1F4B0;</div><h3>Community-Funded</h3><p>No monthly subscriptions. No ads. A single donation gives you lifetime access and helps keep the server running.</p></div>
+                <div class="feature-card reveal reveal-delay-1"><div class="icon" aria-hidden="true">&#x1F513;</div><h3>Open Source</h3><p>Every service we use is free and open source. You can verify exactly how everything works on our public GitHub.</p></div>
+                <div class="feature-card reveal reveal-delay-2"><div class="icon" aria-hidden="true">&#x1F9EA;</div><h3>Crypto Donations</h3><p>We accept Monero and Bitcoin. No personal info required, no credit checks, no paper trail. Your donation is anonymous.</p></div>
+                <div class="feature-card reveal reveal-delay-3"><div class="icon" aria-hidden="true">&#x1F4AC;</div><h3>Community Driven</h3><p>Want a new service? Suggest it and we will consider adding it. This project is shaped by the community.</p></div>
             </div>
         </div>
 
         <div class="stats-section">
             <h2 class="section-title glass-text reveal">By the Numbers</h2>
-            <p class="section-subtitle reveal reveal-delay-1">Small, honest, and growing</p>
             <div class="stats-grid">
-                <div class="stat-card reveal reveal-delay-1"><div class="number" data-target="8" data-suffix="+">0</div><div class="label">Services Running</div></div>
-                <div class="stat-card reveal reveal-delay-2"><div class="number" data-target="0">0</div><div class="label">Trackers &amp; Ads</div></div>
-                <div class="stat-card reveal reveal-delay-3"><div class="number" data-target="100" data-suffix="%">0</div><div class="label">Open Source</div></div>
-                <div class="stat-card reveal reveal-delay-1"><div class="number" data-target="5" data-suffix="">0</div><div class="label">Dollars, One Time</div></div>
+                <div class="stat-card reveal reveal-delay-1"><div class="number" data-target="9" data-suffix="+">0+</div><div class="label">Services Available</div></div>
+                <div class="stat-card reveal reveal-delay-2"><div class="number" data-target="100" data-suffix="%">0%</div><div class="label">Open Source</div></div>
+                <div class="stat-card reveal reveal-delay-3"><div class="number">N/A</div><div class="label">Ads Shown</div></div>
+                <div class="stat-card reveal reveal-delay-4"><div class="number">N/A</div><div class="label">Data Sold</div></div>
             </div>
         </div>
 
         <div class="cta-section">
             <div class="cta-card reveal">
-                <h2>Ready to Join?</h2>
-                <p>A one-time $5 donation gives you lifetime access to every current and future service. No subscriptions, ever.</p>
+                <h2 class="glass-text">Ready to Join?</h2>
+                <p>A single $5 donation gives you lifetime access to all non-media services. No subscriptions, no recurring fees, no hidden costs.</p>
                 <div class="cta-buttons">
-                    <a href="/form.html" class="cta-btn">Get Access</a>
-                    <a href="/pricing.html" class="hero-btn hero-btn-secondary">See What's Included</a>
+                    <a href="/pricing.html" class="cta-btn">View Pricing</a>
+                    <a href="/support.html" class="cta-btn" style="background: rgba(255,255,255,0.05); color: var(--text); border: 1px solid var(--border);">Support Us</a>
+                    <a href="/suggest.html" class="cta-btn" style="background: rgba(255,255,255,0.05); color: var(--text); border: 1px solid var(--border);">Suggest a Service</a>
                 </div>
             </div>
         </div>
-    </main>
+
+        </main>
     <footer class="page-footer">
         <div class="footer-links">
             <a href="/index.html">Home</a>
@@ -219,7 +214,7 @@
     </footer>
     <script src="/assets/js/site.js" defer></script>
     <script>
-        // === Animated Counter for Stats ===
+// === Animated Counter for Stats ===
         const counterObserver = new IntersectionObserver(function(entries) {
             entries.forEach(function(entry) {
                 if (entry.isIntersecting) {
@@ -238,7 +233,7 @@
                 }
             });
         }, { threshold: 0.5 });
-        document.querySelectorAll('.number[data-target]').forEach(function(el) { counterObserver.observe(el); });
+        document.querySelectorAll('.stat-card .number').forEach(function(el) { counterObserver.observe(el); });
     </script>
 </body>
 </html>
