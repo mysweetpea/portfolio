@@ -4,72 +4,70 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MySweetPea — Something Went Wrong</title>
+    <meta name="description" content="Something went wrong. Please try again or contact support.">
+    <meta name="theme-color" content="#0C1316">
+    <meta property="og:title" content="MySweetPea — Something Went Wrong">
+    <meta property="og:description" content="Something went wrong. Please try again or contact support.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://mysweetpea.cc/">
     <link rel="icon" type="image/svg+xml" href="/logo-favicon.svg">
+    <link rel="preload" as="image" href="/logo.svg">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/assets/css/site.css">
     <style>
-        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
-        :root {
-            --bg: #0A1214; --primary: #5EB8A8; --primary-dim: #3E8E86; --primary-glow: rgba(94, 184, 168, 0.15);
-            --primary-bright: #7FD4C5; --text: #F0F8F6; --text-dim: #7A9B95; --text-faint: #4A6B65;
-            --border: rgba(94, 184, 168, 0.08); --border-primary: rgba(94, 184, 168, 0.25);
-            --radius: 16px; --radius-sm: 10px; --transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-            --error: #E85E5E;
-        }
-        html { scroll-behavior: smooth; }
-        body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; line-height: 1.7; overflow-x: hidden; display: flex; flex-direction: column; }
-        #petalCanvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; pointer-events: none; }
-        .content-wrapper { position: relative; z-index: 1; flex: 1; display: flex; flex-direction: column; }
-        .bg-gradient { position: fixed; top: 0; left: 0; right: 0; bottom: 0; z-index: -1; background: radial-gradient(ellipse 80% 50% at 50% -20%, rgba(94, 184, 168, 0.08), transparent), radial-gradient(ellipse 60% 40% at 80% 100%, rgba(94, 211, 158, 0.04), transparent), var(--bg); }
-        @keyframes shimmer { 0% { background-position: -200% center; } 100% { background-position: 200% center; } }
-        @keyframes float3D { 0%, 100% { transform: translateY(0) rotateX(0) rotateY(0); } 50% { transform: translateY(-10px) rotateX(2deg) rotateY(2deg); } }
-        @keyframes scaleIn { from { opacity: 0; transform: scale(0.9); } to { opacity: 1; transform: scale(1); } }
-        @keyframes shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-8px); } 75% { transform: translateX(8px); } }
-        .glass-text { background: linear-gradient(135deg, rgba(240,248,246,0.95) 0%, rgba(94,184,168,0.8) 30%, rgba(240,248,246,0.6) 50%, rgba(94,184,168,0.8) 70%, rgba(240,248,246,0.95) 100%); background-size: 200% auto; -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; text-shadow: 0 0 30px rgba(94, 184, 168, 0.15); animation: shimmer 6s linear infinite; filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.3)); }
-        .top-nav { position: fixed; top: 0; left: 0; right: 0; z-index: 50; display: flex; justify-content: space-between; align-items: center; padding: 16px 24px; background: rgba(10, 18, 20, 0.6); backdrop-filter: blur(20px) saturate(1.5); -webkit-backdrop-filter: blur(20px) saturate(1.5); border-bottom: 1px solid var(--border); transition: var(--transition); }
-        .nav-logo { display: flex; align-items: center; gap: 10px; text-decoration: none; }
-        .nav-logo img { width: 32px; height: 32px; filter: drop-shadow(0 0 8px var(--primary-glow)); }
-        .nav-logo span { font-size: 1rem; font-weight: 700; color: var(--text); letter-spacing: -0.3px; }
-        .nav-links { display: flex; gap: 6px; align-items: center; }
-        .nav-btn { padding: 8px 16px; background: transparent; border: 1px solid transparent; border-radius: var(--radius-sm); color: var(--text-dim); font-size: 0.85rem; font-weight: 500; text-decoration: none; transition: var(--transition); cursor: pointer; }
-        .nav-btn:hover { color: var(--primary); background: var(--primary-glow); border-color: var(--border-primary); transform: translateY(-1px); }
-        .hero { flex: 1; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; padding: 100px 24px 40px; }
-        .error-icon { width: 80px; height: 80px; border-radius: 50%; background: rgba(232, 94, 94, 0.1); border: 2px solid rgba(232, 94, 94, 0.3); display: flex; align-items: center; justify-content: center; margin-bottom: 24px; animation: shake 0.5s ease-out; }
-        .error-icon span { font-size: 2.5rem; }
-        .hero h1 { font-size: 2rem; font-weight: 700; margin-bottom: 16px; animation: scaleIn 0.5s ease-out 0.2s both; }
-        .hero p { font-size: 1rem; color: var(--text-dim); max-width: 500px; margin-bottom: 32px; animation: scaleIn 0.5s ease-out 0.3s both; }
-        .hero-btn { display: inline-block; padding: 14px 36px; border-radius: var(--radius-sm); font-size: 1rem; font-weight: 600; text-decoration: none; transition: var(--transition); background: linear-gradient(135deg, var(--primary), var(--primary-dim)); color: var(--bg); animation: scaleIn 0.5s ease-out 0.4s both; }
-        .hero-btn:hover { transform: translateY(-3px) scale(1.03); box-shadow: 0 8px 30px rgba(94, 184, 168, 0.35); }
-        .contact-link { display: block; margin-top: 20px; font-size: 0.85rem; color: var(--text-faint); animation: scaleIn 0.5s ease-out 0.5s both; }
-        .contact-link a { color: var(--primary); text-decoration: none; }
-        .contact-link a:hover { text-decoration: underline; }
-        .page-footer { text-align: center; padding: 30px 20px; font-size: 0.85rem; color: var(--text-faint); border-top: 1px solid var(--border); }
-        .page-footer a { color: var(--primary); text-decoration: none; transition: var(--transition); }
-        .page-footer a:hover { text-decoration: underline; }
-        .page-footer .footer-links { display: flex; justify-content: center; gap: 24px; margin-bottom: 12px; flex-wrap: wrap; }
-        @media (max-width: 768px) { .top-nav { padding: 12px 16px; flex-direction: column; gap: 8px; } .nav-links { flex-wrap: wrap; justify-content: center; gap: 4px; } .nav-btn { padding: 6px 12px; font-size: 0.78rem; } .hero { padding: 80px 20px 30px; } .hero h1 { font-size: 1.6rem; } }
+@keyframes scaleIn { from { opacity: 0; transform: scale(0.9); } to { opacity: 1; transform: scale(1); } }
+.hero { flex: 1; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; padding: 100px 24px 40px; }
+.error-icon { width: 80px; height: 80px; border-radius: 50%; background: rgba(217, 140, 140, 0.08); border: 2px solid rgba(217, 140, 140, 0.3); display: flex; align-items: center; justify-content: center; margin-bottom: 24px; animation: shake 0.5s ease-out; }
+.error-icon span { font-size: 2.5rem; }
+.hero h1 { font-size: 2.1rem; font-weight: 700; margin-bottom: 16px; letter-spacing: -0.8px; animation: scaleIn 0.5s ease-out 0.2s both; }
+.hero p { font-size: 1rem; color: var(--text-dim); max-width: 500px; margin-bottom: 32px; animation: scaleIn 0.5s ease-out 0.3s both; }
+.hero-btn { display: inline-block; padding: 14px 36px; border-radius: var(--radius-sm); font-size: 1rem; font-weight: 600; text-decoration: none; transition: var(--transition); background: linear-gradient(135deg, var(--primary), var(--primary-dim)); color: var(--bg); animation: scaleIn 0.5s ease-out 0.4s both; }
+.hero-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 24px rgba(143, 175, 181, 0.28); }
+.contact-link { display: block; margin-top: 20px; font-size: 0.85rem; color: var(--text-faint); animation: scaleIn 0.5s ease-out 0.5s both; }
+.contact-link a { color: var(--primary); text-decoration: none; }
+.contact-link a:hover { text-decoration: underline; }
+@media (max-width: 768px) { .hero { padding: 80px 20px 30px; } .hero h1 { font-size: 1.6rem; } }
     </style>
 </head>
 <body>
-    <div class="bg-gradient"></div>
-    <canvas id="petalCanvas"></canvas>
-    <nav class="top-nav">
-        <a href="/index.html" class="nav-logo"><img src="/logo.svg" alt="MySweetPea"><span>MySweetPea</span></a>
-        <div class="nav-links"><a href="/index.html" class="nav-btn">Home</a><a href="/pricing.html" class="nav-btn">Pricing</a><a href="/support.html" class="nav-btn">Support</a><a href="/about.html" class="nav-btn">About</a><a href="/suggest.html" class="nav-btn">Suggest</a></div>
+    <a href="#main-content" class="skip-link">Skip to content</a>
+    <div class="scroll-progress" id="scrollProgress" aria-hidden="true"></div>
+    <div class="bg-gradient" aria-hidden="true"></div>
+    <canvas id="petalCanvas" aria-hidden="true"></canvas>
+    <nav class="top-nav" aria-label="Primary navigation">
+        <a href="/index.html" class="nav-logo">
+            <img src="/logo.svg" alt="" width="32" height="32">
+            <span>MySweetPea</span>
+        </a>
+        <div class="nav-links">
+            <a href="/index.html" class="nav-btn">Home</a>
+            <a href="/pricing.html" class="nav-btn">Pricing</a>
+            <a href="/support.html" class="nav-btn">Support</a>
+            <a href="/about.html" class="nav-btn">About</a>
+            <a href="/suggest.html" class="nav-btn">Suggest</a>
+        </div>
     </nav>
-    <div class="content-wrapper">
+<main id="main-content" class="content-wrapper">
         <div class="hero">
-            <div class="error-icon"><span>&#x1F6A7;</span></div>
+            <div class="error-icon"><span aria-hidden="true">&#x1F6A7;</span></div>
             <h1 class="glass-text">Something Went Wrong</h1>
             <p>We could not process your request. This could be a temporary issue — please try again in a moment.</p>
             <a href="/form.html" class="hero-btn">Back to Form</a>
             <div class="contact-link">Need help? <a href="mailto:support@mysweetpea.cc">support@mysweetpea.cc</a></div>
         </div>
-        <div class="page-footer">
-            <div class="footer-links"><a href="/pricing.html">Pricing</a><a href="/support.html">Support</a><a href="/about.html">About Us</a><a href="/suggest.html">Suggest a Service</a><a href="mailto:support@mysweetpea.cc">Contact</a></div>
-            <p>&copy; 2026 MySweetPea. Self-hosted with care.</p>
+        </main>
+    <footer class="page-footer">
+        <div class="footer-links">
+            <a href="/index.html">Home</a>
+            <a href="/pricing.html">Pricing</a>
+            <a href="/support.html">Support</a>
+            <a href="/about.html">About</a>
+            <a href="/suggest.html">Suggest</a>
         </div>
-    </div>
-    <script>
-        (function() { var c=document.getElementById('petalCanvas'),ctx=c.getContext('2d'),p=[],W,H; function r(){W=c.width=window.innerWidth;H=c.height=window.innerHeight;} r(); window.addEventListener('resize',r); function cp(){return{x:Math.random()*W,y:-20,size:4+Math.random()*8,sY:0.5+Math.random()*1.5,sX:-0.5+Math.random()*1,rot:Math.random()*Math.PI*2,rS:-0.02+Math.random()*0.04,op:0.12+Math.random()*0.25,sw:Math.random()*Math.PI*2,swS:0.01+Math.random()*0.02};} for(var i=0;i<40;i++){var pt=cp();pt.y=Math.random()*H;p.push(pt);} function dp(pt){ctx.save();ctx.translate(pt.x,pt.y);ctx.rotate(pt.rot);ctx.globalAlpha=pt.op;var g=ctx.createRadialGradient(0,0,0,0,0,pt.size);g.addColorStop(0,'#F0F8F6');g.addColorStop(0.5,'#5EB8A8');g.addColorStop(1,'rgba(94,184,168,0.3)');ctx.fillStyle=g;ctx.beginPath();ctx.moveTo(0,-pt.size);ctx.bezierCurveTo(pt.size*0.6,-pt.size*0.5,pt.size*0.6,pt.size*0.5,0,pt.size);ctx.bezierCurveTo(-pt.size*0.6,pt.size*0.5,-pt.size*0.6,-pt.size*0.5,0,-pt.size);ctx.fill();ctx.strokeStyle='rgba(94,184,168,0.4)';ctx.lineWidth=0.5;ctx.stroke();ctx.restore();} function a(){ctx.clearRect(0,0,W,H);for(var i=0;i<p.length;i++){var pt=p[i];pt.sw+=pt.swS;pt.x+=pt.sX+Math.sin(pt.sw)*0.5;pt.y+=pt.sY;pt.rot+=pt.rS;if(pt.y>H+20)p[i]=cp();if(pt.x<-20)pt.x=W+20;if(pt.x>W+20)pt.x=-20;dp(pt);}requestAnimationFrame(a);} a(); })();
-    </script>
+        <p>&copy; 2026 MySweetPea. Privacy-first, self-hosted, community funded.</p>
+    </footer>
+    <script src="/assets/js/site.js" defer></script>
 </body>
 </html>
