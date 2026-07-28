@@ -3,11 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MySweetPea — Get Access</title>
-    <meta name="description" content="Donate $5 or more to get lifetime access to MySweetPea's private, self-hosted services.">
+    <title>MySweetPea — Something Went Wrong</title>
+    <meta name="description" content="Something went wrong. Please try again or contact support.">
     <meta name="theme-color" content="#0C1316">
-    <meta property="og:title" content="MySweetPea — Get Access">
-    <meta property="og:description" content="Donate $5 or more to get lifetime access to MySweetPea's private, self-hosted services.">
+    <meta property="og:title" content="MySweetPea — Something Went Wrong">
+    <meta property="og:description" content="Something went wrong. Please try again or contact support.">
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://mysweetpea.cc/">
     <meta property="og:image" content="https://mysweetpea.cc/logo.svg">
@@ -18,13 +18,11 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/assets/css/site.css">
 </head>
-<body data-page="form">
+<body data-page="error">
     <a href="#main-content" class="skip-link">Skip to content</a>
     <div class="scroll-progress" id="scrollProgress" aria-hidden="true"></div>
     <div class="bg-gradient" aria-hidden="true"></div>
     <canvas id="petalCanvas" aria-hidden="true"></canvas>
-    <div class="float-3d f1" aria-hidden="true"><svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M50 10 C35 15, 28 30, 32 48 C36 60, 48 68, 50 70 C52 68, 64 60, 68 48 C72 30, 65 15, 50 10" fill="#8FAFB5" opacity="0.8"/><path d="M50 25 C44 28, 40 38, 44 48 C47 55, 50 58, 50 58 C50 58, 53 55, 56 48 C60 38, 56 28, 50 25" fill="#8FAFB5" opacity="0.5"/><path d="M50 10 C42 12, 38 22, 42 35 C45 42, 50 45, 50 45 C50 45, 55 42, 58 35 C62 22, 58 12, 50 10" fill="#8FAFB5" opacity="0.6"/><path d="M50 45 C45 48, 42 55, 45 62 C48 67, 50 68, 50 68 C50 68, 52 67, 55 62 C58 55, 55 48, 50 45" fill="#8FAFB5" opacity="0.4"/><line x1="50" y1="68" x2="50" y2="88" stroke="#8FAFB5" stroke-width="2"/><path d="M45 80 Q40 76, 37 82" stroke="#8FAFB5" stroke-width="1.5" fill="none"/><path d="M55 80 Q60 76, 63 82" stroke="#8FAFB5" stroke-width="1.5" fill="none"/><circle cx="37" cy="82" r="2" fill="#8FAFB5" opacity="0.6"/><circle cx="63" cy="82" r="2" fill="#8FAFB5" opacity="0.6"/></svg></div>
-    <div class="float-3d f2" aria-hidden="true"><svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M50 10 C35 15, 28 30, 32 48 C36 60, 48 68, 50 70 C52 68, 64 60, 68 48 C72 30, 65 15, 50 10" fill="#8FAFB5" opacity="0.8"/><path d="M50 25 C44 28, 40 38, 44 48 C47 55, 50 58, 50 58 C50 58, 53 55, 56 48 C60 38, 56 28, 50 25" fill="#8FAFB5" opacity="0.5"/><path d="M50 10 C42 12, 38 22, 42 35 C45 42, 50 45, 50 45 C50 45, 55 42, 58 35 C62 22, 58 12, 50 10" fill="#8FAFB5" opacity="0.6"/><path d="M50 45 C45 48, 42 55, 45 62 C48 67, 50 68, 50 68 C50 68, 52 67, 55 62 C58 55, 55 48, 50 45" fill="#8FAFB5" opacity="0.4"/><line x1="50" y1="68" x2="50" y2="88" stroke="#8FAFB5" stroke-width="2"/><path d="M45 80 Q40 76, 37 82" stroke="#8FAFB5" stroke-width="1.5" fill="none"/><path d="M55 80 Q60 76, 63 82" stroke="#8FAFB5" stroke-width="1.5" fill="none"/><circle cx="37" cy="82" r="2" fill="#8FAFB5" opacity="0.6"/><circle cx="63" cy="82" r="2" fill="#8FAFB5" opacity="0.6"/></svg></div>
     <nav class="top-nav" aria-label="Primary navigation">
         <a href="/index.html" class="nav-logo">
             <img src="/logo.svg" alt="" width="32" height="32">
@@ -45,134 +43,12 @@
     </nav>
 <main id="main-content" class="content-wrapper">
         <div class="hero">
-            <img src="/logo.svg" alt="MySweetPea logo" class="logo" width="160" height="160">
-            <h1 class="glass-text">Get Access</h1>
-            <p>Get access to self-hosted services.</p>
+            <div class="error-icon"><span aria-hidden="true">&#x1F6A7;</span></div>
+            <h1 class="glass-text">Something Went Wrong</h1>
+            <p>We could not process your request. This could be a temporary issue — please try again in a moment.</p>
+            <a href="/form.html" class="hero-btn">Back to Form</a>
+            <div class="contact-link">Need help? <a href="mailto:support@mysweetpea.cc">support@mysweetpea.cc</a></div>
         </div>
-
-        <div class="tabs-container reveal">
-            <div class="tab-buttons">
-                <button class="tab-btn tab-get-access active" onclick="switchTab('get-access')">&#x1F331; Get Access ($5)</button>
-                <button class="tab-btn tab-have-code" onclick="switchTab('have-code')">&#x1F511; I Have a Code</button>
-            </div>
-
-            <!-- Tab 1: Get Access -->
-            <div class="tab-content active" id="tab-get-access">
-                <div class="form-card glow-card">
-                    <h3>Get Access — $5 Minimum</h3>
-                    <p class="form-desc">Donate $5+ to get access to non-media services.</p>
-                    <div class="how-it-works">
-                        <ol>
-                            <li>Send your $5 donation via crypto</li>
-                            <li>Fill out the form below with your TX hash</li>
-                            <li>We verify and email you an invite code</li>
-                            <li>Use the code on the "I Have a Code" tab to create your account</li>
-                        </ol>
-                    </div>
-
-                    <div class="form-group">
-                        <label class="form-label glass-text" for="ga-name">Name</label>
-                        <input type="text" class="form-input" id="ga-name" aria-describedby="ga-name-hint" aria-invalid="false" placeholder="Your name" oninput="validateField('ga-name', 'name')">
-                        <span class="validation-icon" id="ga-name-icon"></span>
-                        <div class="form-hint" id="ga-name-hint" aria-live="polite">Please enter your name.</div>
-                    </div>
-
-                    <div class="form-group">
-                        <label class="form-label glass-text" for="ga-email">Email</label>
-                        <input type="email" class="form-input" id="ga-email" aria-describedby="ga-email-hint" aria-invalid="false" placeholder="you@example.com" oninput="validateField('ga-email', 'email')">
-                        <span class="validation-icon" id="ga-email-icon"></span>
-                        <div class="form-hint" id="ga-email-hint" aria-live="polite">Please enter a valid email.</div>
-                    </div>
-
-                    <div class="form-group">
-                        <label class="form-label glass-text" for="ga-username">Username</label>
-                        <input type="text" class="form-input" id="ga-username" aria-describedby="ga-username-hint" aria-invalid="false" placeholder="Choose a username" oninput="validateField('ga-username', 'username')">
-                        <span class="validation-icon" id="ga-username-icon"></span>
-                        <div class="form-hint" id="ga-username-hint" aria-live="polite">Min 3 chars, alphanumeric + underscore only.</div>
-                    </div>
-
-                    <div class="form-group">
-                        <label class="form-label glass-text">Cryptocurrency</label>
-                        <div class="crypto-options">
-                            <div class="crypto-option selected" data-type="monero" onclick="selectCrypto(this, 'monero')">
-                                <div class="icon">&#x1F9EA;</div>
-                                <div class="name">Monero (XMR)</div>
-                            </div>
-                            <div class="crypto-option" data-type="bitcoin" onclick="selectCrypto(this, 'bitcoin')">
-                                <div class="icon">&#x20BF;</div>
-                                <div class="name">Bitcoin (BTC)</div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="wallet-display visible" id="wallet-display">
-                        <div class="wl">Send your $5+ donation to:</div>
-                        <div class="wa" id="wallet-addr" onclick="copyWallet()">Loading...</div>
-                        <div class="copy-hint">Click address to copy</div>
-                    </div>
-
-                    <div class="form-group">
-                        <label class="form-label glass-text" for="ga-txhash">Transaction Hash (optional but recommended)</label>
-                        <input type="text" class="form-input" id="ga-txhash" placeholder="Your transaction hash">
-                        <div class="form-hint">Helps us verify your donation faster.</div>
-                    </div>
-
-                    <button class="form-submit" id="ga-submit" disabled>Submit Request</button>
-                </div>
-            </div>
-
-            <!-- Tab 2: Have Code -->
-            <div class="tab-content" id="tab-have-code">
-                <div class="form-card glow-card">
-                    <h3>Redeem Invite Code</h3>
-                    <p class="form-desc">Have an invite code? Create your account now.</p>
-                    <div class="info-box">Enter your invite code and details below. Your account will be created instantly.</div>
-
-                    <div class="form-group">
-                        <label class="form-label glass-text" for="hc-code">Invite Code</label>
-                        <input type="text" class="form-input" id="hc-code" aria-describedby="hc-code-hint" aria-invalid="false" placeholder="PEA-XXXXXX" oninput="validateField('hc-code', 'invitecode')">
-                        <span class="validation-icon" id="hc-code-icon"></span>
-                        <div class="form-hint" id="hc-code-hint" aria-live="polite">Checking invite code...</div>
-                    </div>
-
-                    <div class="form-group">
-                        <label class="form-label glass-text" for="hc-name">Name</label>
-                        <input type="text" class="form-input" id="hc-name" aria-describedby="hc-name-hint" aria-invalid="false" placeholder="Your name" oninput="validateField('hc-name', 'name')">
-                        <span class="validation-icon" id="hc-name-icon"></span>
-                        <div class="form-hint" id="hc-name-hint" aria-live="polite">Please enter your name.</div>
-                    </div>
-
-                    <div class="form-group">
-                        <label class="form-label glass-text" for="hc-email">Email</label>
-                        <input type="email" class="form-input" id="hc-email" aria-describedby="hc-email-hint" aria-invalid="false" placeholder="you@example.com" oninput="validateField('hc-email', 'email')">
-                        <span class="validation-icon" id="hc-email-icon"></span>
-                        <div class="form-hint" id="hc-email-hint" aria-live="polite">Please enter a valid email.</div>
-                    </div>
-
-                    <div class="form-group">
-                        <label class="form-label glass-text" for="hc-username">Username</label>
-                        <input type="text" class="form-input" id="hc-username" aria-describedby="hc-username-hint" aria-invalid="false" placeholder="Choose a username" oninput="validateField('hc-username', 'username')">
-                        <span class="validation-icon" id="hc-username-icon"></span>
-                        <div class="form-hint" id="hc-username-hint" aria-live="polite">Min 3 chars, alphanumeric + underscore only.</div>
-                    </div>
-
-                    <button class="form-submit" id="hc-submit" disabled>Create Account</button>
-                </div>
-            </div>
-        </div>
-
-        <!-- FAQ -->
-        <div class="faq-section reveal">
-            <div class="faq-item"><div class="faq-question" onclick="toggleFAQ(this)">Why do you require a donation before access? <span class="arrow">&#9660;</span></div><div class="faq-answer"><p>The donation requirement helps prevent abuse and spam. Without it, anyone could create unlimited accounts, overload the server, and ruin the experience for everyone. A small contribution ensures that users are genuine and invested in the community.</p></div></div>
-            <div class="faq-item"><div class="faq-question" onclick="toggleFAQ(this)">Why do you need donations? <span class="arrow">&#9660;</span></div><div class="faq-answer"><p>Running these services costs money — server hardware, electricity, internet bandwidth, and domain registration. Donations help cover these costs and fund future improvements and new services. We do not run ads or sell your data.</p></div></div>
-            <div class="faq-item"><div class="faq-question" onclick="toggleFAQ(this)">Why don't you accept credit cards? <span class="arrow">&#9660;</span></div><div class="faq-answer"><p>We prioritize privacy. Credit card payments require sharing your personal and financial information with payment processors, which creates a paper trail linking your identity to our services. Cryptocurrency donations (Monero and Bitcoin) allow us to maintain a privacy-first approach with no KYC requirements, no chargebacks, and no third-party data collection.</p></div></div>
-            <div class="faq-item"><div class="faq-question" onclick="toggleFAQ(this)">How do I donate? <span class="arrow">&#9660;</span></div><div class="faq-answer"><p>We accept Monero (XMR) and Bitcoin (BTC). Visit the donation form to see our wallet addresses.</p></div></div>
-            <div class="faq-item"><div class="faq-question" onclick="toggleFAQ(this)">What happens after I donate $5? <span class="arrow">&#9660;</span></div><div class="faq-answer"><p>Fill out the donation form with your details and transaction hash. We verify your donation and email you an invite code. Use the code to create your account.</p></div></div>
-            <div class="faq-item"><div class="faq-question" onclick="toggleFAQ(this)">Is this a subscription? <span class="arrow">&#9660;</span></div><div class="faq-answer"><p>No. A single donation grants lifetime access. There are no recurring fees or billing cycles.</p></div></div>
-            <div class="faq-item"><div class="faq-question" onclick="toggleFAQ(this)">How do I get Sweet Pea tier? <span class="arrow">&#9660;</span></div><div class="faq-answer"><p>Sweet Pea tier is limited due to resource constraints. Contact support@mysweetpea.cc to inquire about availability and pricing.</p></div></div>
-            <div class="faq-item"><div class="faq-question" onclick="toggleFAQ(this)">Can I get a refund? <span class="arrow">&#9660;</span></div><div class="faq-answer"><p>Crypto donations are irreversible. If you have a genuine issue, contact support@mysweetpea.cc.</p></div></div>
-        </div>
-
         </main>
     <footer class="page-footer">
         <div class="footer-links">
@@ -185,224 +61,5 @@
         <p>&copy; 2026 MySweetPea. Privacy-first, self-hosted, community funded.</p>
     </footer>
     <script src="/assets/js/site.js" defer></script>
-    <script>
-// FAQ
-        function toggleFAQ(el) { el.parentElement.classList.toggle('open'); }
-
-        // Tab Switching
-        function switchTab(tab) {
-            document.querySelectorAll('.tab-btn').forEach(function(b) { b.classList.remove('active'); });
-            document.querySelectorAll('.tab-content').forEach(function(c) { c.classList.remove('active'); });
-            document.querySelector('.tab-' + tab).classList.add('active');
-            document.getElementById('tab-' + tab).classList.add('active');
-        }
-
-        // Wallet
-        var WALLETS = { monero: 'Coming Soon', bitcoin: 'Coming Soon' };
-        var currentCrypto = 'monero';
-        function selectCrypto(el, type) {
-            document.querySelectorAll('.crypto-option').forEach(function(o) { o.classList.remove('selected'); });
-            el.classList.add('selected'); currentCrypto = type;
-            document.getElementById('wallet-addr').textContent = WALLETS[type];
-        }
-        function copyWallet() {
-            var addr = document.getElementById('wallet-addr').textContent;
-            navigator.clipboard.writeText(addr).then(function() {
-                var el = document.getElementById('wallet-addr');
-                var orig = el.textContent; el.textContent = 'Copied!';
-                setTimeout(function() { el.textContent = orig; }, 1500);
-            });
-        }
-        document.getElementById('wallet-addr').textContent = WALLETS.monero;
-
-        // Validation
-        function validateField(id, type) {
-            var input = document.getElementById(id);
-            var icon = document.getElementById(id + '-icon');
-            var hint = document.getElementById(id + '-hint');
-            var val = input.value.trim();
-            var valid = false;
-
-            if (type === 'name') { valid = val.length >= 2; }
-            else if (type === 'email') { valid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val); }
-            else if (type === 'username') { valid = /^[a-zA-Z0-9_]{3,}$/.test(val); }
-            else if (type === 'invitecode') { valid = /^PEA-[A-Z0-9]{6}$/.test(val); }
-
-            input.classList.remove('valid', 'invalid');
-            icon.classList.remove('show', 'valid', 'invalid');
-
-            if (val.length > 0) {
-                if (valid) {
-                    input.classList.add('valid'); icon.classList.add('show', 'valid'); icon.innerHTML = '&#x2713;';
-                    hint.classList.remove('error'); hint.classList.add('success');
-                    if (type === 'username') hint.textContent = 'Letters, numbers, underscores. Min 3 characters.';
-                    if (type === 'invitecode') { hint.textContent = 'Checking invite code...'; checkInviteCodeServer(val); }
-                    if (type === 'email') hint.textContent = 'Valid email address.';
-                    if (type === 'name') hint.textContent = 'Looks good!';
-                } else {
-                    input.classList.add('invalid'); icon.classList.add('show', 'invalid'); icon.innerHTML = '&#x2717;';
-                    hint.classList.remove('success'); hint.classList.add('error');
-                    if (type === 'username') hint.textContent = 'Letters, numbers, underscores. Min 3 characters.';
-                    if (type === 'invitecode') hint.textContent = 'Format: PEA-XXXXXX (6 alphanumeric chars)';
-                    if (type === 'email') hint.textContent = 'Please enter a valid email.';
-                    if (type === 'name') hint.textContent = 'Please enter your name.';
-                }
-            } else {
-                hint.classList.remove('error', 'success');
-                if (type === 'name') hint.textContent = 'Please enter your name.';
-                if (type === 'email') hint.textContent = 'Please enter a valid email.';
-                if (type === 'username') hint.textContent = 'Min 3 chars, alphanumeric + underscore only.';
-                if (type === 'invitecode') hint.textContent = 'Checking invite code...';
-            }
-            checkSubmitState();
-            return valid;
-        }
-
-        function checkSubmitState() {
-            var gaValid = ['ga-name', 'ga-email', 'ga-username'].every(function(id) {
-                var el = document.getElementById(id); return el && el.classList.contains('valid');
-            });
-            document.getElementById('ga-submit').disabled = !gaValid;
-
-            var hcValid = ['hc-code', 'hc-name', 'hc-email', 'hc-username'].every(function(id) {
-                var el = document.getElementById(id); return el && el.classList.contains('valid');
-            });
-            document.getElementById('hc-submit').disabled = !hcValid;
-        }
-
-        var WEBHOOK_BASE = 'https://subscribe.mysweetpea.cc/webhook';
-        var ENDPOINTS = {
-            donationRequest: WEBHOOK_BASE + '/donation-request',
-            redeemCode: WEBHOOK_BASE + '/redeem-code',
-            checkCode: WEBHOOK_BASE + '/check-code'
-        };
-
-        var codeCheckTimer = null;
-        function checkInviteCodeServer(code) {
-            clearTimeout(codeCheckTimer);
-            codeCheckTimer = setTimeout(function() {
-                fetch(ENDPOINTS.checkCode, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ invite_code: code })
-                })
-                .then(function(r) { return r.json(); })
-                .then(function(data) {
-                    var input = document.getElementById('hc-code');
-                    var icon = document.getElementById('hc-code-icon');
-                    var hint = document.getElementById('hc-code-hint');
-                    if (input.value.trim() === code) {
-                        if (data.ok) {
-                            input.classList.remove('invalid');
-                            input.classList.add('valid');
-                            icon.classList.remove('invalid');
-                            icon.classList.add('show', 'valid');
-                            icon.innerHTML = '&#x2713;';
-                            hint.classList.remove('error');
-                            hint.classList.add('success');
-                            hint.textContent = 'Valid invite code!';
-                        } else {
-                            input.classList.remove('valid');
-                            input.classList.add('invalid');
-                            icon.classList.remove('valid');
-                            icon.classList.add('show', 'invalid');
-                            icon.innerHTML = '&#x2717;';
-                            hint.classList.remove('success');
-                            hint.classList.add('error');
-                            hint.textContent = data.msg || 'Invalid invite code.';
-                        }
-                        checkSubmitState();
-                    }
-                })
-                .catch(function() {});
-            }, 500);
-        }
-
-        document.getElementById('ga-submit').addEventListener('click', function() {
-            var btn = this;
-            btn.classList.add('loading'); btn.disabled = true;
-            var payload = {
-                name: document.getElementById('ga-name').value.trim(),
-                email: document.getElementById('ga-email').value.trim(),
-                username: document.getElementById('ga-username').value.trim(),
-                crypto_type: currentCrypto,
-                tx_hash: document.getElementById('ga-txhash').value.trim() || ''
-            };
-            fetch(ENDPOINTS.donationRequest, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(payload)
-            })
-            .then(function(r) { return r.json(); })
-            .then(function(data) {
-                if (data.ok) {
-                    btn.classList.remove('loading'); btn.classList.add('success');
-                    btn.textContent = '✓ Request Submitted!';
-                    setTimeout(function() {
-                        window.location.href = '/success.html?type=donation';
-                    }, 1500);
-                } else {
-                    btn.textContent = data.msg || 'Submission failed';
-                    btn.classList.remove('loading'); btn.disabled = false;
-                    setTimeout(function() { btn.textContent = 'Submit Request'; }, 3000);
-                }
-            })
-            .catch(function(err) {
-                btn.textContent = 'Network error. Try again.';
-                btn.classList.remove('loading'); btn.disabled = false;
-                setTimeout(function() { btn.textContent = 'Submit Request'; }, 3000);
-            });
-        });
-
-        document.getElementById('hc-submit').addEventListener('click', function() {
-            var btn = this;
-            btn.classList.add('loading'); btn.disabled = true;
-            var payload = {
-                invite_code: document.getElementById('hc-code').value.trim(),
-                name: document.getElementById('hc-name').value.trim(),
-                email: document.getElementById('hc-email').value.trim(),
-                username: document.getElementById('hc-username').value.trim()
-            };
-            fetch(ENDPOINTS.redeemCode, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(payload)
-            })
-            .then(function(r) { return r.json(); })
-            .then(function(data) {
-                if (data.ok) {
-                    btn.classList.remove('loading'); btn.classList.add('success');
-                    btn.textContent = '✓ Account Created!';
-                    setTimeout(function() {
-                        window.location.href = '/success.html?type=redeem';
-                    }, 1500);
-                } else {
-                    btn.textContent = data.msg || 'Account creation failed';
-                    btn.classList.remove('loading'); btn.disabled = false;
-                    setTimeout(function() { btn.textContent = 'Create Account'; }, 3000);
-                }
-            })
-            .catch(function(err) {
-                btn.textContent = 'Network error. Try again.';
-                btn.classList.remove('loading'); btn.disabled = false;
-                setTimeout(function() { btn.textContent = 'Create Account'; }, 3000);
-            });
-        });
-    
-        /* Keep aria-invalid in sync with validation state (screen readers) */
-        (function syncAriaInvalid() {
-            var observer = new MutationObserver(function(mutations) {
-                mutations.forEach(function(mu) {
-                    var el = mu.target;
-                    if (el.classList && (el.classList.contains('form-input') || el.classList.contains('form-textarea'))) {
-                        el.setAttribute('aria-invalid', el.classList.contains('invalid') ? 'true' : 'false');
-                    }
-                });
-            });
-            document.querySelectorAll('.form-input, .form-textarea').forEach(function(el) {
-                observer.observe(el, { attributes: true, attributeFilter: ['class'] });
-            });
-        })();
-</script>
 </body>
 </html>
