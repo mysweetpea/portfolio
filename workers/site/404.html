@@ -4,33 +4,23 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MySweetPea — Page Not Found</title>
-    <meta name="description" content="The page you are looking for does not exist.">
-    <meta name="theme-color" content="#0A1214">
+    <meta name="description" content="The page you're looking for doesn't exist.">
+    <meta name="theme-color" content="#0C1316">
     <meta name="robots" content="noindex">
     <link rel="icon" type="image/svg+xml" href="/logo-favicon.svg">
-    <link rel="preload" as="image" href="/logo.svg">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/assets/css/site.css">
     <style>
-        @keyframes scaleIn { from { opacity: 0; transform: scale(0.9); } to { opacity: 1; transform: scale(1); } }
-        .hero { flex: 1; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; padding: 100px 24px 40px; }
-        .error-code { font-size: 5rem; font-weight: 800; line-height: 1; margin-bottom: 8px; background: linear-gradient(135deg, var(--primary), var(--primary-dim)); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; animation: scaleIn 0.5s ease-out 0.1s both; }
-        .error-icon { width: 80px; height: 80px; border-radius: 50%; background: rgba(94, 184, 168, 0.1); border: 2px solid rgba(94, 184, 168, 0.3); display: flex; align-items: center; justify-content: center; margin-bottom: 24px; animation: float3D 3s ease-in-out infinite; }
-        .error-icon span { font-size: 2.5rem; }
-        .hero h1 { font-size: 2rem; font-weight: 700; margin-bottom: 16px; animation: scaleIn 0.5s ease-out 0.2s both; }
-        .hero p { font-size: 1rem; color: var(--text-dim); max-width: 500px; margin-bottom: 32px; animation: scaleIn 0.5s ease-out 0.3s both; }
-        .hero-btn { display: inline-block; padding: 14px 36px; border-radius: var(--radius-sm); font-size: 1rem; font-weight: 600; text-decoration: none; transition: var(--transition); background: linear-gradient(135deg, var(--primary), var(--primary-dim)); color: var(--bg); animation: scaleIn 0.5s ease-out 0.4s both; }
-        .hero-btn:hover { transform: translateY(-3px) scale(1.03); box-shadow: 0 8px 30px rgba(94, 184, 168, 0.35); }
-        .contact-link { display: block; margin-top: 20px; font-size: 0.85rem; color: var(--text-faint); animation: scaleIn 0.5s ease-out 0.5s both; }
-        .contact-link a { color: var(--primary); text-decoration: none; }
-        .contact-link a:hover { text-decoration: underline; }
-        @media (max-width: 768px) {
-            .hero { padding: 80px 20px 30px; }
-            .hero h1 { font-size: 1.6rem; }
-            .error-code { font-size: 3.5rem; }
-        }
+@keyframes scaleIn { from { opacity: 0; transform: scale(0.9); } to { opacity: 1; transform: scale(1); } }
+.hero { flex: 1; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; padding: 100px 24px 40px; }
+.code { font-size: 5rem; font-weight: 800; letter-spacing: -3px; line-height: 1; margin-bottom: 16px; color: var(--primary); opacity: 0.9; animation: scaleIn 0.5s ease-out both; }
+.hero h1 { font-size: 2rem; font-weight: 700; margin-bottom: 16px; letter-spacing: -0.6px; animation: scaleIn 0.5s ease-out 0.15s both; }
+.hero p { font-size: 1rem; color: var(--text-dim); max-width: 460px; margin-bottom: 32px; animation: scaleIn 0.5s ease-out 0.25s both; }
+.hero-btn { display: inline-block; padding: 14px 36px; border-radius: var(--radius-sm); font-size: 1rem; font-weight: 600; text-decoration: none; transition: var(--transition); background: linear-gradient(135deg, var(--primary), var(--primary-dim)); color: var(--bg); animation: scaleIn 0.5s ease-out 0.35s both; }
+.hero-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 24px rgba(143, 175, 181, 0.28); }
+@media (max-width: 768px) { .code { font-size: 3.5rem; } .hero h1 { font-size: 1.6rem; } }
     </style>
 </head>
 <body>
@@ -51,16 +41,14 @@
             <a href="/suggest.html" class="nav-btn">Suggest</a>
         </div>
     </nav>
-    <main id="main-content" class="content-wrapper">
+<main id="main-content" class="content-wrapper">
         <div class="hero">
-            <div class="error-code">404</div>
-            <div class="error-icon" aria-hidden="true"><span>&#x1F331;</span></div>
+            <div class="code">404</div>
             <h1 class="glass-text">Page Not Found</h1>
-            <p>The page you are looking for does not exist or may have been moved. Check the URL, or head back home.</p>
+            <p>The page you're looking for doesn't exist or may have been moved.</p>
             <a href="/index.html" class="hero-btn">Back to Home</a>
-            <div class="contact-link">Broken link? Let us know at <a href="mailto:support@mysweetpea.cc">support@mysweetpea.cc</a></div>
         </div>
-    </main>
+        </main>
     <footer class="page-footer">
         <div class="footer-links">
             <a href="/index.html">Home</a>
