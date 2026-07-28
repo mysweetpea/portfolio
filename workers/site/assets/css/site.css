@@ -306,32 +306,6 @@ body {
     animation: float3D 10s ease-in-out infinite reverse;
 }
 
-/* Respect operating-system reduced-motion preferences */
-@media (prefers-reduced-motion: reduce) {
-    html { scroll-behavior: auto; }
-
-    *, *::before, *::after {
-        animation-duration: 0.01ms !important;
-        animation-iteration-count: 1 !important;
-        transition-duration: 0.01ms !important;
-    }
-
-    .glass-text {
-        animation: none;
-        background: none;
-        -webkit-text-fill-color: var(--text);
-        filter: none;
-    }
-
-    .reveal {
-        opacity: 1;
-        transform: none;
-    }
-
-    #petalCanvas { display: none; }
-    .float-3d { animation: none; }
-}
-
 /* Mobile */
 @media (max-width: 768px) {
     .top-nav {
