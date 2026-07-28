@@ -10,28 +10,15 @@
     <meta property="og:description" content="Something went wrong. Please try again or contact support.">
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://mysweetpea.cc/">
+    <meta property="og:image" content="https://mysweetpea.cc/logo.svg">
     <link rel="icon" type="image/svg+xml" href="/logo-favicon.svg">
     <link rel="preload" as="image" href="/logo.svg">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/assets/css/site.css">
-    <style>
-@keyframes scaleIn { from { opacity: 0; transform: scale(0.9); } to { opacity: 1; transform: scale(1); } }
-.hero { flex: 1; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; padding: 100px 24px 40px; }
-.error-icon { width: 80px; height: 80px; border-radius: 50%; background: rgba(217, 140, 140, 0.08); border: 2px solid rgba(217, 140, 140, 0.3); display: flex; align-items: center; justify-content: center; margin-bottom: 24px; animation: shake 0.5s ease-out; }
-.error-icon span { font-size: 2.5rem; }
-.hero h1 { font-size: 2.1rem; font-weight: 700; margin-bottom: 16px; letter-spacing: -0.8px; animation: scaleIn 0.5s ease-out 0.2s both; }
-.hero p { font-size: 1rem; color: var(--text-dim); max-width: 500px; margin-bottom: 32px; animation: scaleIn 0.5s ease-out 0.3s both; }
-.hero-btn { display: inline-block; padding: 14px 36px; border-radius: var(--radius-sm); font-size: 1rem; font-weight: 600; text-decoration: none; transition: var(--transition); background: linear-gradient(135deg, var(--primary), var(--primary-dim)); color: var(--bg); animation: scaleIn 0.5s ease-out 0.4s both; }
-.hero-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 24px rgba(143, 175, 181, 0.28); }
-.contact-link { display: block; margin-top: 20px; font-size: 0.85rem; color: var(--text-faint); animation: scaleIn 0.5s ease-out 0.5s both; }
-.contact-link a { color: var(--primary); text-decoration: none; }
-.contact-link a:hover { text-decoration: underline; }
-@media (max-width: 768px) { .hero { padding: 80px 20px 30px; } .hero h1 { font-size: 1.6rem; } }
-    </style>
 </head>
-<body>
+<body data-page="error">
     <a href="#main-content" class="skip-link">Skip to content</a>
     <div class="scroll-progress" id="scrollProgress" aria-hidden="true"></div>
     <div class="bg-gradient" aria-hidden="true"></div>
@@ -41,7 +28,12 @@
             <img src="/logo.svg" alt="" width="32" height="32">
             <span>MySweetPea</span>
         </a>
-        <div class="nav-links">
+        <button class="nav-toggle" aria-expanded="false" aria-controls="nav-links" aria-label="Toggle navigation menu">
+            <span class="nav-toggle-bar"></span>
+            <span class="nav-toggle-bar"></span>
+            <span class="nav-toggle-bar"></span>
+        </button>
+        <div class="nav-links" id="nav-links">
             <a href="/index.html" class="nav-btn">Home</a>
             <a href="/pricing.html" class="nav-btn">Pricing</a>
             <a href="/support.html" class="nav-btn">Support</a>
