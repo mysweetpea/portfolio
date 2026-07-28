@@ -16,12 +16,14 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600;1,9..144,500&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/assets/css/site.css">
 </head>
 <body data-page="success">
     <a href="#main-content" class="skip-link">Skip to content</a>
     <div class="scroll-progress" id="scrollProgress" aria-hidden="true"></div>
     <div class="bg-gradient" aria-hidden="true"></div>
+    <div class="grain-overlay" aria-hidden="true"></div>
     <canvas id="petalCanvas" aria-hidden="true"></canvas>
     <nav class="top-nav" aria-label="Primary navigation">
         <a href="/index.html" class="nav-logo">
@@ -39,9 +41,11 @@
             <a href="/support.html" class="nav-btn">Support</a>
             <a href="/about.html" class="nav-btn">About</a>
             <a href="/suggest.html" class="nav-btn">Suggest</a>
+        <button class="theme-toggle" aria-label="Toggle color theme"><span class="icon-moon" aria-hidden="true">&#x1F319;</span><span class="icon-sun" aria-hidden="true">&#x2600;&#xFE0F;</span></button>
         </div>
     </nav>
 <main id="main-content" class="content-wrapper">
+        <nav class="breadcrumbs" aria-label="Breadcrumb"><a href="/index.html">Home</a><span aria-current="page">Request Received</span></nav>
         <div class="hero">
             <div class="success-icon"><span aria-hidden="true">&#x2705;</span></div>
             <h1 class="glass-text">Request Received!</h1>
@@ -59,6 +63,7 @@
             <div class="contact-link">Questions? <a href="mailto:support@mysweetpea.cc">support@mysweetpea.cc</a></div>
         </div>
         </main>
+    <a href="#" class="back-to-top" aria-label="Back to top" onclick="window.scrollTo({top:0,behavior:'smooth'});return false;">&#x2191;</a>
     <footer class="page-footer">
         <div class="footer-links">
             <a href="/index.html">Home</a>
