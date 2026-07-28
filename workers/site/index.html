@@ -4,104 +4,21 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MySweetPea — Self-Hosted Services</title>
+    <meta name="description" content="Private, self-hosted alternatives to the services you use every day. No ads, no tracking, no subscriptions — community funded.">
+    <meta name="theme-color" content="#0A1214">
+    <meta property="og:title" content="MySweetPea — Self-Hosted Services">
+    <meta property="og:description" content="Private, self-hosted alternatives to the services you use every day. No ads, no tracking, no subscriptions — community funded.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://mysweetpea.cc/">
     <link rel="icon" type="image/svg+xml" href="/logo-favicon.svg">
+    <link rel="preload" as="image" href="/logo.svg">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/assets/css/site.css">
     <style>
-        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
-
-        :root {
-            --bg: #0A1214;
-            --primary: #5EB8A8;
-            --primary-dim: #3E8E86;
-            --primary-glow: rgba(94, 184, 168, 0.15);
-            --primary-bright: #7FD4C5;
-            --text: #F0F8F6;
-            --text-dim: #7A9B95;
-            --text-faint: #4A6B65;
-            --border: rgba(94, 184, 168, 0.08);
-            --border-primary: rgba(94, 184, 168, 0.25);
-            --radius: 16px;
-            --radius-sm: 10px;
-            --transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-            --ice: #5EB8E8;
-            --sage: #5ED39E;
-            --teal: #5EB8A8;
-        }
-
-        html { scroll-behavior: smooth; }
-        body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
-            background: var(--bg);
-            color: var(--text);
-            min-height: 100vh;
-            line-height: 1.7;
-            overflow-x: hidden;
-        }
-
-        /* === Scroll Progress Bar === */
-        .scroll-progress {
-            position: fixed; top: 0; left: 0; height: 3px; width: 0%;
-            background: linear-gradient(90deg, var(--primary), var(--primary-bright));
-            z-index: 100; transition: width 0.1s;
-            box-shadow: 0 0 10px var(--primary-glow);
-        }
-
-        /* === Background === */
-        #petalCanvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; pointer-events: none; }
-        .content-wrapper { position: relative; z-index: 1; }
-        .bg-gradient {
-            position: fixed; top: 0; left: 0; right: 0; bottom: 0; z-index: -1;
-            background:
-                radial-gradient(ellipse 80% 50% at 50% -20%, rgba(94, 184, 168, 0.08), transparent),
-                radial-gradient(ellipse 60% 40% at 80% 100%, rgba(94, 211, 158, 0.04), transparent),
-                var(--bg);
-        }
-
-        @keyframes shimmer { 0% { background-position: -200% center; } 100% { background-position: 200% center; } }
-        @keyframes float3D { 0%, 100% { transform: translateY(0) rotateX(0) rotateY(0); } 50% { transform: translateY(-10px) rotateX(2deg) rotateY(2deg); } }
-        @keyframes pulseGlow { 0%, 100% { box-shadow: 0 0 20px rgba(94, 184, 168, 0.08); } 50% { box-shadow: 0 0 40px rgba(94, 184, 168, 0.18); } }
-        @keyframes fadeInUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
-        @keyframes slideInLeft { from { opacity: 0; transform: translateX(-30px); } to { opacity: 1; transform: translateX(0); } }
-        @keyframes slideInRight { from { opacity: 0; transform: translateX(30px); } to { opacity: 1; transform: translateX(0); } }
         @keyframes scaleIn { from { opacity: 0; transform: scale(0.9); } to { opacity: 1; transform: scale(1); } }
         @keyframes gradientShift { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
-
-        /* === Glass Text === */
-        .glass-text {
-            background: linear-gradient(135deg, rgba(240,248,246,0.95) 0%, rgba(94,184,168,0.8) 30%, rgba(240,248,246,0.6) 50%, rgba(94,184,168,0.8) 70%, rgba(240,248,246,0.95) 100%);
-            background-size: 200% auto;
-            -webkit-background-clip: text; background-clip: text;
-            -webkit-text-fill-color: transparent;
-            text-shadow: 0 0 30px rgba(94, 184, 168, 0.15);
-            animation: shimmer 6s linear infinite;
-            filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.3));
-        }
-
-        /* === Navigation === */
-        .top-nav {
-            position: fixed; top: 0; left: 0; right: 0;
-            z-index: 50; display: flex; justify-content: space-between; align-items: center;
-            padding: 16px 24px;
-            background: rgba(10, 18, 20, 0.6);
-            backdrop-filter: blur(20px) saturate(1.5);
-            -webkit-backdrop-filter: blur(20px) saturate(1.5);
-            border-bottom: 1px solid var(--border);
-            transition: var(--transition);
-        }
-        .nav-logo { display: flex; align-items: center; gap: 10px; text-decoration: none; }
-        .nav-logo img { width: 32px; height: 32px; filter: drop-shadow(0 0 8px var(--primary-glow)); }
-        .nav-logo span { font-size: 1rem; font-weight: 700; color: var(--text); letter-spacing: -0.3px; }
-        .nav-links { display: flex; gap: 6px; align-items: center; }
-        .nav-btn {
-            padding: 8px 16px; background: transparent;
-            border: 1px solid transparent; border-radius: var(--radius-sm);
-            color: var(--text-dim); font-size: 0.85rem; font-weight: 500;
-            text-decoration: none; transition: var(--transition); cursor: pointer;
-        }
-        .nav-btn:hover {
-            color: var(--primary); background: var(--primary-glow);
-            border-color: var(--border-primary); transform: translateY(-1px);
-        }
-        .nav-btn.active { color: var(--primary); border-color: var(--border-primary); }
 
         /* === Hero === */
         .hero {
@@ -146,15 +63,6 @@
             background: rgba(255, 255, 255, 0.08); border-color: var(--border-primary);
             transform: translateY(-3px) scale(1.03);
         }
-
-        /* === Scroll Animations === */
-        .reveal { opacity: 0; transform: translateY(40px); transition: opacity 0.8s ease, transform 0.8s ease; }
-        .reveal.visible { opacity: 1; transform: translateY(0); }
-        .reveal-delay-1 { transition-delay: 0.1s; }
-        .reveal-delay-2 { transition-delay: 0.2s; }
-        .reveal-delay-3 { transition-delay: 0.3s; }
-        .reveal-delay-4 { transition-delay: 0.4s; }
-        .reveal-delay-5 { transition-delay: 0.5s; }
 
         /* === Features === */
         .features-section { max-width: 1000px; margin: 0 auto; padding: 80px 24px; }
@@ -217,49 +125,15 @@
         .cta-card h2 { font-size: 1.6rem; margin-bottom: 16px; position: relative; }
         .cta-card p { font-size: 0.95rem; color: var(--text-dim); margin-bottom: 28px; position: relative; }
         .cta-buttons { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; position: relative; }
-        .cta-btn {
-            padding: 14px 32px; border-radius: var(--radius-sm); font-size: 0.95rem;
-            font-weight: 600; text-decoration: none; transition: var(--transition); cursor: pointer;
-            border: none;
-        }
-        .cta-btn-primary {
-            background: linear-gradient(135deg, var(--primary), var(--primary-dim)); color: var(--bg);
-        }
-        .cta-btn-primary:hover { transform: scale(1.05); box-shadow: 0 4px 20px rgba(94, 184, 168, 0.3); }
-        .cta-btn-secondary {
-            background: rgba(255, 255, 255, 0.05); color: var(--text);
-            border: 1px solid var(--border);
-        }
-        .cta-btn-secondary:hover { background: rgba(255, 255, 255, 0.1); border-color: var(--border-primary); }
-
-        /* === Footer === */
-        .page-footer {
-            text-align: center; padding: 40px 24px; font-size: 0.85rem;
-            color: var(--text-faint); border-top: 1px solid var(--border);
-        }
-        .page-footer a { color: var(--primary); text-decoration: none; transition: var(--transition); }
-        .page-footer a:hover { text-decoration: underline; }
-        .page-footer .footer-links { display: flex; justify-content: center; gap: 24px; margin-bottom: 12px; flex-wrap: wrap; }
-
-        /* === Floating 3D === */
-        .float-3d { position: absolute; pointer-events: none; opacity: 0.05; z-index: 0; }
-        .float-3d svg { width: 100%; height: 100%; }
-        .float-3d.f1 { top: 15%; right: 5%; width: 120px; height: 120px; animation: float3D 8s ease-in-out infinite; }
-        .float-3d.f2 { top: 45%; left: 3%; width: 80px; height: 80px; animation: float3D 10s ease-in-out infinite reverse; }
-        .float-3d.f3 { top: 70%; right: 8%; width: 100px; height: 100px; animation: float3D 7s ease-in-out infinite 1s; }
 
         /* === Mobile === */
         @media (max-width: 768px) {
-            .top-nav { padding: 12px 16px; flex-direction: column; gap: 8px; }
-            .nav-links { flex-wrap: wrap; justify-content: center; gap: 4px; }
-            .nav-btn { padding: 6px 12px; font-size: 0.78rem; }
             .hero { padding: 120px 20px 40px; }
             .hero h1 { font-size: 2.2rem; }
             .hero p.tagline { font-size: 1rem; }
             .hero img.logo { width: 140px; height: 140px; }
             .hero-buttons { flex-direction: column; align-items: center; }
             .hero-btn { width: 100%; max-width: 280px; justify-content: center; }
-            .float-3d { display: none; }
             .features-section, .stats-section, .cta-section { padding: 40px 16px; }
             .cta-card { padding: 32px 24px; }
             .cta-buttons { flex-direction: column; }
@@ -268,31 +142,28 @@
     </style>
 </head>
 <body>
-    <div class="scroll-progress" id="scrollProgress"></div>
-    <div class="bg-gradient"></div>
-    <canvas id="petalCanvas"></canvas>
-
-    <div class="float-3d f1"><svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M50 10 C35 15, 28 30, 32 48 C36 60, 48 68, 50 70 C52 68, 64 60, 68 48 C72 30, 65 15, 50 10" fill="#5EB8A8" opacity="0.8"/><path d="M50 25 C44 28, 40 38, 44 48 C47 55, 50 58, 50 58 C50 58, 53 55, 56 48 C60 38, 56 28, 50 25" fill="#5EB8A8" opacity="0.5"/><path d="M50 10 C42 12, 38 22, 42 35 C45 42, 50 45, 50 45 C50 45, 55 42, 58 35 C62 22, 58 12, 50 10" fill="#5EB8A8" opacity="0.6"/><path d="M50 45 C45 48, 42 55, 45 62 C48 67, 50 68, 50 68 C50 68, 52 67, 55 62 C58 55, 55 48, 50 45" fill="#5EB8A8" opacity="0.4"/><line x1="50" y1="68" x2="50" y2="88" stroke="#5EB8A8" stroke-width="2"/><path d="M45 80 Q40 76, 37 82" stroke="#5EB8A8" stroke-width="1.5" fill="none"/><path d="M55 80 Q60 76, 63 82" stroke="#5EB8A8" stroke-width="1.5" fill="none"/><circle cx="37" cy="82" r="2" fill="#5EB8A8" opacity="0.6"/><circle cx="63" cy="82" r="2" fill="#5EB8A8" opacity="0.6"/></svg></div>
-    <div class="float-3d f2"><svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M50 10 C35 15, 28 30, 32 48 C36 60, 48 68, 50 70 C52 68, 64 60, 68 48 C72 30, 65 15, 50 10" fill="#5EB8A8" opacity="0.8"/><path d="M50 25 C44 28, 40 38, 44 48 C47 55, 50 58, 50 58 C50 58, 53 55, 56 48 C60 38, 56 28, 50 25" fill="#5EB8A8" opacity="0.5"/><path d="M50 10 C42 12, 38 22, 42 35 C45 42, 50 45, 50 45 C50 45, 55 42, 58 35 C62 22, 58 12, 50 10" fill="#5EB8A8" opacity="0.6"/><path d="M50 45 C45 48, 42 55, 45 62 C48 67, 50 68, 50 68 C50 68, 52 67, 55 62 C58 55, 55 48, 50 45" fill="#5EB8A8" opacity="0.4"/><line x1="50" y1="68" x2="50" y2="88" stroke="#5EB8A8" stroke-width="2"/><path d="M45 80 Q40 76, 37 82" stroke="#5EB8A8" stroke-width="1.5" fill="none"/><path d="M55 80 Q60 76, 63 82" stroke="#5EB8A8" stroke-width="1.5" fill="none"/><circle cx="37" cy="82" r="2" fill="#5EB8A8" opacity="0.6"/><circle cx="63" cy="82" r="2" fill="#5EB8A8" opacity="0.6"/></svg></div>
-    <div class="float-3d f3"><svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M50 10 C35 15, 28 30, 32 48 C36 60, 48 68, 50 70 C52 68, 64 60, 68 48 C72 30, 65 15, 50 10" fill="#5EB8A8" opacity="0.8"/><path d="M50 25 C44 28, 40 38, 44 48 C47 55, 50 58, 50 58 C50 58, 53 55, 56 48 C60 38, 56 28, 50 25" fill="#5EB8A8" opacity="0.5"/><path d="M50 10 C42 12, 38 22, 42 35 C45 42, 50 45, 50 45 C50 45, 55 42, 58 35 C62 22, 58 12, 50 10" fill="#5EB8A8" opacity="0.6"/><path d="M50 45 C45 48, 42 55, 45 62 C48 67, 50 68, 50 68 C50 68, 52 67, 55 62 C58 55, 55 48, 50 45" fill="#5EB8A8" opacity="0.4"/><line x1="50" y1="68" x2="50" y2="88" stroke="#5EB8A8" stroke-width="2"/><path d="M45 80 Q40 76, 37 82" stroke="#5EB8A8" stroke-width="1.5" fill="none"/><path d="M55 80 Q60 76, 63 82" stroke="#5EB8A8" stroke-width="1.5" fill="none"/><circle cx="37" cy="82" r="2" fill="#5EB8A8" opacity="0.6"/><circle cx="63" cy="82" r="2" fill="#5EB8A8" opacity="0.6"/></svg></div>
-
-    <nav class="top-nav">
+    <a href="#main-content" class="skip-link">Skip to content</a>
+    <div class="scroll-progress" id="scrollProgress" aria-hidden="true"></div>
+    <div class="bg-gradient" aria-hidden="true"></div>
+    <canvas id="petalCanvas" aria-hidden="true"></canvas>
+    <div class="float-3d f1" aria-hidden="true"><svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M50 10 C35 15, 28 30, 32 48 C36 60, 48 68, 50 70 C52 68, 64 60, 68 48 C72 30, 65 15, 50 10" fill="#5EB8A8" opacity="0.8"/><path d="M50 25 C44 28, 40 38, 44 48 C47 55, 50 58, 50 58 C50 58, 53 55, 56 48 C60 38, 56 28, 50 25" fill="#5EB8A8" opacity="0.5"/><path d="M50 10 C42 12, 38 22, 42 35 C45 42, 50 45, 50 45 C50 45, 55 42, 58 35 C62 22, 58 12, 50 10" fill="#5EB8A8" opacity="0.6"/><path d="M50 45 C45 48, 42 55, 45 62 C48 67, 50 68, 50 68 C50 68, 52 67, 55 62 C58 55, 55 48, 50 45" fill="#5EB8A8" opacity="0.4"/><line x1="50" y1="68" x2="50" y2="88" stroke="#5EB8A8" stroke-width="2"/><path d="M45 80 Q40 76, 37 82" stroke="#5EB8A8" stroke-width="1.5" fill="none"/><path d="M55 80 Q60 76, 63 82" stroke="#5EB8A8" stroke-width="1.5" fill="none"/><circle cx="37" cy="82" r="2" fill="#5EB8A8" opacity="0.6"/><circle cx="63" cy="82" r="2" fill="#5EB8A8" opacity="0.6"/></svg></div>
+    <div class="float-3d f2" aria-hidden="true"><svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M50 10 C35 15, 28 30, 32 48 C36 60, 48 68, 50 70 C52 68, 64 60, 68 48 C72 30, 65 15, 50 10" fill="#5EB8A8" opacity="0.8"/><path d="M50 25 C44 28, 40 38, 44 48 C47 55, 50 58, 50 58 C50 58, 53 55, 56 48 C60 38, 56 28, 50 25" fill="#5EB8A8" opacity="0.5"/></svg></div>
+    <nav class="top-nav" aria-label="Primary navigation">
         <a href="/index.html" class="nav-logo">
-            <img src="/logo.svg" alt="MySweetPea">
+            <img src="/logo.svg" alt="" width="32" height="32">
             <span>MySweetPea</span>
         </a>
         <div class="nav-links">
-            <a href="/index.html" class="nav-btn active">Home</a>
+            <a href="/index.html" class="nav-btn active" aria-current="page">Home</a>
             <a href="/pricing.html" class="nav-btn">Pricing</a>
             <a href="/support.html" class="nav-btn">Support</a>
             <a href="/about.html" class="nav-btn">About</a>
             <a href="/suggest.html" class="nav-btn">Suggest</a>
         </div>
     </nav>
-
-    <div class="content-wrapper">
+    <main id="main-content" class="content-wrapper">
         <div class="hero">
-            <img src="/logo.svg" alt="MySweetPea" class="logo">
+            <img src="/logo.svg" alt="MySweetPea logo" class="logo" width="200" height="200">
             <h1 class="glass-text">MySweetPea</h1>
             <p class="tagline">Private alternatives to the services you use every day. No ads, no tracking, no subscriptions. Your data stays yours.</p>
             <div class="hero-buttons">
@@ -310,64 +181,44 @@
                 <div class="feature-card reveal reveal-delay-3"><div class="icon">&#x1F4B0;</div><h3>Community-Funded</h3><p>No monthly subscriptions. No ads. A single donation gives you lifetime access and helps keep the server running.</p></div>
                 <div class="feature-card reveal reveal-delay-1"><div class="icon">&#x1F513;</div><h3>Open Source</h3><p>Every service we use is free and open source. You can verify exactly how everything works on our public GitHub.</p></div>
                 <div class="feature-card reveal reveal-delay-2"><div class="icon">&#x1F9EA;</div><h3>Crypto Donations</h3><p>We accept Monero and Bitcoin. No personal info required, no credit checks, no paper trail. Your donation is anonymous.</p></div>
-                <div class="feature-card reveal reveal-delay-3"><div class="icon">&#x1F4AC;</div><h3>Community Driven</h3><p>Want a new service? Suggest it and we will consider adding it. This project is shaped by the community.</p></div>
+                <div class="feature-card reveal reveal-delay-3"><div class="icon">&#x1F91D;</div><h3>Community Driven</h3><p>You can suggest new services, vote on features, and help shape what MySweetPea becomes. This platform belongs to its users.</p></div>
             </div>
         </div>
 
         <div class="stats-section">
             <h2 class="section-title glass-text reveal">By the Numbers</h2>
+            <p class="section-subtitle reveal reveal-delay-1">Small, honest, and growing</p>
             <div class="stats-grid">
-                <div class="stat-card reveal reveal-delay-1"><div class="number" data-target="9" data-suffix="+">0+</div><div class="label">Services Available</div></div>
-                <div class="stat-card reveal reveal-delay-2"><div class="number" data-target="100" data-suffix="%">0%</div><div class="label">Open Source</div></div>
-                <div class="stat-card reveal reveal-delay-3"><div class="number">N/A</div><div class="label">Ads Shown</div></div>
-                <div class="stat-card reveal reveal-delay-4"><div class="number">N/A</div><div class="label">Data Sold</div></div>
+                <div class="stat-card reveal reveal-delay-1"><div class="number" data-target="8" data-suffix="+">0</div><div class="label">Services Running</div></div>
+                <div class="stat-card reveal reveal-delay-2"><div class="number" data-target="0">0</div><div class="label">Trackers &amp; Ads</div></div>
+                <div class="stat-card reveal reveal-delay-3"><div class="number" data-target="100" data-suffix="%">0</div><div class="label">Open Source</div></div>
+                <div class="stat-card reveal reveal-delay-1"><div class="number" data-target="5" data-suffix="">0</div><div class="label">Dollars, One Time</div></div>
             </div>
         </div>
 
         <div class="cta-section">
             <div class="cta-card reveal">
-                <h2 class="glass-text">Ready to Join?</h2>
-                <p>A single $5 donation gives you lifetime access to all non-media services. No subscriptions, no recurring fees, no hidden costs.</p>
+                <h2>Ready to Join?</h2>
+                <p>A one-time $5 donation gives you lifetime access to every current and future service. No subscriptions, ever.</p>
                 <div class="cta-buttons">
-                    <a href="/pricing.html" class="cta-btn cta-btn-primary">View Pricing</a>
-                    <a href="/support.html" class="cta-btn cta-btn-secondary">Support Us</a>
-                    <a href="/suggest.html" class="cta-btn cta-btn-secondary">Suggest a Service</a>
+                    <a href="/form.html" class="cta-btn">Get Access</a>
+                    <a href="/pricing.html" class="hero-btn hero-btn-secondary">See What's Included</a>
                 </div>
             </div>
         </div>
-
-        <div class="page-footer">
-            <div class="footer-links">
-                <a href="/pricing.html">Pricing</a>
-                <a href="/support.html">Support</a>
-                <a href="/about.html">About Us</a>
-                <a href="/suggest.html">Suggest a Service</a>
-                <a href="mailto:support@mysweetpea.cc">Contact</a>
-            </div>
-            <p>&copy; 2026 MySweetPea. Self-hosted with care.</p>
+    </main>
+    <footer class="page-footer">
+        <div class="footer-links">
+            <a href="/index.html">Home</a>
+            <a href="/pricing.html">Pricing</a>
+            <a href="/support.html">Support</a>
+            <a href="/about.html">About</a>
+            <a href="/suggest.html">Suggest</a>
         </div>
-    </div>
-
+        <p>&copy; 2026 MySweetPea. Privacy-first, self-hosted, community funded.</p>
+    </footer>
+    <script src="/assets/js/site.js" defer></script>
     <script>
-        // === Scroll Progress Bar ===
-        const scrollProgress = document.getElementById('scrollProgress');
-        window.addEventListener('scroll', function() {
-            const scrolled = (window.scrollY / (document.documentElement.scrollHeight - window.innerHeight)) * 100;
-            scrollProgress.style.width = scrolled + '%';
-        });
-
-        // === Intersection Observer for Reveal Animations ===
-        const observerOptions = { threshold: 0.15, rootMargin: '0px 0px -50px 0px' };
-        const revealObserver = new IntersectionObserver(function(entries) {
-            entries.forEach(function(entry) {
-                if (entry.isIntersecting) {
-                    entry.target.classList.add('visible');
-                    revealObserver.unobserve(entry.target);
-                }
-            });
-        }, observerOptions);
-        document.querySelectorAll('.reveal').forEach(function(el) { revealObserver.observe(el); });
-
         // === Animated Counter for Stats ===
         const counterObserver = new IntersectionObserver(function(entries) {
             entries.forEach(function(entry) {
@@ -388,62 +239,6 @@
             });
         }, { threshold: 0.5 });
         document.querySelectorAll('.number[data-target]').forEach(function(el) { counterObserver.observe(el); });
-
-        // === Falling Petals Canvas ===
-        (function() {
-            var canvas = document.getElementById('petalCanvas');
-            var ctx = canvas.getContext('2d');
-            var petals = [];
-            var W, H;
-            function resize() { W = canvas.width = window.innerWidth; H = canvas.height = window.innerHeight; }
-            resize(); window.addEventListener('resize', resize);
-            function createPetal() {
-                return { x: Math.random() * W, y: -20, size: 4 + Math.random() * 8,
-                    speedY: 0.5 + Math.random() * 1.5, speedX: -0.5 + Math.random() * 1,
-                    rotation: Math.random() * Math.PI * 2, rotSpeed: -0.02 + Math.random() * 0.04,
-                    opacity: 0.12 + Math.random() * 0.25,
-                    sway: Math.random() * Math.PI * 2, swaySpeed: 0.01 + Math.random() * 0.02 };
-            }
-            for (var i = 0; i < 40; i++) { var p = createPetal(); p.y = Math.random() * H; petals.push(p); }
-            function drawPetal(p) {
-                ctx.save(); ctx.translate(p.x, p.y); ctx.rotate(p.rotation);
-                ctx.globalAlpha = p.opacity;
-                var grad = ctx.createRadialGradient(0, 0, 0, 0, 0, p.size);
-                grad.addColorStop(0, '#F0F8F6'); grad.addColorStop(0.5, '#5EB8A8');
-                grad.addColorStop(1, 'rgba(94, 184, 168, 0.3)');
-                ctx.fillStyle = grad; ctx.beginPath();
-                ctx.moveTo(0, -p.size);
-                ctx.bezierCurveTo(p.size * 0.6, -p.size * 0.5, p.size * 0.6, p.size * 0.5, 0, p.size);
-                ctx.bezierCurveTo(-p.size * 0.6, p.size * 0.5, -p.size * 0.6, -p.size * 0.5, 0, -p.size);
-                ctx.fill(); ctx.strokeStyle = 'rgba(94, 184, 168, 0.4)'; ctx.lineWidth = 0.5; ctx.stroke();
-                ctx.restore();
-            }
-            function animate() {
-                ctx.clearRect(0, 0, W, H);
-                for (var i = 0; i < petals.length; i++) {
-                    var p = petals[i]; p.sway += p.swaySpeed;
-                    p.x += p.speedX + Math.sin(p.sway) * 0.5; p.y += p.speedY;
-                    p.rotation += p.rotSpeed;
-                    if (p.y > H + 20) petals[i] = createPetal();
-                    if (p.x < -20) p.x = W + 20; if (p.x > W + 20) p.x = -20;
-                    drawPetal(p);
-                }
-                requestAnimationFrame(animate);
-            }
-            animate();
-        })();
-
-        // === Card 3D Tilt Effect ===
-        document.querySelectorAll('.feature-card, .stat-card').forEach(function(card) {
-            card.addEventListener('mousemove', function(e) {
-                var rect = card.getBoundingClientRect();
-                var x = e.clientX - rect.left; var y = e.clientY - rect.top;
-                var centerX = rect.width / 2; var centerY = rect.height / 2;
-                var rotateX = (y - centerY) / 20; var rotateY = (centerX - x) / 20;
-                card.style.transform = 'perspective(800px) rotateX(' + rotateX + 'deg) rotateY(' + rotateY + 'deg) translateY(-6px)';
-            });
-            card.addEventListener('mouseleave', function() { card.style.transform = ''; });
-        });
     </script>
 </body>
 </html>
