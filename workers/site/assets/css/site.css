@@ -231,3 +231,81 @@ body {
     .nav-btn { padding: 6px 12px; font-size: 0.78rem; }
     .float-3d { display: none; }
 }
+
+/* ==========================================================================
+   Modernization upgrades (2026-07)
+   Fluid type, text-wrap balance, color-mix borders, backdrop fallback,
+   nav aria-current styling, icon <img> sizing.
+   ========================================================================== */
+
+:root {
+    /* Derive border tones from the base palette so one change propagates */
+    --border: color-mix(in srgb, var(--primary) 14%, transparent);
+    --border-primary: color-mix(in srgb, var(--primary) 32%, transparent);
+    /* Fluid type scale */
+    --fs-hero: clamp(2.5rem, 6vw, 4.25rem);
+    --fs-section: clamp(1.6rem, 3.4vw, 2.2rem);
+}
+
+/* Fluid hero + section typography; overrides fixed rem sizes */
+.hero h1 { font-size: var(--fs-hero); letter-spacing: -0.02em; text-wrap: balance; }
+.section-title { font-size: var(--fs-section); text-wrap: balance; }
+.hero p.tagline { text-wrap: pretty; }
+
+/* Fluid hero spacing + small-viewport-height fix (mobile URL bar) */
+.hero { padding-block: clamp(80px, 15vh, 140px) 60px; min-height: 85svh; }
+
+/* Nav: current-page indicator works with aria-current="page" */
+.nav-btn[aria-current="page"] {
+    color: var(--primary-bright);
+    background: var(--primary-glow);
+    border-color: var(--border);
+}
+.nav-btn[aria-current="page"]::after {
+    content: ''; display: block; height: 2px; margin-top: 2px;
+    border-radius: 2px;
+    background: linear-gradient(90deg, var(--primary-dim), var(--primary-bright));
+}
+
+/* Service icon <img> consistency (pricing/support/suggest pages) */
+img[src*="/assets/icons/"] {
+    width: 40px; height: 40px; object-fit: contain;
+    filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.35));
+}
+
+/* Fallback when backdrop-filter is unavailable (Firefox w/o flag, old WebKit) */
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+    :root {
+        --card-bg: rgba(19, 30, 34, 0.92);
+        --card-bg-hover: rgba(24, 38, 43, 0.95);
+    }
+    .top-nav { background: rgba(12, 19, 22, 0.92); }
+    .hero-btn-secondary { background: rgba(255, 255, 255, 0.07); }
+}
+
+/* Slightly stronger card border on low-contrast displays */
+.feature-card, .stat-card, .pricing-card {
+    border-color: var(--border);
+}
+
+/* Sage accent for a single high-priority CTA / badge per page */
+.accent-sage {
+    background: linear-gradient(135deg, var(--sage), var(--sage-dim));
+    color: var(--bg);
+}
+
+/* Reduced motion: also stop emoji rotate, pulse glows, gradient shifts */
+@media (prefers-reduced-motion: reduce) {
+    .tier-emoji-3d, .tier-name-seedling, .pricing-card.tier-seedling,
+    .hero img.logo, .float-3d {
+        animation: none !important;
+    }
+}
+
+/* Touch devices: no hover lift (avoids sticky-hover artifacts) */
+@media (hover: none) {
+    .feature-card:hover, .stat-card:hover, .pricing-card:hover,
+    .hero-btn-primary:hover, .hero-btn-secondary:hover, .cta-btn:hover {
+        transform: none;
+    }
+}
