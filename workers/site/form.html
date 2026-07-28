@@ -496,7 +496,7 @@
                 fetch(ENDPOINTS.checkCode, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ code: code })
+                    body: JSON.stringify({ invite_code: code })
                 })
                 .then(function(r) { return r.json(); })
                 .then(function(data) {
