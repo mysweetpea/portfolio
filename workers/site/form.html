@@ -10,127 +10,15 @@
     <meta property="og:description" content="Donate $5 or more to get lifetime access to MySweetPea's private, self-hosted services.">
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://mysweetpea.cc/">
+    <meta property="og:image" content="https://mysweetpea.cc/logo.svg">
     <link rel="icon" type="image/svg+xml" href="/logo-favicon.svg">
     <link rel="preload" as="image" href="/logo.svg">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/assets/css/site.css">
-    <style>
-/* Hero */
-        .hero { text-align: center; padding: 120px 24px 20px; }
-.hero img.logo { width: 160px; height: 160px; margin-bottom: 16px; filter: drop-shadow(0 8px 24px rgba(197, 213, 216, 0.12)); animation: float3D 7s ease-in-out infinite; }
-.hero h1 { font-size: 2rem; font-weight: 700; margin-bottom: 8px; }
-.hero p { font-size: 1rem; color: var(--text-dim); }
-/* Tabs */
-        .tabs-container { max-width: 560px; margin: 30px auto; padding: 0 20px; }
-.tab-buttons { display: flex; gap: 12px; margin-bottom: 24px; }
-.tab-btn {
-            flex: 1; padding: 14px 20px; border-radius: var(--radius-sm);
-            font-size: 0.92rem; font-weight: 600; cursor: pointer;
-            transition: var(--transition); border: 2px solid transparent;
-            background: var(--card-bg); backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px); color: var(--text-dim);
-            display: flex; align-items: center; justify-content: center; gap: 8px;
-        }
-.tab-btn:hover { color: var(--text); border-color: var(--border); }
-.tab-btn.active.tab-get-access { color: var(--sage); border-color: rgba(163, 201, 182, 0.4); background: rgba(163, 201, 182, 0.05); box-shadow: 0 0 15px rgba(163, 201, 182, 0.08); }
-.tab-btn.active.tab-have-code { color: #6B9AA6; border-color: rgba(107, 154, 166, 0.4); background: rgba(107, 154, 166, 0.05); box-shadow: 0 0 15px rgba(107, 154, 166, 0.08); }
-/* Tab Content */
-        .tab-content { display: none; animation: fadeInUp 0.4s ease; }
-.tab-content.active { display: block; }
-.form-card {
-            background: var(--card-bg); backdrop-filter: blur(16px) saturate(1.2);
-            -webkit-backdrop-filter: blur(16px) saturate(1.2);
-            border: 1px solid var(--border); border-radius: var(--radius);
-            padding: 32px 28px; position: relative; overflow: hidden;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
-        }
-.form-card.glow-card::before { content: ''; position: absolute; inset: 0; border-radius: inherit; padding: 1px; background: radial-gradient(300px circle at var(--mouse-x, 50%) var(--mouse-y, 50%), rgba(143, 175, 181, 0.4), transparent 40%); -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0); -webkit-mask-composite: xor; mask-composite: exclude; opacity: 0; transition: opacity 0.3s; pointer-events: none; z-index: 1; }
-.form-card.glow-card:hover::before { opacity: 1; }
-.form-card h3 { font-size: 1.1rem; font-weight: 600; margin-bottom: 8px; color: var(--primary); }
-.form-card .form-desc { font-size: 0.85rem; color: var(--text-dim); margin-bottom: 20px; }
-.form-card .how-it-works { background: rgba(14, 22, 26, 0.5); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 16px; margin-bottom: 24px; }
-.form-card .how-it-works ol { padding-left: 20px; }
-.form-card .how-it-works li { font-size: 0.82rem; color: var(--text-dim); margin-bottom: 6px; }
-/* Form Fields */
-        .form-group { margin-bottom: 20px; position: relative; }
-.form-label { display: block; font-size: 0.82rem; font-weight: 600; margin-bottom: 8px; color: var(--text); }
-.form-input {
-            width: 100%; padding: 12px 16px; background: rgba(14, 22, 26, 0.6);
-            border: 1px solid var(--border); border-radius: var(--radius-sm);
-            color: var(--text); font-size: 0.9rem; font-family: inherit;
-            transition: var(--transition); outline: none;
-        }
-.form-input::placeholder { color: var(--text-faint); }
-.form-input:focus { border-color: var(--border-primary); background: rgba(19, 30, 34, 0.85); box-shadow: 0 0 0 3px var(--primary-glow); }
-.form-input.valid { border-color: rgba(163, 201, 182, 0.4); }
-.form-input.invalid { border-color: rgba(217, 140, 140, 0.4); animation: shake 0.3s ease; }
-.form-hint { font-size: 0.75rem; color: var(--text-faint); margin-top: 6px; }
-.form-hint.error { color: var(--error); }
-.form-hint.success { color: var(--success); }
-/* Validation Icon */
-        .validation-icon { position: absolute; right: 14px; top: 38px; font-size: 1.1rem; opacity: 0; transition: opacity 0.3s; pointer-events: none; }
-.validation-icon.show { opacity: 1; }
-.validation-icon.valid { color: var(--success); }
-.validation-icon.invalid { color: var(--error); }
-/* Crypto Select */
-        .crypto-options { display: flex; gap: 12px; margin-bottom: 20px; }
-.crypto-option {
-            flex: 1; min-width: 140px; padding: 16px; background: rgba(14, 22, 26, 0.85);
-            border: 2px solid rgba(255, 255, 255, 0.1); border-radius: var(--radius-sm);
-            cursor: pointer; transition: var(--transition); text-align: center;
-        }
-.crypto-option:hover { border-color: var(--border-primary); }
-.crypto-option.selected { border-color: var(--primary); background: rgba(143, 175, 181, 0.08); }
-.crypto-option .icon { font-size: 1.8rem; margin-bottom: 6px; }
-.crypto-option .name { font-size: 0.86rem; color: var(--text-dim); font-weight: 600; }
-/* Wallet Display */
-        .wallet-display { display: none; background: rgba(14, 22, 26, 0.6); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 16px; margin-bottom: 20px; }
-.wallet-display.visible { display: block; }
-.wallet-display .wl { font-size: 0.78rem; color: var(--text-dim); margin-bottom: 6px; }
-.wallet-display .wa {
-            font-size: 0.88rem; color: var(--primary); font-family: monospace;
-            word-break: break-all; cursor: pointer; padding: 8px;
-            background: rgba(143, 175, 181, 0.05); border-radius: 6px;
-            transition: var(--transition);
-        }
-.wallet-display .wa:hover { background: rgba(143, 175, 181, 0.1); }
-.wallet-display .copy-hint { font-size: 0.72rem; color: var(--text-faint); margin-top: 6px; }
-/* Submit Button */
-        .form-submit {
-            width: 100%; padding: 14px; border: none; border-radius: var(--radius-sm);
-            font-size: 0.95rem; font-weight: 600; cursor: pointer;
-            transition: var(--transition); color: var(--bg);
-            background: linear-gradient(135deg, var(--primary), var(--primary-dim));
-        }
-.form-submit:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 4px 20px rgba(143, 175, 181, 0.3); }
-.form-submit:disabled { opacity: 0.4; cursor: not-allowed; }
-.form-submit.success { background: linear-gradient(135deg, var(--success), #5D7A6E); }
-/* Info Box */
-        .info-box { background: rgba(143, 175, 181, 0.06); border: 1px solid rgba(143, 175, 181, 0.15); border-radius: var(--radius-sm); padding: 14px; margin-bottom: 20px; font-size: 0.82rem; color: var(--text-dim); line-height: 1.6; }
-/* FAQ */
-        .faq-section { max-width: 720px; margin: 60px auto 80px; padding: 20px; }
-.faq-item { background: var(--card-bg); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border: 1px solid var(--border); border-radius: var(--radius-sm); margin-bottom: 10px; overflow: hidden; transition: var(--transition); }
-.faq-item:hover { border-color: var(--border-primary); }
-.faq-question { padding: 16px 20px; font-size: 0.9rem; color: var(--text); cursor: pointer; display: flex; justify-content: space-between; align-items: center; transition: var(--transition); user-select: none; }
-.faq-question:hover { color: var(--primary); }
-.faq-question .arrow { transition: transform 0.3s ease; color: var(--text-dim); font-size: 0.8rem; }
-.faq-item.open .faq-question .arrow { transform: rotate(180deg); color: var(--primary); }
-.faq-answer { max-height: 0; overflow: hidden; transition: max-height 0.3s ease, padding 0.3s ease; padding: 0 20px; }
-.faq-item.open .faq-answer { max-height: 300px; padding: 0 20px 16px; }
-.faq-answer p { font-size: 0.84rem; color: var(--text-dim); line-height: 1.5; }
-@media (max-width: 768px) {
-            .hero { padding: 100px 20px 10px; }
-            .hero h1 { font-size: 1.6rem; }
-            .hero img.logo { width: 120px; height: 120px; }
-            .tab-buttons { flex-direction: column; }
-            .crypto-options { flex-direction: column; }
-            .form-card { padding: 24px 20px; }
-        }
-    </style>
 </head>
-<body>
+<body data-page="form">
     <a href="#main-content" class="skip-link">Skip to content</a>
     <div class="scroll-progress" id="scrollProgress" aria-hidden="true"></div>
     <div class="bg-gradient" aria-hidden="true"></div>
@@ -142,7 +30,12 @@
             <img src="/logo.svg" alt="" width="32" height="32">
             <span>MySweetPea</span>
         </a>
-        <div class="nav-links">
+        <button class="nav-toggle" aria-expanded="false" aria-controls="nav-links" aria-label="Toggle navigation menu">
+            <span class="nav-toggle-bar"></span>
+            <span class="nav-toggle-bar"></span>
+            <span class="nav-toggle-bar"></span>
+        </button>
+        <div class="nav-links" id="nav-links">
             <a href="/index.html" class="nav-btn">Home</a>
             <a href="/pricing.html" class="nav-btn">Pricing</a>
             <a href="/support.html" class="nav-btn">Support</a>
@@ -179,23 +72,23 @@
 
                     <div class="form-group">
                         <label class="form-label glass-text" for="ga-name">Name</label>
-                        <input type="text" class="form-input" id="ga-name" placeholder="Your name" oninput="validateField('ga-name', 'name')">
+                        <input type="text" class="form-input" id="ga-name" aria-describedby="ga-name-hint" aria-invalid="false" placeholder="Your name" oninput="validateField('ga-name', 'name')">
                         <span class="validation-icon" id="ga-name-icon"></span>
-                        <div class="form-hint" id="ga-name-hint">Please enter your name.</div>
+                        <div class="form-hint" id="ga-name-hint" aria-live="polite">Please enter your name.</div>
                     </div>
 
                     <div class="form-group">
                         <label class="form-label glass-text" for="ga-email">Email</label>
-                        <input type="email" class="form-input" id="ga-email" placeholder="you@example.com" oninput="validateField('ga-email', 'email')">
+                        <input type="email" class="form-input" id="ga-email" aria-describedby="ga-email-hint" aria-invalid="false" placeholder="you@example.com" oninput="validateField('ga-email', 'email')">
                         <span class="validation-icon" id="ga-email-icon"></span>
-                        <div class="form-hint" id="ga-email-hint">Please enter a valid email.</div>
+                        <div class="form-hint" id="ga-email-hint" aria-live="polite">Please enter a valid email.</div>
                     </div>
 
                     <div class="form-group">
                         <label class="form-label glass-text" for="ga-username">Username</label>
-                        <input type="text" class="form-input" id="ga-username" placeholder="Choose a username" oninput="validateField('ga-username', 'username')">
+                        <input type="text" class="form-input" id="ga-username" aria-describedby="ga-username-hint" aria-invalid="false" placeholder="Choose a username" oninput="validateField('ga-username', 'username')">
                         <span class="validation-icon" id="ga-username-icon"></span>
-                        <div class="form-hint" id="ga-username-hint">Min 3 chars, alphanumeric + underscore only.</div>
+                        <div class="form-hint" id="ga-username-hint" aria-live="polite">Min 3 chars, alphanumeric + underscore only.</div>
                     </div>
 
                     <div class="form-group">
@@ -237,30 +130,30 @@
 
                     <div class="form-group">
                         <label class="form-label glass-text" for="hc-code">Invite Code</label>
-                        <input type="text" class="form-input" id="hc-code" placeholder="PEA-XXXXXX" oninput="validateField('hc-code', 'invitecode')">
+                        <input type="text" class="form-input" id="hc-code" aria-describedby="hc-code-hint" aria-invalid="false" placeholder="PEA-XXXXXX" oninput="validateField('hc-code', 'invitecode')">
                         <span class="validation-icon" id="hc-code-icon"></span>
-                        <div class="form-hint" id="hc-code-hint">Checking invite code...</div>
+                        <div class="form-hint" id="hc-code-hint" aria-live="polite">Checking invite code...</div>
                     </div>
 
                     <div class="form-group">
                         <label class="form-label glass-text" for="hc-name">Name</label>
-                        <input type="text" class="form-input" id="hc-name" placeholder="Your name" oninput="validateField('hc-name', 'name')">
+                        <input type="text" class="form-input" id="hc-name" aria-describedby="hc-name-hint" aria-invalid="false" placeholder="Your name" oninput="validateField('hc-name', 'name')">
                         <span class="validation-icon" id="hc-name-icon"></span>
-                        <div class="form-hint" id="hc-name-hint">Please enter your name.</div>
+                        <div class="form-hint" id="hc-name-hint" aria-live="polite">Please enter your name.</div>
                     </div>
 
                     <div class="form-group">
                         <label class="form-label glass-text" for="hc-email">Email</label>
-                        <input type="email" class="form-input" id="hc-email" placeholder="you@example.com" oninput="validateField('hc-email', 'email')">
+                        <input type="email" class="form-input" id="hc-email" aria-describedby="hc-email-hint" aria-invalid="false" placeholder="you@example.com" oninput="validateField('hc-email', 'email')">
                         <span class="validation-icon" id="hc-email-icon"></span>
-                        <div class="form-hint" id="hc-email-hint">Please enter a valid email.</div>
+                        <div class="form-hint" id="hc-email-hint" aria-live="polite">Please enter a valid email.</div>
                     </div>
 
                     <div class="form-group">
                         <label class="form-label glass-text" for="hc-username">Username</label>
-                        <input type="text" class="form-input" id="hc-username" placeholder="Choose a username" oninput="validateField('hc-username', 'username')">
+                        <input type="text" class="form-input" id="hc-username" aria-describedby="hc-username-hint" aria-invalid="false" placeholder="Choose a username" oninput="validateField('hc-username', 'username')">
                         <span class="validation-icon" id="hc-username-icon"></span>
-                        <div class="form-hint" id="hc-username-hint">Min 3 chars, alphanumeric + underscore only.</div>
+                        <div class="form-hint" id="hc-username-hint" aria-live="polite">Min 3 chars, alphanumeric + underscore only.</div>
                     </div>
 
                     <button class="form-submit" id="hc-submit" disabled>Create Account</button>
@@ -427,7 +320,7 @@
 
         document.getElementById('ga-submit').addEventListener('click', function() {
             var btn = this;
-            btn.textContent = 'Submitting...'; btn.disabled = true;
+            btn.classList.add('loading'); btn.disabled = true;
             var payload = {
                 name: document.getElementById('ga-name').value.trim(),
                 email: document.getElementById('ga-email').value.trim(),
@@ -443,27 +336,27 @@
             .then(function(r) { return r.json(); })
             .then(function(data) {
                 if (data.ok) {
-                    btn.classList.add('success');
+                    btn.classList.remove('loading'); btn.classList.add('success');
                     btn.textContent = '✓ Request Submitted!';
                     setTimeout(function() {
                         window.location.href = '/success.html?type=donation';
                     }, 1500);
                 } else {
                     btn.textContent = data.msg || 'Submission failed';
-                    btn.disabled = false;
+                    btn.classList.remove('loading'); btn.disabled = false;
                     setTimeout(function() { btn.textContent = 'Submit Request'; }, 3000);
                 }
             })
             .catch(function(err) {
                 btn.textContent = 'Network error. Try again.';
-                btn.disabled = false;
+                btn.classList.remove('loading'); btn.disabled = false;
                 setTimeout(function() { btn.textContent = 'Submit Request'; }, 3000);
             });
         });
 
         document.getElementById('hc-submit').addEventListener('click', function() {
             var btn = this;
-            btn.textContent = 'Creating account...'; btn.disabled = true;
+            btn.classList.add('loading'); btn.disabled = true;
             var payload = {
                 invite_code: document.getElementById('hc-code').value.trim(),
                 name: document.getElementById('hc-name').value.trim(),
@@ -478,23 +371,38 @@
             .then(function(r) { return r.json(); })
             .then(function(data) {
                 if (data.ok) {
-                    btn.classList.add('success');
+                    btn.classList.remove('loading'); btn.classList.add('success');
                     btn.textContent = '✓ Account Created!';
                     setTimeout(function() {
                         window.location.href = '/success.html?type=redeem';
                     }, 1500);
                 } else {
                     btn.textContent = data.msg || 'Account creation failed';
-                    btn.disabled = false;
+                    btn.classList.remove('loading'); btn.disabled = false;
                     setTimeout(function() { btn.textContent = 'Create Account'; }, 3000);
                 }
             })
             .catch(function(err) {
                 btn.textContent = 'Network error. Try again.';
-                btn.disabled = false;
+                btn.classList.remove('loading'); btn.disabled = false;
                 setTimeout(function() { btn.textContent = 'Create Account'; }, 3000);
             });
         });
-    </script>
+    
+        /* Keep aria-invalid in sync with validation state (screen readers) */
+        (function syncAriaInvalid() {
+            var observer = new MutationObserver(function(mutations) {
+                mutations.forEach(function(mu) {
+                    var el = mu.target;
+                    if (el.classList && (el.classList.contains('form-input') || el.classList.contains('form-textarea'))) {
+                        el.setAttribute('aria-invalid', el.classList.contains('invalid') ? 'true' : 'false');
+                    }
+                });
+            });
+            document.querySelectorAll('.form-input, .form-textarea').forEach(function(el) {
+                observer.observe(el, { attributes: true, attributeFilter: ['class'] });
+            });
+        })();
+</script>
 </body>
 </html>
