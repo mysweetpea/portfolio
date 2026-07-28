@@ -10,54 +10,15 @@
     <meta property="og:description" content="Support MySweetPea's privacy-first, self-hosted services with a crypto donation — Monero or Bitcoin.">
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://mysweetpea.cc/">
+    <meta property="og:image" content="https://mysweetpea.cc/logo.svg">
     <link rel="icon" type="image/svg+xml" href="/logo-favicon.svg">
     <link rel="preload" as="image" href="/logo.svg">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/assets/css/site.css">
-    <style>
-.hero { text-align: center; padding: 120px 24px 20px; }
-.hero img.logo { width: 160px; height: 160px; margin-bottom: 16px; filter: drop-shadow(0 8px 24px rgba(197, 213, 216, 0.12)); animation: float3D 7s ease-in-out infinite; }
-.hero h1 { font-size: 2rem; font-weight: 700; margin-bottom: 8px; letter-spacing: -0.6px; }
-.hero p { font-size: 1rem; color: var(--text-dim); }
-.container { max-width: 540px; margin: 0 auto; padding: 20px; }
-.card { background: var(--card-bg); backdrop-filter: blur(16px) saturate(1.2); -webkit-backdrop-filter: blur(16px) saturate(1.2); border: 1px solid var(--border); border-radius: var(--radius); padding: 36px 32px; position: relative; overflow: hidden; box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3); transition: var(--transition); }
-.card.glow-card::before { content: ''; position: absolute; inset: 0; border-radius: inherit; padding: 1px; background: radial-gradient(300px circle at var(--mouse-x, 50%) var(--mouse-y, 50%), rgba(143, 175, 181, 0.4), transparent 40%); -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0); -webkit-mask-composite: xor; mask-composite: exclude; opacity: 0; transition: opacity 0.3s; pointer-events: none; z-index: 1; }
-.card.glow-card:hover::before { opacity: 1; }
-.card h2 { font-size: 1.2rem; font-weight: 600; margin-bottom: 8px; color: var(--primary); }
-.card .subtitle { font-size: 0.88rem; color: var(--text-dim); margin-bottom: 24px; }
-.info-box { background: rgba(143, 175, 181, 0.06); border: 1px solid rgba(143, 175, 181, 0.15); border-radius: var(--radius-sm); padding: 16px; margin-bottom: 24px; font-size: 0.84rem; color: var(--text-dim); line-height: 1.6; }
-.crypto-section-label { font-size: 0.82rem; font-weight: 600; margin-bottom: 12px; color: var(--text); }
-.crypto-options { display: flex; gap: 12px; margin-bottom: 24px; }
-.crypto-option { flex: 1; min-width: 140px; padding: 20px 16px; background: rgba(14, 22, 26, 0.85); border: 2px solid rgba(255, 255, 255, 0.1); border-radius: var(--radius-sm); cursor: pointer; transition: var(--transition); text-align: center; }
-.crypto-option:hover { border-color: var(--border-primary); transform: translateY(-2px); }
-.crypto-option.selected { border-color: var(--primary); background: rgba(143, 175, 181, 0.08); }
-.crypto-option .icon { font-size: 2rem; margin-bottom: 8px; }
-.crypto-option .name { font-size: 0.86rem; color: var(--text-dim); font-weight: 600; }
-.wallet-display { display: none; background: rgba(14, 22, 26, 0.6); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 20px; margin-bottom: 24px; }
-.wallet-display.visible { display: block; animation: fadeInUp 0.3s ease; }
-.wallet-display .wl { font-size: 0.78rem; color: var(--text-dim); margin-bottom: 8px; }
-.wallet-display .wa { font-size: 0.88rem; color: var(--primary); font-family: monospace; word-break: break-all; cursor: pointer; padding: 12px; background: rgba(143, 175, 181, 0.05); border-radius: 8px; transition: var(--transition); border: 1px solid rgba(143, 175, 181, 0.1); }
-.wallet-display .wa:hover { background: rgba(143, 175, 181, 0.1); border-color: var(--border-primary); }
-.wallet-display .copy-hint { font-size: 0.72rem; color: var(--text-faint); margin-top: 8px; }
-.thank-you { text-align: center; padding: 20px 0; }
-.thank-you .heart { font-size: 2.5rem; margin-bottom: 12px; display: inline-block; animation: float3D 4s ease-in-out infinite; }
-.thank-you p { font-size: 0.9rem; color: var(--text-dim); }
-.faq-section { max-width: 720px; margin: 60px auto 80px; padding: 20px; }
-.faq-item { background: var(--card-bg); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border: 1px solid var(--border); border-radius: var(--radius-sm); margin-bottom: 10px; overflow: hidden; transition: var(--transition); }
-.faq-item:hover { border-color: var(--border-primary); }
-.faq-question { padding: 16px 20px; font-size: 0.9rem; color: var(--text); cursor: pointer; display: flex; justify-content: space-between; align-items: center; transition: var(--transition); user-select: none; }
-.faq-question:hover { color: var(--primary); }
-.faq-question .arrow { transition: transform 0.3s ease; color: var(--text-dim); font-size: 0.8rem; }
-.faq-item.open .faq-question .arrow { transform: rotate(180deg); color: var(--primary); }
-.faq-answer { max-height: 0; overflow: hidden; transition: max-height 0.3s ease, padding 0.3s ease; padding: 0 20px; }
-.faq-item.open .faq-answer { max-height: 300px; padding: 0 20px 16px; }
-.faq-answer p { font-size: 0.84rem; color: var(--text-dim); line-height: 1.5; }
-@media (max-width: 768px) { .hero { padding: 100px 20px 10px; } .hero h1 { font-size: 1.6rem; } .hero img.logo { width: 120px; height: 120px; } .crypto-options { flex-direction: column; } .card { padding: 24px 20px; } }
-    </style>
 </head>
-<body>
+<body data-page="support">
     <a href="#main-content" class="skip-link">Skip to content</a>
     <div class="scroll-progress" id="scrollProgress" aria-hidden="true"></div>
     <div class="bg-gradient" aria-hidden="true"></div>
@@ -69,7 +30,12 @@
             <img src="/logo.svg" alt="" width="32" height="32">
             <span>MySweetPea</span>
         </a>
-        <div class="nav-links">
+        <button class="nav-toggle" aria-expanded="false" aria-controls="nav-links" aria-label="Toggle navigation menu">
+            <span class="nav-toggle-bar"></span>
+            <span class="nav-toggle-bar"></span>
+            <span class="nav-toggle-bar"></span>
+        </button>
+        <div class="nav-links" id="nav-links">
             <a href="/index.html" class="nav-btn">Home</a>
             <a href="/pricing.html" class="nav-btn">Pricing</a>
             <a href="/support.html" class="nav-btn active" aria-current="page">Support</a>
