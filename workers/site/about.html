@@ -10,40 +10,15 @@
     <meta property="og:description" content="Learn why MySweetPea exists: privacy-first, self-hosted services running on our own hardware, funded by the community.">
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://mysweetpea.cc/">
+    <meta property="og:image" content="https://mysweetpea.cc/logo.svg">
     <link rel="icon" type="image/svg+xml" href="/logo-favicon.svg">
     <link rel="preload" as="image" href="/logo.svg">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/assets/css/site.css">
-    <style>
-.hero { text-align: center; padding: 120px 24px 20px; }
-.hero img.logo { width: 160px; height: 160px; margin-bottom: 16px; filter: drop-shadow(0 8px 24px rgba(197, 213, 216, 0.12)); animation: float3D 7s ease-in-out infinite; }
-.hero h1 { font-size: 2rem; font-weight: 700; margin-bottom: 8px; letter-spacing: -0.6px; }
-.hero p { font-size: 1rem; color: var(--text-dim); }
-.content-section { max-width: 700px; margin: 0 auto; padding: 40px 24px; }
-.content-section h2 { font-size: 1.4rem; font-weight: 700; margin-bottom: 16px; color: var(--primary); letter-spacing: -0.4px; }
-.content-section p { font-size: 0.92rem; color: var(--text-dim); margin-bottom: 16px; line-height: 1.8; }
-.content-section ul { list-style: none; margin-bottom: 16px; }
-.content-section ul li { font-size: 0.88rem; color: var(--text-dim); margin-bottom: 10px; padding-left: 24px; position: relative; line-height: 1.6; }
-.content-section ul li::before { content: '\2713'; position: absolute; left: 0; color: var(--primary); font-weight: 700; }
-.card { background: var(--card-bg); backdrop-filter: blur(16px) saturate(1.2); -webkit-backdrop-filter: blur(16px) saturate(1.2); border: 1px solid var(--border); border-radius: var(--radius); padding: 32px 28px; margin-bottom: 32px; box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3); transition: var(--transition); }
-.card:hover { border-color: var(--border-primary); }
-.github-links { display: flex; gap: 16px; flex-wrap: wrap; margin-top: 20px; }
-.github-link { flex: 1; min-width: 200px; display: flex; align-items: center; gap: 12px; padding: 16px 20px; background: rgba(14, 22, 26, 0.6); border: 1px solid var(--border); border-radius: var(--radius-sm); text-decoration: none; color: var(--text); transition: var(--transition); }
-.github-link:hover { border-color: var(--border-primary); background: rgba(19, 30, 34, 0.85); transform: translateY(-2px); }
-.github-link .icon { font-size: 1.5rem; }
-.github-link .info { display: flex; flex-direction: column; }
-.github-link .repo { font-size: 0.9rem; font-weight: 600; color: var(--primary); }
-.github-link .desc { font-size: 0.78rem; color: var(--text-dim); }
-.cta-section { max-width: 700px; margin: 0 auto 80px; padding: 24px; text-align: center; }
-.cta-card { background: var(--card-bg); backdrop-filter: blur(20px) saturate(1.3); -webkit-backdrop-filter: blur(20px) saturate(1.3); border: 1px solid var(--border-primary); border-radius: var(--radius); padding: 40px; position: relative; overflow: hidden; box-shadow: 0 8px 40px rgba(0, 0, 0, 0.3); }
-.cta-card h2 { font-size: 1.5rem; margin-bottom: 12px; }
-.cta-card p { font-size: 0.92rem; color: var(--text-dim); margin-bottom: 24px; }
-@media (max-width: 768px) { .hero { padding: 100px 20px 10px; } .hero h1 { font-size: 1.6rem; } .hero img.logo { width: 120px; height: 120px; } .github-links { flex-direction: column; } .cta-card { padding: 28px 20px; } }
-    </style>
 </head>
-<body>
+<body data-page="about">
     <a href="#main-content" class="skip-link">Skip to content</a>
     <div class="scroll-progress" id="scrollProgress" aria-hidden="true"></div>
     <div class="bg-gradient" aria-hidden="true"></div>
@@ -55,7 +30,12 @@
             <img src="/logo.svg" alt="" width="32" height="32">
             <span>MySweetPea</span>
         </a>
-        <div class="nav-links">
+        <button class="nav-toggle" aria-expanded="false" aria-controls="nav-links" aria-label="Toggle navigation menu">
+            <span class="nav-toggle-bar"></span>
+            <span class="nav-toggle-bar"></span>
+            <span class="nav-toggle-bar"></span>
+        </button>
+        <div class="nav-links" id="nav-links">
             <a href="/index.html" class="nav-btn">Home</a>
             <a href="/pricing.html" class="nav-btn">Pricing</a>
             <a href="/support.html" class="nav-btn">Support</a>
