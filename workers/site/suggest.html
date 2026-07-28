@@ -5,11 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MySweetPea — Suggest a Service</title>
     <meta name="description" content="Have an idea for a self-hosted service? Suggest it to the MySweetPea community.">
-    <meta name="theme-color" content="#0A1214">
+    <meta name="theme-color" content="#0C1316">
     <meta property="og:title" content="MySweetPea — Suggest a Service">
     <meta property="og:description" content="Have an idea for a self-hosted service? Suggest it to the MySweetPea community.">
     <meta property="og:type" content="website">
-    <meta property="og:url" content="https://mysweetpea.cc/suggest.html">
+    <meta property="og:url" content="https://mysweetpea.cc/">
     <link rel="icon" type="image/svg+xml" href="/logo-favicon.svg">
     <link rel="preload" as="image" href="/logo.svg">
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -17,47 +17,42 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/assets/css/site.css">
     <style>
-        .hero { text-align: center; padding: 120px 24px 20px; }
-        .hero img.logo { width: 160px; height: 160px; margin-bottom: 16px; filter: drop-shadow(0 0 30px rgba(94, 184, 168, 0.25)); animation: float3D 6s ease-in-out infinite; }
-        .hero h1 { font-size: 2rem; font-weight: 700; margin-bottom: 8px; }
-        .hero p { font-size: 1rem; color: var(--text-dim); }
-        .container { max-width: 560px; margin: 0 auto; padding: 20px; }
-        .success-msg { display: none; text-align: center; padding: 24px; background: rgba(94, 211, 158, 0.08); border: 1px solid rgba(94, 211, 158, 0.2); border-radius: var(--radius); margin-bottom: 24px; }
-        .success-msg.show { display: block; animation: fadeInUp 0.4s ease; }
-        .success-msg .icon { font-size: 2rem; margin-bottom: 8px; }
-        .success-msg p { font-size: 0.9rem; color: var(--success); }
-        .card { background: rgba(15, 26, 28, 0.5); backdrop-filter: blur(16px) saturate(1.2); -webkit-backdrop-filter: blur(16px) saturate(1.2); border: 1px solid var(--border); border-radius: var(--radius); padding: 32px 28px; position: relative; overflow: hidden; box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3); transition: var(--transition); }
-        .card.glow-card::before { content: ''; position: absolute; inset: 0; border-radius: inherit; padding: 1px; background: radial-gradient(300px circle at var(--mouse-x, 50%) var(--mouse-y, 50%), rgba(94, 184, 168, 0.4), transparent 40%); -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0); -webkit-mask-composite: xor; mask-composite: exclude; opacity: 0; transition: opacity 0.3s; pointer-events: none; z-index: 1; }
-        .card.glow-card:hover::before { opacity: 1; }
-        .card h3 { font-size: 1.1rem; font-weight: 600; margin-bottom: 8px; color: var(--primary); }
-        .card .form-desc { font-size: 0.85rem; color: var(--text-dim); margin-bottom: 20px; }
-        .info-box { background: rgba(94, 184, 168, 0.06); border: 1px solid rgba(94, 184, 168, 0.15); border-radius: var(--radius-sm); padding: 14px; margin-bottom: 20px; font-size: 0.82rem; color: var(--text-dim); line-height: 1.6; }
-        .form-group { margin-bottom: 20px; position: relative; }
-        .form-label { display: block; font-size: 0.82rem; font-weight: 600; margin-bottom: 8px; color: var(--text); }
-        .form-input, .form-select, .form-textarea { width: 100%; padding: 12px 16px; background: rgba(10, 18, 20, 0.6); border: 1px solid var(--border); border-radius: var(--radius-sm); color: var(--text); font-size: 0.9rem; font-family: inherit; transition: var(--transition); outline: none; }
-        .form-input::placeholder, .form-textarea::placeholder { color: var(--text-faint); }
-        .form-input:focus, .form-select:focus, .form-textarea:focus { border-color: var(--border-primary); background: rgba(15, 26, 28, 0.8); box-shadow: 0 0 0 3px var(--primary-glow); }
-        .form-input.valid, .form-select.valid, .form-textarea.valid { border-color: rgba(94, 211, 158, 0.4); }
-        .form-input.invalid, .form-select.invalid, .form-textarea.invalid { border-color: rgba(232, 94, 94, 0.4); animation: shake 0.3s ease; }
-        .form-textarea { min-height: 80px; resize: vertical; }
-        .form-select { cursor: pointer; }
-        .form-select option { background: var(--bg); color: var(--text); }
-        .form-hint { font-size: 0.75rem; color: var(--text-faint); margin-top: 6px; }
-        .form-hint.error { color: var(--error); }
-        .form-hint.success { color: var(--success); }
-        .validation-icon { position: absolute; right: 14px; top: 38px; font-size: 1.1rem; opacity: 0; transition: opacity 0.3s; pointer-events: none; }
-        .validation-icon.show { opacity: 1; }
-        .validation-icon.valid { color: var(--success); }
-        .validation-icon.invalid { color: var(--error); }
-        .form-submit { width: 100%; padding: 14px; border: none; border-radius: var(--radius-sm); font-size: 0.95rem; font-weight: 600; cursor: pointer; transition: var(--transition); color: var(--bg); background: linear-gradient(135deg, var(--primary), var(--primary-dim)); }
-        .form-submit:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 4px 20px rgba(94, 184, 168, 0.3); }
-        .form-submit:disabled { opacity: 0.4; cursor: not-allowed; }
-        @media (max-width: 768px) {
-            .hero { padding: 100px 20px 10px; }
-            .hero h1 { font-size: 1.6rem; }
-            .hero img.logo { width: 120px; height: 120px; }
-            .card { padding: 24px 20px; }
-        }
+.hero { text-align: center; padding: 120px 24px 20px; }
+.hero img.logo { width: 160px; height: 160px; margin-bottom: 16px; filter: drop-shadow(0 8px 24px rgba(197, 213, 216, 0.12)); animation: float3D 7s ease-in-out infinite; }
+.hero h1 { font-size: 2rem; font-weight: 700; margin-bottom: 8px; letter-spacing: -0.6px; }
+.hero p { font-size: 1rem; color: var(--text-dim); }
+.container { max-width: 560px; margin: 0 auto; padding: 20px; }
+.success-msg { display: none; text-align: center; padding: 24px; background: rgba(163, 201, 182, 0.08); border: 1px solid rgba(163, 201, 182, 0.2); border-radius: var(--radius); margin-bottom: 24px; }
+.success-msg.show { display: block; animation: fadeInUp 0.4s ease; }
+.success-msg .icon { font-size: 2rem; margin-bottom: 8px; }
+.success-msg p { font-size: 0.9rem; color: var(--success); }
+.card { background: var(--card-bg); backdrop-filter: blur(16px) saturate(1.2); -webkit-backdrop-filter: blur(16px) saturate(1.2); border: 1px solid var(--border); border-radius: var(--radius); padding: 32px 28px; position: relative; overflow: hidden; box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3); transition: var(--transition); }
+.card.glow-card::before { content: ''; position: absolute; inset: 0; border-radius: inherit; padding: 1px; background: radial-gradient(300px circle at var(--mouse-x, 50%) var(--mouse-y, 50%), rgba(143, 175, 181, 0.4), transparent 40%); -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0); -webkit-mask-composite: xor; mask-composite: exclude; opacity: 0; transition: opacity 0.3s; pointer-events: none; z-index: 1; }
+.card.glow-card:hover::before { opacity: 1; }
+.card h3 { font-size: 1.1rem; font-weight: 600; margin-bottom: 8px; color: var(--primary); }
+.card .form-desc { font-size: 0.85rem; color: var(--text-dim); margin-bottom: 20px; }
+.info-box { background: rgba(143, 175, 181, 0.06); border: 1px solid rgba(143, 175, 181, 0.15); border-radius: var(--radius-sm); padding: 14px; margin-bottom: 20px; font-size: 0.82rem; color: var(--text-dim); line-height: 1.6; }
+.form-group { margin-bottom: 20px; position: relative; }
+.form-label { display: block; font-size: 0.82rem; font-weight: 600; margin-bottom: 8px; color: var(--text); }
+.form-input, .form-select, .form-textarea { width: 100%; padding: 12px 16px; background: rgba(14, 22, 26, 0.6); border: 1px solid var(--border); border-radius: var(--radius-sm); color: var(--text); font-size: 0.9rem; font-family: inherit; transition: var(--transition); outline: none; }
+.form-input::placeholder, .form-textarea::placeholder { color: var(--text-faint); }
+.form-input:focus, .form-select:focus, .form-textarea:focus { border-color: var(--border-primary); background: rgba(19, 30, 34, 0.85); box-shadow: 0 0 0 3px var(--primary-glow); }
+.form-input.valid, .form-select.valid, .form-textarea.valid { border-color: rgba(163, 201, 182, 0.4); }
+.form-input.invalid, .form-select.invalid, .form-textarea.invalid { border-color: rgba(217, 140, 140, 0.4); animation: shake 0.3s ease; }
+.form-textarea { min-height: 80px; resize: vertical; }
+.form-select { cursor: pointer; }
+.form-select option { background: var(--bg); color: var(--text); }
+.form-hint { font-size: 0.75rem; color: var(--text-faint); margin-top: 6px; }
+.form-hint.error { color: var(--error); }
+.form-hint.success { color: var(--success); }
+.validation-icon { position: absolute; right: 14px; top: 38px; font-size: 1.1rem; opacity: 0; transition: opacity 0.3s; pointer-events: none; }
+.validation-icon.show { opacity: 1; }
+.validation-icon.valid { color: var(--success); }
+.validation-icon.invalid { color: var(--error); }
+.form-submit { width: 100%; padding: 14px; border: none; border-radius: var(--radius-sm); font-size: 0.95rem; font-weight: 600; cursor: pointer; transition: var(--transition); color: var(--bg); background: linear-gradient(135deg, var(--primary), var(--primary-dim)); }
+.form-submit:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 4px 20px rgba(143, 175, 181, 0.3); }
+.form-submit:disabled { opacity: 0.4; cursor: not-allowed; }
+@media (max-width: 768px) { .hero { padding: 100px 20px 10px; } .hero h1 { font-size: 1.6rem; } .hero img.logo { width: 120px; height: 120px; } .card { padding: 24px 20px; } }
     </style>
 </head>
 <body>
@@ -65,8 +60,8 @@
     <div class="scroll-progress" id="scrollProgress" aria-hidden="true"></div>
     <div class="bg-gradient" aria-hidden="true"></div>
     <canvas id="petalCanvas" aria-hidden="true"></canvas>
-    <div class="float-3d f1" aria-hidden="true"><svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M50 10 C35 15, 28 30, 32 48 C36 60, 48 68, 50 70 C52 68, 64 60, 68 48 C72 30, 65 15, 50 10" fill="#5EB8A8" opacity="0.8"/><path d="M50 25 C44 28, 40 38, 44 48 C47 55, 50 58, 50 58 C50 58, 53 55, 56 48 C60 38, 56 28, 50 25" fill="#5EB8A8" opacity="0.5"/><path d="M50 10 C42 12, 38 22, 42 35 C45 42, 50 45, 50 45 C50 45, 55 42, 58 35 C62 22, 58 12, 50 10" fill="#5EB8A8" opacity="0.6"/><path d="M50 45 C45 48, 42 55, 45 62 C48 67, 50 68, 50 68 C50 68, 52 67, 55 62 C58 55, 55 48, 50 45" fill="#5EB8A8" opacity="0.4"/><line x1="50" y1="68" x2="50" y2="88" stroke="#5EB8A8" stroke-width="2"/><path d="M45 80 Q40 76, 37 82" stroke="#5EB8A8" stroke-width="1.5" fill="none"/><path d="M55 80 Q60 76, 63 82" stroke="#5EB8A8" stroke-width="1.5" fill="none"/><circle cx="37" cy="82" r="2" fill="#5EB8A8" opacity="0.6"/><circle cx="63" cy="82" r="2" fill="#5EB8A8" opacity="0.6"/></svg></div>
-    <div class="float-3d f2" aria-hidden="true"><svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M50 10 C35 15, 28 30, 32 48 C36 60, 48 68, 50 70 C52 68, 64 60, 68 48 C72 30, 65 15, 50 10" fill="#5EB8A8" opacity="0.8"/><path d="M50 25 C44 28, 40 38, 44 48 C47 55, 50 58, 50 58 C50 58, 53 55, 56 48 C60 38, 56 28, 50 25" fill="#5EB8A8" opacity="0.5"/><path d="M50 10 C42 12, 38 22, 42 35 C45 42, 50 45, 50 45 C50 45, 55 42, 58 35 C62 22, 58 12, 50 10" fill="#5EB8A8" opacity="0.6"/><path d="M50 45 C45 48, 42 55, 45 62 C48 67, 50 68, 50 68 C50 68, 52 67, 55 62 C58 55, 55 48, 50 45" fill="#5EB8A8" opacity="0.4"/><line x1="50" y1="68" x2="50" y2="88" stroke="#5EB8A8" stroke-width="2"/><path d="M45 80 Q40 76, 37 82" stroke="#5EB8A8" stroke-width="1.5" fill="none"/><path d="M55 80 Q60 76, 63 82" stroke="#5EB8A8" stroke-width="1.5" fill="none"/><circle cx="37" cy="82" r="2" fill="#5EB8A8" opacity="0.6"/><circle cx="63" cy="82" r="2" fill="#5EB8A8" opacity="0.6"/></svg></div>
+    <div class="float-3d f1" aria-hidden="true"><svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M50 10 C35 15, 28 30, 32 48 C36 60, 48 68, 50 70 C52 68, 64 60, 68 48 C72 30, 65 15, 50 10" fill="#8FAFB5" opacity="0.8"/><path d="M50 25 C44 28, 40 38, 44 48 C47 55, 50 58, 50 58 C50 58, 53 55, 56 48 C60 38, 56 28, 50 25" fill="#8FAFB5" opacity="0.5"/><path d="M50 10 C42 12, 38 22, 42 35 C45 42, 50 45, 50 45 C50 45, 55 42, 58 35 C62 22, 58 12, 50 10" fill="#8FAFB5" opacity="0.6"/><path d="M50 45 C45 48, 42 55, 45 62 C48 67, 50 68, 50 68 C50 68, 52 67, 55 62 C58 55, 55 48, 50 45" fill="#8FAFB5" opacity="0.4"/><line x1="50" y1="68" x2="50" y2="88" stroke="#8FAFB5" stroke-width="2"/><path d="M45 80 Q40 76, 37 82" stroke="#8FAFB5" stroke-width="1.5" fill="none"/><path d="M55 80 Q60 76, 63 82" stroke="#8FAFB5" stroke-width="1.5" fill="none"/><circle cx="37" cy="82" r="2" fill="#8FAFB5" opacity="0.6"/><circle cx="63" cy="82" r="2" fill="#8FAFB5" opacity="0.6"/></svg></div>
+    <div class="float-3d f2" aria-hidden="true"><svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M50 10 C35 15, 28 30, 32 48 C36 60, 48 68, 50 70 C52 68, 64 60, 68 48 C72 30, 65 15, 50 10" fill="#8FAFB5" opacity="0.8"/><path d="M50 25 C44 28, 40 38, 44 48 C47 55, 50 58, 50 58 C50 58, 53 55, 56 48 C60 38, 56 28, 50 25" fill="#8FAFB5" opacity="0.5"/><path d="M50 10 C42 12, 38 22, 42 35 C45 42, 50 45, 50 45 C50 45, 55 42, 58 35 C62 22, 58 12, 50 10" fill="#8FAFB5" opacity="0.6"/><path d="M50 45 C45 48, 42 55, 45 62 C48 67, 50 68, 50 68 C50 68, 52 67, 55 62 C58 55, 55 48, 50 45" fill="#8FAFB5" opacity="0.4"/><line x1="50" y1="68" x2="50" y2="88" stroke="#8FAFB5" stroke-width="2"/><path d="M45 80 Q40 76, 37 82" stroke="#8FAFB5" stroke-width="1.5" fill="none"/><path d="M55 80 Q60 76, 63 82" stroke="#8FAFB5" stroke-width="1.5" fill="none"/><circle cx="37" cy="82" r="2" fill="#8FAFB5" opacity="0.6"/><circle cx="63" cy="82" r="2" fill="#8FAFB5" opacity="0.6"/></svg></div>
     <nav class="top-nav" aria-label="Primary navigation">
         <a href="/index.html" class="nav-logo">
             <img src="/logo.svg" alt="" width="32" height="32">
@@ -80,14 +75,10 @@
             <a href="/suggest.html" class="nav-btn active" aria-current="page">Suggest</a>
         </div>
     </nav>
-    <main id="main-content" class="content-wrapper">
-        <div class="hero">
-            <img src="/logo.svg" alt="MySweetPea logo" class="logo" width="160" height="160">
-            <h1 class="glass-text">Suggest a Service</h1>
-            <p>Have an idea for a service we should self-host? Let us know!</p>
-        </div>
+<main id="main-content" class="content-wrapper">
+        <div class="hero"><img src="/logo.svg" alt="MySweetPea logo" class="logo" width="160" height="160"><h1 class="glass-text">Suggest a Service</h1><p>Have an idea for a service we should self-host? Let us know!</p></div>
         <div class="container reveal">
-            <div class="success-msg" id="successMsg" role="status"><div class="icon" aria-hidden="true">&#x2705;</div><p>Thank you! Your suggestion has been submitted. We will review it and consider adding it to MySweetPea.</p></div>
+            <div class="success-msg" id="successMsg"><div class="icon" aria-hidden="true">&#x2705;</div><p>Thank you! Your suggestion has been submitted. We will review it and consider adding it to MySweetPea.</p></div>
             <div class="card glow-card">
                 <h3>Service Suggestion</h3>
                 <p class="form-desc">Suggest a self-hosted service you would like to see on MySweetPea.</p>
@@ -95,7 +86,7 @@
                 <div class="form-group">
                     <label class="form-label" for="s-name">Service Name</label>
                     <input type="text" class="form-input" id="s-name" placeholder="e.g., Mastodon, Gitea, Vaultwarden" oninput="validateField('s-name', 'name')">
-                    <span class="validation-icon" id="s-name-icon" aria-hidden="true"></span>
+                    <span class="validation-icon" id="s-name-icon"></span>
                     <div class="form-hint" id="s-name-hint">Please enter a service name (min 2 characters).</div>
                 </div>
                 <div class="form-group">
@@ -121,21 +112,21 @@
                 <div class="form-group">
                     <label class="form-label" for="s-reason">Why should we host this?</label>
                     <textarea class="form-textarea" id="s-reason" placeholder="Explain why this service would be valuable..." oninput="validateField('s-reason', 'reason')"></textarea>
-                    <span class="validation-icon" id="s-reason-icon" style="top: auto; bottom: 14px;" aria-hidden="true"></span>
+                    <span class="validation-icon" id="s-reason-icon" style="top: auto; bottom: 14px;"></span>
                     <div class="form-hint" id="s-reason-hint">Please provide an explanation (min 10 characters).</div>
                 </div>
                 <div class="form-group">
                     <label class="form-label" for="s-yourname">Your Name (optional)</label>
-                    <input type="text" class="form-input" id="s-yourname" autocomplete="name" placeholder="Leave blank to submit anonymously.">
+                    <input type="text" class="form-input" id="s-yourname" placeholder="Leave blank to submit anonymously.">
                 </div>
                 <div class="form-group">
                     <label class="form-label" for="s-youremail">Your Email (optional)</label>
-                    <input type="email" class="form-input" id="s-youremail" autocomplete="email" placeholder="Only if you want us to follow up with you.">
+                    <input type="email" class="form-input" id="s-youremail" placeholder="Only if you want us to follow up with you.">
                 </div>
                 <button class="form-submit" id="s-submit" disabled>Submit Suggestion</button>
             </div>
         </div>
-    </main>
+        </main>
     <footer class="page-footer">
         <div class="footer-links">
             <a href="/index.html">Home</a>
@@ -148,7 +139,7 @@
     </footer>
     <script src="/assets/js/site.js" defer></script>
     <script>
-        function validateField(id, type) {
+function validateField(id, type) {
             var input = document.getElementById(id), icon = document.getElementById(id + '-icon'), hint = document.getElementById(id + '-hint'), val = input.value.trim(), valid = false;
             if (type === 'name') valid = val.length >= 2;
             else if (type === 'category') valid = val !== '';
