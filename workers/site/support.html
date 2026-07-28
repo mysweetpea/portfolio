@@ -5,11 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MySweetPea — Support</title>
     <meta name="description" content="Support MySweetPea's privacy-first, self-hosted services with a crypto donation — Monero or Bitcoin.">
-    <meta name="theme-color" content="#0A1214">
+    <meta name="theme-color" content="#0C1316">
     <meta property="og:title" content="MySweetPea — Support">
     <meta property="og:description" content="Support MySweetPea's privacy-first, self-hosted services with a crypto donation — Monero or Bitcoin.">
     <meta property="og:type" content="website">
-    <meta property="og:url" content="https://mysweetpea.cc/support.html">
+    <meta property="og:url" content="https://mysweetpea.cc/">
     <link rel="icon" type="image/svg+xml" href="/logo-favicon.svg">
     <link rel="preload" as="image" href="/logo.svg">
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -17,50 +17,44 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/assets/css/site.css">
     <style>
-        .hero { text-align: center; padding: 120px 24px 20px; }
-        .hero img.logo { width: 160px; height: 160px; margin-bottom: 16px; filter: drop-shadow(0 0 30px rgba(94, 184, 168, 0.25)); animation: float3D 6s ease-in-out infinite; }
-        .hero h1 { font-size: 2rem; font-weight: 700; margin-bottom: 8px; }
-        .hero p { font-size: 1rem; color: var(--text-dim); }
-        .container { max-width: 540px; margin: 0 auto; padding: 20px; }
-        .card { background: rgba(15, 26, 28, 0.5); backdrop-filter: blur(16px) saturate(1.2); -webkit-backdrop-filter: blur(16px) saturate(1.2); border: 1px solid var(--border); border-radius: var(--radius); padding: 36px 32px; position: relative; overflow: hidden; box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3); transition: var(--transition); }
-        .card.glow-card::before { content: ''; position: absolute; inset: 0; border-radius: inherit; padding: 1px; background: radial-gradient(300px circle at var(--mouse-x, 50%) var(--mouse-y, 50%), rgba(94, 184, 168, 0.4), transparent 40%); -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0); -webkit-mask-composite: xor; mask-composite: exclude; opacity: 0; transition: opacity 0.3s; pointer-events: none; z-index: 1; }
-        .card.glow-card:hover::before { opacity: 1; }
-        .card h2 { font-size: 1.2rem; font-weight: 600; margin-bottom: 8px; color: var(--primary); }
-        .card .subtitle { font-size: 0.88rem; color: var(--text-dim); margin-bottom: 24px; }
-        .info-box { background: rgba(94, 184, 168, 0.06); border: 1px solid rgba(94, 184, 168, 0.15); border-radius: var(--radius-sm); padding: 16px; margin-bottom: 24px; font-size: 0.84rem; color: var(--text-dim); line-height: 1.6; }
-        .crypto-section-label { font-size: 0.82rem; font-weight: 600; margin-bottom: 12px; color: var(--text); }
-        .crypto-options { display: flex; gap: 12px; margin-bottom: 24px; }
-        .crypto-option { flex: 1; min-width: 140px; padding: 20px 16px; background: rgba(10, 18, 20, 0.8); border: 2px solid rgba(255, 255, 255, 0.1); border-radius: var(--radius-sm); cursor: pointer; transition: var(--transition); text-align: center; }
-        .crypto-option:hover { border-color: var(--border-primary); transform: translateY(-2px); }
-        .crypto-option.selected { border-color: var(--primary); background: rgba(94, 184, 168, 0.08); box-shadow: 0 0 15px rgba(94, 184, 168, 0.1); }
-        .crypto-option .icon { font-size: 2rem; margin-bottom: 8px; }
-        .crypto-option .name { font-size: 0.86rem; color: #ccc; font-weight: 600; }
-        .wallet-display { display: none; background: rgba(10, 18, 20, 0.6); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 20px; margin-bottom: 24px; }
-        .wallet-display.visible { display: block; animation: fadeInUp 0.3s ease; }
-        .wallet-display .wl { font-size: 0.78rem; color: var(--text-dim); margin-bottom: 8px; }
-        .wallet-display .wa { font-size: 0.88rem; color: var(--primary); font-family: monospace; word-break: break-all; cursor: pointer; padding: 12px; background: rgba(94, 184, 168, 0.05); border-radius: 8px; transition: var(--transition); border: 1px solid rgba(94, 184, 168, 0.1); }
-        .wallet-display .wa:hover { background: rgba(94, 184, 168, 0.1); border-color: var(--border-primary); }
-        .wallet-display .copy-hint { font-size: 0.72rem; color: var(--text-faint); margin-top: 8px; }
-        .thank-you { text-align: center; padding: 20px 0; }
-        .thank-you .heart { font-size: 2.5rem; margin-bottom: 12px; display: inline-block; animation: float3D 3s ease-in-out infinite; }
-        .thank-you p { font-size: 0.9rem; color: var(--text-dim); }
-        .faq-section { max-width: 720px; margin: 60px auto 80px; padding: 20px; }
-        .faq-item { background: rgba(15, 26, 28, 0.5); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border: 1px solid var(--border); border-radius: var(--radius-sm); margin-bottom: 10px; overflow: hidden; transition: var(--transition); }
-        .faq-item:hover { border-color: var(--border-primary); }
-        .faq-question { padding: 16px 20px; font-size: 0.9rem; color: var(--text); cursor: pointer; display: flex; justify-content: space-between; align-items: center; transition: var(--transition); user-select: none; }
-        .faq-question:hover { color: var(--primary); }
-        .faq-question .arrow { transition: transform 0.3s ease; color: var(--text-dim); font-size: 0.8rem; }
-        .faq-item.open .faq-question .arrow { transform: rotate(180deg); color: var(--primary); }
-        .faq-answer { max-height: 0; overflow: hidden; transition: max-height 0.3s ease, padding 0.3s ease; padding: 0 20px; }
-        .faq-item.open .faq-answer { max-height: 300px; padding: 0 20px 16px; }
-        .faq-answer p { font-size: 0.84rem; color: var(--text-dim); line-height: 1.5; }
-        @media (max-width: 768px) {
-            .hero { padding: 100px 20px 10px; }
-            .hero h1 { font-size: 1.6rem; }
-            .hero img.logo { width: 120px; height: 120px; }
-            .crypto-options { flex-direction: column; }
-            .card { padding: 24px 20px; }
-        }
+.hero { text-align: center; padding: 120px 24px 20px; }
+.hero img.logo { width: 160px; height: 160px; margin-bottom: 16px; filter: drop-shadow(0 8px 24px rgba(197, 213, 216, 0.12)); animation: float3D 7s ease-in-out infinite; }
+.hero h1 { font-size: 2rem; font-weight: 700; margin-bottom: 8px; letter-spacing: -0.6px; }
+.hero p { font-size: 1rem; color: var(--text-dim); }
+.container { max-width: 540px; margin: 0 auto; padding: 20px; }
+.card { background: var(--card-bg); backdrop-filter: blur(16px) saturate(1.2); -webkit-backdrop-filter: blur(16px) saturate(1.2); border: 1px solid var(--border); border-radius: var(--radius); padding: 36px 32px; position: relative; overflow: hidden; box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3); transition: var(--transition); }
+.card.glow-card::before { content: ''; position: absolute; inset: 0; border-radius: inherit; padding: 1px; background: radial-gradient(300px circle at var(--mouse-x, 50%) var(--mouse-y, 50%), rgba(143, 175, 181, 0.4), transparent 40%); -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0); -webkit-mask-composite: xor; mask-composite: exclude; opacity: 0; transition: opacity 0.3s; pointer-events: none; z-index: 1; }
+.card.glow-card:hover::before { opacity: 1; }
+.card h2 { font-size: 1.2rem; font-weight: 600; margin-bottom: 8px; color: var(--primary); }
+.card .subtitle { font-size: 0.88rem; color: var(--text-dim); margin-bottom: 24px; }
+.info-box { background: rgba(143, 175, 181, 0.06); border: 1px solid rgba(143, 175, 181, 0.15); border-radius: var(--radius-sm); padding: 16px; margin-bottom: 24px; font-size: 0.84rem; color: var(--text-dim); line-height: 1.6; }
+.crypto-section-label { font-size: 0.82rem; font-weight: 600; margin-bottom: 12px; color: var(--text); }
+.crypto-options { display: flex; gap: 12px; margin-bottom: 24px; }
+.crypto-option { flex: 1; min-width: 140px; padding: 20px 16px; background: rgba(14, 22, 26, 0.85); border: 2px solid rgba(255, 255, 255, 0.1); border-radius: var(--radius-sm); cursor: pointer; transition: var(--transition); text-align: center; }
+.crypto-option:hover { border-color: var(--border-primary); transform: translateY(-2px); }
+.crypto-option.selected { border-color: var(--primary); background: rgba(143, 175, 181, 0.08); }
+.crypto-option .icon { font-size: 2rem; margin-bottom: 8px; }
+.crypto-option .name { font-size: 0.86rem; color: var(--text-dim); font-weight: 600; }
+.wallet-display { display: none; background: rgba(14, 22, 26, 0.6); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 20px; margin-bottom: 24px; }
+.wallet-display.visible { display: block; animation: fadeInUp 0.3s ease; }
+.wallet-display .wl { font-size: 0.78rem; color: var(--text-dim); margin-bottom: 8px; }
+.wallet-display .wa { font-size: 0.88rem; color: var(--primary); font-family: monospace; word-break: break-all; cursor: pointer; padding: 12px; background: rgba(143, 175, 181, 0.05); border-radius: 8px; transition: var(--transition); border: 1px solid rgba(143, 175, 181, 0.1); }
+.wallet-display .wa:hover { background: rgba(143, 175, 181, 0.1); border-color: var(--border-primary); }
+.wallet-display .copy-hint { font-size: 0.72rem; color: var(--text-faint); margin-top: 8px; }
+.thank-you { text-align: center; padding: 20px 0; }
+.thank-you .heart { font-size: 2.5rem; margin-bottom: 12px; display: inline-block; animation: float3D 4s ease-in-out infinite; }
+.thank-you p { font-size: 0.9rem; color: var(--text-dim); }
+.faq-section { max-width: 720px; margin: 60px auto 80px; padding: 20px; }
+.faq-item { background: var(--card-bg); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border: 1px solid var(--border); border-radius: var(--radius-sm); margin-bottom: 10px; overflow: hidden; transition: var(--transition); }
+.faq-item:hover { border-color: var(--border-primary); }
+.faq-question { padding: 16px 20px; font-size: 0.9rem; color: var(--text); cursor: pointer; display: flex; justify-content: space-between; align-items: center; transition: var(--transition); user-select: none; }
+.faq-question:hover { color: var(--primary); }
+.faq-question .arrow { transition: transform 0.3s ease; color: var(--text-dim); font-size: 0.8rem; }
+.faq-item.open .faq-question .arrow { transform: rotate(180deg); color: var(--primary); }
+.faq-answer { max-height: 0; overflow: hidden; transition: max-height 0.3s ease, padding 0.3s ease; padding: 0 20px; }
+.faq-item.open .faq-answer { max-height: 300px; padding: 0 20px 16px; }
+.faq-answer p { font-size: 0.84rem; color: var(--text-dim); line-height: 1.5; }
+@media (max-width: 768px) { .hero { padding: 100px 20px 10px; } .hero h1 { font-size: 1.6rem; } .hero img.logo { width: 120px; height: 120px; } .crypto-options { flex-direction: column; } .card { padding: 24px 20px; } }
     </style>
 </head>
 <body>
@@ -68,8 +62,8 @@
     <div class="scroll-progress" id="scrollProgress" aria-hidden="true"></div>
     <div class="bg-gradient" aria-hidden="true"></div>
     <canvas id="petalCanvas" aria-hidden="true"></canvas>
-    <div class="float-3d f1" aria-hidden="true"><svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M50 10 C35 15, 28 30, 32 48 C36 60, 48 68, 50 70 C52 68, 64 60, 68 48 C72 30, 65 15, 50 10" fill="#5EB8A8" opacity="0.8"/><path d="M50 25 C44 28, 40 38, 44 48 C47 55, 50 58, 50 58 C50 58, 53 55, 56 48 C60 38, 56 28, 50 25" fill="#5EB8A8" opacity="0.5"/><path d="M50 10 C42 12, 38 22, 42 35 C45 42, 50 45, 50 45 C50 45, 55 42, 58 35 C62 22, 58 12, 50 10" fill="#5EB8A8" opacity="0.6"/><path d="M50 45 C45 48, 42 55, 45 62 C48 67, 50 68, 50 68 C50 68, 52 67, 55 62 C58 55, 55 48, 50 45" fill="#5EB8A8" opacity="0.4"/><line x1="50" y1="68" x2="50" y2="88" stroke="#5EB8A8" stroke-width="2"/><path d="M45 80 Q40 76, 37 82" stroke="#5EB8A8" stroke-width="1.5" fill="none"/><path d="M55 80 Q60 76, 63 82" stroke="#5EB8A8" stroke-width="1.5" fill="none"/><circle cx="37" cy="82" r="2" fill="#5EB8A8" opacity="0.6"/><circle cx="63" cy="82" r="2" fill="#5EB8A8" opacity="0.6"/></svg></div>
-    <div class="float-3d f2" aria-hidden="true"><svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M50 10 C35 15, 28 30, 32 48 C36 60, 48 68, 50 70 C52 68, 64 60, 68 48 C72 30, 65 15, 50 10" fill="#5EB8A8" opacity="0.8"/><path d="M50 25 C44 28, 40 38, 44 48 C47 55, 50 58, 50 58 C50 58, 53 55, 56 48 C60 38, 56 28, 50 25" fill="#5EB8A8" opacity="0.5"/><path d="M50 10 C42 12, 38 22, 42 35 C45 42, 50 45, 50 45 C50 45, 55 42, 58 35 C62 22, 58 12, 50 10" fill="#5EB8A8" opacity="0.6"/><path d="M50 45 C45 48, 42 55, 45 62 C48 67, 50 68, 50 68 C50 68, 52 67, 55 62 C58 55, 55 48, 50 45" fill="#5EB8A8" opacity="0.4"/><line x1="50" y1="68" x2="50" y2="88" stroke="#5EB8A8" stroke-width="2"/><path d="M45 80 Q40 76, 37 82" stroke="#5EB8A8" stroke-width="1.5" fill="none"/><path d="M55 80 Q60 76, 63 82" stroke="#5EB8A8" stroke-width="1.5" fill="none"/><circle cx="37" cy="82" r="2" fill="#5EB8A8" opacity="0.6"/><circle cx="63" cy="82" r="2" fill="#5EB8A8" opacity="0.6"/></svg></div>
+    <div class="float-3d f1" aria-hidden="true"><svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M50 10 C35 15, 28 30, 32 48 C36 60, 48 68, 50 70 C52 68, 64 60, 68 48 C72 30, 65 15, 50 10" fill="#8FAFB5" opacity="0.8"/><path d="M50 25 C44 28, 40 38, 44 48 C47 55, 50 58, 50 58 C50 58, 53 55, 56 48 C60 38, 56 28, 50 25" fill="#8FAFB5" opacity="0.5"/><path d="M50 10 C42 12, 38 22, 42 35 C45 42, 50 45, 50 45 C50 45, 55 42, 58 35 C62 22, 58 12, 50 10" fill="#8FAFB5" opacity="0.6"/><path d="M50 45 C45 48, 42 55, 45 62 C48 67, 50 68, 50 68 C50 68, 52 67, 55 62 C58 55, 55 48, 50 45" fill="#8FAFB5" opacity="0.4"/><line x1="50" y1="68" x2="50" y2="88" stroke="#8FAFB5" stroke-width="2"/><path d="M45 80 Q40 76, 37 82" stroke="#8FAFB5" stroke-width="1.5" fill="none"/><path d="M55 80 Q60 76, 63 82" stroke="#8FAFB5" stroke-width="1.5" fill="none"/><circle cx="37" cy="82" r="2" fill="#8FAFB5" opacity="0.6"/><circle cx="63" cy="82" r="2" fill="#8FAFB5" opacity="0.6"/></svg></div>
+    <div class="float-3d f2" aria-hidden="true"><svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M50 10 C35 15, 28 30, 32 48 C36 60, 48 68, 50 70 C52 68, 64 60, 68 48 C72 30, 65 15, 50 10" fill="#8FAFB5" opacity="0.8"/><path d="M50 25 C44 28, 40 38, 44 48 C47 55, 50 58, 50 58 C50 58, 53 55, 56 48 C60 38, 56 28, 50 25" fill="#8FAFB5" opacity="0.5"/><path d="M50 10 C42 12, 38 22, 42 35 C45 42, 50 45, 50 45 C50 45, 55 42, 58 35 C62 22, 58 12, 50 10" fill="#8FAFB5" opacity="0.6"/><path d="M50 45 C45 48, 42 55, 45 62 C48 67, 50 68, 50 68 C50 68, 52 67, 55 62 C58 55, 55 48, 50 45" fill="#8FAFB5" opacity="0.4"/><line x1="50" y1="68" x2="50" y2="88" stroke="#8FAFB5" stroke-width="2"/><path d="M45 80 Q40 76, 37 82" stroke="#8FAFB5" stroke-width="1.5" fill="none"/><path d="M55 80 Q60 76, 63 82" stroke="#8FAFB5" stroke-width="1.5" fill="none"/><circle cx="37" cy="82" r="2" fill="#8FAFB5" opacity="0.6"/><circle cx="63" cy="82" r="2" fill="#8FAFB5" opacity="0.6"/></svg></div>
     <nav class="top-nav" aria-label="Primary navigation">
         <a href="/index.html" class="nav-logo">
             <img src="/logo.svg" alt="" width="32" height="32">
@@ -83,7 +77,7 @@
             <a href="/suggest.html" class="nav-btn">Suggest</a>
         </div>
     </nav>
-    <main id="main-content" class="content-wrapper">
+<main id="main-content" class="content-wrapper">
         <div class="hero">
             <img src="/logo.svg" alt="MySweetPea logo" class="logo" width="160" height="160">
             <h1 class="glass-text">Support MySweetPea</h1>
@@ -94,14 +88,14 @@
                 <h2>Support the Cause</h2>
                 <p class="subtitle">Your contribution helps keep MySweetPea running and funds future improvements.</p>
                 <div class="info-box">Donations are completely anonymous. No name, email, or account required. Just send crypto to the wallet address and you are done. Thank you for your support!</div>
-                <div class="crypto-section-label" id="crypto-label">Select Cryptocurrency</div>
-                <div class="crypto-options" role="group" aria-labelledby="crypto-label">
-                    <div class="crypto-option selected" data-type="monero" role="button" tabindex="0" onclick="selectCrypto(this, 'monero')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();selectCrypto(this,'monero');}"><div class="icon">&#x1F9EA;</div><div class="name">Monero (XMR)</div></div>
-                    <div class="crypto-option" data-type="bitcoin" role="button" tabindex="0" onclick="selectCrypto(this, 'bitcoin')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();selectCrypto(this,'bitcoin');}"><div class="icon">&#x20BF;</div><div class="name">Bitcoin (BTC)</div></div>
+                <div class="crypto-section-label">Select Cryptocurrency</div>
+                <div class="crypto-options">
+                    <div class="crypto-option selected" data-type="monero" onclick="selectCrypto(this, 'monero')"><div class="icon" aria-hidden="true">&#x1F9EA;</div><div class="name">Monero (XMR)</div></div>
+                    <div class="crypto-option" data-type="bitcoin" onclick="selectCrypto(this, 'bitcoin')"><div class="icon" aria-hidden="true">&#x20BF;</div><div class="name">Bitcoin (BTC)</div></div>
                 </div>
                 <div class="wallet-display visible" id="wallet-display">
                     <div class="wl">Send your donation to:</div>
-                    <div class="wa" id="wallet-addr" role="button" tabindex="0" onclick="copyWallet()" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();copyWallet();}">Loading...</div>
+                    <div class="wa" id="wallet-addr" onclick="copyWallet()">Loading...</div>
                     <div class="copy-hint">Click address to copy to clipboard</div>
                 </div>
                 <div class="thank-you">
@@ -116,7 +110,7 @@
             <div class="faq-item"><div class="faq-question" onclick="toggleFAQ(this)">Is my donation anonymous? <span class="arrow">&#9660;</span></div><div class="faq-answer"><p>Yes. Crypto donations are anonymous by default. Monero (XMR) is fully anonymous — sender, receiver, and amount are all hidden. Bitcoin (BTC) is pseudonymous — your wallet address is visible but not linked to your identity.</p></div></div>
             <div class="faq-item"><div class="faq-question" onclick="toggleFAQ(this)">Can I get a refund? <span class="arrow">&#9660;</span></div><div class="faq-answer"><p>Crypto donations are irreversible. If you have a genuine issue, contact support@mysweetpea.cc.</p></div></div>
         </div>
-    </main>
+        </main>
     <footer class="page-footer">
         <div class="footer-links">
             <a href="/index.html">Home</a>
@@ -129,21 +123,10 @@
     </footer>
     <script src="/assets/js/site.js" defer></script>
     <script>
-        function toggleFAQ(el) { el.parentElement.classList.toggle('open'); }
+function toggleFAQ(el) { el.parentElement.classList.toggle('open'); }
         var WALLETS = { monero: 'Coming Soon', bitcoin: 'Coming Soon' };
-        function selectCrypto(el, type) {
-            document.querySelectorAll('.crypto-option').forEach(function(o) { o.classList.remove('selected'); });
-            el.classList.add('selected');
-            document.getElementById('wallet-addr').textContent = WALLETS[type];
-        }
-        function copyWallet() {
-            var a = document.getElementById('wallet-addr').textContent;
-            navigator.clipboard.writeText(a).then(function() {
-                var e = document.getElementById('wallet-addr');
-                var o = e.textContent; e.textContent = 'Copied!';
-                setTimeout(function() { e.textContent = o; }, 1500);
-            });
-        }
+        function selectCrypto(el, type) { document.querySelectorAll('.crypto-option').forEach(function(o) { o.classList.remove('selected'); }); el.classList.add('selected'); document.getElementById('wallet-addr').textContent = WALLETS[type]; }
+        function copyWallet() { var a = document.getElementById('wallet-addr').textContent; navigator.clipboard.writeText(a).then(function() { var e = document.getElementById('wallet-addr'); var o = e.textContent; e.textContent = 'Copied!'; setTimeout(function() { e.textContent = o; }, 1500); }); }
         document.getElementById('wallet-addr').textContent = WALLETS.monero;
     </script>
 </body>
