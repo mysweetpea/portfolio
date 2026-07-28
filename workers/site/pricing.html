@@ -140,7 +140,15 @@
         .service-card .service-icon, .modal-icon { color: var(--text); }
     
         /* Repository-hosted brand marks */
-        .service-card .service-icon img[alt$=" logo"], .modal-icon img[alt$=" logo"] {
+        .service-card .service-icon img[alt="KoalaSync logo"],
+        .service-card .service-icon img[alt="Seerr logo"],
+        .modal-icon img[alt="KoalaSync logo"],
+        .modal-icon img[alt="Seerr logo"] {
+            filter: brightness(0) invert(1);
+            object-fit: contain;
+        }
+        .service-card .service-icon img[alt="Open WebUI logo"],
+        .modal-icon img[alt="Open WebUI logo"] {
             filter: none;
             object-fit: contain;
         }
