@@ -5,12 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MySweetPea — Request Received</title>
     <meta name="description" content="Your request has been received. We'll be in touch soon.">
-    <meta name="theme-color" content="#0A1214">
-    <meta name="robots" content="noindex">
+    <meta name="theme-color" content="#0C1316">
     <meta property="og:title" content="MySweetPea — Request Received">
     <meta property="og:description" content="Your request has been received. We'll be in touch soon.">
     <meta property="og:type" content="website">
-    <meta property="og:url" content="https://mysweetpea.cc/success.html">
+    <meta property="og:url" content="https://mysweetpea.cc/">
     <link rel="icon" type="image/svg+xml" href="/logo-favicon.svg">
     <link rel="preload" as="image" href="/logo.svg">
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -18,19 +17,71 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/assets/css/site.css">
     <style>
-        @keyframes scaleIn { from { opacity: 0; transform: scale(0.9); } to { opacity: 1; transform: scale(1); } }
-        @keyframes checkPop { 0% { transform: scale(0); } 60% { transform: scale(1.2); } 100% { transform: scale(1); } }
-        .hero { flex: 1; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; padding: 100px 24px 40px; }
-        .success-icon { width: 80px; height: 80px; border-radius: 50%; background: rgba(94, 211, 158, 0.1); border: 2px solid rgba(94, 211, 158, 0.3); display: flex; align-items: center; justify-content: center; margin-bottom: 24px; animation: checkPop 0.6s ease-out; }
-        .success-icon span { font-size: 2.5rem; }
-        .hero h1 { font-size: 2rem; font-weight: 700; margin-bottom: 16px; animation: scaleIn 0.5s ease-out 0.2s both; }
-        .hero p { font-size: 1rem; color: var(--text-dim); max-width: 500px; margin-bottom: 32px; animation: scaleIn 0.5s ease-out 0.3s both; }
-        .next-steps { background: rgba(15, 26, 28, 0.5); backdrop-filter: blur(16px) saturate(1.2); -webkit-backdrop-filter: blur(16px) saturate(1.2); border: 1px solid var(--border); border-radius: var(--radius); padding: 28px 32px; max-width: 480px; margin-bottom: 32px; text-align: left; animation: scaleIn 0.5s ease-out 0.4s both; }
-        .next-steps h3 { font-size: 0.9rem; color: var(--primary); margin-bottom: 16px; font-weight: 600; }
-        .next-steps ol { padding-left: 20px; }
-        .next-steps li { font-size: 0.85rem; color: var(--text-dim); margin-bottom: 10px; line-height: 1.6; }
-        .hero-btn { display: inline-block; padding: 14px 36px; border-radius: var(--radius-sm); font-size: 1rem; font-weight: 600; text-decoration: none; transition: var(--transition); background: linear-gradient(135deg, var(--primary), var(--primary-dim)); color: var(--bg); animation: scaleIn 0.5s ease-out 0.5s both; }
-        .hero-btn:hover { transform: translateY(-3px) scale(1.03); box-shadow: 0 8px 30px rgba(94, 184, 168, 0.35); }
-        .contact-link { display: block; margin-top: 20px; font-size: 0.85rem; color: var(--text-faint); animation: scaleIn 0.5s ease-out 0.6s both; }
-        .contact-link a { color: var(--primary); text-decoration: none; }
-        .contact-link 
+@keyframes scaleIn { from { opacity: 0; transform: scale(0.9); } to { opacity: 1; transform: scale(1); } }
+@keyframes checkPop { 0% { transform: scale(0); } 60% { transform: scale(1.15); } 100% { transform: scale(1); } }
+.hero { flex: 1; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; padding: 100px 24px 40px; }
+.success-icon { width: 80px; height: 80px; border-radius: 50%; background: rgba(163, 201, 182, 0.08); border: 2px solid rgba(163, 201, 182, 0.3); display: flex; align-items: center; justify-content: center; margin-bottom: 24px; animation: checkPop 0.6s ease-out; }
+.success-icon span { font-size: 2.5rem; }
+.hero h1 { font-size: 2.1rem; font-weight: 700; margin-bottom: 16px; letter-spacing: -0.8px; animation: scaleIn 0.5s ease-out 0.2s both; }
+.hero p { font-size: 1rem; color: var(--text-dim); max-width: 500px; margin-bottom: 32px; animation: scaleIn 0.5s ease-out 0.3s both; }
+.next-steps { background: var(--card-bg); backdrop-filter: blur(16px) saturate(1.2); -webkit-backdrop-filter: blur(16px) saturate(1.2); border: 1px solid var(--border); border-radius: var(--radius); padding: 28px 32px; max-width: 480px; margin-bottom: 32px; text-align: left; animation: scaleIn 0.5s ease-out 0.4s both; }
+.next-steps h3 { font-size: 0.9rem; color: var(--primary); margin-bottom: 16px; font-weight: 600; }
+.next-steps ol { padding-left: 20px; }
+.next-steps li { font-size: 0.85rem; color: var(--text-dim); margin-bottom: 10px; line-height: 1.6; }
+.hero-btn { display: inline-block; padding: 14px 36px; border-radius: var(--radius-sm); font-size: 1rem; font-weight: 600; text-decoration: none; transition: var(--transition); background: linear-gradient(135deg, var(--primary), var(--primary-dim)); color: var(--bg); animation: scaleIn 0.5s ease-out 0.5s both; }
+.hero-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 24px rgba(143, 175, 181, 0.28); }
+.contact-link { display: block; margin-top: 20px; font-size: 0.85rem; color: var(--text-faint); animation: scaleIn 0.5s ease-out 0.6s both; }
+.contact-link a { color: var(--primary); text-decoration: none; }
+.contact-link a:hover { text-decoration: underline; }
+@media (max-width: 768px) { .hero { padding: 80px 20px 30px; } .hero h1 { font-size: 1.6rem; } .next-steps { padding: 20px 24px; } }
+    </style>
+</head>
+<body>
+    <a href="#main-content" class="skip-link">Skip to content</a>
+    <div class="scroll-progress" id="scrollProgress" aria-hidden="true"></div>
+    <div class="bg-gradient" aria-hidden="true"></div>
+    <canvas id="petalCanvas" aria-hidden="true"></canvas>
+    <nav class="top-nav" aria-label="Primary navigation">
+        <a href="/index.html" class="nav-logo">
+            <img src="/logo.svg" alt="" width="32" height="32">
+            <span>MySweetPea</span>
+        </a>
+        <div class="nav-links">
+            <a href="/index.html" class="nav-btn">Home</a>
+            <a href="/pricing.html" class="nav-btn">Pricing</a>
+            <a href="/support.html" class="nav-btn">Support</a>
+            <a href="/about.html" class="nav-btn">About</a>
+            <a href="/suggest.html" class="nav-btn">Suggest</a>
+        </div>
+    </nav>
+<main id="main-content" class="content-wrapper">
+        <div class="hero">
+            <div class="success-icon"><span aria-hidden="true">&#x2705;</span></div>
+            <h1 class="glass-text">Request Received!</h1>
+            <p>Thank you. We will verify your contribution and get back to you shortly.</p>
+            <div class="next-steps">
+                <h3>What happens next:</h3>
+                <ol>
+                    <li>We verify your donation (usually within 24 hours)</li>
+                    <li>You receive an email with your invite code</li>
+                    <li>Use the code on the donation form to create your account</li>
+                    <li>Log in and change your temporary password</li>
+                </ol>
+            </div>
+            <a href="/index.html" class="hero-btn">Back to Home</a>
+            <div class="contact-link">Questions? <a href="mailto:support@mysweetpea.cc">support@mysweetpea.cc</a></div>
+        </div>
+        </main>
+    <footer class="page-footer">
+        <div class="footer-links">
+            <a href="/index.html">Home</a>
+            <a href="/pricing.html">Pricing</a>
+            <a href="/support.html">Support</a>
+            <a href="/about.html">About</a>
+            <a href="/suggest.html">Suggest</a>
+        </div>
+        <p>&copy; 2026 MySweetPea. Privacy-first, self-hosted, community funded.</p>
+    </footer>
+    <script src="/assets/js/site.js" defer></script>
+</body>
+</html>
