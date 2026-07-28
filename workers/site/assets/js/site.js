@@ -1,44 +1,55 @@
 /* ==========================================================================
    MySweetPea — Shared Site Script (site.js)
    Handles: scroll progress bar, nav shrink, reveal animations,
-            glow-card tracking, falling frost-petal canvas
+            glow-card tracking, and falling frost-petal canvas.
    ========================================================================== */
 (function () {
     'use strict';
 
     var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+    var finePointer = window.matchMedia('(hover: hover) and (pointer: fine)');
+
+    function requestFrameOnce(callback) {
+        var queued = false;
+        return function () {
+            if (queued) return;
+            queued = true;
+            requestAnimationFrame(function () {
+                queued = false;
+                callback();
+            });
+        };
+    }
 
     /* === Scroll progress bar === */
     var progress = document.getElementById('scrollProgress');
     if (progress) {
-        var ticking = false;
-        window.addEventListener('scroll', function () {
-            if (ticking) return;
-            ticking = true;
-            requestAnimationFrame(function () {
-                var max = document.documentElement.scrollHeight - window.innerHeight;
-                progress.style.width = (max > 0 ? (window.scrollY / max) * 100 : 0) + '%';
-                ticking = false;
-            });
-        }, { passive: true });
+        var updateProgress = requestFrameOnce(function () {
+            var max = document.documentElement.scrollHeight - window.innerHeight;
+            progress.style.width = (max > 0 ? (window.scrollY / max) * 100 : 0) + '%';
+        });
+        updateProgress();
+        window.addEventListener('scroll', updateProgress, { passive: true });
+        window.addEventListener('resize', updateProgress, { passive: true });
     }
 
     /* === Nav shrink on scroll === */
     var nav = document.querySelector('.top-nav');
     if (nav) {
-        window.addEventListener('scroll', function () {
+        var updateNav = requestFrameOnce(function () {
             nav.classList.toggle('nav-scrolled', window.scrollY > 40);
-        }, { passive: true });
+        });
+        updateNav();
+        window.addEventListener('scroll', updateNav, { passive: true });
     }
 
-    /* === Scroll reveal animations ===
-       Strategy: staggered reveal on load for above-fold elements,
-       IntersectionObserver for the rest, plus a safety-net timer that
-       force-reveals everything so content can never get stuck hidden. */
+    /* === Scroll reveal animations === */
     var revealEls = Array.prototype.slice.call(document.querySelectorAll('.reveal'));
 
     function forceRevealAll() {
-        revealEls.forEach(function (el) { el.classList.add('visible'); });
+        revealEls.forEach(function (el) {
+            el.classList.add('visible');
+        });
     }
 
     if (revealEls.length) {
@@ -54,10 +65,10 @@
                 });
             }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
 
-            revealEls.forEach(function (el) { revealObserver.observe(el); });
+            revealEls.forEach(function (el) {
+                revealObserver.observe(el);
+            });
 
-            /* Reveal anything already in the viewport immediately after load
-               (covers browsers where the observer races first paint) */
             window.addEventListener('load', function () {
                 revealEls.forEach(function (el) {
                     var rect = el.getBoundingClientRect();
@@ -66,38 +77,72 @@
                         revealObserver.unobserve(el);
                     }
                 });
-            });
+            }, { once: true });
 
-            /* Safety net: nothing stays hidden longer than 2.5s */
-            setTimeout(forceRevealAll, 2500);
+            window.setTimeout(forceRevealAll, 2500);
         }
     }
 
-    /* === Glow card mouse tracking === */
-    document.querySelectorAll('.glow-card').forEach(function (card) {
-        card.addEventListener('mousemove', function (e) {
-            var rect = card.getBoundingClientRect();
-            card.style.setProperty('--mouse-x', (e.clientX - rect.left) + 'px');
-            card.style.setProperty('--mouse-y', (e.clientY - rect.top) + 'px');
+    /* === Glow-card mouse tracking === */
+    if (finePointer.matches && !reduceMotion.matches) {
+        document.querySelectorAll('.glow-card').forEach(function (card) {
+            var rafId = null;
+            var mouseX = 0;
+            var mouseY = 0;
+
+            card.addEventListener('pointermove', function (event) {
+                var rect = card.getBoundingClientRect();
+                mouseX = event.clientX - rect.left;
+                mouseY = event.clientY - rect.top;
+
+                if (rafId !== null) return;
+                rafId = requestAnimationFrame(function () {
+                    card.style.setProperty('--mouse-x', mouseX + 'px');
+                    card.style.setProperty('--mouse-y', mouseY + 'px');
+                    rafId = null;
+                });
+            }, { passive: true });
         });
-    });
+    }
+
     /* === Falling frost petals canvas === */
     var canvas = document.getElementById('petalCanvas');
     if (!canvas) return;
 
     var ctx = canvas.getContext('2d');
+    if (!ctx) return;
+
     var petals = [];
-    var W, H, rafId = null;
+    var width = 0;
+    var height = 0;
+    var dpr = 1;
+    var rafId = null;
+    var resizeTimer = null;
+    var lastViewportWidth = 0;
     var PETAL_COUNT = 22;
 
-    function resize() {
-        W = canvas.width = window.innerWidth;
-        H = canvas.height = window.innerHeight;
+    function resize(force) {
+        var nextWidth = window.innerWidth;
+        var nextHeight = window.innerHeight;
+
+        /* Ignore mobile browser-chrome height changes unless explicitly forced. */
+        if (!force && nextWidth === lastViewportWidth) return;
+
+        width = nextWidth;
+        height = nextHeight;
+        lastViewportWidth = nextWidth;
+        dpr = Math.min(window.devicePixelRatio || 1, 2);
+
+        canvas.width = Math.round(width * dpr);
+        canvas.height = Math.round(height * dpr);
+        canvas.style.width = width + 'px';
+        canvas.style.height = height + 'px';
+        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     }
 
     function createPetal() {
         return {
-            x: Math.random() * W,
+            x: Math.random() * width,
             y: -20,
             size: 3 + Math.random() * 6,
             speedY: 0.35 + Math.random() * 0.9,
@@ -110,49 +155,58 @@
         };
     }
 
-    function drawPetal(p) {
+    function drawPetal(petal) {
         ctx.save();
-        ctx.translate(p.x, p.y);
-        ctx.rotate(p.rotation);
-        ctx.globalAlpha = p.opacity;
-        var grad = ctx.createRadialGradient(0, 0, 0, 0, 0, p.size);
-        grad.addColorStop(0, '#EEF2F3');
-        grad.addColorStop(0.5, '#C5D5D8');
-        grad.addColorStop(1, 'rgba(143, 175, 181, 0.25)');
-        ctx.fillStyle = grad;
+        ctx.translate(petal.x, petal.y);
+        ctx.rotate(petal.rotation);
+        ctx.globalAlpha = petal.opacity;
+
+        var gradient = ctx.createRadialGradient(0, 0, 0, 0, 0, petal.size);
+        gradient.addColorStop(0, '#EEF2F3');
+        gradient.addColorStop(0.5, '#C5D5D8');
+        gradient.addColorStop(1, 'rgba(143, 175, 181, 0.25)');
+        ctx.fillStyle = gradient;
+
         ctx.beginPath();
-        ctx.moveTo(0, -p.size);
-        ctx.bezierCurveTo(p.size * 0.6, -p.size * 0.5, p.size * 0.6, p.size * 0.5, 0, p.size);
-        ctx.bezierCurveTo(-p.size * 0.6, p.size * 0.5, -p.size * 0.6, -p.size * 0.5, 0, -p.size);
+        ctx.moveTo(0, -petal.size);
+        ctx.bezierCurveTo(petal.size * 0.6, -petal.size * 0.5, petal.size * 0.6, petal.size * 0.5, 0, petal.size);
+        ctx.bezierCurveTo(-petal.size * 0.6, petal.size * 0.5, -petal.size * 0.6, -petal.size * 0.5, 0, -petal.size);
         ctx.fill();
         ctx.restore();
     }
 
     function animate() {
-        ctx.clearRect(0, 0, W, H);
+        ctx.clearRect(0, 0, width, height);
+
         for (var i = 0; i < petals.length; i++) {
-            var p = petals[i];
-            p.sway += p.swaySpeed;
-            p.x += p.speedX + Math.sin(p.sway) * 0.4;
-            p.y += p.speedY;
-            p.rotation += p.rotSpeed;
-            if (p.y > H + 20) petals[i] = createPetal();
-            if (p.x < -20) p.x = W + 20;
-            if (p.x > W + 20) p.x = -20;
+            var petal = petals[i];
+            petal.sway += petal.swaySpeed;
+            petal.x += petal.speedX + Math.sin(petal.sway) * 0.4;
+            petal.y += petal.speedY;
+            petal.rotation += petal.rotSpeed;
+
+            if (petal.y > height + 20) petals[i] = createPetal();
+            if (petal.x < -20) petal.x = width + 20;
+            if (petal.x > width + 20) petal.x = -20;
+
             drawPetal(petals[i]);
         }
+
         rafId = requestAnimationFrame(animate);
     }
 
     function start() {
-        if (rafId !== null || reduceMotion.matches) return;
-        resize();
+        if (rafId !== null || reduceMotion.matches || document.hidden) return;
+
+        resize(true);
         petals.length = 0;
+
         for (var i = 0; i < PETAL_COUNT; i++) {
-            var p = createPetal();
-            p.y = Math.random() * H;
-            petals.push(p);
+            var petal = createPetal();
+            petal.y = Math.random() * height;
+            petals.push(petal);
         }
+
         animate();
     }
 
@@ -161,26 +215,34 @@
             cancelAnimationFrame(rafId);
             rafId = null;
         }
+
         petals.length = 0;
-        if (ctx) ctx.clearRect(0, 0, W || 0, H || 0);
+        ctx.clearRect(0, 0, width, height);
     }
 
-    window.addEventListener('resize', resize, { passive: true });
+    window.addEventListener('resize', function () {
+        window.clearTimeout(resizeTimer);
+        resizeTimer = window.setTimeout(function () {
+            if (window.innerWidth !== lastViewportWidth) resize(false);
+        }, 150);
+    }, { passive: true });
 
-    /* Pause when tab hidden, always restart when visible */
     document.addEventListener('visibilitychange', function () {
-        if (document.hidden) stop(); else start();
+        if (document.hidden) stop();
+        else start();
     });
 
-    /* Respect reduced-motion changes at runtime */
-    reduceMotion.addEventListener('change', function (e) {
-        if (e.matches) stop(); else start();
+    reduceMotion.addEventListener('change', function (event) {
+        if (event.matches) {
+            stop();
+            forceRevealAll();
+        } else {
+            start();
+        }
     });
 
-    /* Start on load — and again shortly after, in case the first
-       attempt ran before the canvas had its final dimensions */
     start();
     window.addEventListener('load', function () {
         if (rafId === null) start();
-    });
+    }, { once: true });
 })();
