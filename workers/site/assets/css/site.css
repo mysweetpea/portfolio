@@ -3832,3 +3832,30 @@ body[data-page='status'] .status-updated { font-size: 0.8rem; color: var(--text-
     body[data-page='status'] .status-summary { align-items: flex-start; min-height: 0; }
     body[data-page='status'] .status-summary time { margin: 3px 0 0 auto; padding-left: 10px; font-size: 0.7rem; }
 }
+
+/* v30 UX pass: first-time user guidance and calm theme switching */
+.scroll-cue { display: inline-flex; flex-direction: column; align-items: center; gap: 4px; margin-top: 28px; color: var(--text-dim); font-size: 0.8rem; text-decoration: none; letter-spacing: .03em; }
+.scroll-cue span:last-child { color: var(--sage); font-size: 1.35rem; line-height: 1; animation: cueBounce 2.2s ease-in-out infinite; }
+@keyframes cueBounce { 0%,100% { transform: translateY(0); } 50% { transform: translateY(5px); } }
+.scroll-cue:focus-visible { outline: 3px solid var(--primary-bright); outline-offset: 5px; border-radius: 4px; }
+@media (min-width: 769px) { body[data-page='home'] .hero { min-height: min(82svh, 720px); padding-bottom: 34px; } }
+
+.service-access-guide { max-width: 860px; margin: 26px auto 34px; padding: 17px 18px; display: flex; align-items: center; justify-content: space-between; gap: 18px; border: 1px solid var(--border-primary); border-radius: 14px; background: rgba(163,201,182,0.08); }
+.service-access-guide strong { display: block; color: var(--primary-bright); font-size: 0.96rem; margin-bottom: 3px; }
+.service-access-guide span { display: block; color: var(--text-dim); font-size: 0.86rem; line-height: 1.5; }
+.service-access-actions { display: flex; gap: 9px; flex: none; }
+.service-access-actions a { padding: 10px 13px; border-radius: 9px; text-decoration: none; font-size: 0.82rem; font-weight: 700; color: var(--text); border: 1px solid var(--border-primary); }
+.service-access-actions a:last-child { background: var(--sage); color: var(--bg); border-color: var(--sage); }
+.tier-name-sweetpea span { display: block; margin-top: 2px; font-family: inherit; font-size: 0.68em; font-weight: 600; color: var(--text-dim); }
+.tier-steps { margin: 16px 0 4px; padding: 13px 10px 12px 31px; border-radius: 9px; background: rgba(143,175,181,0.07); color: var(--text-dim); font-size: 0.82rem; line-height: 1.55; text-align: left; }
+.tier-steps li + li { margin-top: 5px; }
+.help-contact { margin-top: 22px; padding: 14px 15px; border-left: 3px solid var(--sage); border-radius: 0 9px 9px 0; background: rgba(163,201,182,0.08); color: var(--text) !important; }
+.help-contact a, .footer-help a, body[data-page='about'] .card a { color: var(--primary-bright); font-weight: 700; text-decoration-thickness: 1px; text-underline-offset: 3px; }
+.footer-help { margin-top: 9px; font-size: 0.84rem; color: var(--text-dim); }
+
+/* Keep the light scheme soft, and avoid abrupt high-luminance jumps. */
+[data-theme="light"] { --bg: #DCE6E2; --text: #203237; --text-dim: #4E6368; --text-faint: #6D7D80; --card-bg: rgba(245,249,247,0.78); --card-bg-hover: rgba(250,252,251,0.90); }
+[data-theme="light"] body, [data-theme="light"] .bg-gradient { background: radial-gradient(ellipse 70% 45% at 50% -15%, rgba(85,129,141,.10), transparent), radial-gradient(ellipse 55% 35% at 85% 105%, rgba(101,145,132,.10), transparent), linear-gradient(180deg,#E3ECE8 0%,#D6E2DD 100%) !important; }
+html, body, .bg-gradient, .top-nav, .card, .feature-card, .stat-card, .pricing-card, .service-card, .faq-item, .status-list, .form-container, .modal { transition: background-color .42s cubic-bezier(.22,1,.36,1), color .32s ease, border-color .42s ease, box-shadow .42s ease !important; }
+@media (prefers-reduced-motion: reduce) { html, body, .bg-gradient, .top-nav, .card, .feature-card, .stat-card, .pricing-card, .service-card, .faq-item, .status-list, .form-container, .modal { transition-duration: 0.01ms !important; } .scroll-cue span:last-child { animation: none; } }
+@media (max-width: 700px) { .service-access-guide { flex-direction: column; align-items: stretch; text-align: left; } .service-access-actions { width: 100%; } .service-access-actions a { flex: 1; text-align: center; } }
