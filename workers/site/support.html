@@ -102,15 +102,7 @@
     <script>
 function toggleFAQ(el) { el.parentElement.classList.toggle('open'); }
         var WALLETS = { monero: 'Coming Soon', bitcoin: 'Coming Soon' };
-        function selectCrypto(el, type) {
-            document.querySelectorAll('.crypto-option').forEach(function(o) { o.classList.remove('selected'); });
-            void el.offsetWidth; el.classList.add('selected');
-            var wa = document.getElementById('wallet-addr');
-            var wd = document.getElementById('wallet-display');
-            wa.classList.remove('addr-swap'); wa.classList.add('addr-out');
-            if (wd) { wd.classList.remove('wallet-pulse'); void wd.offsetWidth; wd.classList.add('wallet-pulse'); }
-            setTimeout(function() { wa.textContent = WALLETS[type]; wa.classList.remove('addr-out'); void wa.offsetWidth; wa.classList.add('addr-swap'); }, 180);
-        }
+        function selectCrypto(el, type) { document.querySelectorAll('.crypto-option').forEach(function(o) { o.classList.remove('selected'); }); el.classList.add('selected'); document.getElementById('wallet-addr').textContent = WALLETS[type]; }
         function copyWallet() { var a = document.getElementById('wallet-addr').textContent; navigator.clipboard.writeText(a).then(function() { var e = document.getElementById('wallet-addr'); var o = e.textContent; e.textContent = 'Copied!'; setTimeout(function() { e.textContent = o; }, 1500); }); }
         document.getElementById('wallet-addr').textContent = WALLETS.monero;
     </script>
