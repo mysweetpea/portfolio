@@ -62,8 +62,10 @@
             <p class="hero-sub pop-text">A manually maintained overview of the services we currently operate.</p>
         </div>
         <section class="status-section" aria-labelledby="status-summary">
-            <div class="status-summary status-all-online reveal" id="status-summary">
-                <span class="status-dot"></span> 6 operational services
+            <div class="status-summary status-all-online reveal" id="status-summary" role="status">
+                <span class="status-dot" aria-hidden="true"></span>
+                <span><strong>6 of 6 operational</strong><small>Current community services</small></span>
+                <time datetime="2026-07-29T15:22:00-04:00">Last reviewed Jul 29, 2026</time>
             </div>
             <h2 class="status-subhead status-subhead-first reveal">Operational Services</h2>
             <div class="status-list status-list-operational">
@@ -172,7 +174,7 @@
                     <span class="status-badge status-soon">Coming soon</span>
                 </div>
             </div>
-            <p class="status-updated">Status information is manually maintained and reviewed regularly.</p>
+            <p class="status-updated">This is a manually maintained service overview.</p>
         </section>
     </main>
     <a href="#" class="back-to-top" aria-label="Back to top" onclick="window.scrollTo({top:0,behavior:'smooth'});return false;"><img src="/assets/icons/icon-ui-arrow-up.svg" class="" alt="" width="22" height="22" loading="lazy" decoding="async" aria-hidden="true"></a>
