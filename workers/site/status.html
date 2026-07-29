@@ -46,7 +46,7 @@
             <a href="/about.html" class="nav-btn">About</a>
             <a href="/suggest.html" class="nav-btn">Suggest</a>
             <a href="/form.html" class="nav-cta">Get Access</a>
-            <button class="nav-search" aria-label="Search pages and services"><span aria-hidden="true">&#x1F50D;</span><span class="nav-search-label">Search</span><kbd>Ctrl K</kbd></button>
+            <button class="nav-search" aria-label="Search pages and services" title="Search (Ctrl+K)"><svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg></button>
             <button class="theme-toggle" aria-label="Toggle color theme"><span class="icon-moon" aria-hidden="true">&#x1F319;</span><span class="icon-sun" aria-hidden="true">&#x2600;&#xFE0F;</span></button>
         </div>
     </nav>
@@ -71,14 +71,14 @@
                 </div>
                 <div class="status-row reveal">
                     <div class="status-service">
-                        <img src="/assets/icons/vaultwarden.svg" class="icon-dark-glyph" alt="" width="28" height="28" loading="lazy">
+                        <img src="/assets/icons/vaultwarden.svg" alt="" width="28" height="28" loading="lazy">
                         <div><div class="status-name">Vaultwarden</div><div class="status-desc">Password manager</div></div>
                     </div>
                     <div class="status-badge status-online"><span class="status-dot"></span>Operational</div>
                 </div>
                 <div class="status-row reveal">
                     <div class="status-service">
-                        <img src="/assets/icons/matrix.svg" class="icon-dark-glyph" alt="" width="28" height="28" loading="lazy">
+                        <img src="/assets/icons/matrix.svg" alt="" width="28" height="28" loading="lazy">
                         <div><div class="status-name">Matrix / Element</div><div class="status-desc">Encrypted chat</div></div>
                     </div>
                     <div class="status-badge status-online"><span class="status-dot"></span>Operational</div>
@@ -104,19 +104,9 @@
                     </div>
                     <div class="status-badge status-online"><span class="status-dot"></span>Operational</div>
                 </div>
-                <div class="status-row reveal">
-                    <div class="status-service">
-                        <img src="/assets/icons/grafana.svg" alt="" width="28" height="28" loading="lazy">
-                        <div><div class="status-name">Grafana</div><div class="status-desc">Dashboards</div></div>
-                    </div>
-                    <div class="status-badge status-online"><span class="status-dot"></span>Operational</div>
+                
                 </div>
-                <div class="status-row reveal">
-                    <div class="status-service">
-                        <img src="/assets/icons/prometheus.svg" alt="" width="28" height="28" loading="lazy">
-                        <div><div class="status-name">Prometheus</div><div class="status-desc">Metrics</div></div>
-                    </div>
-                    <div class="status-badge status-online"><span class="status-dot"></span>Operational</div>
+                
                 </div>
                 <div class="status-row reveal">
                     <div class="status-service">
@@ -144,13 +134,13 @@
                 </div>
                 <div class="status-row reveal">
                     <div class="status-service">
-                        <img src="/assets/icons/openwebui.svg" class="icon-dark-glyph" alt="" width="28" height="28" loading="lazy">
+                        <img src="/assets/icons/openwebui.svg" alt="" width="28" height="28" loading="lazy">
                         <div><div class="status-name">Open WebUI</div><div class="status-desc">AI interface</div></div>
                     </div>
                     <div class="status-badge status-soon">Coming soon</div>
                 </div>
             </div>
-            <p class="status-updated">Live monitoring integration coming soon — powered by Prometheus &amp; Grafana.</p>
+            <p class="status-updated">Live status monitoring integration coming soon.</p>
         </section>
     </main>
     <a href="#" class="back-to-top" aria-label="Back to top" onclick="window.scrollTo({top:0,behavior:'smooth'});return false;">&#x2191;</a>
