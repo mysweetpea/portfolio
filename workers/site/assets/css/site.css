@@ -3358,3 +3358,42 @@ body[data-page='pricing'] .tier-emoji-3d .tier-icon {
 [data-theme="light"] .theme-toggle .icon-sun { display: inline-flex !important; }
 [data-theme="light"] .theme-toggle .icon-moon { display: none !important; }
 .theme-toggle .icon-moon { display: inline-flex !important; }
+
+/* ==========================================================================
+   v14: hero descender fix, text polish, about readability, glowing copy
+   ========================================================================== */
+
+/* Prevent descenders (y, g, p) from being clipped by background-clip:text */
+.glass-text { padding-bottom: 0.12em; margin-bottom: -0.02em; line-height: 1.08; }
+body[data-page='home'] .hero h1 { line-height: 1.12; padding-bottom: 0.16em; }
+
+/* Make plain body copy pop: subtle sheen on key inline text */
+.pop-text, .highlight-text {
+    background: linear-gradient(120deg, var(--text) 20%, var(--primary-bright) 40%, #F0F6F7 50%, var(--primary-bright) 60%, var(--text) 80%);
+    background-size: 240% auto;
+    -webkit-background-clip: text; background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: shimmer 8s linear infinite;
+    font-weight: 600;
+}
+[data-theme="light"] .pop-text, [data-theme="light"] .highlight-text {
+    background: linear-gradient(120deg, #1B2B31 20%, #55818D 40%, #2A4750 50%, #55818D 60%, #1B2B31 80%);
+    background-size: 240% auto; -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;
+}
+
+/* About page: clear typographic hierarchy */
+body[data-page='about'] .content-wrapper p { line-height: 1.75; }
+body[data-page='about'] h2, body[data-page='about'] .section-title {
+    font-size: 1.55rem; letter-spacing: -0.01em; margin: 34px 0 12px;
+    padding-left: 14px; border-left: 3px solid var(--primary);
+}
+body[data-page='about'] h2:not(.glass-text), body[data-page='about'] .section-title:not(.glass-text) { color: var(--text); }
+body[data-page='about'] h3 { font-size: 1.1rem; margin: 24px 0 8px; color: var(--primary-bright); font-weight: 700; }
+body[data-page='about'] strong, body[data-page='about'] b { color: var(--primary-bright); font-weight: 700; }
+[data-theme="light"] body[data-page='about'] strong, [data-theme="light"] body[data-page='about'] b { color: #2A4750; }
+body[data-page='about'] .card p + p { margin-top: 12px; padding-top: 12px; border-top: 1px dashed var(--border); }
+body[data-page='about'] .github-link .repo { font-weight: 700; letter-spacing: 0.01em; }
+body[data-page='about'] .github-link .desc { color: var(--text-dim); line-height: 1.6; }
+
+/* Section titles everywhere get a touch more presence */
+.section-title { letter-spacing: -0.015em; }
