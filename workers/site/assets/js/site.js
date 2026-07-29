@@ -343,17 +343,21 @@
         });
     }
 
-    /* === Animated counters (skips non-numeric like N/A) === */
-    var numbers = document.querySelectorAll('.stat-card .number');
+    /* === Animated counters (uses data-target/data-suffix, falls back to text) === */
+    var numbers = document.querySelectorAll('.stat-card .number, .number[data-target]');
     if (numbers.length && 'IntersectionObserver' in window && !reduceMotion2.matches) {
         var cObs = new IntersectionObserver(function (entries) {
             entries.forEach(function (entry) {
                 if (!entry.isIntersecting) return;
                 cObs.unobserve(entry.target);
                 var el = entry.target;
-                var target = parseFloat(el.textContent.replace(/[^0-9.]/g, ''));
+                var target = parseFloat(el.getAttribute('data-target'));
+                var suffix = el.getAttribute('data-suffix') || '';
+                if (isNaN(target)) {
+                    target = parseFloat(el.textContent.replace(/[^0-9.]/g, ''));
+                    suffix = suffix || el.textContent.replace(/[0-9.,]/g, '');
+                }
                 if (isNaN(target)) return;
-                var suffix = el.textContent.replace(/[0-9.,]/g, '');
                 var start = performance.now(), dur = 1400;
                 (function tick(now) {
                     var t = Math.min((now - start) / dur, 1);
@@ -364,6 +368,11 @@
             });
         }, { threshold: 0.4 });
         numbers.forEach(function (n) { cObs.observe(n); });
+    } else {
+        /* Reduced motion / no IO: set final values immediately */
+        document.querySelectorAll('.number[data-target]').forEach(function (el) {
+            el.textContent = el.getAttribute('data-target') + (el.getAttribute('data-suffix') || '');
+        });
     }
 
     /* === Command palette (Ctrl+K / Cmd+K) === */
