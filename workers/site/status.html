@@ -40,18 +40,22 @@
         <div class="nav-links" id="nav-links">
             <a href="/index.html" class="nav-btn">Home</a>
             <a href="/pricing.html" class="nav-btn">Pricing</a>
+            <a href="/services.html" class="nav-btn">Services</a>
+            <a href="/status.html" class="nav-btn active" aria-current="page">Status</a>
             <a href="/support.html" class="nav-btn">Support</a>
             <a href="/about.html" class="nav-btn">About</a>
             <a href="/suggest.html" class="nav-btn">Suggest</a>
-        <button class="nav-search" aria-label="Search pages and services"><span aria-hidden="true">&#x1F50D;</span><span class="nav-search-label">Search</span><kbd>Ctrl K</kbd></button>
+            <a href="/form.html" class="nav-cta">Get Access</a>
+            <button class="nav-search" aria-label="Search pages and services"><span aria-hidden="true">&#x1F50D;</span><span class="nav-search-label">Search</span><kbd>Ctrl K</kbd></button>
             <button class="theme-toggle" aria-label="Toggle color theme"><span class="icon-moon" aria-hidden="true">&#x1F319;</span><span class="icon-sun" aria-hidden="true">&#x2600;&#xFE0F;</span></button>
         </div>
     </nav>
 <main id="main-content" class="content-wrapper">
-        <div class="hero" style="min-height:auto;padding-bottom:20px;">
+        <div class="hero status-hero">
             <img src="/logo.svg" alt="MySweetPea logo" class="logo" width="140" height="140">
+            <span class="eyebrow">Live monitoring</span>
             <h1 class="glass-text">Service Status</h1>
-            <p>Current availability of all MySweetPea services.</p>
+            <p>Real-time availability across every service we run.</p>
         </div>
         <section class="status-section" aria-labelledby="status-summary">
             <div class="status-summary status-all-online reveal" id="status-summary">
@@ -62,20 +66,6 @@
                     <div class="status-service">
                         <img src="/assets/icons/jellyfin.svg" alt="" width="28" height="28" loading="lazy">
                         <div><div class="status-name">Jellyfin / Moonfin</div><div class="status-desc">Media streaming</div></div>
-                    </div>
-                    <div class="status-badge status-online"><span class="status-dot"></span>Operational</div>
-                </div>
-                <div class="status-row reveal">
-                    <div class="status-service">
-                        <img src="/assets/icons/nextcloud.svg" alt="" width="28" height="28" loading="lazy">
-                        <div><div class="status-name">Nextcloud</div><div class="status-desc">Files & calendar</div></div>
-                    </div>
-                    <div class="status-badge status-online"><span class="status-dot"></span>Operational</div>
-                </div>
-                <div class="status-row reveal">
-                    <div class="status-service">
-                        <img src="/assets/icons/immich.svg" alt="" width="28" height="28" loading="lazy">
-                        <div><div class="status-name">Immich</div><div class="status-desc">Photo backup</div></div>
                     </div>
                     <div class="status-badge status-online"><span class="status-dot"></span>Operational</div>
                 </div>
@@ -109,13 +99,6 @@
                 </div>
                 <div class="status-row reveal">
                     <div class="status-service">
-                        <img src="/assets/icons/openwebui.svg" class="icon-dark-glyph" alt="" width="28" height="28" loading="lazy">
-                        <div><div class="status-name">Open WebUI</div><div class="status-desc">AI interface</div></div>
-                    </div>
-                    <div class="status-badge status-online"><span class="status-dot"></span>Operational</div>
-                </div>
-                <div class="status-row reveal">
-                    <div class="status-service">
                         <img src="/assets/icons/seerr.svg" alt="" width="28" height="28" loading="lazy">
                         <div><div class="status-name">Seerr</div><div class="status-desc">Media requests</div></div>
                     </div>
@@ -143,7 +126,31 @@
                     <div class="status-badge status-online"><span class="status-dot"></span>Operational</div>
                 </div>
             </div>
-            <p class="status-updated">Status data refreshes automatically. Powered by Prometheus &amp; Grafana monitoring.</p>
+            <h2 class="status-subhead reveal">Coming Soon</h2>
+            <div class="status-list status-list-soon">
+                <div class="status-row reveal">
+                    <div class="status-service">
+                        <img src="/assets/icons/nextcloud.svg" alt="" width="28" height="28" loading="lazy">
+                        <div><div class="status-name">Nextcloud</div><div class="status-desc">Files & calendar</div></div>
+                    </div>
+                    <div class="status-badge status-soon">Coming soon</div>
+                </div>
+                <div class="status-row reveal">
+                    <div class="status-service">
+                        <img src="/assets/icons/immich.svg" alt="" width="28" height="28" loading="lazy">
+                        <div><div class="status-name">Immich</div><div class="status-desc">Photo backup</div></div>
+                    </div>
+                    <div class="status-badge status-soon">Coming soon</div>
+                </div>
+                <div class="status-row reveal">
+                    <div class="status-service">
+                        <img src="/assets/icons/openwebui.svg" class="icon-dark-glyph" alt="" width="28" height="28" loading="lazy">
+                        <div><div class="status-name">Open WebUI</div><div class="status-desc">AI interface</div></div>
+                    </div>
+                    <div class="status-badge status-soon">Coming soon</div>
+                </div>
+            </div>
+            <p class="status-updated">Live monitoring integration coming soon — powered by Prometheus &amp; Grafana.</p>
         </section>
     </main>
     <a href="#" class="back-to-top" aria-label="Back to top" onclick="window.scrollTo({top:0,behavior:'smooth'});return false;">&#x2191;</a>
@@ -151,9 +158,12 @@
         <div class="footer-links">
             <a href="/index.html">Home</a>
             <a href="/pricing.html">Pricing</a>
+            <a href="/services.html">Services</a>
+            <a href="/status.html">Status</a>
             <a href="/support.html">Support</a>
             <a href="/about.html">About</a>
             <a href="/suggest.html">Suggest</a>
+            <a href="/form.html">Get Access</a>
         </div>
         <p>&copy; 2026 MySweetPea. Privacy-first, self-hosted, community funded.</p>
     </footer>
