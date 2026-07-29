@@ -3397,3 +3397,75 @@ body[data-page='about'] .github-link .desc { color: var(--text-dim); line-height
 
 /* Section titles everywhere get a touch more presence */
 .section-title { letter-spacing: -0.015em; }
+
+body[data-page='home'] .feature-card h3 {
+    background: linear-gradient(120deg, var(--text) 25%, var(--primary-bright) 45%, #F0F6F7 52%, var(--primary-bright) 60%, var(--text) 78%);
+    background-size: 240% auto;
+    -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;
+    animation: shimmer 9s linear infinite;
+}
+[data-theme="light"] body[data-page='home'] .feature-card h3 {
+    background: linear-gradient(120deg, #1B2B31 25%, #55818D 45%, #2A4750 52%, #55818D 60%, #1B2B31 78%);
+    background-size: 240% auto; -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;
+}
+
+/* ==========================================================================
+   v15: stronger pop text, modal readability, tier badge shimmer
+   ========================================================================== */
+
+/* Stronger, more visible sweep for pop-text (headings/prices/subtitles) */
+.pop-text, .highlight-text {
+    background: linear-gradient(115deg, var(--text) 30%, var(--primary-bright) 45%, #FFFFFF 50%, var(--primary-bright) 55%, var(--text) 70%);
+    background-size: 260% auto;
+    -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;
+    animation: shimmer 6s ease-in-out infinite;
+    font-weight: 700;
+}
+[data-theme="light"] .pop-text, [data-theme="light"] .highlight-text {
+    background: linear-gradient(115deg, #1B2B31 30%, #3E6B77 45%, #0E2B33 50%, #3E6B77 55%, #1B2B31 70%);
+    background-size: 260% auto; -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;
+}
+
+/* Price figures pop harder */
+body[data-page='pricing'] .price { font-weight: 800; letter-spacing: -0.01em; }
+body[data-page='pricing'] .price.pop-text { font-size: 2rem; }
+
+/* Tier tags (cards + modal header): shimmering pill instead of plain text */
+.tier-tag {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 3px 12px; border-radius: 999px;
+    font-size: 0.68rem; font-weight: 800; letter-spacing: 0.09em; text-transform: uppercase;
+    background: linear-gradient(135deg, rgba(143,175,181,0.16), rgba(197,213,216,0.07));
+    border: 1px solid rgba(197,213,216,0.22);
+    color: var(--primary-bright);
+}
+.tier-tag.tier-seedling, .tier-tag[data-tier="seedling"] { border-color: rgba(147,185,164,0.4); color: #A8CBB5; }
+.tier-tag.tier-sweetpea, .tier-tag[data-tier="sweetpea"] { border-color: rgba(197,213,216,0.4); color: #D6E6E8; }
+[data-theme="light"] .tier-tag { background: rgba(255,255,255,0.8); border-color: rgba(51,86,95,0.22); color: #2A4750; }
+
+/* Modal: much easier to read */
+body[data-page='services'] .modal { background: linear-gradient(160deg, #132026, #0D161A); border-color: var(--border-primary); }
+body[data-page='services'] .modal-header h2 { font-size: 1.45rem; letter-spacing: -0.01em; }
+body[data-page='services'] .modal-header { padding-bottom: 14px; border-bottom: 1px solid var(--border); margin-bottom: 18px; }
+body[data-page='services'] .modal-body p { font-size: 0.95rem; line-height: 1.75; color: var(--text); margin-bottom: 18px; }
+body[data-page='services'] .modal-tutorial { background: rgba(197,213,216,0.05); border: 1px solid var(--border-primary); padding: 22px; }
+body[data-page='services'] .modal-tutorial h3 {
+    font-size: 0.8rem; letter-spacing: 0.1em; text-transform: uppercase;
+    margin-bottom: 14px; font-weight: 800; color: var(--primary-bright);
+    display: flex; align-items: center; gap: 8px;
+}
+body[data-page='services'] .modal-tutorial ol { padding-left: 0; list-style: none; counter-reset: step; }
+body[data-page='services'] .modal-tutorial li {
+    counter-increment: step; font-size: 0.9rem; color: var(--text);
+    line-height: 1.65; margin-bottom: 12px; padding-left: 34px; position: relative;
+}
+body[data-page='services'] .modal-tutorial li::before {
+    content: counter(step); position: absolute; left: 0; top: 1px;
+    width: 22px; height: 22px; border-radius: 50%;
+    display: grid; place-items: center;
+    font-size: 0.7rem; font-weight: 800; color: var(--bg);
+    background: linear-gradient(135deg, var(--primary-bright), var(--primary-dim));
+}
+body[data-page='services'] .modal-tutorial a { color: var(--primary-bright); font-weight: 600; border-bottom: 1px dashed var(--primary-dim); }
+[data-theme="light"] body[data-page='services'] .modal { background: linear-gradient(160deg, #FFFFFF, #F0F6F7); }
+[data-theme="light"] body[data-page='services'] .modal-tutorial { background: rgba(255,255,255,0.7); }
