@@ -197,10 +197,11 @@
         ctx.rotate(petal.rotation);
         ctx.globalAlpha = petal.opacity;
 
+        var light = document.documentElement.getAttribute('data-theme') === 'light';
         var gradient = ctx.createRadialGradient(0, 0, 0, 0, 0, petal.size);
-        gradient.addColorStop(0, '#EEF2F3');
-        gradient.addColorStop(0.5, '#C5D5D8');
-        gradient.addColorStop(1, 'rgba(143, 175, 181, 0.25)');
+        gradient.addColorStop(0, light ? '#7A9BA4' : '#EEF2F3');
+        gradient.addColorStop(0.5, light ? '#5B828D' : '#C5D5D8');
+        gradient.addColorStop(1, light ? 'rgba(51, 86, 95, 0.22)' : 'rgba(143, 175, 181, 0.25)');
         ctx.fillStyle = gradient;
 
         ctx.beginPath();
@@ -381,9 +382,7 @@
         { label: 'AFFiNE — Notes', url: '/pricing.html', kind: 'service', icon: '/assets/icons/affine.svg' },
         { label: 'Syncthing — Sync', url: '/pricing.html', kind: 'service', icon: '/assets/icons/syncthing.svg' },
         { label: 'Open WebUI — AI', url: '/pricing.html', kind: 'service', icon: '/assets/icons/openwebui.svg' },
-        { label: 'Seerr — Requests', url: '/pricing.html', kind: 'service', icon: '/assets/icons/seerr.svg' },
-        { label: 'Grafana — Dashboards', url: '/pricing.html', kind: 'service', icon: '/assets/icons/grafana.svg' },
-        { label: 'Prometheus — Metrics', url: '/pricing.html', kind: 'service', icon: '/assets/icons/prometheus.svg' }
+        { label: 'Seerr — Requests', url: '/pricing.html', kind: 'service', icon: '/assets/icons/seerr.svg' }
     ];
 
     var backdrop = document.createElement('div');
@@ -407,8 +406,7 @@
             return;
         }
         cmdkList.innerHTML = cmdkFiltered.map(function (item, i) {
-            var darkGlyph = /vaultwarden|matrix|openwebui/.test(item.icon || '');
-            var icon = item.icon ? '<img src="' + item.icon + '"' + (darkGlyph ? ' class="icon-dark-glyph"' : '') + ' alt="" loading="lazy">' : '';
+            var icon = item.icon ? '<img src="' + item.icon + '" alt="" loading="lazy">' : '';
             return '<a class="cmdk-item' + (i === cmdkActive ? ' active' : '') + '" href="' + item.url + '" role="option" data-i="' + i + '">' +
                 icon + '<span>' + item.label + '</span><span class="cmdk-kind">' + item.kind + '</span></a>';
         }).join('');
