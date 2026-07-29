@@ -204,9 +204,13 @@
         // Tab Switching
         function switchTab(tab) {
             document.querySelectorAll('.tab-btn').forEach(function(b) { b.classList.remove('active'); });
-            document.querySelectorAll('.tab-content').forEach(function(c) { c.classList.remove('active'); });
+            var panels = document.querySelectorAll('.tab-content');
+            panels.forEach(function(c) { c.classList.remove('active', 'switch-left'); });
             document.querySelector('.tab-' + tab).classList.add('active');
-            document.getElementById('tab-' + tab).classList.add('active');
+            var panel = document.getElementById('tab-' + tab);
+            if (tab === 'get-access') panel.classList.add('switch-left');
+            void panel.offsetWidth;
+            panel.classList.add('active');
         }
 
         // Wallet
@@ -214,8 +218,17 @@
         var currentCrypto = 'monero';
         function selectCrypto(el, type) {
             document.querySelectorAll('.crypto-option').forEach(function(o) { o.classList.remove('selected'); });
-            el.classList.add('selected'); currentCrypto = type;
-            document.getElementById('wallet-addr').textContent = WALLETS[type];
+            void el.offsetWidth; el.classList.add('selected'); currentCrypto = type;
+            var wa = document.getElementById('wallet-addr');
+            var wd = document.getElementById('wallet-display');
+            wa.classList.remove('addr-swap'); wa.classList.add('addr-out');
+            if (wd) { wd.classList.remove('wallet-pulse'); void wd.offsetWidth; wd.classList.add('wallet-pulse'); }
+            setTimeout(function() {
+                wa.textContent = WALLETS[type];
+                wa.classList.remove('addr-out');
+                void wa.offsetWidth;
+                wa.classList.add('addr-swap');
+            }, 180);
         }
         function copyWallet() {
             var addr = document.getElementById('wallet-addr').textContent;
