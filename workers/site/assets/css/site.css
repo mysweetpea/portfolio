@@ -3712,3 +3712,21 @@ body[data-page='pricing'] .how-faq .faq-item { margin-bottom: 0; }
 body[data-page='pricing'] .how-it-works-section { max-width: 780px; margin: 0 auto 44px; }
 body[data-page='pricing'] .how-it-works-section .eyebrow { display: block; text-align: center; margin-bottom: 8px; }
 body[data-page='pricing'] .how-it-works-copy .pop-text { font-weight: 700; }
+
+/* v26: About page prose uses the same signature text sheen */
+body[data-page='about'] .content-section .card > p,
+body[data-page='about'] .content-section .card > ul > li,
+body[data-page='about'] .content-section .card .desc {
+    background: linear-gradient(115deg, var(--text) 30%, var(--primary-bright) 45%, #FFFFFF 50%, var(--primary-bright) 55%, var(--text) 70%);
+    background-size: 260% auto;
+    -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;
+    animation: shimmer 9s ease-in-out infinite;
+}
+body[data-page='about'] .content-section .card > p:nth-of-type(2),
+body[data-page='about'] .content-section .card > ul > li:nth-child(even) { animation-delay: -3s; }
+[data-theme="light"] body[data-page='about'] .content-section .card > p,
+[data-theme="light"] body[data-page='about'] .content-section .card > ul > li,
+[data-theme="light"] body[data-page='about'] .content-section .card .desc {
+    background: linear-gradient(115deg, #1B2B31 30%, #3E6B77 45%, #0E2B33 50%, #3E6B77 55%, #1B2B31 70%);
+    background-size: 260% auto; -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;
+}
