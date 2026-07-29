@@ -45,7 +45,7 @@
             <details class="nav-more">
                 <summary aria-label="More pages">More</summary>
                 <div class="nav-more-menu">
-                    <a href="/support.html">Support</a>
+                    <a href="/support.html">Donate</a>
                     <a href="/suggest.html">Suggest a Service</a>
                 </div>
             </details>
@@ -142,9 +142,9 @@
 
                     <div class="form-group">
                         <label class="form-label glass-text" for="hc-code">Invite Code</label>
-                        <input type="text" class="form-input" id="hc-code" aria-describedby="hc-code-hint" aria-invalid="false" placeholder="PEA-XXXXXXXX or FAM-XXXXXXXX" oninput="validateField('hc-code', 'invitecode')">
+                        <input type="text" class="form-input" id="hc-code" aria-describedby="hc-code-hint" aria-invalid="false" placeholder="PEA-7KJXU2YK or FAM-9YG7JQ5T" autocomplete="off" autocapitalize="characters" spellcheck="false" pattern="(?:PEA|FAM)-[A-Za-z0-9]{8}" oninput="this.value = this.value.toUpperCase().replace(/\s/g, ''); validateField('hc-code', 'invitecode')">
                         <span class="validation-icon" id="hc-code-icon"></span>
-                        <div class="form-hint" id="hc-code-hint" aria-live="polite">Checking invite code...</div>
+                        <div class="form-hint" id="hc-code-hint" aria-live="polite">Enter a code like PEA-7KJXU2YK or FAM-9YG7JQ5T.</div>
                     </div>
 
                     <div class="form-group">
@@ -195,7 +195,7 @@
 <div class="faq-answer" id="form-faq-a-6" role="region" aria-labelledby="form-faq-q-6"><p>No. A single donation grants lifetime access. There are no recurring fees or billing cycles.</p></div></div>
             <div class="faq-item">
 <button class="faq-question" type="button" id="form-faq-q-7" aria-expanded="false" aria-controls="form-faq-a-7" onclick="toggleFAQ(this)">How do I get Sweet Pea tier? <span class="arrow"><img src="/assets/icons/icon-ui-chevron-down.svg" class="" alt="" width="16" height="16" loading="lazy" decoding="async" aria-hidden="true"></span></button>
-<div class="faq-answer" id="form-faq-a-7" role="region" aria-labelledby="form-faq-q-7"><p>Sweet Pea tier is limited due to resource constraints. Contact support@mysweetpea.cc to inquire about availability and pricing.</p></div></div>
+<div class="faq-answer" id="form-faq-a-7" role="region" aria-labelledby="form-faq-q-7"><p>Sweet Pea Full Access is limited because media and storage services need more resources. Email support@mysweetpea.cc to request it; we will explain availability and next steps.</p></div></div>
             <div class="faq-item">
 <button class="faq-question" type="button" id="form-faq-q-8" aria-expanded="false" aria-controls="form-faq-a-8" onclick="toggleFAQ(this)">Can I get a refund? <span class="arrow"><img src="/assets/icons/icon-ui-chevron-down.svg" class="" alt="" width="16" height="16" loading="lazy" decoding="async" aria-hidden="true"></span></button>
 <div class="faq-answer" id="form-faq-a-8" role="region" aria-labelledby="form-faq-q-8"><p>Crypto donations are irreversible. If you have a genuine issue, contact support@mysweetpea.cc.</p></div></div>
@@ -206,15 +206,15 @@
     <footer class="page-footer">
         <div class="footer-links">
             <a href="/index.html">Home</a>
-            <a href="/pricing.html">Pricing</a>
+            <a href="/pricing.html">How It Works</a>
             <a href="/services.html">Services</a>
             <a href="/status.html">Status</a>
-            <a href="/support.html">Support</a>
+            <a href="/support.html">Donate</a>
             <a href="/about.html">About</a>
             <a href="/suggest.html">Suggest</a>
             <a href="/form.html">Get Access</a>
         </div>
-        <p>&copy; 2026 MySweetPea. Privacy-first, self-hosted, community funded.</p>
+        <p>&copy; 2026 MySweetPea. Privacy-first, self-hosted, community funded.</p><p class="footer-help">Need help? <a href="mailto:support@mysweetpea.cc">support@mysweetpea.cc</a></p>
     </footer>
     <script src="/assets/js/site.js" defer></script>
     <script>
