@@ -1,1 +1,33 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><defs><linearGradient id="g" x1="10" y1="6" x2="54" y2="58" gradientUnits="userSpaceOnUse"><stop stop-color="#DCEBEC"/><stop offset=".5" stop-color="#93B6BC"/><stop offset="1" stop-color="#58828D"/></linearGradient></defs><g fill="url(#g)"><ellipse cx="32" cy="17" rx="7" ry="10"/><ellipse cx="47" cy="27" rx="7" ry="10" transform="rotate(72 47 27)"/><ellipse cx="41" cy="45" rx="7" ry="10" transform="rotate(144 41 45)"/><ellipse cx="23" cy="45" rx="7" ry="10" transform="rotate(216 23 45)"/><ellipse cx="17" cy="27" rx="7" ry="10" transform="rotate(288 17 27)"/></g><circle cx="32" cy="32" r="6" fill="#EAF4F5"/><circle cx="32" cy="32" r="6" fill="none" stroke="url(#g)" stroke-width="2"/></svg>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Blossom">
+  <defs>
+    <radialGradient id="petal" cx="50%" cy="36%" r="74%">
+      <stop offset="0%" stop-color="#F3FAFA"/>
+      <stop offset="38%" stop-color="#C9DDE0"/>
+      <stop offset="68%" stop-color="#8FAFB5"/>
+      <stop offset="100%" stop-color="#5C8791"/>
+    </radialGradient>
+    <linearGradient id="stem" x1="32" y1="34" x2="32" y2="58" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#9FBBB1"/><stop offset="1" stop-color="#5E8475"/>
+    </linearGradient>
+    <filter id="glow" x="-35%" y="-35%" width="170%" height="170%">
+      <feGaussianBlur stdDeviation="1.4" result="b"/>
+      <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+  </defs>
+  <path d="M32 40c-1 7-1 12 0 18" stroke="url(#stem)" stroke-width="2.4" stroke-linecap="round" fill="none" opacity=".65"/>
+  <path d="M31 52c-5-2-9-6-11-11M33 49c4-1 7-4 9-8" stroke="url(#stem)" stroke-width="2" stroke-linecap="round" fill="none" opacity=".48"/>
+  <g filter="url(#glow)">
+    <ellipse cx="32" cy="16" rx="7.5" ry="11" fill="url(#petal)"/>
+    <ellipse cx="46" cy="25" rx="7.5" ry="11" fill="url(#petal)" transform="rotate(72 46 25)"/>
+    <ellipse cx="41" cy="43" rx="7.5" ry="11" fill="url(#petal)" transform="rotate(144 41 43)"/>
+    <ellipse cx="23" cy="43" rx="7.5" ry="11" fill="url(#petal)" transform="rotate(216 23 43)"/>
+    <ellipse cx="18" cy="25" rx="7.5" ry="11" fill="url(#petal)" transform="rotate(288 18 25)"/>
+  </g>
+  <g stroke="#F7FCFC" stroke-width="1.1" stroke-linecap="round" opacity=".62">
+    <path d="M32 18v8M44 27l-6 4M39 41l-4-5M25 41l4-5M20 27l6 4"/>
+  </g>
+  <circle cx="32" cy="32" r="6.2" fill="#EDF6F7"/>
+  <circle cx="32" cy="32" r="6.2" fill="none" stroke="url(#petal)" stroke-width="2"/>
+  <circle cx="32" cy="32" r="2" fill="#8FAFB5"/>
+  <circle cx="28.5" cy="28.5" r="1" fill="#F7FCFC" opacity=".9"/>
+</svg>
