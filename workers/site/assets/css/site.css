@@ -3795,3 +3795,40 @@ body[data-page='about'] .content-section .card > ul > li:nth-child(even) { anima
     [data-theme="light"] .nav-links { background: rgba(255,255,255,0.94); box-shadow: 0 16px 34px rgba(27,43,49,0.14); }
     [data-theme="light"] .nav-btn, [data-theme="light"] .nav-more > summary { background: rgba(255,255,255,0.72); border-color: rgba(51,86,95,0.15); }
 }
+
+/* v29: shared layout rhythm and concise status summary */
+:root {
+    --container: 72rem;
+    --container-narrow: 46rem;
+    --space-section: clamp(4.5rem, 9vw, 8rem);
+    --space-section-tight: clamp(2.5rem, 5vw, 4rem);
+    --gutter: clamp(1rem, 3vw, 2rem);
+}
+.site-container {
+    width: min(calc(100% - (var(--gutter) * 2)), var(--container));
+    margin-inline: auto;
+}
+.site-container--narrow {
+    width: min(calc(100% - (var(--gutter) * 2)), var(--container-narrow));
+    margin-inline: auto;
+}
+.section-space { padding-block: var(--space-section); }
+.section-space--tight { padding-block: var(--space-section-tight); }
+
+body[data-page='status'] .status-summary {
+    max-width: 760px; margin: 0 auto 30px; min-height: 64px;
+    display: flex; align-items: center; gap: 12px; padding: 12px 17px;
+    text-align: left; border-radius: 13px;
+}
+body[data-page='status'] .status-summary > span:nth-child(2) { display: grid; gap: 2px; }
+body[data-page='status'] .status-summary strong { font-size: 0.94rem; letter-spacing: 0.01em; }
+body[data-page='status'] .status-summary small { color: var(--text-dim); font-size: 0.76rem; }
+body[data-page='status'] .status-summary time {
+    margin-left: auto; color: var(--text-dim); font-size: 0.77rem; white-space: nowrap;
+    padding-left: 14px; border-left: 1px solid var(--border);
+}
+body[data-page='status'] .status-updated { font-size: 0.8rem; color: var(--text-faint); }
+@media (max-width: 560px) {
+    body[data-page='status'] .status-summary { align-items: flex-start; min-height: 0; }
+    body[data-page='status'] .status-summary time { margin: 3px 0 0 auto; padding-left: 10px; font-size: 0.7rem; }
+}
