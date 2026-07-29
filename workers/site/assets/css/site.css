@@ -3683,3 +3683,10 @@ button.faq-question { width: 100%; border: 0; background: transparent; font-fami
     .nav-more-menu { position: static; transform: none; min-width: 0; margin: 4px 0 0; opacity: 1; visibility: visible; display: none; box-shadow: none; }
     .nav-more[open] .nav-more-menu { display: grid; transform: none; }
 }
+
+
+/* v23: How It Works explanation precedes access options */
+body[data-page='pricing'] .faq-section { max-width: 760px; margin: 0 auto 42px; }
+body[data-page='pricing'] .how-it-works-intro { max-width: 620px; margin: 0 auto 24px; text-align: center; line-height: 1.65; color: var(--text-dim); }
+body[data-page='pricing'] .faq-section .eyebrow { display: block; text-align: center; margin-bottom: 8px; }
+body[data-page='pricing'] .pricing-section { margin-top: 0; }
