@@ -407,7 +407,8 @@
             return;
         }
         cmdkList.innerHTML = cmdkFiltered.map(function (item, i) {
-            var icon = item.icon ? '<img src="' + item.icon + '" alt="" loading="lazy">' : '';
+            var darkGlyph = /vaultwarden|matrix|openwebui/.test(item.icon || '');
+            var icon = item.icon ? '<img src="' + item.icon + '"' + (darkGlyph ? ' class="icon-dark-glyph"' : '') + ' alt="" loading="lazy">' : '';
             return '<a class="cmdk-item' + (i === cmdkActive ? ' active' : '') + '" href="' + item.url + '" role="option" data-i="' + i + '">' +
                 icon + '<span>' + item.label + '</span><span class="cmdk-kind">' + item.kind + '</span></a>';
         }).join('');
@@ -443,6 +444,12 @@
         cmdkFiltered = CMDK_ITEMS.filter(function (item) { return item.label.toLowerCase().indexOf(q) !== -1; });
         cmdkActive = 0;
         cmdkRender();
+    });
+
+
+    /* === Search trigger buttons open the palette === */
+    document.querySelectorAll('.nav-search').forEach(function (btn) {
+        btn.addEventListener('click', cmdkOpen);
     });
 
     backdrop.addEventListener('click', function (e) {
