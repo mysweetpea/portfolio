@@ -949,9 +949,9 @@ justify-content: center } body[data-page='home'] .features-section, body[data-pa
     }
 /* Hero */
 body[data-page='pricing'] .hero { text-align: center;
-padding: 120px 24px 30px }
-body[data-page='pricing'] .hero img.logo { width: 180px;
-height: 180px;
+padding: 120px 24px 20px }
+body[data-page='pricing'] .hero img.logo { width: 160px;
+height: 160px;
 margin-bottom: 16px;
 filter: drop-shadow(0 8px 24px rgba(197, 213, 216, 0.12));
 animation: float3D 7s ease-in-out infinite }
@@ -2128,9 +2128,9 @@ body[data-page='pricing'] .pricing-card.tier-seedling { animation-duration: 8s; 
 
 /* ===== Services page (inherits pricing page layout styles) ===== */
 body[data-page='services'] .hero { text-align: center;
-padding: 120px 24px 30px }
-body[data-page='services'] .hero img.logo { width: 180px;
-height: 180px;
+padding: 120px 24px 20px }
+body[data-page='services'] .hero img.logo { width: 160px;
+height: 160px;
 margin-bottom: 16px;
 filter: drop-shadow(0 8px 24px rgba(197, 213, 216, 0.12));
 animation: float3D 7s ease-in-out infinite }
@@ -2650,9 +2650,9 @@ height: 120px } body[data-page='services'] .pricing-grid { grid-template-columns
 
 /* ===== Services page (inherits pricing page layout styles) ===== */
 body[data-page='services'] .hero { text-align: center;
-padding: 120px 24px 30px }
-body[data-page='services'] .hero img.logo { width: 180px;
-height: 180px;
+padding: 120px 24px 20px }
+body[data-page='services'] .hero img.logo { width: 160px;
+height: 160px;
 margin-bottom: 16px;
 filter: drop-shadow(0 8px 24px rgba(197, 213, 216, 0.12));
 animation: float3D 7s ease-in-out infinite }
@@ -3095,7 +3095,8 @@ body[data-page='status'] .hero.status-hero {
     min-height: auto;
     display: flex; flex-direction: column; align-items: center; justify-content: center;
 }
-body[data-page='status'] .hero.status-hero img.logo { width: 140px; height: 140px; margin-bottom: 14px; }
+body[data-page='status'] .hero.status-hero img.logo { width: 160px; height: 160px; margin-bottom: 16px; }
+body[data-page='status'] .hero.status-hero h1 { font-size: 2.4rem; font-weight: 700; margin-bottom: 8px; }
 
 /* === Light mode rework: warm muted surface, readable text, visible petals === */
 [data-theme="light"] {
@@ -3222,3 +3223,37 @@ body[data-page='about'] .github-icon { color: var(--text); display: flex; align-
         transition: none;
     }
 }
+
+/* ==========================================================================
+   v8: status grouping, hero consistency, koalasync icon sizing
+   ========================================================================== */
+
+/* Status group separation */
+.status-subhead {
+    margin: 0 0 14px;
+    display: flex; align-items: center; gap: 12px;
+    font-size: 0.78rem; font-weight: 700;
+    letter-spacing: 0.12em; text-transform: uppercase;
+    color: var(--sage);
+}
+.status-subhead-first { margin-top: 8px; }
+.status-divider {
+    margin: 40px 0 28px;
+    display: flex; align-items: center;
+}
+.status-divider span {
+    flex: 1; height: 1px;
+    background: linear-gradient(90deg, transparent, var(--border-primary), transparent);
+}
+.status-list-soon { margin-bottom: 8px; }
+
+/* Status rows: consistent icon well so no icon looks like it floats */
+.status-service img {
+    width: 28px; height: 28px; object-fit: contain;
+    padding: 5px; box-sizing: content-box;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    flex-shrink: 0;
+}
+[data-theme="light"] .status-service img { background: rgba(255, 255, 255, 0.75); }
