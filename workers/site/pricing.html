@@ -61,37 +61,34 @@
             <p class="hero-sub pop-text">Private services for a community-funded digital home.</p>
         </div>
 
-        <div class="faq-section">
-                    <span class="eyebrow">Community access</span>
-            <h2 class="section-title glass-text reveal">How It Works</h2>
-            <p class="how-it-works-intro reveal">Start here for the essentials: how access is requested, why there is a minimum contribution, and what to expect next.</p>
-            <div class="reveal reveal-delay-1">
-                <div class="faq-item">
-<button class="faq-question" type="button" id="pricing-faq-q-1" aria-expanded="false" aria-controls="pricing-faq-a-1" onclick="toggleFAQ(this)">Why do you require a donation before access? <span class="arrow"><img src="/assets/icons/icon-ui-chevron-down.svg" class="" alt="" width="16" height="16" loading="lazy" decoding="async" aria-hidden="true"></span></button>
-<div class="faq-answer" id="pricing-faq-a-1" role="region" aria-labelledby="pricing-faq-q-1"><p>The donation requirement helps prevent abuse and spam. Without it, anyone could create unlimited accounts, overload the server, and ruin the experience for everyone. A small contribution ensures that users are genuine and invested in the community.</p></div></div>
-                <div class="faq-item">
-<button class="faq-question" type="button" id="pricing-faq-q-2" aria-expanded="false" aria-controls="pricing-faq-a-2" onclick="toggleFAQ(this)">Why do you need donations? <span class="arrow"><img src="/assets/icons/icon-ui-chevron-down.svg" class="" alt="" width="16" height="16" loading="lazy" decoding="async" aria-hidden="true"></span></button>
-<div class="faq-answer" id="pricing-faq-a-2" role="region" aria-labelledby="pricing-faq-q-2"><p>Running these services costs money — server hardware, electricity, internet bandwidth, and domain registration. Donations help cover these costs and fund future improvements and new services. We do not run ads or sell your data.</p></div></div>
-                <div class="faq-item">
-<button class="faq-question" type="button" id="pricing-faq-q-3" aria-expanded="false" aria-controls="pricing-faq-a-3" onclick="toggleFAQ(this)">Why don't you accept credit cards? <span class="arrow"><img src="/assets/icons/icon-ui-chevron-down.svg" class="" alt="" width="16" height="16" loading="lazy" decoding="async" aria-hidden="true"></span></button>
-<div class="faq-answer" id="pricing-faq-a-3" role="region" aria-labelledby="pricing-faq-q-3"><p>We prioritize privacy. Credit card payments require sharing your personal and financial information with payment processors, which creates a paper trail linking your identity to our services. Cryptocurrency donations (Monero and Bitcoin) allow us to maintain a privacy-first approach with no KYC requirements, no chargebacks, and no third-party data collection. This aligns with our core values of self-hosting and data sovereignty.</p></div></div>
-                <div class="faq-item">
-<button class="faq-question" type="button" id="pricing-faq-q-4" aria-expanded="false" aria-controls="pricing-faq-a-4" onclick="toggleFAQ(this)">How does community access work? <span class="arrow"><img src="/assets/icons/icon-ui-chevron-down.svg" class="" alt="" width="16" height="16" loading="lazy" decoding="async" aria-hidden="true"></span></button>
-<div class="faq-answer" id="pricing-faq-a-4" role="region" aria-labelledby="pricing-faq-q-4"><p>We accept Monero (XMR) and Bitcoin (BTC). Visit the donation form to see our wallet addresses.</p></div></div>
-                <div class="faq-item">
-<button class="faq-question" type="button" id="pricing-faq-q-5" aria-expanded="false" aria-controls="pricing-faq-a-5" onclick="toggleFAQ(this)">What happens after I donate $5? <span class="arrow"><img src="/assets/icons/icon-ui-chevron-down.svg" class="" alt="" width="16" height="16" loading="lazy" decoding="async" aria-hidden="true"></span></button>
-<div class="faq-answer" id="pricing-faq-a-5" role="region" aria-labelledby="pricing-faq-q-5"><p>Fill out the donation form with your details and transaction hash. We verify your donation and email you an invite code. Use the code to create your account.</p></div></div>
-                <div class="faq-item">
-<button class="faq-question" type="button" id="pricing-faq-q-6" aria-expanded="false" aria-controls="pricing-faq-a-6" onclick="toggleFAQ(this)">Is this a subscription? <span class="arrow"><img src="/assets/icons/icon-ui-chevron-down.svg" class="" alt="" width="16" height="16" loading="lazy" decoding="async" aria-hidden="true"></span></button>
-<div class="faq-answer" id="pricing-faq-a-6" role="region" aria-labelledby="pricing-faq-q-6"><p>No. A single donation grants lifetime access. There are no recurring fees or billing cycles.</p></div></div>
-                <div class="faq-item">
-<button class="faq-question" type="button" id="pricing-faq-q-7" aria-expanded="false" aria-controls="pricing-faq-a-7" onclick="toggleFAQ(this)">How do I get Sweet Pea tier? <span class="arrow"><img src="/assets/icons/icon-ui-chevron-down.svg" class="" alt="" width="16" height="16" loading="lazy" decoding="async" aria-hidden="true"></span></button>
-<div class="faq-answer" id="pricing-faq-a-7" role="region" aria-labelledby="pricing-faq-q-7"><p>Sweet Pea tier is limited due to resource constraints. Contact support@mysweetpea.cc to inquire about availability and pricing.</p></div></div>
-                <div class="faq-item">
-<button class="faq-question" type="button" id="pricing-faq-q-8" aria-expanded="false" aria-controls="pricing-faq-a-8" onclick="toggleFAQ(this)">Can I get a refund? <span class="arrow"><img src="/assets/icons/icon-ui-chevron-down.svg" class="" alt="" width="16" height="16" loading="lazy" decoding="async" aria-hidden="true"></span></button>
-<div class="faq-answer" id="pricing-faq-a-8" role="region" aria-labelledby="pricing-faq-q-8"><p>Crypto donations are irreversible. If you have a genuine issue, contact support@mysweetpea.cc.</p></div></div>
+        <section class="faq-section how-it-works-section" aria-labelledby="how-it-works-title">
+            <span class="eyebrow">Community access</span>
+            <h2 class="section-title glass-text reveal" id="how-it-works-title">How It Works</h2>
+            <div class="how-it-works-copy reveal">
+                <p>MySweetPea provides privacy-first services that are hosted on our own hardware. To keep access simple and secure, the services sit behind <strong>Authentik</strong>, our single sign-on (SSO) system.</p>
+                <p>That means you create <strong>one Authentik account</strong> and use it to sign in to the self-hosted services included with your access tier. There is no need to manage a separate account for every service.</p>
+                <p>To create an Authentik account, you first need a <strong>redemption code</strong>. Choose a community access tier below, submit your access request, and—after your contribution is verified—we will send you a code to redeem. Then you can create your account and start using your included services.</p>
             </div>
-        </div>
+            <p class="how-it-works-prompt reveal">Want the quick answers? Open any question below.</p>
+            <div class="how-faq reveal reveal-delay-1">
+                <div class="faq-item">
+                    <button class="faq-question" type="button" id="pricing-faq-q-1" aria-expanded="false" aria-controls="pricing-faq-a-1" onclick="toggleFAQ(this)">Why do I need an Authentik account?<span class="arrow"><img src="/assets/icons/icon-ui-chevron-down.svg" alt="" width="16" height="16" loading="lazy" decoding="async" aria-hidden="true"></span></button>
+                    <div class="faq-answer" id="pricing-faq-a-1" role="region" aria-labelledby="pricing-faq-q-1"><p>Authentik is MySweetPea’s single sign-on (SSO) service. One Authentik account securely signs you into the self-hosted services included with your access tier, so you do not need a separate account and password for every service.</p></div>
+                </div>
+                <div class="faq-item">
+                    <button class="faq-question" type="button" id="pricing-faq-q-2" aria-expanded="false" aria-controls="pricing-faq-a-2" onclick="toggleFAQ(this)">How do I receive a redemption code?<span class="arrow"><img src="/assets/icons/icon-ui-chevron-down.svg" alt="" width="16" height="16" loading="lazy" decoding="async" aria-hidden="true"></span></button>
+                    <div class="faq-answer" id="pricing-faq-a-2" role="region" aria-labelledby="pricing-faq-q-2"><p>Choose one of the community access tiers below and submit an access request with your contribution details. After it is verified, you will receive a redemption code. Use that code to create your Authentik account.</p></div>
+                </div>
+                <div class="faq-item">
+                    <button class="faq-question" type="button" id="pricing-faq-q-3" aria-expanded="false" aria-controls="pricing-faq-a-3" onclick="toggleFAQ(this)">What happens after I create my account?<span class="arrow"><img src="/assets/icons/icon-ui-chevron-down.svg" alt="" width="16" height="16" loading="lazy" decoding="async" aria-hidden="true"></span></button>
+                    <div class="faq-answer" id="pricing-faq-a-3" role="region" aria-labelledby="pricing-faq-q-3"><p>Sign in through Authentik, then open any service included with your tier. Authentik recognizes your account and gives you access without asking you to register again for each service.</p></div>
+                </div>
+                <div class="faq-item">
+                    <button class="faq-question" type="button" id="pricing-faq-q-4" aria-expanded="false" aria-controls="pricing-faq-a-4" onclick="toggleFAQ(this)">Why is there a $5 minimum contribution?<span class="arrow"><img src="/assets/icons/icon-ui-chevron-down.svg" alt="" width="16" height="16" loading="lazy" decoding="async" aria-hidden="true"></span></button>
+                    <div class="faq-answer" id="pricing-faq-a-4" role="region" aria-labelledby="pricing-faq-q-4"><p>The minimum helps protect limited community capacity from spam and abuse while contributing to the hardware, electricity, bandwidth, and maintenance required to run these services. It is a one-time community contribution, not a subscription.</p></div>
+                </div>
+            </div>
+        </section>
 
         <div class="pricing-section">
             <div class="info-box reveal">
