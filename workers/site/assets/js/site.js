@@ -199,9 +199,9 @@
 
         var light = document.documentElement.getAttribute('data-theme') === 'light';
         var gradient = ctx.createRadialGradient(0, 0, 0, 0, 0, petal.size);
-        gradient.addColorStop(0, light ? '#7A9BA4' : '#EEF2F3');
-        gradient.addColorStop(0.5, light ? '#5B828D' : '#C5D5D8');
-        gradient.addColorStop(1, light ? 'rgba(51, 86, 95, 0.22)' : 'rgba(143, 175, 181, 0.25)');
+        gradient.addColorStop(0, light ? '#7EAD93' : '#C4E1CC');
+        gradient.addColorStop(0.5, light ? '#5D8D72' : '#A3C9B6');
+        gradient.addColorStop(1, light ? 'rgba(64, 105, 81, 0.24)' : 'rgba(93, 122, 110, 0.28)');
         ctx.fillStyle = gradient;
 
         ctx.beginPath();
