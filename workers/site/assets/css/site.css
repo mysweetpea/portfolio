@@ -3340,3 +3340,21 @@ body[data-page='status'] .status-list-soon { opacity: 0.78; }
 .validation-icon img { width: 18px; height: 18px; }
 .faq-question .arrow img { transition: transform 0.35s var(--ease-premium); }
 .faq-item.open .arrow img { transform: rotate(180deg); }
+
+/* v13: center custom tier icons and correct theme toggle visibility */
+body[data-page='pricing'] .tier-emoji-3d {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    width: 100% !important;
+    margin: 0 auto 14px !important;
+}
+body[data-page='pricing'] .tier-emoji-3d .tier-icon {
+    width: 58px !important; height: 58px !important; margin: 0 !important;
+}
+
+/* Only show the icon matching the active theme */
+.theme-toggle .icon-sun { display: none !important; }
+[data-theme="light"] .theme-toggle .icon-sun { display: inline-flex !important; }
+[data-theme="light"] .theme-toggle .icon-moon { display: none !important; }
+.theme-toggle .icon-moon { display: inline-flex !important; }
