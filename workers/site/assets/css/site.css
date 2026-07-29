@@ -3639,3 +3639,7 @@ body[data-page='home'] .hero p.hero-sub {
 @media (max-width: 640px) {
     body[data-page] .hero p.hero-sub, body[data-page='home'] .hero p.hero-sub { font-size: 0.95rem !important; }
 }
+
+/* v19: breathing room between hero subtitle and CTA buttons on home */
+body[data-page='home'] .hero p.hero-sub { margin-bottom: 34px; }
+body[data-page='home'] .hero .hero-buttons { margin-top: 8px; }
