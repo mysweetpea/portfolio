@@ -3706,3 +3706,9 @@ body[data-page='pricing'] .how-it-works-prompt { text-align: center; color: var(
 body[data-page='pricing'] .how-faq { display: grid; gap: 9px; }
 body[data-page='pricing'] .how-faq .faq-item { margin-bottom: 0; }
 @media (max-width: 640px) { body[data-page='pricing'] .how-it-works-copy { padding: 19px 18px; } }
+
+
+/* v25: concise Authentik access explanation */
+body[data-page='pricing'] .how-it-works-section { max-width: 780px; margin: 0 auto 44px; }
+body[data-page='pricing'] .how-it-works-section .eyebrow { display: block; text-align: center; margin-bottom: 8px; }
+body[data-page='pricing'] .how-it-works-copy .pop-text { font-weight: 700; }
