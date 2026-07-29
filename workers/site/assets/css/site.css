@@ -3321,3 +3321,22 @@ body[data-page='status'] .status-list-soon { opacity: 0.78; }
     body[data-page='status'] .status-desc { font-size: 0.78rem; }
     body[data-page='status'] .status-badge { font-size: 0.7rem; margin-left: 10px; }
 }
+
+/* ==========================================================================
+   v12: custom SVG replacement for all former emoji glyphs
+   ========================================================================== */
+.icon-moon img, .icon-sun img, .back-to-top img, .arrow img, .tab-icon,
+.tier-icon, .heart img, .success-icon img, .error-icon img,
+.success-msg .icon img, .crypto-option .icon img, .validation-icon img,
+.tier-divider .label .icon img { display: block; object-fit: contain; }
+.theme-toggle .icon-moon, .theme-toggle .icon-sun { display: inline-flex; align-items: center; justify-content: center; }
+.back-to-top { display: inline-flex; align-items: center; justify-content: center; }
+.arrow { display: inline-flex; align-items: center; justify-content: center; }
+.tab-icon { vertical-align: -4px; margin-right: 5px; }
+.tier-emoji-3d { display: flex; justify-content: center; align-items: center; }
+.tier-emoji-3d .tier-icon { width: 56px; height: 56px; }
+.tier-divider .label .icon { display: inline-flex; vertical-align: middle; margin-right: 6px; }
+.crypto-option .icon { display: flex; align-items: center; justify-content: center; }
+.validation-icon img { width: 18px; height: 18px; }
+.faq-question .arrow img { transition: transform 0.35s var(--ease-premium); }
+.faq-item.open .arrow img { transform: rotate(180deg); }
