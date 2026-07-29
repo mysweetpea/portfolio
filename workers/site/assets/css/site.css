@@ -3613,3 +3613,29 @@ body[data-page='about'] .card > p:first-of-type {
     background: rgba(255,255,255,0.85);
     border-color: rgba(51,86,95,0.25);
 }
+
+/* ==========================================================================
+   v18: unified hero subtitle style across every page
+   ========================================================================== */
+body[data-page] .hero p.hero-sub,
+body[data-page='home'] .hero p.hero-sub {
+    font-size: 1.05rem !important;
+    font-weight: 600;
+    line-height: 1.65;
+    max-width: 560px;
+    margin: 0 auto;
+    text-align: center;
+    letter-spacing: 0.002em;
+    background: linear-gradient(115deg, var(--text) 30%, var(--primary-bright) 45%, #FFFFFF 50%, var(--primary-bright) 55%, var(--text) 70%);
+    background-size: 260% auto;
+    -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;
+    animation: shimmer 6s ease-in-out infinite;
+}
+[data-theme="light"] body[data-page] .hero p.hero-sub,
+[data-theme="light"] body[data-page='home'] .hero p.hero-sub {
+    background: linear-gradient(115deg, #1B2B31 30%, #3E6B77 45%, #0E2B33 50%, #3E6B77 55%, #1B2B31 70%);
+    background-size: 260% auto; -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;
+}
+@media (max-width: 640px) {
+    body[data-page] .hero p.hero-sub, body[data-page='home'] .hero p.hero-sub { font-size: 0.95rem !important; }
+}
