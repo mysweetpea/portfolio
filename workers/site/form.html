@@ -419,7 +419,7 @@
                     btn.classList.remove('loading'); btn.classList.add('success');
                     btn.textContent = '✓ Account Created!';
                     setTimeout(function() {
-                        window.location.href = '/success.html?type=redeem';
+                        window.location.href = '/account-created.html';
                     }, 1500);
                 } else {
                     btn.textContent = data.msg || 'Account creation failed';
