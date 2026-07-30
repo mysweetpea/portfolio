@@ -1871,19 +1871,26 @@ body[data-page='pricing'] .pricing-card.tier-seedling { animation-duration: 8s; 
 
 /* === Light theme === */
 [data-theme="light"] {
-    --bg: #F2F5F6;
-    --text: #16242A;
-    --text-dim: #4A5F66;
-    --text-faint: #6E8187;
+    /* Single consolidated light theme (was 3 conflicting blocks).
+       Muted, low-glare surfaces — no pure white — for a comfortable switch from dark mode. */
+    --bg: #E7EDEA;                  /* soft sage-tinted canvas, not white */
+    --text: #1B2B31;
+    --text-dim: #445A61;
+    --text-faint: #66797F;
     --primary: #4E7C88;
     --primary-dim: #3E6B77;
     --primary-bright: #2F5560;
     --primary-glow: rgba(78, 124, 136, 0.1);
-    --border: rgba(46, 79, 89, 0.14);
-    --border-primary: rgba(46, 79, 89, 0.32);
-    --card-bg: rgba(255, 255, 255, 0.72);
-    --card-bg-hover: rgba(255, 255, 255, 0.9);
-    --ice: #1B2C33;
+    --border: rgba(51, 86, 95, 0.16);
+    --border-primary: rgba(51, 86, 95, 0.34);
+    --card-bg: rgba(247, 250, 248, 0.82);
+    --card-bg-hover: rgba(252, 253, 252, 0.94);
+    --ice: #22363D;
+    --sage: #4E7A68;
+    --sage-dim: #659184;
+    --slate: #5F7E92;
+    --error: #B4544E;
+    --success: #4E7A68;
 }
 [data-theme="light"] body, [data-theme="light"] .bg-gradient { background: var(--bg); color: var(--text); }
 [data-theme="light"] .bg-gradient {
@@ -3089,26 +3096,7 @@ body[data-page='status'] .hero.status-hero img.logo { width: 160px; height: 160p
 body[data-page='status'] .hero.status-hero h1 { font-size: 2rem; font-weight: 700; margin-bottom: 8px; }
 
 /* === Light mode rework: warm muted surface, readable text, visible petals === */
-[data-theme="light"] {
-    --bg: #E9EEEC;
-    --text: #1B2B31;
-    --text-dim: #445A61;
-    --text-faint: #66797F;
-    --primary: #55818D;
-    --primary-dim: #436E7A;
-    --primary-bright: #33565F;
-    --primary-glow: rgba(85, 129, 141, 0.12);
-    --border: rgba(51, 86, 95, 0.16);
-    --border-primary: rgba(51, 86, 95, 0.34);
-    --card-bg: rgba(250, 252, 251, 0.78);
-    --card-bg-hover: rgba(255, 255, 255, 0.92);
-    --ice: #22363D;
-    --sage: #4E7A68;
-    --sage-dim: #659184;
-    --slate: #5F7E92;
-    --error: #B4544E;
-    --success: #4E7A68;
-}
+/* (merged into the consolidated light theme above) */
 [data-theme="light"] body, [data-theme="light"] .bg-gradient {
     background:
         radial-gradient(ellipse 70% 45% at 50% -15%, rgba(85, 129, 141, 0.12), transparent),
@@ -3854,7 +3842,7 @@ body[data-page='status'] .status-updated { font-size: 0.8rem; color: var(--text-
 .footer-help { margin-top: 9px; font-size: 0.84rem; color: var(--text-dim); }
 
 /* Keep the light scheme soft, and avoid abrupt high-luminance jumps. */
-[data-theme="light"] { --bg: #DCE6E2; --text: #203237; --text-dim: #4E6368; --text-faint: #6D7D80; --card-bg: rgba(245,249,247,0.78); --card-bg-hover: rgba(250,252,251,0.90); }
+/* (merged into the consolidated light theme above) */
 [data-theme="light"] body, [data-theme="light"] .bg-gradient { background: radial-gradient(ellipse 70% 45% at 50% -15%, rgba(85,129,141,.10), transparent), radial-gradient(ellipse 55% 35% at 85% 105%, rgba(101,145,132,.10), transparent), linear-gradient(180deg,#E3ECE8 0%,#D6E2DD 100%) !important; }
 html, body, .bg-gradient, .top-nav, .card, .feature-card, .stat-card, .pricing-card, .service-card, .faq-item, .status-list, .form-container, .modal { transition: background-color .42s cubic-bezier(.22,1,.36,1), color .32s ease, border-color .42s ease, box-shadow .42s ease !important; }
 @media (prefers-reduced-motion: reduce) { html, body, .bg-gradient, .top-nav, .card, .feature-card, .stat-card, .pricing-card, .service-card, .faq-item, .status-list, .form-container, .modal { transition-duration: 0.01ms !important; } .scroll-cue span:last-child { animation: none; } }
@@ -3869,3 +3857,62 @@ html, body, .bg-gradient, .top-nav, .card, .feature-card, .stat-card, .pricing-c
 .full-access-contact span { color: var(--text); font-weight: 650; }
 .copy-email-btn { padding: 9px 12px; border: 1px solid var(--border-primary); border-radius: 8px; background: transparent; color: var(--text); font: inherit; font-size: .8rem; font-weight: 700; cursor: pointer; }
 .copy-email-btn:hover { background: var(--primary-glow); }.copy-email-btn:focus-visible { outline: 3px solid var(--primary-bright); outline-offset: 3px; }
+
+/* === Smooth theme switching (fixes jarring dark -> light flash) === */
+html { background: var(--bg); }
+body, .top-nav, .page-footer, .feature-card, .pricing-card, .service-card,
+.stat-card, .cta-card, .service-chip, .card, .modal-content,
+.service-access-guide, .tier-steps {
+    transition:
+        background-color 260ms ease,
+        border-color 260ms ease,
+        color 260ms ease,
+        box-shadow 260ms ease;
+}
+.bg-gradient, .grain-overlay, #petalCanvas {
+    transition: opacity 400ms ease;
+}
+/* Tone down the bright overlays in light mode so the switch is not blinding */
+[data-theme="light"] .bg-gradient { opacity: 0.55; }
+[data-theme="light"] .grain-overlay { opacity: 0.35; }
+[data-theme="light"] #petalCanvas { opacity: 0.6; }
+
+/* === Homepage "get access in 3 steps" strip (visible without scrolling) === */
+.hero-steps {
+    display: flex; flex-wrap: wrap; justify-content: center; gap: 10px 26px;
+    list-style: none; padding: 0; margin: 26px 0 4px;
+    color: var(--text-dim); font-size: 0.92rem; font-weight: 500;
+}
+.hero-steps li { display: inline-flex; align-items: center; gap: 8px; }
+.hero-steps li span {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 24px; height: 24px; border-radius: 50%;
+    background: var(--sage); color: var(--bg);
+    font-size: 0.78rem; font-weight: 700; flex: none;
+}
+
+/* === Services page: "account required" note under tier divider === */
+.tier-note {
+    text-align: center; color: var(--text-dim);
+    font-size: 0.88rem; margin: 4px auto 18px; max-width: 60ch;
+}
+.tier-note a { color: var(--sage); font-weight: 600; }
+
+/* === Pricing: recommended-tier badge === */
+.tier-badge {
+    display: inline-block; margin-bottom: 10px; padding: 4px 12px;
+    border-radius: 999px; background: var(--sage); color: var(--bg);
+    font-size: 0.72rem; font-weight: 800; letter-spacing: 0.06em;
+    text-transform: uppercase;
+}
+#card-seedling { position: relative; }
+
+@media (prefers-reduced-motion: reduce) {
+    body, .top-nav, .page-footer, .feature-card, .pricing-card, .service-card,
+    .stat-card, .cta-card, .service-chip, .card, .modal-content,
+    .service-access-guide, .tier-steps,
+    .bg-gradient, .grain-overlay, #petalCanvas {
+        transition: none !important;
+    }
+    .scroll-cue span:last-child { animation: none !important; }
+}
