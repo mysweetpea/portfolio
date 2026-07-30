@@ -10,51 +10,203 @@ export default {
     const sender = message.from;
     const recipient = message.to;
     const subject = message.headers.get("subject") || "(no subject)";
-    console.log(`Processing email from ${sender} to ${recipient}: ${subject}`);
+
+    console.log(
+      `Processing email from ${sender} to ${recipient}: ${subject}`,
+    );
 
     try {
       const msg = createMimeMessage();
       const messageId = message.headers.get("Message-ID");
+
       if (messageId) {
         msg.setHeader("In-Reply-To", messageId);
         msg.setHeader("References", messageId);
       }
+
       msg.setSender({
         name: "MySweetPea",
         addr: recipient,
       });
+
       msg.setRecipient(sender);
       msg.setSubject(`Re: ${subject}`);
 
-      // Plain text fallback (no image)
+      // Plain-text fallback.
       msg.addMessage({
-        contentType: "text/plain",
-        data: "Thank you for contacting MySweetPea!\n\nI've received your message and will get back to you within 24-48 hours.\n\nBest regards,\nSweetPea\nmysweetpea.cc",
+        contentType: "text/plain; charset=utf-8",
+        data: `Thank you for contacting MySweetPea.
+
+Your message has been received. We will get back to you within 24–48 hours.
+
+If you already have an invite code, you can create your account at:
+https://mysweetpea.cc/form.html
+
+For Full Access requests, please include the services you are interested in.
+
+This is an automatic confirmation—there is no need to reply unless you would like to add more information.
+
+Warmly,
+SweetPea
+https://mysweetpea.cc`,
       });
 
-      // HTML version with inline logo
+      // HTML email using the existing CID-based logo attachment.
       msg.addMessage({
-        contentType: "text/html",
-        data: `<div style="max-width:500px;margin:0 auto;font-family:Arial,Helvetica,sans-serif;color:#333;">
-  <img src="cid:${LOGO_CID}" alt="MySweetPea" style="width:120px;height:auto;margin-bottom:20px;" />
-  <h2 style="color:#2c3e50;">Thank you for contacting MySweetPea!</h2>
-  <p>I've received your message and will get back to you within <strong>24-48 hours</strong>.</p>
-  <hr style="border:none;border-top:1px solid #eee;margin:24px 0;" />
-  <p style="font-size:14px;color:#888;margin:0;">
-    Best regards,<br>
-    <strong>SweetPea</strong><br>
-    <a href="https://mysweetpea.cc" style="color:#3498db;text-decoration:none;">mysweetpea.cc</a>
-  </p>
-</div>`,
+        contentType: "text/html; charset=utf-8",
+        data: `
+<!doctype html>
+<html lang="en">
+  <body style="margin:0;padding:0;background-color:#10282d;">
+    <table
+      role="presentation"
+      width="100%"
+      cellpadding="0"
+      cellspacing="0"
+      border="0"
+      style="width:100%;margin:0;padding:0;background-color:#10282d;"
+    >
+      <tr>
+        <td
+          align="center"
+          style="padding-top:36px;padding-right:16px;padding-bottom:36px;padding-left:16px;"
+        >
+          <table
+            role="presentation"
+            width="100%"
+            cellpadding="0"
+            cellspacing="0"
+            border="0"
+            style="width:100%;max-width:560px;background-color:#173b42;border:1px solid #426c73;border-radius:14px;"
+          >
+            <tr>
+              <td
+                align="center"
+                style="padding-top:32px;padding-right:32px;padding-bottom:18px;padding-left:32px;border-bottom:1px solid #426c73;"
+              >
+                <a
+                  href="https://mysweetpea.cc"
+                  style="text-decoration:none;"
+                >
+                  <img
+                    src="cid:${LOGO_CID}"
+                    alt="MySweetPea"
+                    width="128"
+                    border="0"
+                    style="display:block;width:128px;max-width:100%;height:auto;margin:0;border:0;outline:none;text-decoration:none;"
+                  >
+                </a>
+              </td>
+            </tr>
+
+            <tr>
+              <td
+                style="padding-top:30px;padding-right:32px;padding-bottom:12px;padding-left:32px;font-family:Arial,Helvetica,sans-serif;"
+              >
+                <p
+                  style="margin-top:0;margin-right:0;margin-bottom:10px;margin-left:0;font-size:12px;line-height:18px;font-weight:700;letter-spacing:1.2px;text-transform:uppercase;color:#a3c9b6;"
+                >
+                  Message received
+                </p>
+
+                <h1
+                  style="margin-top:0;margin-right:0;margin-bottom:16px;margin-left:0;font-family:Georgia,'Times New Roman',serif;font-size:29px;line-height:36px;font-weight:700;color:#eff8f6;"
+                >
+                  Thanks for getting in touch.
+                </h1>
+
+                <p
+                  style="margin-top:0;margin-right:0;margin-bottom:0;margin-left:0;font-size:16px;line-height:25px;color:#d5e7e5;"
+                >
+                  Your message has reached MySweetPea. We will get back to you within
+                  <strong style="color:#eff8f6;">24–48 hours</strong>.
+                </p>
+              </td>
+            </tr>
+
+            <tr>
+              <td
+                style="padding-top:16px;padding-right:32px;padding-bottom:10px;padding-left:32px;"
+              >
+                <table
+                  role="presentation"
+                  width="100%"
+                  cellpadding="0"
+                  cellspacing="0"
+                  border="0"
+                  style="width:100%;background-color:#204a50;border:1px solid #4d7980;border-radius:10px;"
+                >
+                  <tr>
+                    <td
+                      style="padding-top:18px;padding-right:20px;padding-bottom:18px;padding-left:20px;font-family:Arial,Helvetica,sans-serif;"
+                    >
+                      <p
+                        style="margin-top:0;margin-right:0;margin-bottom:8px;margin-left:0;font-size:14px;line-height:20px;font-weight:700;color:#b8dcc9;"
+                      >
+                        Need account access?
+                      </p>
+
+                      <p
+                        style="margin-top:0;margin-right:0;margin-bottom:0;margin-left:0;font-size:14px;line-height:22px;color:#d5e7e5;"
+                      >
+                        If you already have an invite code, you can create your account on the
+                        <a
+                          href="https://mysweetpea.cc/form.html"
+                          style="color:#c7e8ef;text-decoration:underline;"
+                        >access form</a>.
+                        For Full Access requests, please include the services you are interested in.
+                      </p>
+                    </td>
+                  </tr>
+                </table>
+              </td>
+            </tr>
+
+            <tr>
+              <td
+                style="padding-top:22px;padding-right:32px;padding-bottom:32px;padding-left:32px;font-family:Arial,Helvetica,sans-serif;"
+              >
+                <p
+                  style="margin-top:0;margin-right:0;margin-bottom:20px;margin-left:0;font-size:13px;line-height:21px;color:#a9c1c3;"
+                >
+                  This is an automatic confirmation—there is no need to reply unless you would like to add more information.
+                </p>
+
+                <p
+                  style="margin-top:0;margin-right:0;margin-bottom:0;margin-left:0;font-size:14px;line-height:22px;color:#d5e7e5;"
+                >
+                  Warmly,<br>
+                  <strong style="color:#eff8f6;">SweetPea</strong><br>
+                  <a
+                    href="https://mysweetpea.cc"
+                    style="color:#c7e8ef;text-decoration:underline;"
+                  >mysweetpea.cc</a>
+                </p>
+              </td>
+            </tr>
+          </table>
+
+          <p
+            style="margin-top:16px;margin-right:0;margin-bottom:0;margin-left:0;font-family:Arial,Helvetica,sans-serif;font-size:12px;line-height:18px;color:#87a6a8;text-align:center;"
+          >
+            Private, self-hosted, community-funded infrastructure.
+          </p>
+        </td>
+      </tr>
+    </table>
+  </body>
+</html>`,
       });
 
-      // Add logo as inline attachment (CID method)
+      // Existing CID attachment method. Keep your real base64 logo value above.
       msg.addAttachment({
         inline: true,
         filename: "logo.png",
         contentType: "image/png",
         data: LOGO_BASE64,
-        headers: { "Content-ID": `<${LOGO_CID}>` },
+        headers: {
+          "Content-ID": `<${LOGO_CID}>`,
+        },
       });
 
       const replyMessage = new EmailMessage(
@@ -62,6 +214,7 @@ export default {
         sender,
         msg.asRaw(),
       );
+
       await message.reply(replyMessage);
       console.log("Auto-reply with logo sent successfully");
     } catch (replyError) {
