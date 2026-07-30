@@ -142,9 +142,9 @@
 
                     <div class="form-group">
                         <label class="form-label glass-text" for="hc-code">Invite Code</label>
-                        <input type="text" class="form-input" id="hc-code" aria-describedby="hc-code-hint" aria-invalid="false" placeholder="PEA-7KJXU2YK or FAM-9YG7JQ5T" autocomplete="off" autocapitalize="characters" spellcheck="false" pattern="(?:PEA|FAM)-[A-Za-z0-9]{8}" oninput="this.value = this.value.toUpperCase().replace(/\s/g, ''); validateField('hc-code', 'invitecode')">
+                        <input type="text" class="form-input" id="hc-code" aria-describedby="hc-code-hint" aria-invalid="false" placeholder="PEA-12345678 or FAM-12345678" autocomplete="off" autocapitalize="characters" spellcheck="false" pattern="(?:PEA|FAM)-[A-Za-z0-9]{8}" oninput="this.value = this.value.toUpperCase().replace(/\s/g, ''); validateField('hc-code', 'invitecode')">
                         <span class="validation-icon" id="hc-code-icon"></span>
-                        <div class="form-hint" id="hc-code-hint" aria-live="polite">Enter a code like PEA-7KJXU2YK or FAM-9YG7JQ5T.</div>
+                        <div class="form-hint" id="hc-code-hint" aria-live="polite">Enter a code like PEA-12345678 or FAM-12345678.</div>
                     </div>
 
                     <div class="form-group">
@@ -281,14 +281,14 @@
                     input.classList.add('valid'); icon.classList.add('show', 'valid'); icon.innerHTML = '<img src="/assets/icons/icon-ui-check.svg" alt="" width="18" height="18">';
                     hint.classList.remove('error'); hint.classList.add('success');
                     if (type === 'username') hint.textContent = 'Letters, numbers, underscores. Min 3 characters.';
-                    if (type === 'invitecode') { hint.textContent = 'Checking invite code...'; checkInviteCodeServer(val.toUpperCase()); }
+                    if (type === 'invitecode') { hint.textContent = 'Checking invite code...'; checkInviteCodeServer(val.replace(/\s/g, '').toUpperCase()); }
                     if (type === 'email') hint.textContent = 'Valid email address.';
                     if (type === 'name') hint.textContent = 'Looks good!';
                 } else {
                     input.classList.add('invalid'); icon.classList.add('show', 'invalid'); icon.innerHTML = '<img src="/assets/icons/icon-ui-cross.svg" alt="" width="18" height="18">';
                     hint.classList.remove('success'); hint.classList.add('error');
                     if (type === 'username') hint.textContent = 'Letters, numbers, underscores. Min 3 characters.';
-                    if (type === 'invitecode') hint.textContent = 'Format: PEA-XXXXXXXX or FAM-XXXXXXXX (8 alphanumeric chars)';
+                    if (type === 'invitecode') hint.textContent = 'Format: PEA-12345678 or FAM-12345678 (8 letters or numbers)';
                     if (type === 'email') hint.textContent = 'Please enter a valid email.';
                     if (type === 'name') hint.textContent = 'Please enter your name.';
                 }
@@ -336,7 +336,7 @@
                     var input = document.getElementById('hc-code');
                     var icon = document.getElementById('hc-code-icon');
                     var hint = document.getElementById('hc-code-hint');
-                    if (input.value.trim().toUpperCase() === code) {
+                    if (input.value.replace(/\s/g, '').trim().toUpperCase() === code) {
                         if (data.ok) {
                             input.classList.remove('invalid');
                             input.classList.add('valid');
@@ -403,7 +403,7 @@
             var btn = this;
             btn.classList.add('loading'); btn.disabled = true;
             var payload = {
-                invite_code: document.getElementById('hc-code').value.trim(),
+                invite_code: document.getElementById('hc-code').value.replace(/\s/g, '').trim().toUpperCase(),
                 name: document.getElementById('hc-name').value.trim(),
                 email: document.getElementById('hc-email').value.trim(),
                 username: document.getElementById('hc-username').value.trim()
