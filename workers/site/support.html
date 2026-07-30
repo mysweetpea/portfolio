@@ -47,6 +47,7 @@
                 <div class="nav-more-menu">
                     <a href="/support.html" aria-current="page">Donate</a>
                     <a href="/suggest.html">Suggest a Service</a>
+                    <a href="mailto:support@mysweetpea.cc">Contact Us</a>
                 </div>
             </details>
             <a href="/form.html" class="nav-cta">Get Access</a>
@@ -115,8 +116,24 @@
     <script>
 function toggleFAQ(el) { var item = el.parentElement; var open = item.classList.toggle('open'); el.setAttribute('aria-expanded', String(open)); }
         var WALLETS = { monero: 'Coming Soon', bitcoin: 'Coming Soon' };
-        function selectCrypto(el, type) { document.querySelectorAll('.crypto-option').forEach(function(o) { o.classList.remove('selected'); }); el.classList.add('selected'); document.getElementById('wallet-addr').textContent = WALLETS[type]; }
-        function copyWallet() { var a = document.getElementById('wallet-addr').textContent; navigator.clipboard.writeText(a).then(function() { var e = document.getElementById('wallet-addr'); var o = e.textContent; e.textContent = 'Copied!'; setTimeout(function() { e.textContent = o; }, 1500); }); }
+        // Mark unavailable wallets so users never see "Coming Soon" as a payable address.
+        document.querySelectorAll('.crypto-option').forEach(function(o) {
+            var type = o.getAttribute('data-type');
+            if (!WALLETS[type] || WALLETS[type] === 'Coming Soon') {
+                o.classList.add('unavailable');
+                o.setAttribute('aria-disabled', 'true');
+                var note = document.createElement('div');
+                note.className = 'crypto-soon';
+                note.textContent = 'Coming soon';
+                o.appendChild(note);
+            }
+        });
+        function selectCrypto(el, type) {
+            if (el.classList.contains('unavailable')) { return; }
+            document.querySelectorAll('.crypto-option').forEach(function(o) { o.classList.remove('selected'); });
+            el.classList.add('selected'); document.getElementById('wallet-addr').textContent = WALLETS[type];
+        }
+        function copyWallet() { var a = document.getElementById('wallet-addr').textContent; if (!a || a === 'Coming Soon' || a === 'Loading...') { return; } navigator.clipboard.writeText(a).then(function() { var e = document.getElementById('wallet-addr'); var o = e.textContent; e.textContent = 'Copied!'; setTimeout(function() { e.textContent = o; }, 1500); }); }
         document.getElementById('wallet-addr').textContent = WALLETS.monero;
     </script>
 </body>
