@@ -47,6 +47,7 @@
                 <div class="nav-more-menu">
                     <a href="/support.html">Donate</a>
                     <a href="/suggest.html">Suggest a Service</a>
+                    <a href="mailto:support@mysweetpea.cc">Contact Us</a>
                 </div>
             </details>
             <a href="/form.html" class="nav-cta">Get Access</a>
@@ -122,6 +123,7 @@
                         <div class="wa" id="wallet-addr" onclick="copyWallet()">Loading...</div>
                         <div class="copy-hint">Click address to copy</div>
                     </div>
+                    <p class="crypto-alt">Don't use crypto? Email <a href="mailto:support@mysweetpea.cc">support@mysweetpea.cc</a> and we'll work out another way — no one is turned away for that.</p>
 
                     <div class="form-group">
                         <label class="form-label glass-text" for="ga-txhash">Transaction Hash (optional but recommended)</label>
@@ -129,6 +131,7 @@
                         <div class="form-hint">Helps us verify your donation faster.</div>
                     </div>
 
+                    <p class="verify-note">A real person verifies each donation — you'll usually receive your invite code by email within 24 hours.</p>
                     <button class="form-submit" id="ga-submit" disabled>Submit Request</button>
                 </div>
             </div>
@@ -235,8 +238,22 @@
 
         // Wallet
         var WALLETS = { monero: 'Coming Soon', bitcoin: 'Coming Soon' };
+        // Mark any wallet that is not a real address as unavailable so users
+        // are never shown "Coming Soon" as if it were a payable address.
+        document.querySelectorAll('.crypto-option').forEach(function(o) {
+            var type = o.getAttribute('data-type');
+            if (!WALLETS[type] || WALLETS[type] === 'Coming Soon') {
+                o.classList.add('unavailable');
+                o.setAttribute('aria-disabled', 'true');
+                var note = document.createElement('div');
+                note.className = 'crypto-soon';
+                note.textContent = 'Coming soon';
+                o.appendChild(note);
+            }
+        });
         var currentCrypto = 'monero';
         function selectCrypto(el, type) {
+            if (el.classList.contains('unavailable')) { return; }
             document.querySelectorAll('.crypto-option').forEach(function(o) { o.classList.remove('selected'); });
             void el.offsetWidth; el.classList.add('selected'); currentCrypto = type;
             var wa = document.getElementById('wallet-addr');
@@ -252,6 +269,7 @@
         }
         function copyWallet() {
             var addr = document.getElementById('wallet-addr').textContent;
+            if (!addr || addr === 'Coming Soon' || addr === 'Loading...') { return; }
             navigator.clipboard.writeText(addr).then(function() {
                 var el = document.getElementById('wallet-addr');
                 var orig = el.textContent; el.textContent = 'Copied!';
