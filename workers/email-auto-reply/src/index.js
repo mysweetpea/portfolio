@@ -2,7 +2,7 @@ import { EmailMessage } from "cloudflare:email";
 import { createMimeMessage } from "mimetext";
 
 const FORWARD_TO = "sweetpea@tuta.io";
-const LOGO_URL = "https://mysweetpea.cc/assets/logo.png";
+const LOGO_URL = "https://mysweetpea.cc/logo.png";
 
 export default {
   async email(message, env, ctx) {
