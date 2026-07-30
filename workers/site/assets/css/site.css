@@ -3916,3 +3916,50 @@ body, .top-nav, .page-footer, .feature-card, .pricing-card, .service-card,
     }
     .scroll-cue span:last-child { animation: none !important; }
 }
+
+/* === Artifact set 2 additions === */
+/* #7 Copy-button feedback state (used by site.js global handler) */
+.copy-email-btn.copied, .copy-email-btn[data-copied="true"] {
+    background: var(--sage); color: var(--bg); border-color: var(--sage);
+}
+
+/* #2 Unavailable crypto options — clearly not selectable */
+.crypto-option.unavailable {
+    opacity: 0.45; cursor: not-allowed; pointer-events: auto;
+}
+.crypto-option.unavailable .icon, .crypto-option.unavailable .name { filter: grayscale(0.6); }
+.crypto-soon {
+    font-size: 0.68rem; font-weight: 700; letter-spacing: 0.05em;
+    text-transform: uppercase; color: var(--text-faint); margin-top: 2px;
+}
+
+/* #1 Crypto escape hatch + #3 verify note on the access form */
+.crypto-alt, .verify-note {
+    font-size: 0.86rem; color: var(--text-dim); line-height: 1.55;
+    margin: 12px 0 4px;
+}
+.crypto-alt a, .verify-note a { color: var(--sage); font-weight: 600; }
+
+/* #5 Glossary on How It Works */
+.glossary {
+    max-width: 860px; margin: 0 auto 40px; padding: 22px 24px;
+    border: 1px solid var(--border); border-radius: var(--radius-sm);
+    background: var(--card-bg);
+}
+.glossary-title {
+    font-size: 1.05rem; margin: 0 0 14px; color: var(--primary-bright);
+}
+.glossary-grid {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+    gap: 14px 22px; margin: 0;
+}
+.glossary-grid dt { font-weight: 700; color: var(--text); font-size: 0.9rem; }
+.glossary-grid dd { margin: 3px 0 0; color: var(--text-dim); font-size: 0.85rem; line-height: 1.5; }
+
+/* #8 Mobile: keep hero steps + scroll cue inside the first viewport */
+@media (max-width: 640px) {
+    .hero-steps { gap: 8px 14px; font-size: 0.82rem; margin-top: 18px; }
+    .hero-steps li span { width: 20px; height: 20px; font-size: 0.7rem; }
+    .scroll-cue { margin-top: 16px; }
+    body[data-page='home'] .hero { min-height: auto; padding-bottom: 40px; }
+}
