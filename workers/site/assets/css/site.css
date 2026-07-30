@@ -3859,3 +3859,13 @@ body[data-page='status'] .status-updated { font-size: 0.8rem; color: var(--text-
 html, body, .bg-gradient, .top-nav, .card, .feature-card, .stat-card, .pricing-card, .service-card, .faq-item, .status-list, .form-container, .modal { transition: background-color .42s cubic-bezier(.22,1,.36,1), color .32s ease, border-color .42s ease, box-shadow .42s ease !important; }
 @media (prefers-reduced-motion: reduce) { html, body, .bg-gradient, .top-nav, .card, .feature-card, .stat-card, .pricing-card, .service-card, .faq-item, .status-list, .form-container, .modal { transition-duration: 0.01ms !important; } .scroll-cue span:last-child { animation: none; } }
 @media (max-width: 700px) { .service-access-guide { flex-direction: column; align-items: stretch; text-align: left; } .service-access-actions { width: 100%; } .service-access-actions a { flex: 1; text-align: center; } }
+
+
+/* v31: clear full-access contact without forcing an email app */
+.full-access-contact { margin-top: 18px; padding: 15px; border: 1px solid var(--border-primary); background: rgba(143,175,181,.08); border-radius: 10px; text-align: left; }
+.full-access-contact strong { color: var(--primary-bright); display: block; margin-bottom: 5px; }
+.full-access-contact p { margin: 0 0 11px; color: var(--text-dim); font-size: .83rem; line-height: 1.55; }
+.full-access-contact a { color: var(--primary-bright); font-weight: 700; text-underline-offset: 3px; }
+.full-access-contact span { color: var(--text); font-weight: 650; }
+.copy-email-btn { padding: 9px 12px; border: 1px solid var(--border-primary); border-radius: 8px; background: transparent; color: var(--text); font: inherit; font-size: .8rem; font-weight: 700; cursor: pointer; }
+.copy-email-btn:hover { background: var(--primary-glow); }.copy-email-btn:focus-visible { outline: 3px solid var(--primary-bright); outline-offset: 3px; }
