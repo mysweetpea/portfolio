@@ -463,3 +463,28 @@
         if (e.target === backdrop) cmdkClose();
     });
 })();
+
+/* === Global copy-email buttons (class="copy-email-btn" data-copy="...") ===
+   Copies the address and shows "Copied!" feedback so users know it worked. */
+(function() {
+    document.addEventListener('click', function(e) {
+        var btn = e.target.closest('.copy-email-btn');
+        if (!btn) { return; }
+        var text = btn.getAttribute('data-copy') || btn.getAttribute('data-email') || '';
+        if (!text) { return; }
+        var done = function() {
+            var orig = btn.textContent;
+            btn.textContent = 'Copied!';
+            btn.classList.add('copied');
+            setTimeout(function() { btn.textContent = orig; btn.classList.remove('copied'); }, 2000);
+        };
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+            navigator.clipboard.writeText(text).then(done).catch(done);
+        } else {
+            var ta = document.createElement('textarea');
+            ta.value = text; document.body.appendChild(ta); ta.select();
+            try { document.execCommand('copy'); } catch (err) {}
+            document.body.removeChild(ta); done();
+        }
+    });
+})();
