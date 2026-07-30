@@ -112,7 +112,11 @@
                     </ul>
                     <div class="vine-btn-wrapper">
                         <svg viewBox="0 0 200 60" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M10 30 Q30 10, 50 30 T90 30 T130 30 T170 30 T190 30" stroke="#6B9AA6" stroke-width="1.5" fill="none" opacity="0.6"/><path d="M10 30 Q30 50, 50 30 T90 30 T130 30 T170 30 T190 30" stroke="#6B9AA6" stroke-width="1" fill="none" opacity="0.4"/><circle cx="30" cy="18" r="3" fill="#6B9AA6" opacity="0.7"/><circle cx="70" cy="42" r="3" fill="#6B9AA6" opacity="0.7"/><circle cx="110" cy="18" r="3" fill="#6B9AA6" opacity="0.7"/><circle cx="150" cy="42" r="3" fill="#6B9AA6" opacity="0.7"/><path d="M30 18 Q25 12, 28 8" stroke="#6B9AA6" stroke-width="1" fill="none" opacity="0.5"/><path d="M70 42 Q75 48, 72 52" stroke="#6B9AA6" stroke-width="1" fill="none" opacity="0.5"/><path d="M110 18 Q105 12, 108 8" stroke="#6B9AA6" stroke-width="1" fill="none" opacity="0.5"/><path d="M150 42 Q155 48, 152 52" stroke="#6B9AA6" stroke-width="1" fill="none" opacity="0.5"/></svg>
-                        <a href="mailto:support@mysweetpea.cc" class="btn btn-glass-sweetpea">Contact Us</a>
+                        <div class="full-access-contact">
+                            <strong>Request Full Access</strong>
+                            <p>Email <a href="mailto:support@mysweetpea.cc">support@mysweetpea.cc</a> with the subject <span>Sweet Pea Full Access Request</span>.</p>
+                            <button type="button" class="copy-email-btn" data-copy="support@mysweetpea.cc">Copy email address</button>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -142,6 +146,8 @@
         function toggleFAQ(el) { var item = el.parentElement; var open = item.classList.toggle('open'); el.setAttribute('aria-expanded', String(open)); }
 
             </script>
-    <script src="/assets/js/site.js" defer></script>
+    <script>
+document.addEventListener('click', function(event) { var button = event.target.closest('.copy-email-btn'); if (!button) return; var email = button.getAttribute('data-copy'); navigator.clipboard.writeText(email).then(function() { var original=button.textContent; button.textContent='Copied!'; setTimeout(function(){button.textContent=original;},1800); }).catch(function(){ button.textContent=email; }); });
+</script><script src="/assets/js/site.js" defer></script>
 </body>
 </html>
