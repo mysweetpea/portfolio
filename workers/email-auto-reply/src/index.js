@@ -10,51 +10,32 @@ export default {
     const sender = message.from;
     const recipient = message.to;
     const subject = message.headers.get("subject") || "(no subject)";
-
-    console.log(
-      `Processing email from ${sender} to ${recipient}: ${subject}`,
-    );
+    console.log(`Processing email from ${sender} to ${recipient}: ${subject}`);
 
     try {
       const msg = createMimeMessage();
       const messageId = message.headers.get("Message-ID");
-
       if (messageId) {
         msg.setHeader("In-Reply-To", messageId);
         msg.setHeader("References", messageId);
       }
-
       msg.setSender({
         name: "MySweetPea",
         addr: recipient,
       });
-
       msg.setRecipient(sender);
       msg.setSubject(`Re: ${subject}`);
 
-      // Plain-text fallback.
+      // Plain text fallback (no image)
       msg.addMessage({
-        contentType: "text/plain; charset=utf-8",
-        data: `Thank you for contacting MySweetPea.
-
-Your message has been received. We will get back to you within 24–48 hours.
-
-If you already have an invite code, you can create your account at:
-https://mysweetpea.cc/form.html
-
-For Full Access requests, please include the services you are interested in.
-
-This is an automatic confirmation—there is no need to reply unless you would like to add more information.
-
-Warmly,
-SweetPea
-https://mysweetpea.cc`,
+        contentType: "text/plain",
+        data: "Thank you for contacting MySweetPea!\n\nI've received your message and will get back to you within 24-48 hours.\n\nBest regards,\nSweetPea\nmysweetpea.cc",
       });
 
-      // HTML email using the existing CID-based logo attachment.
+      // HTML version with inline logo
       msg.addMessage({
-        contentType: "text/html; charset=utf-8",
-        data: `
+        contentType: "text/html",
+data: `
 <!doctype html>
 <html lang="en">
   <body style="margin:0;padding:0;background-color:#10282d;">
@@ -67,10 +48,7 @@ https://mysweetpea.cc`,
       style="width:100%;margin:0;padding:0;background-color:#10282d;"
     >
       <tr>
-        <td
-          align="center"
-          style="padding-top:36px;padding-right:16px;padding-bottom:36px;padding-left:16px;"
-        >
+        <td align="center" style="padding-top:36px;padding-right:16px;padding-bottom:36px;padding-left:16px;">
           <table
             role="presentation"
             width="100%"
@@ -84,10 +62,7 @@ https://mysweetpea.cc`,
                 align="center"
                 style="padding-top:32px;padding-right:32px;padding-bottom:18px;padding-left:32px;border-bottom:1px solid #426c73;"
               >
-                <a
-                  href="https://mysweetpea.cc"
-                  style="text-decoration:none;"
-                >
+                <a href="https://mysweetpea.cc" style="text-decoration:none;">
                   <img
                     src="cid:${LOGO_CID}"
                     alt="MySweetPea"
@@ -198,15 +173,13 @@ https://mysweetpea.cc`,
 </html>`,
       });
 
-      // Existing CID attachment method. Keep your real base64 logo value above.
+      // Add logo as inline attachment (CID method)
       msg.addAttachment({
         inline: true,
         filename: "logo.png",
         contentType: "image/png",
         data: LOGO_BASE64,
-        headers: {
-          "Content-ID": `<${LOGO_CID}>`,
-        },
+        headers: { "Content-ID": `<${LOGO_CID}>` },
       });
 
       const replyMessage = new EmailMessage(
@@ -214,7 +187,6 @@ https://mysweetpea.cc`,
         sender,
         msg.asRaw(),
       );
-
       await message.reply(replyMessage);
       console.log("Auto-reply with logo sent successfully");
     } catch (replyError) {
