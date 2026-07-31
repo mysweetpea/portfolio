@@ -4076,3 +4076,12 @@ body[data-page='contact'] .contact-hero .hero-sub {
 .redeem-section { padding-bottom: 0; }
 .optional { color: var(--text-faint); font-weight: 400; font-size: .85em; }
 @media (max-width: 640px) { .access-choice-grid { grid-template-columns: 1fr; } .redeem-callout { flex-direction: column; align-items: stretch; text-align: center; } .redeem-callout .btn { text-align: center; } }
+
+/* === Set 8: access-flow validation and navigation refinements === */
+.tier-form-section:empty { display: none; }
+.form-input.valid { border-color: var(--sage) !important; box-shadow: 0 0 0 3px rgba(163, 201, 182, .14); }
+.form-input.invalid { border-color: #D46A6A !important; box-shadow: 0 0 0 3px rgba(212, 106, 106, .13); }
+.form-submit:disabled { opacity: .48; cursor: not-allowed; transform: none !important; }
+body[data-page='pricing'] .pricing-card .tier-sweetpea-cta { background: var(--primary); border-color: var(--primary); color: #10201D; text-decoration: none; }
+body[data-page='pricing'] .pricing-card .tier-sweetpea-cta:hover:not(:disabled), body[data-page='pricing'] .pricing-card .tier-sweetpea-cta:focus-visible { background: var(--primary-bright); border-color: var(--primary-bright); color: #10201D; }
+.nav-more-menu a[aria-current="page"] { color: var(--primary-bright); font-weight: 700; }
