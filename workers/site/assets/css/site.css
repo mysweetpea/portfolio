@@ -4184,3 +4184,29 @@ body[data-page='redeem'] #rc-submit:not(:disabled):focus-visible { background: v
 body[data-page='redeem'] #rc-submit:disabled { background: rgba(163,201,182,.25); border-color: rgba(163,201,182,.25); color: rgba(16,32,29,.60); opacity: 1; }
 body[data-page='redeem'] .redeem-callout { max-width: 600px; margin-top: 16px; }
 @media (max-width: 640px) { body[data-page='redeem'] .redeem-section .form-card { padding: 26px 20px 24px; } }
+
+/* === Set 12: Sweet Pea simplification and refined form controls === */
+/* Every user-resizable writing field can only grow/shrink vertically, with a calm focus transition. */
+textarea.form-input, textarea {
+    resize: vertical;
+    min-height: 96px;
+    max-width: 100%;
+    overflow-y: auto;
+    transition: min-height .2s ease, border-color .18s ease, box-shadow .18s ease, background-color .18s ease;
+}
+/* Redeem uses the same soft sage/slate text hierarchy as the rest of the site. */
+body[data-page='redeem'] .redeem-section .form-card > h2,
+body[data-page='redeem'] .redeem-section .form-label {
+    color: var(--primary-bright);
+}
+body[data-page='redeem'] .redeem-section .form-hint,
+body[data-page='redeem'] .redeem-section .verify-banner {
+    color: var(--text-dim);
+}
+body[data-page='redeem'] .redeem-section .verify-banner {
+    background: rgba(163, 201, 182, .09);
+    border-left-color: var(--sage);
+}
+body[data-page='redeem'] .redeem-section .verify-banner strong { color: var(--primary-bright); }
+body[data-page='redeem'] .redeem-section .form-input { color: var(--text); }
+body[data-page='redeem'] .redeem-section .form-input::placeholder { color: var(--text-faint); }
