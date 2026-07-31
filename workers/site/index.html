@@ -3,30 +3,28 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#0C1316">
+    <link rel="icon" type="image/svg+xml" href="/logo-favicon.svg">
+    <link rel="preload" as="image" href="/logo.svg">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600;1,9..144,500&display=swap">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600;1,9..144,500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/assets/css/site.css">
     <title>MySweetPea — Self-Hosted Services</title>
     <meta name="description" content="Private, self-hosted alternatives to the services you use every day. No ads, no tracking, no subscriptions — community funded.">
-    <meta name="theme-color" content="#0C1316">
     <meta property="og:title" content="MySweetPea — Self-Hosted Services">
     <meta property="og:description" content="Private, self-hosted alternatives to the services you use every day. No ads, no tracking, no subscriptions — community funded.">
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://mysweetpea.cc/">
     <meta property="og:image" content="https://mysweetpea.cc/logo.svg">
-    <link rel="icon" type="image/svg+xml" href="/logo-favicon.svg">
-    <link rel="preload" as="image" href="/logo.svg">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600;1,9..144,500&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="/assets/css/site.css">
 </head>
 <body data-page="home">
     <a href="#main-content" class="skip-link">Skip to content</a>
     <div class="scroll-progress" id="scrollProgress" aria-hidden="true"></div>
     <div class="bg-gradient" aria-hidden="true"></div>
-    <div class="grain-overlay" aria-hidden="true"></div>
     <canvas id="petalCanvas" aria-hidden="true"></canvas>
-    <div class="float-3d f1" aria-hidden="true"><svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M50 10 C35 15, 28 30, 32 48 C36 60, 48 68, 50 70 C52 68, 64 60, 68 48 C72 30, 65 15, 50 10" fill="#8FAFB5" opacity="0.8"/><path d="M50 25 C44 28, 40 38, 44 48 C47 55, 50 58, 50 58 C50 58, 53 55, 56 48 C60 38, 56 28, 50 25" fill="#8FAFB5" opacity="0.5"/><path d="M50 10 C42 12, 38 22, 42 35 C45 42, 50 45, 50 45 C50 45, 55 42, 58 35 C62 22, 58 12, 50 10" fill="#8FAFB5" opacity="0.6"/><path d="M50 45 C45 48, 42 55, 45 62 C48 67, 50 68, 50 68 C50 68, 52 67, 55 62 C58 55, 55 48, 50 45" fill="#8FAFB5" opacity="0.4"/><line x1="50" y1="68" x2="50" y2="88" stroke="#8FAFB5" stroke-width="2"/><path d="M45 80 Q40 76, 37 82" stroke="#8FAFB5" stroke-width="1.5" fill="none"/><path d="M55 80 Q60 76, 63 82" stroke="#8FAFB5" stroke-width="1.5" fill="none"/><circle cx="37" cy="82" r="2" fill="#8FAFB5" opacity="0.6"/><circle cx="63" cy="82" r="2" fill="#8FAFB5" opacity="0.6"/></svg></div>
-    <div class="float-3d f2" aria-hidden="true"><svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M50 10 C35 15, 28 30, 32 48 C36 60, 48 68, 50 70 C52 68, 64 60, 68 48 C72 30, 65 15, 50 10" fill="#8FAFB5" opacity="0.8"/><path d="M50 25 C44 28, 40 38, 44 48 C47 55, 50 58, 50 58 C50 58, 53 55, 56 48 C60 38, 56 28, 50 25" fill="#8FAFB5" opacity="0.5"/><path d="M50 10 C42 12, 38 22, 42 35 C45 42, 50 45, 50 45 C50 45, 55 42, 58 35 C62 22, 58 12, 50 10" fill="#8FAFB5" opacity="0.6"/><path d="M50 45 C45 48, 42 55, 45 62 C48 67, 50 68, 50 68 C50 68, 52 67, 55 62 C58 55, 55 48, 50 45" fill="#8FAFB5" opacity="0.4"/><line x1="50" y1="68" x2="50" y2="88" stroke="#8FAFB5" stroke-width="2"/><path d="M45 80 Q40 76, 37 82" stroke="#8FAFB5" stroke-width="1.5" fill="none"/><path d="M55 80 Q60 76, 63 82" stroke="#8FAFB5" stroke-width="1.5" fill="none"/><circle cx="37" cy="82" r="2" fill="#8FAFB5" opacity="0.6"/><circle cx="63" cy="82" r="2" fill="#8FAFB5" opacity="0.6"/></svg></div>
     <nav class="top-nav" aria-label="Primary navigation">
         <a href="/index.html" class="nav-logo">
             <img src="/logo.svg" alt="" width="32" height="32">
@@ -41,36 +39,50 @@
             <a href="/services.html" class="nav-btn">Services</a>
             <a href="/pricing.html" class="nav-btn">How It Works</a>
             <a href="/redeem.html" class="nav-btn">I Have a Code</a>
-            <details class="nav-more">
-                <summary aria-label="More pages">More</summary>
-                <div class="nav-more-menu">
-                    <a href="/support.html">Donate</a>
-                    <a href="/suggest.html">Suggest a Service</a>
-                    <a href="/contact.html">Contact Us</a>
-                    <a href="/status.html">Status</a>
-                    <a href="/about.html">About</a>
-                    <a href="https://github.com/mysweetpea" target="_blank" rel="noopener noreferrer">GitHub <span aria-hidden="true">↗</span></a>
+            <div class="nav-more">
+                <button class="nav-more-btn" aria-expanded="false" aria-haspopup="true" aria-label="More pages">More</button>
+                <div class="nav-more-menu" role="menu">
+                    <a href="/support.html" role="menuitem">Donate</a>
+                    <a href="/suggest.html" role="menuitem">Suggest a Service</a>
+                    <a href="/contact.html" role="menuitem">Contact Us</a>
+                    <a href="/status.html" role="menuitem">Status</a>
+                    <a href="/about.html" role="menuitem">About</a>
+                    <a href="https://github.com/mysweetpea" target="_blank" rel="noopener noreferrer" role="menuitem">GitHub <span aria-hidden="true">&#8599;</span></a>
                 </div>
-            </details>
+            </div>
             <a href="/form.html" class="nav-cta">Get Access</a>
             <button class="nav-search" aria-label="Search pages and services" title="Search (Ctrl+K)"><svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg></button>
-            <button class="theme-toggle" aria-label="Toggle color theme"><span class="icon-moon" aria-hidden="true"><img src="/assets/icons/icon-ui-moon.svg" class="" alt="" width="18" height="18" loading="lazy" decoding="async" aria-hidden="true"></span><span class="icon-sun" aria-hidden="true"><img src="/assets/icons/icon-ui-sun.svg" class="" alt="" width="18" height="18" loading="lazy" decoding="async" aria-hidden="true"></span></button>
+            <button class="theme-toggle" aria-label="Toggle color theme"><span class="icon-moon" aria-hidden="true"><img src="/assets/icons/icon-ui-moon.svg" alt="" width="18" height="18" loading="lazy" decoding="async"></span><span class="icon-sun" aria-hidden="true"><img src="/assets/icons/icon-ui-sun.svg" alt="" width="18" height="18" loading="lazy" decoding="async"></span></button>
         </div>
     </nav>
 <main id="main-content" class="content-wrapper">
         <div class="hero">
-            <img src="/logo.svg" alt="MySweetPea logo" class="logo" width="220" height="220">
-            <h1 class="glass-text">MySweetPea</h1>
-            <p class="hero-sub pop-text">Private alternatives to the services you use every day. No ads, no tracking, no subscriptions. Your data stays yours.</p>
-            <div class="hero-buttons">
-                <a href="/form.html" class="hero-btn hero-btn-primary">Get Access</a>
-                <a href="/services.html" class="hero-btn hero-btn-secondary">See Available Services</a>
+            <div class="hero-copy">
+                <h1 class="glass-text">MySweetPea</h1>
+                <p class="hero-sub pop-text">Private alternatives to the services you use every day. No ads, no tracking, no subscriptions. Your data stays yours.</p>
+                <div class="hero-buttons">
+                    <a href="/form.html" class="hero-btn hero-btn-primary">Get Access</a>
+                    <a href="/services.html" class="hero-btn hero-btn-secondary">See Available Services</a>
+                </div>
+                <ol class="hero-steps" aria-label="How to get access">
+                    <li><a href="/pricing.html"><span>1</span> Choose a tier</a></li>
+                    <li><a href="/form.html"><span>2</span> Make a $5 donation</a></li>
+                    <li><a href="/redeem.html"><span>3</span> Receive your invite code</a></li>
+                </ol>
             </div>
-            <ol class="hero-steps" aria-label="How to get access">
-                <li><span>1</span> Choose a tier</li>
-                <li><span>2</span> Make a $5 donation</li>
-                <li><span>3</span> Receive your invite code</li>
-            </ol>
+            <div class="hero-visual" aria-hidden="true">
+                <div class="app-launcher">
+                    <div class="app-tile"><img src="/assets/icons/jellyfin.svg" alt="" loading="lazy" width="48" height="48">Jellyfin</div>
+                    <div class="app-tile"><img src="/assets/icons/nextcloud.svg" alt="" loading="lazy" width="48" height="48">Nextcloud</div>
+                    <div class="app-tile"><img src="/assets/icons/immich.svg" alt="" loading="lazy" width="48" height="48">Immich</div>
+                    <div class="app-tile"><img src="/assets/icons/vaultwarden.svg" alt="" loading="lazy" width="48" height="48">Vaultwarden</div>
+                    <div class="app-tile"><img src="/assets/icons/matrix.svg" alt="" loading="lazy" width="48" height="48">Matrix</div>
+                    <div class="app-tile"><img src="/assets/icons/affine.svg" alt="" loading="lazy" width="48" height="48">AFFiNE</div>
+                    <div class="app-tile"><img src="/assets/icons/syncthing.svg" alt="" loading="lazy" width="48" height="48">Syncthing</div>
+                    <div class="app-tile"><img src="/assets/icons/koalasync.svg" alt="" loading="lazy" width="48" height="48">KoalaSync</div>
+                    <div class="app-tile"><img src="/assets/icons/stalwart.svg" alt="" loading="lazy" width="48" height="48">Stalwart</div>
+                </div>
+            </div>
             <a href="#why-mysweetpea" class="scroll-cue">
                 <span>Read more about MySweetPea</span>
                 <span aria-hidden="true">&darr;</span>
@@ -81,29 +93,28 @@
             <h2 class="section-title glass-text reveal">Why MySweetPea?</h2>
             <p class="section-subtitle reveal reveal-delay-1">Privacy, control, and community — without the corporate overhead</p>
             <div class="features-grid">
-                <div class="feature-card reveal reveal-delay-1"><div class="icon feature-icon" aria-hidden="true"><img src="/assets/icons/feature-private.svg" alt="" width="64" height="64" loading="lazy" decoding="async"></div><h3>Privacy First</h3><p>Your data stays on our server, not on some corporate cloud. No tracking, no ads, no data selling. Everything you do here is private.</p></div>
-                <div class="feature-card reveal reveal-delay-2"><div class="icon feature-icon" aria-hidden="true"><img src="/assets/icons/feature-selfhosted.svg" alt="" width="64" height="64" loading="lazy" decoding="async"></div><h3>Self-Hosted</h3><p>All services run on hardware we own, not rented from big tech companies. This means full control and no middleman.</p></div>
-                <div class="feature-card reveal reveal-delay-3"><div class="icon feature-icon" aria-hidden="true"><img src="/assets/icons/feature-free.svg" alt="" width="64" height="64" loading="lazy" decoding="async"></div><h3>Community-Funded</h3><p>No recurring subscriptions or ads. Community contributions help protect limited capacity and keep the infrastructure running.</p></div>
-                <div class="feature-card reveal reveal-delay-1"><div class="icon feature-icon" aria-hidden="true"><img src="/assets/icons/feature-open.svg" alt="" width="64" height="64" loading="lazy" decoding="async"></div><h3>Open Source</h3><p>Every service we use is free and open source. You can verify exactly how everything works on our public GitHub.</p></div>
-                <div class="feature-card reveal reveal-delay-2"><div class="icon feature-icon" aria-hidden="true"><img src="/assets/icons/feature-experimental.svg" alt="" width="64" height="64" loading="lazy" decoding="async"></div><h3>Crypto Donations</h3><p>We accept Monero and Bitcoin. No personal info required, no credit checks, no paper trail. Your donation is anonymous.</p></div>
-                <div class="feature-card reveal reveal-delay-3"><div class="icon feature-icon" aria-hidden="true"><img src="/assets/icons/feature-community.svg" alt="" width="64" height="64" loading="lazy" decoding="async"></div><h3>Community Driven</h3><p>Want a new service? Suggest it and we will consider adding it. This project is shaped by the community.</p></div>
+                <div class="feature-card glow-card reveal reveal-delay-1"><div class="icon feature-icon" aria-hidden="true"><img src="/assets/icons/feature-private.svg" alt="" width="48" height="48" loading="lazy" decoding="async"></div><h3>Privacy First</h3><p>Your data stays on our server, not on some corporate cloud. No tracking, no ads, no data selling. Everything you do here is private.</p></div>
+                <div class="feature-card glow-card reveal reveal-delay-2"><div class="icon feature-icon" aria-hidden="true"><img src="/assets/icons/feature-selfhosted.svg" alt="" width="48" height="48" loading="lazy" decoding="async"></div><h3>Self-Hosted</h3><p>All services run on hardware we own, not rented from big tech companies. This means full control and no middleman.</p></div>
+                <div class="feature-card glow-card reveal reveal-delay-3"><div class="icon feature-icon" aria-hidden="true"><img src="/assets/icons/feature-free.svg" alt="" width="48" height="48" loading="lazy" decoding="async"></div><h3>Community-Funded</h3><p>No recurring subscriptions or ads. Community contributions help protect limited capacity and keep the infrastructure running.</p></div>
+                <div class="feature-card glow-card reveal reveal-delay-1"><div class="icon feature-icon" aria-hidden="true"><img src="/assets/icons/feature-open.svg" alt="" width="48" height="48" loading="lazy" decoding="async"></div><h3>Open Source</h3><p>Every service we use is free and open source. You can verify exactly how everything works on our public GitHub.</p></div>
+                <div class="feature-card glow-card reveal reveal-delay-2"><div class="icon feature-icon" aria-hidden="true"><img src="/assets/icons/feature-experimental.svg" alt="" width="48" height="48" loading="lazy" decoding="async"></div><h3>Crypto Donations</h3><p>We accept Monero and Bitcoin. No personal info required, no credit checks, no paper trail. Your donation is anonymous.</p></div>
+                <div class="feature-card glow-card reveal reveal-delay-3"><div class="icon feature-icon" aria-hidden="true"><img src="/assets/icons/feature-community.svg" alt="" width="48" height="48" loading="lazy" decoding="async"></div><h3>Community Driven</h3><p>Want a new service? Suggest it and we will consider adding it. This project is shaped by the community.</p></div>
             </div>
         </div>
 
-        
         <section class="services-strip reveal" aria-labelledby="services-strip-title">
             <span class="eyebrow">What you get</span>
             <h2 class="section-title glass-text" id="services-strip-title">Your Services</h2>
             <p class="section-subtitle">One donation unlocks the whole suite.</p>
             <div class="services-strip-grid">
-                <a class="service-chip" href="/pricing.html"><img src="/assets/icons/jellyfin.svg" alt="" loading="lazy" width="32" height="32">Jellyfin</a>
-                <a class="service-chip" href="/pricing.html"><img src="/assets/icons/nextcloud.svg" alt="" loading="lazy" width="32" height="32">Nextcloud</a>
-                <a class="service-chip" href="/pricing.html"><img src="/assets/icons/immich.svg" alt="" loading="lazy" width="32" height="32">Immich</a>
-                <a class="service-chip" href="/pricing.html"><img src="/assets/icons/vaultwarden.svg" alt="" loading="lazy" width="32" height="32">Vaultwarden</a>
-                <a class="service-chip" href="/pricing.html"><img src="/assets/icons/matrix.svg" alt="" loading="lazy" width="32" height="32">Matrix</a>
-                <a class="service-chip" href="/pricing.html"><img src="/assets/icons/affine.svg" alt="" loading="lazy" width="32" height="32">AFFiNE</a>
-                <a class="service-chip" href="/pricing.html"><img src="/assets/icons/syncthing.svg" alt="" loading="lazy" width="32" height="32">Syncthing</a>
-                <a class="service-chip" href="/pricing.html"><img src="/assets/icons/openwebui.svg" alt="" loading="lazy" width="32" height="32">Open WebUI</a>
+                <a class="service-chip" href="/pricing.html"><img src="/assets/icons/jellyfin.svg" alt="" loading="lazy" width="48" height="48">Jellyfin</a>
+                <a class="service-chip" href="/pricing.html"><img src="/assets/icons/nextcloud.svg" alt="" loading="lazy" width="48" height="48">Nextcloud</a>
+                <a class="service-chip" href="/pricing.html"><img src="/assets/icons/immich.svg" alt="" loading="lazy" width="48" height="48">Immich</a>
+                <a class="service-chip" href="/pricing.html"><img src="/assets/icons/vaultwarden.svg" alt="" loading="lazy" width="48" height="48">Vaultwarden</a>
+                <a class="service-chip" href="/pricing.html"><img src="/assets/icons/matrix.svg" alt="" loading="lazy" width="48" height="48">Matrix</a>
+                <a class="service-chip" href="/pricing.html"><img src="/assets/icons/affine.svg" alt="" loading="lazy" width="48" height="48">AFFiNE</a>
+                <a class="service-chip" href="/pricing.html"><img src="/assets/icons/syncthing.svg" alt="" loading="lazy" width="48" height="48">Syncthing</a>
+                <a class="service-chip" href="/pricing.html"><img src="/assets/icons/openwebui.svg" alt="" loading="lazy" width="48" height="48">Open WebUI</a>
             </div>
         </section>
 
@@ -123,14 +134,13 @@
                 <p>A $5 minimum community contribution helps protect limited capacity from spam and supports the infrastructure. It is not a subscription.</p>
                 <div class="cta-buttons">
                     <a href="/pricing.html" class="cta-btn">How It Works</a>
-                    <a href="/support.html" class="cta-btn" style="background: rgba(255,255,255,0.05); color: var(--text); border: 1px solid var(--border);">Donate</a>
-                    <a href="/suggest.html" class="cta-btn" style="background: rgba(255,255,255,0.05); color: var(--text); border: 1px solid var(--border);">Suggest a Service</a>
+                    <a href="/support.html" class="cta-btn btn-secondary">Donate</a>
+                    <a href="/suggest.html" class="cta-btn btn-secondary">Suggest a Service</a>
                 </div>
             </div>
         </div>
-
-        </main>
-    <a href="#" class="back-to-top" aria-label="Back to top" onclick="window.scrollTo({top:0,behavior:'smooth'});return false;"><img src="/assets/icons/icon-ui-arrow-up.svg" class="" alt="" width="22" height="22" loading="lazy" decoding="async" aria-hidden="true"></a>
+</main>
+    <a href="#" class="back-to-top" aria-label="Back to top" onclick="window.scrollTo({top:0,behavior:'smooth'});return false;"><img src="/assets/icons/icon-ui-arrow-up.svg" alt="" width="22" height="22" loading="lazy" decoding="async" aria-hidden="true"></a>
     <footer class="page-footer">
         <div class="footer-links">
             <a href="/index.html">Home</a>
@@ -145,27 +155,5 @@
         <p>&copy; 2026 MySweetPea. Privacy-first, self-hosted, community funded.</p><p class="footer-help">Need help? <a href="mailto:support@mysweetpea.cc">support@mysweetpea.cc</a></p>
     </footer>
     <script src="/assets/js/site.js" defer></script>
-    <script>
-// === Animated Counter for Stats ===
-        const counterObserver = new IntersectionObserver(function(entries) {
-            entries.forEach(function(entry) {
-                if (entry.isIntersecting) {
-                    const el = entry.target;
-                    const target = parseInt(el.dataset.target);
-                    if (isNaN(target)) { counterObserver.unobserve(el); return; }
-                    const suffix = el.dataset.suffix || '';
-                    let current = 0;
-                    const increment = target / 30;
-                    const timer = setInterval(function() {
-                        current += increment;
-                        if (current >= target) { current = target; clearInterval(timer); }
-                        el.textContent = Math.floor(current) + suffix;
-                    }, 30);
-                    counterObserver.unobserve(el);
-                }
-            });
-        }, { threshold: 0.5 });
-        document.querySelectorAll('.stat-card .number').forEach(function(el) { counterObserver.observe(el); });
-    </script>
 </body>
 </html>
