@@ -47,7 +47,7 @@
                 <div class="nav-more-menu">
                     <a href="/support.html" aria-current="page">Donate</a>
                     <a href="/suggest.html">Suggest a Service</a>
-                    <a href="mailto:support@mysweetpea.cc">Contact Us</a>
+                    <a href="/contact.html">Contact Us</a>
                 </div>
             </details>
             <a href="/form.html" class="nav-cta">Get Access</a>
@@ -69,10 +69,10 @@
                 <div class="info-box">Donations are completely anonymous. No name, email, or account required. Just send crypto to the wallet address and you are done. Thank you for your support!</div>
                 <div class="crypto-section-label">Select Cryptocurrency</div>
                 <div class="crypto-options">
-                    <div class="crypto-option selected" data-type="monero" onclick="selectCrypto(this, 'monero')"><div class="icon" aria-hidden="true"><img src="/assets/icons/icon-crypto-monero.svg" class="" alt="" width="28" height="28" loading="lazy" decoding="async" aria-hidden="true"></div><div class="name">Monero (XMR)</div></div>
+                    <div class="crypto-option" data-type="monero" onclick="selectCrypto(this, 'monero')"><div class="icon" aria-hidden="true"><img src="/assets/icons/icon-crypto-monero.svg" class="" alt="" width="28" height="28" loading="lazy" decoding="async" aria-hidden="true"></div><div class="name">Monero (XMR)</div></div>
                     <div class="crypto-option" data-type="bitcoin" onclick="selectCrypto(this, 'bitcoin')"><div class="icon" aria-hidden="true"><img src="/assets/icons/icon-crypto-bitcoin.svg" class="" alt="" width="28" height="28" loading="lazy" decoding="async" aria-hidden="true"></div><div class="name">Bitcoin (BTC)</div></div>
                 </div>
-                <div class="wallet-display visible" id="wallet-display">
+                <div class="wallet-display" id="wallet-display">
                     <div class="wl">Send your donation to:</div>
                     <div class="wa" id="wallet-addr" onclick="copyWallet()">Loading...</div>
                     <div class="copy-hint">Click address to copy to clipboard</div>
@@ -130,11 +130,13 @@ function toggleFAQ(el) { var item = el.parentElement; var open = item.classList.
         });
         function selectCrypto(el, type) {
             if (el.classList.contains('unavailable')) { return; }
+            var wd0 = document.getElementById('wallet-display');
+            if (wd0) { wd0.classList.add('visible'); }
             document.querySelectorAll('.crypto-option').forEach(function(o) { o.classList.remove('selected'); });
             el.classList.add('selected'); document.getElementById('wallet-addr').textContent = WALLETS[type];
         }
         function copyWallet() { var a = document.getElementById('wallet-addr').textContent; if (!a || a === 'Coming Soon' || a === 'Loading...') { return; } navigator.clipboard.writeText(a).then(function() { var e = document.getElementById('wallet-addr'); var o = e.textContent; e.textContent = 'Copied!'; setTimeout(function() { e.textContent = o; }, 1500); }); }
-        document.getElementById('wallet-addr').textContent = WALLETS.monero;
+        
     </script>
 </body>
 </html>
