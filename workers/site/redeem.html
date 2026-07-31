@@ -40,14 +40,16 @@
         <div class="nav-links" id="nav-links">
             <a href="/services.html" class="nav-btn">Services</a>
             <a href="/pricing.html" class="nav-btn">How It Works</a>
-            <a href="/status.html" class="nav-btn">Status</a>
-            <a href="/about.html" class="nav-btn">About</a>
+            <a href="/redeem.html" class="nav-btn" aria-current="page">I Have a Code</a>
             <details class="nav-more">
                 <summary aria-label="More pages">More</summary>
                 <div class="nav-more-menu">
                     <a href="/support.html">Donate</a>
                     <a href="/suggest.html">Suggest a Service</a>
                     <a href="/contact.html">Contact Us</a>
+                    <a href="/status.html">Status</a>
+                    <a href="/about.html">About</a>
+                    <a href="https://github.com/mysweetpea" target="_blank" rel="noopener noreferrer">GitHub <span aria-hidden="true">↗</span></a>
                 </div>
             </details>
             <a href="/form.html" class="nav-cta">Get Access</a>
@@ -73,7 +75,7 @@
                 <div class="form-group"><label class="form-label glass-text" for="rc-name">Name</label><input type="text" class="form-input" id="rc-name" placeholder="Your name" autocomplete="name"></div>
                 <div class="form-group"><label class="form-label glass-text" for="rc-email">Email</label><input type="email" class="form-input" id="rc-email" placeholder="you@example.com" autocomplete="email"></div>
                 <div class="form-group"><label class="form-label glass-text" for="rc-username">Username</label><input type="text" class="form-input" id="rc-username" placeholder="Choose a username" autocomplete="username"><div class="form-hint">At least 3 characters; letters, numbers, and underscores only.</div></div>
-                <button type="button" class="form-submit" id="rc-submit">Create MySweetPea Account</button>
+                <button type="button" class="form-submit" id="rc-submit" disabled>Create MySweetPea Account</button>
             </div>
         </section>
         <aside class="redeem-callout reveal"><div><strong>Need access first?</strong><span>Choose a tier and submit an access request.</span></div><a href="/form.html" class="btn btn-secondary">Get access</a></aside>
@@ -94,19 +96,12 @@
     <script src="/assets/js/site.js" defer></script>
     <script>
 (function () {
-    var endpoint = 'https://subscribe.mysweetpea.cc/webhook/redeem-code';
-    var btn = document.getElementById('rc-submit');
-    function validEmail(v) { return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v.trim()); }
-    btn.addEventListener('click', function () {
-        var data = { invite_code: document.getElementById('rc-code').value.trim().toUpperCase(), name: document.getElementById('rc-name').value.trim(), email: document.getElementById('rc-email').value.trim(), username: document.getElementById('rc-username').value.trim() };
-        if (!/^(PEA|FAM)-[A-Z0-9]{8}$/.test(data.invite_code) || data.name.length < 2 || !validEmail(data.email) || !/^[A-Za-z0-9_]{3,}$/.test(data.username)) {
-            alert('Please enter a valid invite code, name, email, and username.'); return;
-        }
-        btn.disabled=true; btn.classList.add('loading'); btn.textContent='Creating account…';
-        fetch(endpoint, { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(data) })
-          .then(function(r){return r.json();}).then(function(result){ if(!result.ok) throw new Error(result.msg || 'Could not create account'); window.location.href='/success.html?type=redeem'; })
-          .catch(function(err){btn.disabled=false;btn.classList.remove('loading');btn.textContent=err.message || 'Try again';setTimeout(function(){btn.textContent='Create MySweetPea Account';},3000);});
-    });
+ var endpoint='https://subscribe.mysweetpea.cc/webhook/redeem-code',btn=document.getElementById('rc-submit');
+ var fields={'rc-code':'code','rc-name':'name','rc-email':'email','rc-username':'username'};
+ function valid(type,v){v=v.trim();if(type==='code')return /^(PEA|FAM)-[A-Z0-9]{8}$/.test(v.toUpperCase());if(type==='name')return v.length>=2;if(type==='email')return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v);return /^[A-Za-z0-9_]{3,}$/.test(v);}
+ function update(){btn.disabled=!Object.keys(fields).every(function(id){return valid(fields[id],document.getElementById(id).value);});}
+ Object.keys(fields).forEach(function(id){var el=document.getElementById(id);el.addEventListener('input',function(){if(id==='rc-code')el.value=el.value.toUpperCase().replace(/\s/g,'');var ok=valid(fields[id],el.value);el.classList.toggle('valid',ok);el.classList.toggle('invalid',el.value.trim().length>0&&!ok);update();});el.addEventListener('blur',function(){var ok=valid(fields[id],el.value);el.classList.toggle('valid',ok);el.classList.toggle('invalid',el.value.trim().length>0&&!ok);update();});});
+ btn.addEventListener('click',function(){if(btn.disabled)return;var data={invite_code:document.getElementById('rc-code').value.trim(),name:document.getElementById('rc-name').value.trim(),email:document.getElementById('rc-email').value.trim(),username:document.getElementById('rc-username').value.trim()};btn.disabled=true;btn.classList.add('loading');btn.textContent='Creating account…';fetch(endpoint,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(data)}).then(function(r){return r.json();}).then(function(result){if(!result.ok)throw new Error(result.msg||'Could not create account');window.location.href='/success.html?type=redeem';}).catch(function(e){btn.disabled=false;btn.classList.remove('loading');btn.textContent=e.message||'Try again';setTimeout(function(){btn.textContent='Create MySweetPea Account';update();},3000);});});update();
 })();
 </script></body>
 </html>
