@@ -4085,3 +4085,31 @@ body[data-page='contact'] .contact-hero .hero-sub {
 body[data-page='pricing'] .pricing-card .tier-sweetpea-cta { background: var(--primary); border-color: var(--primary); color: #10201D; text-decoration: none; }
 body[data-page='pricing'] .pricing-card .tier-sweetpea-cta:hover:not(:disabled), body[data-page='pricing'] .pricing-card .tier-sweetpea-cta:focus-visible { background: var(--primary-bright); border-color: var(--primary-bright); color: #10201D; }
 .nav-more-menu a[aria-current="page"] { color: var(--primary-bright); font-weight: 700; }
+
+/* === Set 9: form-flow polish === */
+/* Redeem uses the same form components as Get Access; give it the full component styling. */
+body[data-page='redeem'] .form-card {
+    background: var(--card-bg); backdrop-filter: blur(16px) saturate(1.2); -webkit-backdrop-filter: blur(16px) saturate(1.2);
+    border: 1px solid var(--border); border-radius: var(--radius); padding: 32px 28px; position: relative; overflow: hidden;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, .3);
+}
+body[data-page='redeem'] .form-group { position: relative; margin-bottom: 20px; }
+body[data-page='redeem'] .form-label { display: block; margin-bottom: 8px; font-weight: 600; }
+body[data-page='redeem'] .form-input { width: 100%; box-sizing: border-box; }
+/* Animate the chosen tier form into view without a disruptive flash. */
+.tier-form-panel.active { animation: tierPanelIn .42s cubic-bezier(.2,.8,.2,1) both; }
+@keyframes tierPanelIn { from { opacity: 0; transform: translateY(16px) scale(.985); } to { opacity: 1; transform: translateY(0) scale(1); } }
+@media (prefers-reduced-motion: reduce) { .tier-form-panel.active { animation: none; } }
+/* Check/X feedback sits inside every validated field. */
+body[data-page='form'] .form-group, body[data-page='redeem'] .form-group { position: relative; }
+body[data-page='form'] .validation-icon, body[data-page='redeem'] .validation-icon { position:absolute; right:14px; top:39px; width:20px; height:20px; line-height:19px; border-radius:50%; text-align:center; font-size:14px; font-weight:800; opacity:0; pointer-events:none; transition:opacity .18s ease; }
+body[data-page='form'] .validation-icon.show, body[data-page='redeem'] .validation-icon.show { opacity:1; }
+body[data-page='form'] .validation-icon.valid, body[data-page='redeem'] .validation-icon.valid { color:#0E5B3A; background:rgba(163,201,182,.5); }
+body[data-page='form'] .validation-icon.invalid, body[data-page='redeem'] .validation-icon.invalid { color:#7A2222; background:rgba(212,106,106,.38); }
+/* Both bottom callout links are proper buttons rather than undersized text links. */
+.redeem-callout .btn { display:inline-flex; align-items:center; justify-content:center; flex:0 0 auto; min-height:44px; box-sizing:border-box; padding:11px 18px; border:1px solid var(--sage); border-radius:var(--radius-sm); background:var(--sage); color:#10201D; font-weight:750; line-height:1.2; text-align:center; text-decoration:none; white-space:nowrap; }
+.redeem-callout .btn:visited { color:#10201D; }
+.redeem-callout .btn:hover, .redeem-callout .btn:focus-visible { background:var(--primary-bright); border-color:var(--primary-bright); color:#10201D; text-decoration:none; transform:none; }
+@media (max-width:640px) { .redeem-callout .btn { width:100%; } }
+/* Sweet Pea CTA remains the only control after its service list. */
+body[data-page='pricing'] .pricing-card .tier-sweetpea-cta { margin-top:auto; width:100%; display:flex; justify-content:center; align-items:center; min-height:52px; box-sizing:border-box; }
