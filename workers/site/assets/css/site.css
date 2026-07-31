@@ -4113,3 +4113,39 @@ body[data-page='form'] .validation-icon.invalid, body[data-page='redeem'] .valid
 @media (max-width:640px) { .redeem-callout .btn { width:100%; } }
 /* Sweet Pea CTA remains the only control after its service list. */
 body[data-page='pricing'] .pricing-card .tier-sweetpea-cta { margin-top:auto; width:100%; display:flex; justify-content:center; align-items:center; min-height:52px; box-sizing:border-box; }
+
+/* === Set 10: redeem controls and unselected access tiers === */
+/* The redeem page uses form controls outside the original form-page selector. */
+body[data-page='redeem'] .form-input {
+    appearance: none;
+    -webkit-appearance: none;
+    display: block;
+    width: 100%;
+    min-height: 46px;
+    padding: 12px 42px 12px 14px;
+    box-sizing: border-box;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    background: rgba(10, 19, 22, .72);
+    color: var(--text);
+    font: inherit;
+    line-height: 1.35;
+    outline: none;
+    transition: border-color .18s ease, box-shadow .18s ease, background-color .18s ease;
+}
+body[data-page='redeem'] .form-input::placeholder { color: var(--text-faint); opacity: 1; }
+body[data-page='redeem'] .form-input:focus { border-color: var(--sage); box-shadow: 0 0 0 3px rgba(163, 201, 182, .14); background: rgba(10, 19, 22, .9); }
+[data-theme="light"] body[data-page='redeem'] .form-input { background: rgba(248, 250, 249, .72); color: var(--text); }
+/* Keep unavailable wallet labels below the currency name instead of colliding with it. */
+body[data-page='form'] .crypto-option {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: 7px;
+    min-height: 78px;
+}
+body[data-page='form'] .crypto-option .icon { flex: 0 0 auto; }
+body[data-page='form'] .crypto-option .name { flex: 0 1 auto; white-space: nowrap; }
+body[data-page='form'] .crypto-option .crypto-soon { flex: 0 0 100%; display: block; margin: 0; text-align: center; line-height: 1.1; }
+body[data-page='form'] .crypto-option.unavailable { padding: 12px 10px; }
