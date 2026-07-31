@@ -1052,54 +1052,6 @@ position: absolute;
 left: 0;
 color: var(--primary);
 font-weight: 700 }
-/* Vine Button */
-body[data-page='pricing'] .vine-btn-wrapper { position: relative;
-display: inline-block;
-width: 100%;
-margin-top: auto }
-body[data-page='pricing'] .vine-btn-wrapper svg { position: absolute;
-top: -8px;
-left: -12px;
-width: calc(100% + 24px);
-height: calc(100% + 20px);
-pointer-events: none;
-opacity: 0;
-transition: opacity 0.4s ease;
-z-index: 2 }
-body[data-page='pricing'] .vine-btn-wrapper:hover svg { opacity: 1 }
-body[data-page='pricing'] .vine-btn-wrapper .btn { position: relative;
-z-index: 1;
-display: block;
-width: 100%;
-padding: 14px 28px;
-border: none;
-border-radius: var(--radius-sm);
-font-size: 0.92rem;
-font-weight: 600;
-text-decoration: none;
-transition: var(--transition);
-cursor: pointer;
-text-align: center }
-body[data-page='pricing'] .btn-glass-seedling { background: rgba(163, 201, 182, 0.05);
-backdrop-filter: blur(10px);
--webkit-backdrop-filter: blur(10px);
-color: var(--text);
-border: 1px solid rgba(163, 201, 182, 0.2);
-box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.05), 0 4px 16px rgba(0, 0, 0, 0.2) }
-body[data-page='pricing'] .btn-glass-seedling:hover:not(:disabled) { background: rgba(163, 201, 182, 0.12);
-border-color: rgba(163, 201, 182, 0.5);
-box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.08), 0 4px 20px rgba(163, 201, 182, 0.15);
-transform: scale(1.02) }
-body[data-page='pricing'] .btn-glass-sweetpea { background: rgba(107, 154, 166, 0.05);
-backdrop-filter: blur(10px);
--webkit-backdrop-filter: blur(10px);
-color: var(--text);
-border: 1px solid rgba(107, 154, 166, 0.2);
-box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.05), 0 4px 16px rgba(0, 0, 0, 0.2) }
-body[data-page='pricing'] .btn-glass-sweetpea:hover:not(:disabled) { background: rgba(107, 154, 166, 0.12);
-border-color: rgba(107, 154, 166, 0.5);
-box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.08), 0 4px 20px rgba(107, 154, 166, 0.15);
-transform: scale(1.02) }
 /* Glow Card */
 body[data-page='pricing'] .glow-card { position: relative }
 body[data-page='pricing'] .glow-card::before { content: "";
@@ -2236,33 +2188,10 @@ position: absolute;
 left: 0;
 color: var(--primary);
 font-weight: 700 }
-body[data-page='services'] .vine-btn-wrapper { position: relative;
-display: inline-block;
-width: 100%;
-margin-top: auto }
-body[data-page='services'] .vine-btn-wrapper svg { position: absolute;
-top: -8px;
-left: -12px;
-width: calc(100% + 24px);
-height: calc(100% + 20px);
-pointer-events: none;
-opacity: 0;
-transition: opacity 0.4s ease;
-z-index: 2 }
-body[data-page='services'] .vine-btn-wrapper:hover svg { opacity: 1 }
-body[data-page='services'] .vine-btn-wrapper .btn { position: relative;
-z-index: 1;
-display: block;
-width: 100%;
-padding: 14px 28px;
-border: none;
-border-radius: var(--radius-sm);
-font-size: 0.92rem;
-font-weight: 600;
-text-decoration: none;
-transition: var(--transition);
-cursor: pointer;
-text-align: center }
+
+
+
+
 body[data-page='services'] .btn-glass-seedling { background: rgba(163, 201, 182, 0.05);
 backdrop-filter: blur(10px);
 -webkit-backdrop-filter: blur(10px);
@@ -2753,33 +2682,10 @@ position: absolute;
 left: 0;
 color: var(--primary);
 font-weight: 700 }
-body[data-page='services'] .vine-btn-wrapper { position: relative;
-display: inline-block;
-width: 100%;
-margin-top: auto }
-body[data-page='services'] .vine-btn-wrapper svg { position: absolute;
-top: -8px;
-left: -12px;
-width: calc(100% + 24px);
-height: calc(100% + 20px);
-pointer-events: none;
-opacity: 0;
-transition: opacity 0.4s ease;
-z-index: 2 }
-body[data-page='services'] .vine-btn-wrapper:hover svg { opacity: 1 }
-body[data-page='services'] .vine-btn-wrapper .btn { position: relative;
-z-index: 1;
-display: block;
-width: 100%;
-padding: 14px 28px;
-border: none;
-border-radius: var(--radius-sm);
-font-size: 0.92rem;
-font-weight: 600;
-text-decoration: none;
-transition: var(--transition);
-cursor: pointer;
-text-align: center }
+
+
+
+
 body[data-page='services'] .btn-glass-seedling { background: rgba(163, 201, 182, 0.05);
 backdrop-filter: blur(10px);
 -webkit-backdrop-filter: blur(10px);
@@ -4054,3 +3960,28 @@ body[data-page='form'] .form-card { animation: none !important; }
 }
 .status-legend a { color: var(--sage); font-weight: 600; }
 .status-legend .status-dot { display: inline-block; vertical-align: middle; margin-right: 4px; }
+
+/* === Set 5 === */
+/* Seedling button: pin to card bottom, full width, solid and readable */
+body[data-page='pricing'] .pricing-card .btn-glass-seedling {
+    margin-top: auto; width: 100%; display: block;
+    padding: 14px 20px; font-size: 0.95rem; font-weight: 700;
+    background: var(--sage); color: var(--bg); border: 1px solid var(--sage);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.25);
+}
+body[data-page='pricing'] .pricing-card .btn-glass-seedling:hover:not(:disabled) {
+    background: var(--primary-bright); color: var(--bg);
+    border-color: var(--primary-bright);
+    box-shadow: 0 6px 22px rgba(163, 201, 182, 0.25);
+    transform: none;
+}
+[data-theme="light"] body[data-page='pricing'] .pricing-card .btn-glass-seedling,
+[data-theme="light"] .pricing-card .btn-glass-seedling { color: #FFFFFF; }
+/* LIVE badge next to service status dot */
+.live-badge {
+    display: inline-block; margin-left: 2px; margin-right: 6px; padding: 1px 8px;
+    border-radius: 999px; background: rgba(163, 201, 182, 0.15);
+    border: 1px solid rgba(163, 201, 182, 0.4);
+    color: var(--sage); font-size: 0.62rem; font-weight: 800;
+    letter-spacing: 0.08em; vertical-align: middle;
+}
