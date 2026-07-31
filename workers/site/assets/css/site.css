@@ -3963,3 +3963,65 @@ body, .top-nav, .page-footer, .feature-card, .pricing-card, .service-card,
     .scroll-cue { margin-top: 16px; }
     body[data-page='home'] .hero { min-height: auto; padding-bottom: 40px; }
 }
+
+/* === Set 3: consistent hero -> content spacing across pages === */
+/* Non-homepage heroes: standardize the gap between hero text and page content */
+body:not([data-page='home']) .hero { min-height: auto; padding-block: clamp(64px, 10vh, 110px) clamp(40px, 6vh, 64px); }
+/* Homepage: keep the scroll cue visible but make the gap to Why MySweetPea match other pages */
+@media (min-width: 769px) { body[data-page='home'] .hero { min-height: min(82svh, 720px); padding-bottom: clamp(40px, 6vh, 64px); } }
+
+/* === Set 3: services page === */
+.acct-pill {
+    display: inline-block; margin-left: 8px; padding: 2px 9px;
+    border-radius: 999px; border: 1px solid var(--border-primary);
+    font-size: 0.68rem; font-weight: 700; letter-spacing: 0.04em;
+    text-transform: uppercase; color: var(--text-dim); vertical-align: middle;
+}
+.acct-notice {
+    font-size: 1.02rem !important; padding: 14px 18px;
+    border: 1px solid var(--border-primary); border-radius: var(--radius-sm);
+    background: rgba(163, 201, 182, 0.1); max-width: 640px;
+}
+.acct-notice strong { color: var(--primary-bright); }
+
+/* === Set 3 #13: remove white flash on tab switch — swap instantly, no entrance animation === */
+body[data-page='form'] .tab-content { animation: none !important; }
+.tab-content.switch-left { animation: none !important; }
+body[data-page='form'] .form-card { animation: none !important; }
+
+/* === Set 3 #12: prominent verification banner === */
+.verify-banner {
+    margin: 14px 0 18px; padding: 14px 16px;
+    border-left: 4px solid var(--sage); border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+    background: rgba(163, 201, 182, 0.12);
+    color: var(--text); font-size: 0.94rem; line-height: 1.55;
+}
+.verify-banner strong { color: var(--primary-bright); }
+
+/* === Set 3 #10: graphical How It Works === */
+.hiw-intro { text-align: center; color: var(--text-dim); font-size: 1.05rem; margin: 0 auto 30px; max-width: 46ch; }
+.hiw-steps {
+    display: flex; align-items: stretch; justify-content: center; gap: 14px;
+    max-width: 980px; margin: 0 auto 24px; flex-wrap: wrap;
+}
+.hiw-step {
+    flex: 1 1 240px; max-width: 300px; padding: 26px 22px 22px;
+    background: var(--card-bg); border: 1px solid var(--border-primary);
+    border-radius: var(--radius); text-align: center;
+    box-shadow: 0 4px 18px rgba(0, 0, 0, 0.18);
+}
+.hiw-num {
+    width: 46px; height: 46px; margin: 0 auto 14px;
+    display: flex; align-items: center; justify-content: center;
+    border-radius: 50%; background: var(--sage); color: var(--bg);
+    font-size: 1.3rem; font-weight: 800;
+}
+.hiw-step h3 { margin: 0 0 8px; font-size: 1.08rem; color: var(--primary-bright); }
+.hiw-step p { margin: 0; color: var(--text-dim); font-size: 0.92rem; line-height: 1.55; }
+.hiw-arrow { display: flex; align-items: center; color: var(--sage); font-size: 1.6rem; font-weight: 700; }
+.hiw-note { text-align: center; color: var(--text-dim); font-size: 0.9rem; max-width: 60ch; margin: 0 auto; }
+.hiw-note a { color: var(--sage); font-weight: 600; }
+@media (max-width: 720px) { .hiw-arrow { transform: rotate(90deg); } }
+
+/* === Set 3 #6: remove vine wrapper spacing left behind === */
+.vine-btn-wrapper { display: none; }
