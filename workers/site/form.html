@@ -47,7 +47,7 @@
                 <div class="nav-more-menu">
                     <a href="/support.html">Donate</a>
                     <a href="/suggest.html">Suggest a Service</a>
-                    <a href="mailto:support@mysweetpea.cc">Contact Us</a>
+                    <a href="/contact.html">Contact Us</a>
                 </div>
             </details>
             <a href="/form.html" class="nav-cta">Get Access</a>
@@ -73,6 +73,7 @@
             <div class="tab-content active" id="tab-get-access">
                 <div class="form-card glow-card">
                     <h3>Get Access — $5 Minimum</h3>
+                    <div class="verify-banner" role="note"><strong>Please note:</strong> a real person personally verifies every donation. You will usually receive your invite code by email <strong>within 24 hours</strong> — it is not instant.</div>
                     <p class="form-desc">Donate $5+ to get access to non-media services. No technical setup needed — we'll email you everything you need, and if you get stuck, <a href="mailto:support@mysweetpea.cc" style="color: var(--sage);">support@mysweetpea.cc</a> is happy to help.</p>
                     <div class="how-it-works">
                         <ol>
@@ -107,7 +108,7 @@
                     <div class="form-group">
                         <label class="form-label glass-text">Cryptocurrency</label>
                         <div class="crypto-options">
-                            <div class="crypto-option selected" data-type="monero" onclick="selectCrypto(this, 'monero')">
+                            <div class="crypto-option" data-type="monero" onclick="selectCrypto(this, 'monero')">
                                 <div class="icon" aria-hidden="true"><img src="/assets/icons/icon-crypto-monero.svg" class="" alt="" width="28" height="28" loading="lazy" decoding="async" aria-hidden="true"></div>
                                 <div class="name">Monero (XMR)</div>
                             </div>
@@ -118,20 +119,19 @@
                         </div>
                     </div>
 
-                    <div class="wallet-display visible" id="wallet-display">
+                    <div class="wallet-display" id="wallet-display">
                         <div class="wl">Send your $5+ donation to:</div>
                         <div class="wa" id="wallet-addr" onclick="copyWallet()">Loading...</div>
                         <div class="copy-hint">Click address to copy</div>
                     </div>
-                    <p class="crypto-alt">Don't use crypto? Email <a href="mailto:support@mysweetpea.cc">support@mysweetpea.cc</a> and we'll work out another way — no one is turned away for that.</p>
 
                     <div class="form-group">
-                        <label class="form-label glass-text" for="ga-txhash">Transaction Hash (optional but recommended)</label>
-                        <input type="text" class="form-input" id="ga-txhash" placeholder="Your transaction hash">
-                        <div class="form-hint">Helps us verify your donation faster.</div>
+                        <label class="form-label glass-text" for="ga-txhash">Transaction Hash (required)</label>
+                        <input type="text" class="form-input" id="ga-txhash" placeholder="Your transaction hash" required aria-describedby="ga-txhash-hint" oninput="validateField('ga-txhash', 'txhash')">
+                        <span class="validation-icon" id="ga-txhash-icon"></span>
+                        <div class="form-hint" id="ga-txhash-hint" aria-live="polite">Required — this is how we match your donation to your request. Find it in your wallet app after sending.</div>
                     </div>
 
-                    <p class="verify-note">A real person verifies each donation — you'll usually receive your invite code by email within 24 hours.</p>
                     <button class="form-submit" id="ga-submit" disabled>Submit Request</button>
                 </div>
             </div>
@@ -254,6 +254,8 @@
         var currentCrypto = 'monero';
         function selectCrypto(el, type) {
             if (el.classList.contains('unavailable')) { return; }
+            var wd0 = document.getElementById('wallet-display');
+            if (wd0) { wd0.classList.add('visible'); }
             document.querySelectorAll('.crypto-option').forEach(function(o) { o.classList.remove('selected'); });
             void el.offsetWidth; el.classList.add('selected'); currentCrypto = type;
             var wa = document.getElementById('wallet-addr');
@@ -276,7 +278,7 @@
                 setTimeout(function() { el.textContent = orig; }, 1500);
             });
         }
-        document.getElementById('wallet-addr').textContent = WALLETS.monero;
+        
 
         // Validation
         function validateField(id, type) {
@@ -290,6 +292,7 @@
             else if (type === 'email') { valid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val); }
             else if (type === 'username') { valid = /^[a-zA-Z0-9_]{3,}$/.test(val); }
             else if (type === 'invitecode') { valid = /^(PEA|FAM)-[A-Z0-9]{8}$/i.test(val); }
+            else if (type === 'txhash') { valid = val.length >= 8; }
 
             input.classList.remove('valid', 'invalid');
             icon.classList.remove('show', 'valid', 'invalid');
@@ -322,7 +325,7 @@
         }
 
         function checkSubmitState() {
-            var gaValid = ['ga-name', 'ga-email', 'ga-username'].every(function(id) {
+            var gaValid = ['ga-name', 'ga-email', 'ga-username', 'ga-txhash'].every(function(id) {
                 var el = document.getElementById(id); return el && el.classList.contains('valid');
             });
             document.getElementById('ga-submit').disabled = !gaValid;
@@ -389,7 +392,7 @@
                 email: document.getElementById('ga-email').value.trim(),
                 username: document.getElementById('ga-username').value.trim(),
                 crypto_type: currentCrypto,
-                tx_hash: document.getElementById('ga-txhash').value.trim() || ''
+                tx_hash: document.getElementById('ga-txhash').value.trim()
             };
             fetch(ENDPOINTS.donationRequest, {
                 method: 'POST',
