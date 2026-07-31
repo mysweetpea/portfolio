@@ -3985,3 +3985,66 @@ body[data-page='pricing'] .pricing-card .btn-glass-seedling:hover:not(:disabled)
     color: var(--sage); font-size: 0.62rem; font-weight: 800;
     letter-spacing: 0.08em; vertical-align: middle;
 }
+
+/* === Set 6: final visual fixes === */
+/* Pricing CTA: remove browser link appearance and use a deliberate button style */
+body[data-page='pricing'] .pricing-card .btn-glass-seedling {
+    margin-top: auto;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 52px;
+    box-sizing: border-box;
+    padding: 14px 20px;
+    border: 1px solid var(--sage);
+    border-radius: var(--radius-sm);
+    background: var(--sage);
+    color: #10201D;
+    font-size: 0.95rem;
+    font-weight: 750;
+    line-height: 1.25;
+    text-align: center;
+    text-decoration: none;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.25);
+}
+body[data-page='pricing'] .pricing-card .btn-glass-seedling:visited { color: #10201D; }
+body[data-page='pricing'] .pricing-card .btn-glass-seedling:hover:not(:disabled),
+body[data-page='pricing'] .pricing-card .btn-glass-seedling:focus-visible {
+    background: var(--primary-bright);
+    border-color: var(--primary-bright);
+    color: #10201D;
+    text-decoration: none;
+    transform: none;
+    box-shadow: 0 6px 22px rgba(163, 201, 182, 0.25);
+}
+
+/* Contact hero: logo, heading, and supporting text share one centered axis */
+body[data-page='contact'] .contact-hero {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+}
+body[data-page='contact'] .contact-hero .logo,
+body[data-page='contact'] .contact-hero h1,
+body[data-page='contact'] .contact-hero .hero-sub {
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
+}
+
+/* Softer low-glare light mode: less white, lower contrast, reduced bright overlays */
+[data-theme="light"] {
+    --bg: #D8E1DD;
+    --text: #24363A;
+    --text-dim: #50656A;
+    --text-faint: #718187;
+    --card-bg: rgba(235, 240, 237, 0.82);
+    --card-bg-hover: rgba(240, 244, 242, 0.92);
+    --primary-glow: rgba(78, 124, 136, 0.06);
+}
+[data-theme="light"] .bg-gradient { opacity: 0.36; }
+[data-theme="light"] .grain-overlay { opacity: 0.22; }
+[data-theme="light"] #petalCanvas { opacity: 0.42; }
