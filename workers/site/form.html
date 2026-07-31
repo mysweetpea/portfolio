@@ -40,14 +40,16 @@
         <div class="nav-links" id="nav-links">
             <a href="/services.html" class="nav-btn">Services</a>
             <a href="/pricing.html" class="nav-btn">How It Works</a>
-            <a href="/status.html" class="nav-btn">Status</a>
-            <a href="/about.html" class="nav-btn">About</a>
+            <a href="/redeem.html" class="nav-btn">I Have a Code</a>
             <details class="nav-more">
                 <summary aria-label="More pages">More</summary>
                 <div class="nav-more-menu">
                     <a href="/support.html">Donate</a>
                     <a href="/suggest.html">Suggest a Service</a>
                     <a href="/contact.html">Contact Us</a>
+                    <a href="/status.html">Status</a>
+                    <a href="/about.html">About</a>
+                    <a href="https://github.com/mysweetpea" target="_blank" rel="noopener noreferrer">GitHub <span aria-hidden="true">↗</span></a>
                 </div>
             </details>
             <a href="/form.html" class="nav-cta">Get Access</a>
@@ -65,7 +67,7 @@
         <section class="access-choice-section" aria-labelledby="choose-tier-title">
             <span class="eyebrow">First, choose a tier</span>
             <h2 class="section-title glass-text" id="choose-tier-title">How would you like to get started?</h2>
-            <p class="section-subtitle">Both options give you a MySweetPea account. Select one to see the next step.</p>
+            <p class="section-subtitle">Both options give you a MySweetPea account. Select a tier below to open its form.</p>
             <div class="access-choice-grid">
                 <button type="button" class="access-choice-card selected" data-tier="seedling" aria-pressed="true">
                     <span class="access-choice-icon" aria-hidden="true"><img src="/assets/icons/icon-ui-seedling.svg" alt="" width="48" height="48"></span>
@@ -83,7 +85,7 @@
         </section>
 
         <section class="tier-form-section" aria-live="polite">
-            <div class="tier-form-panel active" id="panel-seedling">
+            <div class="tier-form-panel" id="panel-seedling" hidden>
                 <div class="form-card glow-card">
                     <span class="form-tier-label">Seedling tier</span>
                     <h2>Complete your Seedling request</h2>
@@ -95,15 +97,15 @@
                     </ol>
                     <div class="form-group">
                         <label class="form-label glass-text" for="ga-name">Name</label>
-                        <input type="text" class="form-input" id="ga-name" placeholder="Your name" autocomplete="name">
+                        <input type="text" class="form-input" id="ga-name" placeholder="Your name" autocomplete="name" required>
                     </div>
                     <div class="form-group">
                         <label class="form-label glass-text" for="ga-email">Email</label>
-                        <input type="email" class="form-input" id="ga-email" placeholder="you@example.com" autocomplete="email">
+                        <input type="email" class="form-input" id="ga-email" placeholder="you@example.com" autocomplete="email" required>
                     </div>
                     <div class="form-group">
                         <label class="form-label glass-text" for="ga-username">Preferred username</label>
-                        <input type="text" class="form-input" id="ga-username" placeholder="Choose a username" autocomplete="username">
+                        <input type="text" class="form-input" id="ga-username" placeholder="Choose a username" autocomplete="username" required>
                         <div class="form-hint">At least 3 characters; letters, numbers, and underscores only.</div>
                     </div>
                     <fieldset class="form-group crypto-fieldset">
@@ -135,20 +137,20 @@
                     <p class="form-desc">No crypto donation or transaction hash is needed for this request. Tell us a little about yourself and which services you are interested in.</p>
                     <div class="form-group">
                         <label class="form-label glass-text" for="sp-name">Name</label>
-                        <input type="text" class="form-input" id="sp-name" placeholder="Your name" autocomplete="name">
+                        <input type="text" class="form-input" id="sp-name" placeholder="Your name" autocomplete="name" required>
                     </div>
                     <div class="form-group">
                         <label class="form-label glass-text" for="sp-email">Email</label>
-                        <input type="email" class="form-input" id="sp-email" placeholder="you@example.com" autocomplete="email">
+                        <input type="email" class="form-input" id="sp-email" placeholder="you@example.com" autocomplete="email" required>
                     </div>
                     <div class="form-group">
                         <label class="form-label glass-text" for="sp-username">Preferred username</label>
-                        <input type="text" class="form-input" id="sp-username" placeholder="Choose a username" autocomplete="username">
+                        <input type="text" class="form-input" id="sp-username" placeholder="Choose a username" autocomplete="username" required>
                         <div class="form-hint">At least 3 characters; letters, numbers, and underscores only.</div>
                     </div>
                     <div class="form-group">
                         <label class="form-label glass-text" for="sp-services">Services you are interested in <span aria-hidden="true">*</span></label>
-                        <textarea class="form-input" id="sp-services" rows="4" placeholder="For example: Jellyfin, Nextcloud, Immich, Open WebUI…"></textarea>
+                        <textarea class="form-input" id="sp-services" rows="4" placeholder="For example: Jellyfin, Nextcloud, Immich, Open WebUI…" required></textarea>
                         <div class="form-hint">Please list at least one service you would like to use.</div>
                     </div>
                     <div class="form-group">
@@ -183,100 +185,49 @@
     <script>
 (function () {
     var WEBHOOK_BASE = 'https://subscribe.mysweetpea.cc/webhook';
-    var ENDPOINTS = {
-        donationRequest: WEBHOOK_BASE + '/donation-request',
-        sweetPeaRequest: WEBHOOK_BASE + '/sweetpea-request'
-    };
-    // Replace Coming Soon with real addresses before enabling a payment option.
+    var ENDPOINTS = { donationRequest: WEBHOOK_BASE + '/donation-request', sweetPeaRequest: WEBHOOK_BASE + '/sweetpea-request' };
     var WALLETS = { monero: 'Coming Soon', bitcoin: 'Coming Soon' };
     var chosenCrypto = '';
-
-    function validName(v) { return v.trim().length >= 2; }
-    function validEmail(v) { return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v.trim()); }
-    function validUsername(v) { return /^[A-Za-z0-9_]{3,}$/.test(v.trim()); }
-    function setButtonState(btn, loading, text) {
-        btn.disabled = loading;
-        btn.classList.toggle('loading', loading);
-        if (text) btn.textContent = text;
+    function valid(type, value) {
+        value = value.trim();
+        if (type === 'name') return value.length >= 2;
+        if (type === 'email') return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
+        if (type === 'username') return /^[A-Za-z0-9_]{3,}$/.test(value);
+        if (type === 'tx') return value.length >= 8;
+        if (type === 'services') return value.length >= 2;
+        return false;
     }
-    function copyText(text, button) {
-        if (!text) return;
-        navigator.clipboard.writeText(text).then(function () {
-            var old = button.textContent; button.textContent = 'Copied!';
-            setTimeout(function () { button.textContent = old; }, 1600);
-        });
+    var fields = { 'ga-name':'name', 'ga-email':'email', 'ga-username':'username', 'ga-txhash':'tx', 'sp-name':'name', 'sp-email':'email', 'sp-username':'username', 'sp-services':'services' };
+    function validateField(id) {
+        var input = document.getElementById(id), ok = valid(fields[id], input.value);
+        input.classList.toggle('valid', ok); input.classList.toggle('invalid', input.value.trim().length > 0 && !ok);
+        updateButtons(); return ok;
     }
-
+    Object.keys(fields).forEach(function (id) { document.getElementById(id).addEventListener('input', function(){ validateField(id); }); document.getElementById(id).addEventListener('blur', function(){ validateField(id); }); });
+    function allValid(ids) { return ids.every(function(id){ return valid(fields[id], document.getElementById(id).value); }); }
+    function updateButtons() {
+        document.getElementById('ga-submit').disabled = !(allValid(['ga-name','ga-email','ga-username','ga-txhash']) && !!chosenCrypto);
+        document.getElementById('sp-submit').disabled = !allValid(['sp-name','sp-email','sp-username','sp-services']);
+    }
     document.querySelectorAll('.access-choice-card').forEach(function (card) {
         card.addEventListener('click', function () {
             var tier = card.getAttribute('data-tier');
-            document.querySelectorAll('.access-choice-card').forEach(function (c) {
-                var selected = c === card;
-                c.classList.toggle('selected', selected);
-                c.setAttribute('aria-pressed', String(selected));
-            });
-            ['seedling', 'sweetpea'].forEach(function (name) {
-                var panel = document.getElementById('panel-' + name);
-                var active = name === tier;
-                panel.hidden = !active;
-                panel.classList.toggle('active', active);
-            });
-            document.querySelector('.tier-form-section').scrollIntoView({ behavior: 'smooth', block: 'start' });
+            document.querySelectorAll('.access-choice-card').forEach(function(c){var picked=c===card;c.classList.toggle('selected',picked);c.setAttribute('aria-pressed',String(picked));});
+            ['seedling','sweetpea'].forEach(function(name){var panel=document.getElementById('panel-'+name),active=name===tier;panel.hidden=!active;panel.classList.toggle('active',active);});
+            document.querySelector('.tier-form-section').scrollIntoView({behavior:'smooth',block:'start'});
         });
     });
-
-    document.querySelectorAll('.crypto-option').forEach(function (button) {
-        var type = button.getAttribute('data-type');
-        if (!WALLETS[type] || WALLETS[type] === 'Coming Soon') {
-            button.disabled = true;
-            button.classList.add('unavailable');
-            button.setAttribute('title', 'Wallet address coming soon');
-            var soon = document.createElement('span'); soon.className = 'crypto-soon'; soon.textContent = 'Coming soon'; button.appendChild(soon);
-            return;
-        }
-        button.addEventListener('click', function () {
-            chosenCrypto = type;
-            document.querySelectorAll('.crypto-option').forEach(function (b) { b.classList.toggle('selected', b === button); });
-            var display = document.getElementById('wallet-display');
-            var address = document.getElementById('wallet-addr');
-            address.textContent = WALLETS[type]; display.hidden = false;
-        });
+    document.querySelectorAll('.crypto-option').forEach(function(button){
+        var type=button.getAttribute('data-type');
+        if(!WALLETS[type] || WALLETS[type]==='Coming Soon'){button.disabled=true;button.classList.add('unavailable');var label=document.createElement('span');label.className='crypto-soon';label.textContent='Coming soon';button.appendChild(label);return;}
+        button.addEventListener('click',function(){chosenCrypto=type;document.querySelectorAll('.crypto-option').forEach(function(b){b.classList.toggle('selected',b===button);});var display=document.getElementById('wallet-display'),address=document.getElementById('wallet-addr');address.textContent=WALLETS[type];display.hidden=false;updateButtons();});
     });
-    document.getElementById('wallet-addr').addEventListener('click', function () { copyText(this.textContent, this); });
-
-    document.getElementById('ga-submit').addEventListener('click', function () {
-        var btn = this;
-        var data = { name: document.getElementById('ga-name').value, email: document.getElementById('ga-email').value, username: document.getElementById('ga-username').value, tx_hash: document.getElementById('ga-txhash').value };
-        if (!validName(data.name) || !validEmail(data.email) || !validUsername(data.username) || !chosenCrypto || data.tx_hash.trim().length < 8) {
-            alert('Please complete every field, choose a cryptocurrency, and enter your transaction hash.'); return;
-        }
-        data.crypto_type = chosenCrypto; setButtonState(btn, true, 'Submitting…');
-        fetch(ENDPOINTS.donationRequest, { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify(data) })
-          .then(function(r){ return r.json(); }).then(function(result){
-            if (!result.ok) throw new Error(result.msg || 'Submission failed');
-            window.location.href = '/success.html?type=donation';
-          }).catch(function(error){ setButtonState(btn, false, error.message || 'Try again'); setTimeout(function(){ btn.textContent='Submit Seedling Request'; }, 3000); });
-    });
-
-    document.getElementById('sp-submit').addEventListener('click', function () {
-        var btn = this;
-        var data = { name: document.getElementById('sp-name').value, email: document.getElementById('sp-email').value, username: document.getElementById('sp-username').value, services: document.getElementById('sp-services').value, message: document.getElementById('sp-message').value };
-        if (!validName(data.name) || !validEmail(data.email) || !validUsername(data.username) || data.services.trim().length < 2) {
-            alert('Please enter your name, email, preferred username, and at least one service you are interested in.'); return;
-        }
-        data.tier = 'sweetpea'; setButtonState(btn, true, 'Submitting request…');
-        fetch(ENDPOINTS.sweetPeaRequest, { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify(data) })
-          .then(function(r){ return r.json(); }).then(function(result){
-            if (!result.ok) throw new Error(result.msg || 'Submission failed');
-            window.location.href = '/success.html?type=sweetpea-request';
-          }).catch(function(error){ setButtonState(btn, false, error.message || 'Try again'); setTimeout(function(){ btn.textContent='Submit Sweet Pea Request'; }, 3000); });
-    });
-
-    var requestedTier = new URLSearchParams(window.location.search).get('tier');
-    if (requestedTier === 'sweetpea') {
-        var sweetCard = document.querySelector('.access-choice-card[data-tier="sweetpea"]');
-        if (sweetCard) { sweetCard.click(); }
-    }
+    document.getElementById('wallet-addr').addEventListener('click',function(){var b=this;navigator.clipboard.writeText(b.textContent).then(function(){var x=b.textContent;b.textContent='Copied!';setTimeout(function(){b.textContent=x;},1600);});});
+    function post(endpoint,data,btn,defaultLabel,successUrl){btn.disabled=true;btn.classList.add('loading');btn.textContent='Submitting…';fetch(endpoint,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(data)}).then(function(r){return r.json();}).then(function(result){if(!result.ok)throw new Error(result.msg||'Submission failed');window.location.href=successUrl;}).catch(function(e){btn.disabled=false;btn.classList.remove('loading');btn.textContent=e.message||'Try again';setTimeout(function(){btn.textContent=defaultLabel;updateButtons();},3000);});}
+    document.getElementById('ga-submit').addEventListener('click',function(){if(this.disabled)return;post(ENDPOINTS.donationRequest,{name:document.getElementById('ga-name').value.trim(),email:document.getElementById('ga-email').value.trim(),username:document.getElementById('ga-username').value.trim(),crypto_type:chosenCrypto,tx_hash:document.getElementById('ga-txhash').value.trim()},this,'Submit Seedling Request','/success.html?type=donation');});
+    document.getElementById('sp-submit').addEventListener('click',function(){if(this.disabled)return;post(ENDPOINTS.sweetPeaRequest,{name:document.getElementById('sp-name').value.trim(),email:document.getElementById('sp-email').value.trim(),username:document.getElementById('sp-username').value.trim(),services:document.getElementById('sp-services').value.trim(),message:document.getElementById('sp-message').value.trim(),tier:'sweetpea'},this,'Submit Sweet Pea Request','/success.html?type=sweetpea-request');});
+    var requested = new URLSearchParams(location.search).get('tier'); if(requested==='sweetpea'){var card=document.querySelector('.access-choice-card[data-tier="sweetpea"]');if(card)card.click();}
+    updateButtons();
 })();
 </script>
 </body>
