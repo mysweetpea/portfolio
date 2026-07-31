@@ -4149,3 +4149,38 @@ body[data-page='form'] .crypto-option .icon { flex: 0 0 auto; }
 body[data-page='form'] .crypto-option .name { flex: 0 1 auto; white-space: nowrap; }
 body[data-page='form'] .crypto-option .crypto-soon { flex: 0 0 100%; display: block; margin: 0; text-align: center; line-height: 1.1; }
 body[data-page='form'] .crypto-option.unavailable { padding: 12px 10px; }
+
+/* === Set 11: dedicated redeem-page composition === */
+/* Center every hero item as one coherent invitation-code block. */
+body[data-page='redeem'] .redeem-hero {
+    min-height: auto;
+    padding-top: clamp(76px, 11vh, 112px);
+    padding-bottom: clamp(42px, 6vh, 64px);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+}
+body[data-page='redeem'] .redeem-hero > * { align-self: center; text-align: center; }
+body[data-page='redeem'] .redeem-hero .logo { display: block; margin: 0 auto 18px; }
+body[data-page='redeem'] .redeem-eyebrow { margin: 0 auto 10px; }
+body[data-page='redeem'] .redeem-hero h1 { max-width: 850px; margin: 0 auto 14px; font-size: clamp(2.25rem, 5vw, 4.35rem); line-height: 1.08; }
+body[data-page='redeem'] .redeem-subtitle { max-width: 600px; margin: 0 auto; }
+/* A purpose-built narrow form avoids the oversized, floating page appearance. */
+body[data-page='redeem'] .tier-form-section { max-width: 600px; }
+body[data-page='redeem'] .redeem-section .form-card { padding: 34px 30px 30px; }
+body[data-page='redeem'] .redeem-section .form-card h2 { margin: 0 0 18px; font-size: 1.7rem; }
+/* The request action is visually a button, never a faded browser control. */
+body[data-page='redeem'] #rc-submit {
+    display: flex; align-items: center; justify-content: center;
+    width: 100%; min-height: 52px; margin-top: 26px; box-sizing: border-box;
+    padding: 14px 20px; border: 1px solid var(--sage); border-radius: var(--radius-sm);
+    background: var(--sage); color: #10201D; font-size: .96rem; font-weight: 800;
+    line-height: 1.2; text-decoration: none; opacity: 1;
+}
+body[data-page='redeem'] #rc-submit:not(:disabled):hover,
+body[data-page='redeem'] #rc-submit:not(:disabled):focus-visible { background: var(--primary-bright); border-color: var(--primary-bright); color: #10201D; transform: none; }
+body[data-page='redeem'] #rc-submit:disabled { background: rgba(163,201,182,.25); border-color: rgba(163,201,182,.25); color: rgba(16,32,29,.60); opacity: 1; }
+body[data-page='redeem'] .redeem-callout { max-width: 600px; margin-top: 16px; }
+@media (max-width: 640px) { body[data-page='redeem'] .redeem-section .form-card { padding: 26px 20px 24px; } }
