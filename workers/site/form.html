@@ -56,155 +56,115 @@
         </div>
     </nav>
 <main id="main-content" class="content-wrapper">
-        <nav class="breadcrumbs" aria-label="Breadcrumb"><a href="/index.html">Home</a><span aria-current="page">Get Access</span></nav>
-        <div class="hero">
+        <div class="hero access-hero">
             <img src="/logo.svg" alt="MySweetPea logo" class="logo" width="160" height="160">
             <h1 class="glass-text">Get Access</h1>
-            <p class="hero-sub pop-text">Get access to self-hosted services.</p>
+            <p class="hero-sub pop-text">Choose the access tier that fits you. We will guide you through the rest.</p>
         </div>
 
-        <div class="tabs-container reveal">
-            <div class="tab-buttons">
-                <button class="tab-btn tab-get-access active" onclick="switchTab('get-access')"><img src="/assets/icons/icon-ui-seedling.svg" class="tab-icon" alt="" width="18" height="18" loading="lazy" decoding="async" aria-hidden="true"> Get Access ($5)</button>
-                <button class="tab-btn tab-have-code" onclick="switchTab('have-code')"><img src="/assets/icons/icon-ui-key.svg" class="tab-icon" alt="" width="18" height="18" loading="lazy" decoding="async" aria-hidden="true"> I Have a Code</button>
+        <section class="access-choice-section" aria-labelledby="choose-tier-title">
+            <span class="eyebrow">First, choose a tier</span>
+            <h2 class="section-title glass-text" id="choose-tier-title">How would you like to get started?</h2>
+            <p class="section-subtitle">Both options give you a MySweetPea account. Select one to see the next step.</p>
+            <div class="access-choice-grid">
+                <button type="button" class="access-choice-card selected" data-tier="seedling" aria-pressed="true">
+                    <span class="access-choice-icon" aria-hidden="true"><img src="/assets/icons/icon-ui-seedling.svg" alt="" width="48" height="48"></span>
+                    <span class="access-choice-title">Seedling</span>
+                    <span class="access-choice-price">$5 minimum donation</span>
+                    <span class="access-choice-copy">Password manager, chat, notes, and watch parties. You make a crypto donation, then submit the transaction hash.</span>
+                </button>
+                <button type="button" class="access-choice-card" data-tier="sweetpea" aria-pressed="false">
+                    <span class="access-choice-icon" aria-hidden="true"><img src="/assets/icons/icon-ui-blossom.svg" alt="" width="48" height="48"></span>
+                    <span class="access-choice-title">Sweet Pea</span>
+                    <span class="access-choice-price">Full access — request review</span>
+                    <span class="access-choice-copy">Everything in Seedling, plus media, files, photos, and more. Send a simple request and we will email you an invite code.</span>
+                </button>
             </div>
+        </section>
 
-            <!-- Tab 1: Get Access -->
-            <div class="tab-content active" id="tab-get-access">
+        <section class="tier-form-section" aria-live="polite">
+            <div class="tier-form-panel active" id="panel-seedling">
                 <div class="form-card glow-card">
-                    <h3>Get Access — $5 Minimum</h3>
+                    <span class="form-tier-label">Seedling tier</span>
+                    <h2>Complete your Seedling request</h2>
                     <div class="verify-banner" role="note"><strong>Please note:</strong> a real person personally verifies every donation. You will usually receive your invite code by email <strong>within 24 hours</strong> — it is not instant.</div>
-                    <p class="form-desc">Donate $5+ to get access to non-media services. No technical setup needed — we'll email you everything you need, and if you get stuck, <a href="mailto:support@mysweetpea.cc" style="color: var(--sage);">support@mysweetpea.cc</a> is happy to help.</p>
-                    <div class="how-it-works">
-                        <ol>
-                            <li>Send your $5 donation via crypto</li>
-                            <li>Fill out the form below with your TX hash (optional, but it speeds things up)</li>
-                            <li>We verify your donation and email you an invite code</li>
-                            <li>Use the code on the "I Have a Code" tab to create your account — then sign in and start using your services</li>
-                        </ol>
-                    </div>
-
+                    <ol class="request-steps">
+                        <li><strong>Send a $5 or larger crypto donation</strong> using one of the options below.</li>
+                        <li><strong>Copy the transaction hash</strong> from your wallet after sending the donation.</li>
+                        <li><strong>Submit this form.</strong> We verify your donation and email your invite code.</li>
+                    </ol>
                     <div class="form-group">
                         <label class="form-label glass-text" for="ga-name">Name</label>
-                        <input type="text" class="form-input" id="ga-name" aria-describedby="ga-name-hint" aria-invalid="false" placeholder="Your name" oninput="validateField('ga-name', 'name')">
-                        <span class="validation-icon" id="ga-name-icon"></span>
-                        <div class="form-hint" id="ga-name-hint" aria-live="polite">Please enter your name.</div>
+                        <input type="text" class="form-input" id="ga-name" placeholder="Your name" autocomplete="name">
                     </div>
-
                     <div class="form-group">
                         <label class="form-label glass-text" for="ga-email">Email</label>
-                        <input type="email" class="form-input" id="ga-email" aria-describedby="ga-email-hint" aria-invalid="false" placeholder="you@example.com" oninput="validateField('ga-email', 'email')">
-                        <span class="validation-icon" id="ga-email-icon"></span>
-                        <div class="form-hint" id="ga-email-hint" aria-live="polite">Please enter a valid email.</div>
+                        <input type="email" class="form-input" id="ga-email" placeholder="you@example.com" autocomplete="email">
                     </div>
-
                     <div class="form-group">
-                        <label class="form-label glass-text" for="ga-username">Username</label>
-                        <input type="text" class="form-input" id="ga-username" aria-describedby="ga-username-hint" aria-invalid="false" placeholder="Choose a username" oninput="validateField('ga-username', 'username')">
-                        <span class="validation-icon" id="ga-username-icon"></span>
-                        <div class="form-hint" id="ga-username-hint" aria-live="polite">Min 3 chars, alphanumeric + underscore only.</div>
+                        <label class="form-label glass-text" for="ga-username">Preferred username</label>
+                        <input type="text" class="form-input" id="ga-username" placeholder="Choose a username" autocomplete="username">
+                        <div class="form-hint">At least 3 characters; letters, numbers, and underscores only.</div>
                     </div>
-
-                    <div class="form-group">
-                        <label class="form-label glass-text">Cryptocurrency</label>
+                    <fieldset class="form-group crypto-fieldset">
+                        <legend class="form-label glass-text">Choose a cryptocurrency</legend>
                         <div class="crypto-options">
-                            <div class="crypto-option" data-type="monero" onclick="selectCrypto(this, 'monero')">
-                                <div class="icon" aria-hidden="true"><img src="/assets/icons/icon-crypto-monero.svg" class="" alt="" width="28" height="28" loading="lazy" decoding="async" aria-hidden="true"></div>
-                                <div class="name">Monero (XMR)</div>
-                            </div>
-                            <div class="crypto-option" data-type="bitcoin" onclick="selectCrypto(this, 'bitcoin')">
-                                <div class="icon" aria-hidden="true"><img src="/assets/icons/icon-crypto-bitcoin.svg" class="" alt="" width="28" height="28" loading="lazy" decoding="async" aria-hidden="true"></div>
-                                <div class="name">Bitcoin (BTC)</div>
-                            </div>
+                            <button type="button" class="crypto-option" data-type="monero"><span class="icon" aria-hidden="true"><img src="/assets/icons/icon-crypto-monero.svg" alt="" width="28" height="28"></span><span class="name">Monero (XMR)</span></button>
+                            <button type="button" class="crypto-option" data-type="bitcoin"><span class="icon" aria-hidden="true"><img src="/assets/icons/icon-crypto-bitcoin.svg" alt="" width="28" height="28"></span><span class="name">Bitcoin (BTC)</span></button>
                         </div>
-                    </div>
-
-                    <div class="wallet-display" id="wallet-display">
+                    </fieldset>
+                    <div class="wallet-display" id="wallet-display" hidden>
                         <div class="wl">Send your $5+ donation to:</div>
-                        <div class="wa" id="wallet-addr" onclick="copyWallet()">Loading...</div>
-                        <div class="copy-hint">Click address to copy</div>
+                        <button type="button" class="wa" id="wallet-addr" aria-label="Copy wallet address"></button>
+                        <div class="copy-hint">Click the address to copy it</div>
                     </div>
-
                     <div class="form-group">
-                        <label class="form-label glass-text" for="ga-txhash">Transaction Hash (required)</label>
-                        <input type="text" class="form-input" id="ga-txhash" placeholder="Your transaction hash" required aria-describedby="ga-txhash-hint" oninput="validateField('ga-txhash', 'txhash')">
-                        <span class="validation-icon" id="ga-txhash-icon"></span>
-                        <div class="form-hint" id="ga-txhash-hint" aria-live="polite">Required — this is how we match your donation to your request. Find it in your wallet app after sending.</div>
+                        <label class="form-label glass-text" for="ga-txhash">Transaction hash</label>
+                        <input type="text" class="form-input" id="ga-txhash" placeholder="Paste your transaction hash" required>
+                        <div class="form-hint">Required — this lets us match your payment to your request.</div>
                     </div>
-
-                    <button class="form-submit" id="ga-submit" disabled>Submit Request</button>
+                    <button type="button" class="form-submit" id="ga-submit">Submit Seedling Request</button>
                 </div>
             </div>
 
-            <!-- Tab 2: Have Code -->
-            <div class="tab-content" id="tab-have-code">
+            <div class="tier-form-panel" id="panel-sweetpea" hidden>
                 <div class="form-card glow-card">
-                    <h3>Redeem Invite Code</h3>
-                    <p class="form-desc">Have an invite code? Create your account now.</p>
-                    <div class="info-box">Enter your invite code and details below. Your account will be created instantly.</div>
-
+                    <span class="form-tier-label sweetpea-label">Sweet Pea tier</span>
+                    <h2>Request Sweet Pea access</h2>
+                    <div class="verify-banner" role="note"><strong>What happens next:</strong> submit this request and we will review it. If approved, we will email you an invitation code to create your MySweetPea account.</div>
+                    <p class="form-desc">No crypto donation or transaction hash is needed for this request. Tell us a little about yourself and which services you are interested in.</p>
                     <div class="form-group">
-                        <label class="form-label glass-text" for="hc-code">Invite Code</label>
-                        <input type="text" class="form-input" id="hc-code" aria-describedby="hc-code-hint" aria-invalid="false" placeholder="PEA-12345678 or FAM-12345678" autocomplete="off" autocapitalize="characters" spellcheck="false" pattern="(?:PEA|FAM)-[A-Za-z0-9]{8}" oninput="this.value = this.value.toUpperCase().replace(/\s/g, ''); validateField('hc-code', 'invitecode')">
-                        <span class="validation-icon" id="hc-code-icon"></span>
-                        <div class="form-hint" id="hc-code-hint" aria-live="polite">Enter a code like PEA-12345678 or FAM-12345678.</div>
+                        <label class="form-label glass-text" for="sp-name">Name</label>
+                        <input type="text" class="form-input" id="sp-name" placeholder="Your name" autocomplete="name">
                     </div>
-
                     <div class="form-group">
-                        <label class="form-label glass-text" for="hc-name">Name</label>
-                        <input type="text" class="form-input" id="hc-name" aria-describedby="hc-name-hint" aria-invalid="false" placeholder="Your name" oninput="validateField('hc-name', 'name')">
-                        <span class="validation-icon" id="hc-name-icon"></span>
-                        <div class="form-hint" id="hc-name-hint" aria-live="polite">Please enter your name.</div>
+                        <label class="form-label glass-text" for="sp-email">Email</label>
+                        <input type="email" class="form-input" id="sp-email" placeholder="you@example.com" autocomplete="email">
                     </div>
-
                     <div class="form-group">
-                        <label class="form-label glass-text" for="hc-email">Email</label>
-                        <input type="email" class="form-input" id="hc-email" aria-describedby="hc-email-hint" aria-invalid="false" placeholder="you@example.com" oninput="validateField('hc-email', 'email')">
-                        <span class="validation-icon" id="hc-email-icon"></span>
-                        <div class="form-hint" id="hc-email-hint" aria-live="polite">Please enter a valid email.</div>
+                        <label class="form-label glass-text" for="sp-username">Preferred username</label>
+                        <input type="text" class="form-input" id="sp-username" placeholder="Choose a username" autocomplete="username">
+                        <div class="form-hint">At least 3 characters; letters, numbers, and underscores only.</div>
                     </div>
-
                     <div class="form-group">
-                        <label class="form-label glass-text" for="hc-username">Username</label>
-                        <input type="text" class="form-input" id="hc-username" aria-describedby="hc-username-hint" aria-invalid="false" placeholder="Choose a username" oninput="validateField('hc-username', 'username')">
-                        <span class="validation-icon" id="hc-username-icon"></span>
-                        <div class="form-hint" id="hc-username-hint" aria-live="polite">Min 3 chars, alphanumeric + underscore only.</div>
+                        <label class="form-label glass-text" for="sp-services">Services you are interested in <span aria-hidden="true">*</span></label>
+                        <textarea class="form-input" id="sp-services" rows="4" placeholder="For example: Jellyfin, Nextcloud, Immich, Open WebUI…"></textarea>
+                        <div class="form-hint">Please list at least one service you would like to use.</div>
                     </div>
-
-                    <button class="form-submit" id="hc-submit" disabled>Create Account</button>
+                    <div class="form-group">
+                        <label class="form-label glass-text" for="sp-message">Anything else you would like us to know? <span class="optional">Optional</span></label>
+                        <textarea class="form-input" id="sp-message" rows="4" placeholder="A short note is fine."></textarea>
+                    </div>
+                    <button type="button" class="form-submit" id="sp-submit">Submit Sweet Pea Request</button>
                 </div>
             </div>
-        </div>
+        </section>
 
-        <!-- FAQ -->
-        <div class="faq-section reveal">
-            <div class="faq-item">
-<button class="faq-question" type="button" id="form-faq-q-1" aria-expanded="false" aria-controls="form-faq-a-1" onclick="toggleFAQ(this)">Why do you require a donation before access? <span class="arrow"><img src="/assets/icons/icon-ui-chevron-down.svg" class="" alt="" width="16" height="16" loading="lazy" decoding="async" aria-hidden="true"></span></button>
-<div class="faq-answer" id="form-faq-a-1" role="region" aria-labelledby="form-faq-q-1"><p>The donation requirement helps prevent abuse and spam. Without it, anyone could create unlimited accounts, overload the server, and ruin the experience for everyone. A small contribution ensures that users are genuine and invested in the community.</p></div></div>
-            <div class="faq-item">
-<button class="faq-question" type="button" id="form-faq-q-2" aria-expanded="false" aria-controls="form-faq-a-2" onclick="toggleFAQ(this)">Why is there a minimum contribution? <span class="arrow"><img src="/assets/icons/icon-ui-chevron-down.svg" class="" alt="" width="16" height="16" loading="lazy" decoding="async" aria-hidden="true"></span></button>
-<div class="faq-answer" id="form-faq-a-2" role="region" aria-labelledby="form-faq-q-2"><p>Running these services costs money — server hardware, electricity, internet bandwidth, and domain registration. Donations help cover these costs and fund future improvements and new services. We do not run ads or sell your data.</p></div></div>
-            <div class="faq-item">
-<button class="faq-question" type="button" id="form-faq-q-3" aria-expanded="false" aria-controls="form-faq-a-3" onclick="toggleFAQ(this)">Why don't you accept credit cards? <span class="arrow"><img src="/assets/icons/icon-ui-chevron-down.svg" class="" alt="" width="16" height="16" loading="lazy" decoding="async" aria-hidden="true"></span></button>
-<div class="faq-answer" id="form-faq-a-3" role="region" aria-labelledby="form-faq-q-3"><p>We prioritize privacy. Credit card payments require sharing your personal and financial information with payment processors, which creates a paper trail linking your identity to our services. Cryptocurrency donations (Monero and Bitcoin) allow us to maintain a privacy-first approach with no KYC requirements, no chargebacks, and no third-party data collection.</p></div></div>
-            <div class="faq-item">
-<button class="faq-question" type="button" id="form-faq-q-4" aria-expanded="false" aria-controls="form-faq-a-4" onclick="toggleFAQ(this)">How do I donate? <span class="arrow"><img src="/assets/icons/icon-ui-chevron-down.svg" class="" alt="" width="16" height="16" loading="lazy" decoding="async" aria-hidden="true"></span></button>
-<div class="faq-answer" id="form-faq-a-4" role="region" aria-labelledby="form-faq-q-4"><p>We accept Monero (XMR) and Bitcoin (BTC). Visit the donation form to see our wallet addresses.</p></div></div>
-            <div class="faq-item">
-<button class="faq-question" type="button" id="form-faq-q-5" aria-expanded="false" aria-controls="form-faq-a-5" onclick="toggleFAQ(this)">What happens after I donate $5? <span class="arrow"><img src="/assets/icons/icon-ui-chevron-down.svg" class="" alt="" width="16" height="16" loading="lazy" decoding="async" aria-hidden="true"></span></button>
-<div class="faq-answer" id="form-faq-a-5" role="region" aria-labelledby="form-faq-q-5"><p>Fill out the donation form with your details and transaction hash. We verify your donation and email you an invite code. Use the code to create your account.</p></div></div>
-            <div class="faq-item">
-<button class="faq-question" type="button" id="form-faq-q-6" aria-expanded="false" aria-controls="form-faq-a-6" onclick="toggleFAQ(this)">Is this a subscription? <span class="arrow"><img src="/assets/icons/icon-ui-chevron-down.svg" class="" alt="" width="16" height="16" loading="lazy" decoding="async" aria-hidden="true"></span></button>
-<div class="faq-answer" id="form-faq-a-6" role="region" aria-labelledby="form-faq-q-6"><p>No. A single donation grants lifetime access. There are no recurring fees or billing cycles.</p></div></div>
-            <div class="faq-item">
-<button class="faq-question" type="button" id="form-faq-q-7" aria-expanded="false" aria-controls="form-faq-a-7" onclick="toggleFAQ(this)">How do I get Sweet Pea tier? <span class="arrow"><img src="/assets/icons/icon-ui-chevron-down.svg" class="" alt="" width="16" height="16" loading="lazy" decoding="async" aria-hidden="true"></span></button>
-<div class="faq-answer" id="form-faq-a-7" role="region" aria-labelledby="form-faq-q-7"><p>Sweet Pea Full Access is limited because media and storage services need more resources. Email support@mysweetpea.cc to request it; we will explain availability and next steps.</p></div></div>
-            <div class="faq-item">
-<button class="faq-question" type="button" id="form-faq-q-8" aria-expanded="false" aria-controls="form-faq-a-8" onclick="toggleFAQ(this)">Can I get a refund? <span class="arrow"><img src="/assets/icons/icon-ui-chevron-down.svg" class="" alt="" width="16" height="16" loading="lazy" decoding="async" aria-hidden="true"></span></button>
-<div class="faq-answer" id="form-faq-a-8" role="region" aria-labelledby="form-faq-q-8"><p>Crypto donations are irreversible. If you have a genuine issue, contact support@mysweetpea.cc.</p></div></div>
-        </div>
-
-        </main>
+        <aside class="redeem-callout reveal" aria-label="Already have an invite code">
+            <div><strong>Already have an invite code?</strong><span>Use it to create your MySweetPea account.</span></div>
+            <a href="/redeem.html" class="btn btn-secondary">Redeem invite code</a>
+        </aside>
+    </main>
     <a href="#" class="back-to-top" aria-label="Back to top" onclick="window.scrollTo({top:0,behavior:'smooth'});return false;"><img src="/assets/icons/icon-ui-arrow-up.svg" class="" alt="" width="22" height="22" loading="lazy" decoding="async" aria-hidden="true"></a>
     <footer class="page-footer">
         <div class="footer-links">
@@ -221,254 +181,103 @@
     </footer>
     <script src="/assets/js/site.js" defer></script>
     <script>
-// FAQ
-        function toggleFAQ(el) { var item = el.parentElement; var open = item.classList.toggle('open'); el.setAttribute('aria-expanded', String(open)); }
+(function () {
+    var WEBHOOK_BASE = 'https://subscribe.mysweetpea.cc/webhook';
+    var ENDPOINTS = {
+        donationRequest: WEBHOOK_BASE + '/donation-request',
+        sweetPeaRequest: WEBHOOK_BASE + '/sweetpea-request'
+    };
+    // Replace Coming Soon with real addresses before enabling a payment option.
+    var WALLETS = { monero: 'Coming Soon', bitcoin: 'Coming Soon' };
+    var chosenCrypto = '';
 
-        // Tab Switching
-        function switchTab(tab) {
-            document.querySelectorAll('.tab-btn').forEach(function(b) { b.classList.remove('active'); });
-            var panels = document.querySelectorAll('.tab-content');
-            panels.forEach(function(c) { c.classList.remove('active', 'switch-left'); });
-            document.querySelector('.tab-' + tab).classList.add('active');
-            var panel = document.getElementById('tab-' + tab);
-            if (tab === 'get-access') panel.classList.add('switch-left');
-            void panel.offsetWidth;
-            panel.classList.add('active');
-        }
-
-        // Wallet
-        var WALLETS = { monero: 'Coming Soon', bitcoin: 'Coming Soon' };
-        // Mark any wallet that is not a real address as unavailable so users
-        // are never shown "Coming Soon" as if it were a payable address.
-        document.querySelectorAll('.crypto-option').forEach(function(o) {
-            var type = o.getAttribute('data-type');
-            if (!WALLETS[type] || WALLETS[type] === 'Coming Soon') {
-                o.classList.add('unavailable');
-                o.setAttribute('aria-disabled', 'true');
-                var note = document.createElement('div');
-                note.className = 'crypto-soon';
-                note.textContent = 'Coming soon';
-                o.appendChild(note);
-            }
+    function validName(v) { return v.trim().length >= 2; }
+    function validEmail(v) { return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v.trim()); }
+    function validUsername(v) { return /^[A-Za-z0-9_]{3,}$/.test(v.trim()); }
+    function setButtonState(btn, loading, text) {
+        btn.disabled = loading;
+        btn.classList.toggle('loading', loading);
+        if (text) btn.textContent = text;
+    }
+    function copyText(text, button) {
+        if (!text) return;
+        navigator.clipboard.writeText(text).then(function () {
+            var old = button.textContent; button.textContent = 'Copied!';
+            setTimeout(function () { button.textContent = old; }, 1600);
         });
-        var currentCrypto = 'monero';
-        function selectCrypto(el, type) {
-            if (el.classList.contains('unavailable')) { return; }
-            var wd0 = document.getElementById('wallet-display');
-            if (wd0) { wd0.classList.add('visible'); }
-            document.querySelectorAll('.crypto-option').forEach(function(o) { o.classList.remove('selected'); });
-            void el.offsetWidth; el.classList.add('selected'); currentCrypto = type;
-            var wa = document.getElementById('wallet-addr');
-            var wd = document.getElementById('wallet-display');
-            wa.classList.remove('addr-swap'); wa.classList.add('addr-out');
-            if (wd) { wd.classList.remove('wallet-pulse'); void wd.offsetWidth; wd.classList.add('wallet-pulse'); }
-            setTimeout(function() {
-                wa.textContent = WALLETS[type];
-                wa.classList.remove('addr-out');
-                void wa.offsetWidth;
-                wa.classList.add('addr-swap');
-            }, 180);
-        }
-        function copyWallet() {
-            var addr = document.getElementById('wallet-addr').textContent;
-            if (!addr || addr === 'Coming Soon' || addr === 'Loading...') { return; }
-            navigator.clipboard.writeText(addr).then(function() {
-                var el = document.getElementById('wallet-addr');
-                var orig = el.textContent; el.textContent = 'Copied!';
-                setTimeout(function() { el.textContent = orig; }, 1500);
+    }
+
+    document.querySelectorAll('.access-choice-card').forEach(function (card) {
+        card.addEventListener('click', function () {
+            var tier = card.getAttribute('data-tier');
+            document.querySelectorAll('.access-choice-card').forEach(function (c) {
+                var selected = c === card;
+                c.classList.toggle('selected', selected);
+                c.setAttribute('aria-pressed', String(selected));
             });
-        }
-        
-
-        // Validation
-        function validateField(id, type) {
-            var input = document.getElementById(id);
-            var icon = document.getElementById(id + '-icon');
-            var hint = document.getElementById(id + '-hint');
-            var val = input.value.trim();
-            var valid = false;
-
-            if (type === 'name') { valid = val.length >= 2; }
-            else if (type === 'email') { valid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val); }
-            else if (type === 'username') { valid = /^[a-zA-Z0-9_]{3,}$/.test(val); }
-            else if (type === 'invitecode') { valid = /^(PEA|FAM)-[A-Z0-9]{8}$/i.test(val); }
-            else if (type === 'txhash') { valid = val.length >= 8; }
-
-            input.classList.remove('valid', 'invalid');
-            icon.classList.remove('show', 'valid', 'invalid');
-
-            if (val.length > 0) {
-                if (valid) {
-                    input.classList.add('valid'); icon.classList.add('show', 'valid'); icon.innerHTML = '<img src="/assets/icons/icon-ui-check.svg" alt="" width="18" height="18">';
-                    hint.classList.remove('error'); hint.classList.add('success');
-                    if (type === 'username') hint.textContent = 'Letters, numbers, underscores. Min 3 characters.';
-                    if (type === 'invitecode') { hint.textContent = 'Checking invite code...'; checkInviteCodeServer(val.replace(/\s/g, '').toUpperCase()); }
-                    if (type === 'email') hint.textContent = 'Valid email address.';
-                    if (type === 'name') hint.textContent = 'Looks good!';
-                } else {
-                    input.classList.add('invalid'); icon.classList.add('show', 'invalid'); icon.innerHTML = '<img src="/assets/icons/icon-ui-cross.svg" alt="" width="18" height="18">';
-                    hint.classList.remove('success'); hint.classList.add('error');
-                    if (type === 'username') hint.textContent = 'Letters, numbers, underscores. Min 3 characters.';
-                    if (type === 'invitecode') hint.textContent = 'Format: PEA-12345678 or FAM-12345678 (8 letters or numbers)';
-                    if (type === 'email') hint.textContent = 'Please enter a valid email.';
-                    if (type === 'name') hint.textContent = 'Please enter your name.';
-                }
-            } else {
-                hint.classList.remove('error', 'success');
-                if (type === 'name') hint.textContent = 'Please enter your name.';
-                if (type === 'email') hint.textContent = 'Please enter a valid email.';
-                if (type === 'username') hint.textContent = 'Min 3 chars, alphanumeric + underscore only.';
-                if (type === 'invitecode') hint.textContent = 'Checking invite code...';
-            }
-            checkSubmitState();
-            return valid;
-        }
-
-        function checkSubmitState() {
-            var gaValid = ['ga-name', 'ga-email', 'ga-username', 'ga-txhash'].every(function(id) {
-                var el = document.getElementById(id); return el && el.classList.contains('valid');
+            ['seedling', 'sweetpea'].forEach(function (name) {
+                var panel = document.getElementById('panel-' + name);
+                var active = name === tier;
+                panel.hidden = !active;
+                panel.classList.toggle('active', active);
             });
-            document.getElementById('ga-submit').disabled = !gaValid;
-
-            var hcValid = ['hc-code', 'hc-name', 'hc-email', 'hc-username'].every(function(id) {
-                var el = document.getElementById(id); return el && el.classList.contains('valid');
-            });
-            document.getElementById('hc-submit').disabled = !hcValid;
-        }
-
-        var WEBHOOK_BASE = 'https://subscribe.mysweetpea.cc/webhook';
-        var ENDPOINTS = {
-            donationRequest: WEBHOOK_BASE + '/donation-request',
-            redeemCode: WEBHOOK_BASE + '/redeem-code',
-            checkCode: WEBHOOK_BASE + '/check-code'
-        };
-
-        var codeCheckTimer = null;
-        function checkInviteCodeServer(code) {
-            clearTimeout(codeCheckTimer);
-            codeCheckTimer = setTimeout(function() {
-                fetch(ENDPOINTS.checkCode, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ invite_code: code })
-                })
-                .then(function(r) { return r.json(); })
-                .then(function(data) {
-                    var input = document.getElementById('hc-code');
-                    var icon = document.getElementById('hc-code-icon');
-                    var hint = document.getElementById('hc-code-hint');
-                    if (input.value.replace(/\s/g, '').trim().toUpperCase() === code) {
-                        if (data.ok) {
-                            input.classList.remove('invalid');
-                            input.classList.add('valid');
-                            icon.classList.remove('invalid');
-                            icon.classList.add('show', 'valid');
-                            icon.innerHTML = '<img src="/assets/icons/icon-ui-check.svg" alt="" width="18" height="18">';
-                            hint.classList.remove('error');
-                            hint.classList.add('success');
-                            hint.textContent = 'Valid invite code!';
-                        } else {
-                            input.classList.remove('valid');
-                            input.classList.add('invalid');
-                            icon.classList.remove('valid');
-                            icon.classList.add('show', 'invalid');
-                            icon.innerHTML = '<img src="/assets/icons/icon-ui-cross.svg" alt="" width="18" height="18">';
-                            hint.classList.remove('success');
-                            hint.classList.add('error');
-                            hint.textContent = data.msg || 'Invalid invite code.';
-                        }
-                        checkSubmitState();
-                    }
-                })
-                .catch(function() {});
-            }, 500);
-        }
-
-        document.getElementById('ga-submit').addEventListener('click', function() {
-            var btn = this;
-            btn.classList.add('loading'); btn.disabled = true;
-            var payload = {
-                name: document.getElementById('ga-name').value.trim(),
-                email: document.getElementById('ga-email').value.trim(),
-                username: document.getElementById('ga-username').value.trim(),
-                crypto_type: currentCrypto,
-                tx_hash: document.getElementById('ga-txhash').value.trim()
-            };
-            fetch(ENDPOINTS.donationRequest, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(payload)
-            })
-            .then(function(r) { return r.json(); })
-            .then(function(data) {
-                if (data.ok) {
-                    btn.classList.remove('loading'); btn.classList.add('success');
-                    btn.textContent = 'Request Submitted!';
-                    setTimeout(function() {
-                        window.location.href = '/success.html?type=donation';
-                    }, 1500);
-                } else {
-                    btn.textContent = data.msg || 'Submission failed';
-                    btn.classList.remove('loading'); btn.disabled = false;
-                    setTimeout(function() { btn.textContent = 'Submit Request'; }, 3000);
-                }
-            })
-            .catch(function(err) {
-                btn.textContent = 'Network error. Try again.';
-                btn.classList.remove('loading'); btn.disabled = false;
-                setTimeout(function() { btn.textContent = 'Submit Request'; }, 3000);
-            });
+            document.querySelector('.tier-form-section').scrollIntoView({ behavior: 'smooth', block: 'start' });
         });
+    });
 
-        document.getElementById('hc-submit').addEventListener('click', function() {
-            var btn = this;
-            btn.classList.add('loading'); btn.disabled = true;
-            var payload = {
-                invite_code: document.getElementById('hc-code').value.replace(/\s/g, '').trim().toUpperCase(),
-                name: document.getElementById('hc-name').value.trim(),
-                email: document.getElementById('hc-email').value.trim(),
-                username: document.getElementById('hc-username').value.trim()
-            };
-            fetch(ENDPOINTS.redeemCode, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(payload)
-            })
-            .then(function(r) { return r.json(); })
-            .then(function(data) {
-                if (data.ok) {
-                    btn.classList.remove('loading'); btn.classList.add('success');
-                    btn.textContent = '✓ Account Created!';
-                    setTimeout(function() {
-                        window.location.href = '/account-created.html';
-                    }, 1500);
-                } else {
-                    btn.textContent = data.msg || 'Account creation failed';
-                    btn.classList.remove('loading'); btn.disabled = false;
-                    setTimeout(function() { btn.textContent = 'Create Account'; }, 3000);
-                }
-            })
-            .catch(function(err) {
-                btn.textContent = 'Network error. Try again.';
-                btn.classList.remove('loading'); btn.disabled = false;
-                setTimeout(function() { btn.textContent = 'Create Account'; }, 3000);
-            });
+    document.querySelectorAll('.crypto-option').forEach(function (button) {
+        var type = button.getAttribute('data-type');
+        if (!WALLETS[type] || WALLETS[type] === 'Coming Soon') {
+            button.disabled = true;
+            button.classList.add('unavailable');
+            button.setAttribute('title', 'Wallet address coming soon');
+            var soon = document.createElement('span'); soon.className = 'crypto-soon'; soon.textContent = 'Coming soon'; button.appendChild(soon);
+            return;
+        }
+        button.addEventListener('click', function () {
+            chosenCrypto = type;
+            document.querySelectorAll('.crypto-option').forEach(function (b) { b.classList.toggle('selected', b === button); });
+            var display = document.getElementById('wallet-display');
+            var address = document.getElementById('wallet-addr');
+            address.textContent = WALLETS[type]; display.hidden = false;
         });
-    
-        /* Keep aria-invalid in sync with validation state (screen readers) */
-        (function syncAriaInvalid() {
-            var observer = new MutationObserver(function(mutations) {
-                mutations.forEach(function(mu) {
-                    var el = mu.target;
-                    if (el.classList && (el.classList.contains('form-input') || el.classList.contains('form-textarea'))) {
-                        el.setAttribute('aria-invalid', el.classList.contains('invalid') ? 'true' : 'false');
-                    }
-                });
-            });
-            document.querySelectorAll('.form-input, .form-textarea').forEach(function(el) {
-                observer.observe(el, { attributes: true, attributeFilter: ['class'] });
-            });
-        })();
+    });
+    document.getElementById('wallet-addr').addEventListener('click', function () { copyText(this.textContent, this); });
+
+    document.getElementById('ga-submit').addEventListener('click', function () {
+        var btn = this;
+        var data = { name: document.getElementById('ga-name').value, email: document.getElementById('ga-email').value, username: document.getElementById('ga-username').value, tx_hash: document.getElementById('ga-txhash').value };
+        if (!validName(data.name) || !validEmail(data.email) || !validUsername(data.username) || !chosenCrypto || data.tx_hash.trim().length < 8) {
+            alert('Please complete every field, choose a cryptocurrency, and enter your transaction hash.'); return;
+        }
+        data.crypto_type = chosenCrypto; setButtonState(btn, true, 'Submitting…');
+        fetch(ENDPOINTS.donationRequest, { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify(data) })
+          .then(function(r){ return r.json(); }).then(function(result){
+            if (!result.ok) throw new Error(result.msg || 'Submission failed');
+            window.location.href = '/success.html?type=donation';
+          }).catch(function(error){ setButtonState(btn, false, error.message || 'Try again'); setTimeout(function(){ btn.textContent='Submit Seedling Request'; }, 3000); });
+    });
+
+    document.getElementById('sp-submit').addEventListener('click', function () {
+        var btn = this;
+        var data = { name: document.getElementById('sp-name').value, email: document.getElementById('sp-email').value, username: document.getElementById('sp-username').value, services: document.getElementById('sp-services').value, message: document.getElementById('sp-message').value };
+        if (!validName(data.name) || !validEmail(data.email) || !validUsername(data.username) || data.services.trim().length < 2) {
+            alert('Please enter your name, email, preferred username, and at least one service you are interested in.'); return;
+        }
+        data.tier = 'sweetpea'; setButtonState(btn, true, 'Submitting request…');
+        fetch(ENDPOINTS.sweetPeaRequest, { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify(data) })
+          .then(function(r){ return r.json(); }).then(function(result){
+            if (!result.ok) throw new Error(result.msg || 'Submission failed');
+            window.location.href = '/success.html?type=sweetpea-request';
+          }).catch(function(error){ setButtonState(btn, false, error.message || 'Try again'); setTimeout(function(){ btn.textContent='Submit Sweet Pea Request'; }, 3000); });
+    });
+
+    var requestedTier = new URLSearchParams(window.location.search).get('tier');
+    if (requestedTier === 'sweetpea') {
+        var sweetCard = document.querySelector('.access-choice-card[data-tier="sweetpea"]');
+        if (sweetCard) { sweetCard.click(); }
+    }
+})();
 </script>
 </body>
 </html>
