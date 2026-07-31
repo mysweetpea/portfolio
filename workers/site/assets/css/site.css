@@ -4021,7 +4021,36 @@ body[data-page='form'] .form-card { animation: none !important; }
 .hiw-arrow { display: flex; align-items: center; color: var(--sage); font-size: 1.6rem; font-weight: 700; }
 .hiw-note { text-align: center; color: var(--text-dim); font-size: 0.9rem; max-width: 60ch; margin: 0 auto; }
 .hiw-note a { color: var(--sage); font-weight: 600; }
-@media (max-width: 720px) { .hiw-arrow { transform: rotate(90deg); } }
 
-/* === Set 3 #6: remove vine wrapper spacing left behind === */
-.vine-btn-wrapper { display: none; }
+
+/* === Set 4 === */
+/* Compact 3-step boxes on services page */
+.hiw-compact { margin: 0 auto 34px; }
+.hiw-step p a { color: var(--sage); font-weight: 600; }
+
+/* Graphical numbered steps inside service modals (same principle as How It Works) */
+.tutorial-steps { list-style: none; margin: 14px 0 0; padding: 0; counter-reset: tstep; }
+.tutorial-steps li {
+    counter-increment: tstep; position: relative;
+    padding: 14px 16px 14px 58px; margin-bottom: 10px;
+    background: var(--card-bg); border: 1px solid var(--border);
+    border-radius: var(--radius-sm); line-height: 1.6; font-size: 0.94rem;
+}
+.tutorial-steps li::before {
+    content: counter(tstep);
+    position: absolute; left: 14px; top: 14px;
+    width: 30px; height: 30px; border-radius: 50%;
+    background: var(--sage); color: var(--bg);
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 800; font-size: 0.95rem;
+}
+.tutorial-steps li a { color: var(--sage); font-weight: 600; word-break: break-all; }
+.tutorial-steps li em { color: var(--text-faint); font-size: 0.86rem; }
+
+/* Status-dot hint linking to status page */
+.status-legend {
+    text-align: center; color: var(--text-dim); font-size: 0.86rem;
+    margin: 10px auto 0; max-width: 60ch;
+}
+.status-legend a { color: var(--sage); font-weight: 600; }
+.status-legend .status-dot { display: inline-block; vertical-align: middle; margin-right: 4px; }
