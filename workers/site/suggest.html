@@ -47,6 +47,7 @@
                 <div class="nav-more-menu">
                     <a href="/support.html">Donate</a>
                     <a href="/suggest.html" aria-current="page">Suggest a Service</a>
+                    <a href="/contact.html">Contact Us</a>
                 </div>
             </details>
             <a href="/form.html" class="nav-cta">Get Access</a>
@@ -69,9 +70,10 @@
                     <div class="form-hint" id="s-name-hint" aria-live="polite">Please enter a service name (min 2 characters).</div>
                 </div>
                 <div class="form-group">
-                    <label class="form-label" for="s-url">Project URL (optional)</label>
-                    <input type="url" class="form-input" id="s-url" placeholder="https://github.com/...">
-                    <div class="form-hint">Link to the project's website or GitHub repo.</div>
+                    <label class="form-label" for="s-url">Project URL (required)</label>
+                    <input type="url" class="form-input" id="s-url" placeholder="https://github.com/..." required aria-describedby="s-url-hint" oninput="validateField('s-url', 'url')">
+                    <span class="validation-icon" id="s-url-icon"></span>
+                    <div class="form-hint" id="s-url-hint" aria-live="polite">Required — link to the project's website or GitHub repo so we can evaluate it.</div>
                 </div>
                 <div class="form-group">
                     <label class="form-label" for="s-category">Category</label>
@@ -127,6 +129,7 @@ function validateField(id, type) {
             if (type === 'name') valid = val.length >= 2;
             else if (type === 'category') valid = val !== '';
             else if (type === 'reason') valid = val.length >= 10;
+            else if (type === 'url') valid = /^https?:\/\/.+\..+/.test(val);
             input.classList.remove('valid', 'invalid'); if (icon) icon.classList.remove('show', 'valid', 'invalid');
             if (val.length > 0 || type === 'category') {
                 if (valid) { input.classList.add('valid'); if (icon) { icon.classList.add('show', 'valid'); icon.innerHTML = '<img src="/assets/icons/icon-ui-check.svg" alt="" width="18" height="18">'; } if (hint) { hint.classList.remove('error'); hint.classList.add('success'); } }
@@ -135,7 +138,7 @@ function validateField(id, type) {
             checkSubmit(); return valid;
         }
         function checkSubmit() {
-            var valid = ['s-name', 's-category', 's-reason'].every(function(id) { var el = document.getElementById(id); return el && el.classList.contains('valid'); });
+            var valid = ['s-name', 's-url', 's-category', 's-reason'].every(function(id) { var el = document.getElementById(id); return el && el.classList.contains('valid'); });
             document.getElementById('s-submit').disabled = !valid;
         }
         document.getElementById('s-submit').addEventListener('click', function() {
