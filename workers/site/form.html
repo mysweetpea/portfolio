@@ -1,1 +1,238 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#0b1215"><meta name="description" content="Request access to MySweetPea."><title>MySweetPea — Request Access</title><link rel="icon" href="logo-favicon.svg"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet"><link rel="stylesheet" href="assets/css/site.css"></head><body><a class="skip-link" href="#main">Skip to content</a><div class="progress"></div><div class="aurora"></div><div class="grain"></div><nav class="nav" aria-label="Primary navigation"><a class="brand" href="index.html"><img src="logo.svg" alt=""><span>MySweetPea</span></a><button class="menu" type="button" aria-expanded="false" aria-controls="nav-links">Menu</button><div class="nav-links" id="nav-links"><a href="services.html" >Services</a><a href="pricing.html" >How It Works</a><a href="redeem.html" >I Have a Code</a><a href="support.html">Donate</a><a class="access" href="form.html" aria-current="page">Get Access</a></div></nav><main id="main"><header class="page-hero"><img class="hero-logo" src="logo.svg" alt="MySweetPea logo"><span class="eyebrow">Community request</span><h1>Start your private space.</h1><p>Request access or continue with an invitation code you already received.</p></header><section class="form-shell card"><div class="tabs" role="tablist"><button class="active" data-tab="request">Request access</button><button data-tab="code">I have a code</button></div><div class="panel active" id="request"><h2>Request access</h2><p>Choose your tier and we will guide you through the next step.</p><form action="https://subscribe.mysweetpea.cc/webhook/access-request" method="post"><div class="field"><label for="tier">Access tier</label><select id="tier" name="tier"><option value="seedling">Seedling — $5 minimum contribution</option><option value="sweetpea">Sweet Pea — request availability</option></select></div><div class="field"><label for="name">Name</label><input id="name" name="name" autocomplete="name" required></div><div class="field"><label for="email">Email</label><input id="email" type="email" name="email" autocomplete="email" required></div><div class="form-note">We use this email only to send access instructions and your invitation code.</div><button class="btn primary form-submit" type="submit">Continue request</button></form></div><div class="panel" id="code"><h2>Already have a code?</h2><p>Use the invitation email to finish creating your account.</p><a class="btn primary" href="redeem.html">Redeem invitation code</a></div></section></main><script>document.addEventListener('DOMContentLoaded',()=>{let q=new URLSearchParams(location.search).get('tier');if(q)document.querySelector('#tier').value=q;document.querySelectorAll('[data-tab]').forEach(b=>b.onclick=()=>{document.querySelectorAll('[data-tab]').forEach(x=>x.classList.toggle('active',x===b));document.querySelectorAll('.panel').forEach(x=>x.classList.toggle('active',x.id===b.dataset.tab))})})</script><footer class="footer"><p><a href="index.html">Home</a><a href="services.html">Services</a><a href="pricing.html">How It Works</a><a href="status.html">Status</a><a href="support.html">Donate</a><a href="about.html">About</a></p><p>© 2026 MySweetPea. Privacy-first, self-hosted, community funded.</p></footer><script src="assets/js/site.js" defer></script></body></html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MySweetPea — Get Access</title>
+    <meta name="description" content="Request community access to MySweetPea's private, self-hosted services with a $5 minimum contribution.">
+    <meta name="theme-color" content="#0C1316">
+    <meta property="og:title" content="MySweetPea — Get Access">
+    <meta property="og:description" content="Request community access to MySweetPea's private, self-hosted services with a $5 minimum contribution.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://mysweetpea.cc/">
+    <meta property="og:image" content="https://mysweetpea.cc/logo.svg">
+    <link rel="icon" type="image/svg+xml" href="/logo-favicon.svg">
+    <link rel="preload" as="image" href="/logo.svg">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600;1,9..144,500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/assets/css/site.css">
+</head>
+<body data-page="form">
+    <a href="#main-content" class="skip-link">Skip to content</a>
+    <div class="scroll-progress" id="scrollProgress" aria-hidden="true"></div>
+    <div class="bg-gradient" aria-hidden="true"></div>
+    <div class="grain-overlay" aria-hidden="true"></div>
+    <canvas id="petalCanvas" aria-hidden="true"></canvas>
+    <div class="float-3d f1" aria-hidden="true"><svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M50 10 C35 15, 28 30, 32 48 C36 60, 48 68, 50 70 C52 68, 64 60, 68 48 C72 30, 65 15, 50 10" fill="#8FAFB5" opacity="0.8"/><path d="M50 25 C44 28, 40 38, 44 48 C47 55, 50 58, 50 58 C50 58, 53 55, 56 48 C60 38, 56 28, 50 25" fill="#8FAFB5" opacity="0.5"/><path d="M50 10 C42 12, 38 22, 42 35 C45 42, 50 45, 50 45 C50 45, 55 42, 58 35 C62 22, 58 12, 50 10" fill="#8FAFB5" opacity="0.6"/><path d="M50 45 C45 48, 42 55, 45 62 C48 67, 50 68, 50 68 C50 68, 52 67, 55 62 C58 55, 55 48, 50 45" fill="#8FAFB5" opacity="0.4"/><line x1="50" y1="68" x2="50" y2="88" stroke="#8FAFB5" stroke-width="2"/><path d="M45 80 Q40 76, 37 82" stroke="#8FAFB5" stroke-width="1.5" fill="none"/><path d="M55 80 Q60 76, 63 82" stroke="#8FAFB5" stroke-width="1.5" fill="none"/><circle cx="37" cy="82" r="2" fill="#8FAFB5" opacity="0.6"/><circle cx="63" cy="82" r="2" fill="#8FAFB5" opacity="0.6"/></svg></div>
+    <div class="float-3d f2" aria-hidden="true"><svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M50 10 C35 15, 28 30, 32 48 C36 60, 48 68, 50 70 C52 68, 64 60, 68 48 C72 30, 65 15, 50 10" fill="#8FAFB5" opacity="0.8"/><path d="M50 25 C44 28, 40 38, 44 48 C47 55, 50 58, 50 58 C50 58, 53 55, 56 48 C60 38, 56 28, 50 25" fill="#8FAFB5" opacity="0.5"/><path d="M50 10 C42 12, 38 22, 42 35 C45 42, 50 45, 50 45 C50 45, 55 42, 58 35 C62 22, 58 12, 50 10" fill="#8FAFB5" opacity="0.6"/><path d="M50 45 C45 48, 42 55, 45 62 C48 67, 50 68, 50 68 C50 68, 52 67, 55 62 C58 55, 55 48, 50 45" fill="#8FAFB5" opacity="0.4"/><line x1="50" y1="68" x2="50" y2="88" stroke="#8FAFB5" stroke-width="2"/><path d="M45 80 Q40 76, 37 82" stroke="#8FAFB5" stroke-width="1.5" fill="none"/><path d="M55 80 Q60 76, 63 82" stroke="#8FAFB5" stroke-width="1.5" fill="none"/><circle cx="37" cy="82" r="2" fill="#8FAFB5" opacity="0.6"/><circle cx="63" cy="82" r="2" fill="#8FAFB5" opacity="0.6"/></svg></div>
+    <nav class="top-nav" aria-label="Primary navigation">
+        <a href="/index.html" class="nav-logo">
+            <img src="/logo.svg" alt="" width="32" height="32">
+            <span>MySweetPea</span>
+        </a>
+        <button class="nav-toggle" aria-expanded="false" aria-controls="nav-links" aria-label="Toggle navigation menu">
+            <span class="nav-toggle-bar"></span>
+            <span class="nav-toggle-bar"></span>
+            <span class="nav-toggle-bar"></span>
+        </button>
+        <div class="nav-links" id="nav-links">
+            <a href="/services.html" class="nav-btn">Services</a>
+            <a href="/pricing.html" class="nav-btn">How It Works</a>
+            <a href="/redeem.html" class="nav-btn">I Have a Code</a>
+            <details class="nav-more">
+                <summary aria-label="More pages">More</summary>
+                <div class="nav-more-menu">
+                    <a href="/support.html">Donate</a>
+                    <a href="/suggest.html">Suggest a Service</a>
+                    <a href="/contact.html">Contact Us</a>
+                    <a href="/status.html">Status</a>
+                    <a href="/about.html">About</a>
+                    <a href="https://github.com/mysweetpea" target="_blank" rel="noopener noreferrer">GitHub <span aria-hidden="true">↗</span></a>
+                </div>
+            </details>
+            <a href="/form.html" class="nav-cta">Get Access</a>
+            <button class="nav-search" aria-label="Search pages and services" title="Search (Ctrl+K)"><svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg></button>
+            <button class="theme-toggle" aria-label="Toggle color theme"><span class="icon-moon" aria-hidden="true"><img src="/assets/icons/icon-ui-moon.svg" class="" alt="" width="18" height="18" loading="lazy" decoding="async" aria-hidden="true"></span><span class="icon-sun" aria-hidden="true"><img src="/assets/icons/icon-ui-sun.svg" class="" alt="" width="18" height="18" loading="lazy" decoding="async" aria-hidden="true"></span></button>
+        </div>
+    </nav>
+<main id="main-content" class="content-wrapper">
+        <div class="hero access-hero">
+            <img src="/logo.svg" alt="MySweetPea logo" class="logo" width="160" height="160">
+            <h1 class="glass-text">Get Access</h1>
+            <p class="hero-sub pop-text">Choose the access tier that fits you. We will guide you through the rest.</p>
+        </div>
+
+        <section class="access-choice-section" aria-labelledby="choose-tier-title">
+            <span class="eyebrow">First, choose a tier</span>
+            <h2 class="section-title glass-text" id="choose-tier-title">How would you like to get started?</h2>
+            <p class="section-subtitle">Both options give you a MySweetPea account. Select a tier below to open its form.</p>
+            <div class="access-choice-grid">
+                <button type="button" class="access-choice-card" data-tier="seedling" aria-pressed="false">
+                    <span class="access-choice-icon" aria-hidden="true"><img src="/assets/icons/icon-ui-seedling.svg" alt="" width="48" height="48"></span>
+                    <span class="access-choice-title">Seedling</span>
+                    <span class="access-choice-price">$5 minimum donation</span>
+                    <span class="access-choice-copy">Password manager, chat, notes, and watch parties. You make a crypto donation, then submit the transaction hash.</span>
+                </button>
+                <button type="button" class="access-choice-card" data-tier="sweetpea" aria-pressed="false">
+                    <span class="access-choice-icon" aria-hidden="true"><img src="/assets/icons/icon-ui-blossom.svg" alt="" width="48" height="48"></span>
+                    <span class="access-choice-title">Sweet Pea</span>
+                    <span class="access-choice-price">Full access — request review</span>
+                    <span class="access-choice-copy">Everything in Seedling, plus media, files, photos, and more. Send a simple request and we will email you an invite code.</span>
+                </button>
+            </div>
+        </section>
+
+        <section class="tier-form-section" aria-live="polite">
+            <div class="tier-form-panel" id="panel-seedling" hidden>
+                <div class="form-card glow-card">
+                    <span class="form-tier-label">Seedling tier</span>
+                    <h2>Complete your Seedling request</h2>
+                    <div class="verify-banner" role="note"><strong>Please note:</strong> a real person personally verifies every donation. You will usually receive your invite code by email <strong>within 24 hours</strong> — it is not instant.</div>
+                    <ol class="request-steps">
+                        <li><strong>Send a $5 or larger crypto donation</strong> using one of the options below.</li>
+                        <li><strong>Copy the transaction hash</strong> from your wallet after sending the donation.</li>
+                        <li><strong>Submit this form.</strong> We verify your donation and email your invite code.</li>
+                    </ol>
+                    <div class="form-group">
+                        <label class="form-label glass-text" for="ga-name">Name</label>
+                        <input type="text" class="form-input" id="ga-name" placeholder="Your name" autocomplete="name" required>
+                        <span class="validation-icon" id="ga-name-icon" aria-hidden="true"></span>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label glass-text" for="ga-email">Email</label>
+                        <input type="email" class="form-input" id="ga-email" placeholder="you@example.com" autocomplete="email" required>
+                        <span class="validation-icon" id="ga-email-icon" aria-hidden="true"></span>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label glass-text" for="ga-username">Preferred username</label>
+                        <input type="text" class="form-input" id="ga-username" placeholder="Choose a username" autocomplete="username" required>
+                        <span class="validation-icon" id="ga-username-icon" aria-hidden="true"></span>
+                        <div class="form-hint">At least 3 characters; letters, numbers, and underscores only.</div>
+                    </div>
+                    <fieldset class="form-group crypto-fieldset">
+                        <legend class="form-label glass-text">Choose a cryptocurrency</legend>
+                        <div class="crypto-options">
+                            <button type="button" class="crypto-option" data-type="monero"><span class="icon" aria-hidden="true"><img src="/assets/icons/icon-crypto-monero.svg" alt="" width="28" height="28"></span><span class="name">Monero (XMR)</span></button>
+                            <button type="button" class="crypto-option" data-type="bitcoin"><span class="icon" aria-hidden="true"><img src="/assets/icons/icon-crypto-bitcoin.svg" alt="" width="28" height="28"></span><span class="name">Bitcoin (BTC)</span></button>
+                        </div>
+                    </fieldset>
+                    <div class="wallet-display" id="wallet-display" hidden>
+                        <div class="wl">Send your $5+ donation to:</div>
+                        <button type="button" class="wa" id="wallet-addr" aria-label="Copy wallet address"></button>
+                        <div class="copy-hint">Click the address to copy it</div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label glass-text" for="ga-txhash">Transaction hash</label>
+                        <input type="text" class="form-input" id="ga-txhash" placeholder="Paste your transaction hash" required>
+                        <span class="validation-icon" id="ga-txhash-icon" aria-hidden="true"></span>
+                        <div class="form-hint">Required — this lets us match your payment to your request.</div>
+                    </div>
+                    <button type="button" class="form-submit" id="ga-submit">Submit Seedling Request</button>
+                </div>
+            </div>
+
+            <div class="tier-form-panel" id="panel-sweetpea" hidden>
+                <div class="form-card glow-card">
+                    <span class="form-tier-label sweetpea-label">Sweet Pea tier</span>
+                    <h2>Request Sweet Pea access</h2>
+                    <div class="verify-banner" role="note"><strong>What happens next:</strong> submit this request and we will review it. If approved, we will email you an invitation code to create your MySweetPea account.</div>
+                    <p class="form-desc">No crypto donation or transaction hash is needed for this request. Tell us a little about yourself and which services you are interested in.</p>
+                    <div class="form-group">
+                        <label class="form-label glass-text" for="sp-name">Name</label>
+                        <input type="text" class="form-input" id="sp-name" placeholder="Your name" autocomplete="name" required>
+                        <span class="validation-icon" id="sp-name-icon" aria-hidden="true"></span>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label glass-text" for="sp-email">Email</label>
+                        <input type="email" class="form-input" id="sp-email" placeholder="you@example.com" autocomplete="email" required>
+                        <span class="validation-icon" id="sp-email-icon" aria-hidden="true"></span>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label glass-text" for="sp-services">Services you are interested in <span aria-hidden="true">*</span></label>
+                        <textarea class="form-input" id="sp-services" rows="4" placeholder="For example: Jellyfin, Nextcloud, Immich, Open WebUI…" required></textarea>
+                        <span class="validation-icon" id="sp-services-icon" aria-hidden="true"></span>
+                        <div class="form-hint">Please list at least one service you would like to use.</div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label glass-text" for="sp-message">Anything else you would like us to know? <span class="optional">Optional</span></label>
+                        <textarea class="form-input" id="sp-message" rows="4" placeholder="A short note is fine."></textarea>
+                    </div>
+                    <button type="button" class="form-submit" id="sp-submit">Submit Sweet Pea Request</button>
+                </div>
+            </div>
+        </section>
+
+        <aside class="redeem-callout reveal" aria-label="Already have an invite code">
+            <div><strong>Already have an invite code?</strong><span>Use it to create your MySweetPea account.</span></div>
+            <a href="/redeem.html" class="btn btn-secondary">Redeem invite code</a>
+        </aside>
+    </main>
+    <a href="#" class="back-to-top" aria-label="Back to top" onclick="window.scrollTo({top:0,behavior:'smooth'});return false;"><img src="/assets/icons/icon-ui-arrow-up.svg" class="" alt="" width="22" height="22" loading="lazy" decoding="async" aria-hidden="true"></a>
+    <footer class="page-footer">
+        <div class="footer-links">
+            <a href="/index.html">Home</a>
+            <a href="/pricing.html">How It Works</a>
+            <a href="/services.html">Services</a>
+            <a href="/status.html">Status</a>
+            <a href="/support.html">Donate</a>
+            <a href="/about.html">About</a>
+            <a href="/suggest.html">Suggest</a>
+            <a href="/form.html">Get Access</a>
+        </div>
+        <p>&copy; 2026 MySweetPea. Privacy-first, self-hosted, community funded.</p><p class="footer-help">Need help? <a href="mailto:support@mysweetpea.cc">support@mysweetpea.cc</a></p>
+    </footer>
+    <script src="/assets/js/site.js" defer></script>
+    <script>
+(function () {
+    var WEBHOOK_BASE = 'https://subscribe.mysweetpea.cc/webhook';
+    var ENDPOINTS = { donationRequest: WEBHOOK_BASE + '/donation-request', sweetPeaRequest: WEBHOOK_BASE + '/sweetpea-request' };
+    var WALLETS = { monero: 'Coming Soon', bitcoin: 'Coming Soon' };
+    var chosenCrypto = '';
+    function valid(type, value) {
+        value = value.trim();
+        if (type === 'name') return value.length >= 2;
+        if (type === 'email') return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
+        if (type === 'username') return /^[A-Za-z0-9_]{3,}$/.test(value);
+        if (type === 'tx') return value.length >= 8;
+        if (type === 'services') return value.length >= 2;
+        return false;
+    }
+    var fields = { 'ga-name':'name', 'ga-email':'email', 'ga-username':'username', 'ga-txhash':'tx', 'sp-name':'name', 'sp-email':'email', 'sp-services':'services' };
+    function validateField(id) {
+        var input = document.getElementById(id), ok = valid(fields[id], input.value);
+        input.classList.toggle('valid', ok); input.classList.toggle('invalid', input.value.trim().length > 0 && !ok);
+        var icon = document.getElementById(id + '-icon');
+        if (icon) { icon.classList.toggle('show', input.value.trim().length > 0); icon.classList.toggle('valid', ok); icon.classList.toggle('invalid', input.value.trim().length > 0 && !ok); icon.textContent = ok ? '✓' : '×'; }
+        updateButtons(); return ok;
+    }
+    Object.keys(fields).forEach(function (id) { document.getElementById(id).addEventListener('input', function(){ validateField(id); }); document.getElementById(id).addEventListener('blur', function(){ validateField(id); }); });
+    function allValid(ids) { return ids.every(function(id){ return valid(fields[id], document.getElementById(id).value); }); }
+    function updateButtons() {
+        document.getElementById('ga-submit').disabled = !(allValid(['ga-name','ga-email','ga-username','ga-txhash']) && !!chosenCrypto);
+        document.getElementById('sp-submit').disabled = !allValid(['sp-name','sp-email','sp-services']);
+    }
+    document.querySelectorAll('.access-choice-card').forEach(function (card) {
+        card.addEventListener('click', function () {
+            var tier = card.getAttribute('data-tier');
+            document.querySelectorAll('.access-choice-card').forEach(function(c){var picked=c===card;c.classList.toggle('selected',picked);c.setAttribute('aria-pressed',String(picked));});
+            ['seedling','sweetpea'].forEach(function(name){var panel=document.getElementById('panel-'+name),active=name===tier;panel.hidden=!active;panel.classList.toggle('active',active);});
+            document.querySelector('.tier-form-section').scrollIntoView({behavior:'smooth',block:'start'});
+        });
+    });
+    document.querySelectorAll('.crypto-option').forEach(function(button){
+        var type=button.getAttribute('data-type');
+        if(!WALLETS[type] || WALLETS[type]==='Coming Soon'){button.disabled=true;button.classList.add('unavailable');var label=document.createElement('span');label.className='crypto-soon';label.textContent='Coming soon';button.appendChild(label);return;}
+        button.addEventListener('click',function(){chosenCrypto=type;document.querySelectorAll('.crypto-option').forEach(function(b){b.classList.toggle('selected',b===button);});var display=document.getElementById('wallet-display'),address=document.getElementById('wallet-addr');address.textContent=WALLETS[type];display.hidden=false;updateButtons();});
+    });
+    document.getElementById('wallet-addr').addEventListener('click',function(){var b=this;navigator.clipboard.writeText(b.textContent).then(function(){var x=b.textContent;b.textContent='Copied!';setTimeout(function(){b.textContent=x;},1600);});});
+    function post(endpoint,data,btn,defaultLabel,successUrl){btn.disabled=true;btn.classList.add('loading');btn.textContent='Submitting…';fetch(endpoint,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(data)}).then(function(r){return r.json();}).then(function(result){if(!result.ok)throw new Error(result.msg||'Submission failed');window.location.href=successUrl;}).catch(function(e){btn.disabled=false;btn.classList.remove('loading');btn.textContent=e.message||'Try again';setTimeout(function(){btn.textContent=defaultLabel;updateButtons();},3000);});}
+    document.getElementById('ga-submit').addEventListener('click',function(){if(this.disabled)return;post(ENDPOINTS.donationRequest,{name:document.getElementById('ga-name').value.trim(),email:document.getElementById('ga-email').value.trim(),username:document.getElementById('ga-username').value.trim(),crypto_type:chosenCrypto,tx_hash:document.getElementById('ga-txhash').value.trim()},this,'Submit Seedling Request','/success.html?type=donation');});
+    document.getElementById('sp-submit').addEventListener('click',function(){if(this.disabled)return;post(ENDPOINTS.sweetPeaRequest,{name:document.getElementById('sp-name').value.trim(),email:document.getElementById('sp-email').value.trim(),services:document.getElementById('sp-services').value.trim(),message:document.getElementById('sp-message').value.trim(),tier:'sweetpea'},this,'Submit Sweet Pea Request','/success.html?type=sweetpea-request');});
+    var requested = new URLSearchParams(location.search).get('tier'); if(requested==='sweetpea'){var card=document.querySelector('.access-choice-card[data-tier="sweetpea"]');if(card)card.click();}
+    updateButtons();
+})();
+</script>
+</body>
+</html>
