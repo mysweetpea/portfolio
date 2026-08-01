@@ -1,1 +1,160 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#0b1215"><meta name="description" content="Learn how community access works."><title>MySweetPea — Community Access</title><link rel="icon" href="logo-favicon.svg"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet"><link rel="stylesheet" href="assets/css/site.css"></head><body><a class="skip-link" href="#main">Skip to content</a><div class="progress"></div><div class="aurora"></div><div class="grain"></div><nav class="nav" aria-label="Primary navigation"><a class="brand" href="index.html"><img src="logo.svg" alt=""><span>MySweetPea</span></a><button class="menu" type="button" aria-expanded="false" aria-controls="nav-links">Menu</button><div class="nav-links" id="nav-links"><a href="services.html" >Services</a><a href="pricing.html" aria-current="page">How It Works</a><a href="redeem.html" >I Have a Code</a><a href="support.html">Donate</a><a class="access" href="form.html" >Get Access</a></div></nav><main id="main"><header class="page-hero"><img class="hero-logo" src="logo.svg" alt="MySweetPea logo"><span class="eyebrow">Community access</span><h1>Private tools, shared responsibility.</h1><p>Choose the access level that fits the services you want. Contributions help protect capacity, reduce abuse, and support the infrastructure.</p></header><section class="flow"><div class="flow-grid reveal"><article class="flow-step"><b>1</b><h3>Choose a tier</h3><p>Pick Seedling for essential private tools or Sweet Pea for the full suite.</p></article><article class="flow-step"><b>2</b><h3>Send a contribution</h3><p>Seedling begins with a one-time $5 crypto contribution.</p></article><article class="flow-step"><b>3</b><h3>Receive your code</h3><p>We email an invitation code for your one MySweetPea sign-in.</p></article></div></section><div class="notice reveal"><strong>Not a subscription.</strong> A contribution helps cover hardware, electricity, bandwidth, and anti-abuse measures. There are no recurring billing cycles.</div><section class="pricing-grid"><article class="tier featured card reveal"><img class="tier-icon" src="assets/icons/icon-ui-seedling.svg" alt=""><h2 class="tier-name">Seedling</h2><div class="tier-price">$5 <small>min.</small></div><div class="tier-period">One-time crypto contribution</div><p class="tier-desc">Essential private services for everyday digital life.</p><ul><li>Vaultwarden passwords</li><li>Matrix / Element chat</li><li>AFFiNE notes and docs</li><li>KoalaSync watch parties</li></ul><a class="btn primary" href="form.html?tier=seedling">Request Seedling access</a></article><article class="tier card reveal"><img class="tier-icon" src="assets/icons/icon-ui-blossom.svg" alt=""><h2 class="tier-name">Sweet Pea</h2><div class="tier-price">Contact us</div><div class="tier-period">Limited availability</div><p class="tier-desc">Full suite access, including media, requests, files, photos, and AI.</p><ul><li>Everything in Seedling</li><li>Jellyfin Moonfin media</li><li>Seerr requests</li><li>Future full-suite services</li></ul><a class="btn secondary" href="form.html?tier=sweetpea">Request Sweet Pea access</a></article></section></main><footer class="footer"><p><a href="index.html">Home</a><a href="services.html">Services</a><a href="pricing.html">How It Works</a><a href="status.html">Status</a><a href="support.html">Donate</a><a href="about.html">About</a></p><p>© 2026 MySweetPea. Privacy-first, self-hosted, community funded.</p></footer><script src="assets/js/site.js" defer></script></body></html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MySweetPea — Community Access</title>
+    <meta name="description" content="Learn how community access works for MySweetPea's private, self-hosted services.">
+    <meta name="theme-color" content="#0C1316">
+    <meta property="og:title" content="MySweetPea — Community Access">
+    <meta property="og:description" content="Learn how community access works for MySweetPea's private, self-hosted services.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://mysweetpea.cc/">
+    <meta property="og:image" content="https://mysweetpea.cc/logo.svg">
+    <link rel="icon" type="image/svg+xml" href="/logo-favicon.svg">
+    <link rel="preload" as="image" href="/logo.svg">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600;1,9..144,500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/assets/css/site.css">
+</head>
+<body data-page="pricing">
+    <a href="#main-content" class="skip-link">Skip to content</a>
+    <div class="scroll-progress" id="scrollProgress" aria-hidden="true"></div>
+    <div class="bg-gradient" aria-hidden="true"></div>
+    <div class="grain-overlay" aria-hidden="true"></div>
+    <canvas id="petalCanvas" aria-hidden="true"></canvas>
+    <div class="float-3d f1" aria-hidden="true"><svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M50 10 C35 15, 28 30, 32 48 C36 60, 48 68, 50 70 C52 68, 64 60, 68 48 C72 30, 65 15, 50 10" fill="#8FAFB5" opacity="0.8"/><path d="M50 25 C44 28, 40 38, 44 48 C47 55, 50 58, 50 58 C50 58, 53 55, 56 48 C60 38, 56 28, 50 25" fill="#8FAFB5" opacity="0.5"/><path d="M50 10 C42 12, 38 22, 42 35 C45 42, 50 45, 50 45 C50 45, 55 42, 58 35 C62 22, 58 12, 50 10" fill="#8FAFB5" opacity="0.6"/><path d="M50 45 C45 48, 42 55, 45 62 C48 67, 50 68, 50 68 C50 68, 52 67, 55 62 C58 55, 55 48, 50 45" fill="#8FAFB5" opacity="0.4"/><line x1="50" y1="68" x2="50" y2="88" stroke="#8FAFB5" stroke-width="2"/><path d="M45 80 Q40 76, 37 82" stroke="#8FAFB5" stroke-width="1.5" fill="none"/><path d="M55 80 Q60 76, 63 82" stroke="#8FAFB5" stroke-width="1.5" fill="none"/><circle cx="37" cy="82" r="2" fill="#8FAFB5" opacity="0.6"/><circle cx="63" cy="82" r="2" fill="#8FAFB5" opacity="0.6"/></svg></div>
+    <div class="float-3d f2" aria-hidden="true"><svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M50 10 C35 15, 28 30, 32 48 C36 60, 48 68, 50 70 C52 68, 64 60, 68 48 C72 30, 65 15, 50 10" fill="#8FAFB5" opacity="0.8"/><path d="M50 25 C44 28, 40 38, 44 48 C47 55, 50 58, 50 58 C50 58, 53 55, 56 48 C60 38, 56 28, 50 25" fill="#8FAFB5" opacity="0.5"/><path d="M50 10 C42 12, 38 22, 42 35 C45 42, 50 45, 50 45 C50 45, 55 42, 58 35 C62 22, 58 12, 50 10" fill="#8FAFB5" opacity="0.6"/><path d="M50 45 C45 48, 42 55, 45 62 C48 67, 50 68, 50 68 C50 68, 52 67, 55 62 C58 55, 55 48, 50 45" fill="#8FAFB5" opacity="0.4"/><line x1="50" y1="68" x2="50" y2="88" stroke="#8FAFB5" stroke-width="2"/><path d="M45 80 Q40 76, 37 82" stroke="#8FAFB5" stroke-width="1.5" fill="none"/><path d="M55 80 Q60 76, 63 82" stroke="#8FAFB5" stroke-width="1.5" fill="none"/><circle cx="37" cy="82" r="2" fill="#8FAFB5" opacity="0.6"/><circle cx="63" cy="82" r="2" fill="#8FAFB5" opacity="0.6"/></svg></div>
+    <nav class="top-nav" aria-label="Primary navigation">
+        <a href="/index.html" class="nav-logo">
+            <img src="/logo.svg" alt="" width="32" height="32">
+            <span>MySweetPea</span>
+        </a>
+        <button class="nav-toggle" aria-expanded="false" aria-controls="nav-links" aria-label="Toggle navigation menu">
+            <span class="nav-toggle-bar"></span>
+            <span class="nav-toggle-bar"></span>
+            <span class="nav-toggle-bar"></span>
+        </button>
+        <div class="nav-links" id="nav-links">
+            <a href="/services.html" class="nav-btn">Services</a>
+            <a href="/pricing.html" class="nav-btn" aria-current="page">How It Works</a>
+            <a href="/redeem.html" class="nav-btn">I Have a Code</a>
+            <details class="nav-more">
+                <summary aria-label="More pages">More</summary>
+                <div class="nav-more-menu">
+                    <a href="/support.html">Donate</a>
+                    <a href="/suggest.html">Suggest a Service</a>
+                    <a href="/contact.html">Contact Us</a>
+                    <a href="/status.html">Status</a>
+                    <a href="/about.html">About</a>
+                    <a href="https://github.com/mysweetpea" target="_blank" rel="noopener noreferrer">GitHub <span aria-hidden="true">↗</span></a>
+                </div>
+            </details>
+            <a href="/form.html" class="nav-cta">Get Access</a>
+            <button class="nav-search" aria-label="Search pages and services" title="Search (Ctrl+K)"><svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg></button>
+            <button class="theme-toggle" aria-label="Toggle color theme"><span class="icon-moon" aria-hidden="true"><img src="/assets/icons/icon-ui-moon.svg" class="" alt="" width="18" height="18" loading="lazy" decoding="async" aria-hidden="true"></span><span class="icon-sun" aria-hidden="true"><img src="/assets/icons/icon-ui-sun.svg" class="" alt="" width="18" height="18" loading="lazy" decoding="async" aria-hidden="true"></span></button>
+        </div>
+    </nav>
+<main id="main-content" class="content-wrapper">
+        <div class="hero">
+            <img src="/logo.svg" alt="MySweetPea logo" class="logo" width="160" height="160">
+            <h1 class="glass-text">MySweetPea</h1>
+            <p class="hero-sub pop-text">Private services for a community-funded digital home.</p>
+        </div>
+
+        <section class="how-it-works-section" aria-labelledby="how-it-works-title">
+            <span class="eyebrow">Community access</span>
+            <h2 class="section-title glass-text reveal" id="how-it-works-title">How It Works</h2>
+            <p class="hiw-intro reveal">Getting access takes three simple steps. No technical knowledge needed.</p>
+            <div class="hiw-steps reveal">
+                <div class="hiw-step">
+                    <div class="hiw-num" aria-hidden="true">1</div>
+                    <h3>Choose a tier</h3>
+                    <p>Pick Seedling or Sweet Pea below — whichever services you want to use.</p>
+                </div>
+                <div class="hiw-step">
+                    <div class="hiw-num" aria-hidden="true">2</div>
+                    <h3>Fill out the tier form</h3>
+                    <p>Tell us which tier you want. Seedling includes a $5 crypto donation; Sweet Pea is reviewed after you submit your request.</p>
+                </div>
+                <div class="hiw-step">
+                    <div class="hiw-num" aria-hidden="true">3</div>
+                    <h3>Create your account</h3>
+                    <p>We email you an invite code. Use it to set up your one MySweetPea sign-in — the same username and password works for every service.</p>
+                </div>
+            </div>
+            <p class="hiw-note reveal">Your sign-in page is powered by software called <strong>Authentik</strong> — that is just its name, not a typo. Stuck at any point? Email <a href="mailto:support@mysweetpea.cc">support@mysweetpea.cc</a> and we'll walk you through it.</p>
+        </section>
+
+        <div class="pricing-section">
+            <div class="info-box reveal">
+                <strong>Why a $5 minimum contribution?</strong><br>
+                A small community contribution helps prevent spam and abuse, ensures members are invested in the community, and contributes to infrastructure costs such as electricity, hardware, and bandwidth. It is not a subscription or a sale of your data.
+            </div>
+
+            <div class="pricing-grid">
+                <div class="pricing-card tier-seedling glow-card reveal" id="card-seedling">
+                    <div class="tier-emoji-3d"><img src="/assets/icons/icon-ui-seedling.svg" class="tier-icon" alt="" width="56" height="56" loading="lazy" decoding="async" aria-hidden="true"></div>
+                    <div class="tier-name tier-name-seedling">Seedling</div>
+                    <div class="price">$5<span style="font-size:0.9rem;color:var(--text-dim);">+ min</span></div>
+                    <div class="price-period">One-time donation</div>
+                    <div class="desc">Access to non-media community services.</div>
+                    <ul class="features">
+                        <li>Vaultwarden (Password Manager)</li>
+                        <li>Matrix / Element (Chat)</li>
+                        <li>AFFiNE (Notes &amp; Docs)</li>
+                        <li>KoalaSync (Watch Parties)</li>
+                    </ul>
+                    <a href="/form.html" class="btn btn-glass-seedling">Get Seedling Access — $5</a>
+                </div>
+
+                <div class="pricing-card tier-sweetpea glow-card reveal reveal-delay-1" id="card-sweetpea">
+                    <div class="tier-emoji-3d"><img src="/assets/icons/icon-ui-blossom.svg" class="tier-icon" alt="" width="56" height="56" loading="lazy" decoding="async" aria-hidden="true"></div>
+                    <div class="tier-name tier-name-sweetpea">Sweet Pea <span>Full Access</span></div>
+                    <div class="price pop-text">Contact Us</div>
+                    <div class="price-period">Pricing on request</div>
+                    <div class="desc">Full access to all services, including media. Limited availability—request it by email.</div><ol class="tier-steps"><li>Submit the Sweet Pea request form</li><li>Receive your invite code by email</li><li>Create your MySweetPea account</li></ol>
+                    <ul class="features">
+                        <li>Everything in Seedling</li>
+                        <li>Jellyfin / Moonfin (Media Server)</li>
+                        <li>Seerr (Request Portal)</li>
+                        <li>Nextcloud (File Sync)</li>
+                        <li>Open WebUI (AI Assistant)</li>
+                        <li>Immich (Photo Backup)</li>
+                    </ul>
+                    <a href="/form.html?tier=sweetpea" class="btn btn-glass-seedling tier-sweetpea-cta">Request Sweet Pea Access</a>
+                    </div>
+                </div>
+            </div>
+        <div class="services-teaser reveal">
+            <p class="services-teaser-text">Want to see everything that's included?</p>
+            <a href="/services.html" class="teaser-btn"><span>Browse All Services</span><span class="teaser-btn-arrow" aria-hidden="true">&rarr;</span></a>
+        </div>
+        
+        </main>
+    <a href="#" class="back-to-top" aria-label="Back to top" onclick="window.scrollTo({top:0,behavior:'smooth'});return false;"><img src="/assets/icons/icon-ui-arrow-up.svg" class="" alt="" width="22" height="22" loading="lazy" decoding="async" aria-hidden="true"></a>
+    <footer class="page-footer">
+        <div class="footer-links">
+            <a href="/index.html">Home</a>
+            <a href="/pricing.html">How It Works</a>
+            <a href="/services.html">Services</a>
+            <a href="/status.html">Status</a>
+            <a href="/support.html">Donate</a>
+            <a href="/about.html">About</a>
+            <a href="/suggest.html">Suggest</a>
+            <a href="/form.html">Get Access</a>
+        </div>
+        <p>&copy; 2026 MySweetPea. Privacy-first, self-hosted, community funded.</p><p class="footer-help">Need help? <a href="mailto:support@mysweetpea.cc">support@mysweetpea.cc</a></p>
+    </footer>
+    <!-- Service details modal -->    <script>
+// FAQ Toggle
+        function toggleFAQ(el) { var item = el.parentElement; var open = item.classList.toggle('open'); el.setAttribute('aria-expanded', String(open)); }
+
+            </script>
+    <script>
+document.addEventListener('click', function(event) { var button = event.target.closest('.copy-email-btn'); if (!button) return; var email = button.getAttribute('data-copy'); navigator.clipboard.writeText(email).then(function() { var original=button.textContent; button.textContent='Copied!'; setTimeout(function(){button.textContent=original;},1800); }).catch(function(){ button.textContent=email; }); });
+</script><script src="/assets/js/site.js" defer></script>
+</body>
+</html>
