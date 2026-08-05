@@ -195,6 +195,15 @@
             document.querySelectorAll('.access-choice-card').forEach(function(c){var picked=c===card;c.classList.toggle('selected',picked);c.setAttribute('aria-pressed',String(picked));});
             ['seedling','sweetpea'].forEach(function(name){var panel=document.getElementById('panel-'+name),active=name===tier;panel.hidden=!active;panel.classList.toggle('active',active);});
             document.querySelector('.tier-form-section').scrollIntoView({behavior:'smooth',block:'start'});
+            /* Update progress indicator: step 1 done, step 2 active */
+            var steps = document.querySelectorAll('.form-progress .step');
+            var connectors = document.querySelectorAll('.form-progress .connector');
+            if (steps.length >= 3) {
+                steps[0].classList.remove('active'); steps[0].classList.add('done');
+                steps[1].classList.remove('done'); steps[1].classList.add('active');
+                steps[2].classList.remove('active','done');
+            }
+            if (connectors.length >= 2) { connectors[0].classList.add('done'); connectors[1].classList.remove('done'); }
         });
     });
     document.querySelectorAll('.crypto-option').forEach(function(button){
