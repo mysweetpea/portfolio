@@ -713,3 +713,36 @@
         btn.addEventListener('click', function () { setTimeout(update, 50); });
     });
 })();
+
+/* ==========================================================================
+   v42: View-switcher (no-scroll tabs) — pricing + services
+   ========================================================================== */
+(function () {
+    'use strict';
+    document.querySelectorAll('.view-switcher').forEach(function (switcher) {
+        var tabs = switcher.querySelectorAll('.view-tab');
+        var panels = switcher.querySelectorAll('.view-panel');
+
+        function activate(view) {
+            tabs.forEach(function (t) {
+                var active = t.getAttribute('data-view') === view;
+                t.classList.toggle('active', active);
+                t.setAttribute('aria-selected', active ? 'true' : 'false');
+            });
+            panels.forEach(function (p) {
+                p.classList.toggle('active', p.getAttribute('data-view') === view);
+            });
+        }
+
+        tabs.forEach(function (tab) {
+            tab.addEventListener('click', function () {
+                activate(tab.getAttribute('data-view'));
+            });
+        });
+
+        // Support deep-linking: ?view=services opens that tab
+        var params = new URLSearchParams(window.location.search);
+        var initial = params.get('view');
+        if (initial) activate(initial);
+    });
+})();

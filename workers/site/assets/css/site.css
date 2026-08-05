@@ -5164,3 +5164,45 @@ body {
     .hero h1 { animation: none !important; }
     .feature-card::after, .service-card::after, .pricing-card::after, .stat-card::after { display: none; }
 }
+
+/* ==========================================================================
+   v41: View-switcher (no-scroll tabs) for pricing + services
+   ========================================================================== */
+.view-switcher {
+    max-width: 1040px; margin: 0 auto; padding: 0 24px 80px;
+}
+.view-tabs {
+    display: flex; flex-wrap: wrap; gap: 8px; justify-content: center;
+    margin: 0 auto 36px; max-width: 720px;
+    padding: 8px; border-radius: 999px;
+    background: rgba(12,19,22,0.8);
+    backdrop-filter: blur(20px) saturate(1.4);
+    border: 1px solid var(--hairline);
+    box-shadow: 0 4px 24px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.05);
+}
+.view-tab {
+    padding: 10px 22px; border-radius: 999px; cursor: pointer;
+    background: transparent; border: 1px solid transparent;
+    color: var(--text-dim); font-size: 0.88rem; font-weight: 600;
+    transition: var(--transition);
+}
+.view-tab:hover { color: var(--text); background: var(--primary-glow); }
+.view-tab.active {
+    background: linear-gradient(135deg, var(--primary), var(--primary-dim) 60%, var(--sage-dim));
+    color: var(--bg); border-color: rgba(255,255,255,0.12);
+    box-shadow: 0 4px 16px rgba(94,184,168,0.25), inset 0 1px 0 rgba(255,255,255,0.2);
+}
+.view-panel { display: none; animation: viewIn 0.35s var(--ease-premium); }
+.view-panel.active { display: block; }
+@keyframes viewIn {
+    from { opacity: 0; transform: translateY(12px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+[data-theme="light"] .view-tabs { background: rgba(242,245,246,0.85); }
+@media (max-width: 640px) {
+    .view-tabs { border-radius: 16px; gap: 6px; }
+    .view-tab { padding: 8px 14px; font-size: 0.8rem; }
+}
+@media (prefers-reduced-motion: reduce) {
+    .view-panel { animation: none; }
+}
