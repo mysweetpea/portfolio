@@ -4866,3 +4866,195 @@ body[data-page='home'] .hero h1 { font-size: clamp(2.75rem, 6.5vw, 4.5rem); }
     .hero .logo, .hero::before, .garden-pollen span { animation: none !important; }
     .garden-pollen { display: none; }
 }
+
+/* ==========================================================================
+   v38: Premium refinement — luxury depth, refined palette, elegant detail
+   ========================================================================== */
+
+/* --- Refined premium palette (deeper, richer, more luxurious) --- */
+:root {
+    --gold: #D9A86C;                 /* warm gold accent (sparingly) */
+    --gold-dim: #B8874F;
+    --gold-glow: rgba(217,168,108,0.16);
+    --premium-shadow:
+        0 1px 2px rgba(0,0,0,0.3),
+        0 4px 12px rgba(0,0,0,0.22),
+        0 16px 48px rgba(0,0,0,0.28);
+    --hairline: rgba(197,213,216,0.12);
+}
+
+/* --- Body: richer background with subtle depth --- */
+body {
+    background:
+        radial-gradient(ellipse 80% 50% at 50% -10%, rgba(94,184,168,0.06), transparent 60%),
+        radial-gradient(ellipse 60% 40% at 90% 110%, rgba(217,168,108,0.03), transparent 60%),
+        var(--bg);
+}
+
+/* --- Premium typography: refined hierarchy --- */
+.hero h1 {
+    font-weight: 700;
+    letter-spacing: -0.03em;
+    text-wrap: balance;
+}
+.section-title {
+    font-weight: 600;
+    letter-spacing: -0.02em;
+}
+.eyebrow {
+    letter-spacing: 0.18em;
+    font-weight: 700;
+}
+
+/* --- Premium cards: hairline border + layered depth --- */
+.feature-card, .stat-card, .pricing-card, .service-card, .card, .glow-card,
+.cta-card, .members-teaser-card {
+    border: 1px solid var(--hairline);
+    box-shadow:
+        inset 0 1px 0 rgba(255,255,255,0.07),
+        0 1px 2px rgba(0,0,0,0.25),
+        0 8px 24px rgba(0,0,0,0.2),
+        0 24px 64px rgba(0,0,0,0.16);
+    transition: transform 0.5s var(--ease-premium), box-shadow 0.5s var(--ease-premium), border-color 0.5s var(--ease-premium);
+}
+.feature-card:hover, .stat-card:hover, .pricing-card:hover, .service-card:hover,
+.cta-card:hover, .members-teaser-card:hover {
+    border-color: rgba(197,213,216,0.22);
+    box-shadow:
+        inset 0 1px 0 rgba(255,255,255,0.09),
+        0 2px 4px rgba(0,0,0,0.25),
+        0 12px 32px rgba(0,0,0,0.24),
+        0 32px 80px rgba(0,0,0,0.2),
+        0 0 40px rgba(94,184,168,0.06);
+    transform: translateY(-3px);
+}
+
+/* --- Premium buttons: refined gradient + inner glow --- */
+.hero-btn-primary, .cta-btn, .form-submit, .nav-cta {
+    background:
+        linear-gradient(180deg, rgba(255,255,255,0.12), transparent 40%),
+        linear-gradient(135deg, var(--primary), var(--primary-dim) 55%, var(--sage-dim));
+    border: 1px solid rgba(255,255,255,0.12);
+    box-shadow:
+        inset 0 1px 0 rgba(255,255,255,0.25),
+        0 4px 16px rgba(94,184,168,0.25),
+        0 8px 32px rgba(0,0,0,0.2);
+    text-shadow: 0 1px 2px rgba(0,0,0,0.2);
+}
+.hero-btn-primary:hover, .cta-btn:hover, .form-submit:hover:not(:disabled), .nav-cta:hover {
+    box-shadow:
+        inset 0 1px 0 rgba(255,255,255,0.3),
+        0 6px 24px rgba(94,184,168,0.35),
+        0 12px 40px rgba(0,0,0,0.25);
+    transform: translateY(-2px);
+}
+
+/* --- Premium nav: refined glass with subtle bottom glow --- */
+.top-nav {
+    background: rgba(12,19,22,0.6);
+    backdrop-filter: blur(24px) saturate(1.5);
+    -webkit-backdrop-filter: blur(24px) saturate(1.5);
+    border-bottom: 1px solid var(--hairline);
+    box-shadow: 0 1px 0 rgba(255,255,255,0.04), 0 8px 32px rgba(0,0,0,0.2);
+}
+.top-nav.nav-scrolled {
+    background: rgba(12,19,22,0.85);
+    box-shadow: 0 1px 0 rgba(255,255,255,0.05), 0 12px 40px rgba(0,0,0,0.3);
+}
+
+/* --- Premium section-nav: refined pill --- */
+.section-nav {
+    background: rgba(12,19,22,0.8);
+    backdrop-filter: blur(20px) saturate(1.4);
+    border: 1px solid var(--hairline);
+    box-shadow: 0 4px 24px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.05);
+}
+.section-nav a {
+    font-weight: 600;
+    letter-spacing: 0.01em;
+}
+.section-nav a:hover {
+    background: linear-gradient(180deg, rgba(255,255,255,0.08), transparent);
+    color: var(--text);
+}
+
+/* --- Premium footer --- */
+.page-footer {
+    background:
+        radial-gradient(ellipse 60% 40% at 50% 120%, rgba(94,184,168,0.06), transparent 60%),
+        linear-gradient(180deg, transparent, rgba(12,19,22,0.6));
+    border-top: 1px solid var(--hairline);
+}
+.page-footer .footer-links a {
+    font-weight: 500;
+    letter-spacing: 0.02em;
+}
+
+/* --- Premium scrollbar --- */
+::-webkit-scrollbar { width: 10px; }
+::-webkit-scrollbar-track { background: var(--bg); }
+::-webkit-scrollbar-thumb {
+    background: linear-gradient(180deg, var(--primary-dim), var(--sage-dim));
+    border-radius: 6px;
+    border: 2px solid var(--bg);
+}
+::-webkit-scrollbar-thumb:hover { background: var(--primary); }
+
+/* --- Premium selection --- */
+::selection {
+    background: linear-gradient(135deg, var(--primary), var(--sage));
+    color: var(--bg);
+}
+
+/* --- Premium focus ring --- */
+:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 2px var(--bg), 0 0 0 4px var(--primary-bright), 0 0 20px rgba(94,184,168,0.3);
+}
+
+/* --- Premium link underline (subtle gradient) --- */
+.content-wrapper a:not(.nav-btn):not(.nav-cta):not(.hero-btn):not(.cta-btn):not(.section-nav a):not(.wm-btn):not(.compare-cta):not(.teaser-btn):not(.status-action-btn):not(.service-chip):not(.github-link) {
+    text-decoration: none;
+    background-image: linear-gradient(90deg, var(--sage), var(--primary));
+    background-size: 100% 1px;
+    background-position: 0 100%;
+    background-repeat: no-repeat;
+    transition: background-size 0.3s var(--ease-premium);
+}
+.content-wrapper a:not(.nav-btn):not(.nav-cta):not(.hero-btn):not(.cta-btn):not(.section-nav a):not(.wm-btn):not(.compare-cta):not(.teaser-btn):not(.status-action-btn):not(.service-chip):not(.github-link):hover {
+    background-size: 100% 2px;
+}
+
+/* --- Premium stat numbers --- */
+.stat-card .number {
+    background: linear-gradient(135deg, var(--text) 20%, var(--primary-bright) 60%, var(--sage) 100%);
+    -webkit-background-clip: text; background-clip: text;
+    -webkit-text-fill-color: transparent;
+    font-weight: 800;
+}
+
+/* --- Premium tier cards: subtle gold accent on Sweet Pea --- */
+.pricing-card.tier-sweetpea {
+    border-color: rgba(217,168,108,0.25);
+}
+.pricing-card.tier-sweetpea:hover {
+    border-color: rgba(217,168,108,0.45);
+    box-shadow:
+        inset 0 1px 0 rgba(255,255,255,0.08),
+        0 12px 40px rgba(0,0,0,0.4),
+        0 0 24px rgba(217,168,108,0.08);
+}
+
+/* --- Premium welcome modal --- */
+.welcome-modal-card {
+    border: 1px solid var(--hairline);
+    box-shadow: 0 32px 96px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.06);
+}
+
+/* --- Reduced motion guard --- */
+@media (prefers-reduced-motion: reduce) {
+    .feature-card, .stat-card, .pricing-card, .service-card, .cta-card,
+    .members-teaser-card, .hero-btn-primary, .cta-btn, .form-submit, .nav-cta {
+        transition: none !important;
+    }
+}
