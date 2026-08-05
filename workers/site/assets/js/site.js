@@ -132,6 +132,29 @@
             }
         });
 
+        /* Focus trap: keep Tab cycling within the open mobile menu */
+        navLinks.addEventListener('keydown', function (event) {
+            if (!navLinks.classList.contains('nav-open')) return;
+            if (event.key !== 'Tab') return;
+            var focusables = Array.prototype.slice.call(navLinks.querySelectorAll('a[href], button:not([disabled]), summary, [tabindex]:not([tabindex="-1"])'));
+            if (!focusables.length) return;
+            var first = focusables[0];
+            var last = focusables[focusables.length - 1];
+            if (event.shiftKey && document.activeElement === first) {
+                event.preventDefault(); last.focus();
+            } else if (!event.shiftKey && document.activeElement === last) {
+                event.preventDefault(); first.focus();
+            }
+        });
+
+        /* Move focus into the menu when it opens */
+        navToggle.addEventListener('click', function () {
+            if (navLinks.classList.contains('nav-open')) {
+                var firstLink = navLinks.querySelector('a[href], button, summary');
+                if (firstLink) firstLink.focus();
+            }
+        });
+
         /* Reset state if resized back to desktop */
         window.addEventListener('resize', function () {
             if (window.innerWidth > 768) {
@@ -187,7 +210,8 @@
             rotSpeed: -0.012 + Math.random() * 0.024,
             opacity: 0.08 + Math.random() * 0.16,
             sway: Math.random() * Math.PI * 2,
-            swaySpeed: 0.008 + Math.random() * 0.014
+            swaySpeed: 0.008 + Math.random() * 0.014,
+            tone: Math.random() // 0 = frost/ice, 1 = sage/green
         };
     }
 
@@ -199,9 +223,17 @@
 
         var light = document.documentElement.getAttribute('data-theme') === 'light';
         var gradient = ctx.createRadialGradient(0, 0, 0, 0, 0, petal.size);
-        gradient.addColorStop(0, light ? '#7EAD93' : '#C4E1CC');
-        gradient.addColorStop(0.5, light ? '#5D8D72' : '#A3C9B6');
-        gradient.addColorStop(1, light ? 'rgba(64, 105, 81, 0.24)' : 'rgba(93, 122, 110, 0.28)');
+        if (petal.tone > 0.5) {
+            /* sage/green tone */
+            gradient.addColorStop(0, light ? '#7EAD93' : '#C4E1CC');
+            gradient.addColorStop(0.5, light ? '#5D8D72' : '#A3C9B6');
+            gradient.addColorStop(1, light ? 'rgba(64, 105, 81, 0.24)' : 'rgba(93, 122, 110, 0.28)');
+        } else {
+            /* frost/ice tone */
+            gradient.addColorStop(0, light ? '#A9C4C9' : '#DDE6E8');
+            gradient.addColorStop(0.5, light ? '#7E9FA8' : '#B8CDD2');
+            gradient.addColorStop(1, light ? 'rgba(94, 130, 145, 0.22)' : 'rgba(143, 175, 181, 0.26)');
+        }
         ctx.fillStyle = gradient;
 
         ctx.beginPath();
@@ -325,7 +357,7 @@
 
     /* === Magnetic CTAs (fine pointers only) === */
     if (window.matchMedia('(hover: hover) and (pointer: fine)').matches && !reduceMotion2.matches) {
-        document.querySelectorAll('.hero-btn-primary, .cta-btn').forEach(function (btn) {
+        document.querySelectorAll('.hero-btn-primary, .cta-btn, .form-submit, .nav-cta, .compare-cta').forEach(function (btn) {
             var raf = null;
             btn.addEventListener('pointermove', function (e) {
                 if (raf !== null) return;
