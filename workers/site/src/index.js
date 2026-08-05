@@ -1,32 +1,25 @@
-const NAV_PARTIAL = '/_partials/nav.html';
-const FOOTER_PARTIAL = '/_partials/footer.html';
+/* MySweetPea — Cloudflare Worker
+   Serves the static site with security headers and Matrix federation well-known.
+   Nav/footer are now inlined directly into each HTML page (no injection needed). */
 
-/* Fetch a shared partial from the static assets binding.
-   Build the URL from the incoming request's origin so the ASSETS
-   binding resolves correctly (a fake host like placeholder.invalid
-   is rejected and returns null). */
-async function getPartial(env, path, request) {
-  try {
-    const url = new URL(path, request.url);
-    const res = await env.ASSETS.fetch(new Request(url, request));
-    if (res.ok) return await res.text();
-  } catch (e) { /* fall through */ }
-  return null;
-}
+const securityHeaders = {
+  'X-Content-Type-Options': 'nosniff',
+  'X-Frame-Options': 'DENY',
+  'Referrer-Policy': 'strict-origin-when-cross-origin',
+  'Permissions-Policy': 'camera=(), microphone=(), geolocation=(), payment=(), usb=()',
+  'Strict-Transport-Security': 'max-age=63072000; includeSubDomains; preload'
+};
 
-/* Mark the nav link matching the current path as active (aria-current="page"). */
-function markActiveNav(navHtml, pathname) {
-  const clean = pathname.replace(/\/$/, '') || '/index.html';
-  // Map "/" and "/index.html" to the home link; otherwise match the .html path.
-  let target;
-  if (clean === '/' || clean === '/index.html') target = '/index.html';
-  else target = clean.endsWith('.html') ? clean : clean + '.html';
-  // Add aria-current to the matching <a href="..."> in the nav.
-  return navHtml.replace(
-    new RegExp('(<a[^>]+href="' + target.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + '"[^>]*)>', 'g'),
-    '$1 aria-current="page">'
-  );
-}
+// CSP allows only our own assets (fonts + QR are self-hosted).
+const csp = [
+  "default-src 'self'",
+  "script-src 'self' 'unsafe-inline'",
+  "style-src 'self' 'unsafe-inline'",
+  "font-src 'self'",
+  "img-src 'self' data:",
+  "connect-src 'self' https://subscribe.mysweetpea.cc",
+  "frame-ancestors 'none'"
+].join('; ');
 
 export default {
   async fetch(request, env) {
@@ -53,69 +46,15 @@ export default {
     const res = await env.ASSETS.fetch(request);
     const contentType = res.headers.get('Content-Type') || '';
 
-    // Security headers applied to every response (privacy-first brand signal)
-    const securityHeaders = {
-      'X-Content-Type-Options': 'nosniff',
-      'X-Frame-Options': 'DENY',
-      'Referrer-Policy': 'strict-origin-when-cross-origin',
-      'Permissions-Policy': 'camera=(), microphone=(), geolocation=(), payment=(), usb=()',
-      'Strict-Transport-Security': 'max-age=63072000; includeSubDomains; preload'
-    };
+    // Apply security headers to every response
+    const out = new Response(res.body, res);
+    Object.entries(securityHeaders).forEach(([k, v]) => out.headers.set(k, v));
 
-    if (!contentType.includes('text/html')) {
-      // Non-HTML: apply security headers and return as-is
-      const out = new Response(res.body, res);
-      Object.entries(securityHeaders).forEach(([k, v]) => out.headers.set(k, v));
-      return out;
+    // Add CSP to HTML responses
+    if (contentType.includes('text/html')) {
+      out.headers.set('Content-Security-Policy', csp);
     }
 
-    // Inject shared nav + footer into HTML pages (single source of truth).
-    const [nav, footer] = await Promise.all([
-      getPartial(env, NAV_PARTIAL, request),
-      getPartial(env, FOOTER_PARTIAL, request)
-    ]);
-
-    let html = await res.text();
-    let injected = false;
-
-    if (nav) {
-      const activeNav = markActiveNav(nav, url.pathname);
-      if (html.includes('<!-- NAV -->')) {
-        html = html.replace('<!-- NAV -->', activeNav);
-        injected = true;
-      }
-    }
-    if (footer && html.includes('<!-- FOOTER -->')) {
-      html = html.replace('<!-- FOOTER -->', footer);
-      injected = true;
-    }
-
-    if (!injected) {
-      // No placeholders found — return the original response with security headers.
-      const out = new Response(res.body, res);
-      Object.entries(securityHeaders).forEach(([k, v]) => out.headers.set(k, v));
-      return out;
-    }
-
-    // CSP allows only our own assets (fonts + QR are self-hosted).
-    const csp = [
-      "default-src 'self'",
-      "script-src 'self' 'unsafe-inline'",
-      "style-src 'self' 'unsafe-inline'",
-      "font-src 'self'",
-      "img-src 'self' data:",
-      "connect-src 'self' https://subscribe.mysweetpea.cc",
-      "frame-ancestors 'none'"
-    ].join('; ');
-
-    return new Response(html, {
-      status: res.status,
-      headers: {
-        'Content-Type': 'text/html; charset=utf-8',
-        'Cache-Control': 'public, max-age=300',
-        ...securityHeaders,
-        'Content-Security-Policy': csp
-      }
-    });
+    return out;
   }
 };
