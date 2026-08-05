@@ -5058,3 +5058,108 @@ body {
         transition: none !important;
     }
 }
+
+/* ==========================================================================
+   v39: Live status, notify buttons, dashboard teaser, shine, cache-busting
+   ========================================================================== */
+
+/* --- Live status pill (home page) --- */
+.live-status-pill {
+    display: inline-flex; align-items: center; gap: 8px;
+    margin: 0 auto 8px; padding: 8px 18px;
+    border-radius: 999px;
+    background: rgba(163,201,182,0.1); border: 1px solid rgba(163,201,182,0.3);
+    color: var(--sage); font-size: 0.82rem; font-weight: 600;
+    max-width: fit-content;
+}
+.live-status-pill .status-dot { margin-right: 0; }
+.live-status-pill.offline { background: rgba(217,140,140,0.1); border-color: rgba(217,140,140,0.3); color: var(--error); }
+[data-theme="light"] .live-status-pill { color: #2f7a72; border-color: rgba(47,122,114,0.3); }
+
+/* --- Notify-me buttons (coming-soon services) --- */
+.notify-btn {
+    display: inline-flex; align-items: center; gap: 6px;
+    margin-top: 10px; padding: 7px 14px;
+    border-radius: 999px; cursor: pointer;
+    background: var(--primary-glow); border: 1px solid var(--border-primary);
+    color: var(--text-dim); font-size: 0.78rem; font-weight: 600;
+    transition: var(--transition);
+}
+.notify-btn:hover { color: var(--text); border-color: var(--sage); background: rgba(163,201,182,0.12); }
+.notify-btn.notified { background: rgba(163,201,182,0.15); border-color: var(--sage); color: var(--sage); }
+.notify-btn img { width: 14px; height: 14px; }
+
+/* --- Members dashboard teaser --- */
+.dashboard-teaser {
+    max-width: 1040px; margin: 0 auto; padding: 0 24px 90px;
+}
+.dashboard-teaser-card {
+    background: var(--card-bg); border: 1px solid var(--hairline);
+    border-radius: var(--radius); padding: 40px 36px;
+    backdrop-filter: blur(20px) saturate(1.3);
+    box-shadow: var(--premium-shadow);
+}
+.dashboard-teaser-head { display: flex; align-items: center; justify-content: space-between; gap: 20px; flex-wrap: wrap; margin-bottom: 24px; }
+.dashboard-teaser-head h2 { font-size: 1.5rem; margin: 0; }
+.dashboard-teaser-head .dt-tier {
+    padding: 6px 14px; border-radius: 999px;
+    background: rgba(217,168,108,0.15); border: 1px solid rgba(217,168,108,0.35);
+    color: var(--gold); font-size: 0.8rem; font-weight: 700;
+}
+.dashboard-teaser-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 16px; }
+.dashboard-teaser-item {
+    padding: 18px; border-radius: var(--radius-sm);
+    background: rgba(143,175,181,0.05); border: 1px solid var(--border);
+    text-align: center;
+}
+.dashboard-teaser-item .dt-num { font-size: 1.6rem; font-weight: 800; color: var(--primary-bright); }
+.dashboard-teaser-item .dt-label { font-size: 0.78rem; color: var(--text-dim); margin-top: 4px; }
+.dashboard-teaser-note { margin-top: 20px; text-align: center; color: var(--text-faint); font-size: 0.82rem; }
+
+/* --- Card shine sweep on hover --- */
+.feature-card, .service-card, .pricing-card, .stat-card {
+    position: relative; overflow: hidden;
+}
+.feature-card::after, .service-card::after, .pricing-card::after, .stat-card::after {
+    content: ''; position: absolute; top: 0; left: -120%;
+    width: 60%; height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.06), transparent);
+    transform: skewX(-20deg);
+    transition: left 0.7s ease;
+    pointer-events: none;
+}
+.feature-card:hover::after, .service-card:hover::after, .pricing-card:hover::after, .stat-card:hover::after {
+    left: 130%;
+}
+
+/* --- Animated hero gradient wordmark --- */
+.hero h1 {
+    background: linear-gradient(120deg,
+        var(--text) 0%, var(--primary-bright) 25%, var(--sage) 50%,
+        var(--primary-bright) 75%, var(--text) 100%);
+    background-size: 300% auto;
+    -webkit-background-clip: text; background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: heroGradient 10s ease-in-out infinite;
+}
+@keyframes heroGradient {
+    0%, 100% { background-position: 0% center; }
+    50% { background-position: 100% center; }
+}
+[data-theme="light"] .hero h1 {
+    background: linear-gradient(120deg, #1B2B31 0%, #3E6B77 25%, #2F7A72 50%, #3E6B77 75%, #1B2B31 100%);
+    background-size: 300% auto;
+    -webkit-background-clip: text; background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: heroGradient 10s ease-in-out infinite;
+}
+
+/* --- Grain texture (slightly stronger) --- */
+.grain-overlay { opacity: 0.04; }
+
+/* --- Reduced motion guards for new animations --- */
+@media (prefers-reduced-motion: reduce) {
+    .feature-card::after, .service-card::after, .pricing-card::after, .stat-card::after,
+    .hero h1 { animation: none !important; }
+    .feature-card::after, .service-card::after, .pricing-card::after, .stat-card::after { display: none; }
+}

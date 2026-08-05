@@ -15,8 +15,8 @@
     <link rel="apple-touch-icon" href="/apple-touch-icon.png">
     <link rel="manifest" href="/manifest.json">
     <link rel="preload" as="image" href="/logo.svg">
-                    <link rel="stylesheet" href="/assets/css/fonts.css">
-    <link rel="stylesheet" href="/assets/css/site.css">
+                    <link rel="stylesheet" href="/assets/css/fonts.css?v=2">
+    <link rel="stylesheet" href="/assets/css/site.css?v=2">
 </head>
 <body data-page="home">
     <a href="#main-content" class="skip-link">Skip to content</a>
@@ -89,8 +89,14 @@
     <a href="#sec-members">Members</a>
     <a href="#sec-stats">Stats</a>
     <a href="#sec-cta">Join</a>
-<div class="vine-divider" aria-hidden="true"></div>
 </nav>
+
+        <div class="live-status-pill" id="liveStatus" role="status" aria-live="polite">
+            <span class="status-dot" aria-hidden="true"></span>
+            <span id="liveStatusText">Checking service status…</span>
+        </div>
+
+<div class="vine-divider" aria-hidden="true"></div>
 <div class="features-section" id="sec-features">
             <h2 class="section-title glass-text reveal">Why MySweetPea?</h2>
             <p class="section-subtitle reveal reveal-delay-1">Privacy, control, and community — without the corporate overhead</p>
@@ -123,7 +129,7 @@
         <div class="vine-divider" aria-hidden="true"></div>
 </section>
 
-        <div class="stats-section" id="sec-stats"
+        <div class="stats-section" id="sec-stats">
             <h2 class="section-title glass-text reveal">What You Can Count On</h2>
             <div class="stats-grid">
                 <div class="stat-card reveal reveal-delay-1"><div class="number">Zero</div><div class="label">Advertisements, ever</div></div>
@@ -134,7 +140,7 @@
         <div class="vine-divider" aria-hidden="true"></div>
 </div>
 
-        <div class="cta-section" id="sec-cta"
+        <div class="cta-section" id="sec-cta">
             <div class="cta-card reveal">
                 <h2 class="glass-text">Ready to Join?</h2>
                 <p>A $5 minimum community contribution helps protect limited capacity from spam and supports the infrastructure. It is not a subscription.</p>
@@ -147,7 +153,7 @@
         <div class="vine-divider" aria-hidden="true"></div>
 </div>
 
-        <div class="members-teaser reveal" id="sec-members"
+        <div class="members-teaser reveal" id="sec-members">
             <div class="members-teaser-card">
                 <span class="eyebrow">For members</span>
                 <h2 class="section-title glass-text">One sign-in, every service</h2>
@@ -162,6 +168,22 @@
                     <a href="/pricing.html" class="cta-btn">See what's included</a>
                     <a href="/form.html" class="cta-btn" style="background: rgba(255,255,255,0.05); color: var(--text); border: 1px solid var(--border);">Get Access</a>
                 </div>
+            </div>
+        </div>
+
+        <div class="dashboard-teaser reveal" id="sec-dashboard">
+            <div class="dashboard-teaser-card">
+                <div class="dashboard-teaser-head">
+                    <h2 class="section-title glass-text">Your garden at a glance</h2>
+                    <span class="dt-tier">Sweet Pea</span>
+                </div>
+                <div class="dashboard-teaser-grid">
+                    <div class="dashboard-teaser-item"><div class="dt-num">9</div><div class="dt-label">Active services</div></div>
+                    <div class="dashboard-teaser-item"><div class="dt-num">1</div><div class="dt-label">Sign-in for all</div></div>
+                    <div class="dashboard-teaser-item"><div class="dt-num">$5</div><div class="dt-label">One-time, lifetime</div></div>
+                    <div class="dashboard-teaser-item"><div class="dt-num">0</div><div class="dt-label">Ads or tracking</div></div>
+                </div>
+                <p class="dashboard-teaser-note">This is a preview of what members see after joining — one account, every service, no subscriptions.</p>
             </div>
         </div>
 
@@ -184,7 +206,7 @@
 
 
 
-    <script src="/assets/js/site.js" defer></script>
+    <script src="/assets/js/site.js?v=2" defer></script>
     <script>
 // === Animated Counter for Stats ===
         const counterObserver = new IntersectionObserver(function(entries) {

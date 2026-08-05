@@ -15,8 +15,8 @@
     <link rel="apple-touch-icon" href="/apple-touch-icon.png">
     <link rel="manifest" href="/manifest.json">
     <link rel="preload" as="image" href="/logo.svg">
-                    <link rel="stylesheet" href="/assets/css/fonts.css">
-    <link rel="stylesheet" href="/assets/css/site.css">
+                    <link rel="stylesheet" href="/assets/css/fonts.css?v=2">
+    <link rel="stylesheet" href="/assets/css/site.css?v=2">
 </head>
 <body data-page="services">
     <a href="#main-content" class="skip-link">Skip to content</a>
@@ -75,7 +75,7 @@
     <a href="#sec-faq">FAQ</a>
 <div class="vine-divider" aria-hidden="true"></div>
 </nav>
-<div class="services-section" id="sec-services"
+<div class="services-section" id="sec-services">
             <span class="eyebrow">Included with access</span>
             <h2 class="section-title glass-text reveal">Available Services</h2>
             <p class="section-subtitle reveal reveal-delay-1">Click any service to see what it does and how to set it up</p>
@@ -123,16 +123,16 @@
             <div class="vine-divider" aria-hidden="true"></div>
 </div>
 
-        <div class="coming-soon-section" id="sec-coming"
+        <div class="coming-soon-section" id="sec-coming">
             <div class="tier-divider reveal"><div class="line"></div><div class="label"><span class="icon"><img src="/assets/icons/icon-ui-construction.svg" class="" alt="" width="22" height="22" loading="lazy" decoding="async" aria-hidden="true"></span> Coming Soon</div><div class="line"></div></div>
             <div class="coming-soon-grid">
-                <div class="coming-soon-card reveal reveal-delay-3" data-tier="coming-soon"><div class="service-header"><div class="service-icon"><img src="/assets/icons/syncthing.svg" width="40" height="40" loading="lazy" decoding="async" alt="Syncthing"></div><h3>Syncthing</h3><span class="acct-pill">Account required</span></div><p>Peer-to-peer file synchronization. Sync folders across devices without a central server.</p></div>
-                <div class="coming-soon-card reveal reveal-delay-1" data-tier="coming-soon"><div class="service-header"><div class="service-icon"><img src="/assets/icons/stalwart.svg" width="40" height="40" loading="lazy" decoding="async" alt="Stalwart Mail"></div><h3>Stalwart Mail</h3><span class="acct-pill">Account required</span></div><p>Self-hosted email server with IMAP, JMAP, and SMTP support. Your own private email domain.</p></div>
-                <div class="coming-soon-card reveal reveal-delay-2" data-tier="coming-soon"><div class="service-header"><div class="service-icon"><img src="/assets/icons/remux.webp" width="40" height="40" loading="lazy" decoding="async" alt="Remux"></div><h3>Remux</h3><span class="acct-pill">Account required</span></div><p>Automated media acquisition and library management. Finds, downloads, and organizes requested content for the media server.</p></div>
+                <div class="coming-soon-card reveal reveal-delay-3" data-tier="coming-soon"><div class="service-header"><div class="service-icon"><img src="/assets/icons/syncthing.svg" width="40" height="40" loading="lazy" decoding="async" alt="Syncthing"></div><h3>Syncthing</h3><span class="acct-pill">Account required</span></div><p>Peer-to-peer file synchronization. Sync folders across devices without a central server.</p><button type="button" class="notify-btn" data-service="Syncthing"><img src="/assets/icons/icon-ui-blossom.svg" alt="" width="14" height="14"> Notify me when live</button></div>
+                <div class="coming-soon-card reveal reveal-delay-1" data-tier="coming-soon"><div class="service-header"><div class="service-icon"><img src="/assets/icons/stalwart.svg" width="40" height="40" loading="lazy" decoding="async" alt="Stalwart Mail"></div><h3>Stalwart Mail</h3><span class="acct-pill">Account required</span></div><p>Self-hosted email server with IMAP, JMAP, and SMTP support. Your own private email domain.</p><button type="button" class="notify-btn" data-service="Stalwart Mail"><img src="/assets/icons/icon-ui-blossom.svg" alt="" width="14" height="14"> Notify me when live</button></div>
+                <div class="coming-soon-card reveal reveal-delay-2" data-tier="coming-soon"><div class="service-header"><div class="service-icon"><img src="/assets/icons/remux.webp" width="40" height="40" loading="lazy" decoding="async" alt="Remux"></div><h3>Remux</h3><span class="acct-pill">Account required</span></div><p>Automated media acquisition and library management. Finds, downloads, and organizes requested content for the media server.</p><button type="button" class="notify-btn" data-service="Remux"><img src="/assets/icons/icon-ui-blossom.svg" alt="" width="14" height="14"> Notify me when live</button></div>
             </div>
         <div class="vine-divider" aria-hidden="true"></div>
 </div>
-        <div class="faq-section" id="sec-faq"
+        <div class="faq-section" id="sec-faq">
             <h2 class="section-title glass-text reveal">FAQ</h2>
             <div class="reveal reveal-delay-1">
                 <div class="faq-item">
@@ -216,7 +216,7 @@
         </div>
     </div>
 
-    <script src="/assets/js/site.js" defer></script>
+    <script src="/assets/js/site.js?v=2" defer></script>
     <script>
 // FAQ Toggle
         function toggleFAQ(el) { var item = el.parentElement; var open = item.classList.toggle('open'); el.setAttribute('aria-expanded', String(open)); }

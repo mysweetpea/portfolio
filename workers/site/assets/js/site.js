@@ -625,3 +625,87 @@
         el.innerHTML = vineSvg;
     });
 })();
+
+/* ==========================================================================
+   v40: Live status, notify buttons, dashboard teaser, redeem live check
+   ========================================================================== */
+(function () {
+    'use strict';
+
+    /* === Live service status pill (home page) === */
+    var liveStatus = document.getElementById('liveStatus');
+    var liveStatusText = document.getElementById('liveStatusText');
+    if (liveStatus && liveStatusText) {
+        // Try Uptime Kuma API; fall back to a static "operational" state.
+        fetch('https://status.mysweetpea.cc/api/status-page/heartbeat/1')
+            .then(function (r) { return r.ok ? r.json() : Promise.reject(); })
+            .then(function (data) {
+                var allUp = data && data.heartbeatList && data.heartbeatList.every(function (h) { return h.status === 1; });
+                liveStatusText.textContent = allUp ? 'All systems operational' : 'Some services may be affected';
+                if (!allUp) liveStatus.classList.add('offline');
+            })
+            .catch(function () {
+                liveStatusText.textContent = 'All systems operational';
+            });
+    }
+
+    /* === Notify-me buttons (coming-soon services) === */
+    document.querySelectorAll('.notify-btn').forEach(function (btn) {
+        btn.addEventListener('click', function () {
+            var service = btn.getAttribute('data-service');
+            var email = btn.getAttribute('data-email') || '';
+            var payload = { service_name: service, notify: true, email: email };
+            fetch('https://subscribe.mysweetpea.cc/webhook/suggest', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            }).then(function (r) { return r.json(); })
+              .then(function (data) {
+                  btn.classList.add('notified');
+                  btn.textContent = 'We\'ll let you know';
+              })
+              .catch(function () {
+                  btn.classList.add('notified');
+                  btn.textContent = 'We\'ll let you know';
+              });
+        });
+    });
+
+    /* === Redeem: live invite-code check === */
+    var rcCode = document.getElementById('rc-code');
+    var rcHint = document.getElementById('rc-code-hint');
+    if (rcCode && rcHint) {
+        var checkTimer = null;
+        rcCode.addEventListener('input', function () {
+            clearTimeout(checkTimer);
+            var code = rcCode.value.trim();
+            if (code.length < 8) { rcHint.textContent = 'Enter the code exactly as it appears in your email.'; return; }
+            checkTimer = setTimeout(function () {
+                fetch('https://subscribe.mysweetpea.cc/webhook/check-code', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ invite_code: code })
+                }).then(function (r) { return r.json(); })
+                  .then(function (data) {
+                      if (data.ok) { rcHint.textContent = 'Code looks good — continue with your details.'; rcHint.classList.add('success'); }
+                      else { rcHint.textContent = data.msg || 'That code doesn\'t look right.'; rcHint.classList.add('error'); }
+                  })
+                  .catch(function () { /* leave default hint */ });
+            }, 600);
+        });
+    }
+})();
+
+/* === Update meta theme-color on theme change === */
+(function () {
+    var meta = document.querySelector('meta[name="theme-color"]');
+    if (!meta) return;
+    function update() {
+        var light = document.documentElement.getAttribute('data-theme') === 'light';
+        meta.setAttribute('content', light ? '#D8E1DD' : '#0C1316');
+    }
+    update();
+    document.querySelectorAll('.theme-toggle').forEach(function (btn) {
+        btn.addEventListener('click', function () { setTimeout(update, 50); });
+    });
+})();

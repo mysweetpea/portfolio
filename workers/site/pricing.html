@@ -15,8 +15,8 @@
     <link rel="apple-touch-icon" href="/apple-touch-icon.png">
     <link rel="manifest" href="/manifest.json">
     <link rel="preload" as="image" href="/logo.svg">
-                    <link rel="stylesheet" href="/assets/css/fonts.css">
-    <link rel="stylesheet" href="/assets/css/site.css">
+                    <link rel="stylesheet" href="/assets/css/fonts.css?v=2">
+    <link rel="stylesheet" href="/assets/css/site.css?v=2">
 </head>
 <body data-page="pricing">
     <a href="#main-content" class="skip-link">Skip to content</a>
@@ -100,8 +100,7 @@
         <div class="vine-divider" aria-hidden="true"></div>
 </section>
 
-        <div class="pricing-section" id="sec-pricing"
-            <div class="info-box reveal">
+        <div class="pricing-section" id="sec-pricing">            <div class="info-box reveal">
                 <strong>Why a $5 minimum contribution?</strong><br>
                 A small community contribution helps prevent spam and abuse, ensures members are invested in the community, and contributes to infrastructure costs such as electricity, hardware, and bandwidth. It is not a subscription or a sale of your data.
             </div>
@@ -200,7 +199,7 @@
             </script>
     <script>
 document.addEventListener('click', function(event) { var button = event.target.closest('.copy-email-btn'); if (!button) return; var email = button.getAttribute('data-copy'); navigator.clipboard.writeText(email).then(function() { var original=button.textContent; button.textContent='Copied!'; setTimeout(function(){button.textContent=original;},1800); }).catch(function(){ button.textContent=email; }); });
-</script><script src="/assets/js/site.js" defer></script>
+</script><script src="/assets/js/site.js?v=2" defer></script>
     <div class="welcome-modal" id="welcomeModal" role="dialog" aria-modal="true" aria-labelledby="wm-title">
         <div class="welcome-modal-card">
             <img src="/logo.svg" alt="" class="wm-logo" aria-hidden="true">

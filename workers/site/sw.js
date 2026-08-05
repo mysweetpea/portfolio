@@ -2,7 +2,7 @@
    Minimal offline cache for the static site. Caches pages + assets on first
    visit so the site works offline and feels app-like for members. */
 
-const CACHE = 'mysweetpea-v1';
+const CACHE = 'mysweetpea-v2';
 const CORE = [
   '/',
   '/index.html',
