@@ -4747,3 +4747,122 @@ body[data-page='home'] .hero h1 { font-size: clamp(2.75rem, 6.5vw, 4.5rem); }
 }
 .private-badge img { width: 14px; height: 14px; }
 [data-theme="light"] .private-badge { color: #2f7a72; border-color: rgba(47,122,114,0.4); }
+
+/* ==========================================================================
+   v36: Modern private garden — cohesive visual refinement
+   ========================================================================== */
+
+/* --- Garden glow backdrop behind the hero logo --- */
+.hero .logo {
+    position: relative;
+    filter: drop-shadow(0 8px 30px rgba(197,213,216,0.12));
+    animation: gardenBreath 6s ease-in-out infinite;
+}
+@keyframes gardenBreath {
+    0%, 100% { transform: scale(1); filter: drop-shadow(0 8px 30px rgba(94,184,168,0.18)); }
+    50% { transform: scale(1.03); filter: drop-shadow(0 12px 44px rgba(94,184,168,0.32)); }
+}
+.hero::before {
+    content: ''; position: absolute; top: 50%; left: 50%;
+    width: min(60vmin, 460px); height: min(60vmin, 460px);
+    transform: translate(-50%, -50%);
+    background: radial-gradient(circle, rgba(94,184,168,0.10), rgba(163,201,182,0.04) 45%, transparent 70%);
+    border-radius: 50%;
+    filter: blur(20px);
+    pointer-events: none; z-index: 0;
+    animation: gardenGlow 8s ease-in-out infinite;
+}
+@keyframes gardenGlow {
+    0%, 100% { opacity: 0.7; transform: translate(-50%,-50%) scale(1); }
+    50% { opacity: 1; transform: translate(-50%,-50%) scale(1.06); }
+}
+
+/* --- Floating garden pollen / light particles (JS adds .garden-pollen) --- */
+.garden-pollen {
+    position: fixed; inset: 0; z-index: 0; pointer-events: none; overflow: hidden;
+}
+.garden-pollen span {
+    position: absolute; border-radius: 50%;
+    background: radial-gradient(circle, rgba(163,201,182,0.5), rgba(163,201,182,0));
+    animation: pollenFloat linear infinite;
+    opacity: 0;
+}
+@keyframes pollenFloat {
+    0% { transform: translateY(110vh) translateX(0); opacity: 0; }
+    10% { opacity: 0.6; }
+    90% { opacity: 0.4; }
+    100% { transform: translateY(-10vh) translateX(30px); opacity: 0; }
+}
+
+/* --- Curved vine divider between major sections --- */
+.vine-divider {
+    display: flex; align-items: center; justify-content: center;
+    gap: 14px; margin: 0 auto; max-width: 720px; padding: 0 20px;
+    color: var(--sage); opacity: 0.6;
+}
+.vine-divider::before, .vine-divider::after {
+    content: ''; flex: 1; height: 1px;
+    background: linear-gradient(90deg, transparent, var(--border-primary), transparent);
+}
+.vine-divider svg { width: 26px; height: 26px; }
+
+/* --- Modern glassmorphism refinement: layered depth on cards --- */
+.feature-card, .stat-card, .pricing-card, .service-card, .card, .glow-card {
+    background:
+        linear-gradient(160deg, rgba(255,255,255,0.04), transparent 40%),
+        var(--card-bg);
+    border: 1px solid var(--border);
+    box-shadow:
+        inset 0 1px 0 rgba(255,255,255,0.06),
+        0 1px 2px rgba(0,0,0,0.2),
+        0 8px 24px rgba(0,0,0,0.18);
+    backdrop-filter: blur(18px) saturate(1.25);
+    -webkit-backdrop-filter: blur(18px) saturate(1.25);
+}
+
+/* --- Brand gradient text (modern) --- */
+.nav-logo span {
+    background: linear-gradient(120deg, var(--text) 20%, var(--primary-bright) 40%, var(--sage) 60%, var(--text) 80%);
+    background-size: 200% auto;
+    -webkit-background-clip: text; background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: shimmer 8s linear infinite;
+}
+
+/* --- Modern primary buttons: gradient + shine + lift --- */
+.hero-btn-primary, .cta-btn, .form-submit, .nav-cta {
+    background: linear-gradient(135deg, var(--primary), var(--primary-dim) 60%, var(--sage-dim));
+    background-size: 160% 160%;
+    box-shadow: 0 4px 18px rgba(94,184,168,0.22), inset 0 1px 0 rgba(255,255,255,0.15);
+    transition: transform 0.3s var(--ease-premium), box-shadow 0.3s var(--ease-premium), background-position 0.5s ease;
+}
+.hero-btn-primary:hover, .cta-btn:hover, .form-submit:hover:not(:disabled), .nav-cta:hover {
+    background-position: 100% 100%;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 28px rgba(94,184,168,0.32), inset 0 1px 0 rgba(255,255,255,0.2);
+}
+
+/* --- Modern footer: refined, layered --- */
+.page-footer {
+    background: linear-gradient(180deg, transparent, rgba(94,184,168,0.04));
+    border-top: 1px solid var(--border);
+    padding: 56px 24px 40px;
+}
+.page-footer .footer-links a {
+    padding: 6px 10px; border-radius: 8px;
+    transition: var(--transition);
+}
+.page-footer .footer-links a:hover { background: var(--primary-glow); }
+
+/* --- Section titles: softer, more elegant --- */
+.section-title {
+    font-family: 'Fraunces', Georgia, serif;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+}
+
+/* --- Smooth scroll + reduced motion guard --- */
+@media (prefers-reduced-motion: reduce) {
+    .hero .logo, .hero::before, .garden-pollen span { animation: none !important; }
+    .garden-pollen { display: none; }
+}

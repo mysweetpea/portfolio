@@ -585,3 +585,43 @@
         });
     }
 })();
+
+/* ==========================================================================
+   v37: Garden pollen particles + vine dividers
+   ========================================================================== */
+(function () {
+    'use strict';
+    var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+    if (reduceMotion.matches) return;
+
+    /* === Floating garden pollen particles === */
+    var pollen = document.createElement('div');
+    pollen.className = 'garden-pollen';
+    pollen.setAttribute('aria-hidden', 'true');
+    document.body.appendChild(pollen);
+
+    var COUNT = 14;
+    for (var i = 0; i < COUNT; i++) {
+        var span = document.createElement('span');
+        var size = 3 + Math.random() * 5;
+        span.style.width = size + 'px';
+        span.style.height = size + 'px';
+        span.style.left = (Math.random() * 100) + '%';
+        span.style.animationDuration = (12 + Math.random() * 14) + 's';
+        span.style.animationDelay = (Math.random() * 12) + 's';
+        pollen.appendChild(span);
+    }
+
+    /* === Vine divider SVG (injected into .vine-divider elements) === */
+    var vineSvg = '<svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">' +
+        '<path d="M32 6C22 10 16 20 18 32c2 12 12 20 14 26" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>' +
+        '<path d="M18 32c-6-2-10-8-8-14 2-6 8-8 14-6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" opacity=".6"/>' +
+        '<path d="M32 6c10 4 16 14 14 26-2 12-12 20-14 26" stroke="currentColor" stroke-width="2" stroke-linecap="round" opacity=".5"/>' +
+        '<path d="M46 32c6-2 10-8 8-14-2-6-8-8-14-6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" opacity=".6"/>' +
+        '<circle cx="18" cy="32" r="2.5" fill="currentColor" opacity=".7"/>' +
+        '<circle cx="46" cy="32" r="2.5" fill="currentColor" opacity=".7"/>' +
+        '</svg>';
+    document.querySelectorAll('.vine-divider').forEach(function (el) {
+        el.innerHTML = vineSvg;
+    });
+})();
