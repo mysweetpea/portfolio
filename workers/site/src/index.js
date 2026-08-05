@@ -47,8 +47,21 @@ export default {
     // Serve static site
     const res = await env.ASSETS.fetch(request);
     const contentType = res.headers.get('Content-Type') || '';
+
+    // Security headers applied to every response (privacy-first brand signal)
+    const securityHeaders = {
+      'X-Content-Type-Options': 'nosniff',
+      'X-Frame-Options': 'DENY',
+      'Referrer-Policy': 'strict-origin-when-cross-origin',
+      'Permissions-Policy': 'camera=(), microphone=(), geolocation=(), payment=(), usb=()',
+      'Strict-Transport-Security': 'max-age=63072000; includeSubDomains; preload'
+    };
+
     if (!contentType.includes('text/html')) {
-      return res;
+      // Non-HTML: apply security headers and return as-is
+      const out = new Response(res.body, res);
+      Object.entries(securityHeaders).forEach(([k, v]) => out.headers.set(k, v));
+      return out;
     }
 
     // Inject shared nav + footer into HTML pages (single source of truth).
@@ -73,15 +86,30 @@ export default {
     }
 
     if (!injected) {
-      // No placeholders found — return the original response untouched.
-      return res;
+      // No placeholders found — return the original response with security headers.
+      const out = new Response(res.body, res);
+      Object.entries(securityHeaders).forEach(([k, v]) => out.headers.set(k, v));
+      return out;
     }
+
+    // CSP allows our own assets, Google Fonts, and the QR CDN (if still used).
+    const csp = [
+      "default-src 'self'",
+      "script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net",
+      "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
+      "font-src 'self' https://fonts.gstatic.com",
+      "img-src 'self' data:",
+      "connect-src 'self' https://subscribe.mysweetpea.cc",
+      "frame-ancestors 'none'"
+    ].join('; ');
 
     return new Response(html, {
       status: res.status,
       headers: {
         'Content-Type': 'text/html; charset=utf-8',
-        'Cache-Control': 'public, max-age=300'
+        'Cache-Control': 'public, max-age=300',
+        ...securityHeaders,
+        'Content-Security-Policy': csp
       }
     });
   }

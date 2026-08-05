@@ -34,7 +34,7 @@
 
 <main id="main-content" class="content-wrapper">
         <div class="hero access-hero">
-            <img src="/logo.svg" alt="" class="hero-watermark" aria-hidden="true">
+            <img src="/logo.svg" alt="" class="hero-watermark" aria-hidden="true" loading="lazy" decoding="async">
             <img src="/logo.svg" alt="MySweetPea logo" class="logo" width="160" height="160">
             <h1 class="glass-text">Get Access</h1>
             <p class="hero-sub pop-text">Choose the access tier that fits you. We will guide you through the rest.</p>
@@ -159,7 +159,7 @@
 <!-- FOOTER -->
 
     <script src="/assets/js/site.js" defer></script>
-    <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js" defer></script>
+    <script src="/assets/js/qrcode.min.js" defer></script>
     <script>
 (function () {
     var WEBHOOK_BASE = 'https://subscribe.mysweetpea.cc/webhook';
@@ -215,13 +215,23 @@
     function renderQR(text) {
         var wrap = document.getElementById('qr-wrap');
         if (!wrap || !text || text === 'Coming Soon') { if (wrap) wrap.hidden = true; return; }
-        if (typeof QRCode === 'undefined') { wrap.hidden = true; return; }
+        if (typeof qrcode === 'undefined') { wrap.hidden = true; return; }
         var canvas = document.getElementById('wallet-qr');
         canvas.width = 160; canvas.height = 160;
-        QRCode.toCanvas(canvas, text, { width: 160, margin: 1 }, function (err) {
-            if (err) { wrap.hidden = true; return; }
-            wrap.hidden = false;
-        });
+        var qr = qrcode(0, 'M');
+        qr.addData(text);
+        qr.make();
+        var ctx = canvas.getContext('2d');
+        var cells = qr.getModuleCount();
+        var size = 160 / cells;
+        ctx.fillStyle = '#fff'; ctx.fillRect(0, 0, 160, 160);
+        ctx.fillStyle = '#000';
+        for (var r = 0; r < cells; r++) {
+            for (var c = 0; c < cells; c++) {
+                if (qr.isDark(r, c)) ctx.fillRect(c * size, r * size, size, size);
+            }
+        }
+        wrap.hidden = false;
     }
     document.getElementById('wallet-addr').addEventListener('click',function(){var b=this;navigator.clipboard.writeText(b.textContent).then(function(){var x=b.textContent;b.textContent='Copied!';setTimeout(function(){b.textContent=x;},1600);});});
     function post(endpoint,data,btn,defaultLabel,successUrl,overlayId){btn.disabled=true;btn.classList.add('loading');btn.textContent='Submitting…';var overlay=document.getElementById(overlayId);if(overlay)overlay.classList.add('active');fetch(endpoint,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(data)}).then(function(r){return r.json();}).then(function(result){if(!result.ok)throw new Error(result.msg||'Submission failed');window.location.href=successUrl;}).catch(function(e){btn.disabled=false;btn.classList.remove('loading');btn.textContent=e.message||'Try again';if(overlay)overlay.classList.remove('active');setTimeout(function(){btn.textContent=defaultLabel;updateButtons();},3000);});}

@@ -34,7 +34,7 @@
 
 <main id="main-content" class="content-wrapper">
         <div class="hero">
-            <img src="/logo.svg" alt="" class="hero-watermark" aria-hidden="true">
+            <img src="/logo.svg" alt="" class="hero-watermark" aria-hidden="true" loading="lazy" decoding="async">
             <img src="/logo.svg" alt="MySweetPea logo" class="logo" width="160" height="160">
             <h1 class="glass-text">Services</h1>
             <p class="hero-sub pop-text">Everything below runs on our own hardware — private, no ads, no tracking. Click any service for a setup guide.</p>
@@ -122,6 +122,15 @@
                 <div class="faq-item">
 <button class="faq-question" type="button" id="services-faq-q-8" aria-expanded="false" aria-controls="services-faq-a-8" onclick="toggleFAQ(this)">Can I get a refund? <span class="arrow"><img src="/assets/icons/icon-ui-chevron-down.svg" class="" alt="" width="16" height="16" loading="lazy" decoding="async" aria-hidden="true"></span></button>
 <div class="faq-answer" id="services-faq-a-8" role="region" aria-labelledby="services-faq-q-8"><p>Crypto donations are irreversible. If you have a genuine issue, contact support@mysweetpea.cc.</p></div></div>
+                <div class="faq-item">
+<button class="faq-question" type="button" id="services-faq-q-9" aria-expanded="false" aria-controls="services-faq-a-9" onclick="toggleFAQ(this)">What happens if MySweetPea shuts down? <span class="arrow"><img src="/assets/icons/icon-ui-chevron-down.svg" class="" alt="" width="16" height="16" loading="lazy" decoding="async" aria-hidden="true"></span></button>
+<div class="faq-answer" id="services-faq-a-9" role="region" aria-labelledby="services-faq-q-9"><p>Because every service we run is open source and self-hosted, your data is never locked in. If MySweetPea ever had to shut down, you could export your data from each service and self-host the same software yourself — or migrate to any other provider. Nothing about your data is proprietary or vendor-locked.</p></div></div>
+                <div class="faq-item">
+<button class="faq-question" type="button" id="services-faq-q-10" aria-expanded="false" aria-controls="services-faq-a-10" onclick="toggleFAQ(this)">Can I self-host these services myself? <span class="arrow"><img src="/assets/icons/icon-ui-chevron-down.svg" class="" alt="" width="16" height="16" loading="lazy" decoding="async" aria-hidden="true"></span></button>
+<div class="faq-answer" id="services-faq-a-10" role="region" aria-labelledby="services-faq-q-10"><p>Absolutely. Everything we run is free and open source, and our entire infrastructure setup is public on <a href="https://github.com/mysweetpea/homelab-k8s" target="_blank" rel="noopener noreferrer">GitHub</a>. If you'd like to run your own private services, you can follow our setup or use the same software on any server.</p></div></div>
+                <div class="faq-item">
+<button class="faq-question" type="button" id="services-faq-q-11" aria-expanded="false" aria-controls="services-faq-a-11" onclick="toggleFAQ(this)">How is my data backed up? <span class="arrow"><img src="/assets/icons/icon-ui-chevron-down.svg" class="" alt="" width="16" height="16" loading="lazy" decoding="async" aria-hidden="true"></span></button>
+<div class="faq-answer" id="services-faq-a-11" role="region" aria-labelledby="services-faq-q-11"><p>Databases and configuration are backed up automatically every day, with multiple copies retained. We also keep offsite backups of critical data. If a service ever fails, we can restore it quickly from these backups.</p></div></div>
             </div>
         </div>
 

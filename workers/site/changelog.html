@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MySweetPea — Changelog</title>
+    <meta name="description" content="What's new at MySweetPea — service updates, improvements, and community changes.">
+    <meta name="theme-color" content="#0C1316">
+    <meta name="robots" content="noindex, nofollow">
+    <meta property="og:title" content="MySweetPea — Changelog">
+    <meta property="og:description" content="What's new at MySweetPea — service updates, improvements, and community changes.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://mysweetpea.cc/changelog.html">
+    <meta property="og:image" content="https://mysweetpea.cc/logo.svg">
+    <link rel="icon" type="image/svg+xml" href="/logo-favicon.svg">
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+    <link rel="manifest" href="/manifest.json">
+    <link rel="preload" as="image" href="/logo.svg">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600;1,9..144,500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/assets/css/site.css">
+</head>
+<body data-page="changelog">
+    <a href="#main-content" class="skip-link">Skip to content</a>
+    <div class="scroll-progress" id="scrollProgress" aria-hidden="true"></div>
+    <div class="bg-gradient" aria-hidden="true"></div>
+    <div class="grain-overlay" aria-hidden="true"></div>
+    <div class="aurora" aria-hidden="true"></div>
+    <canvas id="petalCanvas" aria-hidden="true"></canvas>
+<!-- NAV -->
+<main id="main-content" class="content-wrapper">
+        <div class="hero">
+            <img src="/logo.svg" alt="MySweetPea logo" class="hero-watermark" aria-hidden="true" loading="lazy" decoding="async">
+            <img src="/logo.svg" alt="MySweetPea logo" class="logo" width="160" height="160">
+            <h1 class="glass-text">Changelog</h1>
+            <p class="hero-sub pop-text">What's new at MySweetPea — service updates, improvements, and community changes.</p>
+        </div>
+
+        <div class="content-section" style="max-width: 720px; margin: 0 auto; padding: 20px 24px 80px;">
+            <div class="card reveal">
+                <h2>August 2026</h2>
+                <ul>
+                    <li><strong>New services live:</strong> Nextcloud (files &amp; calendar), Immich (photo backup), and Open WebUI (private AI chat) are now available to Sweet Pea members.</li>
+                    <li><strong>Reliability:</strong> Automated database and configuration backups are now running daily. Namespace protection added to prevent accidental data loss.</li>
+                    <li><strong>Performance:</strong> All services updated to their latest stable versions, including n8n 2.33.3 and Authentik 2026.5.6.</li>
+                </ul>
+            </div>
+            <div class="card reveal reveal-delay-1">
+                <h2>July 2026</h2>
+                <ul>
+                    <li><strong>Website redesign:</strong> New Nordic Frost theme, falling-petal animations, glassmorphism, and a command palette (Ctrl+K).</li>
+                    <li><strong>Community access:</strong> Introduced the Seedling and Sweet Pea tiers with a one-time $5 minimum donation.</li>
+                    <li><strong>New service:</strong> KoalaSync (watch parties) added behind single sign-on.</li>
+                </ul>
+            </div>
+            <div class="card reveal reveal-delay-2">
+                <h2>June 2026</h2>
+                <ul>
+                    <li><strong>Single sign-on:</strong> All services now use one MySweetPea sign-in via Authentik.</li>
+                    <li><strong>New services:</strong> Jellyfin / Moonfin (media), Seerr (requests), and AFFiNE (notes &amp; docs) launched.</li>
+                    <li><strong>Infrastructure:</strong> Migrated to GitOps with ArgoCD for reproducible deployments.</li>
+                </ul>
+            </div>
+        </div>
+        </main>
+<a href="#" class="back-to-top" aria-label="Back to top" onclick="window.scrollTo({top:0,behavior:'smooth'});return false;"><img src="/assets/icons/icon-ui-arrow-up.svg" class="" alt="" width="22" height="22" loading="lazy" decoding="async" aria-hidden="true"></a>
+<!-- FOOTER -->
+
+    <script src="/assets/js/site.js" defer></script>
+</body>
+</html>

@@ -32,13 +32,17 @@
 <main id="main-content" class="content-wrapper">
         <nav class="breadcrumbs" aria-label="Breadcrumb"><a href="/index.html">Home</a><span aria-current="page">Page Not Found</span></nav>
         <div class="hero">
-            <img src="/logo.svg" alt="" class="hero-watermark" aria-hidden="true">
+            <img src="/logo.svg" alt="" class="hero-watermark" aria-hidden="true" loading="lazy" decoding="async">
             <div class="code">404</div>
             <h1 class="glass-text">Page Not Found</h1>
             <p>The page you're looking for doesn't exist or may have been moved.</p>
             <div class="hero-buttons">
                 <a href="/index.html" class="hero-btn hero-btn-primary">Back to Home</a>
                 <a href="/services.html" class="hero-btn hero-btn-secondary">See Services</a>
+            </div>
+            <div class="p404-search" style="margin-top: 28px; max-width: 420px; width: 100%;">
+                <input type="text" id="p404-search" class="form-input" placeholder="Search pages and services…" aria-label="Search pages and services" autocomplete="off">
+                <div class="form-hint" style="margin-top: 8px;">Press Enter to search, or use Ctrl+K anywhere on the site.</div>
             </div>
             <p style="margin-top: 22px;">Need a hand? Email <a href="mailto:support@mysweetpea.cc" style="color: var(--sage);">support@mysweetpea.cc</a> and we'll point you in the right direction.</p>
         </div>
@@ -47,5 +51,31 @@
 <!-- FOOTER -->
 
     <script src="/assets/js/site.js" defer></script>
+    <script>
+    (function () {
+        var input = document.getElementById('p404-search');
+        if (!input) return;
+        var pages = {
+            'home': '/index.html', 'services': '/services.html', 'pricing': '/pricing.html',
+            'how it works': '/pricing.html', 'redeem': '/redeem.html', 'code': '/redeem.html',
+            'donate': '/support.html', 'support': '/support.html', 'suggest': '/suggest.html',
+            'contact': '/contact.html', 'status': '/status.html', 'about': '/about.html',
+            'changelog': '/changelog.html', 'get access': '/form.html', 'access': '/form.html',
+            'vaultwarden': '/services.html', 'matrix': '/services.html', 'jellyfin': '/services.html',
+            'nextcloud': '/services.html', 'immich': '/services.html', 'open webui': '/services.html',
+            'seerr': '/services.html', 'affine': '/services.html', 'koalasync': '/services.html'
+        };
+        input.addEventListener('keydown', function (e) {
+            if (e.key !== 'Enter') return;
+            var q = input.value.trim().toLowerCase();
+            if (!q) return;
+            var url = pages[q] || pages[q.split(' ')[0]];
+            if (url) { window.location.href = url; return; }
+            input.classList.add('invalid');
+            input.value = '';
+            input.placeholder = 'No match — try "services" or "pricing"';
+        });
+    })();
+    </script>
 </body>
 </html>
