@@ -520,3 +520,68 @@
         }
     });
 })();
+
+/* ==========================================================================
+   v35: Scroll-linked hero fade, welcome modal, card stagger, auto theme
+   ========================================================================== */
+(function () {
+    'use strict';
+
+    /* === Scroll-linked hero fade === */
+    var hero = document.querySelector('.hero');
+    if (hero) {
+        var heroTick = false;
+        window.addEventListener('scroll', function () {
+            if (heroTick) return;
+            heroTick = true;
+            requestAnimationFrame(function () {
+                hero.classList.toggle('hero-faded', window.scrollY > 120);
+                heroTick = false;
+            });
+        }, { passive: true });
+    }
+
+    /* === Card entrance stagger (index-based) === */
+    var grids = document.querySelectorAll('.features-grid, .services-grid, .coming-soon-grid, .testimonials-grid, .members-teaser-grid');
+    grids.forEach(function (grid) {
+        Array.prototype.forEach.call(grid.children, function (card, i) {
+            var delay = Math.min(i * 0.08, 0.5);
+            card.style.transitionDelay = delay + 's';
+        });
+    });
+
+    /* === Auto theme from OS preference (only if no saved choice) === */
+    var root = document.documentElement;
+    var savedTheme = null;
+    try { savedTheme = localStorage.getItem('msp-theme'); } catch (e) {}
+    if (!savedTheme && window.matchMedia('(prefers-color-scheme: light)').matches) {
+        root.setAttribute('data-theme', 'light');
+    }
+
+    /* === First-visit welcome modal === */
+    var welcome = document.getElementById('welcomeModal');
+    if (welcome) {
+        var seen = null;
+        try { seen = localStorage.getItem('msp-welcome-seen'); } catch (e) {}
+        if (!seen) {
+            // Show after a short delay so the page paints first
+            setTimeout(function () {
+                welcome.classList.add('active');
+                var closeBtn = welcome.querySelector('.wm-btn-ghost');
+                if (closeBtn) closeBtn.focus();
+            }, 1200);
+        }
+        function dismissWelcome() {
+            welcome.classList.remove('active');
+            try { localStorage.setItem('msp-welcome-seen', '1'); } catch (e) {}
+        }
+        welcome.addEventListener('click', function (e) {
+            if (e.target === welcome) dismissWelcome();
+        });
+        var dismissBtns = welcome.querySelectorAll('[data-dismiss]');
+        dismissBtns.forEach(function (b) { b.addEventListener('click', dismissWelcome); });
+        document.addEventListener('keydown', function (e) {
+            if (e.key === 'Escape' && welcome.classList.contains('active')) dismissWelcome();
+        });
+    }
+})();

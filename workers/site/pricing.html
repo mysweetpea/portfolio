@@ -69,7 +69,12 @@
             <p class="hero-sub pop-text">Private services for a community-funded digital home.</p>
         </div>
 
-        <section class="how-it-works-section" aria-labelledby="how-it-works-title">
+        <nav class="section-nav" aria-label="Page sections">
+    <a href="#sec-how">How It Works</a>
+    <a href="#sec-pricing">Tiers</a>
+    <a href="#sec-compare">Compare</a>
+</nav>
+<section class="how-it-works-section" id="sec-how" aria-labelledby="how-it-works-title">
             <span class="eyebrow">Community access</span>
             <h2 class="section-title glass-text reveal" id="how-it-works-title">How It Works</h2>
             <p class="hiw-intro reveal">Getting access takes three simple steps. No technical knowledge needed.</p>
@@ -93,7 +98,7 @@
             <p class="hiw-note reveal">Your sign-in page is powered by software called <strong>Authentik</strong> — that is just its name, not a typo. Stuck at any point? Email <a href="mailto:support@mysweetpea.cc">support@mysweetpea.cc</a> and we'll walk you through it.</p>
         </section>
 
-        <div class="pricing-section">
+        <div class="pricing-section" id="sec-pricing"
             <div class="info-box reveal">
                 <strong>Why a $5 minimum contribution?</strong><br>
                 A small community contribution helps prevent spam and abuse, ensures members are invested in the community, and contributes to infrastructure costs such as electricity, hardware, and bandwidth. It is not a subscription or a sale of your data.
@@ -138,7 +143,7 @@
             <a href="/services.html" class="teaser-btn"><span>Browse All Services</span><span class="teaser-btn-arrow" aria-hidden="true">&rarr;</span></a>
         </div>
 
-        <section class="compare-section reveal" aria-labelledby="compare-title">
+        <section class="compare-section reveal" id="sec-compare" aria-labelledby="compare-title">
             <span class="eyebrow">Compare</span>
             <h2 class="section-title glass-text" id="compare-title">What you get with each tier</h2>
             <div class="compare-table-wrap">
@@ -193,5 +198,23 @@
     <script>
 document.addEventListener('click', function(event) { var button = event.target.closest('.copy-email-btn'); if (!button) return; var email = button.getAttribute('data-copy'); navigator.clipboard.writeText(email).then(function() { var original=button.textContent; button.textContent='Copied!'; setTimeout(function(){button.textContent=original;},1800); }).catch(function(){ button.textContent=email; }); });
 </script><script src="/assets/js/site.js" defer></script>
+    <div class="welcome-modal" id="welcomeModal" role="dialog" aria-modal="true" aria-labelledby="wm-title">
+        <div class="welcome-modal-card">
+            <img src="/logo.svg" alt="" class="wm-logo" aria-hidden="true">
+            <h2 id="wm-title">Welcome to the garden</h2>
+            <p>MySweetPea is a private, community-funded collection of self-hosted services. Everything runs on our own hardware — no ads, no tracking, no subscriptions.</p>
+            <div class="wm-actions">
+                <a href="/pricing.html" class="wm-btn wm-btn-primary">How to get access</a>
+                <button type="button" class="wm-btn wm-btn-ghost" data-dismiss>Browse first</button>
+            </div>
+        </div>
+    </div>
+    <script>
+    if ('serviceWorker' in navigator) {
+        window.addEventListener('load', function () {
+            navigator.serviceWorker.register('/sw.js').catch(function () {});
+        });
+    }
+    </script>
 </body>
 </html>

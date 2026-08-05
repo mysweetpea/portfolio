@@ -69,7 +69,12 @@
             <p class="hero-sub pop-text">Everything below runs on our own hardware — private, no ads, no tracking. Click any service for a setup guide.</p>
         </div>
 
-        <div class="services-section">
+        <nav class="section-nav" aria-label="Page sections">
+    <a href="#sec-services">Services</a>
+    <a href="#sec-coming">Coming Soon</a>
+    <a href="#sec-faq">FAQ</a>
+</nav>
+<div class="services-section" id="sec-services"
             <span class="eyebrow">Included with access</span>
             <h2 class="section-title glass-text reveal">Available Services</h2>
             <p class="section-subtitle reveal reveal-delay-1">Click any service to see what it does and how to set it up</p>
@@ -116,7 +121,7 @@
                 </div>
             </div>
 
-        <div class="coming-soon-section">
+        <div class="coming-soon-section" id="sec-coming"
             <div class="tier-divider reveal"><div class="line"></div><div class="label"><span class="icon"><img src="/assets/icons/icon-ui-construction.svg" class="" alt="" width="22" height="22" loading="lazy" decoding="async" aria-hidden="true"></span> Coming Soon</div><div class="line"></div></div>
             <div class="coming-soon-grid">
                 <div class="coming-soon-card reveal reveal-delay-3" data-tier="coming-soon"><div class="service-header"><div class="service-icon"><img src="/assets/icons/syncthing.svg" width="40" height="40" loading="lazy" decoding="async" alt="Syncthing"></div><h3>Syncthing</h3><span class="acct-pill">Account required</span></div><p>Peer-to-peer file synchronization. Sync folders across devices without a central server.</p></div>
@@ -124,7 +129,7 @@
                 <div class="coming-soon-card reveal reveal-delay-2" data-tier="coming-soon"><div class="service-header"><div class="service-icon"><img src="/assets/icons/remux.webp" width="40" height="40" loading="lazy" decoding="async" alt="Remux"></div><h3>Remux</h3><span class="acct-pill">Account required</span></div><p>Automated media acquisition and library management. Finds, downloads, and organizes requested content for the media server.</p></div>
             </div>
         </div>
-        <div class="faq-section">
+        <div class="faq-section" id="sec-faq"
             <h2 class="section-title glass-text reveal">FAQ</h2>
             <div class="reveal reveal-delay-1">
                 <div class="faq-item">
@@ -309,5 +314,23 @@
             }
         });
 </script>
+    <div class="welcome-modal" id="welcomeModal" role="dialog" aria-modal="true" aria-labelledby="wm-title">
+        <div class="welcome-modal-card">
+            <img src="/logo.svg" alt="" class="wm-logo" aria-hidden="true">
+            <h2 id="wm-title">Welcome to the garden</h2>
+            <p>MySweetPea is a private, community-funded collection of self-hosted services. Everything runs on our own hardware — no ads, no tracking, no subscriptions.</p>
+            <div class="wm-actions">
+                <a href="/pricing.html" class="wm-btn wm-btn-primary">How to get access</a>
+                <button type="button" class="wm-btn wm-btn-ghost" data-dismiss>Browse first</button>
+            </div>
+        </div>
+    </div>
+    <script>
+    if ('serviceWorker' in navigator) {
+        window.addEventListener('load', function () {
+            navigator.serviceWorker.register('/sw.js').catch(function () {});
+        });
+    }
+    </script>
 </body>
 </html>

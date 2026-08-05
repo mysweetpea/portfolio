@@ -149,5 +149,12 @@ function toggleFAQ(el) { var item = el.parentElement; var open = item.classList.
         function copyWallet() { var a = document.getElementById('wallet-addr').textContent; if (!a || a === 'Coming Soon' || a === 'Loading...') { return; } navigator.clipboard.writeText(a).then(function() { var e = document.getElementById('wallet-addr'); var o = e.textContent; e.textContent = 'Copied!'; setTimeout(function() { e.textContent = o; }, 1500); }); }
         
     </script>
+    <script>
+    if ('serviceWorker' in navigator) {
+        window.addEventListener('load', function () {
+            navigator.serviceWorker.register('/sw.js').catch(function () {});
+        });
+    }
+    </script>
 </body>
 </html>

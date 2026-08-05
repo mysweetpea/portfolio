@@ -64,11 +64,12 @@
 <main id="main-content" class="content-wrapper">
         <div class="hero">
             <img src="/logo.svg" alt="" class="hero-watermark" aria-hidden="true" loading="lazy" decoding="async">
+            <span class="private-badge"><img src="/assets/icons/icon-ui-shield.svg" alt="" width="14" height="14"> Private community</span>
             <img src="/logo.svg" alt="MySweetPea logo" class="logo" width="220" height="220">
             <h1 class="glass-text">MySweetPea</h1>
             <p class="hero-sub pop-text">Private alternatives to the services you use every day. No ads, no tracking, no subscriptions. Your data stays yours.</p>
             <div class="hero-buttons">
-                <a href="/form.html" class="hero-btn hero-btn-primary">Get Access</a>
+                <a href="/form.html" class="hero-btn hero-btn-primary">Request an Invitation</a>
                 <a href="/services.html" class="hero-btn hero-btn-secondary">See Available Services</a>
             </div>
             <ol class="hero-steps" aria-label="How to get access">
@@ -76,13 +77,20 @@
                 <li><span>2</span> Make a $5 donation</li>
                 <li><span>3</span> Receive your invite code</li>
             </ol>
-            <a href="#why-mysweetpea" class="scroll-cue">
+            <a href="#sec-features" class="scroll-cue">
                 <span>Read more about MySweetPea</span>
                 <span aria-hidden="true">&darr;</span>
             </a>
         </div>
 
-        <div class="features-section" id="why-mysweetpea">
+        <nav class="section-nav" aria-label="Page sections">
+    <a href="#sec-features">Why MySweetPea</a>
+    <a href="#sec-services">Services</a>
+    <a href="#sec-members">Members</a>
+    <a href="#sec-stats">Stats</a>
+    <a href="#sec-cta">Join</a>
+</nav>
+<div class="features-section" id="sec-features">
             <h2 class="section-title glass-text reveal">Why MySweetPea?</h2>
             <p class="section-subtitle reveal reveal-delay-1">Privacy, control, and community — without the corporate overhead</p>
             <div class="features-grid">
@@ -96,7 +104,7 @@
         </div>
 
         
-        <section class="services-strip reveal" aria-labelledby="services-strip-title">
+        <section class="services-strip reveal" id="sec-services" aria-labelledby="services-strip-title">
             <span class="eyebrow">What you get</span>
             <h2 class="section-title glass-text" id="services-strip-title">Your Services</h2>
             <p class="section-subtitle">One donation unlocks the whole suite.</p>
@@ -112,7 +120,7 @@
             </div>
         </section>
 
-        <div class="stats-section">
+        <div class="stats-section" id="sec-stats"
             <h2 class="section-title glass-text reveal">What You Can Count On</h2>
             <div class="stats-grid">
                 <div class="stat-card reveal reveal-delay-1"><div class="number">Zero</div><div class="label">Advertisements, ever</div></div>
@@ -122,7 +130,7 @@
             </div>
         </div>
 
-        <div class="cta-section">
+        <div class="cta-section" id="sec-cta"
             <div class="cta-card reveal">
                 <h2 class="glass-text">Ready to Join?</h2>
                 <p>A $5 minimum community contribution helps protect limited capacity from spam and supports the infrastructure. It is not a subscription.</p>
@@ -134,7 +142,7 @@
             </div>
         </div>
 
-        <div class="members-teaser reveal">
+        <div class="members-teaser reveal" id="sec-members"
             <div class="members-teaser-card">
                 <span class="eyebrow">For members</span>
                 <h2 class="section-title glass-text">One sign-in, every service</h2>
@@ -193,6 +201,24 @@
             });
         }, { threshold: 0.5 });
         document.querySelectorAll('.stat-card .number').forEach(function(el) { counterObserver.observe(el); });
+    </script>
+    <div class="welcome-modal" id="welcomeModal" role="dialog" aria-modal="true" aria-labelledby="wm-title">
+        <div class="welcome-modal-card">
+            <img src="/logo.svg" alt="" class="wm-logo" aria-hidden="true">
+            <h2 id="wm-title">Welcome to the garden</h2>
+            <p>MySweetPea is a private, community-funded collection of self-hosted services. Everything runs on our own hardware — no ads, no tracking, no subscriptions.</p>
+            <div class="wm-actions">
+                <a href="/pricing.html" class="wm-btn wm-btn-primary">How to get access</a>
+                <button type="button" class="wm-btn wm-btn-ghost" data-dismiss>Browse first</button>
+            </div>
+        </div>
+    </div>
+    <script>
+    if ('serviceWorker' in navigator) {
+        window.addEventListener('load', function () {
+            navigator.serviceWorker.register('/sw.js').catch(function () {});
+        });
+    }
     </script>
 </body>
 </html>
