@@ -13,9 +13,13 @@ deployed as static files.
 ├── suggest.html        # Service suggestion form
 ├── support.html        # Anonymous crypto donation page
 ├── about.html          # Mission, self-hosting rationale, costs, open source
-├── success.html        # Confirmation page (adapts via ?type=donation|redeem|suggest)
+├── success.html        # Confirmation page (adapts via ?type=donation|redeem|sweetpea-request)
 ├── error.html          # Generic "something went wrong" page
 ├── 404.html            # Not-found page (wire up as server 404 handler)
+├── manifest.json       # PWA manifest (installable)
+├── apple-touch-icon.png # iOS home-screen icon
+├── icon-192.png        # PWA icon (192px)
+├── icon-512.png        # PWA icon (512px)
 ├── logo.svg            # Full logo
 ├── logo-favicon.svg    # Favicon
 └── assets/
@@ -38,8 +42,9 @@ Expected responses are JSON: `{ "ok": true }` on success, or
 `{ "ok": false, "msg": "..." }` on failure (msg is shown on the button).
 
 After successful donation/redeem submissions the user is redirected to
-`/success.html?type=donation` or `/success.html?type=redeem`. The success
-page reads the `type` param and shows the appropriate message.
+`/success.html?type=donation`, `/success.html?type=redeem`, or
+`/success.html?type=sweetpea-request`. The success page reads the `type`
+param and shows the appropriate message and next-steps list.
 
 ## Wallet addresses
 

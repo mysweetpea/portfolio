@@ -4210,3 +4210,122 @@ body[data-page='redeem'] .redeem-section .verify-banner {
 body[data-page='redeem'] .redeem-section .verify-banner strong { color: var(--primary-bright); }
 body[data-page='redeem'] .redeem-section .form-input { color: var(--text); }
 body[data-page='redeem'] .redeem-section .form-input::placeholder { color: var(--text-faint); }
+
+/* ==========================================================================
+   v32: Full modernization pass (2026-08)
+   Aurora hero background, content-visibility, shimmer reduction,
+   unified type scale, light-theme consolidation, PWA polish.
+   ========================================================================== */
+
+/* --- Aurora / animated gradient hero backdrop --- */
+.aurora {
+    position: fixed; inset: 0; z-index: -1; pointer-events: none;
+    overflow: hidden;
+}
+.aurora::before, .aurora::after {
+    content: ''; position: absolute; border-radius: 50%;
+    filter: blur(70px); opacity: 0.5;
+}
+.aurora::before {
+    width: 55vmax; height: 55vmax; top: -18vmax; left: -12vmax;
+    background: radial-gradient(circle at 30% 30%, rgba(143,175,181,0.28), transparent 60%);
+    animation: auroraDrift 22s ease-in-out infinite alternate;
+}
+.aurora::after {
+    width: 45vmax; height: 45vmax; bottom: -16vmax; right: -10vmax;
+    background: radial-gradient(circle at 60% 40%, rgba(163,201,182,0.22), transparent 60%);
+    animation: auroraDrift 26s ease-in-out infinite alternate-reverse;
+}
+@keyframes auroraDrift {
+    0%   { transform: translate(0, 0) scale(1); }
+    50%  { transform: translate(4vmax, -3vmax) scale(1.08); }
+    100% { transform: translate(-3vmax, 2vmax) scale(0.96); }
+}
+[data-theme="light"] .aurora::before { opacity: 0.3; }
+[data-theme="light"] .aurora::after  { opacity: 0.25; }
+@media (prefers-reduced-motion: reduce) {
+    .aurora::before, .aurora::after { animation: none; }
+}
+
+/* --- content-visibility for below-fold sections (faster long pages) --- */
+.features-section, .stats-section, .cta-section, .services-section,
+.coming-soon-section, .faq-section, .content-section, .pricing-section,
+.status-section, .how-it-works-section, .access-choice-section {
+    content-visibility: auto;
+    contain-intrinsic-size: auto 600px;
+}
+
+/* --- Shimmer reduction: keep shimmer on headings only --- */
+/* Body copy and hero subtitles become static (readable) text. */
+.hero p.hero-sub, .pop-text, .highlight-text,
+body[data-page='status'] .status-name,
+body[data-page='about'] .content-section .card > p,
+body[data-page='about'] .content-section .card > ul > li,
+body[data-page='about'] .content-section .card .desc {
+    background: none;
+    -webkit-text-fill-color: currentColor;
+    color: var(--text-dim);
+    animation: none;
+    font-weight: 500;
+}
+body[data-page='home'] .hero p.hero-sub { color: var(--text-dim); font-weight: 500; }
+/* Keep shimmer on display headings only */
+.hero h1, .section-title, .tier-name-seedling, .tier-name-sweetpea,
+body[data-page='about'] h2, body[data-page='about'] h3,
+body[data-page='home'] .feature-card h3 {
+    background: linear-gradient(135deg,
+        rgba(238,242,243,0.95) 0%, rgba(143,175,181,0.75) 30%,
+        rgba(238,242,243,0.55) 50%, rgba(143,175,181,0.75) 70%,
+        rgba(238,242,243,0.95) 100%);
+    background-size: 200% auto;
+    -webkit-background-clip: text; background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: shimmer 7s linear infinite;
+}
+[data-theme="light"] .hero h1, [data-theme="light"] .section-title,
+[data-theme="light"] .tier-name-seedling, [data-theme="light"] .tier-name-sweetpea,
+[data-theme="light"] body[data-page='about'] h2, [data-theme="light"] body[data-page='about'] h3,
+[data-theme="light"] body[data-page='home'] .feature-card h3 {
+    background: linear-gradient(135deg, #1B2B31 0%, #3E6B77 30%, #0E2B33 50%, #3E6B77 70%, #1B2B31 100%);
+    background-size: 200% auto;
+    -webkit-background-clip: text; background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+/* --- Unified hero type scale --- */
+body[data-page] .hero h1 {
+    font-size: clamp(2.25rem, 5vw, 3.6rem);
+    letter-spacing: -0.02em;
+    line-height: 1.1;
+}
+body[data-page='home'] .hero h1 { font-size: clamp(2.75rem, 6.5vw, 4.5rem); }
+
+/* --- Light theme consolidation (single source of truth) --- */
+[data-theme="light"] {
+    --bg: #D8E1DD;
+    --text: #24363A;
+    --text-dim: #50656A;
+    --text-faint: #718187;
+    --primary: #4E7C88;
+    --primary-dim: #3E6B77;
+    --primary-bright: #2F5560;
+    --primary-glow: rgba(78, 124, 136, 0.08);
+    --border: rgba(51, 86, 95, 0.16);
+    --border-primary: rgba(51, 86, 95, 0.34);
+    --card-bg: rgba(235, 240, 237, 0.82);
+    --card-bg-hover: rgba(240, 244, 242, 0.92);
+    --ice: #22363D;
+    --sage: #4E7A68;
+    --sage-dim: #659184;
+    --slate: #5F7E92;
+    --error: #B4544E;
+    --success: #4E7A68;
+}
+[data-theme="light"] .bg-gradient { opacity: 0.36; }
+[data-theme="light"] .grain-overlay { opacity: 0.22; }
+[data-theme="light"] #petalCanvas { opacity: 0.42; }
+
+/* --- PWA / install polish --- */
+@media (display-mode: standalone) {
+    .top-nav { padding-top: max(18px, env(safe-area-inset-top)); }
+}

@@ -1,0 +1,29 @@
+{
+  "name": "MySweetPea — Self-Hosted Services",
+  "short_name": "MySweetPea",
+  "description": "Private, self-hosted alternatives to the services you use every day. No ads, no tracking, no subscriptions — community funded.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0C1316",
+  "theme_color": "#0C1316",
+  "icons": [
+    {
+      "src": "/logo-favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    },
+    {
+      "src": "/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    }
+  ]
+}

@@ -12,6 +12,8 @@
     <meta property="og:url" content="https://mysweetpea.cc/status.html">
     <meta property="og:image" content="https://mysweetpea.cc/logo.svg">
     <link rel="icon" type="image/svg+xml" href="/logo-favicon.svg">
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+    <link rel="manifest" href="/manifest.json">
     <link rel="preload" as="image" href="/logo.svg">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -24,6 +26,7 @@
     <div class="scroll-progress" id="scrollProgress" aria-hidden="true"></div>
     <div class="bg-gradient" aria-hidden="true"></div>
     <div class="grain-overlay" aria-hidden="true"></div>
+    <div class="aurora" aria-hidden="true"></div>
     <canvas id="petalCanvas" aria-hidden="true"></canvas>
     <div class="float-3d f1" aria-hidden="true"><svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M50 10 C35 15, 28 30, 32 48 C36 60, 48 68, 50 70 C52 68, 64 60, 68 48 C72 30, 65 15, 50 10" fill="#8FAFB5" opacity="0.8"/><path d="M50 25 C44 28, 40 38, 44 48 C47 55, 50 58, 50 58 C50 58, 53 55, 56 48 C60 38, 56 28, 50 25" fill="#8FAFB5" opacity="0.5"/><path d="M50 10 C42 12, 38 22, 42 35 C45 42, 50 45, 50 45 C50 45, 55 42, 58 35 C62 22, 58 12, 50 10" fill="#8FAFB5" opacity="0.6"/><path d="M50 45 C45 48, 42 55, 45 62 C48 67, 50 68, 50 68 C50 68, 52 67, 55 62 C58 55, 55 48, 50 45" fill="#8FAFB5" opacity="0.4"/><line x1="50" y1="68" x2="50" y2="88" stroke="#8FAFB5" stroke-width="2"/><path d="M45 80 Q40 76, 37 82" stroke="#8FAFB5" stroke-width="1.5" fill="none"/><path d="M55 80 Q60 76, 63 82" stroke="#8FAFB5" stroke-width="1.5" fill="none"/><circle cx="37" cy="82" r="2" fill="#8FAFB5" opacity="0.6"/><circle cx="63" cy="82" r="2" fill="#8FAFB5" opacity="0.6"/></svg></div>
     <div class="float-3d f2" aria-hidden="true"><svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M50 10 C35 15, 28 30, 32 48 C36 60, 48 68, 50 70 C52 68, 64 60, 68 48 C72 30, 65 15, 50 10" fill="#8FAFB5" opacity="0.8"/><path d="M50 25 C44 28, 40 38, 44 48 C47 55, 50 58, 50 58 C50 58, 53 55, 56 48 C60 38, 56 28, 50 25" fill="#8FAFB5" opacity="0.5"/><path d="M50 10 C42 12, 38 22, 42 35 C45 42, 50 45, 50 45 C50 45, 55 42, 58 35 C62 22, 58 12, 50 10" fill="#8FAFB5" opacity="0.6"/><path d="M50 45 C45 48, 42 55, 45 62 C48 67, 50 68, 50 68 C50 68, 52 67, 55 62 C58 55, 55 48, 50 45" fill="#8FAFB5" opacity="0.4"/><line x1="50" y1="68" x2="50" y2="88" stroke="#8FAFB5" stroke-width="2"/><path d="M45 80 Q40 76, 37 82" stroke="#8FAFB5" stroke-width="1.5" fill="none"/><path d="M55 80 Q60 76, 63 82" stroke="#8FAFB5" stroke-width="1.5" fill="none"/><circle cx="37" cy="82" r="2" fill="#8FAFB5" opacity="0.6"/><circle cx="63" cy="82" r="2" fill="#8FAFB5" opacity="0.6"/></svg></div>
@@ -68,8 +71,8 @@
         <section class="status-section" aria-labelledby="status-summary">
             <div class="status-summary status-all-online reveal" id="status-summary" role="status">
                 <span class="status-dot" aria-hidden="true"></span>
-                <span><strong>6 of 6 operational</strong><small>Current community services</small></span>
-                <time datetime="2026-07-29T15:22:00-04:00">Last reviewed Jul 29, 2026</time>
+                <span><strong>9 of 9 operational</strong><small>Current community services</small></span>
+                <time datetime="2026-08-05T00:00:00-04:00">Last reviewed Aug 5, 2026</time>
             </div>
             <h2 class="status-subhead status-subhead-first reveal">Operational Services</h2>
             <div class="status-list status-list-operational">
@@ -133,6 +136,36 @@
                     </div>
                     <span class="status-badge status-online"><span class="status-dot"></span>Operational</span>
                 </div>
+                <div class="status-row reveal">
+                    <div class="status-service">
+                        <img src="/assets/icons/nextcloud.svg" alt="" width="28" height="28" loading="lazy" decoding="async">
+                        <div>
+                            <div class="status-name">Nextcloud</div>
+                            <div class="status-desc">Files & calendar</div>
+                        </div>
+                    </div>
+                    <span class="status-badge status-online"><span class="status-dot"></span>Operational</span>
+                </div>
+                <div class="status-row reveal">
+                    <div class="status-service">
+                        <img src="/assets/icons/immich.svg" alt="" width="28" height="28" loading="lazy" decoding="async">
+                        <div>
+                            <div class="status-name">Immich</div>
+                            <div class="status-desc">Photo backup</div>
+                        </div>
+                    </div>
+                    <span class="status-badge status-online"><span class="status-dot"></span>Operational</span>
+                </div>
+                <div class="status-row reveal">
+                    <div class="status-service">
+                        <img src="/assets/icons/openwebui.svg" alt="" width="28" height="28" loading="lazy" decoding="async">
+                        <div>
+                            <div class="status-name">Open WebUI</div>
+                            <div class="status-desc">AI interface</div>
+                        </div>
+                    </div>
+                    <span class="status-badge status-online"><span class="status-dot"></span>Operational</span>
+                </div>
             </div>
             <div class="status-divider" aria-hidden="true"><span></span></div>
             <h2 class="status-subhead reveal">Coming Soon</h2>
@@ -143,36 +176,6 @@
                         <div>
                             <div class="status-name">Syncthing</div>
                             <div class="status-desc">File sync</div>
-                        </div>
-                    </div>
-                    <span class="status-badge status-soon">Coming soon</span>
-                </div>
-                <div class="status-row reveal">
-                    <div class="status-service">
-                        <img src="/assets/icons/immich.svg" alt="" width="28" height="28" loading="lazy" decoding="async">
-                        <div>
-                            <div class="status-name">Immich</div>
-                            <div class="status-desc">Photo backup</div>
-                        </div>
-                    </div>
-                    <span class="status-badge status-soon">Coming soon</span>
-                </div>
-                <div class="status-row reveal">
-                    <div class="status-service">
-                        <img src="/assets/icons/nextcloud.svg" alt="" width="28" height="28" loading="lazy" decoding="async">
-                        <div>
-                            <div class="status-name">Nextcloud</div>
-                            <div class="status-desc">Files & calendar</div>
-                        </div>
-                    </div>
-                    <span class="status-badge status-soon">Coming soon</span>
-                </div>
-                <div class="status-row reveal">
-                    <div class="status-service">
-                        <img src="/assets/icons/openwebui.svg" alt="" width="28" height="28" loading="lazy" decoding="async">
-                        <div>
-                            <div class="status-name">Open WebUI</div>
-                            <div class="status-desc">AI interface</div>
                         </div>
                     </div>
                     <span class="status-badge status-soon">Coming soon</span>
