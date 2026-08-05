@@ -1,9 +1,14 @@
 const NAV_PARTIAL = '/_partials/nav.html';
 const FOOTER_PARTIAL = '/_partials/footer.html';
 
-async function getPartial(env, path) {
+/* Fetch a shared partial from the static assets binding.
+   Build the URL from the incoming request's origin so the ASSETS
+   binding resolves correctly (a fake host like placeholder.invalid
+   is rejected and returns null). */
+async function getPartial(env, path, request) {
   try {
-    const res = await env.ASSETS.fetch(new Request('https://placeholder.invalid' + path));
+    const url = new URL(path, request.url);
+    const res = await env.ASSETS.fetch(new Request(url, request));
     if (res.ok) return await res.text();
   } catch (e) { /* fall through */ }
   return null;
@@ -66,8 +71,8 @@ export default {
 
     // Inject shared nav + footer into HTML pages (single source of truth).
     const [nav, footer] = await Promise.all([
-      getPartial(env, NAV_PARTIAL),
-      getPartial(env, FOOTER_PARTIAL)
+      getPartial(env, NAV_PARTIAL, request),
+      getPartial(env, FOOTER_PARTIAL, request)
     ]);
 
     let html = await res.text();
@@ -92,12 +97,12 @@ export default {
       return out;
     }
 
-    // CSP allows our own assets, Google Fonts, and the QR CDN (if still used).
+    // CSP allows only our own assets (fonts + QR are self-hosted).
     const csp = [
       "default-src 'self'",
-      "script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net",
-      "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
-      "font-src 'self' https://fonts.gstatic.com",
+      "script-src 'self' 'unsafe-inline'",
+      "style-src 'self' 'unsafe-inline'",
+      "font-src 'self'",
       "img-src 'self' data:",
       "connect-src 'self' https://subscribe.mysweetpea.cc",
       "frame-ancestors 'none'"

@@ -1,0 +1,22 @@
+/* ==========================================================================
+   MySweetPea — Self-hosted fonts (no Google Fonts requests)
+   Inter (variable, latin) + Fraunces (variable, latin)
+   ========================================================================== */
+
+/* Inter — variable font covering weights 400–800 */
+@font-face {
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 100 900;
+    font-display: swap;
+    src: url('/assets/fonts/inter-var.woff2') format('woff2');
+}
+
+/* Fraunces — variable font (regular + italic, optical size axis) */
+@font-face {
+    font-family: 'Fraunces';
+    font-style: normal;
+    font-weight: 100 900;
+    font-display: swap;
+    src: url('/assets/fonts/fraunces-var.woff2') format('woff2');
+}
