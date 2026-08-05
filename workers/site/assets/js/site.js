@@ -6,6 +6,10 @@
 (function () {
     'use strict';
 
+    /* Mark html as JS-enabled so reveal animations only hide content
+       when JS is actually running (prevents blank/unfinished pages). */
+    document.documentElement.classList.add('js');
+
     var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
     var finePointer = window.matchMedia('(hover: hover) and (pointer: fine)');
 
