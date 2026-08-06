@@ -3353,17 +3353,10 @@ body[data-page='services'] .modal-tutorial h3 {
     margin-bottom: 14px; font-weight: 800; color: var(--primary-bright);
     display: flex; align-items: center; gap: 8px;
 }
-body[data-page='services'] .modal-tutorial ol { padding-left: 0; list-style: none; counter-reset: step; }
+body[data-page='services'] .modal-tutorial ol { padding-left: 0; list-style: none; }
 body[data-page='services'] .modal-tutorial li {
-    counter-increment: step; font-size: 0.9rem; color: var(--text);
+    font-size: 0.9rem; color: var(--text);
     line-height: 1.65; margin-bottom: 12px; padding-left: 34px; position: relative;
-}
-body[data-page='services'] .modal-tutorial li::before {
-    content: counter(step); position: absolute; left: 0; top: 1px;
-    width: 22px; height: 22px; border-radius: 50%;
-    display: grid; place-items: center;
-    font-size: 0.7rem; font-weight: 800; color: var(--bg);
-    background: linear-gradient(135deg, var(--primary-bright), var(--primary-dim));
 }
 body[data-page='services'] .modal-tutorial a { color: var(--primary-bright); font-weight: 600; border-bottom: 1px dashed var(--primary-dim); }
 [data-theme="light"] body[data-page='services'] .modal { background: linear-gradient(160deg, #FFFFFF, #F0F6F7); }
@@ -3940,20 +3933,12 @@ body[data-page='form'] .form-card { animation: none !important; }
 .hiw-step p a { color: var(--sage); font-weight: 600; }
 
 /* Graphical numbered steps inside service modals (same principle as How It Works) */
-.tutorial-steps { list-style: none; margin: 14px 0 0; padding: 0; counter-reset: tstep; }
+.tutorial-steps { list-style: none; margin: 14px 0 0; padding: 0; }
 .tutorial-steps li {
-    counter-increment: tstep; position: relative;
+    position: relative;
     padding: 14px 16px 14px 58px; margin-bottom: 10px;
     background: var(--card-bg); border: 1px solid var(--border);
     border-radius: var(--radius-sm); line-height: 1.6; font-size: 0.94rem;
-}
-.tutorial-steps li::before {
-    content: counter(tstep);
-    position: absolute; left: 14px; top: 14px;
-    width: 30px; height: 30px; border-radius: 50%;
-    background: var(--sage); color: var(--bg);
-    display: flex; align-items: center; justify-content: center;
-    font-weight: 800; font-size: 0.95rem;
 }
 .tutorial-steps li a { color: var(--sage); font-weight: 600; word-break: break-all; }
 .tutorial-steps li em { color: var(--text-faint); font-size: 0.86rem; }
@@ -5353,6 +5338,21 @@ body {
 .modal {
     max-height: 88vh; overflow-y: auto;
 }
+/* Modal meta: tier + github on the same line, spaced */
+.modal-meta {
+    display: flex; align-items: center; gap: 12px;
+    margin-top: 8px;
+}
+.modal-meta .tier-tag { margin: 0; }
+.modal-github {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 5px 12px; border-radius: 999px;
+    background: var(--primary-glow); border: 1px solid var(--border-primary);
+    color: var(--text-dim); font-size: 0.78rem; font-weight: 600;
+    text-decoration: none; transition: var(--transition);
+}
+.modal-github:hover { color: var(--text); border-color: var(--sage); background: rgba(163,201,182,0.12); }
+.modal-github img { width: 16px; height: 16px; }
 @media (prefers-reduced-motion: reduce) {
     .modal-mockup img { animation: none; }
 }
@@ -5423,3 +5423,19 @@ body {
 }
 .nav-more-menu a.nav-github:hover { color: var(--text); border-color: var(--sage); background: rgba(163,201,182,0.12); }
 .nav-more-menu a.nav-github img { width: 14px; height: 14px; }
+
+/* --- Modal meta: tier + github on same line, spaced --- */
+.modal-meta {
+    display: flex; align-items: center; gap: 12px;
+    margin-top: 8px;
+}
+.modal-meta .tier-tag { margin: 0; }
+.modal-github {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 5px 12px; border-radius: 999px;
+    background: var(--primary-glow); border: 1px solid var(--border-primary);
+    color: var(--text-dim); font-size: 0.78rem; font-weight: 600;
+    text-decoration: none; transition: var(--transition);
+}
+.modal-github:hover { color: var(--text); border-color: var(--sage); background: rgba(163,201,182,0.12); }
+.modal-github img { width: 16px; height: 16px; }
