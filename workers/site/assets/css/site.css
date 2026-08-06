@@ -5427,3 +5427,38 @@ body[data-page='services'] .modal-mockup {
 }
 .modal-title-row h2 { margin: 0; }
 .modal-title-row .modal-github { margin-top: 0; }
+
+/* ==========================================================================
+   v49: Services filter animation + sticky modal footer
+   ========================================================================== */
+
+/* --- Filter animation: fade/slide cards when switching filters --- */
+.services-grid, .coming-soon-grid {
+    transition: opacity 0.2s ease;
+}
+.services-grid.filtering, .coming-soon-grid.filtering {
+    opacity: 0.4;
+}
+.services-grid .service-card, .coming-soon-grid .coming-soon-card {
+    animation: cardIn 0.4s var(--ease-premium) both;
+}
+@keyframes cardIn {
+    from { opacity: 0; transform: translateY(12px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* --- Sticky modal footer: Open Service + Close always visible --- */
+.modal-footer {
+    position: sticky; bottom: 0;
+    background: rgba(16, 26, 30, 0.95);
+    backdrop-filter: blur(12px);
+    border-top: 1px solid var(--border);
+    padding: 16px 0 4px;
+    margin-top: 8px;
+    z-index: 2;
+}
+[data-theme="light"] .modal-footer { background: rgba(255,255,255,0.95); }
+
+@media (prefers-reduced-motion: reduce) {
+    .services-grid .service-card, .coming-soon-grid .coming-soon-card { animation: none; }
+}
