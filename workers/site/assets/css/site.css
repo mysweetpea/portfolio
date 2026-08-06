@@ -5588,3 +5588,68 @@ body[data-page='services'] .service-card .acct-pill {
     .hiw-steps { flex-direction: column; align-items: center; }
     .hiw-arrow { transform: rotate(90deg); margin: 4px 0; }
 }
+
+/* ==========================================================================
+   v53: Redeem page improvements
+   ========================================================================== */
+
+/* --- Invite code field: more prominent --- */
+.redeem-code-group .redeem-code-input {
+    font-size: 1.15rem; font-weight: 700; letter-spacing: 0.04em;
+    padding: 14px 16px; text-align: center;
+    border: 2px solid var(--border-primary);
+    background: rgba(14, 22, 26, 0.75);
+}
+.redeem-code-group .redeem-code-input:focus {
+    border-color: var(--sage);
+    box-shadow: 0 0 0 3px rgba(163,201,182,0.15);
+}
+
+/* --- What happens next strip --- */
+.redeem-next {
+    max-width: 640px; margin: 0 auto 28px; padding: 24px;
+    text-align: center;
+    background: var(--card-bg); border: 1px solid var(--border-primary);
+    border-radius: var(--radius);
+    backdrop-filter: blur(16px) saturate(1.2);
+}
+.redeem-next h3 { font-size: 1.1rem; margin-bottom: 16px; color: var(--primary-bright); }
+.redeem-next-steps {
+    display: flex; flex-wrap: wrap; justify-content: center; gap: 12px;
+}
+.redeem-next-step {
+    display: flex; align-items: center; gap: 8px;
+    padding: 10px 16px; border-radius: 999px;
+    background: var(--primary-glow); border: 1px solid var(--border-primary);
+    color: var(--text-dim); font-size: 0.85rem; font-weight: 600;
+}
+.redeem-next-step span {
+    width: 24px; height: 24px; border-radius: 50%;
+    display: grid; place-items: center;
+    background: linear-gradient(135deg, var(--primary), var(--sage-dim));
+    color: var(--bg); font-weight: 800; font-size: 0.75rem;
+}
+
+/* --- Stuck? support footer --- */
+.redeem-help {
+    max-width: 640px; margin: 0 auto 28px; padding: 20px 24px;
+    text-align: center;
+    background: var(--card-bg); border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+}
+.redeem-help p { color: var(--text-dim); font-size: 0.9rem; margin-bottom: 12px; }
+.redeem-help strong { color: var(--text); }
+.redeem-help .copy-email-btn {
+    padding: 9px 16px; border-radius: 999px;
+    background: var(--primary-glow); border: 1px solid var(--border-primary);
+    color: var(--text); font-size: 0.82rem; font-weight: 600; cursor: pointer;
+    transition: var(--transition);
+}
+.redeem-help .copy-email-btn:hover { background: rgba(163,201,182,0.15); border-color: var(--sage); color: var(--sage); }
+.redeem-help span { display: block; margin-top: 8px; color: var(--text-faint); font-size: 0.78rem; }
+
+/* --- Mobile: stack next-steps --- */
+@media (max-width: 640px) {
+    .redeem-next-steps { flex-direction: column; align-items: center; }
+    .redeem-next-step { width: 100%; justify-content: center; }
+}

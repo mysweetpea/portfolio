@@ -70,25 +70,41 @@
             <img src="/logo.svg" alt="MySweetPea logo" class="logo" width="160" height="160">
             <span class="eyebrow redeem-eyebrow">Invitation code</span>
             <h1 class="glass-text">Redeem Your Invite Code</h1>
-            <p class="hero-sub pop-text redeem-subtitle">Enter the invitation code we emailed you to request your MySweetPea account.</p>
+            <p class="hero-sub pop-text redeem-subtitle">Enter the invitation code we emailed you to create your MySweetPea account.</p>
         </div>
         <section class="tier-form-section redeem-section">
             <div class="form-card glow-card">
-                <h2 class="glass-text">Request your account</h2>
-                <div class="verify-banner" role="note"><strong>Have not received a code yet?</strong> Seedling donations are usually reviewed within 24 hours. Sweet Pea requests are reviewed individually; we will email you when there is an update.</div>
-                <div class="form-group">
+                <h2 class="glass-text">Create your account</h2>
+                <div class="verify-banner" role="note"><strong>Haven't received a code yet?</strong> Seedling is usually reviewed within 24 hours. Sweet Pea is reviewed individually. <a href="mailto:support@mysweetpea.cc">Contact support</a></div>
+                <div class="form-group redeem-code-group">
                     <label class="form-label glass-text" for="rc-code">Invite code</label>
-                    <input type="text" class="form-input" id="rc-code" placeholder="PEA-12345678 or FAM-12345678" autocomplete="off" autocapitalize="characters" spellcheck="false"><span class="validation-icon" id="rc-code-icon" aria-hidden="true"></span>
+                    <input type="text" class="form-input redeem-code-input" id="rc-code" placeholder="PEA-12345678 or FAM-12345678" autocomplete="off" autocapitalize="characters" spellcheck="false"><span class="validation-icon" id="rc-code-icon" aria-hidden="true"></span>
                     <div class="form-hint" id="rc-code-hint">Enter the code exactly as it appears in your email.</div>
                 </div>
                 <div class="form-group"><label class="form-label glass-text" for="rc-name">Name</label><input type="text" class="form-input" id="rc-name" placeholder="Your name" autocomplete="name"><span class="validation-icon" id="rc-name-icon" aria-hidden="true"></span></div>
                 <div class="form-group"><label class="form-label glass-text" for="rc-email">Email</label><input type="email" class="form-input" id="rc-email" placeholder="you@example.com" autocomplete="email"><span class="validation-icon" id="rc-email-icon" aria-hidden="true"></span></div>
                 <div class="form-group"><label class="form-label glass-text" for="rc-username">Username</label><input type="text" class="form-input" id="rc-username" placeholder="Choose a username" autocomplete="username"><span class="validation-icon" id="rc-username-icon" aria-hidden="true"></span><div class="form-hint">At least 3 characters; letters, numbers, and underscores only.</div></div>
-                <button type="button" class="form-submit" id="rc-submit" disabled>Request MySweetPea Account</button>
+                <button type="button" class="form-submit" id="rc-submit" disabled>Create MySweetPea Account</button>
             </div>
         </section>
+
+        <div class="redeem-next reveal">
+            <h3>What happens next</h3>
+            <div class="redeem-next-steps">
+                <div class="redeem-next-step"><span>1</span> We verify your code</div>
+                <div class="redeem-next-step"><span>2</span> We create your account</div>
+                <div class="redeem-next-step"><span>3</span> You get an email with your sign-in details</div>
+            </div>
+        </div>
+
+        <div class="redeem-help reveal">
+            <p><strong>Stuck?</strong> We're happy to help.</p>
+            <button type="button" class="copy-email-btn" data-copy="support@mysweetpea.cc">Copy email address</button>
+            <span>support@mysweetpea.cc</span>
+        </div>
+
         <aside class="redeem-callout reveal"><div><strong>Need access first?</strong><span>Choose a tier and submit an access request.</span></div><a href="/form.html" class="btn btn-secondary">Get access</a></aside>
-    </main>
+    </main></main>
 <a href="#" class="back-to-top" aria-label="Back to top" onclick="window.scrollTo({top:0,behavior:'smooth'});return false;"><img src="/assets/icons/icon-ui-arrow-up.svg" class="" alt="" width="22" height="22" loading="lazy" decoding="async" aria-hidden="true"></a>
 <footer class="page-footer">
     <div class="footer-links">
