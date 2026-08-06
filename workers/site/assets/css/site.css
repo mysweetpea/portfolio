@@ -1486,6 +1486,64 @@ background: linear-gradient(120deg, var(--text) 20%, var(--primary-bright) 60%, 
 body[data-page='suggest'] .card .form-desc { font-size: 0.85rem;
 color: var(--text-dim);
 margin-bottom: 20px }
+body[data-page='suggest'] .form-group { margin-bottom: 20px;
+position: relative }
+body[data-page='suggest'] .form-label { display: block;
+font-size: 0.82rem;
+font-weight: 600;
+margin-bottom: 8px;
+color: var(--text) }
+body[data-page='suggest'] .form-input, body[data-page='suggest'] .form-select, body[data-page='suggest'] .form-textarea { width: 100%;
+padding: 12px 16px;
+background: rgba(14, 22, 26, 0.6);
+border: 1px solid var(--border);
+border-radius: var(--radius-sm);
+color: var(--text);
+font-size: 0.9rem;
+font-family: inherit;
+transition: var(--transition);
+outline: none }
+body[data-page='suggest'] .form-input::placeholder, body[data-page='suggest'] .form-textarea::placeholder { color: var(--text-faint) }
+body[data-page='suggest'] .form-input:focus, body[data-page='suggest'] .form-select:focus, body[data-page='suggest'] .form-textarea:focus { border-color: var(--border-primary);
+background: rgba(19, 30, 34, 0.85);
+box-shadow: 0 0 0 3px var(--primary-glow) }
+body[data-page='suggest'] .form-input.valid, body[data-page='suggest'] .form-select.valid, body[data-page='suggest'] .form-textarea.valid { border-color: rgba(163, 201, 182, 0.4) }
+body[data-page='suggest'] .form-input.invalid, body[data-page='suggest'] .form-select.invalid, body[data-page='suggest'] .form-textarea.invalid { border-color: rgba(217, 140, 140, 0.4);
+animation: shake 0.3s ease }
+body[data-page='suggest'] .form-textarea { min-height: 80px;
+resize: vertical }
+body[data-page='suggest'] .form-select { cursor: pointer }
+body[data-page='suggest'] .form-select option { background: var(--bg);
+color: var(--text) }
+body[data-page='suggest'] .form-hint { font-size: 0.75rem;
+color: var(--text-faint);
+margin-top: 6px }
+body[data-page='suggest'] .form-hint.error { color: var(--error) }
+body[data-page='suggest'] .form-hint.success { color: var(--success) }
+body[data-page='suggest'] .validation-icon { position: absolute;
+right: 14px;
+top: 38px;
+font-size: 1.1rem;
+opacity: 0;
+transition: opacity 0.3s;
+pointer-events: none }
+body[data-page='suggest'] .validation-icon.show { opacity: 1 }
+body[data-page='suggest'] .validation-icon.valid { color: var(--success) }
+body[data-page='suggest'] .validation-icon.invalid { color: var(--error) }
+body[data-page='suggest'] .form-submit { width: 100%;
+padding: 14px;
+border: none;
+border-radius: var(--radius-sm);
+font-size: 0.95rem;
+font-weight: 600;
+cursor: pointer;
+transition: var(--transition);
+color: var(--bg);
+background: linear-gradient(135deg, var(--primary), var(--primary-dim)) }
+body[data-page='suggest'] .form-submit:hover:not(:disabled) { transform: translatey(-2px);
+box-shadow: 0 4px 20px rgba(143, 175, 181, 0.3) }
+body[data-page='suggest'] .form-submit:disabled { opacity: 0.4;
+cursor: not-allowed }
 body[data-page='suggest'] .info-box { background: linear-gradient(135deg, rgba(163,201,182,0.10), rgba(143,175,181,0.05));
 border: 1px solid rgba(163,201,182,0.18);
 border-left: 3px solid var(--sage);
@@ -1504,15 +1562,15 @@ body[data-page='suggest'] .req-tag, body[data-page='suggest'] .opt-tag {
 body[data-page='suggest'] .req-tag { color: var(--sage); background: rgba(163,201,182,0.12); border: 1px solid rgba(163,201,182,0.25); }
 body[data-page='suggest'] .opt-tag { color: var(--text-faint); background: rgba(143,175,181,0.08); border: 1px solid rgba(143,175,181,0.15); }
 body[data-page='suggest'] .char-counter {
-    position: absolute; top: 0; right: 0;
     font-size: 0.7rem; color: var(--text-faint);
     transition: color .18s ease;
 }
 body[data-page='suggest'] .char-counter.met { color: var(--success); }
-/* Keep the reason label clear of the counter on the same line */
-body[data-page='suggest'] .form-group:has(.char-counter) .form-label {
-    padding-right: 90px;
+body[data-page='suggest'] .label-row {
+    display: flex; align-items: center; justify-content: space-between;
+    margin-bottom: 8px;
 }
+body[data-page='suggest'] .label-row .form-label { margin-bottom: 0; }
 body[data-page='suggest'] .guidelines-list {
     list-style: none; padding: 0; margin: 0 0 16px;
     display: grid; gap: 12px;
