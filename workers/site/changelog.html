@@ -70,30 +70,40 @@
             <p class="hero-sub pop-text">What's new at MySweetPea — service updates, improvements, and community changes.</p>
         </div>
 
-        <div class="content-section" style="max-width: 720px; margin: 0 auto; padding: 20px 24px 80px;">
-            <div class="card reveal">
+        <div class="content-section changelog-section">
+            <div class="changelog-latest reveal"><span class="latest-dot" aria-hidden="true"></span> Latest update — Aug 2026</div>
+
+            <div class="card changelog-card reveal">
                 <h2>August 2026</h2>
                 <ul>
-                    <li><strong>New services live:</strong> Nextcloud (files &amp; calendar), Immich (photo backup), and Open WebUI (private AI chat) are now available to Sweet Pea members.</li>
-                    <li><strong>Reliability:</strong> Automated database and configuration backups are now running daily. Namespace protection added to prevent accidental data loss.</li>
-                    <li><strong>Performance:</strong> All services updated to their latest stable versions, including n8n 2.33.3 and Authentik 2026.5.6.</li>
+                    <li><span class="cl-tag tag-new">New service</span><strong>Nextcloud, Immich &amp; Open WebUI live</strong> — files &amp; calendar, photo backup, and private AI chat are now available to Sweet Pea members.</li>
+                    <li><span class="cl-tag tag-reliability">Reliability</span><strong>Automated backups</strong> — database and configuration backups now run daily. Namespace protection added to prevent accidental data loss.</li>
+                    <li><span class="cl-tag tag-performance">Performance</span><strong>Services updated</strong> — all services on latest stable versions, including n8n 2.33.3 and Authentik 2026.5.6.</li>
                 </ul>
             </div>
-            <div class="card reveal reveal-delay-1">
+            <div class="card changelog-card reveal reveal-delay-1">
                 <h2>July 2026</h2>
                 <ul>
-                    <li><strong>Website redesign:</strong> New Nordic Frost theme, falling-petal animations, glassmorphism, and a command palette (Ctrl+K).</li>
-                    <li><strong>Community access:</strong> Introduced the Seedling and Sweet Pea tiers with a one-time $5 minimum donation.</li>
-                    <li><strong>New service:</strong> KoalaSync (watch parties) added behind single sign-on.</li>
+                    <li><span class="cl-tag tag-design">Design</span><strong>Website redesign</strong> — new Nordic Frost theme, falling-petal animations, glassmorphism, and a command palette (Ctrl+K).</li>
+                    <li><span class="cl-tag tag-community">Community</span><strong>Access tiers</strong> — introduced Seedling and Sweet Pea tiers with a one-time $5 minimum donation.</li>
+                    <li><span class="cl-tag tag-new">New service</span><strong>KoalaSync</strong> — watch parties added behind single sign-on.</li>
                 </ul>
             </div>
-            <div class="card reveal reveal-delay-2">
+            <div class="card changelog-card reveal reveal-delay-2">
                 <h2>June 2026</h2>
                 <ul>
-                    <li><strong>Single sign-on:</strong> All services now use one MySweetPea sign-in via Authentik.</li>
-                    <li><strong>New services:</strong> Jellyfin / Moonfin (media), Seerr (requests), and AFFiNE (notes &amp; docs) launched.</li>
-                    <li><strong>Infrastructure:</strong> Migrated to GitOps with ArgoCD for reproducible deployments.</li>
+                    <li><span class="cl-tag tag-security">Security</span><strong>Single sign-on</strong> — all services now use one MySweetPea sign-in via Authentik.</li>
+                    <li><span class="cl-tag tag-new">New service</span><strong>Jellyfin, Seerr &amp; AFFiNE</strong> — media, requests, and notes &amp; docs launched.</li>
+                    <li><span class="cl-tag tag-infra">Infrastructure</span><strong>GitOps</strong> — migrated to ArgoCD for reproducible deployments.</li>
                 </ul>
+            </div>
+
+            <div class="changelog-github reveal">
+                <h3>Recent commits</h3>
+                <p class="changelog-github-note">Automatically pulled from our GitHub repositories.</p>
+                <div class="commit-list" id="commit-list">
+                    <p class="commit-loading">Loading recent commits…</p>
+                </div>
             </div>
         </div>
         </main>
@@ -120,6 +130,65 @@
 
 
     <script src="/assets/js/site.js?v=2" defer></script>
+    <script>
+    /* === Changelog: pull recent commits from GitHub === */
+    (function () {
+        var list = document.getElementById('commit-list');
+        if (!list) return;
+        var REPOS = [
+            { owner: 'mysweetpea', repo: 'portfolio', label: 'portfolio' },
+            { owner: 'mysweetpea', repo: 'homelab-k8s', label: 'homelab-k8s' }
+        ];
+        var all = [];
+        var pending = REPOS.length;
+
+        REPOS.forEach(function (r) {
+            fetch('https://api.github.com/repos/' + r.owner + '/' + r.repo + '/commits?per_page=5')
+                .then(function (res) { return res.ok ? res.json() : Promise.reject(); })
+                .then(function (commits) {
+                    commits.forEach(function (c) {
+                        all.push({
+                            repo: r.label,
+                            sha: c.sha.slice(0, 7),
+                            message: (c.commit && c.commit.message || '').split('\n')[0],
+                            date: c.commit && c.commit.author && c.commit.author.date
+                        });
+                    });
+                })
+                .catch(function () { /* skip repo on failure */ })
+                .then(function () {
+                    pending--;
+                    if (pending === 0) render();
+                });
+        });
+
+        function render() {
+            if (!all.length) {
+                list.innerHTML = '<p class="commit-empty">No recent commits available.</p>';
+                return;
+            }
+            all.sort(function (a, b) { return new Date(b.date) - new Date(a.date); });
+            list.innerHTML = '';
+            all.slice(0, 10).forEach(function (c) {
+                var item = document.createElement('div');
+                item.className = 'commit-item';
+                var repo = document.createElement('span');
+                repo.className = 'commit-repo';
+                repo.textContent = c.repo;
+                var msg = document.createElement('span');
+                msg.className = 'commit-msg';
+                msg.textContent = c.message;
+                var date = document.createElement('span');
+                date.className = 'commit-date';
+                date.textContent = new Date(c.date).toLocaleDateString();
+                item.appendChild(repo);
+                item.appendChild(msg);
+                item.appendChild(date);
+                list.appendChild(item);
+            });
+        }
+    })();
+    </script>
     <script>
     if ('serviceWorker' in navigator) {
         window.addEventListener('load', function () {
