@@ -5304,3 +5304,27 @@ body {
 @media (max-width: 768px) {
     .nav-tagline { display: none; }
 }
+
+/* ==========================================================================
+   v46: Services filter — hide tier dividers + groups, animated transitions
+   ========================================================================== */
+[data-tier-group], [data-tier-divider] {
+    transition: opacity 0.3s ease, transform 0.3s ease, max-height 0.3s ease;
+}
+[data-tier-group].filter-hidden, [data-tier-divider].filter-hidden {
+    display: none;
+}
+/* Animate cards in when a filter is applied */
+.services-grid, .coming-soon-grid {
+    transition: opacity 0.25s ease;
+}
+.services-grid .service-card, .coming-soon-grid .coming-soon-card {
+    animation: cardIn 0.35s var(--ease-premium) both;
+}
+@keyframes cardIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+@media (prefers-reduced-motion: reduce) {
+    .services-grid .service-card, .coming-soon-grid .coming-soon-card { animation: none; }
+}

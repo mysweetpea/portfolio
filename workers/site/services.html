@@ -74,7 +74,6 @@
         <div class="view-switcher" id="services-switcher">
             <div class="view-tabs" role="tablist" aria-label="Services sections">
                 <button type="button" class="view-tab active" role="tab" aria-selected="true" data-view="services">Services</button>
-                <button type="button" class="view-tab" role="tab" aria-selected="false" data-view="coming">Coming Soon</button>
                 <button type="button" class="view-tab" role="tab" aria-selected="false" data-view="faq">FAQ</button>
             </div>
 
@@ -89,28 +88,25 @@
                     <button type="button" class="filter-btn" data-filter="coming-soon">Coming Soon</button>
                 </div>
 
-                <div class="tier-divider reveal"><div class="line"></div><div class="label"><span class="icon"><img src="/assets/icons/icon-ui-seedling.svg" class="" alt="" width="22" height="22" loading="lazy" decoding="async" aria-hidden="true"></span> Seedling Tier</div><div class="line"></div></div>
-                <div class="services-grid">
+                <div class="tier-divider reveal" data-tier-divider="seedling"><div class="line"></div><div class="label"><span class="icon"><img src="/assets/icons/icon-ui-seedling.svg" class="" alt="" width="22" height="22" loading="lazy" decoding="async" aria-hidden="true"></span> Seedling Tier</div><div class="line"></div></div>
+                <div class="services-grid" data-tier-group="seedling">
                     <button class="service-card glow-card reveal reveal-delay-1" type="button" data-service="vaultwarden" data-tier="seedling" aria-haspopup="dialog" aria-controls="serviceModal"><div class="service-header"><div class="service-icon"><img src="/assets/icons/vaultwarden.svg" width="40" height="40" loading="lazy" decoding="async" alt="Vaultwarden"></div><h3 class="glass-text"><span class="status-dot" title="Operational" aria-label="Status: operational"></span><span class="live-badge">LIVE</span>Vaultwarden</h3><span class="acct-pill">Account required</span></div><p>A password manager that creates strong, unique passwords and fills them in automatically.</p><span class="tier-tag seedling">Seedling</span><div class="learn-more">Learn more &rarr;</div></button>
                     <button class="service-card glow-card reveal reveal-delay-2" type="button" data-service="matrix" data-tier="seedling" aria-haspopup="dialog" aria-controls="serviceModal"><div class="service-header"><div class="service-icon"><img src="/assets/icons/matrix.svg" width="40" height="40" loading="lazy" decoding="async" alt="Matrix"></div><h3 class="glass-text"><span class="status-dot" title="Operational" aria-label="Status: operational"></span><span class="live-badge">LIVE</span>Matrix / Element</h3><span class="acct-pill">Account required</span></div><p>A private, encrypted chat app. Message friends and create rooms without anyone watching.</p><span class="tier-tag seedling">Seedling</span><div class="learn-more">Learn more &rarr;</div></button>
                     <button class="service-card glow-card reveal reveal-delay-3" type="button" data-service="affine" data-tier="seedling" aria-haspopup="dialog" aria-controls="serviceModal"><div class="service-header"><div class="service-icon"><img src="/assets/icons/affine.svg" width="40" height="40" loading="lazy" decoding="async" alt="AFFiNE"></div><h3 class="glass-text"><span class="status-dot" title="Operational" aria-label="Status: operational"></span><span class="live-badge">LIVE</span>AFFiNE</h3><span class="acct-pill">Account required</span></div><p>A Notion alternative you own. Documents, wikis, and whiteboards — all private.</p><span class="tier-tag seedling">Seedling</span><div class="learn-more">Learn more &rarr;</div></button>
                     <button class="service-card glow-card reveal reveal-delay-1" type="button" data-service="koalasync" data-tier="seedling" aria-haspopup="dialog" aria-controls="serviceModal"><div class="service-header"><div class="service-icon"><img src="/assets/icons/koalasync.svg" alt="KoalaSync logo" width="40" height="40" loading="lazy" decoding="async"></div><h3 class="glass-text"><span class="status-dot" title="Operational" aria-label="Status: operational"></span><span class="live-badge">LIVE</span>KoalaSync</h3><span class="acct-pill">Account required</span></div><p>Watch movies and shows together with friends in real-time.</p><span class="tier-tag seedling">Seedling</span><div class="learn-more">Learn more &rarr;</div></button>
                 </div>
 
-                <div class="tier-divider reveal" style="margin-top: 60px;"><div class="line"></div><div class="label"><span class="icon"><img src="/assets/icons/icon-ui-blossom.svg" class="" alt="" width="22" height="22" loading="lazy" decoding="async" aria-hidden="true"></span> Sweet Pea Tier</div><div class="line"></div></div>
-                <div class="services-grid">
+                <div class="tier-divider reveal" style="margin-top: 60px;" data-tier-divider="sweetpea"><div class="line"></div><div class="label"><span class="icon"><img src="/assets/icons/icon-ui-blossom.svg" class="" alt="" width="22" height="22" loading="lazy" decoding="async" aria-hidden="true"></span> Sweet Pea Tier</div><div class="line"></div></div>
+                <div class="services-grid" data-tier-group="sweetpea">
                     <button class="service-card glow-card reveal reveal-delay-1" type="button" data-service="jellyfin" data-tier="sweetpea" aria-haspopup="dialog" aria-controls="serviceModal"><div class="service-header"><div class="service-icon"><img src="/assets/icons/jellyfin.svg" width="40" height="40" loading="lazy" decoding="async" alt="Jellyfin"></div><h3 class="glass-text"><span class="status-dot" title="Operational" aria-label="Status: operational"></span><span class="live-badge">LIVE</span>Jellyfin / Moonfin</h3><span class="acct-pill">Account required</span></div><p>Your own private Netflix — stream your library on any device.</p><span class="tier-tag sweetpea">Sweet Pea</span><div class="learn-more">Learn more &rarr;</div></button>
                     <button class="service-card glow-card reveal reveal-delay-2" type="button" data-service="seerr" data-tier="sweetpea" aria-haspopup="dialog" aria-controls="serviceModal"><div class="service-header"><div class="service-icon"><img src="/assets/icons/seerr.svg" alt="Seerr logo" width="40" height="40" loading="lazy" decoding="async"></div><h3 class="glass-text"><span class="status-dot" title="Operational" aria-label="Status: operational"></span><span class="live-badge">LIVE</span>Seerr</h3><span class="acct-pill">Account required</span></div><p>Request movies and shows — they appear in Jellyfin automatically.</p><span class="tier-tag sweetpea">Sweet Pea</span><div class="learn-more">Learn more &rarr;</div></button>
                     <button class="service-card glow-card reveal reveal-delay-3" type="button" data-service="nextcloud" data-tier="sweetpea" aria-haspopup="dialog" aria-controls="serviceModal"><div class="service-header"><div class="service-icon"><img src="/assets/icons/nextcloud.svg" width="40" height="40" loading="lazy" decoding="async" alt="Nextcloud"></div><h3 class="glass-text"><span class="status-dot" title="Operational" aria-label="Status: operational"></span><span class="live-badge">LIVE</span>Nextcloud</h3><span class="acct-pill">Account required</span></div><p>Files, calendar, and contacts — your private Google Workspace.</p><span class="tier-tag sweetpea">Sweet Pea</span><div class="learn-more">Learn more &rarr;</div></button>
                     <button class="service-card glow-card reveal reveal-delay-1" type="button" data-service="immich" data-tier="sweetpea" aria-haspopup="dialog" aria-controls="serviceModal"><div class="service-header"><div class="service-icon"><img src="/assets/icons/immich.svg" width="40" height="40" loading="lazy" decoding="async" alt="Immich"></div><h3 class="glass-text"><span class="status-dot" title="Operational" aria-label="Status: operational"></span><span class="live-badge">LIVE</span>Immich</h3><span class="acct-pill">Account required</span></div><p>Photo and video backup, like Google Photos without the tracking.</p><span class="tier-tag sweetpea">Sweet Pea</span><div class="learn-more">Learn more &rarr;</div></button>
                     <button class="service-card glow-card reveal reveal-delay-2" type="button" data-service="openwebui" data-tier="sweetpea" aria-haspopup="dialog" aria-controls="serviceModal"><div class="service-header"><div class="service-icon"><img src="/assets/icons/openwebui.svg" width="40" height="40" loading="lazy" decoding="async" alt="Open WebUI"></div><h3 class="glass-text"><span class="status-dot" title="Operational" aria-label="Status: operational"></span><span class="live-badge">LIVE</span>Open WebUI</h3><span class="acct-pill">Account required</span></div><p>A private AI chat interface running on our own hardware.</p><span class="tier-tag sweetpea">Sweet Pea</span><div class="learn-more">Learn more &rarr;</div></button>
                 </div>
-            </div>
 
-            <div class="view-panel" data-view="coming" role="tabpanel">
-                <span class="eyebrow">Coming soon</span>
-                <h2 class="section-title glass-text reveal">Coming Soon</h2>
-                <div class="coming-soon-grid">
+                <div class="tier-divider reveal" style="margin-top: 60px;" data-tier-divider="coming-soon"><div class="line"></div><div class="label"><span class="icon"><img src="/assets/icons/icon-ui-construction.svg" class="" alt="" width="22" height="22" loading="lazy" decoding="async" aria-hidden="true"></span> Coming Soon</div><div class="line"></div></div>
+                <div class="coming-soon-grid" data-tier-group="coming-soon">
                     <div class="coming-soon-card reveal reveal-delay-3" data-tier="coming-soon"><div class="service-header"><div class="service-icon"><img src="/assets/icons/syncthing.svg" width="40" height="40" loading="lazy" decoding="async" alt="Syncthing"></div><h3>Syncthing</h3></div><p>Peer-to-peer file sync across devices.</p><button type="button" class="notify-btn" data-service="Syncthing"><img src="/assets/icons/icon-ui-blossom.svg" alt="" width="14" height="14"> Notify me when live</button></div>
                     <div class="coming-soon-card reveal reveal-delay-1" data-tier="coming-soon"><div class="service-header"><div class="service-icon"><img src="/assets/icons/stalwart.svg" width="40" height="40" loading="lazy" decoding="async" alt="Stalwart Mail"></div><h3>Stalwart Mail</h3></div><p>Self-hosted email with IMAP, JMAP, and SMTP.</p><button type="button" class="notify-btn" data-service="Stalwart Mail"><img src="/assets/icons/icon-ui-blossom.svg" alt="" width="14" height="14"> Notify me when live</button></div>
                     <div class="coming-soon-card reveal reveal-delay-2" data-tier="coming-soon"><div class="service-header"><div class="service-icon"><img src="/assets/icons/remux.webp" width="40" height="40" loading="lazy" decoding="async" alt="Remux"></div><h3>Remux</h3></div><p>Automated media acquisition and library management.</p><button type="button" class="notify-btn" data-service="Remux"><img src="/assets/icons/icon-ui-blossom.svg" alt="" width="14" height="14"> Notify me when live</button></div>
@@ -134,7 +130,7 @@
             </div>
         </div>
 
-        </main>
+        </main></main>
 <a href="#" class="back-to-top" aria-label="Back to top" onclick="window.scrollTo({top:0,behavior:'smooth'});return false;"><img src="/assets/icons/icon-ui-arrow-up.svg" class="" alt="" width="22" height="22" loading="lazy" decoding="async" aria-hidden="true"></a>
 <footer class="page-footer">
     <div class="footer-links">
@@ -250,15 +246,21 @@
             card.addEventListener('click', function() { openModal(card.dataset.service, card); });
         });
 
-        /* === Services filter bar === */
+        /* === Services filter bar (hides tier dividers + groups, animated) === */
         (function () {
             var filterBtns = document.querySelectorAll('.filter-btn');
-            var cards = document.querySelectorAll('.service-card[data-tier], .coming-soon-card[data-tier]');
+            var groups = document.querySelectorAll('[data-tier-group]');
+            var dividers = document.querySelectorAll('[data-tier-divider]');
             function applyFilter(filter) {
-                cards.forEach(function (card) {
-                    var tier = card.getAttribute('data-tier');
+                groups.forEach(function (group) {
+                    var tier = group.getAttribute('data-tier-group');
                     var show = filter === 'all' || tier === filter;
-                    card.classList.toggle('hidden', !show);
+                    group.classList.toggle('filter-hidden', !show);
+                });
+                dividers.forEach(function (divider) {
+                    var tier = divider.getAttribute('data-tier-divider');
+                    var show = filter === 'all' || tier === filter;
+                    divider.classList.toggle('filter-hidden', !show);
                 });
             }
             filterBtns.forEach(function (btn) {
