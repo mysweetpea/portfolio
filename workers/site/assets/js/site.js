@@ -616,7 +616,7 @@
         pollen.appendChild(span);
     }
 
-    /* === Vine divider SVG (injected into .vine-divider elements) === */
+    /* === Vine divider SVG + label (injected into .vine-divider elements) === */
     var vineSvg = '<svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">' +
         '<path d="M32 6C22 10 16 20 18 32c2 12 12 20 14 26" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>' +
         '<path d="M18 32c-6-2-10-8-8-14 2-6 8-8 14-6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" opacity=".6"/>' +
@@ -626,7 +626,7 @@
         '<circle cx="46" cy="32" r="2.5" fill="currentColor" opacity=".7"/>' +
         '</svg>';
     document.querySelectorAll('.vine-divider').forEach(function (el) {
-        el.innerHTML = vineSvg;
+        el.innerHTML = vineSvg + '<span class="vine-label">Vines</span>';
     });
 })();
 
@@ -745,4 +745,33 @@
         var initial = params.get('view');
         if (initial) activate(initial);
     });
+})();
+
+/* ==========================================================================
+   v44: Home value-tabs (Privacy / Ownership / Community)
+   ========================================================================== */
+(function () {
+    'use strict';
+    var tabs = document.querySelectorAll('.value-tab');
+    var cards = document.querySelectorAll('.features-grid .feature-card');
+    if (!tabs.length || !cards.length) return;
+
+    function show(value) {
+        tabs.forEach(function (t) {
+            t.classList.toggle('active', t.getAttribute('data-value') === value);
+        });
+        cards.forEach(function (c) {
+            c.classList.toggle('visible', c.getAttribute('data-value') === value);
+        });
+    }
+
+    tabs.forEach(function (tab) {
+        tab.addEventListener('click', function () {
+            show(tab.getAttribute('data-value'));
+        });
+    });
+
+    // Show the first value's cards by default
+    var initial = tabs[0].getAttribute('data-value');
+    show(initial);
 })();

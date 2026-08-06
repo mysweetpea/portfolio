@@ -5206,3 +5206,77 @@ body {
 @media (prefers-reduced-motion: reduce) {
     .view-panel { animation: none; }
 }
+
+/* ==========================================================================
+   v43: Home value-tabs, prominent hero steps, clearer vine dividers
+   ========================================================================== */
+
+/* --- Value tabs (Privacy / Ownership / Community) --- */
+.value-tabs {
+    display: flex; flex-wrap: wrap; gap: 8px; justify-content: center;
+    margin: 0 auto 32px; max-width: 560px;
+    padding: 8px; border-radius: 999px;
+    background: rgba(12,19,22,0.8);
+    backdrop-filter: blur(20px) saturate(1.4);
+    border: 1px solid var(--hairline);
+    box-shadow: 0 4px 24px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.05);
+}
+.value-tab {
+    padding: 10px 24px; border-radius: 999px; cursor: pointer;
+    background: transparent; border: 1px solid transparent;
+    color: var(--text-dim); font-size: 0.9rem; font-weight: 600;
+    transition: var(--transition);
+}
+.value-tab:hover { color: var(--text); background: var(--primary-glow); }
+.value-tab.active {
+    background: linear-gradient(135deg, var(--primary), var(--primary-dim) 60%, var(--sage-dim));
+    color: var(--bg); border-color: rgba(255,255,255,0.12);
+    box-shadow: 0 4px 16px rgba(94,184,168,0.25), inset 0 1px 0 rgba(255,255,255,0.2);
+}
+[data-theme="light"] .value-tabs { background: rgba(242,245,246,0.85); }
+
+/* --- Feature cards: hidden by default, shown per active value --- */
+.features-grid .feature-card { display: none; }
+.features-grid .feature-card.visible { display: block; animation: viewIn 0.35s var(--ease-premium); }
+
+/* --- Prominent hero steps --- */
+.hero-steps {
+    display: flex; flex-wrap: wrap; justify-content: center; gap: 14px 32px;
+    list-style: none; padding: 0; margin: 34px 0 4px;
+}
+.hero-steps li {
+    display: flex; align-items: center; gap: 12px;
+    padding: 14px 20px; border-radius: var(--radius-sm);
+    background: var(--card-bg); border: 1px solid var(--hairline);
+    backdrop-filter: blur(14px) saturate(1.2);
+    box-shadow: 0 4px 16px rgba(0,0,0,0.2), inset 0 1px 0 rgba(255,255,255,0.05);
+}
+.hero-steps li span {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 34px; height: 34px; border-radius: 50%; flex: none;
+    background: linear-gradient(135deg, var(--primary), var(--sage-dim));
+    color: var(--bg); font-size: 0.95rem; font-weight: 800;
+    box-shadow: 0 2px 8px rgba(94,184,168,0.3);
+}
+.hero-steps li strong { display: block; color: var(--text); font-size: 0.95rem; font-weight: 700; }
+.hero-steps li em { display: block; color: var(--text-dim); font-size: 0.78rem; font-style: normal; }
+
+/* --- Clearer vine dividers (label them as vines) --- */
+.vine-divider {
+    display: flex; align-items: center; justify-content: center;
+    gap: 12px; margin: 0 auto; max-width: 720px; padding: 0 20px;
+    color: var(--sage); opacity: 0.7;
+}
+.vine-divider::before, .vine-divider::after {
+    content: ''; flex: 1; height: 1px;
+    background: linear-gradient(90deg, transparent, var(--border-primary), transparent);
+}
+.vine-divider svg { width: 26px; height: 26px; }
+.vine-divider .vine-label {
+    font-size: 0.68rem; font-weight: 700; letter-spacing: 0.14em;
+    text-transform: uppercase; color: var(--text-faint);
+    white-space: nowrap;
+}
+@media (prefers-reduced-motion: reduce) {
+    .features-grid .feature-card.visible { animation: none; }
+}
