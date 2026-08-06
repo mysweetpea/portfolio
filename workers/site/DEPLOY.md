@@ -43,6 +43,7 @@ These live features are wired but need backend endpoints to fully function:
 | Live status pill (home) | `https://status.mysweetpea.cc/api/status-page/heartbeat/1` | Needs Uptime Kuma behind tunnel |
 | Notify-me buttons (services) | `https://subscribe.mysweetpea.cc/webhook/suggest` | Needs n8n webhook |
 | Invite-code check (redeem) | `https://subscribe.mysweetpea.cc/webhook/check-code` | Needs n8n webhook |
+| Incidents (status) | `https://subscribe.mysweetpea.cc/webhook/incidents` | Needs n8n webhook + Telegram `/incident` command |
 
 Until these exist, they gracefully fall back (status shows "All systems
 operational", buttons flip to "We'll let you know", code check keeps default
