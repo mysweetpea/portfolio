@@ -6530,3 +6530,37 @@ body[data-page='form'] .crypto-option.selected {
     border-color: var(--sage);
     box-shadow: 0 0 0 3px rgba(163,201,182,0.14), 0 8px 24px rgba(0,0,0,0.2);
 }
+
+/* ==========================================================================
+   v63: Form page — verification checkboxes
+   ========================================================================== */
+body[data-page='form'] .verify-check {
+    display: flex; align-items: flex-start; gap: 10px;
+    margin: 16px 0 18px; padding: 12px 14px;
+    background: rgba(163,201,182,0.06);
+    border: 1px solid rgba(163,201,182,0.15);
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    transition: border-color .18s ease, background-color .18s ease;
+}
+body[data-page='form'] .verify-check:hover { border-color: rgba(163,201,182,0.3); }
+body[data-page='form'] .verify-check input {
+    position: absolute; opacity: 0; width: 0; height: 0;
+}
+body[data-page='form'] .vc-box {
+    flex: 0 0 auto; width: 20px; height: 20px; margin-top: 1px;
+    display: inline-flex; align-items: center; justify-content: center;
+    border: 1.5px solid var(--border-primary);
+    border-radius: 5px;
+    background: rgba(14,22,26,0.6);
+    transition: border-color .18s ease, background-color .18s ease;
+}
+body[data-page='form'] .verify-check input:checked + .vc-box {
+    border-color: var(--sage);
+    background: rgba(163,201,182,0.2);
+}
+body[data-page='form'] .verify-check input:checked + .vc-box img { opacity: 1; }
+body[data-page='form'] .vc-box img { opacity: 0; transition: opacity .18s ease; }
+body[data-page='form'] .vc-text {
+    font-size: 0.85rem; color: var(--text-dim); line-height: 1.5;
+}
