@@ -6366,7 +6366,7 @@ body[data-page='changelog'] .hero { text-align: center; }
    v61: About page — view-switcher tabs + premium polish
    ========================================================================== */
 body[data-page='about'] .view-switcher { max-width: 720px; margin: 0 auto; }
-body[data-page='about'] .about-section { max-width: 720px; margin: 0 auto; padding: 20px 24px 60px; }
+body[data-page='about'] .about-section { max-width: 720px; margin: 0 auto; padding: 20px 24px 16px; }
 body[data-page='about'] .about-card {
     background:
         linear-gradient(160deg, rgba(255,255,255,0.04), transparent 40%),
