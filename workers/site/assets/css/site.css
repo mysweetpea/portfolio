@@ -1477,77 +1477,96 @@ body[data-page='suggest'] .card h3 { font-size: 1.1rem;
 font-weight: 600;
 margin-bottom: 8px;
 color: var(--primary) }
+body[data-page='suggest'] .card h2 { font-size: 1.35rem;
+font-weight: 700;
+margin-bottom: 8px;
+background: linear-gradient(120deg, var(--text) 20%, var(--primary-bright) 60%, var(--sage) 100%);
+-webkit-background-clip: text; background-clip: text;
+-webkit-text-fill-color: transparent; }
 body[data-page='suggest'] .card .form-desc { font-size: 0.85rem;
 color: var(--text-dim);
 margin-bottom: 20px }
-body[data-page='suggest'] .info-box { background: rgba(143, 175, 181, 0.06);
-border: 1px solid rgba(143, 175, 181, 0.15);
+body[data-page='suggest'] .info-box { background: linear-gradient(135deg, rgba(163,201,182,0.10), rgba(143,175,181,0.05));
+border: 1px solid rgba(163,201,182,0.18);
+border-left: 3px solid var(--sage);
 border-radius: var(--radius-sm);
 padding: 14px;
 margin-bottom: 20px;
 font-size: 0.82rem;
 color: var(--text-dim);
 line-height: 1.6 }
-body[data-page='suggest'] .form-group { margin-bottom: 20px;
-position: relative }
-body[data-page='suggest'] .form-label { display: block;
-font-size: 0.82rem;
-font-weight: 600;
-margin-bottom: 8px;
-color: var(--text) }
-body[data-page='suggest'] .form-input, body[data-page='suggest'] .form-select, body[data-page='suggest'] .form-textarea { width: 100%;
-padding: 12px 16px;
-background: rgba(14, 22, 26, 0.6);
-border: 1px solid var(--border);
-border-radius: var(--radius-sm);
-color: var(--text);
-font-size: 0.9rem;
-font-family: inherit;
-transition: var(--transition);
-outline: none }
-body[data-page='suggest'] .form-input::placeholder, body[data-page='suggest'] .form-textarea::placeholder { color: var(--text-faint) }
-body[data-page='suggest'] .form-input:focus, body[data-page='suggest'] .form-select:focus, body[data-page='suggest'] .form-textarea:focus { border-color: var(--border-primary);
-background: rgba(19, 30, 34, 0.85);
-box-shadow: 0 0 0 3px var(--primary-glow) }
-body[data-page='suggest'] .form-input.valid, body[data-page='suggest'] .form-select.valid, body[data-page='suggest'] .form-textarea.valid { border-color: rgba(163, 201, 182, 0.4) }
-body[data-page='suggest'] .form-input.invalid, body[data-page='suggest'] .form-select.invalid, body[data-page='suggest'] .form-textarea.invalid { border-color: rgba(217, 140, 140, 0.4);
-animation: shake 0.3s ease }
-body[data-page='suggest'] .form-textarea { min-height: 80px;
-resize: vertical }
-body[data-page='suggest'] .form-select { cursor: pointer }
-body[data-page='suggest'] .form-select option { background: var(--bg);
-color: var(--text) }
-body[data-page='suggest'] .form-hint { font-size: 0.75rem;
-color: var(--text-faint);
-margin-top: 6px }
-body[data-page='suggest'] .form-hint.error { color: var(--error) }
-body[data-page='suggest'] .form-hint.success { color: var(--success) }
-body[data-page='suggest'] .validation-icon { position: absolute;
-right: 14px;
-top: 38px;
-font-size: 1.1rem;
-opacity: 0;
-transition: opacity 0.3s;
-pointer-events: none }
-body[data-page='suggest'] .validation-icon.show { opacity: 1 }
-body[data-page='suggest'] .validation-icon.valid { color: var(--success) }
-body[data-page='suggest'] .validation-icon.invalid { color: var(--error) }
-body[data-page='suggest'] .form-submit { width: 100%;
-padding: 14px;
-border: none;
-border-radius: var(--radius-sm);
-font-size: 0.95rem;
-font-weight: 600;
-cursor: pointer;
-transition: var(--transition);
-color: var(--bg);
-background: linear-gradient(135deg, var(--primary), var(--primary-dim)) }
-body[data-page='suggest'] .form-submit:hover:not(:disabled) { transform: translatey(-2px);
-box-shadow: 0 4px 20px rgba(143, 175, 181, 0.3) }
-body[data-page='suggest'] .form-submit:disabled { opacity: 0.4;
-cursor: not-allowed }
-@media (max-width: 768px) { body[data-page='suggest'] .hero { padding: 100px 20px 10px } body[data-page='suggest'] .hero h1 { font-size: 1.6rem } body[data-page='suggest'] .hero img.logo { width: 120px;
-height: 120px } body[data-page='suggest'] .card { padding: 24px 20px } }
+body[data-page='suggest'] .req-tag, body[data-page='suggest'] .opt-tag {
+    display: inline-block; font-size: 0.62rem; font-weight: 700;
+    letter-spacing: 0.06em; text-transform: uppercase;
+    padding: 2px 7px; border-radius: 999px; vertical-align: middle;
+    margin-left: 6px;
+}
+body[data-page='suggest'] .req-tag { color: var(--sage); background: rgba(163,201,182,0.12); border: 1px solid rgba(163,201,182,0.25); }
+body[data-page='suggest'] .opt-tag { color: var(--text-faint); background: rgba(143,175,181,0.08); border: 1px solid rgba(143,175,181,0.15); }
+body[data-page='suggest'] .char-counter {
+    position: absolute; right: 2px; bottom: -18px;
+    font-size: 0.7rem; color: var(--text-faint);
+    transition: color .18s ease;
+}
+body[data-page='suggest'] .char-counter.met { color: var(--success); }
+body[data-page='suggest'] .guidelines-list {
+    list-style: none; padding: 0; margin: 0 0 16px;
+    display: grid; gap: 12px;
+}
+body[data-page='suggest'] .guidelines-list li {
+    display: flex; align-items: flex-start; gap: 10px;
+    font-size: 0.9rem; color: var(--text-dim); line-height: 1.55;
+    padding: 12px 14px;
+    background: rgba(143,175,181,0.05);
+    border: 1px solid var(--hairline);
+    border-radius: var(--radius-sm);
+}
+body[data-page='suggest'] .guidelines-list li strong { color: var(--text); }
+body[data-page='suggest'] .gl-icon {
+    flex: 0 0 auto; width: 22px; height: 22px;
+    display: inline-flex; align-items: center; justify-content: center;
+    border-radius: 50%;
+    background: rgba(163,201,182,0.14);
+    border: 1px solid rgba(163,201,182,0.25);
+}
+body[data-page='suggest'] .guidelines-note {
+    font-size: 0.9rem; color: var(--text-dim);
+    text-align: center; padding: 14px;
+    background: linear-gradient(135deg, rgba(163,201,182,0.06), transparent 60%);
+    border: 1px solid rgba(163,201,182,0.12);
+    border-radius: var(--radius-sm);
+}
+body[data-page='suggest'] .view-switcher { max-width: 720px; margin: 0 auto; }
+body[data-page='suggest'] .view-panel .container { padding: 0; }
+body[data-page='suggest'] .card {
+    box-shadow:
+        inset 0 1px 0 rgba(255,255,255,0.07),
+        0 1px 2px rgba(0,0,0,0.25),
+        0 8px 24px rgba(0,0,0,0.2),
+        0 24px 64px rgba(0,0,0,0.16);
+}
+body[data-page='suggest'] .form-input, body[data-page='suggest'] .form-select, body[data-page='suggest'] .form-textarea {
+    background:
+        linear-gradient(160deg, rgba(255,255,255,0.03), transparent 40%),
+        rgba(14, 22, 26, 0.6);
+    border: 1px solid var(--hairline);
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.04);
+    transition: border-color 0.3s var(--ease-premium), box-shadow 0.3s var(--ease-premium), background 0.3s var(--ease-premium);
+}
+body[data-page='suggest'] .form-input:focus, body[data-page='suggest'] .form-select:focus, body[data-page='suggest'] .form-textarea:focus {
+    border-color: var(--sage);
+    box-shadow: 0 0 0 3px rgba(163,201,182,0.14);
+}
+body[data-page='suggest'] .form-submit {
+    background:
+        linear-gradient(180deg, rgba(255,255,255,0.12), transparent 40%),
+        linear-gradient(135deg, var(--primary), var(--primary-dim) 55%, var(--sage-dim));
+    border: 1px solid rgba(255,255,255,0.12);
+    box-shadow: 0 4px 18px rgba(94,184,168,0.22), inset 0 1px 0 rgba(255,255,255,0.15);
+}
+@media (prefers-reduced-motion: reduce) {
+    body[data-page='suggest'] .form-input.invalid { animation: none; }
+}
 
 /* ===== Page: support.html ===== */
 body[data-page='support'] .hero { text-align: center;
