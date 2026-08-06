@@ -5740,3 +5740,29 @@ body[data-page='services'] .service-card .acct-pill {
     .cb-cell { width: 30px; height: 42px; font-size: 1.05rem; }
     .code-boxes { gap: 4px; }
 }
+
+/* ==========================================================================
+   v55: Username live requirement checks (X -> green check as you type)
+   ========================================================================== */
+.username-checks {
+    display: flex; flex-wrap: wrap; gap: 6px 16px;
+    margin-top: 8px; padding: 10px 12px;
+    background: rgba(14, 22, 26, 0.45);
+    border: 1px solid var(--border-primary);
+    border-radius: var(--radius-sm);
+}
+.uc-item {
+    display: inline-flex; align-items: center; gap: 6px;
+    font-size: 0.82rem; color: var(--text-dim);
+    transition: color .18s ease;
+}
+.uc-icon {
+    width: 16px; height: 16px; line-height: 15px;
+    border-radius: 50%; text-align: center;
+    font-size: 11px; font-weight: 800;
+    color: var(--error); background: rgba(217, 140, 140, 0.18);
+    flex: 0 0 auto;
+    transition: color .18s ease, background-color .18s ease;
+}
+.uc-item.ok { color: var(--text); }
+.uc-item.ok .uc-icon { color: #0E5B3A; background: rgba(163, 201, 182, 0.5); }
