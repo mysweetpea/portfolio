@@ -132,7 +132,7 @@
                     var item = document.createElement('div');
                     item.className = 'commit-item';
                     var repo = document.createElement('span');
-                    repo.className = 'commit-repo';
+                    repo.className = 'commit-repo commit-repo-' + c.repo;
                     repo.textContent = c.repo;
                     var msg = document.createElement('span');
                     msg.className = 'commit-msg';

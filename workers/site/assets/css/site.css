@@ -6334,6 +6334,12 @@ body[data-page='changelog'] .commit-repo {
     color: var(--sage); background: rgba(163,201,182,0.1);
     padding: 2px 8px; border-radius: 999px;
 }
+body[data-page='changelog'] .commit-repo-portfolio {
+    color: #5EB8A8; background: rgba(94,184,168,0.14); border: 1px solid rgba(94,184,168,0.3);
+}
+body[data-page='changelog'] .commit-repo-homelab-k8s {
+    color: #D9A86C; background: rgba(217,168,108,0.14); border: 1px solid rgba(217,168,108,0.3);
+}
 body[data-page='changelog'] .commit-msg {
     flex: 1 1 auto; min-width: 0; color: var(--text);
     overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
