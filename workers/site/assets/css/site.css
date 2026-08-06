@@ -6395,7 +6395,7 @@ body[data-page='about'] .about-list {
     display: grid; gap: 10px;
 }
 body[data-page='about'] .about-list li {
-    display: flex; align-items: flex-start; gap: 10px;
+    display: flex; align-items: center; gap: 10px;
     font-size: 0.92rem; color: var(--text-dim); line-height: 1.55;
     padding: 12px 14px;
     background: rgba(143,175,181,0.05);
@@ -6404,12 +6404,13 @@ body[data-page='about'] .about-list li {
 }
 body[data-page='about'] .about-list li a { color: var(--sage); font-weight: 600; }
 body[data-page='about'] .al-icon {
-    flex: 0 0 auto; width: 24px; height: 24px;
+    flex: 0 0 auto; width: 20px; height: 20px;
     display: inline-flex; align-items: center; justify-content: center;
     border-radius: 50%;
     background: rgba(163,201,182,0.14);
     border: 1px solid rgba(163,201,182,0.25);
 }
+body[data-page='about'] .al-icon img { width: 13px; height: 13px; }
 body[data-page='about'] .github-link.repo-homelab {
     border-color: rgba(217,168,108,0.3);
 }
