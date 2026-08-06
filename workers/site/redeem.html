@@ -78,7 +78,9 @@
                 <div class="verify-banner" role="note"><strong>Haven't received a code yet?</strong> Seedling is usually reviewed within 24 hours. Sweet Pea is reviewed individually. <a href="mailto:support@mysweetpea.cc">Contact support</a></div>
                 <div class="form-group redeem-code-group">
                     <label class="form-label glass-text" for="rc-code">Invite code</label>
-                    <input type="text" class="form-input redeem-code-input" id="rc-code" placeholder="PEA-12345678 or FAM-12345678" autocomplete="off" autocapitalize="characters" spellcheck="false"><span class="validation-icon" id="rc-code-icon" aria-hidden="true"></span>
+                    <input type="text" class="form-input redeem-code-input" id="rc-code" placeholder="" autocomplete="off" autocapitalize="characters" spellcheck="false" maxlength="12" aria-label="Invite code">
+                    <div class="code-template" aria-hidden="true"><span class="ct-prefix">___</span><span class="ct-dash">-</span><span class="ct-digits">________</span></div>
+                    <span class="validation-icon" id="rc-code-icon" aria-hidden="true"></span>
                     <div class="form-hint" id="rc-code-hint">Enter the code exactly as it appears in your email.</div>
                 </div>
                 <div class="form-group"><label class="form-label glass-text" for="rc-name">Name</label><input type="text" class="form-input" id="rc-name" placeholder="Your name" autocomplete="name"><span class="validation-icon" id="rc-name-icon" aria-hidden="true"></span></div>
@@ -88,23 +90,8 @@
             </div>
         </section>
 
-        <div class="redeem-next reveal">
-            <h3>What happens next</h3>
-            <div class="redeem-next-steps">
-                <div class="redeem-next-step"><span>1</span> We verify your code</div>
-                <div class="redeem-next-step"><span>2</span> We create your account</div>
-                <div class="redeem-next-step"><span>3</span> You get an email with your sign-in details</div>
-            </div>
-        </div>
-
-        <div class="redeem-help reveal">
-            <p><strong>Stuck?</strong> We're happy to help.</p>
-            <button type="button" class="copy-email-btn" data-copy="support@mysweetpea.cc">Copy email address</button>
-            <span>support@mysweetpea.cc</span>
-        </div>
-
         <aside class="redeem-callout reveal"><div><strong>Need access first?</strong><span>Choose a tier and submit an access request.</span></div><a href="/form.html" class="btn btn-secondary">Get access</a></aside>
-    </main></main>
+    </main>
 <a href="#" class="back-to-top" aria-label="Back to top" onclick="window.scrollTo({top:0,behavior:'smooth'});return false;"><img src="/assets/icons/icon-ui-arrow-up.svg" class="" alt="" width="22" height="22" loading="lazy" decoding="async" aria-hidden="true"></a>
 <footer class="page-footer">
     <div class="footer-links">
@@ -134,7 +121,7 @@
  var fields={'rc-code':'code','rc-name':'name','rc-email':'email','rc-username':'username'};
  function valid(type,v){v=v.trim();if(type==='code')return /^(PEA|FAM)-[A-Z0-9]{8}$/.test(v.toUpperCase());if(type==='name')return v.length>=2;if(type==='email')return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v);return /^[A-Za-z0-9_]{3,}$/.test(v);}
  function update(){btn.disabled=!Object.keys(fields).every(function(id){return valid(fields[id],document.getElementById(id).value);});}
- Object.keys(fields).forEach(function(id){var el=document.getElementById(id);el.addEventListener('input',function(){if(id==='rc-code')el.value=el.value.toUpperCase().replace(/\s/g,'');var ok=valid(fields[id],el.value);el.classList.toggle('valid',ok);el.classList.toggle('invalid',el.value.trim().length>0&&!ok);var icon=document.getElementById(id+'-icon');if(icon){icon.classList.toggle('show',el.value.trim().length>0);icon.classList.toggle('valid',ok);icon.classList.toggle('invalid',el.value.trim().length>0&&!ok);icon.textContent=ok?'✓':'×';}update();});el.addEventListener('blur',function(){var ok=valid(fields[id],el.value);el.classList.toggle('valid',ok);el.classList.toggle('invalid',el.value.trim().length>0&&!ok);var icon=document.getElementById(id+'-icon');if(icon){icon.classList.toggle('show',el.value.trim().length>0);icon.classList.toggle('valid',ok);icon.classList.toggle('invalid',el.value.trim().length>0&&!ok);icon.textContent=ok?'✓':'×';}update();});});
+ Object.keys(fields).forEach(function(id){var el=document.getElementById(id);el.addEventListener('input',function(){if(id==='rc-code'){el.value=el.value.toUpperCase().replace(/\s/g,'');var tpl=document.querySelector('.code-template');if(tpl){var v=el.value;var p='';for(var i=0;i<3;i++){p+='<span class="ct-filled">'+(v[i]||'_')+'</span>';}tpl.querySelector('.ct-prefix').innerHTML=p;var d='';for(var j=0;j<8;j++){d+='<span class="ct-filled">'+(v[4+j]||'_')+'</span>';}tpl.querySelector('.ct-digits').innerHTML=d;}}var ok=valid(fields[id],el.value);el.classList.toggle('valid',ok);el.classList.toggle('invalid',el.value.trim().length>0&&!ok);var icon=document.getElementById(id+'-icon');if(icon){icon.classList.toggle('show',el.value.trim().length>0);icon.classList.toggle('valid',ok);icon.classList.toggle('invalid',el.value.trim().length>0&&!ok);icon.textContent=ok?'✓':'×';}update();});el.addEventListener('blur',function(){var ok=valid(fields[id],el.value);el.classList.toggle('valid',ok);el.classList.toggle('invalid',el.value.trim().length>0&&!ok);var icon=document.getElementById(id+'-icon');if(icon){icon.classList.toggle('show',el.value.trim().length>0);icon.classList.toggle('valid',ok);icon.classList.toggle('invalid',el.value.trim().length>0&&!ok);icon.textContent=ok?'✓':'×';}update();});});
  btn.addEventListener('click',function(){if(btn.disabled)return;var data={invite_code:document.getElementById('rc-code').value.trim(),name:document.getElementById('rc-name').value.trim(),email:document.getElementById('rc-email').value.trim(),username:document.getElementById('rc-username').value.trim()};btn.disabled=true;btn.classList.add('loading');btn.textContent='Creating account…';fetch(endpoint,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(data)}).then(function(r){return r.json();}).then(function(result){if(!result.ok)throw new Error(result.msg||'Could not create account');window.location.href='/success.html?type=redeem';}).catch(function(e){btn.disabled=false;btn.classList.remove('loading');btn.textContent=e.message||'Try again';setTimeout(function(){btn.textContent='Request MySweetPea Account';update();},3000);});});update();
 })();
 </script>    <script>

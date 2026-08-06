@@ -3826,6 +3826,12 @@ body[data-page='form'] .form-card { animation: none !important; }
     color: var(--text); font-size: 0.94rem; line-height: 1.55;
 }
 .verify-banner strong { color: var(--primary-bright); }
+.verify-banner a {
+    color: var(--sage); font-weight: 700; text-decoration: none;
+    border-bottom: 1px solid var(--sage); padding-bottom: 1px;
+    transition: color .18s ease, border-color .18s ease;
+}
+.verify-banner a:hover { color: var(--primary-bright); border-color: var(--primary-bright); }
 
 /* === Set 3 #10: graphical How It Works === */
 .hiw-intro { text-align: center; color: var(--text-dim); font-size: 1.05rem; margin: 0 auto 30px; max-width: 46ch; }
@@ -4118,6 +4124,8 @@ body[data-page='redeem'] .redeem-section .form-hint,
 body[data-page='redeem'] .redeem-section .verify-banner {
     color: var(--text-dim);
 }
+body[data-page='redeem'] .redeem-section .form-hint.success { color: var(--success); }
+body[data-page='redeem'] .redeem-section .form-hint.error { color: var(--error); }
 body[data-page='redeem'] .redeem-section .verify-banner {
     background: rgba(163, 201, 182, .09);
     border-left-color: var(--sage);
@@ -5653,3 +5661,29 @@ body[data-page='services'] .service-card .acct-pill {
     .redeem-next-steps { flex-direction: column; align-items: center; }
     .redeem-next-step { width: 100%; justify-content: center; }
 }
+
+/* ==========================================================================
+   v54: Redeem code template (underscores that fill as you type)
+   ========================================================================== */
+.redeem-code-group { position: relative; }
+.code-template {
+    position: absolute; top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 1.15rem; font-weight: 700; letter-spacing: 0.04em;
+    color: var(--text-faint); pointer-events: none;
+    white-space: nowrap; z-index: 1;
+    display: flex; align-items: center; gap: 0.1em;
+}
+.code-template .ct-prefix { color: var(--primary-bright); }
+.code-template .ct-dash { color: var(--text-faint); }
+.code-template .ct-digits { color: var(--text-faint); letter-spacing: 0.12em; }
+.code-template .ct-digits .ct-filled { color: var(--text); }
+.redeem-code-input {
+    position: relative; z-index: 2;
+    background: transparent !important;
+    color: transparent !important;
+    caret-color: var(--text);
+}
+.redeem-code-input:focus { background: transparent !important; }
+.redeem-code-input:focus ~ .code-template .ct-digits { color: var(--text-faint); }
+.redeem-code-input:focus ~ .code-template .ct-digits .ct-filled { color: var(--text); }
