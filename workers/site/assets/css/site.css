@@ -5312,7 +5312,7 @@ body {
     transition: opacity 0.3s ease, transform 0.3s ease, max-height 0.3s ease;
 }
 [data-tier-group].filter-hidden, [data-tier-divider].filter-hidden {
-    display: none;
+    display: none !important;
 }
 /* Animate cards in when a filter is applied */
 .services-grid, .coming-soon-grid {

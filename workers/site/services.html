@@ -256,11 +256,13 @@
                     var tier = group.getAttribute('data-tier-group');
                     var show = filter === 'all' || tier === filter;
                     group.classList.toggle('filter-hidden', !show);
+                    group.style.display = show ? '' : 'none';
                 });
                 dividers.forEach(function (divider) {
                     var tier = divider.getAttribute('data-tier-divider');
                     var show = filter === 'all' || tier === filter;
                     divider.classList.toggle('filter-hidden', !show);
+                    divider.style.display = show ? '' : 'none';
                 });
             }
             filterBtns.forEach(function (btn) {
