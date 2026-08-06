@@ -5328,3 +5328,31 @@ body {
 @media (prefers-reduced-motion: reduce) {
     .services-grid .service-card, .coming-soon-grid .coming-soon-card { animation: none; }
 }
+
+/* ==========================================================================
+   v47: Service modal mockup + text-cutoff fix
+   ========================================================================== */
+.modal-mockup {
+    margin: 0 0 18px; border-radius: 12px; overflow: hidden;
+    border: 1px solid var(--hairline);
+    background: #0F1A1E;
+}
+.modal-mockup img {
+    display: block; width: 100%; height: auto;
+    border-radius: 12px;
+}
+/* Fix text cutoff: allow modal body to scroll, don't clip desc */
+.modal-body {
+    overflow-y: auto; max-height: 60vh;
+    padding-right: 4px;
+}
+.modal-body p#modalDesc {
+    line-height: 1.7; margin-bottom: 18px;
+    word-wrap: break-word; overflow-wrap: break-word;
+}
+.modal {
+    max-height: 88vh; overflow-y: auto;
+}
+@media (prefers-reduced-motion: reduce) {
+    .modal-mockup img { animation: none; }
+}
