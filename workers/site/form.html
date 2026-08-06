@@ -112,20 +112,21 @@
                         <li><strong>Submit this form.</strong> We verify your donation and email your invite code.</li>
                     </ol>
                     <div class="form-group">
-                        <label class="form-label glass-text" for="ga-name">Name</label>
-                        <input type="text" class="form-input" id="ga-name" placeholder="Your name" autocomplete="name" required>
+                        <label class="form-label glass-text" for="ga-name">Name <span class="req-tag">required</span></label>
+                        <input type="text" class="form-input" id="ga-name" placeholder="Your name" autocomplete="name" maxlength="60" required>
                         <span class="validation-icon" id="ga-name-icon" aria-hidden="true"></span>
                     </div>
                     <div class="form-group">
-                        <label class="form-label glass-text" for="ga-email">Email</label>
-                        <input type="email" class="form-input" id="ga-email" placeholder="you@example.com" autocomplete="email" required>
+                        <label class="form-label glass-text" for="ga-email">Email <span class="req-tag">required</span></label>
+                        <input type="email" class="form-input" id="ga-email" placeholder="you@example.com" autocomplete="email" maxlength="120" required>
                         <span class="validation-icon" id="ga-email-icon" aria-hidden="true"></span>
                     </div>
                     <div class="form-group">
-                        <label class="form-label glass-text" for="ga-username">Preferred username</label>
-                        <input type="text" class="form-input" id="ga-username" placeholder="Choose a username" autocomplete="username" required>
+                        <label class="form-label glass-text" for="ga-username">Preferred username <span class="req-tag">required</span></label>
+                        <input type="text" class="form-input" id="ga-username" placeholder="Choose a username" autocomplete="username" maxlength="30" required>
                         <span class="validation-icon" id="ga-username-icon" aria-hidden="true"></span>
                         <div class="form-hint">At least 3 characters; letters, numbers, and underscores only.</div>
+                        <div class="username-checks" id="ga-username-checks"><span class="uc-item" data-uc="len"><span class="uc-icon">×</span> At least 3 characters</span><span class="uc-item" data-uc="alnum"><span class="uc-icon">×</span> Letters/Numbers</span><span class="uc-item" data-uc="underscore"><span class="uc-icon">×</span> Underscore only</span></div>
                     </div>
                     <fieldset class="form-group crypto-fieldset">
                         <legend class="form-label glass-text">Choose a cryptocurrency</legend>
@@ -141,8 +142,8 @@
                         <div class="qr-wrap" id="qr-wrap" hidden><canvas id="wallet-qr" aria-hidden="true"></canvas><div class="qr-hint">Scan with your mobile wallet</div></div>
                     </div>
                     <div class="form-group">
-                        <label class="form-label glass-text" for="ga-txhash">Transaction hash</label>
-                        <input type="text" class="form-input" id="ga-txhash" placeholder="Paste your transaction hash" required>
+                        <label class="form-label glass-text" for="ga-txhash">Transaction hash <span class="req-tag">required</span></label>
+                        <input type="text" class="form-input" id="ga-txhash" placeholder="Paste your transaction hash" maxlength="100" required>
                         <span class="validation-icon" id="ga-txhash-icon" aria-hidden="true"></span>
                         <div class="form-hint">Required — this lets us match your payment to your request.</div>
                     </div>
@@ -158,24 +159,24 @@
                     <div class="verify-banner" role="note"><strong>What happens next:</strong> submit this request and we will review it. If approved, we will email you an invitation code to create your MySweetPea account.</div>
                     <p class="form-desc">No crypto donation or transaction hash is needed for this request. Tell us a little about yourself and which services you are interested in.</p>
                     <div class="form-group">
-                        <label class="form-label glass-text" for="sp-name">Name</label>
-                        <input type="text" class="form-input" id="sp-name" placeholder="Your name" autocomplete="name" required>
+                        <label class="form-label glass-text" for="sp-name">Name <span class="req-tag">required</span></label>
+                        <input type="text" class="form-input" id="sp-name" placeholder="Your name" autocomplete="name" maxlength="60" required>
                         <span class="validation-icon" id="sp-name-icon" aria-hidden="true"></span>
                     </div>
                     <div class="form-group">
-                        <label class="form-label glass-text" for="sp-email">Email</label>
-                        <input type="email" class="form-input" id="sp-email" placeholder="you@example.com" autocomplete="email" required>
+                        <label class="form-label glass-text" for="sp-email">Email <span class="req-tag">required</span></label>
+                        <input type="email" class="form-input" id="sp-email" placeholder="you@example.com" autocomplete="email" maxlength="120" required>
                         <span class="validation-icon" id="sp-email-icon" aria-hidden="true"></span>
                     </div>
                     <div class="form-group">
-                        <label class="form-label glass-text" for="sp-services">Services you are interested in <span aria-hidden="true">*</span></label>
-                        <textarea class="form-input" id="sp-services" rows="4" placeholder="For example: Jellyfin, Nextcloud, Immich, Open WebUI…" required></textarea>
+                        <label class="form-label glass-text" for="sp-services">Services you are interested in <span class="req-tag">required</span></label>
+                        <textarea class="form-input" id="sp-services" rows="4" placeholder="For example: Jellyfin, Nextcloud, Immich, Open WebUI…" maxlength="500" required></textarea>
                         <span class="validation-icon" id="sp-services-icon" aria-hidden="true"></span>
                         <div class="form-hint">Please list at least one service you would like to use.</div>
                     </div>
                     <div class="form-group">
-                        <label class="form-label glass-text" for="sp-message">Anything else you would like us to know? <span class="optional">Optional</span></label>
-                        <textarea class="form-input" id="sp-message" rows="4" placeholder="A short note is fine."></textarea>
+                        <label class="form-label glass-text" for="sp-message">Anything else you would like us to know? <span class="opt-tag">optional</span></label>
+                        <textarea class="form-input" id="sp-message" rows="4" placeholder="A short note is fine." maxlength="500"></textarea>
                     </div>
                     <button type="button" class="form-submit" id="sp-submit">Submit Sweet Pea Request</button>
                 </div>
@@ -232,7 +233,21 @@
         input.classList.toggle('valid', ok); input.classList.toggle('invalid', input.value.trim().length > 0 && !ok);
         var icon = document.getElementById(id + '-icon');
         if (icon) { icon.classList.toggle('show', input.value.trim().length > 0); icon.classList.toggle('valid', ok); icon.classList.toggle('invalid', input.value.trim().length > 0 && !ok); icon.textContent = ok ? '✓' : '×'; }
-        updateButtons(); return ok;
+        updateUsernameChecks(id); updateButtons(); return ok;
+    }
+    function updateUsernameChecks(id) {
+        if (id !== 'ga-username') return;
+        var v = document.getElementById(id).value;
+        var checks = document.querySelectorAll('#ga-username-checks .uc-item');
+        if (!checks.length) return;
+        var rules = { len: v.length >= 3, alnum: /[A-Za-z0-9]/.test(v), underscore: /^[A-Za-z0-9_]+$/.test(v) };
+        checks.forEach(function (c) {
+            var k = c.getAttribute('data-uc');
+            var ok = rules[k];
+            c.classList.toggle('ok', ok);
+            var icon = c.querySelector('.uc-icon');
+            if (icon) icon.textContent = ok ? '✓' : '×';
+        });
     }
     Object.keys(fields).forEach(function (id) { document.getElementById(id).addEventListener('input', function(){ validateField(id); }); document.getElementById(id).addEventListener('blur', function(){ validateField(id); }); });
     function allValid(ids) { return ids.every(function(id){ return valid(fields[id], document.getElementById(id).value); }); }
