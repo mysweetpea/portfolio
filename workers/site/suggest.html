@@ -81,8 +81,8 @@
                         <h2>Service Suggestion</h2>
                         <p class="form-desc">Suggest a self-hosted service you would like to see on MySweetPea.</p>
                         <div class="form-group">
-                            <label class="form-label" for="s-name">Service Name</label>
-                            <input type="text" class="form-input" id="s-name" aria-describedby="s-name-hint" aria-invalid="false" placeholder="e.g., Mastodon, Gitea, Vaultwarden" oninput="validateField('s-name', 'name')">
+                            <label class="form-label" for="s-name">Service Name <span class="req-tag">required</span></label>
+                            <input type="text" class="form-input" id="s-name" aria-describedby="s-name-hint" aria-invalid="false" placeholder="e.g., Mastodon, Gitea" maxlength="60" oninput="validateField('s-name', 'name')">
                             <span class="validation-icon" id="s-name-icon"></span>
                             <div class="form-hint" id="s-name-hint" aria-live="polite">Please enter a service name (min 2 characters).</div>
                         </div>
@@ -93,7 +93,7 @@
                             <div class="form-hint" id="s-url-hint" aria-live="polite">Link to the project's website or GitHub repo so we can evaluate it. Don't know the URL? Just paste the GitHub link or website address.</div>
                         </div>
                         <div class="form-group">
-                            <label class="form-label" for="s-category">Category</label>
+                            <label class="form-label" for="s-category">Category <span class="req-tag">required</span></label>
                             <select class="form-select" id="s-category" aria-describedby="s-category-hint" aria-invalid="false" onchange="validateField('s-category', 'category')">
                                 <option value="">Select a category...</option>
                                 <option value="media">Media &amp; Entertainment</option>
@@ -108,18 +108,18 @@
                             <div class="form-hint" id="s-category-hint" aria-live="polite">Please select a category.</div>
                         </div>
                         <div class="form-group">
-                            <div class="label-row"><label class="form-label" for="s-reason">Why should we host this?</label><span class="char-counter" id="s-reason-count" aria-hidden="true">0 / 10 min</span></div>
-                            <textarea class="form-textarea" id="s-reason" aria-describedby="s-reason-hint" aria-invalid="false" placeholder="Explain why this service would be valuable..." oninput="validateField('s-reason', 'reason')"></textarea>
+                            <div class="label-row"><label class="form-label" for="s-reason">Why should we host this? <span class="req-tag">required</span></label><span class="char-counter" id="s-reason-count" aria-hidden="true">0 / 500</span></div>
+                            <textarea class="form-textarea" id="s-reason" aria-describedby="s-reason-hint" aria-invalid="false" placeholder="Explain why this service would be valuable..." maxlength="500" oninput="validateField('s-reason', 'reason')"></textarea>
                             <span class="validation-icon" id="s-reason-icon" style="top: auto; bottom: 14px;"></span>
                             <div class="form-hint" id="s-reason-hint" aria-live="polite">Please provide an explanation (min 10 characters).</div>
                         </div>
                         <div class="form-group">
                             <label class="form-label" for="s-yourname">Your Name <span class="opt-tag">optional</span></label>
-                            <input type="text" class="form-input" id="s-yourname" placeholder="Leave blank to submit anonymously.">
+                            <input type="text" class="form-input" id="s-yourname" placeholder="Leave blank to submit anonymously." maxlength="60">
                         </div>
                         <div class="form-group">
                             <label class="form-label" for="s-youremail">Your Email <span class="opt-tag">optional</span></label>
-                            <input type="email" class="form-input" id="s-youremail" placeholder="Only if you want us to follow up with you.">
+                            <input type="email" class="form-input" id="s-youremail" placeholder="Only if you want us to follow up with you." maxlength="120">
                         </div>
                         <button class="form-submit" id="s-submit" disabled>Submit Suggestion</button>
                     </div>
@@ -136,7 +136,7 @@
                             <li><span class="gl-icon"><img src="/assets/icons/icon-ui-check.svg" alt="" width="16" height="16"></span> <strong>Open source</strong> — the code should be publicly available and self-hostable.</li>
                             <li><span class="gl-icon"><img src="/assets/icons/icon-ui-check.svg" alt="" width="16" height="16"></span> <strong>Privacy-focused</strong> — we favor services that respect user data and avoid tracking.</li>
                             <li><span class="gl-icon"><img src="/assets/icons/icon-ui-check.svg" alt="" width="16" height="16"></span> <strong>Community value</strong> — the more members it helps, the better.</li>
-                            <li><span class="gl-icon"><img src="/assets/icons/icon-ui-check.svg" alt="" width="16" height="16"></span> <strong>Maintainable</strong> — it should run reliably on our hardware.</li>
+                            <li><span class="gl-icon"><img src="/assets/icons/icon-ui-check.svg" alt="" width="16" height="16"></span> <strong>Uniqueness</strong> — we only add services we don't already provide.</li>
                         </ul>
                         <p class="guidelines-note">We review every suggestion and add the best ones to the garden.</p>
                     </div>
@@ -176,12 +176,12 @@ function validateField(id, type) {
             else if (type === 'url') valid = /^https?:\/\/.+\..+/.test(val);
             input.classList.remove('valid', 'invalid'); if (icon) icon.classList.remove('show', 'valid', 'invalid');
             if (val.length > 0 || type === 'category') {
-                if (valid) { input.classList.add('valid'); if (icon) { icon.classList.add('show', 'valid'); icon.innerHTML = '<img src="/assets/icons/icon-ui-check.svg" alt="" width="18" height="18">'; } if (hint) { hint.classList.remove('error'); hint.classList.add('success'); } }
-                else { input.classList.add('invalid'); if (icon) { icon.classList.add('show', 'invalid'); icon.innerHTML = '<img src="/assets/icons/icon-ui-cross.svg" alt="" width="18" height="18">'; } if (hint) { hint.classList.remove('success'); hint.classList.add('error'); } }
-            } else { if (hint) hint.classList.remove('error', 'success'); }
+                if (valid) { input.classList.add('valid'); if (icon) { icon.classList.add('show', 'valid'); icon.innerHTML = '<img src="/assets/icons/icon-ui-check.svg" alt="" width="18" height="18">'; } if (hint) { hint.classList.remove('error'); hint.classList.add('success'); if (type === 'category') hint.textContent = 'Category selected.'; } }
+                else { input.classList.add('invalid'); if (icon) { icon.classList.add('show', 'invalid'); icon.innerHTML = '<img src="/assets/icons/icon-ui-cross.svg" alt="" width="18" height="18">'; } if (hint) { hint.classList.remove('success'); hint.classList.add('error'); if (type === 'category') hint.textContent = 'Please select a category.'; } }
+            } else { if (hint) hint.classList.remove('error', 'success'); if (type === 'category' && hint) hint.textContent = 'Please select a category.'; }
             if (type === 'reason') {
                 var count = document.getElementById('s-reason-count');
-                if (count) { count.textContent = val.length + ' / 10 min'; count.classList.toggle('met', valid); }
+                if (count) { count.textContent = val.length + ' / 500'; count.classList.toggle('met', valid); }
             }
             checkSubmit(); return valid;
         }
