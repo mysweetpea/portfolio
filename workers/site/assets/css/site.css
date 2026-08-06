@@ -5237,7 +5237,7 @@ body {
 
 /* --- Feature cards: hidden by default, shown per active value --- */
 .features-grid .feature-card { display: none; }
-.features-grid .feature-card.visible { display: block; animation: viewIn 0.35s var(--ease-premium); }
+.features-grid .feature-card.show { display: block; animation: viewIn 0.35s var(--ease-premium); }
 
 /* --- Prominent hero steps --- */
 .hero-steps {
@@ -5272,5 +5272,35 @@ body {
     white-space: nowrap;
 }
 @media (prefers-reduced-motion: reduce) {
-    .features-grid .feature-card.visible { animation: none; }
+    .features-grid .feature-card.show { animation: none; }
+}
+
+/* ==========================================================================
+   v45: Nav brand + tagline polish
+   ========================================================================== */
+.nav-logo {
+    display: flex; align-items: baseline; gap: 8px;
+    text-decoration: none;
+}
+.nav-brand {
+    font-size: 1.1rem; font-weight: 800; letter-spacing: -0.02em;
+    background: linear-gradient(120deg, var(--text) 20%, var(--primary-bright) 45%, var(--sage) 70%, var(--text) 90%);
+    background-size: 200% auto;
+    -webkit-background-clip: text; background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: shimmer 8s linear infinite;
+}
+.nav-tagline {
+    font-size: 0.82rem; font-weight: 500; font-style: normal;
+    color: var(--text-faint); letter-spacing: 0.01em;
+    white-space: nowrap;
+}
+[data-theme="light"] .nav-brand {
+    background: linear-gradient(120deg, #1B2B31 20%, #3E6B77 45%, #2F7A72 70%, #1B2B31 90%);
+    background-size: 200% auto;
+    -webkit-background-clip: text; background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+@media (max-width: 768px) {
+    .nav-tagline { display: none; }
 }

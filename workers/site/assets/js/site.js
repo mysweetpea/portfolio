@@ -584,6 +584,14 @@
         });
         var dismissBtns = welcome.querySelectorAll('[data-dismiss]');
         dismissBtns.forEach(function (b) { b.addEventListener('click', dismissWelcome); });
+        /* Also mark as seen when the user clicks the primary CTA link, so the
+           modal doesn't reappear when they navigate back. */
+        var primaryBtn = welcome.querySelector('.wm-btn-primary');
+        if (primaryBtn) {
+            primaryBtn.addEventListener('click', function () {
+                try { localStorage.setItem('msp-welcome-seen', '1'); } catch (e) {}
+            });
+        }
         document.addEventListener('keydown', function (e) {
             if (e.key === 'Escape' && welcome.classList.contains('active')) dismissWelcome();
         });
@@ -772,7 +780,7 @@
             t.classList.toggle('active', t.getAttribute('data-value') === value);
         });
         cards.forEach(function (c) {
-            c.classList.toggle('visible', c.getAttribute('data-value') === value);
+            c.classList.toggle('show', c.getAttribute('data-value') === value);
         });
     }
 
