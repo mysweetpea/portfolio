@@ -5663,27 +5663,61 @@ body[data-page='services'] .service-card .acct-pill {
 }
 
 /* ==========================================================================
-   v54: Redeem code template (underscores that fill as you type)
+   v54: Redeem code template (segmented boxes that fill as you type)
    ========================================================================== */
 .redeem-code-group { position: relative; }
-.code-template {
-    position: absolute; top: 50%; left: 50%;
-    transform: translate(-50%, -50%);
-    font-size: 1.15rem; font-weight: 700; letter-spacing: 0.04em;
-    color: var(--text-faint); pointer-events: none;
-    white-space: nowrap; z-index: 1;
-    display: flex; align-items: center; gap: 0.1em;
+.code-boxes {
+    position: relative;
+    display: flex; align-items: center; justify-content: center;
+    gap: 6px; margin: 2px 0 6px;
 }
-.code-template .ct-prefix { color: var(--primary-bright); }
-.code-template .ct-dash { color: var(--text-faint); }
-.code-template .ct-digits { color: var(--text-faint); letter-spacing: 0.12em; }
-.code-template .ct-digits .ct-filled { color: var(--text); }
+.cb-cell {
+    width: 34px; height: 46px;
+    display: flex; align-items: center; justify-content: center;
+    border: 1.5px solid var(--border-primary);
+    border-radius: 10px;
+    background: rgba(14, 22, 26, 0.6);
+    font-size: 1.2rem; font-weight: 700; letter-spacing: 0.02em;
+    color: var(--text);
+    transition: border-color .18s ease, box-shadow .18s ease, background-color .18s ease, transform .12s ease;
+}
+.cb-cell.filled {
+    border-color: var(--sage);
+    background: rgba(163, 201, 182, 0.10);
+    box-shadow: 0 0 0 3px rgba(163, 201, 182, 0.12);
+}
+.cb-sep {
+    width: 14px; text-align: center;
+    color: var(--text-faint); font-weight: 700; font-size: 1.1rem;
+}
+/* The real input sits invisibly on top of the boxes so typing fills them. */
 .redeem-code-input {
-    position: relative; z-index: 2;
-    background: transparent !important;
-    color: transparent !important;
-    caret-color: var(--text);
+    position: absolute; inset: 0;
+    width: 100%; height: 100%;
+    opacity: 0; cursor: text;
+    z-index: 3;
 }
-.redeem-code-input:focus { background: transparent !important; }
-.redeem-code-input:focus ~ .code-template .ct-digits { color: var(--text-faint); }
-.redeem-code-input:focus ~ .code-template .ct-digits .ct-filled { color: var(--text); }
+.redeem-code-group:focus-within .cb-cell {
+    border-color: var(--sage);
+    box-shadow: 0 0 0 3px rgba(163, 201, 182, 0.15);
+}
+.redeem-code-group:focus-within .cb-cell.filled {
+    border-color: var(--primary-bright);
+    box-shadow: 0 0 0 3px rgba(94, 184, 168, 0.22);
+}
+.redeem-code-group:focus-within .cb-cell:empty {
+    border-color: var(--primary-bright);
+    box-shadow: 0 0 0 3px rgba(94, 184, 168, 0.18);
+}
+.redeem-code-input.valid ~ .code-boxes .cb-cell.filled {
+    border-color: var(--success);
+    box-shadow: 0 0 0 3px rgba(163, 201, 182, 0.18);
+}
+.redeem-code-input.invalid ~ .code-boxes .cb-cell.filled {
+    border-color: var(--error);
+    box-shadow: 0 0 0 3px rgba(217, 140, 140, 0.18);
+}
+@media (max-width: 640px) {
+    .cb-cell { width: 30px; height: 42px; font-size: 1.05rem; }
+    .code-boxes { gap: 4px; }
+}
