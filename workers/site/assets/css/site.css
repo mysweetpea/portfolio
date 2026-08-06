@@ -5368,3 +5368,47 @@ body {
 }
 .modal-github:hover { color: var(--text); border-color: var(--sage); background: rgba(163,201,182,0.12); }
 .modal-github img { width: 16px; height: 16px; }
+
+/* ==========================================================================
+   v48: Friendly step cards + plain-English intro in service modals
+   ========================================================================== */
+.modal-plain {
+    font-size: 1.05rem; font-weight: 600; line-height: 1.6;
+    color: var(--text); margin-bottom: 8px;
+}
+.modal-replaces {
+    font-size: 0.88rem; color: var(--text-dim); font-style: italic;
+    margin-bottom: 18px; padding-bottom: 14px;
+    border-bottom: 1px solid var(--border);
+}
+/* Step cards */
+.tutorial-steps { list-style: none; margin: 14px 0 0; padding: 0; }
+.tutorial-steps li {
+    display: flex; gap: 14px; align-items: flex-start;
+    padding: 16px; margin-bottom: 12px;
+    background: var(--card-bg); border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    transition: var(--transition);
+}
+.tutorial-steps li:hover { border-color: var(--border-primary); }
+.tutorial-steps .step-num {
+    flex: 0 0 auto; width: 30px; height: 30px; border-radius: 50%;
+    display: grid; place-items: center;
+    background: linear-gradient(135deg, var(--primary), var(--sage-dim));
+    color: var(--bg); font-weight: 800; font-size: 0.9rem;
+    box-shadow: 0 2px 8px rgba(94,184,168,0.3);
+}
+.tutorial-steps .step-body { flex: 1; min-width: 0; }
+.tutorial-steps .step-body strong { display: block; color: var(--text); font-size: 0.95rem; margin-bottom: 4px; }
+.tutorial-steps .step-body p { color: var(--text-dim); font-size: 0.88rem; line-height: 1.55; margin: 0 0 10px; }
+.tutorial-steps .step-btn {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 7px 14px; border-radius: 999px;
+    background: var(--primary-glow); border: 1px solid var(--border-primary);
+    color: var(--text); font-size: 0.8rem; font-weight: 600;
+    text-decoration: none; transition: var(--transition);
+}
+.tutorial-steps .step-btn:hover { background: rgba(163,201,182,0.15); border-color: var(--sage); color: var(--sage); }
+@media (prefers-reduced-motion: reduce) {
+    .tutorial-steps li { transition: none; }
+}
