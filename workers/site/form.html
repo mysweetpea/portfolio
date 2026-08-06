@@ -264,13 +264,24 @@
         card.addEventListener('click', function () {
             var tier = card.getAttribute('data-tier');
             document.querySelectorAll('.access-choice-card').forEach(function(c){var picked=c===card;c.classList.toggle('selected',picked);c.setAttribute('aria-pressed',String(picked));});
+            // Reveal the panel first so the form exists, then smooth-scroll to it.
+            ['seedling','sweetpea'].forEach(function(name){var panel=document.getElementById('panel-'+name),active=name===tier;panel.hidden=!active;panel.classList.toggle('active',active);});
             var formSection = document.querySelector('.tier-form-section');
-            // Scroll smoothly first, then reveal the panel so the layout shift
-            // doesn't make the scroll feel like a jump.
-            if (formSection) formSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
-            setTimeout(function () {
-                ['seedling','sweetpea'].forEach(function(name){var panel=document.getElementById('panel-'+name),active=name===tier;panel.hidden=!active;panel.classList.toggle('active',active);});
-            }, 250);
+            if (formSection) {
+                var target = formSection.getBoundingClientRect().top + window.pageYOffset - 90;
+                var startY = window.pageYOffset;
+                var dist = target - startY;
+                var dur = Math.min(700, Math.max(350, Math.abs(dist) * 0.5));
+                var startT = null;
+                function step(ts) {
+                    if (!startT) startT = ts;
+                    var p = Math.min(1, (ts - startT) / dur);
+                    var ease = p < 0.5 ? 2 * p * p : 1 - Math.pow(-2 * p + 2, 2) / 2;
+                    window.scrollTo(0, startY + dist * ease);
+                    if (p < 1) requestAnimationFrame(step);
+                }
+                requestAnimationFrame(step);
+            }
             /* Update progress indicator: step 1 done, step 2 active */
             var steps = document.querySelectorAll('.form-progress .step');
             var connectors = document.querySelectorAll('.form-progress .connector');
@@ -311,7 +322,7 @@
     }
     document.getElementById('wallet-addr').addEventListener('click',function(){var b=this;navigator.clipboard.writeText(b.textContent).then(function(){var x=b.textContent;b.textContent='Copied!';setTimeout(function(){b.textContent=x;},1600);});});
     function post(endpoint,data,btn,defaultLabel,successUrl,overlayId){btn.disabled=true;btn.classList.add('loading');btn.textContent='Submitting…';var overlay=document.getElementById(overlayId);if(overlay)overlay.classList.add('active');fetch(endpoint,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(data)}).then(function(r){return r.json();}).then(function(result){if(!result.ok)throw new Error(result.msg||'Submission failed');window.location.href=successUrl;}).catch(function(e){btn.disabled=false;btn.classList.remove('loading');btn.textContent=e.message||'Try again';if(overlay)overlay.classList.remove('active');setTimeout(function(){btn.textContent=defaultLabel;updateButtons();},3000);});}
-    document.getElementById('ga-submit').addEventListener('click',function(){if(this.disabled)return;post(ENDPOINTS.donationRequest,{name:document.getElementById('ga-name').value.trim(),email:document.getElementById('ga-email').value.trim(),username:document.getElementById('ga-username').value.trim(),crypto_type:chosenCrypto,tx_hash:document.getElementById('ga-txhash').value.trim()},this,'Submit Seedling Request','/success.html?type=donation','seedling-overlay');});
+    document.getElementById('ga-submit').addEventListener('click',function(){if(this.disabled)return;post(ENDPOINTS.donationRequest,{name:document.getElementById('ga-name').value.trim(),email:document.getElementById('ga-email').value.trim(),username:document.getElementById('ga-username').value.trim(),crypto_type:chosenCrypto,tx_hash:document.getElementById('ga-txhash').value.trim()},this,'Submit Seedling Request','/success.html?type=seedling','seedling-overlay');});
     document.getElementById('sp-submit').addEventListener('click',function(){if(this.disabled)return;post(ENDPOINTS.sweetPeaRequest,{name:document.getElementById('sp-name').value.trim(),email:document.getElementById('sp-email').value.trim(),services:document.getElementById('sp-services').value.trim(),message:document.getElementById('sp-message').value.trim(),tier:'sweetpea'},this,'Submit Sweet Pea Request','/success.html?type=sweetpea-request','sweetpea-overlay');});
     var requested = new URLSearchParams(location.search).get('tier'); if(requested==='sweetpea'){var card=document.querySelector('.access-choice-card[data-tier="sweetpea"]');if(card)card.click();}
     updateButtons();

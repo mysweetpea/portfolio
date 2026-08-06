@@ -113,6 +113,11 @@
         var list = document.getElementById('nextStepsList');
         var steps = {
             donation: [
+                'Thank you for your contribution',
+                'Your donation helps keep the services running',
+                'No account or access is required for a donation'
+            ],
+            seedling: [
                 'We verify your donation (usually within 24 hours)',
                 'You receive an email with your invite code',
                 'Use the code on the redeem page to create your account',
@@ -132,9 +137,10 @@
             ]
         };
         var copy = {
-            donation: { title: 'Request Received!', msg: 'Thank you. We will verify your contribution and get back to you shortly.' },
+            donation: { title: 'Donation Received!', msg: 'Thank you for your contribution. It helps keep MySweetPea running.' },
+            seedling: { title: 'Seedling Request Received!', msg: 'Thank you. We will verify your contribution and get back to you shortly.' },
             redeem: { title: 'Account Created!', msg: 'Your MySweetPea account has been created successfully.' },
-            'sweetpea-request': { title: 'Request Received!', msg: 'Thank you for your Sweet Pea request. We will review it and get back to you.' }
+            'sweetpea-request': { title: 'Sweet Pea Request Received!', msg: 'Thank you for your Sweet Pea request. We will review it and get back to you.' }
         };
         var c = copy[type] || copy.donation;
         title.textContent = c.title;
