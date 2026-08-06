@@ -5412,3 +5412,18 @@ body {
 .nav-more-menu a.nav-github:hover { color: var(--text); border-color: var(--sage); background: rgba(163,201,182,0.12); }
 .nav-more-menu a.nav-github img { width: 14px; height: 14px; }
 
+
+/* --- Modal: give top room so the X button doesn't overlap the mockup image --- */
+body[data-page='services'] .modal {
+    padding-top: 56px;
+}
+body[data-page='services'] .modal-mockup {
+    margin-top: 0;
+}
+/* Title row: service name + github link on the same line */
+.modal-title-row {
+    display: flex; align-items: center; gap: 12px;
+    flex-wrap: wrap;
+}
+.modal-title-row h2 { margin: 0; }
+.modal-title-row .modal-github { margin-top: 0; }
