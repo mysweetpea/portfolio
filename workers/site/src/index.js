@@ -25,6 +25,38 @@ export default {
   async fetch(request, env) {
     const url = new URL(request.url);
 
+    // Proxy GitHub commits for the changelog (token stays server-side)
+    if (url.pathname === '/api/commits') {
+      const token = env.GITHUB_TOKEN || '';
+      const repos = ['mysweetpea/portfolio', 'mysweetpea/homelab-k8s'];
+      const headers = {
+        'Accept': 'application/vnd.github+json',
+        'User-Agent': 'mysweetpea-site'
+      };
+      if (token) headers['Authorization'] = 'Bearer ' + token;
+
+      const results = await Promise.all(repos.map(async (repo) => {
+        try {
+          const res = await fetch('https://api.github.com/repos/' + repo + '/commits?per_page=10', { headers });
+          if (!res.ok) return [];
+          const data = await res.json();
+          return data.map((c) => ({
+            repo: repo.split('/')[1],
+            sha: c.sha.slice(0, 7),
+            message: (c.commit && c.commit.message || '').split('\n')[0],
+            date: c.commit && c.commit.author && c.commit.author.date
+          }));
+        } catch (e) {
+          return [];
+        }
+      }));
+
+      const all = results.flat().sort((a, b) => new Date(b.date) - new Date(a.date));
+      return new Response(JSON.stringify(all), {
+        headers: { 'Content-Type': 'application/json', 'Cache-Control': 'public, max-age=300' }
+      });
+    }
+
     // Matrix federation well-known
     if (url.pathname === '/.well-known/matrix/server') {
       return new Response(JSON.stringify({

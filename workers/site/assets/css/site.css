@@ -6343,6 +6343,13 @@ body[data-page='changelog'] .commit-date {
 body[data-page='changelog'] .commit-loading, body[data-page='changelog'] .commit-empty {
     color: var(--text-faint); font-size: 0.85rem; text-align: center; padding: 12px;
 }
+body[data-page='changelog'] .commit-group {
+    font-size: 0.78rem; font-weight: 700; letter-spacing: 0.08em;
+    text-transform: uppercase; color: var(--sage);
+    margin: 16px 0 8px;
+}
+body[data-page='changelog'] .commit-group:first-child { margin-top: 0; }
+body[data-page='changelog'] .hero { text-align: center; }
 @media (max-width: 560px) {
     body[data-page='changelog'] .commit-item { flex-wrap: wrap; }
     body[data-page='changelog'] .commit-date { width: 100%; }
