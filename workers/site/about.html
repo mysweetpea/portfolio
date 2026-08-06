@@ -67,48 +67,62 @@
 <main id="main-content" class="content-wrapper">
         <div class="hero">
             <img src="/logo.svg" alt="" class="hero-watermark" aria-hidden="true" loading="lazy" decoding="async"><img src="/logo.svg" alt="MySweetPea logo" class="logo" width="160" height="160"><h1 class="glass-text">About MySweetPea</h1><p class="hero-sub pop-text">Self-hosted services for a privacy-first community.</p></div>
-        <div class="content-section">
-            <div class="card reveal">
-                <h2>What is MySweetPea?</h2>
-                <p>MySweetPea is a small collection of private apps for a community. Instead of using large companies that track you or show ads, you can use tools for chat, passwords, notes, photos, and more in one private place.</p>
-                <p>I run and maintain this project because privacy should be easier to choose. The goal is simple: useful everyday tools without advertising, tracking, or selling your information.</p>
+        <div class="view-switcher" id="about-switcher">
+            <div class="view-tabs" role="tablist" aria-label="About sections">
+                <button type="button" class="view-tab active" role="tab" aria-selected="true" data-view="about">About</button>
+                <button type="button" class="view-tab" role="tab" aria-selected="false" data-view="opensource">Open Source</button>
             </div>
-            <div class="card reveal reveal-delay-1">
-                <h2>What does “self-hosted” mean?</h2>
-                <p>It means the apps run on computers and storage hardware that I own and manage, rather than on rented servers from a large technology company. Your services are provided from MySweetPea’s own equipment.</p>
-                <p>For you, that means:</p>
-                <ul>
-                    <li>Full control over the infrastructure and your data</li>
-                    <li>No third-party access to your data — not even mine, since services like the password manager use encryption that even I cannot break</li>
-                    <li>No vendor lock-in — if I shut down tomorrow, you still have your data</li>
-                    <li>Transparency — you can view the project’s technical files on <a href="https://github.com/mysweetpea" target="_blank" rel="noopener noreferrer">GitHub</a>, a website where developers share code</li>
-                </ul>
-                <h2>One sign-in for everything</h2>
-                <p>You sign in to MySweetPea services with a single username and password. Behind the scenes, that sign-in page runs on software called <strong>Authentik</strong> — that's just its name, not a typo of "authentic." It keeps your account secure and means you never need a separate password for each service.</p>
-            </div>
-            <div class="card reveal reveal-delay-2">
-                <h2>The Cost of Running MySweetPea</h2>
-                <p>Running these services is not free, which is why donations matter. Here are the main expenses:</p>
-                <ul>
-                    <li>Electricity — three servers running 24 hours a day, 7 days a week use a lot of power</li>
-                    <li>Hardware — the physical servers, networking equipment, and storage drives that need occasional upgrades</li>
-                    <li>Internet bandwidth — streaming movies and serving services to multiple users at once requires a fast, reliable connection</li>
-                    <li>Domain registration — the mysweetpea.cc web address needs to be renewed every year</li>
-                    <li>Relay server — a small server that helps people outside my home network access the media streaming</li>
-                </ul>
-                <p>Donations help cover these ongoing costs and fund future improvements and new services. Without community support, this project would not be sustainable. Every dollar helps keep MySweetPea running.</p>
-            </div>
-            <div class="card reveal">
-                <h2>Open Source</h2>
-                <p>Every service we run is open source, meaning the code is freely available for anyone to inspect. Our infrastructure code is public on GitHub, so you can see exactly how everything is set up and secured. No black boxes, no hidden tracking, full transparency.</p>
-                <div class="github-links">
-                    <a href="https://github.com/mysweetpea/homelab-k8s" target="_blank" rel="noopener noreferrer" class="github-link"><div class="icon github-icon" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg></div><div class="info"><div class="repo">homelab-k8s</div><div class="desc">All the code that runs the servers and services</div></div></a>
-                    <a href="https://github.com/mysweetpea/portfolio" target="_blank" rel="noopener noreferrer" class="github-link"><div class="icon github-icon" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg></div><div class="info"><div class="repo">portfolio</div><div class="desc">The code for this website</div></div></a>
+
+            <div class="view-panel active" data-view="about" role="tabpanel">
+                <div class="content-section about-section">
+                    <div class="card about-card reveal">
+                        <h2>What is MySweetPea?</h2>
+                        <p>MySweetPea is a small collection of private apps for a community. Instead of using large companies that track you or show ads, you can use tools for chat, passwords, notes, photos, and more in one private place.</p>
+                        <p>I run and maintain this project because privacy should be easier to choose. The goal is simple: useful everyday tools without advertising, tracking, or selling your information.</p>
+                    </div>
+                    <div class="card about-card reveal reveal-delay-1">
+                        <h2>What does “self-hosted” mean?</h2>
+                        <p>It means the apps run on computers and storage hardware that I own and manage, rather than on rented servers from a large technology company. Your services are provided from MySweetPea’s own equipment.</p>
+                        <p>For you, that means:</p>
+                        <ul class="about-list">
+                            <li><span class="al-icon" aria-hidden="true"><img src="/assets/icons/icon-ui-shield.svg" alt="" width="16" height="16"></span>Full control over the infrastructure and your data</li>
+                            <li><span class="al-icon" aria-hidden="true"><img src="/assets/icons/icon-ui-shield.svg" alt="" width="16" height="16"></span>No third-party access to your data — not even mine, since services like the password manager use encryption that even I cannot break</li>
+                            <li><span class="al-icon" aria-hidden="true"><img src="/assets/icons/icon-ui-globe.svg" alt="" width="16" height="16"></span>No vendor lock-in — if I shut down tomorrow, you still have your data</li>
+                            <li><span class="al-icon" aria-hidden="true"><img src="/assets/icons/icon-ui-globe.svg" alt="" width="16" height="16"></span>Transparency — you can view the project’s technical files on <a href="https://github.com/mysweetpea" target="_blank" rel="noopener noreferrer">GitHub</a>, a website where developers share code</li>
+                        </ul>
+                        <h2>One sign-in for everything</h2>
+                        <p>You sign in to MySweetPea services with a single username and password. Behind the scenes, that sign-in page runs on software called <strong>Authentik</strong> — that's just its name, not a typo of "authentic." It keeps your account secure and means you never need a separate password for each service.</p>
+                    </div>
+                    <div class="card about-card reveal reveal-delay-2">
+                        <h2>The Cost of Running MySweetPea</h2>
+                        <p>Running these services is not free, which is why donations matter. Here are the main expenses:</p>
+                        <ul class="about-list">
+                            <li><span class="al-icon" aria-hidden="true"><img src="/assets/icons/icon-ui-blossom.svg" alt="" width="16" height="16"></span>Electricity — three servers running 24 hours a day, 7 days a week use a lot of power</li>
+                            <li><span class="al-icon" aria-hidden="true"><img src="/assets/icons/icon-ui-blossom.svg" alt="" width="16" height="16"></span>Hardware — the physical servers, networking equipment, and storage drives that need occasional upgrades</li>
+                            <li><span class="al-icon" aria-hidden="true"><img src="/assets/icons/icon-ui-blossom.svg" alt="" width="16" height="16"></span>Internet bandwidth — streaming movies and serving services to multiple users at once requires a fast, reliable connection</li>
+                            <li><span class="al-icon" aria-hidden="true"><img src="/assets/icons/icon-ui-blossom.svg" alt="" width="16" height="16"></span>Domain registration — the mysweetpea.cc web address needs to be renewed every year</li>
+                            <li><span class="al-icon" aria-hidden="true"><img src="/assets/icons/icon-ui-blossom.svg" alt="" width="16" height="16"></span>Relay server — a small server that helps people outside my home network access the media streaming</li>
+                        </ul>
+                        <p>Donations help cover these ongoing costs and fund future improvements and new services. Without community support, this project would not be sustainable. Every dollar helps keep MySweetPea running.</p>
+                    </div>
                 </div>
-                <div class="trust-row">
-                    <span class="trust-badge"><span class="trust-icon" aria-hidden="true"><img src="/assets/icons/icon-ui-shield.svg" alt="" width="18" height="18"></span>End-to-end encrypted vaults</span>
-                    <span class="trust-badge"><span class="trust-icon" aria-hidden="true"><img src="/assets/icons/icon-ui-shield.svg" alt="" width="18" height="18"></span>No ads, no tracking, no data selling</span>
-                    <span class="trust-badge"><span class="trust-icon" aria-hidden="true"><img src="/assets/icons/icon-ui-globe.svg" alt="" width="18" height="18"></span>Open source, fully auditable</span>
+            </div>
+
+            <div class="view-panel" data-view="opensource" role="tabpanel">
+                <div class="content-section about-section">
+                    <div class="card about-card reveal">
+                        <h2>Open Source</h2>
+                        <p>Every service we run is open source, meaning the code is freely available for anyone to inspect. Our infrastructure code is public on GitHub, so you can see exactly how everything is set up and secured. No black boxes, no hidden tracking, full transparency.</p>
+                        <div class="github-links">
+                            <a href="https://github.com/mysweetpea/homelab-k8s" target="_blank" rel="noopener noreferrer" class="github-link repo-homelab"><div class="icon github-icon" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg></div><div class="info"><div class="repo">homelab-k8s</div><div class="desc">All the code that runs the servers and services</div></div></a>
+                            <a href="https://github.com/mysweetpea/portfolio" target="_blank" rel="noopener noreferrer" class="github-link repo-portfolio"><div class="icon github-icon" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg></div><div class="info"><div class="repo">portfolio</div><div class="desc">The code for this website</div></div></a>
+                        </div>
+                        <div class="trust-row">
+                            <span class="trust-badge"><span class="trust-icon" aria-hidden="true"><img src="/assets/icons/icon-ui-shield.svg" alt="" width="18" height="18"></span>End-to-end encrypted vaults</span>
+                            <span class="trust-badge"><span class="trust-icon" aria-hidden="true"><img src="/assets/icons/icon-ui-shield.svg" alt="" width="18" height="18"></span>No ads, no tracking, no data selling</span>
+                            <span class="trust-badge"><span class="trust-icon" aria-hidden="true"><img src="/assets/icons/icon-ui-globe.svg" alt="" width="18" height="18"></span>Open source, fully auditable</span>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
