@@ -71,181 +71,204 @@
             <span class="eyebrow">Current service overview</span>
             <h1 class="glass-text">Service Status</h1>
             <p class="hero-sub pop-text">A live overview of the services we currently operate.</p>
-            <p class="hero-sub" style="font-size: 0.95rem;">Something not working? If it's not listed here, email <a href="mailto:support@mysweetpea.cc" style="color: var(--sage); font-weight: 600;">support@mysweetpea.cc</a> and we'll take a look.</p>
         </div>
-        <section class="status-section" aria-labelledby="status-summary">
-            <div class="status-summary status-all-online reveal" id="status-summary" role="status">
-                <span class="status-dot" aria-hidden="true"></span>
-                <span><strong>9 of 9 operational</strong><small>Current community services</small></span>
-                <time datetime="2026-08-05T00:00:00-04:00">Last reviewed Aug 5, 2026</time>
+        <div class="status-help-box reveal">Something not working? If it's not listed here, email <a href="mailto:support@mysweetpea.cc">support@mysweetpea.cc</a> and we'll take a look.</div>
+
+        <div class="view-switcher" id="status-switcher">
+            <div class="view-tabs" role="tablist" aria-label="Status sections">
+                <button type="button" class="view-tab active" role="tab" aria-selected="true" data-view="status">Status</button>
+                <button type="button" class="view-tab" role="tab" aria-selected="false" data-view="incidents">Incidents</button>
             </div>
 
-            <div class="status-metrics reveal">
-                <div class="metric-card">
-                    <div class="metric-value">99.9%</div>
-                    <div class="metric-label">Uptime (30 days)</div>
-                    <div class="metric-bar"><span style="width:99.9%"></span></div>
-                </div>
-                <div class="metric-card">
-                    <div class="metric-value">9</div>
-                    <div class="metric-label">Live services</div>
-                    <div class="metric-bar"><span style="width:100%"></span></div>
-                </div>
-                <div class="metric-card">
-                    <div class="metric-value">0</div>
-                    <div class="metric-label">Active incidents</div>
-                    <div class="metric-bar"><span style="width:0%"></span></div>
-                </div>
+            <div class="view-panel active" data-view="status" role="tabpanel">
+                <section class="status-section" aria-labelledby="status-summary">
+                    <div class="status-summary status-all-online reveal" id="status-summary" role="status">
+                        <span class="status-dot" aria-hidden="true"></span>
+                        <span><strong>9 of 9 operational</strong><small>Current community services</small></span>
+                        <time datetime="2026-08-05T00:00:00-04:00">Last reviewed Aug 5, 2026</time>
+                    </div>
+
+                    <div class="status-metrics reveal">
+                        <div class="metric-card">
+                            <div class="metric-value">99.9%</div>
+                            <div class="metric-label">Uptime (30 days)</div>
+                            <div class="metric-bar"><span style="width:99.9%"></span></div>
+                        </div>
+                        <div class="metric-card">
+                            <div class="metric-value">9</div>
+                            <div class="metric-label">Live services</div>
+                            <div class="metric-bar"><span style="width:100%"></span></div>
+                        </div>
+                        <div class="metric-card">
+                            <div class="metric-value">0</div>
+                            <div class="metric-label">Active incidents</div>
+                            <div class="metric-bar"><span style="width:0%"></span></div>
+                        </div>
+                    </div>
+
+                    <h2 class="status-subhead status-subhead-first reveal">Seedling Tier</h2>
+                    <div class="status-list status-list-operational">
+                        <div class="status-row reveal" data-tier="seedling">
+                            <div class="status-service">
+                                <img src="/assets/icons/vaultwarden.svg" alt="" width="28" height="28" loading="lazy" decoding="async">
+                                <div>
+                                    <div class="status-name">Vaultwarden</div>
+                                    <div class="status-desc">Password manager</div>
+                                </div>
+                            </div>
+                            <span class="status-badge status-online">
+                            <div class="uptime-wrap"><div class="uptime-bar"><div class="uptime-bar-fill" style="width:99.9%"></div></div><span class="uptime-pct">99.9%</span></div><span class="status-dot"></span>Operational</span>
+                        </div>
+                        <div class="status-row reveal" data-tier="seedling">
+                            <div class="status-service">
+                                <img src="/assets/icons/matrix.svg" alt="" width="28" height="28" loading="lazy" decoding="async">
+                                <div>
+                                    <div class="status-name">Matrix / Element</div>
+                                    <div class="status-desc">Encrypted chat</div>
+                                </div>
+                            </div>
+                            <span class="status-badge status-online">
+                            <div class="uptime-wrap"><div class="uptime-bar"><div class="uptime-bar-fill" style="width:99.9%"></div></div><span class="uptime-pct">99.9%</span></div><span class="status-dot"></span>Operational</span>
+                        </div>
+                        <div class="status-row reveal" data-tier="seedling">
+                            <div class="status-service">
+                                <img src="/assets/icons/affine.svg" alt="" width="28" height="28" loading="lazy" decoding="async">
+                                <div>
+                                    <div class="status-name">AFFiNE</div>
+                                    <div class="status-desc">Notes & docs</div>
+                                </div>
+                            </div>
+                            <span class="status-badge status-online">
+                            <div class="uptime-wrap"><div class="uptime-bar"><div class="uptime-bar-fill" style="width:99.9%"></div></div><span class="uptime-pct">99.9%</span></div><span class="status-dot"></span>Operational</span>
+                        </div>
+                        <div class="status-row reveal" data-tier="seedling">
+                            <div class="status-service">
+                                <img src="/assets/icons/koalasync.svg" alt="" width="28" height="28" loading="lazy" decoding="async">
+                                <div>
+                                    <div class="status-name">KoalaSync</div>
+                                    <div class="status-desc">Watch parties</div>
+                                </div>
+                            </div>
+                            <span class="status-badge status-online">
+                            <div class="uptime-wrap"><div class="uptime-bar"><div class="uptime-bar-fill" style="width:99.9%"></div></div><span class="uptime-pct">99.9%</span></div><span class="status-dot"></span>Operational</span>
+                        </div>
+                    </div>
+
+                    <h2 class="status-subhead reveal">Sweet Pea Tier</h2>
+                    <div class="status-list status-list-operational">
+                        <div class="status-row reveal" data-tier="sweetpea">
+                            <div class="status-service">
+                                <img src="/assets/icons/jellyfin.svg" alt="" width="28" height="28" loading="lazy" decoding="async">
+                                <div>
+                                    <div class="status-name">Jellyfin / Moonfin</div>
+                                    <div class="status-desc">Media streaming</div>
+                                </div>
+                            </div>
+                            <span class="status-badge status-online">
+                            <div class="uptime-wrap"><div class="uptime-bar"><div class="uptime-bar-fill" style="width:99.9%"></div></div><span class="uptime-pct">99.9%</span></div><span class="status-dot"></span>Operational</span>
+                        </div>
+                        <div class="status-row reveal" data-tier="sweetpea">
+                            <div class="status-service">
+                                <img src="/assets/icons/seerr.svg" alt="" width="28" height="28" loading="lazy" decoding="async">
+                                <div>
+                                    <div class="status-name">Seerr</div>
+                                    <div class="status-desc">Media requests</div>
+                                </div>
+                            </div>
+                            <span class="status-badge status-online">
+                            <div class="uptime-wrap"><div class="uptime-bar"><div class="uptime-bar-fill" style="width:99.9%"></div></div><span class="uptime-pct">99.9%</span></div><span class="status-dot"></span>Operational</span>
+                        </div>
+                        <div class="status-row reveal" data-tier="sweetpea">
+                            <div class="status-service">
+                                <img src="/assets/icons/nextcloud.svg" alt="" width="28" height="28" loading="lazy" decoding="async">
+                                <div>
+                                    <div class="status-name">Nextcloud</div>
+                                    <div class="status-desc">Files & calendar</div>
+                                </div>
+                            </div>
+                            <span class="status-badge status-online">
+                            <div class="uptime-wrap"><div class="uptime-bar"><div class="uptime-bar-fill" style="width:99.9%"></div></div><span class="uptime-pct">99.9%</span></div><span class="status-dot"></span>Operational</span>
+                        </div>
+                        <div class="status-row reveal" data-tier="sweetpea">
+                            <div class="status-service">
+                                <img src="/assets/icons/immich.svg" alt="" width="28" height="28" loading="lazy" decoding="async">
+                                <div>
+                                    <div class="status-name">Immich</div>
+                                    <div class="status-desc">Photo backup</div>
+                                </div>
+                            </div>
+                            <span class="status-badge status-online">
+                            <div class="uptime-wrap"><div class="uptime-bar"><div class="uptime-bar-fill" style="width:99.9%"></div></div><span class="uptime-pct">99.9%</span></div><span class="status-dot"></span>Operational</span>
+                        </div>
+                        <div class="status-row reveal" data-tier="sweetpea">
+                            <div class="status-service">
+                                <img src="/assets/icons/openwebui.svg" alt="" width="28" height="28" loading="lazy" decoding="async">
+                                <div>
+                                    <div class="status-name">Open WebUI</div>
+                                    <div class="status-desc">AI interface</div>
+                                </div>
+                            </div>
+                            <span class="status-badge status-online">
+                            <div class="uptime-wrap"><div class="uptime-bar"><div class="uptime-bar-fill" style="width:99.9%"></div></div><span class="uptime-pct">99.9%</span></div><span class="status-dot"></span>Operational</span>
+                        </div>
+                    </div>
+
+                    <div class="status-divider" aria-hidden="true"><span></span></div>
+                    <h2 class="status-subhead reveal">Coming Soon</h2>
+                    <div class="status-list status-list-soon">
+                        <div class="status-row reveal">
+                            <div class="status-service">
+                                <img src="/assets/icons/syncthing.svg" alt="" width="28" height="28" loading="lazy" decoding="async">
+                                <div>
+                                    <div class="status-name">Syncthing</div>
+                                    <div class="status-desc">File sync</div>
+                                </div>
+                            </div>
+                            <span class="status-badge status-soon">Coming soon</span>
+                        </div>
+                    </div>
+
+                    <div class="status-resources reveal">
+                        <h3 class="status-resources-title">Resources</h3>
+                        <div class="status-actions">
+                            <a href="mailto:support@mysweetpea.cc?subject=Service%20Issue%20Report" class="status-action-btn">
+                                <img src="/assets/icons/icon-ui-construction.svg" alt="" width="18" height="18"> Report an issue
+                            </a>
+                            <a href="/changelog.html" class="status-action-btn">
+                                <img src="/assets/icons/icon-ui-blossom.svg" alt="" width="18" height="18"> Changelog
+                            </a>
+                            <a href="https://github.com/mysweetpea/homelab-k8s" target="_blank" rel="noopener noreferrer" class="status-action-btn">
+                                <img src="/assets/icons/github.svg" alt="" width="18" height="18"> View infrastructure code
+                            </a>
+                        </div>
+                    </div>
+
+                    <p class="status-updated">Service status is monitored and updated automatically.</p>
+                </section>
             </div>
 
-            <h2 class="status-subhead status-subhead-first reveal">Seedling Tier</h2>
-            <div class="status-list status-list-operational">
-                <div class="status-row reveal" data-tier="seedling">
-                    <div class="status-service">
-                        <img src="/assets/icons/vaultwarden.svg" alt="" width="28" height="28" loading="lazy" decoding="async">
-                        <div>
-                            <div class="status-name">Vaultwarden</div>
-                            <div class="status-desc">Password manager</div>
+            <div class="view-panel" data-view="incidents" role="tabpanel">
+                <section class="status-section" aria-label="Incidents">
+                    <div class="incidents-panel reveal">
+                        <h3 class="incidents-title">Recent incidents</h3>
+                        <div class="incident-item incident-resolved">
+                            <div class="incident-date">Aug 3, 2026</div>
+                            <div class="incident-body">
+                                <strong>private namespace recovery</strong> — All services restored after an ArgoCD sync incident. Automated backups and namespace protection added to prevent recurrence.
+                                <span class="incident-badge">Resolved</span>
+                            </div>
                         </div>
+                        <p class="incidents-empty" hidden>No active incidents. All systems operational.</p>
                     </div>
-                    <span class="status-badge status-online">
-                    <div class="uptime-wrap"><div class="uptime-bar"><div class="uptime-bar-fill" style="width:99.9%"></div></div><span class="uptime-pct">99.9%</span></div><span class="status-dot"></span>Operational</span>
-                </div>
-                <div class="status-row reveal" data-tier="seedling">
-                    <div class="status-service">
-                        <img src="/assets/icons/matrix.svg" alt="" width="28" height="28" loading="lazy" decoding="async">
-                        <div>
-                            <div class="status-name">Matrix / Element</div>
-                            <div class="status-desc">Encrypted chat</div>
-                        </div>
+                    <div class="status-report reveal">
+                        <p>Something not working? Let us know and we'll take a look.</p>
+                        <a href="mailto:support@mysweetpea.cc?subject=Service%20Issue%20Report" class="status-action-btn">
+                            <img src="/assets/icons/icon-ui-construction.svg" alt="" width="18" height="18"> Report an issue
+                        </a>
                     </div>
-                    <span class="status-badge status-online">
-                    <div class="uptime-wrap"><div class="uptime-bar"><div class="uptime-bar-fill" style="width:99.9%"></div></div><span class="uptime-pct">99.9%</span></div><span class="status-dot"></span>Operational</span>
-                </div>
-                <div class="status-row reveal" data-tier="seedling">
-                    <div class="status-service">
-                        <img src="/assets/icons/affine.svg" alt="" width="28" height="28" loading="lazy" decoding="async">
-                        <div>
-                            <div class="status-name">AFFiNE</div>
-                            <div class="status-desc">Notes & docs</div>
-                        </div>
-                    </div>
-                    <span class="status-badge status-online">
-                    <div class="uptime-wrap"><div class="uptime-bar"><div class="uptime-bar-fill" style="width:99.9%"></div></div><span class="uptime-pct">99.9%</span></div><span class="status-dot"></span>Operational</span>
-                </div>
-                <div class="status-row reveal" data-tier="seedling">
-                    <div class="status-service">
-                        <img src="/assets/icons/koalasync.svg" alt="" width="28" height="28" loading="lazy" decoding="async">
-                        <div>
-                            <div class="status-name">KoalaSync</div>
-                            <div class="status-desc">Watch parties</div>
-                        </div>
-                    </div>
-                    <span class="status-badge status-online">
-                    <div class="uptime-wrap"><div class="uptime-bar"><div class="uptime-bar-fill" style="width:99.9%"></div></div><span class="uptime-pct">99.9%</span></div><span class="status-dot"></span>Operational</span>
-                </div>
+                </section>
             </div>
-
-            <h2 class="status-subhead reveal">Sweet Pea Tier</h2>
-            <div class="status-list status-list-operational">
-                <div class="status-row reveal" data-tier="sweetpea">
-                    <div class="status-service">
-                        <img src="/assets/icons/jellyfin.svg" alt="" width="28" height="28" loading="lazy" decoding="async">
-                        <div>
-                            <div class="status-name">Jellyfin / Moonfin</div>
-                            <div class="status-desc">Media streaming</div>
-                        </div>
-                    </div>
-                    <span class="status-badge status-online">
-                    <div class="uptime-wrap"><div class="uptime-bar"><div class="uptime-bar-fill" style="width:99.9%"></div></div><span class="uptime-pct">99.9%</span></div><span class="status-dot"></span>Operational</span>
-                </div>
-                <div class="status-row reveal" data-tier="sweetpea">
-                    <div class="status-service">
-                        <img src="/assets/icons/seerr.svg" alt="" width="28" height="28" loading="lazy" decoding="async">
-                        <div>
-                            <div class="status-name">Seerr</div>
-                            <div class="status-desc">Media requests</div>
-                        </div>
-                    </div>
-                    <span class="status-badge status-online">
-                    <div class="uptime-wrap"><div class="uptime-bar"><div class="uptime-bar-fill" style="width:99.9%"></div></div><span class="uptime-pct">99.9%</span></div><span class="status-dot"></span>Operational</span>
-                </div>
-                <div class="status-row reveal" data-tier="sweetpea">
-                    <div class="status-service">
-                        <img src="/assets/icons/nextcloud.svg" alt="" width="28" height="28" loading="lazy" decoding="async">
-                        <div>
-                            <div class="status-name">Nextcloud</div>
-                            <div class="status-desc">Files & calendar</div>
-                        </div>
-                    </div>
-                    <span class="status-badge status-online">
-                    <div class="uptime-wrap"><div class="uptime-bar"><div class="uptime-bar-fill" style="width:99.9%"></div></div><span class="uptime-pct">99.9%</span></div><span class="status-dot"></span>Operational</span>
-                </div>
-                <div class="status-row reveal" data-tier="sweetpea">
-                    <div class="status-service">
-                        <img src="/assets/icons/immich.svg" alt="" width="28" height="28" loading="lazy" decoding="async">
-                        <div>
-                            <div class="status-name">Immich</div>
-                            <div class="status-desc">Photo backup</div>
-                        </div>
-                    </div>
-                    <span class="status-badge status-online">
-                    <div class="uptime-wrap"><div class="uptime-bar"><div class="uptime-bar-fill" style="width:99.9%"></div></div><span class="uptime-pct">99.9%</span></div><span class="status-dot"></span>Operational</span>
-                </div>
-                <div class="status-row reveal" data-tier="sweetpea">
-                    <div class="status-service">
-                        <img src="/assets/icons/openwebui.svg" alt="" width="28" height="28" loading="lazy" decoding="async">
-                        <div>
-                            <div class="status-name">Open WebUI</div>
-                            <div class="status-desc">AI interface</div>
-                        </div>
-                    </div>
-                    <span class="status-badge status-online">
-                    <div class="uptime-wrap"><div class="uptime-bar"><div class="uptime-bar-fill" style="width:99.9%"></div></div><span class="uptime-pct">99.9%</span></div><span class="status-dot"></span>Operational</span>
-                </div>
-            </div>
-
-            <div class="status-divider" aria-hidden="true"><span></span></div>
-            <h2 class="status-subhead reveal">Coming Soon</h2>
-            <div class="status-list status-list-soon">
-                <div class="status-row reveal">
-                    <div class="status-service">
-                        <img src="/assets/icons/syncthing.svg" alt="" width="28" height="28" loading="lazy" decoding="async">
-                        <div>
-                            <div class="status-name">Syncthing</div>
-                            <div class="status-desc">File sync</div>
-                        </div>
-                    </div>
-                    <span class="status-badge status-soon">Coming soon</span>
-                </div>
-            </div>
-
-            <div class="status-actions reveal">
-                <a href="mailto:support@mysweetpea.cc?subject=Service%20Issue%20Report" class="status-action-btn">
-                    <img src="/assets/icons/icon-ui-construction.svg" alt="" width="18" height="18"> Report an issue
-                </a>
-                <a href="/changelog.html" class="status-action-btn">
-                    <img src="/assets/icons/icon-ui-blossom.svg" alt="" width="18" height="18"> Changelog
-                </a>
-                <a href="https://github.com/mysweetpea/homelab-k8s" target="_blank" rel="noopener noreferrer" class="status-action-btn">
-                    <img src="/assets/icons/github.svg" alt="" width="18" height="18"> View infrastructure code
-                </a>
-            </div>
-
-            <div class="incidents-panel reveal">
-                <h3 class="incidents-title">Recent incidents</h3>
-                <div class="incident-item incident-resolved">
-                    <div class="incident-date">Aug 3, 2026</div>
-                    <div class="incident-body">
-                        <strong>private namespace recovery</strong> — All services restored after an ArgoCD sync incident. Automated backups and namespace protection added to prevent recurrence.
-                        <span class="incident-badge">Resolved</span>
-                    </div>
-                </div>
-                <p class="incidents-empty" hidden>No active incidents. All systems operational.</p>
-            </div>
-
-            <p class="status-updated">Service status is monitored and updated automatically.</p>
-        </section>
+        </div>
     </main>
 <a href="#" class="back-to-top" aria-label="Back to top" onclick="window.scrollTo({top:0,behavior:'smooth'});return false;"><img src="/assets/icons/icon-ui-arrow-up.svg" class="" alt="" width="22" height="22" loading="lazy" decoding="async" aria-hidden="true"></a>
 <footer class="page-footer">
