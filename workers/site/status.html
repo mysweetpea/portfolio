@@ -108,7 +108,7 @@
 
                     <h2 class="status-subhead status-subhead-first reveal">Seedling Tier</h2>
                     <div class="status-list status-list-operational">
-                        <div class="status-row reveal" data-tier="seedling">
+                        <div class="status-row reveal" data-tier="seedling" data-service-key="vaultwarden">
                             <div class="status-service">
                                 <img src="/assets/icons/vaultwarden.svg" alt="" width="28" height="28" loading="lazy" decoding="async">
                                 <div>
@@ -119,7 +119,7 @@
                             <span class="status-badge status-online">
                             <div class="uptime-wrap"><div class="uptime-bar"><div class="uptime-bar-fill" style="width:99.9%"></div></div><span class="uptime-pct">99.9%</span></div><span class="status-dot"></span>Operational</span>
                         </div>
-                        <div class="status-row reveal" data-tier="seedling">
+                        <div class="status-row reveal" data-tier="seedling" data-service-key="matrix">
                             <div class="status-service">
                                 <img src="/assets/icons/matrix.svg" alt="" width="28" height="28" loading="lazy" decoding="async">
                                 <div>
@@ -130,7 +130,7 @@
                             <span class="status-badge status-online">
                             <div class="uptime-wrap"><div class="uptime-bar"><div class="uptime-bar-fill" style="width:99.9%"></div></div><span class="uptime-pct">99.9%</span></div><span class="status-dot"></span>Operational</span>
                         </div>
-                        <div class="status-row reveal" data-tier="seedling">
+                        <div class="status-row reveal" data-tier="seedling" data-service-key="affine">
                             <div class="status-service">
                                 <img src="/assets/icons/affine.svg" alt="" width="28" height="28" loading="lazy" decoding="async">
                                 <div>
@@ -141,7 +141,7 @@
                             <span class="status-badge status-online">
                             <div class="uptime-wrap"><div class="uptime-bar"><div class="uptime-bar-fill" style="width:99.9%"></div></div><span class="uptime-pct">99.9%</span></div><span class="status-dot"></span>Operational</span>
                         </div>
-                        <div class="status-row reveal" data-tier="seedling">
+                        <div class="status-row reveal" data-tier="seedling" data-service-key="koalasync">
                             <div class="status-service">
                                 <img src="/assets/icons/koalasync.svg" alt="" width="28" height="28" loading="lazy" decoding="async">
                                 <div>
@@ -156,7 +156,7 @@
 
                     <h2 class="status-subhead reveal">Sweet Pea Tier</h2>
                     <div class="status-list status-list-operational">
-                        <div class="status-row reveal" data-tier="sweetpea">
+                        <div class="status-row reveal" data-tier="sweetpea" data-service-key="jellyfin">
                             <div class="status-service">
                                 <img src="/assets/icons/jellyfin.svg" alt="" width="28" height="28" loading="lazy" decoding="async">
                                 <div>
@@ -167,7 +167,7 @@
                             <span class="status-badge status-online">
                             <div class="uptime-wrap"><div class="uptime-bar"><div class="uptime-bar-fill" style="width:99.9%"></div></div><span class="uptime-pct">99.9%</span></div><span class="status-dot"></span>Operational</span>
                         </div>
-                        <div class="status-row reveal" data-tier="sweetpea">
+                        <div class="status-row reveal" data-tier="sweetpea" data-service-key="seerr">
                             <div class="status-service">
                                 <img src="/assets/icons/seerr.svg" alt="" width="28" height="28" loading="lazy" decoding="async">
                                 <div>
@@ -178,7 +178,7 @@
                             <span class="status-badge status-online">
                             <div class="uptime-wrap"><div class="uptime-bar"><div class="uptime-bar-fill" style="width:99.9%"></div></div><span class="uptime-pct">99.9%</span></div><span class="status-dot"></span>Operational</span>
                         </div>
-                        <div class="status-row reveal" data-tier="sweetpea">
+                        <div class="status-row reveal" data-tier="sweetpea" data-service-key="nextcloud">
                             <div class="status-service">
                                 <img src="/assets/icons/nextcloud.svg" alt="" width="28" height="28" loading="lazy" decoding="async">
                                 <div>
@@ -189,7 +189,7 @@
                             <span class="status-badge status-online">
                             <div class="uptime-wrap"><div class="uptime-bar"><div class="uptime-bar-fill" style="width:99.9%"></div></div><span class="uptime-pct">99.9%</span></div><span class="status-dot"></span>Operational</span>
                         </div>
-                        <div class="status-row reveal" data-tier="sweetpea">
+                        <div class="status-row reveal" data-tier="sweetpea" data-service-key="immich">
                             <div class="status-service">
                                 <img src="/assets/icons/immich.svg" alt="" width="28" height="28" loading="lazy" decoding="async">
                                 <div>
@@ -200,7 +200,7 @@
                             <span class="status-badge status-online">
                             <div class="uptime-wrap"><div class="uptime-bar"><div class="uptime-bar-fill" style="width:99.9%"></div></div><span class="uptime-pct">99.9%</span></div><span class="status-dot"></span>Operational</span>
                         </div>
-                        <div class="status-row reveal" data-tier="sweetpea">
+                        <div class="status-row reveal" data-tier="sweetpea" data-service-key="openwebui">
                             <div class="status-service">
                                 <img src="/assets/icons/openwebui.svg" alt="" width="28" height="28" loading="lazy" decoding="async">
                                 <div>
@@ -293,6 +293,74 @@
 
 
     <script src="/assets/js/site.js?v=2" defer></script>
+    <script>
+    /* === Live status from Uptime Kuma === */
+    (function () {
+        var summary = document.getElementById('status-summary');
+        var summaryText = summary ? summary.querySelector('strong') : null;
+        var summaryTime = summary ? summary.querySelector('time') : null;
+        var rows = document.querySelectorAll('.status-row[data-service-key]');
+        var metricUptime = document.querySelector('.metric-card .metric-value');
+        var metricLive = document.querySelectorAll('.metric-card .metric-value')[1];
+        var metricIncidents = document.querySelectorAll('.metric-card .metric-value')[2];
+
+        // Map our service keys to Uptime Kuma monitor IDs (fill in once monitors exist)
+        var MONITOR_IDS = {
+            vaultwarden: 1, matrix: 2, affine: 3, koalasync: 4,
+            jellyfin: 5, seerr: 6, nextcloud: 7, immich: 8, openwebui: 9
+        };
+
+        function setRow(row, up, pct) {
+            var badge = row.querySelector('.status-badge');
+            var fill = row.querySelector('.uptime-bar-fill');
+            var pctEl = row.querySelector('.uptime-pct');
+            var dot = row.querySelector('.status-dot');
+            if (badge) {
+                badge.classList.remove('status-online', 'status-down');
+                badge.classList.add(up ? 'status-online' : 'status-down');
+                var label = badge.childNodes[badge.childNodes.length - 1];
+                if (label && label.nodeType === 3) label.textContent = up ? 'Operational' : 'Down';
+            }
+            if (fill) fill.style.width = (pct || 99.9) + '%';
+            if (pctEl) pctEl.textContent = (pct || 99.9) + '%';
+            if (dot) dot.classList.toggle('status-down', !up);
+        }
+
+        // Fetch overall status-page heartbeat
+        fetch('https://status.mysweetpea.cc/api/status-page/heartbeat/1')
+            .then(function (r) { return r.ok ? r.json() : Promise.reject(); })
+            .then(function (data) {
+                if (!data || !data.heartbeatList) return;
+                var list = data.heartbeatList;
+                var upCount = 0;
+                list.forEach(function (h) {
+                    var row = document.querySelector('.status-row[data-service-key="' + h.monitorID + '"]');
+                    if (row) {
+                        var up = h.status === 1;
+                        if (up) upCount++;
+                        setRow(row, up, h.uptime ? h.uptime * 100 : 99.9);
+                    }
+                });
+                if (summaryText) summaryText.textContent = upCount + ' of ' + list.length + ' operational';
+                if (summaryTime) summaryTime.textContent = 'Updated ' + new Date().toLocaleDateString();
+            })
+            .catch(function () { /* keep static fallback */ });
+
+        // Per-monitor status (Uptime Kuma API: /api/status-page/heartbeat/{id})
+        Object.keys(MONITOR_IDS).forEach(function (key) {
+            var row = document.querySelector('.status-row[data-service-key="' + key + '"]');
+            if (!row) return;
+            fetch('https://status.mysweetpea.cc/api/status-page/heartbeat/' + MONITOR_IDS[key])
+                .then(function (r) { return r.ok ? r.json() : Promise.reject(); })
+                .then(function (data) {
+                    if (!data || !data.heartbeatList || !data.heartbeatList.length) return;
+                    var h = data.heartbeatList[data.heartbeatList.length - 1];
+                    setRow(row, h.status === 1, h.uptime ? h.uptime * 100 : 99.9);
+                })
+                .catch(function () { /* keep static fallback */ });
+        });
+    })();
+    </script>
     <script>
     if ('serviceWorker' in navigator) {
         window.addEventListener('load', function () {
