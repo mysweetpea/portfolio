@@ -361,6 +361,49 @@ color: var(--bg);
 animation: scaleIn 0.5s ease-out 0.35s both }
 body[data-page='p404'] .hero-btn:hover { transform: translatey(-2px);
 box-shadow: 0 6px 24px rgba(143, 175, 181, 0.28) }
+body[data-page='p404'] .hero-buttons {
+    display: flex; gap: 14px; justify-content: center; align-items: center;
+    flex-wrap: wrap; margin-bottom: 8px;
+}
+body[data-page='p404'] .hero-btn-secondary {
+    background: rgba(255,255,255,0.07); color: var(--text);
+    border: 1px solid var(--border-primary);
+}
+body[data-page='p404'] .hero-btn-secondary:hover {
+    background: rgba(255,255,255,0.12); border-color: var(--border-primary);
+}
+body[data-page='p404'] .p404-search {
+    margin-top: 28px; max-width: 420px; width: 100%;
+}
+body[data-page='p404'] .p404-search .form-input {
+    width: 100%; padding: 14px 18px;
+    background:
+        linear-gradient(160deg, rgba(255,255,255,0.03), transparent 40%),
+        rgba(14,22,26,0.6);
+    border: 1px solid var(--hairline);
+    border-radius: var(--radius-sm);
+    color: var(--text); font-size: 0.95rem;
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.04);
+    transition: border-color 0.3s var(--ease-premium), box-shadow 0.3s var(--ease-premium);
+}
+body[data-page='p404'] .p404-search .form-input:focus {
+    border-color: var(--sage);
+    box-shadow: 0 0 0 3px rgba(163,201,182,0.14);
+    outline: none;
+}
+body[data-page='p404'] .p404-search .form-input::placeholder { color: var(--text-faint); }
+body[data-page='p404'] .p404-search .form-input.invalid { border-color: var(--error); }
+body[data-page='p404'] .p404-search .form-hint {
+    margin-top: 8px; font-size: 0.78rem; color: var(--text-faint);
+}
+body[data-page='p404'] .p404-help {
+    margin-top: 22px; font-size: 0.92rem; color: var(--text-dim);
+}
+body[data-page='p404'] .p404-help a {
+    color: var(--sage); font-weight: 700; text-decoration: none;
+    border-bottom: 1px solid var(--sage); padding-bottom: 1px;
+}
+body[data-page='p404'] .p404-help a:hover { color: var(--primary-bright); border-color: var(--primary-bright); }
 @media (max-width: 768px) { body[data-page='p404'] .code { font-size: 3.5rem } body[data-page='p404'] .hero h1 { font-size: 1.6rem } }
 
 /* ===== Page: about.html ===== */

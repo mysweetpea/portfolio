@@ -264,9 +264,13 @@
         card.addEventListener('click', function () {
             var tier = card.getAttribute('data-tier');
             document.querySelectorAll('.access-choice-card').forEach(function(c){var picked=c===card;c.classList.toggle('selected',picked);c.setAttribute('aria-pressed',String(picked));});
-            ['seedling','sweetpea'].forEach(function(name){var panel=document.getElementById('panel-'+name),active=name===tier;panel.hidden=!active;panel.classList.toggle('active',active);});
             var formSection = document.querySelector('.tier-form-section');
+            // Scroll smoothly first, then reveal the panel so the layout shift
+            // doesn't make the scroll feel like a jump.
             if (formSection) formSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            setTimeout(function () {
+                ['seedling','sweetpea'].forEach(function(name){var panel=document.getElementById('panel-'+name),active=name===tier;panel.hidden=!active;panel.classList.toggle('active',active);});
+            }, 250);
             /* Update progress indicator: step 1 done, step 2 active */
             var steps = document.querySelectorAll('.form-progress .step');
             var connectors = document.querySelectorAll('.form-progress .connector');
