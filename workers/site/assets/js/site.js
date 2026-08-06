@@ -87,6 +87,24 @@
         }
     }
 
+    /* === Smooth auto-grow textareas ===
+       Grows the textarea height smoothly as the user types, so it never
+       shows a scrollbar and feels elegant. Respects reduced-motion. */
+    var autoGrow = reduceMotion.matches ? false : true;
+    document.querySelectorAll('textarea.form-input, textarea').forEach(function (ta) {
+        if (!autoGrow) return;
+        ta.style.overflow = 'hidden';
+        ta.style.resize = 'none';
+        ta.style.transition = 'height .18s ease';
+        function grow() {
+            ta.style.height = 'auto';
+            ta.style.height = ta.scrollHeight + 'px';
+        }
+        grow();
+        ta.addEventListener('input', grow);
+        window.addEventListener('resize', grow);
+    });
+
     /* === Glow-card mouse tracking === */
     if (finePointer.matches && !reduceMotion.matches) {
         document.querySelectorAll('.glow-card').forEach(function (card) {
