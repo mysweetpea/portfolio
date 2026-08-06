@@ -6159,13 +6159,40 @@ body[data-page='status'] .metric-card {
         0 8px 24px rgba(0,0,0,0.18);
     backdrop-filter: blur(18px) saturate(1.25);
     -webkit-backdrop-filter: blur(18px) saturate(1.25);
+    padding: 20px 16px; text-align: center;
+}
+body[data-page='status'] .status-metrics {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px;
+    margin: 24px 0 36px;
 }
 body[data-page='status'] .metric-value {
     background: linear-gradient(135deg, var(--text) 20%, var(--primary-bright) 60%, var(--sage) 100%);
     -webkit-background-clip: text; background-clip: text;
     -webkit-text-fill-color: transparent;
-    font-weight: 800;
+    font-weight: 800; font-size: 1.6rem; line-height: 1.2;
 }
+body[data-page='status'] .metric-label {
+    font-size: 0.78rem; color: var(--text-dim); font-weight: 600;
+    margin-top: 6px;
+}
+body[data-page='status'] .metric-bar {
+    height: 5px; border-radius: 3px;
+    background: rgba(143,175,181,0.15); overflow: hidden;
+    margin-top: 12px;
+}
+body[data-page='status'] .metric-bar span {
+    display: block; height: 100%; border-radius: 3px;
+    background: linear-gradient(90deg, var(--sage), var(--primary));
+}
+@media (max-width: 560px) {
+    body[data-page='status'] .status-metrics { grid-template-columns: 1fr; gap: 10px; }
+}
+body[data-page='status'] .status-subhead { margin-top: 40px; }
+body[data-page='status'] .status-subhead-first { margin-top: 8px; }
+body[data-page='status'] .status-badge { margin-left: 16px; flex: 0 0 auto; display: inline-flex; align-items: center; gap: 8px; }
+body[data-page='status'] .status-badge .uptime-wrap { display: inline-flex; align-items: center; gap: 8px; }
+body[data-page='status'] .status-badge .status-dot { flex: 0 0 auto; }
+body[data-page='status'] .status-hero .eyebrow { text-align: center; display: block; }
 body[data-page='status'] .status-row {
     background:
         linear-gradient(160deg, rgba(255,255,255,0.03), transparent 40%),
