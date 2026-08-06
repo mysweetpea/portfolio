@@ -70,42 +70,55 @@
             <img src="/logo.svg" alt="MySweetPea logo" class="logo" width="160" height="160">
             <h1 class="glass-text">Donate to MySweetPea</h1>
             <p class="hero-sub pop-text">Voluntary support for community infrastructure. No account or access required.</p>
-            <p class="hero-sub" style="font-size: 0.95rem;">Looking for help with your account instead? This page is only for donations — email <a href="mailto:support@mysweetpea.cc" style="color: var(--sage); font-weight: 600;">support@mysweetpea.cc</a> and we'll be happy to help.</p>
         </div>
-        <div class="container reveal">
-            <div class="card glow-card">
-                <h2>Donate to the Community</h2>
-                <p class="subtitle">Your contribution helps keep MySweetPea running and funds future improvements.</p>
-                <div class="info-box">Donations are completely anonymous. No name, email, or account required. Just send crypto to the wallet address and you are done. Thank you for your support!</div>
-                <div class="crypto-section-label">Select Cryptocurrency</div>
-                <div class="crypto-options">
-                    <div class="crypto-option" data-type="monero" onclick="selectCrypto(this, 'monero')"><div class="icon" aria-hidden="true"><img src="/assets/icons/icon-crypto-monero.svg" class="" alt="" width="28" height="28" loading="lazy" decoding="async" aria-hidden="true"></div><div class="name">Monero (XMR)</div></div>
-                    <div class="crypto-option" data-type="bitcoin" onclick="selectCrypto(this, 'bitcoin')"><div class="icon" aria-hidden="true"><img src="/assets/icons/icon-crypto-bitcoin.svg" class="" alt="" width="28" height="28" loading="lazy" decoding="async" aria-hidden="true"></div><div class="name">Bitcoin (BTC)</div></div>
-                </div>
-                <div class="wallet-display" id="wallet-display">
-                    <div class="wl">Send your donation to:</div>
-                    <div class="wa" id="wallet-addr" onclick="copyWallet()">Loading...</div>
-                    <div class="copy-hint">Click address to copy to clipboard</div>
-                </div>
-                <div class="thank-you">
-                    <div class="heart" aria-hidden="true"><img src="/assets/icons/icon-ui-blossom.svg" class="" alt="" width="44" height="44" loading="lazy" decoding="async" aria-hidden="true"></div>
-                    <p>Why crypto? We prioritize privacy. Crypto donations (especially Monero) are anonymous, irreversible, and require no personal information. No KYC, no chargebacks, no paper trail.</p>
+        <div class="account-help-box reveal">Looking for help with your account instead? This page is only for donations — email <a href="mailto:support@mysweetpea.cc">support@mysweetpea.cc</a> and we'll be happy to help.</div>
+
+        <div class="view-switcher" id="support-switcher">
+            <div class="view-tabs" role="tablist" aria-label="Donate sections">
+                <button type="button" class="view-tab active" role="tab" aria-selected="true" data-view="donate">Donate</button>
+                <button type="button" class="view-tab" role="tab" aria-selected="false" data-view="faq">FAQ</button>
+            </div>
+
+            <div class="view-panel active" data-view="donate" role="tabpanel">
+                <div class="container reveal">
+                    <div class="card glow-card">
+                        <h2>Donate to the Community</h2>
+                        <p class="subtitle">Your contribution helps keep MySweetPea running and funds future improvements.</p>
+                        <div class="info-box">Donations are completely anonymous. No name, email, or account required. Just send crypto to the wallet address and you are done. Thank you for your support!</div>
+                        <div class="crypto-section-label">Select Cryptocurrency</div>
+                        <div class="crypto-options">
+                            <div class="crypto-option" data-type="monero" onclick="selectCrypto(this, 'monero')"><div class="icon" aria-hidden="true"><img src="/assets/icons/icon-crypto-monero.svg" class="" alt="" width="28" height="28" loading="lazy" decoding="async" aria-hidden="true"></div><div class="name">Monero (XMR)</div></div>
+                            <div class="crypto-option" data-type="bitcoin" onclick="selectCrypto(this, 'bitcoin')"><div class="icon" aria-hidden="true"><img src="/assets/icons/icon-crypto-bitcoin.svg" class="" alt="" width="28" height="28" loading="lazy" decoding="async" aria-hidden="true"></div><div class="name">Bitcoin (BTC)</div></div>
+                        </div>
+                        <div class="wallet-display" id="wallet-display">
+                            <div class="wl">Send your donation to:</div>
+                            <div class="wa" id="wallet-addr" onclick="copyWallet()">Loading...</div>
+                            <div class="copy-hint">Click address to copy to clipboard</div>
+                        </div>
+                        <div class="thank-you">
+                            <div class="heart" aria-hidden="true"><img src="/assets/icons/icon-ui-blossom.svg" class="" alt="" width="44" height="44" loading="lazy" decoding="async" aria-hidden="true"></div>
+                            <p>Why crypto? We prioritize privacy. Crypto donations (especially Monero) are anonymous, irreversible, and require no personal information. No KYC, no chargebacks, no paper trail.</p>
+                        </div>
+                    </div>
                 </div>
             </div>
-        </div>
-        <div class="faq-section reveal">
-            <div class="faq-item">
+
+            <div class="view-panel" data-view="faq" role="tabpanel">
+                <div class="faq-section reveal">
+                    <div class="faq-item">
 <button class="faq-question" type="button" id="support-faq-q-1" aria-expanded="false" aria-controls="support-faq-a-1" onclick="toggleFAQ(this)">Why do you need donations? <span class="arrow"><img src="/assets/icons/icon-ui-chevron-down.svg" class="" alt="" width="16" height="16" loading="lazy" decoding="async" aria-hidden="true"></span></button>
 <div class="faq-answer" id="support-faq-a-1" role="region" aria-labelledby="support-faq-q-1"><p>Running these services costs money — server hardware, electricity, internet bandwidth, and domain registration. Donations help cover these costs and fund future improvements and new services. We do not run ads or sell your data.</p></div></div>
-            <div class="faq-item">
+                    <div class="faq-item">
 <button class="faq-question" type="button" id="support-faq-q-2" aria-expanded="false" aria-controls="support-faq-a-2" onclick="toggleFAQ(this)">Why don't you accept credit cards? <span class="arrow"><img src="/assets/icons/icon-ui-chevron-down.svg" class="" alt="" width="16" height="16" loading="lazy" decoding="async" aria-hidden="true"></span></button>
 <div class="faq-answer" id="support-faq-a-2" role="region" aria-labelledby="support-faq-q-2"><p>We prioritize privacy. Credit card payments require sharing your personal and financial information with payment processors, which creates a paper trail linking your identity to our services. Cryptocurrency donations (Monero and Bitcoin) allow us to maintain a privacy-first approach with no KYC requirements, no chargebacks, and no third-party data collection.</p></div></div>
-            <div class="faq-item">
+                    <div class="faq-item">
 <button class="faq-question" type="button" id="support-faq-q-3" aria-expanded="false" aria-controls="support-faq-a-3" onclick="toggleFAQ(this)">Is my donation anonymous? <span class="arrow"><img src="/assets/icons/icon-ui-chevron-down.svg" class="" alt="" width="16" height="16" loading="lazy" decoding="async" aria-hidden="true"></span></button>
 <div class="faq-answer" id="support-faq-a-3" role="region" aria-labelledby="support-faq-q-3"><p>Yes. Crypto donations are anonymous by default. Monero (XMR) is fully anonymous — sender, receiver, and amount are all hidden. Bitcoin (BTC) is pseudonymous — your wallet address is visible but not linked to your identity.</p></div></div>
-            <div class="faq-item">
+                    <div class="faq-item">
 <button class="faq-question" type="button" id="support-faq-q-4" aria-expanded="false" aria-controls="support-faq-a-4" onclick="toggleFAQ(this)">Can I get a refund? <span class="arrow"><img src="/assets/icons/icon-ui-chevron-down.svg" class="" alt="" width="16" height="16" loading="lazy" decoding="async" aria-hidden="true"></span></button>
 <div class="faq-answer" id="support-faq-a-4" role="region" aria-labelledby="support-faq-q-4"><p>Crypto donations are irreversible. If you have a genuine issue, contact support@mysweetpea.cc.</p></div></div>
+                </div>
+            </div>
         </div>
         </main>
 <a href="#" class="back-to-top" aria-label="Back to top" onclick="window.scrollTo({top:0,behavior:'smooth'});return false;"><img src="/assets/icons/icon-ui-arrow-up.svg" class="" alt="" width="22" height="22" loading="lazy" decoding="async" aria-hidden="true"></a>
