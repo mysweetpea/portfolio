@@ -4024,6 +4024,9 @@ body[data-page='redeem'] .form-input { width: 100%; box-sizing: border-box; }
 /* Check/X feedback sits inside every validated field. */
 body[data-page='form'] .form-group, body[data-page='redeem'] .form-group { position: relative; }
 body[data-page='form'] .validation-icon, body[data-page='redeem'] .validation-icon { position:absolute; right:14px; top:39px; width:20px; height:20px; line-height:19px; border-radius:50%; text-align:center; font-size:14px; font-weight:800; opacity:0; pointer-events:none; transition:opacity .18s ease; }
+/* The invite-code boxes have their own row; move its check/X outside the last box. */
+body[data-page='redeem'] .redeem-code-group .validation-icon { right: auto; left: 50%; top: auto; bottom: -26px; transform: translateX(-50%); }
+body[data-page='redeem'] .redeem-code-group .validation-icon.show { opacity:1; }
 body[data-page='form'] .validation-icon.show, body[data-page='redeem'] .validation-icon.show { opacity:1; }
 body[data-page='form'] .validation-icon.valid, body[data-page='redeem'] .validation-icon.valid { color:#0E5B3A; background:rgba(163,201,182,.5); }
 body[data-page='form'] .validation-icon.invalid, body[data-page='redeem'] .validation-icon.invalid { color:#7A2222; background:rgba(212,106,106,.38); }
@@ -5690,6 +5693,21 @@ body[data-page='services'] .service-card .acct-pill {
     width: 14px; text-align: center;
     color: var(--text-faint); font-weight: 700; font-size: 1.1rem;
 }
+/* Blinking caret indicator that tracks the cursor position across the boxes */
+.cb-caret {
+    position: absolute; top: 50%;
+    width: 2px; height: 26px;
+    transform: translate(-50%, -50%);
+    background: var(--primary-bright);
+    border-radius: 2px;
+    opacity: 0; pointer-events: none;
+    box-shadow: 0 0 8px rgba(94, 184, 168, 0.7);
+    animation: cbBlink 1s steps(1) infinite;
+    transition: left .08s ease;
+}
+.redeem-code-group:focus-within .cb-caret { opacity: 1; }
+@keyframes cbBlink { 50% { opacity: 0; } }
+@media (prefers-reduced-motion: reduce) { .cb-caret { animation: none; } }
 /* The real input sits invisibly on top of the boxes so typing fills them. */
 .redeem-code-input {
     position: absolute; inset: 0;
