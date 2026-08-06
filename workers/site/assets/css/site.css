@@ -2469,41 +2469,6 @@ line-height: 1.5 }
 body[data-page='services'] .modal-tutorial a { color: var(--primary);
 text-decoration: none }
 body[data-page='services'] .modal-tutorial a:hover { text-decoration: underline }
-body[data-page='services'] .modal-footer { display: flex;
-gap: 12px;
-align-items: center }
-body[data-page='services'] .modal-footer .btn { padding: 10px 24px;
-border: none;
-border-radius: var(--radius-sm);
-font-size: 0.88rem;
-font-weight: 600;
-text-decoration: none;
-transition: var(--transition);
-cursor: pointer }
-body[data-page='services'] .modal-footer .btn-primary { background: linear-gradient(135deg, var(--primary), var(--primary-dim));
-color: var(--bg) }
-body[data-page='services'] .modal-footer .btn-primary:hover { transform: scale(1.02);
-box-shadow: 0 4px 16px rgba(143, 175, 181, 0.25) }
-body[data-page='services'] .modal-footer .btn-secondary { background: rgba(255, 255, 255, 0.06);
-color: var(--text);
-border: 1px solid var(--border) }
-body[data-page='services'] .pricing-grid { grid-template-columns: 1fr }
-body[data-page='services'] .services-grid, body[data-page='services'] .coming-soon-grid { grid-template-columns: 1fr }
-body[data-page='services'] .modal { padding: 24px }
-body[data-page='services'] .service-card { cursor: pointer }
-body[data-page='services'] .service-card:focus-visible { outline: 2px solid var(--primary);
-outline-offset: 3px }
-body[data-page='services'] .tier-emoji-3d { animation-duration: 14s; }
-body[data-page='services'] .pricing-card.tier-seedling { animation-duration: 8s; }
-@media (max-width: 768px) {  body[data-page='services'] .pricing-grid { grid-template-columns: 1fr } body[data-page='services'] .services-grid, body[data-page='services'] .coming-soon-grid { grid-template-columns: 1fr } body[data-page='services'] .modal { padding: 24px } }/* Search trigger button in nav */
-.nav-search {
-    display: inline-flex; align-items: center; gap: 8px;
-    padding: 8px 14px;
-    background: transparent; border: 1px solid transparent;
-    border-radius: var(--radius-sm);
-    color: var(--text-dim); font-size: 0.87rem; font-family: inherit;
-    cursor: pointer; transition: var(--transition);
-}
 .nav-search:hover { color: var(--primary-bright); background: var(--primary-glow); }
 .nav-search kbd {
     font-family: inherit; font-size: 0.68rem;
@@ -2963,46 +2928,6 @@ line-height: 1.5 }
 body[data-page='services'] .modal-tutorial a { color: var(--primary);
 text-decoration: none }
 body[data-page='services'] .modal-tutorial a:hover { text-decoration: underline }
-body[data-page='services'] .modal-footer { display: flex;
-gap: 12px;
-align-items: center }
-body[data-page='services'] .modal-footer .btn { padding: 10px 24px;
-border: none;
-border-radius: var(--radius-sm);
-font-size: 0.88rem;
-font-weight: 600;
-text-decoration: none;
-transition: var(--transition);
-cursor: pointer }
-body[data-page='services'] .modal-footer .btn-primary { background: linear-gradient(135deg, var(--primary), var(--primary-dim));
-color: var(--bg) }
-body[data-page='services'] .modal-footer .btn-primary:hover { transform: scale(1.02);
-box-shadow: 0 4px 16px rgba(143, 175, 181, 0.25) }
-body[data-page='services'] .modal-footer .btn-secondary { background: rgba(255, 255, 255, 0.06);
-color: var(--text);
-border: 1px solid var(--border) }
-body[data-page='services'] .pricing-grid { grid-template-columns: 1fr }
-body[data-page='services'] .services-grid, body[data-page='services'] .coming-soon-grid { grid-template-columns: 1fr }
-body[data-page='services'] .modal { padding: 24px }
-body[data-page='services'] .service-card { cursor: pointer }
-body[data-page='services'] .service-card:focus-visible { outline: 2px solid var(--primary);
-outline-offset: 3px }
-body[data-page='services'] .tier-emoji-3d { animation-duration: 14s; }
-body[data-page='services'] .pricing-card.tier-seedling { animation-duration: 8s; }
-@media (max-width: 768px) {  body[data-page='services'] .pricing-grid { grid-template-columns: 1fr } body[data-page='services'] .services-grid, body[data-page='services'] .coming-soon-grid { grid-template-columns: 1fr } body[data-page='services'] .modal { padding: 24px } }
-
-/* ==========================================================================
-   v7: status hero centering, light-mode rework, teaser button,
-       icon-only search, nav spacing, modal/interaction animation
-   ========================================================================== */
-
-/* Status hero centered like other pages */
-body[data-page='status'] .hero.status-hero {
-    text-align: center;
-    padding: 120px 24px 24px;
-    min-height: auto;
-    display: flex; flex-direction: column; align-items: center; justify-content: center;
-}
 body[data-page='status'] .hero.status-hero img.logo { width: 160px; height: 160px; margin-bottom: 16px; }
 body[data-page='status'] .hero.status-hero h1 { font-size: 2rem; font-weight: 700; margin-bottom: 8px; }
 
@@ -5446,18 +5371,6 @@ body[data-page='services'] .modal-mockup {
     from { opacity: 0; transform: translateY(12px); }
     to { opacity: 1; transform: translateY(0); }
 }
-
-/* --- Sticky modal footer: Open Service + Close always visible --- */
-.modal-footer {
-    position: sticky; bottom: 0;
-    background: rgba(16, 26, 30, 0.95);
-    backdrop-filter: blur(12px);
-    border-top: 1px solid var(--border);
-    padding: 16px 0 4px;
-    margin-top: 8px;
-    z-index: 2;
-}
-[data-theme="light"] .modal-footer { background: rgba(255,255,255,0.95); }
 
 @media (prefers-reduced-motion: reduce) {
     .services-grid .service-card, .coming-soon-grid .coming-soon-card { animation: none; }
