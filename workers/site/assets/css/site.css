@@ -2447,7 +2447,7 @@ height: 32px }
 body[data-page='services'] .modal-header h2 { font-size: 1.3rem;
 color: var(--primary);
 font-weight: 700 }
-body[data-page='services'] .modal-header .tier-tag { margin-top: 4px }
+
 body[data-page='services'] .modal-body p { font-size: 0.88rem;
 color: var(--text-dim);
 line-height: 1.6;
@@ -2941,7 +2941,7 @@ height: 32px }
 body[data-page='services'] .modal-header h2 { font-size: 1.3rem;
 color: var(--primary);
 font-weight: 700 }
-body[data-page='services'] .modal-header .tier-tag { margin-top: 4px }
+
 body[data-page='services'] .modal-body p { font-size: 0.88rem;
 color: var(--text-dim);
 line-height: 1.6;
@@ -5328,7 +5328,6 @@ body {
 }
 /* Fix text cutoff: allow modal body to scroll, don't clip desc */
 .modal-body {
-    overflow-y: auto; max-height: 60vh;
     padding-right: 4px;
 }
 .modal-body p#modalDesc {
@@ -5357,17 +5356,6 @@ body {
     .modal-mockup img { animation: none; }
 }
 
-/* --- GitHub link in service modal header --- */
-.modal-github {
-    display: inline-flex; align-items: center; gap: 6px;
-    margin-top: 8px; padding: 5px 12px;
-    border-radius: 999px;
-    background: var(--primary-glow); border: 1px solid var(--border-primary);
-    color: var(--text-dim); font-size: 0.78rem; font-weight: 600;
-    text-decoration: none; transition: var(--transition);
-}
-.modal-github:hover { color: var(--text); border-color: var(--sage); background: rgba(163,201,182,0.12); }
-.modal-github img { width: 16px; height: 16px; }
 
 /* ==========================================================================
    v48: Friendly step cards + plain-English intro in service modals
@@ -5424,18 +5412,3 @@ body {
 .nav-more-menu a.nav-github:hover { color: var(--text); border-color: var(--sage); background: rgba(163,201,182,0.12); }
 .nav-more-menu a.nav-github img { width: 14px; height: 14px; }
 
-/* --- Modal meta: tier + github on same line, spaced --- */
-.modal-meta {
-    display: flex; align-items: center; gap: 12px;
-    margin-top: 8px;
-}
-.modal-meta .tier-tag { margin: 0; }
-.modal-github {
-    display: inline-flex; align-items: center; gap: 6px;
-    padding: 5px 12px; border-radius: 999px;
-    background: var(--primary-glow); border: 1px solid var(--border-primary);
-    color: var(--text-dim); font-size: 0.78rem; font-weight: 600;
-    text-decoration: none; transition: var(--transition);
-}
-.modal-github:hover { color: var(--text); border-color: var(--sage); background: rgba(163,201,182,0.12); }
-.modal-github img { width: 16px; height: 16px; }
