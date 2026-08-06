@@ -5997,3 +5997,103 @@ body[data-page='support'] .account-help-box a:hover { color: var(--primary-brigh
 body[data-page='support'] .view-switcher { max-width: 720px; margin: 0 auto; }
 body[data-page='support'] .view-panel .container { padding: 0; }
 body[data-page='support'] .view-panel .faq-section { margin: 0; }
+
+/* ==========================================================================
+   v58: Contact page — view-switcher tabs + premium polish
+   ========================================================================== */
+body[data-page='contact'] .view-switcher { max-width: 640px; margin: 0 auto; }
+body[data-page='contact'] .contact-container { max-width: 640px; margin: 0 auto; padding: 0 20px 60px; }
+body[data-page='contact'] .contact-card {
+    padding: 36px 32px; text-align: center;
+    box-shadow:
+        inset 0 1px 0 rgba(255,255,255,0.07),
+        0 1px 2px rgba(0,0,0,0.25),
+        0 8px 24px rgba(0,0,0,0.2),
+        0 24px 64px rgba(0,0,0,0.16);
+}
+body[data-page='contact'] .contact-card h2 {
+    font-size: 1.35rem; font-weight: 700; margin: 0 0 12px;
+    background: linear-gradient(120deg, var(--text) 20%, var(--primary-bright) 60%, var(--sage) 100%);
+    -webkit-background-clip: text; background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+body[data-page='contact'] .contact-intro {
+    color: var(--text-dim); line-height: 1.7; font-size: 0.95rem;
+    margin-bottom: 24px;
+}
+body[data-page='contact'] .contact-email {
+    font-size: 1.25rem; font-weight: 700; margin: 0 0 18px;
+}
+body[data-page='contact'] .contact-email a {
+    color: var(--sage); text-decoration: none;
+    border-bottom: 2px solid rgba(163,201,182,0.3); padding-bottom: 2px;
+    transition: color .18s ease, border-color .18s ease;
+}
+body[data-page='contact'] .contact-email a:hover { color: var(--primary-bright); border-color: var(--primary-bright); }
+body[data-page='contact'] .copy-email-btn {
+    padding: 11px 22px; border-radius: 999px;
+    background:
+        linear-gradient(180deg, rgba(255,255,255,0.12), transparent 40%),
+        linear-gradient(135deg, var(--primary), var(--primary-dim) 55%, var(--sage-dim));
+    border: 1px solid rgba(255,255,255,0.12);
+    color: var(--bg); font-size: 0.9rem; font-weight: 700; cursor: pointer;
+    box-shadow: 0 4px 18px rgba(94,184,168,0.22), inset 0 1px 0 rgba(255,255,255,0.15);
+    transition: transform 0.3s var(--ease-premium), box-shadow 0.3s var(--ease-premium);
+}
+body[data-page='contact'] .copy-email-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 24px rgba(94,184,168,0.3), inset 0 1px 0 rgba(255,255,255,0.15);
+}
+body[data-page='contact'] .contact-copy-hint {
+    color: var(--text-faint); font-size: 0.85rem; margin-top: 18px;
+}
+body[data-page='contact'] .contact-response {
+    display: inline-flex; align-items: center; gap: 8px;
+    margin-top: 22px; padding: 10px 16px;
+    font-size: 0.85rem; color: var(--text-dim);
+    background: rgba(163,201,182,0.08);
+    border: 1px solid rgba(163,201,182,0.15);
+    border-radius: 999px;
+}
+body[data-page='contact'] .resp-dot {
+    width: 8px; height: 8px; border-radius: 50%;
+    background: var(--success);
+    box-shadow: 0 0 8px rgba(163,201,182,0.6);
+}
+body[data-page='contact'] .info-box {
+    background: linear-gradient(135deg, rgba(163,201,182,0.10), rgba(143,175,181,0.05));
+    border: 1px solid rgba(163,201,182,0.18);
+    border-left: 3px solid var(--sage);
+    border-radius: var(--radius-sm);
+    padding: 14px 16px; margin-bottom: 20px;
+    font-size: 0.88rem; color: var(--text-dim); line-height: 1.6;
+    text-align: left;
+}
+body[data-page='contact'] .info-box a { color: var(--sage); font-weight: 700; text-decoration: none; border-bottom: 1px solid var(--sage); }
+body[data-page='contact'] .contact-checklist {
+    list-style: none; padding: 0; margin: 0 0 16px;
+    display: grid; gap: 12px; text-align: left;
+}
+body[data-page='contact'] .contact-checklist li {
+    display: flex; align-items: flex-start; gap: 10px;
+    font-size: 0.9rem; color: var(--text-dim); line-height: 1.55;
+    padding: 12px 14px;
+    background: rgba(143,175,181,0.05);
+    border: 1px solid var(--hairline);
+    border-radius: var(--radius-sm);
+}
+body[data-page='contact'] .contact-checklist li strong { color: var(--text); }
+body[data-page='contact'] .cl-icon {
+    flex: 0 0 auto; width: 22px; height: 22px;
+    display: inline-flex; align-items: center; justify-content: center;
+    border-radius: 50%;
+    background: rgba(163,201,182,0.14);
+    border: 1px solid rgba(163,201,182,0.25);
+}
+body[data-page='contact'] .contact-note {
+    font-size: 0.9rem; color: var(--text-dim);
+    text-align: center; padding: 14px;
+    background: linear-gradient(135deg, rgba(163,201,182,0.06), transparent 60%);
+    border: 1px solid rgba(163,201,182,0.12);
+    border-radius: var(--radius-sm);
+}
