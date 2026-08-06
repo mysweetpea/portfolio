@@ -5241,25 +5241,19 @@ body {
 
 /* --- Prominent hero steps --- */
 .hero-steps {
-    display: flex; flex-wrap: wrap; justify-content: center; gap: 14px 32px;
-    list-style: none; padding: 0; margin: 34px 0 4px;
+    display: flex; flex-wrap: wrap; justify-content: center; gap: 10px 24px;
+    list-style: none; padding: 0; margin: 22px 0 4px;
+    color: var(--text-dim); font-size: 0.88rem; font-weight: 500;
 }
-.hero-steps li {
-    display: flex; align-items: center; gap: 12px;
-    padding: 14px 20px; border-radius: var(--radius-sm);
-    background: var(--card-bg); border: 1px solid var(--hairline);
-    backdrop-filter: blur(14px) saturate(1.2);
-    box-shadow: 0 4px 16px rgba(0,0,0,0.2), inset 0 1px 0 rgba(255,255,255,0.05);
-}
+.hero-steps li { display: inline-flex; align-items: center; gap: 8px; }
 .hero-steps li span {
     display: inline-flex; align-items: center; justify-content: center;
-    width: 34px; height: 34px; border-radius: 50%; flex: none;
-    background: linear-gradient(135deg, var(--primary), var(--sage-dim));
-    color: var(--bg); font-size: 0.95rem; font-weight: 800;
-    box-shadow: 0 2px 8px rgba(94,184,168,0.3);
+    width: 24px; height: 24px; border-radius: 50%; flex: none;
+    background: var(--sage); color: var(--bg);
+    font-size: 0.78rem; font-weight: 700;
 }
-.hero-steps li strong { display: block; color: var(--text); font-size: 0.95rem; font-weight: 700; }
-.hero-steps li em { display: block; color: var(--text-dim); font-size: 0.78rem; font-style: normal; }
+.hero-steps li strong { color: var(--text); font-weight: 600; }
+.hero-steps li em { color: var(--text-faint); font-size: 0.78rem; font-style: normal; }
 
 /* --- Clearer vine dividers (label them as vines) --- */
 .vine-divider {

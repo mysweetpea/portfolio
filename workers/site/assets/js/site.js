@@ -616,17 +616,28 @@
         pollen.appendChild(span);
     }
 
-    /* === Vine divider SVG + label (injected into .vine-divider elements) === */
+    /* === Vine divider SVG (injected into .vine-divider elements) === */
     var vineSvg = '<svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">' +
+        /* main stems */
         '<path d="M32 6C22 10 16 20 18 32c2 12 12 20 14 26" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>' +
-        '<path d="M18 32c-6-2-10-8-8-14 2-6 8-8 14-6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" opacity=".6"/>' +
         '<path d="M32 6c10 4 16 14 14 26-2 12-12 20-14 26" stroke="currentColor" stroke-width="2" stroke-linecap="round" opacity=".5"/>' +
-        '<path d="M46 32c6-2 10-8 8-14-2-6-8-8-14-6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" opacity=".6"/>' +
-        '<circle cx="18" cy="32" r="2.5" fill="currentColor" opacity=".7"/>' +
-        '<circle cx="46" cy="32" r="2.5" fill="currentColor" opacity=".7"/>' +
+        /* leaves along left stem */
+        '<path d="M20 18c-4-1-7-5-6-9 4 0 7 4 6 9Z" fill="currentColor" opacity=".6"/>' +
+        '<path d="M19 26c-4-1-7-5-6-9 4 0 7 4 6 9Z" fill="currentColor" opacity=".5"/>' +
+        '<path d="M19 34c-4-1-7-5-6-9 4 0 7 4 6 9Z" fill="currentColor" opacity=".4"/>' +
+        /* leaves along right stem */
+        '<path d="M44 18c4-1 7-5 6-9-4 0-7 4-6 9Z" fill="currentColor" opacity=".6"/>' +
+        '<path d="M45 26c4-1 7-5 6-9-4 0-7 4-6 9Z" fill="currentColor" opacity=".5"/>' +
+        '<path d="M45 34c4-1 7-5 6-9-4 0-7 4-6 9Z" fill="currentColor" opacity=".4"/>' +
+        /* tendrils (curls) */
+        '<path d="M18 32c-5-1-8-5-7-9" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" opacity=".6"/>' +
+        '<path d="M46 32c5-1 8-5 7-9" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" opacity=".6"/>' +
+        /* center bloom */
+        '<circle cx="32" cy="32" r="3" fill="currentColor" opacity=".8"/>' +
+        '<circle cx="32" cy="32" r="5.5" fill="none" stroke="currentColor" stroke-width="1" opacity=".4"/>' +
         '</svg>';
     document.querySelectorAll('.vine-divider').forEach(function (el) {
-        el.innerHTML = vineSvg + '<span class="vine-label">Vines</span>';
+        el.innerHTML = vineSvg;
     });
 })();
 
