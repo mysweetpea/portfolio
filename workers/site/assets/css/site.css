@@ -6564,3 +6564,16 @@ body[data-page='form'] .vc-box img { opacity: 0; transition: opacity .18s ease; 
 body[data-page='form'] .vc-text {
     font-size: 0.85rem; color: var(--text-dim); line-height: 1.5;
 }
+
+/* ==========================================================================
+   v64: Utility classes for success/404/error/index polish
+   ========================================================================== */
+.cta-btn-ghost {
+    background: rgba(255,255,255,0.05) !important;
+    color: var(--text) !important;
+    border: 1px solid var(--border) !important;
+}
+.cta-btn-ghost:hover {
+    background: rgba(255,255,255,0.1) !important;
+    border-color: var(--border-primary) !important;
+}
