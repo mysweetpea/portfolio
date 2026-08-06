@@ -5412,3 +5412,14 @@ body {
 @media (prefers-reduced-motion: reduce) {
     .tutorial-steps li { transition: none; }
 }
+
+/* --- Nav GitHub link: compact pill with logo, no external arrow --- */
+.nav-more-menu a.nav-github {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 6px 12px; border-radius: 999px;
+    background: var(--primary-glow); border: 1px solid var(--border-primary);
+    color: var(--text-dim); font-size: 0.78rem; font-weight: 600;
+    white-space: nowrap; width: fit-content;
+}
+.nav-more-menu a.nav-github:hover { color: var(--text); border-color: var(--sage); background: rgba(163,201,182,0.12); }
+.nav-more-menu a.nav-github img { width: 14px; height: 14px; }

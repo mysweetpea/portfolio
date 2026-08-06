@@ -49,7 +49,7 @@
                 <a href="/status.html">Status</a>
                 <a href="/changelog.html">Changelog</a>
                 <a href="/about.html">About</a>
-                <a href="https://github.com/mysweetpea" target="_blank" rel="noopener noreferrer">GitHub <span aria-hidden="true"><img src="/assets/icons/icon-ui-external.svg" alt="" width="12" height="12"></span></a>
+                <a href="https://github.com/mysweetpea" target="_blank" rel="noopener noreferrer" class="nav-github"><img src="/assets/icons/github.svg" alt="" width="14" height="14"> GitHub</a>
             </div>
         </details>
         <a href="/form.html" class="nav-cta">Get Access</a>
@@ -57,6 +57,7 @@
         <button class="theme-toggle" aria-label="Toggle color theme"><span class="icon-moon" aria-hidden="true"><img src="/assets/icons/icon-ui-moon.svg" class="" alt="" width="18" height="18" loading="lazy" decoding="async" aria-hidden="true"></span><span class="icon-sun" aria-hidden="true"><img src="/assets/icons/icon-ui-sun.svg" class="" alt="" width="18" height="18" loading="lazy" decoding="async" aria-hidden="true"></span></button>
     </div>
 </nav>
+
 
 
 
@@ -152,6 +153,7 @@
 
 
 
+
     <!-- Service details modal -->
     <div class="modal-overlay" id="serviceModal" role="dialog" aria-modal="true" aria-labelledby="modalTitle" aria-hidden="true">
         <div class="modal">
@@ -166,6 +168,7 @@
                 </div>
             </div>
             <div class="modal-body">
+                <p id="modalDesc" class="modal-desc"></p>
                 <p id="modalPlain" class="modal-plain"></p>
                 <p id="modalReplaces" class="modal-replaces"></p>
                 <div class="modal-tutorial">
@@ -213,7 +216,8 @@
             var badge = document.getElementById('modalTierBadge');
             badge.textContent = s.tierLabel;
             badge.className = 'tier-badge ' + s.tier;
-            document.getElementById('modalDesc').textContent = s.desc;
+            var descEl = document.getElementById('modalDesc');
+            if (descEl) descEl.textContent = s.desc;
             var plain = document.getElementById('modalPlain');
             if (plain) plain.textContent = s.plain || '';
             var replaces = document.getElementById('modalReplaces');
