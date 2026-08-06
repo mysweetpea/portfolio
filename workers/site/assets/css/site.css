@@ -4024,8 +4024,8 @@ body[data-page='redeem'] .form-input { width: 100%; box-sizing: border-box; }
 /* Check/X feedback sits inside every validated field. */
 body[data-page='form'] .form-group, body[data-page='redeem'] .form-group { position: relative; }
 body[data-page='form'] .validation-icon, body[data-page='redeem'] .validation-icon { position:absolute; right:14px; top:39px; width:20px; height:20px; line-height:19px; border-radius:50%; text-align:center; font-size:14px; font-weight:800; opacity:0; pointer-events:none; transition:opacity .18s ease; }
-/* The invite-code boxes have their own row; move its check/X outside the last box. */
-body[data-page='redeem'] .redeem-code-group .validation-icon { right: auto; left: 50%; top: auto; bottom: -26px; transform: translateX(-50%); }
+/* The invite-code boxes have their own row; place its check/X to the right of the boxes. */
+body[data-page='redeem'] .redeem-code-group .validation-icon { right: 8px; top: 50%; bottom: auto; left: auto; transform: translateY(-50%); }
 body[data-page='redeem'] .redeem-code-group .validation-icon.show { opacity:1; }
 body[data-page='form'] .validation-icon.show, body[data-page='redeem'] .validation-icon.show { opacity:1; }
 body[data-page='form'] .validation-icon.valid, body[data-page='redeem'] .validation-icon.valid { color:#0E5B3A; background:rgba(163,201,182,.5); }
@@ -5695,11 +5695,11 @@ body[data-page='services'] .service-card .acct-pill {
 }
 /* Blinking caret indicator that tracks the cursor position across the boxes */
 .cb-caret {
-    position: absolute; top: 50%;
-    width: 2px; height: 26px;
-    transform: translate(-50%, -50%);
+    position: absolute; left: 0; top: auto; bottom: 6px;
+    width: 22px; height: 3px;
+    transform: translateX(-50%);
     background: var(--primary-bright);
-    border-radius: 2px;
+    border-radius: 3px;
     opacity: 0; pointer-events: none;
     box-shadow: 0 0 8px rgba(94, 184, 168, 0.7);
     animation: cbBlink 1s steps(1) infinite;
