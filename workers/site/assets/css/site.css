@@ -5356,3 +5356,15 @@ body {
 @media (prefers-reduced-motion: reduce) {
     .modal-mockup img { animation: none; }
 }
+
+/* --- GitHub link in service modal header --- */
+.modal-github {
+    display: inline-flex; align-items: center; gap: 6px;
+    margin-top: 8px; padding: 5px 12px;
+    border-radius: 999px;
+    background: var(--primary-glow); border: 1px solid var(--border-primary);
+    color: var(--text-dim); font-size: 0.78rem; font-weight: 600;
+    text-decoration: none; transition: var(--transition);
+}
+.modal-github:hover { color: var(--text); border-color: var(--sage); background: rgba(163,201,182,0.12); }
+.modal-github img { width: 16px; height: 16px; }
