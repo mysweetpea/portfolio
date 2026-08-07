@@ -197,7 +197,7 @@ body {
 /* Only hide reveal elements when JS is confirmed running (html.js).
    If JS fails or is slow, content stays visible — pages never look unfinished. */
 .js .reveal {
-    opacity: 1; transform: none;
+    opacity: 0; transform: translateY(28px);
 }
 .js .reveal.visible { opacity: 1; transform: translateY(0); }
 .reveal-delay-1 { transition-delay: 0.1s; }
@@ -3526,15 +3526,11 @@ body[data-page='pricing'] .price.pop-text { font-size: 2rem; }
 body[data-page='services'] .modal { background: linear-gradient(160deg, #132026, #0D161A); border-color: var(--border-primary); }
 body[data-page='services'] .modal-header h2 { font-size: 1.45rem; letter-spacing: -0.01em; }
 body[data-page='services'] .modal-header { padding-bottom: 14px; border-bottom: 1px solid var(--border); margin-bottom: 18px; }
-/* On mobile, when the GitHub link is moved next to the tier badge (long names),
-   put them in a flex row so they sit side-by-side without overlapping. */
-@media (max-width: 640px) {
-    body[data-page='services'] .modal-header > div {
-        display: flex; flex-wrap: wrap; align-items: center; gap: 8px;
-    }
-    body[data-page='services'] .modal-header .tier-tag + .modal-github {
-        display: inline-flex; align-items: center; margin-left: 0;
-    }
+/* The tier tag + GitHub link sit together on the same line, below the name.
+   Keep them inline-flex so they align side-by-side and vertically centered. */
+body[data-page='services'] .modal-header .tier-tag + .modal-github {
+    display: inline-flex; align-items: center; margin-left: 8px;
+    vertical-align: middle;
 }
 body[data-page='services'] .modal-body p { font-size: 0.95rem; line-height: 1.75; color: var(--text); margin-bottom: 18px; }
 body[data-page='services'] .modal-tutorial { background: rgba(197,213,216,0.05); border: 1px solid var(--border-primary); padding: 22px; }
