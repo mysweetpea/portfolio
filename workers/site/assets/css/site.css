@@ -3396,9 +3396,11 @@ body[data-page='status'] .status-list-soon { opacity: 0.78; }
 [data-theme='light'] body[data-page='status'] .status-service img { background: rgba(255,255,255,0.88); border-color: rgba(51,86,95,0.24); }
 @media (max-width: 560px) {
     body[data-page='status'] .status-section { padding-inline: 16px; }
-    body[data-page='status'] .status-row { padding: 14px; min-height: 72px; }
+    body[data-page='status'] .status-row { padding: 14px; min-height: 72px; flex-wrap: wrap; }
     body[data-page='status'] .status-desc { font-size: 0.78rem; }
-    body[data-page='status'] .status-badge { font-size: 0.7rem; margin-left: 10px; }
+    body[data-page='status'] .status-badge { font-size: 0.7rem; margin-left: 10px; flex-wrap: wrap; }
+    body[data-page='status'] .status-service { min-width: 0; }
+    body[data-page='status'] .uptime-bar { width: 80px; }
 }
 
 /* ==========================================================================
@@ -4669,10 +4671,12 @@ body[data-page='home'] .hero h1 { font-size: clamp(2.75rem, 6.5vw, 4.5rem); }
 .form-progress {
     display: flex; align-items: center; justify-content: center;
     gap: 6px; margin: 0 auto 28px; max-width: 420px;
+    flex-wrap: wrap;
 }
 .form-progress .step {
     display: flex; align-items: center; gap: 6px;
     font-size: 0.78rem; color: var(--text-faint); font-weight: 600;
+    white-space: nowrap;
 }
 .form-progress .step .dot {
     width: 22px; height: 22px; border-radius: 50%;
@@ -4686,6 +4690,11 @@ body[data-page='home'] .hero h1 { font-size: clamp(2.75rem, 6.5vw, 4.5rem); }
 .form-progress .step.done { color: var(--text-dim); }
 .form-progress .connector { width: 28px; height: 2px; background: var(--border); }
 .form-progress .connector.done { background: var(--sage); }
+@media (max-width: 640px) {
+    .form-progress { gap: 4px; }
+    .form-progress .step { font-size: 0.7rem; }
+    .form-progress .connector { width: 18px; }
+}
 
 /* --- QR code --- */
 .qr-wrap { text-align: center; margin-top: 14px; }
@@ -4760,6 +4769,10 @@ body[data-page='home'] .hero h1 { font-size: clamp(2.75rem, 6.5vw, 4.5rem); }
 .compare-table .compare-cta-row .compare-cta:hover { background: var(--primary-bright); transform: translateY(-1px); }
 @media (max-width: 640px) {
     .compare-table th, .compare-table td { padding: 10px 10px; font-size: 0.8rem; }
+    .compare-table .compare-cta-row .compare-cta {
+        display: block; width: 100%; text-align: center; box-sizing: border-box;
+        padding: 10px 8px; font-size: 0.75rem; white-space: nowrap;
+    }
 }
 
 /* --- Status page: actions + incidents --- */
@@ -6018,8 +6031,9 @@ body[data-page='services'] .service-card .acct-pill {
     box-shadow: 0 0 0 3px rgba(217, 140, 140, 0.18);
 }
 @media (max-width: 640px) {
-    .cb-cell { width: 30px; height: 42px; font-size: 1.05rem; }
-    .code-boxes { gap: 4px; }
+    .cb-cell { width: 26px; height: 40px; font-size: 0.95rem; }
+    .code-boxes { gap: 3px; }
+    .cb-sep { width: 10px; font-size: 0.95rem; }
 }
 
 /* ==========================================================================
@@ -6452,6 +6466,7 @@ body[data-page='about'] .about-card {
     backdrop-filter: blur(18px) saturate(1.25);
     -webkit-backdrop-filter: blur(18px) saturate(1.25);
     padding: 28px 26px; margin-bottom: 20px;
+    max-width: 100%; box-sizing: border-box; overflow-wrap: break-word;
 }
 body[data-page='about'] .about-card h2 {
     font-size: 1.2rem; font-weight: 700; margin: 0 0 14px;
@@ -6473,6 +6488,7 @@ body[data-page='about'] .about-list li {
     background: rgba(143,175,181,0.05);
     border: 1px solid var(--hairline);
     border-radius: var(--radius-sm);
+    min-width: 0; overflow-wrap: break-word;
 }
 body[data-page='about'] .about-list li a {
     color: var(--sage); font-weight: 600; text-decoration: none;
@@ -6547,6 +6563,23 @@ body[data-page='form'] .access-choice-card {
     backdrop-filter: blur(18px) saturate(1.25);
     -webkit-backdrop-filter: blur(18px) saturate(1.25);
     transition: transform 0.35s var(--ease-premium), box-shadow 0.35s var(--ease-premium), border-color 0.35s var(--ease-premium);
+    position: relative; overflow: hidden;
+}
+/* Shimmer sweep on the tier cards so mobile users know they're clickable */
+body[data-page='form'] .access-choice-card::after {
+    content: ""; position: absolute; top: 0; left: -150%;
+    width: 60%; height: 100%;
+    background: linear-gradient(100deg, transparent, rgba(255,255,255,0.10), transparent);
+    transform: skewX(-20deg);
+    animation: cardShimmer 3.2s ease-in-out infinite;
+}
+@keyframes cardShimmer {
+    0% { left: -150%; }
+    60% { left: 150%; }
+    100% { left: 150%; }
+}
+@media (prefers-reduced-motion: reduce) {
+    body[data-page='form'] .access-choice-card::after { animation: none; display: none; }
 }
 body[data-page='form'] .access-choice-card:hover {
     transform: translateY(-3px);

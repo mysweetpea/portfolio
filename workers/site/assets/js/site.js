@@ -741,7 +741,15 @@
                 t.setAttribute('aria-selected', active ? 'true' : 'false');
             });
             panels.forEach(function (p) {
-                p.classList.toggle('active', p.getAttribute('data-view') === view);
+                var active = p.getAttribute('data-view') === view;
+                p.classList.toggle('active', active);
+                // Reveal any .reveal elements inside the now-active panel so
+                // FAQ/content isn't stuck hidden when switching tabs.
+                if (active) {
+                    p.querySelectorAll('.reveal').forEach(function (el) {
+                        el.classList.add('visible');
+                    });
+                }
             });
         }
 
