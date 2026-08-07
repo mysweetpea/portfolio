@@ -67,21 +67,11 @@
                         revealObserver.unobserve(entry.target);
                     }
                 });
-            }, { threshold: 0.15, rootMargin: '0px 0px -50% 0px' });
+            }, { threshold: 0.2, rootMargin: '0px 0px -60% 0px' });
 
             revealEls.forEach(function (el) {
                 revealObserver.observe(el);
             });
-
-            window.addEventListener('load', function () {
-                revealEls.forEach(function (el) {
-                    var rect = el.getBoundingClientRect();
-                    if (rect.top < window.innerHeight && rect.bottom > 0) {
-                        el.classList.add('visible');
-                        revealObserver.unobserve(el);
-                    }
-                });
-            }, { once: true });
         }
     }
 
