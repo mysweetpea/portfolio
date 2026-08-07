@@ -137,6 +137,7 @@ body {
     letter-spacing: -0.4px;
 }
 .nav-links { display: flex; gap: 4px; align-items: center; }
+.nav-actions { display: flex; align-items: center; gap: 4px; }
 .nav-btn {
     padding: 8px 16px;
     background: transparent;
@@ -3853,6 +3854,12 @@ body[data-page='about'] .content-section .card > ul > li:nth-child(even) { anima
     }
     .nav-search { order: 10; margin: 2px 0 0; align-self: center; }
     .theme-toggle { order: 11; margin: 2px 0 0; align-self: center; }
+    /* Keep the two small icon buttons side-by-side on mobile */
+    .nav-actions {
+        display: flex; flex-direction: row; align-items: center; justify-content: center;
+        gap: 8px; margin-top: 2px;
+    }
+    .nav-actions .nav-search, .nav-actions .theme-toggle { margin: 0; }
     .nav-more { width: 100%; }
     .nav-more > summary {
         min-height: 50px; padding: 14px 16px; display: flex; align-items: center; justify-content: center;
