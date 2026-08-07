@@ -82,8 +82,6 @@
                     }
                 });
             }, { once: true });
-
-            window.setTimeout(forceRevealAll, 2500);
         }
     }
 

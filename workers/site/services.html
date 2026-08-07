@@ -240,6 +240,19 @@
             document.getElementById('modalOpenBtn').href = s.url;
             var gh = document.getElementById('modalGithub');
             if (gh) { gh.href = s.github || '#'; }
+            /* Long service names: move the GitHub link next to the tier badge
+               so it doesn't wrap awkwardly under the name. */
+            var longNames = ['Jellyfin / Moonfin', 'Vaultwarden', 'Open WebUI', 'Matrix / Element'];
+            var titleRow = document.querySelector('.modal-title-row');
+            var tierBadge = document.getElementById('modalTierBadge');
+            if (gh && titleRow && tierBadge) {
+                if (longNames.indexOf(s.name) !== -1) {
+                    if (gh.parentNode === titleRow) titleRow.removeChild(gh);
+                    tierBadge.parentNode.insertBefore(gh, tierBadge.nextSibling);
+                } else {
+                    if (gh.parentNode !== titleRow) titleRow.appendChild(gh);
+                }
+            }
             var modal = document.getElementById('serviceModal');
             if (!modal) return;
             modal.classList.add('active'); modal.setAttribute('aria-hidden', 'false');

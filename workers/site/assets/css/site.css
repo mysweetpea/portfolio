@@ -5736,10 +5736,10 @@ body[data-page='services'] .service-card .tier-tag {
 body[data-page='services'] .service-card .learn-more {
     margin-top: 14px; font-size: 0.8rem;
 }
-/* Account required pill: centered on its own line */
+/* Account required pill: inline next to the service name */
 body[data-page='services'] .service-card .acct-pill {
-    font-size: 0.6rem; padding: 2px 7px; margin-left: 0;
-    width: 100%; text-align: center; justify-content: center;
+    font-size: 0.6rem; padding: 2px 7px; margin-left: 8px;
+    display: inline-flex; align-items: center; width: auto;
 }
 
 /* ==========================================================================
