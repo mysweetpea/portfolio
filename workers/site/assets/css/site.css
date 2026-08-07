@@ -197,7 +197,7 @@ body {
 /* Only hide reveal elements when JS is confirmed running (html.js).
    If JS fails or is slow, content stays visible — pages never look unfinished. */
 .js .reveal {
-    opacity: 0; transform: translateY(28px);
+    opacity: 1; transform: none;
 }
 .js .reveal.visible { opacity: 1; transform: translateY(0); }
 .reveal-delay-1 { transition-delay: 0.1s; }
@@ -5631,6 +5631,13 @@ body {
 }
 .nav-more-menu a.nav-github:hover { color: var(--text); border-color: var(--sage); background: rgba(163,201,182,0.12); }
 .nav-more-menu a.nav-github img { width: 14px; height: 14px; }
+/* On mobile, center the GitHub link in the nav menu (it inherits the
+   full-width centered layout of the other menu links). */
+@media (max-width: 768px) {
+    .nav-more-menu a.nav-github {
+        width: 100%; justify-content: center; margin: 0 auto;
+    }
+}
 
 
 /* --- Modal: give top room so the X button doesn't overlap the mockup image --- */

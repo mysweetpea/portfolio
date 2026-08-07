@@ -240,15 +240,14 @@
             document.getElementById('modalOpenBtn').href = s.url;
             var gh = document.getElementById('modalGithub');
             if (gh) { gh.href = s.github || '#'; }
-            /* Long service names: on mobile only, move the GitHub link next to
-               the tier badge so it doesn't wrap awkwardly under the name.
-               On desktop it always stays next to the service name. */
-            var longNames = ['Jellyfin / Moonfin', 'Vaultwarden', 'Open WebUI', 'Matrix / Element'];
+            /* On mobile only, always move the GitHub link next to the tier badge
+               so it doesn't wrap awkwardly under the name. On desktop it always
+               stays next to the service name. */
             var titleRow = document.querySelector('.modal-title-row');
             var tierBadge = document.getElementById('modalTierBadge');
             var isMobile = window.matchMedia('(max-width: 640px)').matches;
             if (gh && titleRow && tierBadge) {
-                if (isMobile && longNames.indexOf(s.name) !== -1) {
+                if (isMobile) {
                     if (gh.parentNode === titleRow) titleRow.removeChild(gh);
                     tierBadge.parentNode.insertBefore(gh, tierBadge.nextSibling);
                 } else {
