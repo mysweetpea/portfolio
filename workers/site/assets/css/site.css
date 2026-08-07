@@ -483,6 +483,14 @@ font-weight: 600;
 color: var(--primary) }
 body[data-page='about'] .github-link .desc { font-size: 0.78rem;
 color: var(--text-dim) }
+/* On mobile, shrink the GitHub icons and keep the repo cards inside the parent */
+@media (max-width: 640px) {
+    body[data-page='about'] .github-links { flex-direction: column; gap: 10px; }
+    body[data-page='about'] .github-link { min-width: 0; width: 100%; box-sizing: border-box; padding: 12px 14px; }
+    body[data-page='about'] .github-link .icon { font-size: 1.1rem; flex: 0 0 auto; }
+    body[data-page='about'] .github-link .icon svg { width: 18px; height: 18px; }
+    body[data-page='about'] .github-link .desc { font-size: 0.72rem; }
+}
 body[data-page='about'] .cta-section { max-width: 700px;
 margin: 0 auto 80px;
 padding: 24px;
