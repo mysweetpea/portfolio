@@ -656,12 +656,17 @@
     /* === Redeem: live invite-code check === */
     var rcCode = document.getElementById('rc-code');
     var rcHint = document.getElementById('rc-code-hint');
+    var rcIcon = document.getElementById('rc-code-icon');
     if (rcCode && rcHint) {
         var checkTimer = null;
+        function resetRcIcon() {
+            if (rcIcon) rcIcon.classList.remove('show', 'valid', 'invalid');
+        }
         rcCode.addEventListener('input', function () {
             clearTimeout(checkTimer);
+            resetRcIcon();
             var code = rcCode.value.trim();
-            if (code.length < 8) { rcHint.textContent = 'Enter the code exactly as it appears in your email.'; return; }
+            if (code.length < 8) { rcHint.textContent = 'Enter the code exactly as it appears in your email.'; rcHint.classList.remove('success', 'error'); return; }
             checkTimer = setTimeout(function () {
                 fetch('https://subscribe.mysweetpea.cc/webhook/check-code', {
                     method: 'POST',
@@ -669,8 +674,17 @@
                     body: JSON.stringify({ invite_code: code })
                 }).then(function (r) { return r.json(); })
                   .then(function (data) {
-                      if (data.ok) { rcHint.textContent = 'Code looks good — continue with your details.'; rcHint.classList.add('success'); }
-                      else { rcHint.textContent = data.msg || 'That code doesn\'t look right.'; rcHint.classList.add('error'); }
+                      if (data.ok) {
+                          rcHint.textContent = 'Code looks good — continue with your details.';
+                          rcHint.classList.remove('error');
+                          rcHint.classList.add('success');
+                          if (rcIcon) { rcIcon.classList.add('show', 'valid'); rcIcon.classList.remove('invalid'); rcIcon.textContent = '✓'; }
+                      } else {
+                          rcHint.textContent = data.msg || 'That code doesn\'t look right.';
+                          rcHint.classList.remove('success');
+                          rcHint.classList.add('error');
+                          if (rcIcon) { rcIcon.classList.add('show', 'invalid'); rcIcon.classList.remove('valid'); rcIcon.textContent = '×'; }
+                      }
                   })
                   .catch(function () { /* leave default hint */ });
             }, 600);
