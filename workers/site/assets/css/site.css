@@ -3527,11 +3527,13 @@ body[data-page='services'] .modal { background: linear-gradient(160deg, #132026,
 body[data-page='services'] .modal-header h2 { font-size: 1.45rem; letter-spacing: -0.01em; }
 body[data-page='services'] .modal-header { padding-bottom: 14px; border-bottom: 1px solid var(--border); margin-bottom: 18px; }
 /* On mobile, when the GitHub link is moved next to the tier badge (long names),
-   align them on the same line. */
+   put them in a flex row so they sit side-by-side without overlapping. */
 @media (max-width: 640px) {
+    body[data-page='services'] .modal-header > div {
+        display: flex; flex-wrap: wrap; align-items: center; gap: 8px;
+    }
     body[data-page='services'] .modal-header .tier-tag + .modal-github {
-        display: inline-flex; align-items: center; vertical-align: middle;
-        margin-left: 8px;
+        display: inline-flex; align-items: center; margin-left: 0;
     }
 }
 body[data-page='services'] .modal-body p { font-size: 0.95rem; line-height: 1.75; color: var(--text); margin-bottom: 18px; }

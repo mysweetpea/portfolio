@@ -537,18 +537,24 @@
 (function () {
     'use strict';
 
-    /* === Scroll-linked hero fade === */
+    /* === Scroll-linked hero fade ===
+       Only fade the hero once the user has scrolled past most of it,
+       so the headline, buttons, and steps stay readable while on screen. */
     var hero = document.querySelector('.hero');
     if (hero) {
         var heroTick = false;
+        function heroFadeThreshold() {
+            return Math.max(hero.offsetHeight * 0.85, window.innerHeight * 0.6);
+        }
         window.addEventListener('scroll', function () {
             if (heroTick) return;
             heroTick = true;
             requestAnimationFrame(function () {
-                hero.classList.toggle('hero-faded', window.scrollY > 120);
+                hero.classList.toggle('hero-faded', window.scrollY > heroFadeThreshold());
                 heroTick = false;
             });
         }, { passive: true });
+        window.addEventListener('resize', function () { hero.classList.toggle('hero-faded', window.scrollY > heroFadeThreshold()); });
     }
 
     /* === Card entrance stagger (index-based) === */
