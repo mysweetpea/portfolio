@@ -100,9 +100,9 @@
                             <div class="metric-bar"><span style="width:100%"></span></div>
                         </div>
                         <div class="metric-card">
-                            <div class="metric-value">0</div>
+                            <div class="metric-value" id="active-incidents-count">0</div>
                             <div class="metric-label">Active incidents</div>
-                            <div class="metric-bar"><span style="width:0%"></span></div>
+                            <div class="metric-bar"><span id="active-incidents-bar" style="width:0%"></span></div>
                         </div>
                     </div>
 
@@ -359,6 +359,12 @@
                     return;
                 }
                 if (empty) empty.hidden = true;
+                // Update the Active incidents metric
+                var activeCount = list.filter(function (i) { return i.status !== 'resolved'; }).length;
+                var countEl = document.getElementById('active-incidents-count');
+                var barEl = document.getElementById('active-incidents-bar');
+                if (countEl) countEl.textContent = activeCount;
+                if (barEl) barEl.style.width = Math.min(100, activeCount * 20) + '%';
                 list.forEach(function (inc) {
                     var item = document.createElement('div');
                     item.className = 'incident-item ' + (inc.status === 'resolved' ? 'incident-resolved' : 'incident-active');
