@@ -574,40 +574,7 @@
         root.setAttribute('data-theme', 'light');
     }
 
-    /* === First-visit welcome modal === */
-    var welcome = document.getElementById('welcomeModal');
-    if (welcome) {
-        var seen = null;
-        try { seen = localStorage.getItem('msp-welcome-seen'); } catch (e) {}
-        if (!seen) {
-            // Show after a short delay so the page paints first
-            setTimeout(function () {
-                welcome.classList.add('active');
-                var closeBtn = welcome.querySelector('.wm-btn-ghost');
-                if (closeBtn) closeBtn.focus();
-            }, 1200);
-        }
-        function dismissWelcome() {
-            welcome.classList.remove('active');
-            try { localStorage.setItem('msp-welcome-seen', '1'); } catch (e) {}
-        }
-        welcome.addEventListener('click', function (e) {
-            if (e.target === welcome) dismissWelcome();
-        });
-        var dismissBtns = welcome.querySelectorAll('[data-dismiss]');
-        dismissBtns.forEach(function (b) { b.addEventListener('click', dismissWelcome); });
-        /* Also mark as seen when the user clicks the primary CTA link, so the
-           modal doesn't reappear when they navigate back. */
-        var primaryBtn = welcome.querySelector('.wm-btn-primary');
-        if (primaryBtn) {
-            primaryBtn.addEventListener('click', function () {
-                try { localStorage.setItem('msp-welcome-seen', '1'); } catch (e) {}
-            });
-        }
-        document.addEventListener('keydown', function (e) {
-            if (e.key === 'Escape' && welcome.classList.contains('active')) dismissWelcome();
-        });
-    }
+    /* === First-visit welcome modal — removed per request === */
 })();
 
 /* ==========================================================================
