@@ -4755,6 +4755,12 @@ body[data-page='home'] .hero h1 { font-size: clamp(2.75rem, 6.5vw, 4.5rem); }
 }
 .trust-badge .trust-icon { color: var(--sage); font-size: 1rem; flex: 0 0 auto; }
 .trust-row { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-top: 20px; }
+/* On mobile, shrink the trust-badge icons and let the badges fit the parent */
+@media (max-width: 640px) {
+    .trust-row { grid-template-columns: 1fr; gap: 8px; }
+    .trust-badge { padding: 8px 12px; font-size: 0.75rem; gap: 6px; }
+    .trust-badge .trust-icon img { width: 14px; height: 14px; }
+}
 
 /* --- Focus trap helper (mobile nav) --- */
 .nav-links.nav-open { outline: none; }
