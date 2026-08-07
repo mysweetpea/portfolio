@@ -5714,7 +5714,7 @@ body[data-page='services'] .service-card {
 body[data-page='services'] .service-card .service-header {
     gap: 16px;
     margin-bottom: 14px;
-    justify-content: center;
+    flex-wrap: wrap;
 }
 body[data-page='services'] .service-card .service-icon {
     width: 48px; height: 48px; border-radius: 12px;
@@ -5736,9 +5736,10 @@ body[data-page='services'] .service-card .tier-tag {
 body[data-page='services'] .service-card .learn-more {
     margin-top: 14px; font-size: 0.8rem;
 }
-/* Account required pill: subtler */
+/* Account required pill: centered on its own line */
 body[data-page='services'] .service-card .acct-pill {
-    font-size: 0.6rem; padding: 2px 7px; margin-left: 6px;
+    font-size: 0.6rem; padding: 2px 7px; margin-left: 0;
+    width: 100%; text-align: center; justify-content: center;
 }
 
 /* ==========================================================================
