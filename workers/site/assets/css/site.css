@@ -3526,12 +3526,6 @@ body[data-page='pricing'] .price.pop-text { font-size: 2rem; }
 body[data-page='services'] .modal { background: linear-gradient(160deg, #132026, #0D161A); border-color: var(--border-primary); }
 body[data-page='services'] .modal-header h2 { font-size: 1.45rem; letter-spacing: -0.01em; }
 body[data-page='services'] .modal-header { padding-bottom: 14px; border-bottom: 1px solid var(--border); margin-bottom: 18px; }
-/* The tier tag + GitHub link sit together on the same line, below the name.
-   Keep them inline-flex so they align side-by-side and vertically centered. */
-body[data-page='services'] .modal-header .tier-tag + .modal-github {
-    display: inline-flex; align-items: center; margin-left: 8px;
-    vertical-align: middle;
-}
 body[data-page='services'] .modal-body p { font-size: 0.95rem; line-height: 1.75; color: var(--text); margin-bottom: 18px; }
 body[data-page='services'] .modal-tutorial { background: rgba(197,213,216,0.05); border: 1px solid var(--border-primary); padding: 22px; }
 body[data-page='services'] .modal-tutorial h3 {

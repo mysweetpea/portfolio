@@ -67,7 +67,7 @@
                         revealObserver.unobserve(entry.target);
                     }
                 });
-            }, { threshold: 0.2, rootMargin: '0px 0px -60% 0px' });
+            }, { threshold: 0.1, rootMargin: '0px 0px -10% 0px' });
 
             revealEls.forEach(function (el) {
                 revealObserver.observe(el);

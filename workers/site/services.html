@@ -163,9 +163,8 @@
                 <div>
                     <div class="modal-title-row">
                         <h2 id="modalTitle"></h2>
-                        <a id="modalGithub" class="modal-github" href="#" target="_blank" rel="noopener noreferrer"><img src="/assets/icons/github.svg" alt="" width="16" height="16"> GitHub</a>
                     </div>
-                    <span id="modalTierBadge" class="tier-tag"></span>
+                    <a id="modalGithub" class="modal-github" href="#" target="_blank" rel="noopener noreferrer"><img src="/assets/icons/github.svg" alt="" width="16" height="16"> GitHub</a>
                 </div>
             </div>
             <div class="modal-body">
@@ -214,9 +213,6 @@
             lastModalTrigger = trigger || document.activeElement;
             document.getElementById('modalIcon').innerHTML = s.icon;
             document.getElementById('modalTitle').textContent = s.name;
-            var badge = document.getElementById('modalTierBadge');
-            badge.textContent = s.tierLabel;
-            badge.className = 'tier-badge ' + s.tier;
             var descEl = document.getElementById('modalDesc');
             if (descEl) descEl.textContent = s.desc;
             var plain = document.getElementById('modalPlain');
@@ -240,14 +236,6 @@
             document.getElementById('modalOpenBtn').href = s.url;
             var gh = document.getElementById('modalGithub');
             if (gh) { gh.href = s.github || '#'; }
-            /* Always place the GitHub link next to the tier badge, below the
-               service name, so it's consistent for every service. */
-            var titleRow = document.querySelector('.modal-title-row');
-            var tierBadge = document.getElementById('modalTierBadge');
-            if (gh && titleRow && tierBadge) {
-                if (gh.parentNode === titleRow) titleRow.removeChild(gh);
-                tierBadge.parentNode.insertBefore(gh, tierBadge.nextSibling);
-            }
             var modal = document.getElementById('serviceModal');
             if (!modal) return;
             modal.classList.add('active'); modal.setAttribute('aria-hidden', 'false');
