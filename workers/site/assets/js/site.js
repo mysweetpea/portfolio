@@ -690,27 +690,7 @@
             });
     }
 
-    /* === Notify-me buttons (coming-soon services) === */
-    document.querySelectorAll('.notify-btn').forEach(function (btn) {
-        btn.addEventListener('click', function () {
-            var service = btn.getAttribute('data-service');
-            var email = btn.getAttribute('data-email') || '';
-            var payload = { service_name: service, notify: true, email: email };
-            fetch('https://subscribe.mysweetpea.cc/webhook/suggest', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(payload)
-            }).then(function (r) { return r.json(); })
-              .then(function (data) {
-                  btn.classList.add('notified');
-                  btn.textContent = 'We\'ll let you know';
-              })
-              .catch(function () {
-                  btn.classList.add('notified');
-                  btn.textContent = 'We\'ll let you know';
-              });
-        });
-    });
+    /* === Notify-me buttons (coming-soon services) — removed per request === */
 
     /* === Redeem: live invite-code check === */
     var rcCode = document.getElementById('rc-code');

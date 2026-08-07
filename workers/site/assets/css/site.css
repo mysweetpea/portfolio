@@ -5714,6 +5714,7 @@ body[data-page='services'] .service-card {
 body[data-page='services'] .service-card .service-header {
     gap: 16px;
     margin-bottom: 14px;
+    justify-content: center;
 }
 body[data-page='services'] .service-card .service-icon {
     width: 48px; height: 48px; border-radius: 12px;
