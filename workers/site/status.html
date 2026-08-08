@@ -284,11 +284,16 @@
         var metricLive = document.querySelectorAll('.metric-card .metric-value')[1];
         var metricIncidents = document.querySelectorAll('.metric-card .metric-value')[2];
 
-        // Map our service keys to Uptime Kuma monitor IDs (fill in once monitors exist)
+        // Map our service keys to Uptime Kuma monitor IDs
         var MONITOR_IDS = {
             vaultwarden: 1, matrix: 2, affine: 3, koalasync: 4,
             jellyfin: 5, seerr: 6, nextcloud: 7, immich: 8, openwebui: 9
         };
+        // Reverse map: monitor ID -> service key
+        var ID_TO_KEY = {};
+        Object.keys(MONITOR_IDS).forEach(function (k) { ID_TO_KEY[MONITOR_IDS[k]] = k; });
+        // Status page slug in Uptime Kuma (public URL /status/homelab)
+        var STATUS_SLUG = 'homelab';
 
         function setRow(row, up, pct) {
             var badge = row.querySelector('.status-badge');
@@ -306,39 +311,31 @@
             if (dot) dot.classList.toggle('status-down', !up);
         }
 
-        // Fetch overall status-page heartbeat
-        fetch('https://status.mysweetpea.cc/api/status-page/heartbeat/1')
+        // Fetch the status page heartbeat (single call, object keyed by monitor ID)
+        fetch('https://status.mysweetpea.cc/api/status-page/heartbeat/' + STATUS_SLUG)
             .then(function (r) { return r.ok ? r.json() : Promise.reject(); })
             .then(function (data) {
                 if (!data || !data.heartbeatList) return;
-                var list = data.heartbeatList;
-                var upCount = 0;
-                list.forEach(function (h) {
-                    var row = document.querySelector('.status-row[data-service-key="' + h.monitorID + '"]');
-                    if (row) {
-                        var up = h.status === 1;
-                        if (up) upCount++;
-                        setRow(row, up, h.uptime ? h.uptime * 100 : 99.9);
-                    }
+                var hb = data.heartbeatList; // { "<monitorId>": [heartbeats...], ... }
+                var upCount = 0, total = 0;
+                Object.keys(hb).forEach(function (id) {
+                    var key = ID_TO_KEY[id];
+                    if (!key) return;
+                    var row = document.querySelector('.status-row[data-service-key="' + key + '"]');
+                    if (!row) return;
+                    var list = hb[id];
+                    if (!list || !list.length) return;
+                    var h = list[list.length - 1];
+                    var up = h.status === 1;
+                    if (up) upCount++;
+                    total++;
+                    var pct = (data.uptimeList && data.uptimeList[id] != null) ? data.uptimeList[id] : 99.9;
+                    setRow(row, up, pct);
                 });
-                if (summaryText) summaryText.textContent = upCount + ' of ' + list.length + ' operational';
+                if (summaryText) summaryText.textContent = upCount + ' of ' + total + ' operational';
                 if (summaryTime) summaryTime.textContent = 'Updated ' + new Date().toLocaleDateString();
             })
             .catch(function () { /* keep static fallback */ });
-
-        // Per-monitor status (Uptime Kuma API: /api/status-page/heartbeat/{id})
-        Object.keys(MONITOR_IDS).forEach(function (key) {
-            var row = document.querySelector('.status-row[data-service-key="' + key + '"]');
-            if (!row) return;
-            fetch('https://status.mysweetpea.cc/api/status-page/heartbeat/' + MONITOR_IDS[key])
-                .then(function (r) { return r.ok ? r.json() : Promise.reject(); })
-                .then(function (data) {
-                    if (!data || !data.heartbeatList || !data.heartbeatList.length) return;
-                    var h = data.heartbeatList[data.heartbeatList.length - 1];
-                    setRow(row, h.status === 1, h.uptime ? h.uptime * 100 : 99.9);
-                })
-                .catch(function () { /* keep static fallback */ });
-        });
     })();
 
     /* === Incidents from n8n webhook (Telegram bot /incident command) === */
