@@ -17,7 +17,7 @@ const csp = [
   "style-src 'self' 'unsafe-inline'",
   "font-src 'self'",
   "img-src 'self' data:",
-  "connect-src 'self' https://subscribe.mysweetpea.cc",
+  "connect-src 'self' https://subscribe.mysweetpea.cc https://status.mysweetpea.cc",
   "frame-ancestors 'none'"
 ].join('; ');
 
