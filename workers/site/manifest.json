@@ -3,9 +3,13 @@
   "short_name": "MySweetPea",
   "description": "Private, self-hosted alternatives to the services you use every day. No ads, no tracking, no subscriptions — community funded.",
   "start_url": "/",
+  "scope": "/",
   "display": "standalone",
+  "orientation": "portrait",
   "background_color": "#0C1316",
   "theme_color": "#0C1316",
+  "categories": ["productivity", "utilities", "social"],
+  "lang": "en",
   "icons": [
     {
       "src": "/logo-favicon.svg",
@@ -24,6 +28,32 @@
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "any"
+    },
+    {
+      "src": "/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Get Access",
+      "short_name": "Get Access",
+      "url": "/form.html",
+      "icons": [{ "src": "/icon-192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "Services",
+      "short_name": "Services",
+      "url": "/services.html",
+      "icons": [{ "src": "/icon-192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "Status",
+      "short_name": "Status",
+      "url": "/status.html",
+      "icons": [{ "src": "/icon-192.png", "sizes": "192x192" }]
     }
   ]
 }

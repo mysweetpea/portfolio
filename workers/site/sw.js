@@ -1,8 +1,8 @@
 /* MySweetPea — Service Worker
-   Minimal offline cache for the static site. Caches pages + assets on first
-   visit so the site works offline and feels app-like for members. */
+   Stale-while-revalidate caching for static assets, network-first for HTML.
+   Bumped to v8 — updates propagate automatically without hard-refresh. */
 
-const CACHE = 'mysweetpea-v7';
+const CACHE = 'mysweetpea-v8';
 const CORE = [
   '/',
   '/index.html',
@@ -35,7 +35,7 @@ self.addEventListener('fetch', (event) => {
   if (req.method !== 'GET') return;
 
   // Network-first for HTML (so nav/footer/content stay fresh), cache fallback.
-  if (req.mode === 'navigate' || req.headers.get('accept')?.includes('text/html')) {
+  if (req.mode === 'navigate' || (req.headers.get('accept') && req.headers.get('accept').includes('text/html'))) {
     event.respondWith(
       fetch(req).then((res) => {
         const copy = res.clone();
@@ -46,12 +46,19 @@ self.addEventListener('fetch', (event) => {
     return;
   }
 
-  // Cache-first for static assets.
+  // Stale-while-revalidate for static assets: serve cache immediately,
+  // fetch fresh in background, update cache. No more stuck v7!
   event.respondWith(
-    caches.match(req).then((cached) => cached || fetch(req).then((res) => {
-      const copy = res.clone();
-      caches.open(CACHE).then((c) => c.put(req, copy));
-      return res;
-    }))
+    caches.match(req).then((cached) => {
+      const fetchPromise = fetch(req).then((res) => {
+        if (res && res.status === 200) {
+          const copy = res.clone();
+          caches.open(CACHE).then((c) => c.put(req, copy));
+        }
+        return res;
+      }).catch(() => cached);
+
+      return cached || fetchPromise;
+    })
   );
 });

@@ -1,32 +1,50 @@
 /* MySweetPea — Cloudflare Worker
-   Serves the static site with security headers and Matrix federation well-known.
-   Nav/footer are now inlined directly into each HTML page (no injection needed). */
+   Serves the static site with strict CSP (per-request nonces), security headers,
+   Matrix federation well-known, GitHub commits proxy, and 404 handling. */
 
 const securityHeaders = {
   'X-Content-Type-Options': 'nosniff',
   'X-Frame-Options': 'DENY',
   'Referrer-Policy': 'strict-origin-when-cross-origin',
   'Permissions-Policy': 'camera=(), microphone=(), geolocation=(), payment=(), usb=()',
-  'Strict-Transport-Security': 'max-age=63072000; includeSubDomains; preload'
+  'Strict-Transport-Security': 'max-age=63072000; includeSubDomains; preload',
+  'Cross-Origin-Opener-Policy': 'same-origin',
+  'Cross-Origin-Embedder-Policy': 'credentialless',
+  'Cross-Origin-Resource-Policy': 'same-origin',
+  'X-DNS-Prefetch-Control': 'off'
 };
 
-// CSP allows only our own assets (fonts + QR are self-hosted).
-const csp = [
-  "default-src 'self'",
-  "script-src 'self' 'unsafe-inline'",
-  "style-src 'self' 'unsafe-inline'",
-  "font-src 'self'",
-  "img-src 'self' data:",
-  "connect-src 'self' https://subscribe.mysweetpea.cc https://status.mysweetpea.cc",
-  "frame-ancestors 'none'"
-].join('; ');
+// Generate a base64url-safe nonce (16 bytes → 22 chars)
+function generateNonce() {
+  const bytes = new Uint8Array(16);
+  crypto.getRandomValues(bytes);
+  return btoa(String.fromCharCode(...bytes))
+    .replace(/\+/g, '-')
+    .replace(/\//g, '_')
+    .replace(/=+$/, '');
+}
+
+// In-memory cache for /api/commits (survives across requests within an isolate)
+let commitsCache = { data: null, ts: 0 };
+const COMMITS_TTL = 300_000; // 5 minutes in ms
 
 export default {
   async fetch(request, env) {
     const url = new URL(request.url);
 
-    // Proxy GitHub commits for the changelog (token stays server-side)
+    // --- Proxy GitHub commits for the changelog (token stays server-side) ---
     if (url.pathname === '/api/commits') {
+      const now = Date.now();
+      if (commitsCache.data && (now - commitsCache.ts) < COMMITS_TTL) {
+        return new Response(JSON.stringify(commitsCache.data), {
+          headers: {
+            'Content-Type': 'application/json',
+            'Cache-Control': 'public, max-age=300',
+            'X-Cache': 'HIT'
+          }
+        });
+      }
+
       const token = env.GITHUB_TOKEN || '';
       const repos = ['mysweetpea/portfolio', 'mysweetpea/homelab-k8s'];
       const headers = {
@@ -52,15 +70,21 @@ export default {
       }));
 
       const all = results.flat().sort((a, b) => new Date(b.date) - new Date(a.date));
+      commitsCache = { data: all, ts: now };
+
       return new Response(JSON.stringify(all), {
-        headers: { 'Content-Type': 'application/json', 'Cache-Control': 'public, max-age=300' }
+        headers: {
+          'Content-Type': 'application/json',
+          'Cache-Control': 'public, max-age=300',
+          'X-Cache': 'MISS'
+        }
       });
     }
 
-    // Matrix federation well-known
+    // --- Matrix federation well-known ---
     if (url.pathname === '/.well-known/matrix/server') {
       return new Response(JSON.stringify({
-        "m.server": "matrix.mysweetpea.cc:443"
+        'm.server': 'matrix.mysweetpea.cc:443'
       }), {
         headers: { 'Content-Type': 'application/json' }
       });
@@ -68,23 +92,86 @@ export default {
 
     if (url.pathname === '/.well-known/matrix/client') {
       return new Response(JSON.stringify({
-        "m.homeserver": { "base_url": "https://matrix.mysweetpea.cc" }
+        'm.homeserver': { 'base_url': 'https://matrix.mysweetpea.cc' }
       }), {
         headers: { 'Content-Type': 'application/json' }
       });
     }
 
-    // Serve static site
+    // --- Serve static site ---
     const res = await env.ASSETS.fetch(request);
     const contentType = res.headers.get('Content-Type') || '';
+
+    // Handle 404: serve 404.html for unknown HTML routes
+    if (res.status === 404 && !url.pathname.includes('.')) {
+      const notFoundRes = await env.ASSETS.fetch(new Request('https://dummy.local/404.html'));
+      if (notFoundRes.ok) {
+        const body = await notFoundRes.text();
+        const out = new Response(body, {
+          status: 404,
+          headers: {
+            'Content-Type': 'text/html; charset=utf-8',
+            'Cache-Control': 'no-cache'
+          }
+        });
+        Object.entries(securityHeaders).forEach(([k, v]) => out.headers.set(k, v));
+        return out;
+      }
+    }
 
     // Apply security headers to every response
     const out = new Response(res.body, res);
     Object.entries(securityHeaders).forEach(([k, v]) => out.headers.set(k, v));
 
-    // Add CSP to HTML responses
+    // Apply strict CSP with nonce to HTML responses
     if (contentType.includes('text/html')) {
+      const nonce = generateNonce();
+
+      // Build CSP — no unsafe-inline; scripts and styles require the nonce
+      const csp = [
+        "default-src 'self'",
+        "script-src 'self' 'nonce-" + nonce + "'",
+        "style-src 'self' 'nonce-" + nonce + "'",
+        "font-src 'self'",
+        "img-src 'self' data:",
+        "connect-src 'self' https://subscribe.mysweetpea.cc https://status.mysweetpea.cc",
+        "object-src 'none'",
+        "base-uri 'self'",
+        "form-action 'self' https://subscribe.mysweetpea.cc",
+        "frame-ancestors 'none'",
+        "upgrade-insecure-requests"
+      ].join('; ');
+
       out.headers.set('Content-Security-Policy', csp);
+
+      // Inject nonce into all <script> and <style> tags in the HTML body
+      const text = await out.text();
+      let injected = text
+        .replace(/<script(?![^>]*nonce=)/g, '<script nonce="' + nonce + '"')
+        .replace(/<style(?![^>]*nonce=)/g, '<style nonce="' + nonce + '"');
+
+      // Inject canonical URL + JSON-LD Organization schema into <head>
+      const page = url.pathname === '/' ? 'index.html' : url.pathname.replace(/^\//, '');
+      const canonical = 'https://mysweetpea.cc/' + (page === 'index.html' ? '' : page);
+      const jsonLd = '<script type="application/ld+json" nonce="' + nonce + '">' +
+        JSON.stringify({
+          '@context': 'https://schema.org',
+          '@type': 'Organization',
+          'name': 'MySweetPea',
+          'url': 'https://mysweetpea.cc',
+          'logo': 'https://mysweetpea.cc/logo.png',
+          'description': 'Private, self-hosted alternatives to the services you use every day. No ads, no tracking, no subscriptions — community funded.',
+          'email': 'support@mysweetpea.cc',
+          'sameAs': ['https://github.com/mysweetpea']
+        }) + '</script>';
+      const headInject = '<link rel="canonical" href="' + canonical + '">' + jsonLd;
+      injected = injected.replace('</head>', headInject + '</head>');
+
+      return new Response(injected, {
+        status: out.status,
+        statusText: out.statusText,
+        headers: out.headers
+      });
     }
 
     return out;
