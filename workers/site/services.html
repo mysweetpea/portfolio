@@ -15,8 +15,8 @@
     <link rel="apple-touch-icon" href="/apple-touch-icon.png">
     <link rel="manifest" href="/manifest.json">
     <link rel="preload" as="image" href="/logo.svg">
-                    <link rel="stylesheet" href="/assets/css/fonts.css?v=7">
-    <link rel="stylesheet" href="/assets/css/site.css?v=7">
+                    <link rel="stylesheet" href="/assets/css/fonts.css?v=8">
+    <link rel="stylesheet" href="/assets/css/site.css?v=8">
 </head>
 <body data-page="services">
     <a href="#main-content" class="skip-link">Skip to content</a>
@@ -118,20 +118,20 @@
                 <h2 class="section-title glass-text reveal">FAQ</h2>
                 <div class="reveal reveal-delay-1">
                     <div class="faq-item">
-<button class="faq-question" type="button" id="services-faq-q-1" aria-expanded="false" aria-controls="services-faq-a-1" onclick="toggleFAQ(this)">Why do you require a donation before access? <span class="arrow"><img src="/assets/icons/icon-ui-chevron-down.svg" class="" alt="" width="16" height="16" loading="lazy" decoding="async" aria-hidden="true"></span></button>
+<button class="faq-question" type="button" id="services-faq-q-1" aria-expanded="false" aria-controls="services-faq-a-1" data-action="toggle-faq">Why do you require a donation before access? <span class="arrow"><img src="/assets/icons/icon-ui-chevron-down.svg" class="" alt="" width="16" height="16" loading="lazy" decoding="async" aria-hidden="true"></span></button>
 <div class="faq-answer" id="services-faq-a-1" role="region" aria-labelledby="services-faq-q-1"><p>The donation requirement prevents abuse and spam, and ensures members are invested in the community.</p></div></div>
                     <div class="faq-item">
-<button class="faq-question" type="button" id="services-faq-q-2" aria-expanded="false" aria-controls="services-faq-a-2" onclick="toggleFAQ(this)">Is this a subscription? <span class="arrow"><img src="/assets/icons/icon-ui-chevron-down.svg" class="" alt="" width="16" height="16" loading="lazy" decoding="async" aria-hidden="true"></span></button>
+<button class="faq-question" type="button" id="services-faq-q-2" aria-expanded="false" aria-controls="services-faq-a-2" data-action="toggle-faq">Is this a subscription? <span class="arrow"><img src="/assets/icons/icon-ui-chevron-down.svg" class="" alt="" width="16" height="16" loading="lazy" decoding="async" aria-hidden="true"></span></button>
 <div class="faq-answer" id="services-faq-a-2" role="region" aria-labelledby="services-faq-q-2"><p>No. A single donation grants lifetime access. There are no recurring fees.</p></div></div>
                     <div class="faq-item">
-<button class="faq-question" type="button" id="services-faq-q-3" aria-expanded="false" aria-controls="services-faq-a-3" onclick="toggleFAQ(this)">What happens if MySweetPea shuts down? <span class="arrow"><img src="/assets/icons/icon-ui-chevron-down.svg" class="" alt="" width="16" height="16" loading="lazy" decoding="async" aria-hidden="true"></span></button>
+<button class="faq-question" type="button" id="services-faq-q-3" aria-expanded="false" aria-controls="services-faq-a-3" data-action="toggle-faq">What happens if MySweetPea shuts down? <span class="arrow"><img src="/assets/icons/icon-ui-chevron-down.svg" class="" alt="" width="16" height="16" loading="lazy" decoding="async" aria-hidden="true"></span></button>
 <div class="faq-answer" id="services-faq-a-3" role="region" aria-labelledby="services-faq-q-3"><p>Every service is open source and self-hosted, so your data is never locked in. You can export and self-host the same software yourself.</p></div></div>
                 </div>
             </div>
         </div>
 
         </main>
-<a href="#" class="back-to-top" aria-label="Back to top" onclick="window.scrollTo({top:0,behavior:'smooth'});return false;"><img src="/assets/icons/icon-ui-arrow-up.svg" class="" alt="" width="22" height="22" loading="lazy" decoding="async" aria-hidden="true"></a>
+<a href="#" class="back-to-top" aria-label="Back to top" data-action="back-to-top"><img src="/assets/icons/icon-ui-arrow-up.svg" class="" alt="" width="22" height="22" loading="lazy" decoding="async" aria-hidden="true"></a>
 <footer class="page-footer">
     <div class="footer-links">
         <a href="/index.html">Home</a>
@@ -156,7 +156,7 @@
     <!-- Service details modal -->
     <div class="modal-overlay" id="serviceModal" role="dialog" aria-modal="true" aria-labelledby="modalTitle" aria-hidden="true">
         <div class="modal">
-            <button class="modal-close" type="button" onclick="closeModal()" aria-label="Close service details">&times;</button>
+            <button class="modal-close" type="button" data-action="close-modal" aria-label="Close service details">&times;</button>
             <div class="modal-mockup" id="modalMockup"></div>
             <div class="modal-header">
                 <div class="modal-icon" id="modalIcon"></div>
@@ -178,12 +178,12 @@
             </div>
             <div class="modal-footer">
                 <a id="modalOpenBtn" class="btn btn-primary" href="#" target="_blank" rel="noopener noreferrer">Open service &rarr;</a>
-                <button class="btn btn-secondary" type="button" onclick="closeModal()">Close</button>
+                <button class="btn btn-secondary" type="button" data-action="close-modal">Close</button>
             </div>
         </div>
     </div>
 
-    <script src="/assets/js/site.js?v=7" defer></script>
+    <script src="/assets/js/site.js?v=8" defer></script>
     <script>
 // FAQ Toggle
         function toggleFAQ(el) { var item = el.parentElement; var open = item.classList.toggle('open'); el.setAttribute('aria-expanded', String(open)); }

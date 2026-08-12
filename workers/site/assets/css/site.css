@@ -2223,6 +2223,21 @@ body[data-page='pricing'] .pricing-card.tier-seedling { animation-duration: 8s; 
 }
 @keyframes statusPulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.55; } }
 
+/* === Home page live status pill (v45) === */
+.home-status {
+    display: inline-flex; align-items: center; gap: 8px;
+    margin: 18px auto 0; padding: 8px 16px;
+    border-radius: 999px; text-decoration: none;
+    background: var(--card-bg); border: 1px solid var(--border);
+    color: var(--text-dim); font-size: 0.85rem;
+    transition: border-color 0.3s var(--ease-premium), color 0.3s var(--ease-premium);
+}
+.home-status:hover { border-color: var(--border-primary); color: var(--text); }
+.home-status .status-dot { margin-right: 0; }
+.home-status.online .status-dot { background: var(--sage); box-shadow: 0 0 6px var(--sage); }
+.home-status.degraded .status-dot { background: var(--warn, #d9a441); box-shadow: 0 0 6px var(--warn, #d9a441); }
+.home-status.offline .status-dot { background: var(--error); box-shadow: 0 0 6px var(--error); }
+
 /* === Breadcrumbs === */
 .breadcrumbs {
     max-width: 800px; margin: 0 auto; padding: 96px 24px 0;

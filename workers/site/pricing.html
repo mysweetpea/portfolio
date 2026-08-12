@@ -15,8 +15,8 @@
     <link rel="apple-touch-icon" href="/apple-touch-icon.png">
     <link rel="manifest" href="/manifest.json">
     <link rel="preload" as="image" href="/logo.svg">
-                    <link rel="stylesheet" href="/assets/css/fonts.css?v=7">
-    <link rel="stylesheet" href="/assets/css/site.css?v=7">
+                    <link rel="stylesheet" href="/assets/css/fonts.css?v=8">
+    <link rel="stylesheet" href="/assets/css/site.css?v=8">
 </head>
 <body data-page="pricing">
     <a href="#main-content" class="skip-link">Skip to content</a>
@@ -179,7 +179,7 @@
         </div>
 
         </main>
-<a href="#" class="back-to-top" aria-label="Back to top" onclick="window.scrollTo({top:0,behavior:'smooth'});return false;"><img src="/assets/icons/icon-ui-arrow-up.svg" class="" alt="" width="22" height="22" loading="lazy" decoding="async" aria-hidden="true"></a>
+<a href="#" class="back-to-top" aria-label="Back to top" data-action="back-to-top"><img src="/assets/icons/icon-ui-arrow-up.svg" class="" alt="" width="22" height="22" loading="lazy" decoding="async" aria-hidden="true"></a>
 <footer class="page-footer">
     <div class="footer-links">
         <a href="/index.html">Home</a>
@@ -208,7 +208,7 @@
             </script>
     <script>
 document.addEventListener('click', function(event) { var button = event.target.closest('.copy-email-btn'); if (!button) return; var email = button.getAttribute('data-copy'); navigator.clipboard.writeText(email).then(function() { var original=button.textContent; button.textContent='Copied!'; setTimeout(function(){button.textContent=original;},1800); }).catch(function(){ button.textContent=email; }); });
-</script><script src="/assets/js/site.js?v=7" defer></script>
+</script><script src="/assets/js/site.js?v=8" defer></script>
     <script>
     if ('serviceWorker' in navigator) {
         window.addEventListener('load', function () {

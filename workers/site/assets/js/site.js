@@ -634,20 +634,46 @@
 (function () {
     'use strict';
 
-    /* === Live service status pill (home page) === */
-    var liveStatus = document.getElementById('liveStatus');
-    var liveStatusText = document.getElementById('liveStatusText');
-    if (liveStatus && liveStatusText) {
-        // Try Uptime Kuma API; fall back to a static "operational" state.
-        fetch('https://status.mysweetpea.cc/api/status-page/heartbeat/1')
+    /* === Live service status pill (home page) ===
+       Shows REAL data from Uptime Kuma. Never claims "all operational"
+       when the API is unreachable — that would hide real outages. */
+    var homeStatus = document.getElementById('homeStatus');
+    var homeStatusText = document.getElementById('homeStatusText');
+    var homeStatusDot = document.getElementById('homeStatusDot');
+    if (homeStatus && homeStatusText) {
+        var STATUS_NAMES = {
+            1: 'Vaultwarden', 2: 'Matrix', 3: 'AFFiNE', 4: 'KoalaSync',
+            5: 'Jellyfin', 6: 'Seerr', 7: 'Nextcloud', 8: 'Immich', 9: 'Open WebUI'
+        };
+        fetch('https://status.mysweetpea.cc/api/status-page/heartbeat/homelab')
             .then(function (r) { return r.ok ? r.json() : Promise.reject(); })
             .then(function (data) {
-                var allUp = data && data.heartbeatList && data.heartbeatList.every(function (h) { return h.status === 1; });
-                liveStatusText.textContent = allUp ? 'All systems operational' : 'Some services may be affected';
-                if (!allUp) liveStatus.classList.add('offline');
+                var hb = data && data.heartbeatList;
+                if (!hb) throw new Error('no data');
+                var down = [];
+                Object.keys(hb).forEach(function (id) {
+                    var list = hb[id];
+                    if (!list || !list.length) return;
+                    var last = list[list.length - 1];
+                    if (last.status !== 1) {
+                        down.push(STATUS_NAMES[id] || ('Service ' + id));
+                    }
+                });
+                if (down.length === 0) {
+                    homeStatusText.textContent = 'All systems operational';
+                    homeStatus.classList.remove('degraded', 'offline');
+                    homeStatus.classList.add('online');
+                } else {
+                    homeStatusText.textContent = down.length + ' of 9 services down: ' + down.join(', ');
+                    homeStatus.classList.remove('online');
+                    homeStatus.classList.add('offline');
+                }
             })
             .catch(function () {
-                liveStatusText.textContent = 'All systems operational';
+                // API unreachable — say so honestly instead of faking "operational".
+                homeStatusText.textContent = 'Status unavailable — check the status page';
+                homeStatus.classList.remove('online');
+                homeStatus.classList.add('degraded');
             });
     }
 
@@ -744,6 +770,45 @@
         var params = new URLSearchParams(window.location.search);
         var initial = params.get('view');
         if (initial) activate(initial);
+    });
+})();
+
+/* ==========================================================================
+   v45: Global click delegation — CSP-safe replacement for inline onclick
+   handlers. The worker's strict CSP (script-src nonce-only) blocks inline
+   event handler attributes, so every page's onclick=... is bound here via
+   data-action attributes. Keep this in sync with the pages.
+   ========================================================================== */
+(function () {
+    'use strict';
+
+    document.addEventListener('click', function (event) {
+        var el = event.target.closest('[data-action]');
+        if (!el) return;
+        var action = el.getAttribute('data-action');
+
+        if (action === 'back-to-top') {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            return;
+        }
+        if (action === 'toggle-faq') {
+            var item = el.parentElement;
+            var open = item.classList.toggle('open');
+            el.setAttribute('aria-expanded', String(open));
+            return;
+        }
+        if (action === 'close-modal') {
+            if (typeof closeModal === 'function') closeModal();
+            return;
+        }
+        if (action === 'select-crypto') {
+            if (typeof selectCrypto === 'function') selectCrypto(el, el.getAttribute('data-type'));
+            return;
+        }
+        if (action === 'copy-wallet') {
+            if (typeof copyWallet === 'function') copyWallet();
+            return;
+        }
     });
 })();
 
