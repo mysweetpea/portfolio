@@ -1,0 +1,170 @@
+/* ==========================================================================
+   Premium Pack (2026-08) — Fraunces headings, hero proof row, ticker,
+   live service dots, toasts, view transitions, footer columns
+   ========================================================================== */
+
+/* === 1. Fraunces editorial headings === */
+.hero h1, .section-title, .access-choice-title, .modal h2, .modal h3 {
+    font-family: 'Fraunces', 'Inter', Georgia, serif;
+    font-weight: 600;
+    letter-spacing: -0.015em;
+}
+.hero h1 { font-weight: 500; }
+
+/* === 2. Hero proof row (stats) === */
+.hero-proof {
+    display: flex; flex-wrap: wrap; gap: 28px;
+    justify-content: center; align-items: center;
+    margin-top: 34px;
+}
+.proof-stat { text-align: center; }
+.proof-stat .proof-value {
+    font-family: 'Fraunces', serif; font-size: 1.7rem; font-weight: 600;
+    color: var(--primary-bright); display: block; line-height: 1.1;
+}
+.proof-stat .proof-label {
+    font-size: 0.78rem; color: var(--text-faint);
+    text-transform: uppercase; letter-spacing: 0.08em; margin-top: 4px;
+}
+.proof-divider { width: 1px; height: 38px; background: var(--border-primary); }
+@media (max-width: 640px) {
+    .hero-proof { gap: 18px; }
+    .proof-divider { display: none; }
+}
+
+/* === 3. Service ticker marquee === */
+.ticker-wrap {
+    position: relative; overflow: hidden;
+    margin-top: 44px; padding: 14px 0;
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+    -webkit-mask-image: linear-gradient(90deg, transparent, #000 12%, #000 88%, transparent);
+    mask-image: linear-gradient(90deg, transparent, #000 12%, #000 88%, transparent);
+}
+.ticker-track {
+    display: flex; gap: 48px; width: max-content;
+    animation: tickerScroll 36s linear infinite;
+}
+.ticker-wrap:hover .ticker-track { animation-play-state: paused; }
+.ticker-item {
+    display: flex; align-items: center; gap: 10px;
+    font-size: 0.9rem; color: var(--text-dim); white-space: nowrap;
+}
+.ticker-item img { width: 20px; height: 20px; opacity: 0.8; }
+.ticker-item .status-dot { width: 7px; height: 7px; margin-right: 0; }
+@keyframes tickerScroll {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
+}
+@media (prefers-reduced-motion: reduce) {
+    .ticker-track { animation: none; flex-wrap: wrap; justify-content: center; gap: 20px; }
+}
+
+/* === 4. Live status dots on service cards === */
+.service-card .status-dot { width: 9px; height: 9px; margin-right: 8px; }
+.service-card .status-dot.status-down { background: var(--error); box-shadow: 0 0 8px var(--error); }
+.service-card .status-dot.status-unknown { background: var(--text-faint); box-shadow: none; }
+
+/* === 5. Toast notifications === */
+.toast-stack {
+    position: fixed; bottom: 24px; right: 24px; z-index: 300;
+    display: flex; flex-direction: column; gap: 10px; max-width: 360px;
+}
+.toast {
+    display: flex; align-items: flex-start; gap: 12px;
+    background: rgba(19, 30, 34, 0.92);
+    border: 1px solid var(--border-primary);
+    border-radius: var(--radius-sm);
+    padding: 14px 16px;
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.45);
+    backdrop-filter: blur(16px);
+    animation: toastIn 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    font-size: 0.9rem; color: var(--text);
+}
+.toast.toast-success { border-left: 3px solid var(--sage); }
+.toast.toast-error { border-left: 3px solid var(--error); }
+.toast.toast-info { border-left: 3px solid var(--primary); }
+.toast .toast-close {
+    margin-left: auto; background: none; border: none; cursor: pointer;
+    color: var(--text-faint); font-size: 1rem; line-height: 1; padding: 2px 4px;
+}
+.toast .toast-close:hover { color: var(--text); }
+@keyframes toastIn {
+    from { opacity: 0; transform: translateY(12px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+.toast.toast-out { animation: toastOut 0.25s ease forwards; }
+@keyframes toastOut {
+    to { opacity: 0; transform: translateY(8px); }
+}
+@media (max-width: 640px) {
+    .toast-stack { left: 16px; right: 16px; max-width: none; }
+}
+
+/* === 6. View Transitions (Chromium) === */
+@view-transition { navigation: auto; }
+::view-transition-old(root) { animation: vtFadeOut 0.18s ease; }
+::view-transition-new(root) { animation: vtFadeIn 0.25s ease; }
+@keyframes vtFadeOut { to { opacity: 0; } }
+@keyframes vtFadeIn { from { opacity: 0; } }
+
+/* === 7. Footer columns === */
+.page-footer { text-align: left; padding: 56px 32px 40px; }
+.footer-grid {
+    display: grid; grid-template-columns: 2fr 1fr 1fr 1fr;
+    gap: 40px; max-width: 1100px; margin: 0 auto 36px;
+}
+.footer-brand p { margin-top: 12px; font-size: 0.88rem; color: var(--text-faint); max-width: 300px; }
+.footer-col h4 {
+    font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.1em;
+    color: var(--text-faint); margin-bottom: 14px; font-weight: 600;
+}
+.footer-col a {
+    display: block; color: var(--text-dim); text-decoration: none;
+    font-size: 0.9rem; padding: 4px 0; transition: var(--transition);
+}
+.footer-col a:hover { color: var(--primary-bright); }
+.footer-status {
+    display: inline-flex; align-items: center; gap: 8px;
+    font-size: 0.88rem; color: var(--text-dim);
+    border: 1px solid var(--border); border-radius: 999px;
+    padding: 6px 14px; margin-top: 4px; text-decoration: none;
+    transition: var(--transition);
+}
+.footer-status:hover { border-color: var(--border-primary); color: var(--text); }
+.footer-bottom {
+    text-align: center; border-top: 1px solid var(--border);
+    padding-top: 24px; font-size: 0.82rem; color: var(--text-faint);
+}
+.footer-bottom .footer-help { margin-top: 6px; }
+@media (max-width: 768px) {
+    .footer-grid { grid-template-columns: 1fr 1fr; gap: 28px; }
+}
+@media (max-width: 480px) {
+    .footer-grid { grid-template-columns: 1fr; }
+}
+
+/* === 8. Micro-interaction polish === */
+.hero-btn, .cta-btn, .nav-cta { transition: transform 0.25s ease, box-shadow 0.25s ease, background 0.25s ease, color 0.25s ease; }
+.hero-btn:hover, .cta-btn:hover, .nav-cta:hover { transform: translateY(-2px); }
+.feature-card, .stat-card, .pricing-card, .service-card, .glow-card {
+    transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease, background 0.3s ease;
+}
+.feature-card:hover, .stat-card:hover, .pricing-card:hover, .service-card:hover, .glow-card:hover {
+    box-shadow: 0 10px 40px rgba(143, 175, 181, 0.1), 0 0 0 1px var(--border-primary);
+}
+
+/* === 9. FAQ smooth accordion === */
+.faq-answer {
+    max-height: 0; overflow: hidden;
+    transition: max-height 0.35s cubic-bezier(0.4, 0, 0.2, 1), padding 0.35s ease;
+    padding: 0 18px;
+}
+.faq-item.open .faq-answer { max-height: 400px; padding: 0 18px 16px; }
+.faq-item .arrow { transition: transform 0.3s ease; }
+.faq-item.open .arrow { transform: rotate(180deg); }
+
+/* === 10. Light theme polish for new elements === */
+[data-theme="light"] .toast { background: rgba(255, 255, 255, 0.95); color: var(--text); box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15); }
+[data-theme="light"] .ticker-wrap { border-color: var(--border-primary); }
+[data-theme="light"] .footer-status { border-color: var(--border-primary); }

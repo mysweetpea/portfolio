@@ -10,13 +10,14 @@
     <meta property="og:description" content="Support MySweetPea's privacy-first, self-hosted services with a crypto donation — Monero or Bitcoin.">
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://mysweetpea.cc/">
-    <meta property="og:image" content="https://mysweetpea.cc/logo.png">
+    <meta property="og:image" content="https://mysweetpea.cc/og-card.png">
     <link rel="icon" type="image/svg+xml" href="/logo-favicon.svg">
     <link rel="apple-touch-icon" href="/apple-touch-icon.png">
     <link rel="manifest" href="/manifest.json">
     <link rel="preload" as="image" href="/logo.svg">
-                    <link rel="stylesheet" href="/assets/css/fonts.css?v=8">
-    <link rel="stylesheet" href="/assets/css/site.css?v=8">
+                    <link rel="stylesheet" href="/assets/css/fonts.css?v=9">
+    <link rel="stylesheet" href="/assets/css/site.css?v=9"
+    <link rel="stylesheet" href="/assets/css/premium.css?v=9">
 </head>
 <body data-page="support">
     <a href="#main-content" class="skip-link">Skip to content</a>
@@ -123,18 +124,37 @@
         </main>
 <a href="#" class="back-to-top" aria-label="Back to top" data-action="back-to-top"><img src="/assets/icons/icon-ui-arrow-up.svg" class="" alt="" width="22" height="22" loading="lazy" decoding="async" aria-hidden="true"></a>
 <footer class="page-footer">
-    <div class="footer-links">
-        <a href="/index.html">Home</a>
-        <a href="/pricing.html">How It Works</a>
-        <a href="/services.html">Services</a>
-        <a href="/status.html">Status</a>
-        <a href="/support.html">Donate</a>
-        <a href="/about.html">About</a>
-        <a href="/changelog.html">Changelog</a>
-        <a href="/suggest.html">Suggest</a>
-        <a href="/form.html">Get Access</a>
+    <div class="footer-grid">
+        <div class="footer-brand">
+            <a href="/index.html" class="nav-logo"><img src="/logo-favicon.svg" alt="" width="28" height="28"><span>MySweetPea</span></a>
+            <p>Private alternatives to the services you use every day. No ads, no tracking, no subscriptions — just community-funded, self-hosted software.</p>
+            <a href="/status.html" class="footer-status" id="footerStatus"><span class="status-dot" aria-hidden="true"></span><span id="footerStatusText">Checking status…</span></a>
+        </div>
+        <div class="footer-col">
+            <h4>Explore</h4>
+            <a href="/services.html">Services</a>
+            <a href="/pricing.html">How It Works</a>
+            <a href="/status.html">Status</a>
+            <a href="/changelog.html">Changelog</a>
+        </div>
+        <div class="footer-col">
+            <h4>Community</h4>
+            <a href="/form.html">Get Access</a>
+            <a href="/support.html">Donate</a>
+            <a href="/suggest.html">Suggest a Service</a>
+            <a href="/about.html">About</a>
+        </div>
+        <div class="footer-col">
+            <h4>Support</h4>
+            <a href="/contact.html">Contact Us</a>
+            <a href="mailto:support@mysweetpea.cc">support@mysweetpea.cc</a>
+            <a href="https://github.com/mysweetpea" target="_blank" rel="noopener noreferrer">GitHub</a>
+        </div>
     </div>
-    <p>&copy; 2026 MySweetPea. Privacy-first, self-hosted, community funded.</p><p class="footer-help">Need help? <a href="mailto:support@mysweetpea.cc">support@mysweetpea.cc</a></p>
+    <div class="footer-bottom">
+        <p>&copy; 2026 MySweetPea. Privacy-first, self-hosted, community funded.</p>
+        <p class="footer-help">Need help? <a href="mailto:support@mysweetpea.cc">support@mysweetpea.cc</a></p>
+    </div>
 </footer>
 
 
@@ -143,7 +163,8 @@
 
 
 
-    <script src="/assets/js/site.js?v=8" defer></script>
+    <script src="/assets/js/site.js?v=9"
+    <script src="/assets/js/premium.js?v=9" defer></script> defer></script>
     <script>
 function toggleFAQ(el) { var item = el.parentElement; var open = item.classList.toggle('open'); el.setAttribute('aria-expanded', String(open)); }
         var WALLETS = { monero: 'Coming Soon', bitcoin: 'Coming Soon' };
