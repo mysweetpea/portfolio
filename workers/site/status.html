@@ -317,6 +317,16 @@
             .then(function (data) {
                 if (!data || !data.heartbeatList) return;
                 var hb = data.heartbeatList; // { "<monitorId>": [heartbeats...], ... }
+                // uptimeList keys are "<monitorId>_<durationDays>" (e.g. "1_24"),
+                // values are fractions 0..1 — normalize to a monitorId -> pct map
+                var uptimePct = {};
+                if (data.uptimeList) {
+                    Object.keys(data.uptimeList).forEach(function (k) {
+                        var id = k.split('_')[0];
+                        var v = data.uptimeList[k];
+                        if (typeof v === 'number') uptimePct[id] = Math.round(v * 1000) / 10;
+                    });
+                }
                 var upCount = 0, total = 0;
                 Object.keys(hb).forEach(function (id) {
                     var key = ID_TO_KEY[id];
@@ -329,7 +339,7 @@
                     var up = h.status === 1;
                     if (up) upCount++;
                     total++;
-                    var pct = (data.uptimeList && data.uptimeList[id] != null) ? data.uptimeList[id] : 99.9;
+                    var pct = uptimePct[id] != null ? uptimePct[id] : 99.9;
                     setRow(row, up, pct);
                 });
                 if (summaryText) summaryText.textContent = upCount + ' of ' + total + ' operational';
