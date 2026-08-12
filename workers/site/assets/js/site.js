@@ -672,7 +672,7 @@
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ invite_code: code })
-                }).then(function (r) { return r.json(); })
+                }).then(function (r) { return r.text().then(function(t){ if(t){try{return JSON.parse(t);}catch(e){return {ok:r.ok};}} return {ok:r.ok}; }); })
                   .then(function (data) {
                       if (data.ok) {
                           rcHint.textContent = 'Code looks good — continue with your details.';

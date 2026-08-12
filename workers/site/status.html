@@ -348,7 +348,7 @@
         if (container) container.remove();
 
         fetch('https://subscribe.mysweetpea.cc/webhook/incidents')
-            .then(function (r) { return r.ok ? r.json() : Promise.reject(); })
+            .then(function (r) { return r.text().then(function(t){ if(t){try{return JSON.parse(t);}catch(e){return [];}} return []; }); })
             .then(function (data) {
                 var list = Array.isArray(data) ? data : (data && data.incidents) || [];
                 if (!list.length) {

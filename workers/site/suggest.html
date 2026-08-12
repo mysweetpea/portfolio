@@ -204,7 +204,7 @@ function validateField(id, type) {
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(payload)
             })
-            .then(function(r) { return r.json(); })
+            .then(function(r) { return r.text().then(function(t){ if(t){try{return JSON.parse(t);}catch(e){return {ok:r.ok};}} return {ok:r.ok}; }); })
             .then(function(data) {
                 if (data.ok) {
                     document.getElementById('successMsg').classList.add('show');
