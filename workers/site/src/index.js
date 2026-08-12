@@ -127,14 +127,15 @@ export default {
     if (contentType.includes('text/html')) {
       const nonce = generateNonce();
 
-      // Build CSP — scripts require the nonce (no unsafe-inline); styles allow
-      // inline style="" attributes (static widths, JS-set transforms) but still
-      // nonce the <style> blocks. Inline onclick handlers are NOT allowed —
-      // all clicks are bound via addEventListener in site.js.
+      // Build CSP — scripts require the nonce (no unsafe-inline). Styles use
+      // 'unsafe-inline' WITHOUT a nonce: per CSP spec, 'unsafe-inline' is
+      // ignored when a nonce/hash is present in the same source list, and the
+      // pages rely on inline style="" attributes (static widths, JS-set
+      // transforms). The <style> blocks are static, worker-served content.
       const csp = [
         "default-src 'self'",
         "script-src 'self' 'nonce-" + nonce + "'",
-        "style-src 'self' 'nonce-" + nonce + "' 'unsafe-inline'",
+        "style-src 'self' 'unsafe-inline'",
         "font-src 'self'",
         "img-src 'self' data:",
         "connect-src 'self' https://subscribe.mysweetpea.cc https://status.mysweetpea.cc",
