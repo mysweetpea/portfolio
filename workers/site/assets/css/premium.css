@@ -58,6 +58,9 @@
 }
 @media (prefers-reduced-motion: reduce) {
     .ticker-track { animation: none; flex-wrap: wrap; justify-content: center; gap: 20px; }
+    /* The clone track exists only for the seamless marquee loop — hide it
+       when animation is off, otherwise the same services show twice. */
+    .ticker-track[aria-hidden="true"] { display: none; }
 }
 
 /* === 4. Live status dots on service cards === */

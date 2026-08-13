@@ -3948,21 +3948,12 @@ body[data-page='status'] .status-summary time {
 }
 body[data-page='status'] .status-updated { font-size: 0.8rem; color: var(--text-faint); }
 
-/* Status page: subtler, staggered reveal — the dense row list looks janky
-   with the default 28px slide + simultaneous animation. */
-body[data-page='status'] .reveal {
-    transform: translateY(12px);
-    transition-duration: 0.5s;
+/* Status page: reveal the whole list as one unit — per-row popping looked
+   janky while scrolling. Single gentle fade for the list container. */
+body[data-page='status'] .status-list.reveal {
+    transform: translateY(14px);
+    transition-duration: 0.6s;
 }
-body[data-page='status'] .status-row.reveal:nth-child(2) { transition-delay: 0.05s; }
-body[data-page='status'] .status-row.reveal:nth-child(3) { transition-delay: 0.1s; }
-body[data-page='status'] .status-row.reveal:nth-child(4) { transition-delay: 0.15s; }
-body[data-page='status'] .status-row.reveal:nth-child(5) { transition-delay: 0.2s; }
-body[data-page='status'] .status-row.reveal:nth-child(6) { transition-delay: 0.25s; }
-body[data-page='status'] .status-row.reveal:nth-child(7) { transition-delay: 0.3s; }
-body[data-page='status'] .status-row.reveal:nth-child(8) { transition-delay: 0.35s; }
-body[data-page='status'] .status-row.reveal:nth-child(9) { transition-delay: 0.4s; }
-body[data-page='status'] .status-row.reveal:nth-child(10) { transition-delay: 0.45s; }
 @media (max-width: 560px) {
     body[data-page='status'] .status-summary { align-items: flex-start; min-height: 0; }
     body[data-page='status'] .status-summary time { margin: 3px 0 0 auto; padding-left: 10px; font-size: 0.7rem; }
