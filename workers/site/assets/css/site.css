@@ -5270,10 +5270,56 @@ body[data-page='home'] .hero h1 { font-size: clamp(2.75rem, 6.5vw, 4.5rem); }
 .compare-table .compare-cta-row .compare-cta { display: inline-block; font-size: 0.8rem; font-weight: 700; color: var(--bg); background: var(--sage); padding: 9px 16px; border-radius: 9px; text-decoration: none; transition: var(--transition); }
 .compare-table .compare-cta-row .compare-cta:hover { background: var(--primary-bright); transform: translateY(-1px); }
 @media (max-width: 640px) {
-    .compare-table th, .compare-table td { padding: 10px 10px; font-size: 0.8rem; }
+    /* Stack the compare table into per-service cards:
+       service name on top, two tier boxes (Seedling | Sweet Pea) below */
+    .compare-table-wrap { overflow: visible; }
+    .compare-table, .compare-table tbody { display: block; width: 100%; }
+    .compare-table thead { display: none; }
+    .compare-table tr {
+        display: grid; grid-template-columns: 1fr 1fr; gap: 8px;
+        padding: 14px 16px; border-bottom: 1px solid var(--border);
+    }
+    .compare-table tr:last-child { border-bottom: none; }
+    .compare-table td {
+        border-bottom: none !important; padding: 0; text-align: center;
+    }
+    .compare-table td:first-child {
+        grid-column: 1 / -1; text-align: left;
+        font-size: 0.92rem; font-weight: 600; color: var(--text);
+    }
+    .compare-table td:first-child img { width: 20px; height: 20px; margin-right: 8px; }
+    .compare-table .col-seedling, .compare-table .col-sweetpea { border-left: none !important; }
+    .compare-table td.col-seedling, .compare-table td.col-sweetpea {
+        display: flex; flex-direction: column; align-items: center; gap: 6px;
+        background: var(--primary-glow);
+        border: 1px solid var(--border-primary);
+        border-radius: 12px;
+        padding: 10px 6px;
+    }
+    .compare-table td.col-seedling::before, .compare-table td.col-sweetpea::before {
+        font-size: 0.6rem; font-weight: 700; letter-spacing: 0.08em;
+        text-transform: uppercase; color: var(--sage);
+    }
+    .compare-table td.col-seedling::before { content: 'Seedling'; }
+    .compare-table td.col-sweetpea::before { content: 'Sweet Pea'; }
+    [data-theme="light"] .compare-table td.col-seedling::before,
+    [data-theme="light"] .compare-table td.col-sweetpea::before { color: #2F5A44; }
+    .compare-table .check, .compare-table .dash { width: 30px; height: 30px; }
+    .compare-table .check::after { width: 16px; height: 16px; }
+    /* CTA row: gradient band, buttons full-width in each column */
+    .compare-table .compare-cta-row {
+        background: linear-gradient(180deg, var(--primary-glow), transparent);
+        border-radius: 0 0 18px 18px;
+    }
+    .compare-table .compare-cta-row td {
+        background: none !important; border: none !important;
+        padding: 6px 0 2px; display: flex;
+    }
+    .compare-table .compare-cta-row td::before { display: none; }
+    .compare-table .compare-cta-row td:first-child { display: none; }
     .compare-table .compare-cta-row .compare-cta {
         display: block; width: 100%; text-align: center; box-sizing: border-box;
-        padding: 10px 8px; font-size: 0.75rem; white-space: nowrap;
+        padding: 11px 8px; font-size: 0.78rem; white-space: nowrap;
     }
 }
 
