@@ -70,7 +70,11 @@ export default {
       }));
 
       const all = results.flat().sort((a, b) => new Date(b.date) - new Date(a.date));
-      commitsCache = { data: all, ts: now };
+      // Don't cache empty results: a transient GitHub failure would otherwise
+      // blank the changelog for the whole TTL.
+      if (all.length > 0) {
+        commitsCache = { data: all, ts: now };
+      }
 
       return new Response(JSON.stringify(all), {
         headers: {
