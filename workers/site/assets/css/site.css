@@ -1628,21 +1628,34 @@ body[data-page='suggest'] .guidelines-list {
     display: grid; gap: 12px;
 }
 body[data-page='suggest'] .guidelines-list li {
-    display: flex; align-items: flex-start; gap: 10px;
-    font-size: 0.9rem; color: var(--text-dim); line-height: 1.55;
-    padding: 12px 14px;
-    background: rgba(143,175,181,0.05);
+    display: flex; align-items: flex-start; gap: 14px;
+    font-size: 0.9rem; color: var(--text-dim); line-height: 1.6;
+    padding: 16px 18px;
+    background:
+        linear-gradient(160deg, rgba(255,255,255,0.03), transparent 40%),
+        rgba(14, 22, 26, 0.5);
     border: 1px solid var(--hairline);
     border-radius: var(--radius-sm);
+    transition: border-color 0.3s var(--ease-premium), transform 0.3s var(--ease-premium), box-shadow 0.3s var(--ease-premium);
 }
-body[data-page='suggest'] .guidelines-list li strong { color: var(--text); }
+body[data-page='suggest'] .guidelines-list li:hover {
+    border-color: rgba(163,201,182,0.35);
+    transform: translateX(4px);
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.05), 0 4px 16px rgba(0,0,0,0.15);
+}
+body[data-page='suggest'] .guidelines-list li strong {
+    color: var(--text); display: block; font-size: 0.95rem; margin-bottom: 2px;
+}
 body[data-page='suggest'] .gl-icon {
-    flex: 0 0 auto; width: 22px; height: 22px;
+    flex: 0 0 auto; width: 28px; height: 28px;
     display: inline-flex; align-items: center; justify-content: center;
     border-radius: 50%;
-    background: rgba(163,201,182,0.14);
-    border: 1px solid rgba(163,201,182,0.25);
+    background: linear-gradient(135deg, rgba(163,201,182,0.2), rgba(163,201,182,0.08));
+    border: 1px solid rgba(163,201,182,0.3);
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.1);
+    margin-top: 1px;
 }
+body[data-page='suggest'] .gl-icon img { width: 14px; height: 14px; }
 body[data-page='suggest'] .guidelines-note {
     font-size: 0.9rem; color: var(--text-dim);
     text-align: center; padding: 14px;
@@ -3934,6 +3947,22 @@ body[data-page='status'] .status-summary time {
     padding-left: 14px; border-left: 1px solid var(--border);
 }
 body[data-page='status'] .status-updated { font-size: 0.8rem; color: var(--text-faint); }
+
+/* Status page: subtler, staggered reveal — the dense row list looks janky
+   with the default 28px slide + simultaneous animation. */
+body[data-page='status'] .reveal {
+    transform: translateY(12px);
+    transition-duration: 0.5s;
+}
+body[data-page='status'] .status-row.reveal:nth-child(2) { transition-delay: 0.05s; }
+body[data-page='status'] .status-row.reveal:nth-child(3) { transition-delay: 0.1s; }
+body[data-page='status'] .status-row.reveal:nth-child(4) { transition-delay: 0.15s; }
+body[data-page='status'] .status-row.reveal:nth-child(5) { transition-delay: 0.2s; }
+body[data-page='status'] .status-row.reveal:nth-child(6) { transition-delay: 0.25s; }
+body[data-page='status'] .status-row.reveal:nth-child(7) { transition-delay: 0.3s; }
+body[data-page='status'] .status-row.reveal:nth-child(8) { transition-delay: 0.35s; }
+body[data-page='status'] .status-row.reveal:nth-child(9) { transition-delay: 0.4s; }
+body[data-page='status'] .status-row.reveal:nth-child(10) { transition-delay: 0.45s; }
 @media (max-width: 560px) {
     body[data-page='status'] .status-summary { align-items: flex-start; min-height: 0; }
     body[data-page='status'] .status-summary time { margin: 3px 0 0 auto; padding-left: 10px; font-size: 0.7rem; }
@@ -6114,7 +6143,9 @@ body[data-page='support'] .account-help-box a {
 body[data-page='support'] .account-help-box a:hover { color: var(--primary-bright); border-color: var(--primary-bright); }
 body[data-page='support'] .view-switcher { max-width: 720px; margin: 0 auto; }
 body[data-page='support'] .view-panel .container { padding: 0; }
-body[data-page='support'] .view-panel .faq-section { margin: 0; }
+body[data-page='support'] .view-panel .faq-section { margin: 0 auto; }
+body[data-page='support'] .faq-header { text-align: center; margin: 0 auto 24px; }
+body[data-page='support'] .faq-header .section-title { margin-bottom: 0; }
 
 /* ==========================================================================
    v58: Contact page — view-switcher tabs + premium polish
@@ -6193,21 +6224,34 @@ body[data-page='contact'] .contact-checklist {
     display: grid; gap: 12px; text-align: left;
 }
 body[data-page='contact'] .contact-checklist li {
-    display: flex; align-items: flex-start; gap: 10px;
-    font-size: 0.9rem; color: var(--text-dim); line-height: 1.55;
-    padding: 12px 14px;
-    background: rgba(143,175,181,0.05);
+    display: flex; align-items: flex-start; gap: 14px;
+    font-size: 0.9rem; color: var(--text-dim); line-height: 1.6;
+    padding: 16px 18px;
+    background:
+        linear-gradient(160deg, rgba(255,255,255,0.03), transparent 40%),
+        rgba(14, 22, 26, 0.5);
     border: 1px solid var(--hairline);
     border-radius: var(--radius-sm);
+    transition: border-color 0.3s var(--ease-premium), transform 0.3s var(--ease-premium), box-shadow 0.3s var(--ease-premium);
 }
-body[data-page='contact'] .contact-checklist li strong { color: var(--text); }
+body[data-page='contact'] .contact-checklist li:hover {
+    border-color: rgba(163,201,182,0.35);
+    transform: translateX(4px);
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.05), 0 4px 16px rgba(0,0,0,0.15);
+}
+body[data-page='contact'] .contact-checklist li strong {
+    color: var(--text); display: block; font-size: 0.95rem; margin-bottom: 2px;
+}
 body[data-page='contact'] .cl-icon {
-    flex: 0 0 auto; width: 22px; height: 22px;
+    flex: 0 0 auto; width: 28px; height: 28px;
     display: inline-flex; align-items: center; justify-content: center;
     border-radius: 50%;
-    background: rgba(163,201,182,0.14);
-    border: 1px solid rgba(163,201,182,0.25);
+    background: linear-gradient(135deg, rgba(163,201,182,0.2), rgba(163,201,182,0.08));
+    border: 1px solid rgba(163,201,182,0.3);
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.1);
+    margin-top: 1px;
 }
+body[data-page='contact'] .cl-icon img { width: 14px; height: 14px; }
 body[data-page='contact'] .contact-note {
     font-size: 0.9rem; color: var(--text-dim);
     text-align: center; padding: 14px;
@@ -6511,13 +6555,21 @@ body[data-page='about'] .about-list {
     display: grid; gap: 10px;
 }
 body[data-page='about'] .about-list li {
-    display: flex; align-items: flex-start; gap: 12px;
+    display: flex; align-items: flex-start; gap: 14px;
     font-size: 0.92rem; color: var(--text-dim); line-height: 1.6;
     padding: 14px 18px;
-    background: rgba(143,175,181,0.05);
+    background:
+        linear-gradient(160deg, rgba(255,255,255,0.03), transparent 40%),
+        rgba(14, 22, 26, 0.5);
     border: 1px solid var(--hairline);
     border-radius: var(--radius-sm);
     min-width: 0; overflow-wrap: break-word;
+    transition: border-color 0.3s var(--ease-premium), transform 0.3s var(--ease-premium), box-shadow 0.3s var(--ease-premium);
+}
+body[data-page='about'] .about-list li:hover {
+    border-color: rgba(163,201,182,0.35);
+    transform: translateX(4px);
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.05), 0 4px 16px rgba(0,0,0,0.15);
 }
 body[data-page='about'] .about-list li a {
     color: var(--sage); font-weight: 600; text-decoration: none;
@@ -6527,13 +6579,14 @@ body[data-page='about'] .about-list li a {
 }
 body[data-page='about'] .about-list li a:hover { color: var(--primary-bright); border-color: var(--primary-bright); }
 body[data-page='about'] .al-icon {
-    flex: 0 0 auto; width: 20px; height: 20px; margin-top: 2px;
+    flex: 0 0 auto; width: 28px; height: 28px; margin-top: 1px;
     display: inline-flex; align-items: center; justify-content: center;
     border-radius: 50%;
-    background: rgba(163,201,182,0.14);
-    border: 1px solid rgba(163,201,182,0.25);
+    background: linear-gradient(135deg, rgba(163,201,182,0.2), rgba(163,201,182,0.08));
+    border: 1px solid rgba(163,201,182,0.3);
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.1);
 }
-body[data-page='about'] .al-icon img { width: 13px; height: 13px; }
+body[data-page='about'] .al-icon img { width: 14px; height: 14px; }
 body[data-page='about'] .github-link.repo-homelab {
     border-color: rgba(217,168,108,0.3);
 }

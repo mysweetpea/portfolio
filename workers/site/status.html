@@ -349,6 +349,7 @@
                     });
                 }
                 var upCount = 0, total = 0;
+                var uptimeSum = 0, uptimeCount = 0;
                 Object.keys(hb).forEach(function (id) {
                     var key = ID_TO_KEY[id];
                     if (!key) return;
@@ -361,10 +362,23 @@
                     if (up) upCount++;
                     total++;
                     var pct = uptimePct[id] != null ? uptimePct[id] : 99.9;
+                    uptimeSum += pct; uptimeCount++;
                     setRow(row, up, pct);
                 });
                 if (summaryText) summaryText.textContent = upCount + ' of ' + total + ' operational';
                 if (summaryTime) summaryTime.textContent = 'Updated ' + new Date().toLocaleDateString();
+                // Connect the metric cards to real data
+                if (metricUptime && uptimeCount) {
+                    var avg = Math.round((uptimeSum / uptimeCount) * 10) / 10;
+                    metricUptime.textContent = avg + '%';
+                    var bar = metricUptime.parentNode.querySelector('.metric-bar span');
+                    if (bar) bar.style.width = avg + '%';
+                }
+                if (metricLive) {
+                    metricLive.textContent = total;
+                    var liveBar = metricLive.parentNode.querySelector('.metric-bar span');
+                    if (liveBar) liveBar.style.width = (total > 0 ? 100 : 0) + '%';
+                }
             })
             .catch(function () { /* keep static fallback */ });
     })();
