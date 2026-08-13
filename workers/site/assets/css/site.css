@@ -6385,6 +6385,10 @@ body[data-page='services'] .service-card .acct-pill {
         padding: 52px 20px 0;
         animation: sheetUp 0.32s cubic-bezier(0.32, 0.72, 0.24, 1) both;
     }
+    /* Beat .modal-overlay.active .modal (0,3,1) — sheet slides up, no spring pop */
+    body[data-page='services'] .modal-overlay.active .modal {
+        animation: sheetUp 0.32s cubic-bezier(0.32, 0.72, 0.24, 1) both;
+    }
     /* Grab handle: only on mobile, signals the sheet can be dismissed */
     .modal-handle {
         display: block; position: absolute; top: 10px; left: 50%;
