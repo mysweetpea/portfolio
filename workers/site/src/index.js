@@ -10,9 +10,17 @@ const securityHeaders = {
   'Strict-Transport-Security': 'max-age=63072000; includeSubDomains; preload',
   'Cross-Origin-Opener-Policy': 'same-origin',
   'Cross-Origin-Embedder-Policy': 'credentialless',
-  'Cross-Origin-Resource-Policy': 'same-origin',
   'X-DNS-Prefetch-Control': 'off'
 };
+
+// CORP is applied per-response-type: HTML gets 'same-origin' (blocks
+// cross-origin embedding of the site itself), while public assets
+// (logo.svg, icons, fonts, images) get 'cross-origin' so other origins
+// (auth.mysweetpea.cc, email clients) can embed them. A blanket
+// 'same-origin' broke the Authentik login logo (naturalWidth 0).
+function corpFor(contentType) {
+  return contentType.includes('text/html') ? 'same-origin' : 'cross-origin';
+}
 
 // Generate a base64url-safe nonce (16 bytes → 22 chars)
 function generateNonce() {
@@ -127,6 +135,7 @@ export default {
           }
         });
         Object.entries(securityHeaders).forEach(([k, v]) => out.headers.set(k, v));
+        out.headers.set('Cross-Origin-Resource-Policy', 'same-origin');
         return out;
       }
     }
@@ -134,6 +143,7 @@ export default {
     // Apply security headers to every response
     const out = new Response(res.body, res);
     Object.entries(securityHeaders).forEach(([k, v]) => out.headers.set(k, v));
+    out.headers.set('Cross-Origin-Resource-Policy', corpFor(contentType));
 
     // Apply strict CSP with nonce to HTML responses
     if (contentType.includes('text/html')) {
