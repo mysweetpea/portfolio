@@ -823,7 +823,8 @@ min-height: 90vh;
 display: flex;
 flex-direction: column;
 justify-content: center;
-align-items: center }
+align-items: center;
+overflow-x: clip }
 body[data-page='home'] .hero img.logo { width: 220px;
 height: 220px;
 margin-bottom: 28px;

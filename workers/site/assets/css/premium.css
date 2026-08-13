@@ -35,6 +35,7 @@
 /* === 3. Service ticker marquee === */
 .ticker-wrap {
     position: relative; overflow: hidden;
+    width: 100%; max-width: 100%;
     margin-top: 44px; padding: 14px 0;
     border-top: 1px solid var(--border);
     border-bottom: 1px solid var(--border);
@@ -52,6 +53,17 @@
 }
 .ticker-item img { width: 20px; height: 20px; opacity: 0.8; }
 .ticker-item .status-dot { width: 7px; height: 7px; margin-right: 0; }
+/* ASCII-art service glyphs */
+.ticker-art {
+    margin: 0; padding: 0;
+    font-family: 'Cascadia Mono', 'Consolas', 'Courier New', monospace;
+    font-size: 0.6rem; line-height: 1.1;
+    color: var(--sage);
+    text-align: center;
+    user-select: none;
+    -webkit-user-select: none;
+}
+.ticker-name { font-weight: 600; letter-spacing: 0.01em; }
 @keyframes tickerScroll {
     0% { transform: translateX(0); }
     100% { transform: translateX(-50%); }
@@ -61,6 +73,12 @@
     /* The clone track exists only for the seamless marquee loop — hide it
        when animation is off, otherwise the same services show twice. */
     .ticker-track[aria-hidden="true"] { display: none; }
+}
+@media (max-width: 640px) {
+    .ticker-wrap { margin-top: 30px; padding: 10px 0; }
+    .ticker-track { gap: 28px; }
+    .ticker-art { font-size: 0.52rem; }
+    .ticker-item { gap: 7px; font-size: 0.8rem; }
 }
 
 /* === 4. Live status dots on service cards === */
