@@ -4465,17 +4465,17 @@ body[data-page='contact'] .contact-hero .hero-sub {
 
 /* Softer low-glare light mode: less white, lower contrast, reduced bright overlays */
 [data-theme="light"] {
-    --bg: #D8E1DD;
-    --text: #24363A;
-    --text-dim: #50656A;
-    --text-faint: #718187;
-    --card-bg: rgba(235, 240, 237, 0.82);
-    --card-bg-hover: rgba(240, 244, 242, 0.92);
-    --primary-glow: rgba(78, 124, 136, 0.06);
+    --bg: #E8EFEA;
+    --text: #1B2B31;
+    --text-dim: #3E5A52;
+    --text-faint: #5E7A70;
+    --card-bg: rgba(250, 253, 250, 0.85);
+    --card-bg-hover: rgba(255, 255, 255, 0.95);
+    --primary-glow: rgba(62, 124, 95, 0.1);
 }
 [data-theme="light"] .bg-gradient { opacity: 0.36; }
 [data-theme="light"] .grain-overlay { opacity: 0.22; }
-[data-theme="light"] #petalCanvas { opacity: 0.42; }
+[data-theme="light"] #petalCanvas { opacity: 0.7; }
 
 /* === Set 7: redesigned access flow === */
 .access-choice-section { max-width: 980px; margin: 0 auto; padding: 0 var(--gutter, 1.25rem) 34px; text-align: center; }
@@ -4731,28 +4731,29 @@ body[data-page='home'] .hero h1 { font-size: clamp(2.75rem, 6.5vw, 4.5rem); }
 
 /* --- Light theme consolidation (single source of truth) --- */
 [data-theme="light"] {
-    --bg: #D8E1DD;
-    --text: #24363A;
-    --text-dim: #50656A;
-    --text-faint: #718187;
-    --primary: #4E7C88;
-    --primary-dim: #3E6B77;
-    --primary-bright: #2F5560;
-    --primary-glow: rgba(78, 124, 136, 0.08);
-    --border: rgba(51, 86, 95, 0.16);
-    --border-primary: rgba(51, 86, 95, 0.34);
-    --card-bg: rgba(235, 240, 237, 0.82);
-    --card-bg-hover: rgba(240, 244, 242, 0.92);
-    --ice: #22363D;
-    --sage: #4E7A68;
-    --sage-dim: #659184;
+    --bg: #E8EFEA;
+    --text: #1B2B31;
+    --text-dim: #3E5A52;
+    --text-faint: #5E7A70;
+    --primary: #3E7C5F;
+    --primary-dim: #2F6B4E;
+    --primary-bright: #245A40;
+    --primary-glow: rgba(62, 124, 95, 0.1);
+    --border: rgba(46, 92, 70, 0.16);
+    --border-primary: rgba(46, 92, 70, 0.32);
+    --card-bg: rgba(250, 253, 250, 0.85);
+    --card-bg-hover: rgba(255, 255, 255, 0.95);
+    --ice: #2A4A3E;
+    --sage: #3E7C5F;
+    --sage-dim: #5E9A7C;
     --slate: #5F7E92;
     --error: #B4544E;
-    --success: #4E7A68;
+    --success: #3E7C5F;
+    --hairline: rgba(46, 92, 70, 0.12);
 }
 [data-theme="light"] .bg-gradient { opacity: 0.36; }
 [data-theme="light"] .grain-overlay { opacity: 0.22; }
-[data-theme="light"] #petalCanvas { opacity: 0.42; }
+[data-theme="light"] #petalCanvas { opacity: 0.7; }
 
 /* --- PWA / install polish --- */
 @media (display-mode: standalone) {
