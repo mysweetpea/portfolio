@@ -127,6 +127,14 @@ export default {
     if (contentType.includes('text/html')) {
       const nonce = generateNonce();
 
+      // HTML is DYNAMIC (per-request nonce) — never edge-cache it. The ASSETS
+      // binding's ETag/max-age=0 headers describe the static file, not this
+      // rewritten body; keeping them lets Cloudflare serve stale HTML with
+      // old nonces from other edge nodes. no-store fixes that permanently.
+      out.headers.set('Cache-Control', 'no-store');
+      out.headers.delete('ETag');
+      out.headers.delete('Last-Modified');
+
       // Build CSP — scripts require the nonce (no unsafe-inline). Styles use
       // 'unsafe-inline' WITHOUT a nonce: per CSP spec, 'unsafe-inline' is
       // ignored when a nonce/hash is present in the same source list, and the
