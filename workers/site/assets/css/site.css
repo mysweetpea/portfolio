@@ -1656,7 +1656,13 @@ body[data-page='suggest'] .gl-icon {
     margin-top: 1px;
     color: var(--sage);
 }
-body[data-page='suggest'] .gl-icon img { width: 16px; height: 16px; }
+body[data-page='suggest'] .gl-icon::after {
+    content: '';
+    width: 16px; height: 16px;
+    background-color: currentColor;
+    -webkit-mask: url('/assets/icons/icon-ui-checkmark.svg') center/contain no-repeat;
+    mask: url('/assets/icons/icon-ui-checkmark.svg') center/contain no-repeat;
+}
 body[data-page='suggest'] .guidelines-note {
     font-size: 0.9rem; color: var(--text-dim);
     text-align: center; padding: 14px;
@@ -5089,7 +5095,13 @@ body[data-page='home'] .hero h1 { font-size: clamp(2.75rem, 6.5vw, 4.5rem); }
     border: 1px solid rgba(94, 211, 158, 0.35);
     color: #5ED39E;
 }
-.compare-table .check img { width: 18px; height: 18px; }
+.compare-table .check::after {
+    content: '';
+    width: 18px; height: 18px;
+    background-color: currentColor;
+    -webkit-mask: url('/assets/icons/icon-ui-checkmark.svg') center/contain no-repeat;
+    mask: url('/assets/icons/icon-ui-checkmark.svg') center/contain no-repeat;
+}
 .compare-table .dash {
     display: inline-flex; align-items: center; justify-content: center;
     width: 34px; height: 34px; border-radius: 50%;
@@ -6718,7 +6730,13 @@ body[data-page='contact'] .cl-icon {
     margin-top: 1px;
     color: var(--sage);
 }
-body[data-page='contact'] .cl-icon img { width: 16px; height: 16px; }
+body[data-page='contact'] .cl-icon::after {
+    content: '';
+    width: 16px; height: 16px;
+    background-color: currentColor;
+    -webkit-mask: url('/assets/icons/icon-ui-checkmark.svg') center/contain no-repeat;
+    mask: url('/assets/icons/icon-ui-checkmark.svg') center/contain no-repeat;
+}
 body[data-page='contact'] .contact-note {
     font-size: 0.9rem; color: var(--text-dim);
     text-align: center; padding: 14px;
@@ -7206,14 +7224,23 @@ body[data-page='form'] .vc-box {
     border: 1.5px solid var(--border-primary);
     border-radius: 5px;
     background: rgba(14,22,26,0.6);
+    color: var(--sage);
     transition: border-color .18s ease, background-color .18s ease;
+}
+body[data-page='form'] .vc-box::after {
+    content: '';
+    width: 12px; height: 12px;
+    background-color: currentColor;
+    -webkit-mask: url('/assets/icons/icon-ui-checkmark.svg') center/contain no-repeat;
+    mask: url('/assets/icons/icon-ui-checkmark.svg') center/contain no-repeat;
+    opacity: 0;
+    transition: opacity .18s ease;
 }
 body[data-page='form'] .verify-check input:checked + .vc-box {
     border-color: var(--sage);
     background: rgba(163,201,182,0.2);
 }
-body[data-page='form'] .verify-check input:checked + .vc-box img { opacity: 1; }
-body[data-page='form'] .vc-box img { opacity: 0; transition: opacity .18s ease; }
+body[data-page='form'] .verify-check input:checked + .vc-box::after { opacity: 1; }
 body[data-page='form'] .vc-text {
     font-size: 0.85rem; color: var(--text-dim); line-height: 1.5;
 }
@@ -7264,6 +7291,7 @@ body[data-page='form'] .vc-text {
 [data-theme="light"] body[data-page='form'] .vc-box {
     background: rgba(250, 253, 250, 0.9);
     border-color: var(--border-primary);
+    color: #2F6B4E;
 }
 [data-theme="light"] body[data-page='form'] .verify-check input:checked + .vc-box {
     background: rgba(62, 124, 95, 0.15);
