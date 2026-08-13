@@ -27,7 +27,7 @@
         requestAnimationFrame(step);
     }
 
-    var proofStats = document.querySelectorAll('.proof-stat[data-count]');
+    var proofStats = document.querySelectorAll('.proof-value[data-count]');
     if (proofStats.length) {
         if (reduceMotion.matches) {
             proofStats.forEach(function (el) {
