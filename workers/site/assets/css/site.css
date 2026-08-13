@@ -6371,13 +6371,15 @@ body[data-page='services'] .service-card .acct-pill {
 }
 
 /* --- Modal: bottom-sheet on mobile, footer buttons stack --- */
+/* NOTE: base modal rules are prefixed body[data-page='services'] (0,2,1) —
+   mobile overrides MUST carry the same prefix or they silently lose. */
 @media (max-width: 640px) {
-    .modal-overlay {
+    body[data-page='services'] .modal-overlay {
         padding: 0;
         align-items: flex-end;
         animation: overlayFade 0.25s ease both;
     }
-    .modal {
+    body[data-page='services'] .modal {
         max-height: 92vh; border-radius: 20px 20px 0 0;
         width: 100%;
         padding: 52px 20px 0;
@@ -6390,7 +6392,7 @@ body[data-page='services'] .service-card .acct-pill {
         width: 40px; height: 4px; border-radius: 999px;
         background: var(--border-primary);
     }
-    .modal-close {
+    body[data-page='services'] .modal-close {
         top: 14px; right: 14px;
         width: 34px; height: 34px; border-radius: 50%;
         display: grid; place-items: center;
@@ -6399,11 +6401,12 @@ body[data-page='services'] .service-card .acct-pill {
     }
     .modal-mockup { margin-bottom: 14px; }
     .modal-mockup img { border-radius: 0; }
-    .modal-header { gap: 12px; margin-bottom: 16px; }
-    .modal-icon { width: 48px; height: 48px; border-radius: 10px; }
-    .modal-icon img, .modal-icon svg { width: 26px; height: 26px; }
-    .modal-header h2 { font-size: 1.15rem; }
-    .modal-tutorial { padding: 16px; }
+    body[data-page='services'] .modal-header { gap: 12px; margin-bottom: 16px; }
+    body[data-page='services'] .modal-icon { width: 48px; height: 48px; border-radius: 10px; }
+    body[data-page='services'] .modal-icon img,
+    body[data-page='services'] .modal-icon svg { width: 26px; height: 26px; }
+    body[data-page='services'] .modal-header h2 { font-size: 1.15rem; }
+    body[data-page='services'] .modal-tutorial { padding: 16px; }
     .tutorial-steps li { padding: 13px; gap: 12px; }
     .tutorial-steps .step-btn { width: 100%; justify-content: center; }
     .modal-footer {
