@@ -82,19 +82,19 @@
                         <p class="form-desc">Suggest a self-hosted service you would like to see on MySweetPea.</p>
                         <div class="form-group">
                             <label class="form-label" for="s-name">Service Name <span class="req-tag">required</span></label>
-                            <input type="text" class="form-input" id="s-name" aria-describedby="s-name-hint" aria-invalid="false" placeholder="e.g., Mastodon, Gitea" maxlength="60" oninput="validateField('s-name', 'name')">
+                            <input type="text" class="form-input" id="s-name" aria-describedby="s-name-hint" aria-invalid="false" placeholder="e.g., Mastodon, Gitea" maxlength="60">
                             <span class="validation-icon" id="s-name-icon"></span>
                             <div class="form-hint" id="s-name-hint" aria-live="polite">Please enter a service name (min 2 characters).</div>
                         </div>
                         <div class="form-group">
                             <label class="form-label" for="s-url">Project URL <span class="req-tag">required</span></label>
-                            <input type="url" class="form-input" id="s-url" placeholder="https://github.com/..." required aria-describedby="s-url-hint" oninput="validateField('s-url', 'url')">
+                            <input type="url" class="form-input" id="s-url" placeholder="https://github.com/..." required aria-describedby="s-url-hint">
                             <span class="validation-icon" id="s-url-icon"></span>
                             <div class="form-hint" id="s-url-hint" aria-live="polite">Link to the project's website or GitHub repo so we can evaluate it. Don't know the URL? Just paste the GitHub link or website address.</div>
                         </div>
                         <div class="form-group">
                             <label class="form-label" for="s-category">Category <span class="req-tag">required</span></label>
-                            <select class="form-select" id="s-category" aria-describedby="s-category-hint" aria-invalid="false" onchange="validateField('s-category', 'category')">
+                            <select class="form-select" id="s-category" aria-describedby="s-category-hint" aria-invalid="false">
                                 <option value="">Select a category...</option>
                                 <option value="media">Media &amp; Entertainment</option>
                                 <option value="productivity">Productivity</option>
@@ -109,7 +109,7 @@
                         </div>
                         <div class="form-group">
                             <div class="label-row"><label class="form-label" for="s-reason">Why should we host this? <span class="req-tag">required</span></label><span class="char-counter" id="s-reason-count" aria-hidden="true">0 / 500</span></div>
-                            <textarea class="form-textarea" id="s-reason" aria-describedby="s-reason-hint" aria-invalid="false" placeholder="Explain why this service would be valuable..." maxlength="500" oninput="validateField('s-reason', 'reason')"></textarea>
+                            <textarea class="form-textarea" id="s-reason" aria-describedby="s-reason-hint" aria-invalid="false" placeholder="Explain why this service would be valuable..." maxlength="500"></textarea>
                             <span class="validation-icon" id="s-reason-icon" style="top: auto; bottom: 14px;"></span>
                             <div class="form-hint" id="s-reason-hint" aria-live="polite">Please provide an explanation (min 10 characters).</div>
                         </div>
@@ -209,6 +209,18 @@ function validateField(id, type) {
             var valid = ['s-name', 's-url', 's-category', 's-reason'].every(function(id) { var el = document.getElementById(id); return el && el.classList.contains('valid'); });
             document.getElementById('s-submit').disabled = !valid;
         }
+        /* CSP-safe validation binding (inline oninput/onchange are blocked by the
+           nonce-only script-src — bind via addEventListener instead) */
+        (function bindValidation() {
+            var fields = { 's-name': 'name', 's-url': 'url', 's-category': 'category', 's-reason': 'reason' };
+            Object.keys(fields).forEach(function (id) {
+                var el = document.getElementById(id);
+                if (!el) return;
+                el.addEventListener('input', function () { validateField(id, fields[id]); });
+                el.addEventListener('change', function () { validateField(id, fields[id]); });
+                el.addEventListener('blur', function () { validateField(id, fields[id]); });
+            });
+        })();
         document.getElementById('s-submit').addEventListener('click', function() {
             var btn = this;
             btn.classList.add('loading'); btn.disabled = true;
