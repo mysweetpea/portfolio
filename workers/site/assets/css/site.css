@@ -1647,7 +1647,7 @@ body[data-page='suggest'] .guidelines-list li strong {
     color: var(--text); display: block; font-size: 0.95rem; margin-bottom: 2px;
 }
 body[data-page='suggest'] .gl-icon {
-    flex: 0 0 auto; width: 28px; height: 28px;
+    flex: 0 0 auto; width: 34px; height: 34px;
     display: inline-flex; align-items: center; justify-content: center;
     border-radius: 50%;
     background: linear-gradient(135deg, rgba(163,201,182,0.2), rgba(163,201,182,0.08));
@@ -1655,7 +1655,7 @@ body[data-page='suggest'] .gl-icon {
     box-shadow: inset 0 1px 0 rgba(255,255,255,0.1);
     margin-top: 1px;
 }
-body[data-page='suggest'] .gl-icon img { width: 14px; height: 14px; }
+body[data-page='suggest'] .gl-icon img { width: 20px; height: 20px; }
 body[data-page='suggest'] .guidelines-note {
     font-size: 0.9rem; color: var(--text-dim);
     text-align: center; padding: 14px;
@@ -2071,7 +2071,7 @@ body[data-page='support'] .faq-item.open .faq-question .arrow {
 }
 
 /* Selection + scrollbar in palette */
-::selection { background: var(--primary); color: #0C1316; }
+::selection { background: var(--primary); color: #0C1316; -webkit-text-fill-color: #0C1316; }
 ::-webkit-scrollbar { width: 10px; }
 ::-webkit-scrollbar-track { background: var(--bg); }
 ::-webkit-scrollbar-thumb { background: var(--sage-dim); border-radius: 6px; }
@@ -3359,6 +3359,186 @@ body[data-page='status'] .hero.status-hero h1 { font-size: 2rem; font-weight: 70
         linear-gradient(160deg, rgba(255,255,255,0.8), transparent 40%),
         rgba(250, 253, 250, 0.95);
 }
+/* v61: Kill remaining dark islands — hero steps, inputs, crypto options,
+   status boxes, redeem/verify fields, modal mockup, welcome modal, etc. */
+[data-theme="light"] .hero-steps li,
+[data-theme="light"] .form-input, [data-theme="light"] .form-select,
+[data-theme="light"] .form-textarea, [data-theme="light"] .p404-search .form-input,
+[data-theme="light"] .crypto-option, [data-theme="light"] .wallet-display,
+[data-theme="light"] .username-checks, [data-theme="light"] .cb-cell,
+[data-theme="light"] .redeem-code-group .redeem-code-input,
+[data-theme="light"] .vc-box, [data-theme="light"] .status-resources,
+[data-theme="light"] .status-report, [data-theme="light"] .changelog-github,
+[data-theme="light"] .modal-mockup, [data-theme="light"] .welcome-modal,
+[data-theme="light"] .modal-overlay, [data-theme="light"] .cmdk-backdrop {
+    background:
+        linear-gradient(160deg, rgba(255,255,255,0.6), transparent 40%),
+        rgba(250, 253, 250, 0.85);
+    border-color: rgba(46, 92, 70, 0.16);
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.7), 0 2px 10px rgba(27, 43, 49, 0.05);
+}
+[data-theme="light"] .hero-steps li span {
+    background: var(--sage);
+    color: #F2F6F4;
+}
+[data-theme="light"] .crypto-option.selected {
+    background:
+        linear-gradient(160deg, rgba(62,124,95,0.12), transparent 50%),
+        rgba(250, 253, 250, 0.95);
+    border-color: var(--sage);
+}
+[data-theme="light"] .crypto-option:hover {
+    background:
+        linear-gradient(160deg, rgba(255,255,255,0.8), transparent 40%),
+        rgba(250, 253, 250, 0.95);
+}
+[data-theme="light"] .welcome-modal, [data-theme="light"] .modal-overlay,
+[data-theme="light"] .cmdk-backdrop {
+    background: rgba(27, 43, 49, 0.4);
+    backdrop-filter: blur(6px);
+}
+[data-theme="light"] .form-overlay {
+    background: rgba(216, 225, 221, 0.6);
+}
+[data-theme="light"] .vc-box {
+    background: rgba(250, 253, 250, 0.9);
+    border-color: var(--border-primary);
+}
+[data-theme="light"] .verify-check input:checked + .vc-box {
+    background: rgba(62, 124, 95, 0.15);
+    border-color: var(--sage);
+}
+[data-theme="light"] .cb-cell {
+    background: rgba(250, 253, 250, 0.9);
+}
+[data-theme="light"] .modal-mockup {
+    background: #E8EFEA;
+}
+[data-theme="light"] .toast {
+    background: rgba(250, 253, 250, 0.97);
+    border-color: rgba(46, 92, 70, 0.2);
+}
+[data-theme="light"] .nav-links {
+    background: rgba(250, 253, 250, 0.97);
+    border-color: rgba(46, 92, 70, 0.2);
+}
+[data-theme="light"] .nav-more-menu {
+    background: rgba(250, 253, 250, 0.98);
+    border-color: rgba(46, 92, 70, 0.2);
+}
+[data-theme="light"] .modal-footer {
+    background: linear-gradient(180deg, rgba(255,255,255,0.6), rgba(255,255,255,0.95) 30%);
+}
+[data-theme="light"] .section-nav {
+    background: rgba(250, 253, 250, 0.9);
+    border-color: rgba(46, 92, 70, 0.16);
+    box-shadow: 0 4px 24px rgba(27, 43, 49, 0.08), inset 0 1px 0 rgba(255,255,255,0.8);
+}
+[data-theme="light"] .section-nav a:hover {
+    background: rgba(62, 124, 95, 0.08);
+}
+[data-theme="light"] .back-to-top {
+    background: rgba(250, 253, 250, 0.9);
+    border-color: rgba(46, 92, 70, 0.2);
+}
+[data-theme="light"] .back-to-top:hover {
+    background: rgba(62, 124, 95, 0.1);
+}
+[data-theme="light"] .status-summary {
+    background: rgba(62, 124, 95, 0.1);
+    border-color: rgba(62, 124, 95, 0.3);
+}
+[data-theme="light"] .status-badge.status-online {
+    background: rgba(62, 124, 95, 0.1);
+    border-color: rgba(62, 124, 95, 0.3);
+}
+[data-theme="light"] .status-badge.status-down {
+    background: rgba(180, 84, 78, 0.1);
+    border-color: rgba(180, 84, 78, 0.3);
+}
+[data-theme="light"] .status-badge.status-unknown {
+    background: rgba(94, 122, 112, 0.1);
+    border-color: rgba(94, 122, 112, 0.3);
+}
+[data-theme="light"] .metric-card {
+    background:
+        linear-gradient(160deg, rgba(255,255,255,0.7), transparent 40%),
+        rgba(250, 253, 250, 0.88);
+    border-color: rgba(46, 92, 70, 0.14);
+}
+[data-theme="light"] .hero-btn-secondary {
+    background: rgba(250, 253, 250, 0.7);
+    border-color: rgba(46, 92, 70, 0.25);
+    color: var(--text);
+}
+[data-theme="light"] .hero-btn-secondary:hover {
+    background: rgba(250, 253, 250, 0.95);
+    border-color: rgba(62, 124, 95, 0.4);
+}
+[data-theme="light"] .form-submit.loading::after {
+    border-color: rgba(46, 92, 70, 0.3);
+    border-top-color: var(--primary);
+}
+[data-theme="light"] .ticker-wrap {
+    background:
+        linear-gradient(160deg, rgba(255,255,255,0.6), transparent 40%),
+        rgba(250, 253, 250, 0.8);
+    border-color: rgba(46, 92, 70, 0.14);
+}
+[data-theme="light"] .value-tabs, [data-theme="light"] .view-tabs {
+    background: rgba(242, 245, 246, 0.85);
+    border-color: rgba(46, 92, 70, 0.14);
+}
+[data-theme="light"] .coming-soon-card {
+    background:
+        linear-gradient(160deg, rgba(255,255,255,0.6), transparent 40%),
+        rgba(250, 253, 250, 0.8);
+    border-color: rgba(46, 92, 70, 0.14);
+}
+[data-theme="light"] .form-card .how-it-works,
+[data-theme="light"] .modal-tutorial {
+    background:
+        linear-gradient(160deg, rgba(255,255,255,0.6), transparent 40%),
+        rgba(250, 253, 250, 0.8);
+    border-color: rgba(46, 92, 70, 0.14);
+}
+[data-theme="light"] .github-link {
+    background:
+        linear-gradient(160deg, rgba(255,255,255,0.6), transparent 40%),
+        rgba(250, 253, 250, 0.8);
+    border-color: rgba(46, 92, 70, 0.14);
+}
+[data-theme="light"] .github-link:hover {
+    background:
+        linear-gradient(160deg, rgba(255,255,255,0.8), transparent 40%),
+        rgba(250, 253, 250, 0.95);
+    border-color: rgba(62, 124, 95, 0.35);
+}
+[data-theme="light"] .status-row,
+[data-theme="light"] .guidelines-list li,
+[data-theme="light"] .contact-checklist li,
+[data-theme="light"] .about-list li {
+    background:
+        linear-gradient(160deg, rgba(255,255,255,0.6), transparent 40%),
+        rgba(250, 253, 250, 0.8);
+    border-color: rgba(46, 92, 70, 0.14);
+}
+[data-theme="light"] .status-row:hover,
+[data-theme="light"] .guidelines-list li:hover,
+[data-theme="light"] .contact-checklist li:hover,
+[data-theme="light"] .about-list li:hover {
+    background:
+        linear-gradient(160deg, rgba(255,255,255,0.8), transparent 40%),
+        rgba(250, 253, 250, 0.95);
+    border-color: rgba(62, 124, 95, 0.35);
+}
+[data-theme="light"] .gl-icon, [data-theme="light"] .cl-icon, [data-theme="light"] .al-icon {
+    background: rgba(62, 124, 95, 0.12);
+    border-color: rgba(62, 124, 95, 0.28);
+}
+[data-theme="light"] .gl-icon img, [data-theme="light"] .cl-icon img, [data-theme="light"] .al-icon img {
+    filter: none;
+}
 /* Icon chips: green-tinted */
 [data-theme="light"] .gl-icon, [data-theme="light"] .cl-icon, [data-theme="light"] .al-icon {
     background: rgba(62, 124, 95, 0.12);
@@ -3442,6 +3622,7 @@ body[data-page='status'] .hero.status-hero h1 { font-size: 2rem; font-weight: 70
 [data-theme="light"] ::selection {
     background: rgba(62, 124, 95, 0.35);
     color: #12241B;
+    -webkit-text-fill-color: #12241B;
 }
 /* Scrollbar */
 [data-theme="light"] ::-webkit-scrollbar-thumb {
@@ -4901,18 +5082,18 @@ body[data-page='home'] .hero h1 { font-size: clamp(2.75rem, 6.5vw, 4.5rem); }
 .compare-table tbody tr:last-child td { border-bottom: none; }
 .compare-table .check {
     display: inline-flex; align-items: center; justify-content: center;
-    width: 28px; height: 28px; border-radius: 50%;
+    width: 34px; height: 34px; border-radius: 50%;
     background: rgba(94, 211, 158, 0.16);
     border: 1px solid rgba(94, 211, 158, 0.35);
 }
-.compare-table .check img { width: 14px; height: 14px; }
+.compare-table .check img { width: 20px; height: 20px; }
 .compare-table .dash {
     display: inline-flex; align-items: center; justify-content: center;
-    width: 28px; height: 28px; border-radius: 50%;
+    width: 34px; height: 34px; border-radius: 50%;
     background: rgba(143, 175, 181, 0.08);
     border: 1px solid var(--border);
     color: var(--text-faint);
-    font-size: 0.85rem;
+    font-size: 1rem;
 }
 .compare-table .compare-cta-row td {
     padding: 20px;
@@ -5068,7 +5249,7 @@ body[data-page='home'] .hero h1 { font-size: clamp(2.75rem, 6.5vw, 4.5rem); }
 .compare-table .check { color: var(--sage); font-weight: 700; }
 .compare-table .dash { color: var(--text-faint); }
 .compare-table .compare-tier-icon { display: inline-flex; align-items: center; margin-right: 6px; vertical-align: middle; }
-.compare-table .compare-tier-icon img { width: 20px; height: 20px; }
+.compare-table .compare-tier-icon img { width: 22px; height: 22px; }
 .compare-table td img { vertical-align: middle; margin-right: 8px; }
 .compare-table .compare-cta-row td { padding-top: 18px; padding-bottom: 18px; }
 .compare-table .compare-cta-row .compare-cta { display: inline-block; font-size: 0.8rem; font-weight: 700; color: var(--bg); background: var(--sage); padding: 9px 16px; border-radius: 9px; text-decoration: none; transition: var(--transition); }
@@ -5510,6 +5691,7 @@ body {
 ::selection {
     background: linear-gradient(135deg, var(--primary), var(--sage));
     color: #0C1316;
+    -webkit-text-fill-color: #0C1316;
 }
 
 /* --- Premium focus ring --- */
@@ -5805,9 +5987,34 @@ body {
     animation: shimmer 8s linear infinite;
 }
 .nav-tagline {
-    font-size: 0.82rem; font-weight: 500; font-style: normal;
-    color: var(--text-faint); letter-spacing: 0.01em;
+    display: inline-flex; align-items: center; gap: 6px;
+    font-size: 0.75rem; font-weight: 600; font-style: normal;
+    color: var(--sage);
+    letter-spacing: 0.02em;
     white-space: nowrap;
+    padding: 3px 12px 3px 9px;
+    border-radius: 999px;
+    background: var(--primary-glow);
+    border: 1px solid var(--border-primary);
+    transition: border-color 0.3s var(--ease-premium), background 0.3s var(--ease-premium);
+}
+.nav-tagline::before {
+    content: '';
+    width: 11px; height: 11px; flex: none;
+    background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z'/%3E%3Cpath d='M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12'/%3E%3C/svg%3E") center/contain no-repeat;
+}
+.nav-logo:hover .nav-tagline {
+    border-color: var(--sage);
+    background: rgba(163, 201, 182, 0.12);
+}
+[data-theme="light"] .nav-tagline {
+    color: #2F5A44;
+    background: rgba(62, 124, 95, 0.1);
+    border-color: rgba(62, 124, 95, 0.25);
+}
+[data-theme="light"] .nav-logo:hover .nav-tagline {
+    background: rgba(62, 124, 95, 0.16);
+    border-color: rgba(62, 124, 95, 0.4);
 }
 [data-theme="light"] .nav-brand {
     background: linear-gradient(120deg, #1B2B31 20%, #3E6B77 45%, #2F7A72 70%, #1B2B31 90%);
@@ -5816,7 +6023,7 @@ body {
     -webkit-text-fill-color: transparent;
 }
 @media (max-width: 768px) {
-    .nav-tagline { display: inline; font-size: 0.72rem; }
+    .nav-tagline { font-size: 0.7rem; padding: 2px 10px 2px 8px; }
 }
 
 /* ==========================================================================
@@ -6491,7 +6698,7 @@ body[data-page='contact'] .contact-checklist li strong {
     color: var(--text); display: block; font-size: 0.95rem; margin-bottom: 2px;
 }
 body[data-page='contact'] .cl-icon {
-    flex: 0 0 auto; width: 28px; height: 28px;
+    flex: 0 0 auto; width: 34px; height: 34px;
     display: inline-flex; align-items: center; justify-content: center;
     border-radius: 50%;
     background: linear-gradient(135deg, rgba(163,201,182,0.2), rgba(163,201,182,0.08));
@@ -6499,7 +6706,7 @@ body[data-page='contact'] .cl-icon {
     box-shadow: inset 0 1px 0 rgba(255,255,255,0.1);
     margin-top: 1px;
 }
-body[data-page='contact'] .cl-icon img { width: 14px; height: 14px; }
+body[data-page='contact'] .cl-icon img { width: 20px; height: 20px; }
 body[data-page='contact'] .contact-note {
     font-size: 0.9rem; color: var(--text-dim);
     text-align: center; padding: 14px;
@@ -6827,14 +7034,14 @@ body[data-page='about'] .about-list li a {
 }
 body[data-page='about'] .about-list li a:hover { color: var(--primary-bright); border-color: var(--primary-bright); }
 body[data-page='about'] .al-icon {
-    flex: 0 0 auto; width: 28px; height: 28px; margin-top: 1px;
+    flex: 0 0 auto; width: 34px; height: 34px; margin-top: 1px;
     display: inline-flex; align-items: center; justify-content: center;
     border-radius: 50%;
     background: linear-gradient(135deg, rgba(163,201,182,0.2), rgba(163,201,182,0.08));
     border: 1px solid rgba(163,201,182,0.3);
     box-shadow: inset 0 1px 0 rgba(255,255,255,0.1);
 }
-body[data-page='about'] .al-icon img { width: 14px; height: 14px; }
+body[data-page='about'] .al-icon img { width: 20px; height: 20px; }
 body[data-page='about'] .github-link.repo-homelab {
     border-color: rgba(217,168,108,0.3);
 }
@@ -7010,4 +7217,178 @@ body[data-page='form'] .vc-text {
 .cta-btn-ghost:hover {
     background: rgba(255,255,255,0.1) !important;
     border-color: var(--border-primary) !important;
+}
+
+/* ==========================================================================
+   v65: FINAL light-theme dark-island sweep — page-specific selectors that
+   come later in the file need matching specificity to win. This block sits
+   last so it beats every earlier hardcoded dark surface.
+   ========================================================================== */
+[data-theme="light"] body[data-page='form'] .form-input,
+[data-theme="light"] body[data-page='form'] .form-card .how-it-works,
+[data-theme="light"] body[data-page='form'] .crypto-option,
+[data-theme="light"] body[data-page='form'] .crypto-option.selected,
+[data-theme="light"] body[data-page='form'] .vc-box,
+[data-theme="light"] body[data-page='form'] .username-checks,
+[data-theme="light"] body[data-page='form'] .cb-cell,
+[data-theme="light"] body[data-page='form'] .wallet-display {
+    background:
+        linear-gradient(160deg, rgba(255,255,255,0.6), transparent 40%),
+        rgba(250, 253, 250, 0.88);
+    border-color: rgba(46, 92, 70, 0.16);
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.7), 0 2px 10px rgba(27, 43, 49, 0.05);
+}
+[data-theme="light"] body[data-page='form'] .crypto-option.selected {
+    background:
+        linear-gradient(160deg, rgba(62,124,95,0.12), transparent 50%),
+        rgba(250, 253, 250, 0.95);
+    border-color: var(--sage);
+}
+[data-theme="light"] body[data-page='form'] .crypto-option:hover {
+    background:
+        linear-gradient(160deg, rgba(255,255,255,0.8), transparent 40%),
+        rgba(250, 253, 250, 0.95);
+}
+[data-theme="light"] body[data-page='form'] .vc-box {
+    background: rgba(250, 253, 250, 0.9);
+    border-color: var(--border-primary);
+}
+[data-theme="light"] body[data-page='form'] .verify-check input:checked + .vc-box {
+    background: rgba(62, 124, 95, 0.15);
+    border-color: var(--sage);
+}
+[data-theme="light"] body[data-page='form'] .cb-cell {
+    background: rgba(250, 253, 250, 0.9);
+}
+[data-theme="light"] body[data-page='suggest'] .form-input,
+[data-theme="light"] body[data-page='suggest'] .form-select,
+[data-theme="light"] body[data-page='suggest'] .form-textarea,
+[data-theme="light"] body[data-page='suggest'] .guidelines-list li {
+    background:
+        linear-gradient(160deg, rgba(255,255,255,0.6), transparent 40%),
+        rgba(250, 253, 250, 0.88);
+    border-color: rgba(46, 92, 70, 0.16);
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.7), 0 2px 10px rgba(27, 43, 49, 0.05);
+}
+[data-theme="light"] body[data-page='suggest'] .guidelines-list li:hover {
+    background:
+        linear-gradient(160deg, rgba(255,255,255,0.8), transparent 40%),
+        rgba(250, 253, 250, 0.95);
+    border-color: rgba(62, 124, 95, 0.35);
+}
+[data-theme="light"] body[data-page='support'] .crypto-option,
+[data-theme="light"] body[data-page='support'] .crypto-option.selected,
+[data-theme="light"] body[data-page='support'] .wallet-display {
+    background:
+        linear-gradient(160deg, rgba(255,255,255,0.6), transparent 40%),
+        rgba(250, 253, 250, 0.88);
+    border-color: rgba(46, 92, 70, 0.16);
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.7), 0 2px 10px rgba(27, 43, 49, 0.05);
+}
+[data-theme="light"] body[data-page='support'] .crypto-option.selected {
+    background:
+        linear-gradient(160deg, rgba(62,124,95,0.12), transparent 50%),
+        rgba(250, 253, 250, 0.95);
+    border-color: var(--sage);
+}
+[data-theme="light"] body[data-page='support'] .crypto-option:hover {
+    background:
+        linear-gradient(160deg, rgba(255,255,255,0.8), transparent 40%),
+        rgba(250, 253, 250, 0.95);
+}
+[data-theme="light"] body[data-page='redeem'] .form-input,
+[data-theme="light"] body[data-page='redeem'] .redeem-code-group .redeem-code-input {
+    background:
+        linear-gradient(160deg, rgba(255,255,255,0.6), transparent 40%),
+        rgba(250, 253, 250, 0.88);
+    border-color: rgba(46, 92, 70, 0.16);
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.7), 0 2px 10px rgba(27, 43, 49, 0.05);
+}
+[data-theme="light"] body[data-page='status'] .status-row,
+[data-theme="light"] body[data-page='status'] .status-resources,
+[data-theme="light"] body[data-page='status'] .status-report,
+[data-theme="light"] body[data-page='status'] .status-help-box {
+    background:
+        linear-gradient(160deg, rgba(255,255,255,0.6), transparent 40%),
+        rgba(250, 253, 250, 0.88);
+    border-color: rgba(46, 92, 70, 0.16);
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.7), 0 2px 10px rgba(27, 43, 49, 0.05);
+}
+[data-theme="light"] body[data-page='status'] .status-row:hover {
+    background:
+        linear-gradient(160deg, rgba(255,255,255,0.8), transparent 40%),
+        rgba(250, 253, 250, 0.95);
+    border-color: rgba(62, 124, 95, 0.35);
+}
+[data-theme="light"] body[data-page='changelog'] .changelog-github {
+    background:
+        linear-gradient(160deg, rgba(255,255,255,0.6), transparent 40%),
+        rgba(250, 253, 250, 0.88);
+    border-color: rgba(46, 92, 70, 0.16);
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.7), 0 2px 10px rgba(27, 43, 49, 0.05);
+}
+[data-theme="light"] body[data-page='about'] .about-list li,
+[data-theme="light"] body[data-page='about'] .github-link {
+    background:
+        linear-gradient(160deg, rgba(255,255,255,0.6), transparent 40%),
+        rgba(250, 253, 250, 0.88);
+    border-color: rgba(46, 92, 70, 0.16);
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.7), 0 2px 10px rgba(27, 43, 49, 0.05);
+}
+[data-theme="light"] body[data-page='about'] .about-list li:hover,
+[data-theme="light"] body[data-page='about'] .github-link:hover {
+    background:
+        linear-gradient(160deg, rgba(255,255,255,0.8), transparent 40%),
+        rgba(250, 253, 250, 0.95);
+    border-color: rgba(62, 124, 95, 0.35);
+}
+[data-theme="light"] body[data-page='contact'] .contact-checklist li {
+    background:
+        linear-gradient(160deg, rgba(255,255,255,0.6), transparent 40%),
+        rgba(250, 253, 250, 0.88);
+    border-color: rgba(46, 92, 70, 0.16);
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.7), 0 2px 10px rgba(27, 43, 49, 0.05);
+}
+[data-theme="light"] body[data-page='contact'] .contact-checklist li:hover {
+    background:
+        linear-gradient(160deg, rgba(255,255,255,0.8), transparent 40%),
+        rgba(250, 253, 250, 0.95);
+    border-color: rgba(62, 124, 95, 0.35);
+}
+[data-theme="light"] body[data-page='p404'] .p404-search .form-input {
+    background:
+        linear-gradient(160deg, rgba(255,255,255,0.6), transparent 40%),
+        rgba(250, 253, 250, 0.88);
+    border-color: rgba(46, 92, 70, 0.16);
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.7), 0 2px 10px rgba(27, 43, 49, 0.05);
+}
+[data-theme="light"] body[data-page='pricing'] .modal-tutorial,
+[data-theme="light"] body[data-page='services'] .modal-tutorial {
+    background:
+        linear-gradient(160deg, rgba(255,255,255,0.6), transparent 40%),
+        rgba(250, 253, 250, 0.88);
+    border-color: rgba(46, 92, 70, 0.16);
+}
+[data-theme="light"] body[data-page='pricing'] .modal,
+[data-theme="light"] body[data-page='services'] .modal {
+    background: rgba(250, 253, 250, 0.97);
+    border-color: rgba(46, 92, 70, 0.2);
+}
+[data-theme="light"] body[data-page='pricing'] .modal-overlay,
+[data-theme="light"] body[data-page='services'] .modal-overlay {
+    background: rgba(27, 43, 49, 0.4);
+}
+[data-theme="light"] body[data-page='pricing'] .coming-soon-card,
+[data-theme="light"] body[data-page='services'] .coming-soon-card {
+    background:
+        linear-gradient(160deg, rgba(255,255,255,0.6), transparent 40%),
+        rgba(250, 253, 250, 0.8);
+    border-color: rgba(46, 92, 70, 0.14);
+}
+[data-theme="light"] body[data-page='form'] .form-overlay {
+    background: rgba(216, 225, 221, 0.6);
+}
+[data-theme="light"] .form-submit.loading::after {
+    border-color: rgba(46, 92, 70, 0.3);
+    border-top-color: var(--primary);
 }
