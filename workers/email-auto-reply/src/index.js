@@ -277,4 +277,26 @@ export default {
       console.error("Forward to Tuta failed:", forwardError);
     }
   },
+
+  // HTTP stub: this worker is triggered by Email Routing, not HTTP, but the
+  // dashboard preview console always sends a fetch request. Without this
+  // handler the preview shows "No fetch handler!" — the stub returns a
+  // friendly status so the console test works and doubles as a health check.
+  async fetch(request) {
+    const url = new URL(request.url);
+    if (url.pathname === "/health" || url.pathname === "/") {
+      return new Response(
+        JSON.stringify({
+          ok: true,
+          service: "email-auto-reply",
+          note: "This worker is triggered by Email Routing (inbound mail), not HTTP requests.",
+        }),
+        {
+          status: 200,
+          headers: { "Content-Type": "application/json" },
+        }
+      );
+    }
+    return new Response("Not found", { status: 404 });
+  },
 };
