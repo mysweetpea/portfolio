@@ -15,9 +15,9 @@
     <link rel="apple-touch-icon" href="/apple-touch-icon.png">
     <link rel="manifest" href="/manifest.json">
     <link rel="preload" as="image" href="/logo.svg">
-                    <link rel="stylesheet" href="/assets/css/fonts.css?v=10">
-    <link rel="stylesheet" href="/assets/css/site.css?v=10">
-    <link rel="stylesheet" href="/assets/css/premium.css?v=10">
+                    <link rel="stylesheet" href="/assets/css/fonts.css?v=11">
+    <link rel="stylesheet" href="/assets/css/site.css?v=11">
+    <link rel="stylesheet" href="/assets/css/premium.css?v=11">
 </head>
 <body data-page="services">
     <a href="#main-content" class="skip-link">Skip to content</a>
@@ -176,6 +176,7 @@
     <!-- Service details modal -->
     <div class="modal-overlay" id="serviceModal" role="dialog" aria-modal="true" aria-labelledby="modalTitle" aria-hidden="true">
         <div class="modal">
+            <div class="modal-handle" aria-hidden="true"></div>
             <button class="modal-close" type="button" data-action="close-modal" aria-label="Close service details">&times;</button>
             <div class="modal-mockup" id="modalMockup"></div>
             <div class="modal-header">
@@ -203,8 +204,8 @@
         </div>
     </div>
 
-    <script src="/assets/js/site.js?v=10" defer></script>
-    <script src="/assets/js/premium.js?v=10" defer></script>
+    <script src="/assets/js/site.js?v=11" defer></script>
+    <script src="/assets/js/premium.js?v=11" defer></script>
     <script>
 // FAQ Toggle
         function toggleFAQ(el) { var item = el.parentElement; var open = item.classList.toggle('open'); el.setAttribute('aria-expanded', String(open)); }

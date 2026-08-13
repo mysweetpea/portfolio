@@ -64,6 +64,28 @@
     -webkit-user-select: none;
 }
 .ticker-name { font-weight: 600; letter-spacing: 0.01em; }
+/* Animated ASCII glyphs: the center character pulses (glow + brightness)
+   and the whole art block gently floats. Staggered per item so the ticker
+   feels alive without being busy. */
+.ticker-art {
+    animation: tickerFloat 3.2s ease-in-out infinite;
+}
+.ticker-glyph {
+    display: inline-block;
+    animation: tickerPulse 2.4s ease-in-out infinite;
+}
+.ticker-item:nth-child(2n) .ticker-art { animation-delay: -1.6s; }
+.ticker-item:nth-child(2n) .ticker-glyph { animation-delay: -1.2s; }
+.ticker-item:nth-child(3n) .ticker-art { animation-delay: -0.8s; }
+.ticker-item:nth-child(3n) .ticker-glyph { animation-delay: -0.4s; }
+@keyframes tickerPulse {
+    0%, 100% { opacity: 0.55; text-shadow: 0 0 0 transparent; }
+    50% { opacity: 1; text-shadow: 0 0 10px rgba(163, 201, 182, 0.55); }
+}
+@keyframes tickerFloat {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-2px); }
+}
 @keyframes tickerScroll {
     0% { transform: translateX(0); }
     100% { transform: translateX(-50%); }
@@ -73,6 +95,7 @@
     /* The clone track exists only for the seamless marquee loop — hide it
        when animation is off, otherwise the same services show twice. */
     .ticker-track[aria-hidden="true"] { display: none; }
+    .ticker-art, .ticker-glyph { animation: none; }
 }
 @media (max-width: 640px) {
     .ticker-wrap { margin-top: 30px; padding: 10px 0; }
