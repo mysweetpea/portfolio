@@ -417,24 +417,57 @@
         });
     }
 
-    /* === Command palette (Ctrl+K / Cmd+K) === */
-    var CMDK_ITEMS = [
-        { label: 'Home', url: '/index.html', kind: 'page' },
-        { label: 'Pricing', url: '/pricing.html', kind: 'page' },
-        { label: 'Support', url: '/support.html', kind: 'page' },
-        { label: 'About', url: '/about.html', kind: 'page' },
-        { label: 'Suggest a Service', url: '/suggest.html', kind: 'page' },
-        { label: 'Get Access', url: '/form.html', kind: 'page' },
-        { label: 'Jellyfin — Media', url: '/pricing.html', kind: 'service', icon: '/assets/icons/jellyfin.svg' },
-        { label: 'Nextcloud — Files', url: '/pricing.html', kind: 'service', icon: '/assets/icons/nextcloud.svg' },
-        { label: 'Immich — Photos', url: '/pricing.html', kind: 'service', icon: '/assets/icons/immich.svg' },
-        { label: 'Vaultwarden — Passwords', url: '/pricing.html', kind: 'service', icon: '/assets/icons/vaultwarden.svg' },
-        { label: 'Matrix — Chat', url: '/pricing.html', kind: 'service', icon: '/assets/icons/matrix.svg' },
-        { label: 'AFFiNE — Notes', url: '/pricing.html', kind: 'service', icon: '/assets/icons/affine.svg' },
-        { label: 'Syncthing — Sync', url: '/pricing.html', kind: 'service', icon: '/assets/icons/syncthing.svg' },
-        { label: 'Open WebUI — AI', url: '/pricing.html', kind: 'service', icon: '/assets/icons/openwebui.svg' },
-        { label: 'Seerr — Requests', url: '/pricing.html', kind: 'service', icon: '/assets/icons/seerr.svg' }
-    ];
+    /* === Command palette (Ctrl+K / Cmd+K) — dynamic index ===
+       Pages are discovered from the nav links (present on every page) and
+       services from the services page DOM — new pages or service cards
+       appear in search automatically, no code changes needed. */
+    var CMDK_ITEMS = [];
+    var CMDK_SERVICES_LOADED = false;
+
+    function cmdkBuildIndex() {
+        var items = [];
+        var seen = {};
+
+        // 1. Pages from nav links (skip external links like GitHub)
+        document.querySelectorAll('.nav-logo[href], .nav-btn, .nav-more-menu a').forEach(function (a) {
+            var href = a.getAttribute('href');
+            if (!href || href.indexOf('http') === 0 || href.indexOf('mailto:') === 0) return;
+            var label = a.textContent.trim();
+            if (!label || seen[href]) return;
+            seen[href] = true;
+            items.push({ label: label, url: href, kind: 'page' });
+        });
+
+        // 2. Services from the services page (fetched once, cached)
+        if (!CMDK_SERVICES_LOADED) {
+            CMDK_SERVICES_LOADED = true;
+            fetch('/services.html')
+                .then(function (r) { return r.ok ? r.text() : Promise.reject(); })
+                .then(function (html) {
+                    var doc = new DOMParser().parseFromString(html, 'text/html');
+                    doc.querySelectorAll('.service-card[data-service]').forEach(function (card) {
+                        var h3 = card.querySelector('h3');
+                        if (!h3) return;
+                        var nameEl = h3.cloneNode(true);
+                        nameEl.querySelectorAll('.live-badge, .status-dot, .acct-pill').forEach(function (n) { n.remove(); });
+                        var name = nameEl.textContent.trim();
+                        var icon = card.querySelector('.service-icon img');
+                        var desc = card.querySelector('p');
+                        items.push({
+                            label: name,
+                            url: '/services.html',
+                            kind: 'service',
+                            icon: icon ? icon.getAttribute('src') : '',
+                            desc: desc ? desc.textContent.trim() : ''
+                        });
+                    });
+                    CMDK_ITEMS = items;
+                    if (backdrop.classList.contains('open')) cmdkRender();
+                })
+                .catch(function () { /* nav-only index is fine */ });
+        }
+        return items;
+    }
 
     var backdrop = document.createElement('div');
     backdrop.className = 'cmdk-backdrop';
@@ -449,7 +482,7 @@
     var cmdkInput = backdrop.querySelector('.cmdk-input');
     var cmdkList = backdrop.querySelector('.cmdk-list');
     var cmdkActive = 0;
-    var cmdkFiltered = CMDK_ITEMS;
+    var cmdkFiltered = [];
 
     function cmdkRender() {
         if (!cmdkFiltered.length) {
@@ -458,15 +491,16 @@
         }
         cmdkList.innerHTML = cmdkFiltered.map(function (item, i) {
             var icon = item.icon ? '<img src="' + item.icon + '" alt="" loading="lazy">' : '';
+            var desc = item.desc ? '<span class="cmdk-desc">' + item.desc + '</span>' : '';
             return '<a class="cmdk-item' + (i === cmdkActive ? ' active' : '') + '" href="' + item.url + '" role="option" data-i="' + i + '">' +
-                icon + '<span>' + item.label + '</span><span class="cmdk-kind">' + item.kind + '</span></a>';
+                icon + '<span class="cmdk-label">' + item.label + desc + '</span><span class="cmdk-kind">' + item.kind + '</span></a>';
         }).join('');
     }
 
     function cmdkOpen() {
         backdrop.classList.add('open');
         cmdkInput.value = '';
-        cmdkFiltered = CMDK_ITEMS;
+        cmdkFiltered = cmdkBuildIndex();
         cmdkActive = 0;
         cmdkRender();
         cmdkInput.focus();
@@ -490,7 +524,11 @@
 
     cmdkInput.addEventListener('input', function () {
         var q = cmdkInput.value.trim().toLowerCase();
-        cmdkFiltered = CMDK_ITEMS.filter(function (item) { return item.label.toLowerCase().indexOf(q) !== -1; });
+        cmdkFiltered = CMDK_ITEMS.filter(function (item) {
+            if (item.label.toLowerCase().indexOf(q) !== -1) return true;
+            if (item.desc && item.desc.toLowerCase().indexOf(q) !== -1) return true;
+            return false;
+        });
         cmdkActive = 0;
         cmdkRender();
     });
