@@ -447,7 +447,7 @@ left: 0;
 color: var(--primary);
 font-weight: 700 }
 /* About checklist items already have an icon chip — drop the generic ✓ glyph */
-body[data-page='about'] .about-list li::before { content: none; }
+body[data-page='about'] .content-section ul.about-list li::before { content: none; }
 body[data-page='about'] .card { background: var(--card-bg);
 backdrop-filter: blur(16px) saturate(1.2);
 -webkit-backdrop-filter: blur(16px) saturate(1.2);
