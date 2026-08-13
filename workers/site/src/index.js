@@ -99,7 +99,15 @@ export default {
     }
 
     // --- Serve static site ---
-    const res = await env.ASSETS.fetch(request);
+    // Strip conditional headers (If-None-Match / If-Modified-Since) before
+    // hitting ASSETS: the binding's ETag describes the STATIC file, but HTML
+    // bodies are rewritten per-request (nonce injection). Passing conditionals
+    // through lets edge nodes revalidate to a 304 (no Content-Type → the HTML
+    // branch below is skipped) and keep serving pre-rewrite HTML forever.
+    const freshHeaders = new Headers(request.headers);
+    freshHeaders.delete('If-None-Match');
+    freshHeaders.delete('If-Modified-Since');
+    const res = await env.ASSETS.fetch(new Request(request, { headers: freshHeaders }));
     const contentType = res.headers.get('Content-Type') || '';
 
     // Handle 404: serve 404.html for unknown HTML routes
