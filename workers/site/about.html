@@ -15,9 +15,9 @@
     <link rel="apple-touch-icon" href="/apple-touch-icon.png">
     <link rel="manifest" href="/manifest.json">
     <link rel="preload" as="image" href="/logo.svg">
-                    <link rel="stylesheet" href="/assets/css/fonts.css?v=13">
-    <link rel="stylesheet" href="/assets/css/site.css?v=13">
-    <link rel="stylesheet" href="/assets/css/premium.css?v=13">
+                    <link rel="stylesheet" href="/assets/css/fonts.css?v=14">
+    <link rel="stylesheet" href="/assets/css/site.css?v=14">
+    <link rel="stylesheet" href="/assets/css/premium.css?v=14">
 </head>
 <body data-page="about">
     <a href="#main-content" class="skip-link">Skip to content</a>
@@ -131,18 +131,22 @@
             <div class="cta-card reveal">
                 <h2 class="glass-text">Support the Project</h2>
                 <p>If you believe in privacy-first, community-funded services, consider supporting MySweetPea with a donation.</p>
-                <a href="/support.html" class="cta-btn">Donate Now</a>
+                <a href="/support.html" class="cta-btn" id="supportCta">Donate Now</a>
             </div>
         </div>
         </main>
+        <!-- Hermes-style portal easter egg: click "Support the Project" to reveal -->
+        <div class="portal-reveal" id="portalReveal" aria-hidden="true">
+            <div class="portal-stage">
+                <video autoplay loop muted playsinline preload="auto" poster="/assets/videos/hermes-girl-orb-poster.png">
+                    <source src="/assets/videos/hermes-girl-orb.webm" type="video/webm">
+                    <source src="/assets/videos/hermes-girl-orb.mp4" type="video/mp4">
+                </video>
+            </div>
+            <button class="portal-close" type="button" aria-label="Close" data-action="close-portal">&times;</button>
+        </div>
 <a href="#" class="back-to-top" aria-label="Back to top" data-action="back-to-top"><img src="/assets/icons/icon-ui-arrow-up.svg" class="" alt="" width="22" height="22" loading="lazy" decoding="async" aria-hidden="true"></a>
 <footer class="page-footer">
-    <div class="footer-girl" aria-hidden="true">
-        <video autoplay loop muted playsinline preload="metadata" poster="/assets/videos/hermes-girl-orb-poster.png">
-            <source src="/assets/videos/hermes-girl-orb.webm" type="video/webm">
-            <source src="/assets/videos/hermes-girl-orb.mp4" type="video/mp4">
-        </video>
-    </div>
     <div class="footer-grid">
         <div class="footer-brand">
             <a href="/index.html" class="nav-logo"><img src="/logo-favicon.svg" alt="" width="28" height="28"><span>MySweetPea</span></a>
@@ -182,8 +186,8 @@
 
 
 
-    <script src="/assets/js/site.js?v=13" defer></script>
-    <script src="/assets/js/premium.js?v=13" defer></script>
+    <script src="/assets/js/site.js?v=14" defer></script>
+    <script src="/assets/js/premium.js?v=14" defer></script>
     <script>
     if ('serviceWorker' in navigator) {
         window.addEventListener('load', function () {

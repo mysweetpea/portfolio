@@ -825,6 +825,16 @@
         if (!el) return;
         var action = el.getAttribute('data-action');
 
+        if (action === 'close-portal') {
+            var portal = document.getElementById('portalReveal');
+            if (portal) {
+                portal.classList.remove('open');
+                portal.setAttribute('aria-hidden', 'true');
+                var v = portal.querySelector('video');
+                if (v) v.pause();
+            }
+            return;
+        }
         if (action === 'back-to-top') {
             window.scrollTo({ top: 0, behavior: 'smooth' });
             return;
@@ -848,6 +858,47 @@
             return;
         }
     });
+})();
+
+/* ==========================================================================
+   v45: Hermes-style portal easter egg — click "Support the Project" on
+   about.html to reveal the girl-with-moon full-screen (like hermes-agent.nousresearch.com)
+   ========================================================================== */
+(function () {
+    'use strict';
+    var supportCta = document.getElementById('supportCta');
+    if (!supportCta) return;
+    supportCta.addEventListener('click', function (e) {
+        var portal = document.getElementById('portalReveal');
+        if (!portal) return;
+        e.preventDefault();
+        portal.classList.add('open');
+        portal.setAttribute('aria-hidden', 'false');
+        var v = portal.querySelector('video');
+        if (v) { v.currentTime = 0; v.play().catch(function () {}); }
+        document.body.style.overflow = 'hidden';
+    });
+    var portal = document.getElementById('portalReveal');
+    if (portal) {
+        portal.addEventListener('click', function (e) {
+            if (e.target === portal) {
+                portal.classList.remove('open');
+                portal.setAttribute('aria-hidden', 'true');
+                var v = portal.querySelector('video');
+                if (v) v.pause();
+                document.body.style.overflow = '';
+            }
+        });
+        document.addEventListener('keydown', function (e) {
+            if (e.key === 'Escape' && portal.classList.contains('open')) {
+                portal.classList.remove('open');
+                portal.setAttribute('aria-hidden', 'true');
+                var v = portal.querySelector('video');
+                if (v) v.pause();
+                document.body.style.overflow = '';
+            }
+        });
+    }
 })();
 
 /* ==========================================================================
