@@ -15,9 +15,9 @@
     <link rel="apple-touch-icon" href="/apple-touch-icon.png">
     <link rel="manifest" href="/manifest.json">
     <link rel="preload" as="image" href="/logo.svg">
-                    <link rel="stylesheet" href="/assets/css/fonts.css?v=12">
-    <link rel="stylesheet" href="/assets/css/site.css?v=12">
-    <link rel="stylesheet" href="/assets/css/premium.css?v=12">
+                    <link rel="stylesheet" href="/assets/css/fonts.css?v=13">
+    <link rel="stylesheet" href="/assets/css/site.css?v=13">
+    <link rel="stylesheet" href="/assets/css/premium.css?v=13">
 </head>
 <body data-page="home">
     <a href="#main-content" class="skip-link">Skip to content</a>
@@ -66,6 +66,9 @@
 
 <main id="main-content" class="content-wrapper">
         <div class="hero">
+            <div class="ascii-hero" aria-hidden="true">
+                <pre id="asciiRipple" class="ascii-ripple"></pre>
+            </div>
             <h1 class="glass-text">MySweetPea</h1>
             <p class="hero-sub pop-text">Private alternatives to the services you use every day. No ads, no tracking, no subscriptions.</p>
             <div class="hero-buttons">
@@ -82,9 +85,6 @@
                 <div class="proof-stat"><span class="proof-value" data-count="100" data-suffix="%">0%</span><span class="proof-label">Uptime target</span></div>
                 <div class="proof-divider" aria-hidden="true"></div>
                 <div class="proof-stat"><span class="proof-value" data-count="0" data-suffix="">0</span><span class="proof-label">Ads · trackers · subscriptions</span></div>
-            </div>
-            <div class="ascii-hero" aria-hidden="true">
-                <pre id="asciiRipple" class="ascii-ripple"></pre>
             </div>
             <ol class="hero-steps" aria-label="How to get access">
                 <li><span>1</span><strong>Choose a tier</strong><em>Seedling or Sweet Pea</em></li>
@@ -129,6 +129,12 @@
         </main>
 <a href="#" class="back-to-top" aria-label="Back to top" data-action="back-to-top"><img src="/assets/icons/icon-ui-arrow-up.svg" class="" alt="" width="22" height="22" loading="lazy" decoding="async" aria-hidden="true"></a>
 <footer class="page-footer">
+    <div class="footer-girl" aria-hidden="true">
+        <video autoplay loop muted playsinline preload="metadata" poster="/assets/videos/hermes-girl-orb-poster.png">
+            <source src="/assets/videos/hermes-girl-orb.webm" type="video/webm">
+            <source src="/assets/videos/hermes-girl-orb.mp4" type="video/mp4">
+        </video>
+    </div>
     <div class="footer-grid">
         <div class="footer-brand">
             <a href="/index.html" class="nav-logo"><img src="/logo-favicon.svg" alt="" width="28" height="28"><span>MySweetPea</span></a>
@@ -168,8 +174,8 @@
 
 
 
-    <script src="/assets/js/site.js?v=12" defer></script>
-    <script src="/assets/js/premium.js?v=12" defer></script>
+    <script src="/assets/js/site.js?v=13" defer></script>
+    <script src="/assets/js/premium.js?v=13" defer></script>
     <script>
 // === Animated Counter for Stats ===
         const counterObserver = new IntersectionObserver(function(entries) {

@@ -33,11 +33,16 @@
 }
 
 /* === 3. Rippling ASCII hero (openclaw.ai-style) === */
+/* The art now leads the hero (above the H1) — tighten the hero's top
+   padding when the ascii-hero is present so the page doesn't start
+   with a huge empty gap. */
+.hero:has(.ascii-hero) { padding-top: clamp(20px, 4vh, 48px); }
 .ascii-hero {
     position: relative;
     width: 100%;
     height: clamp(180px, 26vh, 260px);
-    margin-top: 40px;
+    margin-top: 0;
+    margin-bottom: 8px;
     overflow: hidden;
     display: flex;
     align-items: center;
@@ -153,7 +158,35 @@
 @keyframes vtFadeIn { from { opacity: 0; } }
 
 /* === 7. Footer columns === */
-.page-footer { text-align: left; padding: 56px 32px 40px; }
+.page-footer { text-align: left; padding: 56px 32px 40px; position: relative; overflow: hidden; }
+/* Hermes-style girl with the moon — looping video, black bg removed via
+   screen blend so she floats over the footer. Fixed to the viewport
+   bottom-right so she's visible while scrolling (like hermes-agent.nousresearch.com). */
+.footer-girl {
+    position: fixed;
+    right: 18px;
+    bottom: 0;
+    z-index: 5;
+    width: clamp(120px, 14vw, 200px);
+    pointer-events: none;
+    opacity: 0.9;
+    mix-blend-mode: screen;
+    -webkit-mask-image: linear-gradient(#000 70%, #0000 100%);
+    mask-image: linear-gradient(#000 70%, #0000 100%);
+}
+.footer-girl video {
+    display: block;
+    width: 100%;
+    height: auto;
+}
+/* Keep the back-to-top button clear of the girl */
+.back-to-top { right: 24px; bottom: 24px; }
+@media (max-width: 768px) {
+    .footer-girl { width: 100px; right: 8px; opacity: 0.7; }
+}
+@media (prefers-reduced-motion: reduce) {
+    .footer-girl video { display: none; }
+}
 .footer-grid {
     display: grid; grid-template-columns: 2fr 1fr 1fr 1fr;
     gap: 40px; max-width: 1100px; margin: 0 auto 36px;
