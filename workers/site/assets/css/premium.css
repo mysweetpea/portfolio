@@ -191,8 +191,8 @@
     pointer-events: none;
 }
 .portal-stage {
-    width: min(52vh, 480px);
-    margin-bottom: 4vh;
+    width: min(68vh, 640px);
+    margin-bottom: 2vh;
     animation: portal-float 4s ease-in-out infinite;
     filter: drop-shadow(0 0 40px rgba(201, 168, 106, 0.18));
 }
