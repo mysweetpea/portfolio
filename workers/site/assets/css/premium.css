@@ -159,15 +159,16 @@
 
 /* === 7. Footer columns === */
 .page-footer { text-align: left; padding: 56px 32px 40px; position: relative; overflow: hidden; }
-/* === 7b. Hermes-style portal easter egg — scroll reveal, girl blends with page ===
-   Mimics hermes-agent.nousresearch.com: after arming (click "Support the
-   Project"), the girl fades in as the footer scrolls past, blending into the
-   page background. Scrolling back up conceals her. The footer-bottom line
-   stays visible on top. */
+/* === 7b. Hermes-style portal easter egg — cover-removal reveal ===
+   Mimics hermes-agent.nousresearch.com: the girl layer is FIXED at the
+   bottom of the viewport, UNDERNEATH the content (z-index 0 vs content
+   z-index 1). Arming grows a 100vh spacer at the end of the page; as the
+   user scrolls, the content LIFTS like a cover being removed, revealing
+   the girl beneath it. Scrolling back up re-covers her. */
 .portal-reveal {
     position: fixed;
     inset: 0;
-    z-index: 40; /* above page content, below footer-bottom (z 50) */
+    z-index: 0; /* BELOW the content — the content is the cover that lifts */
     display: flex;
     align-items: flex-end;
     justify-content: center;
@@ -179,12 +180,12 @@
     overflow: hidden;
 }
 .portal-reveal.armed {
+    opacity: 1; /* always "there" when armed — hidden behind the content cover */
     visibility: visible;
-    pointer-events: none; /* still inert until fully revealed */
+    pointer-events: none; /* inert until fully revealed */
 }
 .portal-reveal.open {
-    opacity: 1;
-    visibility: visible;
+    z-index: 60; /* above the nav (z 50) so the close button is clickable */
     pointer-events: auto;
 }
 .portal-stage {
@@ -232,7 +233,7 @@
     cursor: pointer;
     opacity: 0.7;
     transition: opacity 0.2s;
-    z-index: 2;
+    z-index: 100; /* above the nav (z 50) so it's clickable when revealed */
 }
 .portal-close:hover { opacity: 1; }
 /* The trigger is intentionally subtle — no glow, no underline, no pointer
@@ -245,13 +246,24 @@
 #supportTrigger::after {
     display: none; /* no underline indicator */
 }
-/* footer-bottom must stay visible above the revealed girl */
+/* The page content (main + footer) is the "cover" — it must paint ABOVE
+   the fixed girl layer (z-index 0) AND be opaque, so the girl stays hidden
+   until the cover lifts as the user scrolls into the spacer. */
+.content-wrapper {
+    background: var(--bg);
+}
+.page-footer {
+    position: relative;
+    z-index: 1;
+    background: var(--bg);
+}
+/* footer-bottom stays visible above the revealed girl */
 .footer-bottom {
     position: relative;
     z-index: 50;
 }
 /* Easter-egg scroll spacer: 0 height normally; grows to 100vh when armed so
-   the user can scroll further and the girl fades in over that distance. */
+   the user can scroll further and the content lifts, revealing the girl. */
 .portal-spacer {
     height: 0;
     transition: height 0.6s ease;

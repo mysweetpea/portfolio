@@ -877,8 +877,7 @@
     var spacer = document.getElementById('portalSpacer');
     var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-    function setOpacity(o) {
-        portal.style.opacity = String(o);
+    function setOpen(o) {
         if (o > 0.98 && !open) {
             open = true;
             portal.classList.add('open');
@@ -899,9 +898,9 @@
         var o = 0;
         if (spacer) {
             var top = spacer.getBoundingClientRect().top;
-            // The spacer is 100vh tall when armed. Opacity ramps 0→1 as the
-            // spacer's top travels from the viewport bottom up to the top —
-            // i.e. fully revealed exactly when the page is scrolled to the end.
+            // The spacer is 100vh tall when armed. The content "cover" lifts
+            // as the spacer's top travels from the viewport bottom up to the
+            // top — the girl is fully revealed exactly at the page end.
             o = (vh - top) / vh;
         } else {
             // Fallback: last 45% of the page.
@@ -910,7 +909,7 @@
             if (max > 0) o = (vh * 0.45 - (max - (window.scrollY || doc.scrollTop || 0))) / (vh * 0.45);
         }
         o = Math.max(0, Math.min(1, o));
-        setOpacity(o);
+        setOpen(o);
     }
 
     function close() {
@@ -919,7 +918,6 @@
         open = false;
         portal.classList.remove('open', 'armed');
         portal.setAttribute('aria-hidden', 'true');
-        portal.style.opacity = '';
         if (spacer) spacer.classList.remove('armed');
         if (hint) hint.classList.remove('visible');
         if (video) video.pause();
@@ -936,9 +934,11 @@
         portal.setAttribute('aria-hidden', 'false');
         if (spacer) spacer.classList.add('armed');
         if (hint) hint.classList.add('visible');
+        // Start the video on arm so she's already animating when the cover lifts.
+        if (video && video.paused) { video.play().catch(function () {}); }
         if (reduceMotion) {
             // Reduced motion: reveal immediately instead of scroll-ramping.
-            setOpacity(1);
+            setOpen(1);
             return;
         }
         document.addEventListener('scroll', onScroll, { passive: true });
