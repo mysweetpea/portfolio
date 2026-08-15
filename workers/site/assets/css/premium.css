@@ -159,22 +159,23 @@
 
 /* === 7. Footer columns === */
 .page-footer { text-align: left; padding: 56px 32px 40px; position: relative; overflow: hidden; }
-/* === 7b. Hermes-style portal easter egg — full-viewport scroll reveal ===
+/* === 7b. Hermes-style portal easter egg — scroll reveal, girl blends with page ===
    Mimics hermes-agent.nousresearch.com: after arming (click "Support the
-   Project"), a fixed full-screen layer fades in as the user scrolls toward
-   the bottom; the girl is the only thing that shows. */
+   Project"), the girl fades in as the footer scrolls past, blending into the
+   page background. Scrolling back up conceals her. The footer-bottom line
+   stays visible on top. */
 .portal-reveal {
     position: fixed;
     inset: 0;
-    z-index: 90;
+    z-index: 40; /* above page content, below footer-bottom (z 50) */
     display: flex;
-    align-items: center;
+    align-items: flex-end;
     justify-content: center;
-    background: var(--bg, #0b0e14);
+    background: transparent; /* blend with the page — no dark layer */
     opacity: 0;
     visibility: hidden;
     pointer-events: none;
-    transition: opacity 0.25s ease, visibility 0.25s ease;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
     overflow: hidden;
 }
 .portal-reveal.armed {
@@ -187,29 +188,34 @@
     pointer-events: auto;
 }
 .portal-stage {
-    width: min(46vh, 420px);
+    width: min(52vh, 480px);
+    margin-bottom: 4vh;
     animation: portal-float 4s ease-in-out infinite;
-    filter: drop-shadow(0 0 60px rgba(201, 168, 106, 0.25));
+    filter: drop-shadow(0 0 40px rgba(201, 168, 106, 0.18));
 }
 .portal-stage video {
     display: block;
     width: 100%;
     height: auto;
-    mix-blend-mode: screen;
-    -webkit-mask-image: linear-gradient(to top, #000 78%, transparent 100%);
-    mask-image: linear-gradient(to top, #000 78%, transparent 100%);
+    mix-blend-mode: screen; /* black background disappears into the page */
+    -webkit-mask-image: linear-gradient(to top, #000 82%, transparent 100%);
+    mask-image: linear-gradient(to top, #000 82%, transparent 100%);
 }
+/* "keep scrolling…" hint lives in the CTA card, above the trigger text */
 .portal-hint {
-    position: absolute;
-    bottom: 7vh;
-    left: 0;
-    right: 0;
-    text-align: center;
-    font-size: 0.8rem;
+    margin: 0 0 10px;
+    font-size: 0.78rem;
     letter-spacing: 0.22em;
     text-transform: uppercase;
-    color: rgba(255, 255, 255, 0.45);
+    color: var(--text-faint, rgba(255, 255, 255, 0.45));
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.4s ease, visibility 0.4s ease;
     animation: portal-hint-pulse 2.4s ease-in-out infinite;
+}
+.portal-hint.visible {
+    opacity: 1;
+    visibility: visible;
 }
 .portal-close {
     position: absolute;
@@ -229,23 +235,21 @@
     z-index: 2;
 }
 .portal-close:hover { opacity: 1; }
+/* The trigger is intentionally subtle — no glow, no underline, no pointer
+   cursor: it should NOT look clickable (the user discovers it by accident). */
 #supportTrigger {
-    cursor: pointer;
+    cursor: default;
     display: inline-block;
     position: relative;
 }
 #supportTrigger::after {
-    content: '';
-    position: absolute;
-    left: 0;
-    bottom: 2px;
-    width: 100%;
-    height: 2px;
-    background: linear-gradient(90deg, var(--accent, #c9a86a), transparent);
-    opacity: 0.4;
-    transition: opacity 0.3s;
+    display: none; /* no underline indicator */
 }
-#supportTrigger:hover::after { opacity: 1; }
+/* footer-bottom must stay visible above the revealed girl */
+.footer-bottom {
+    position: relative;
+    z-index: 50;
+}
 @keyframes portal-float {
     0%, 100% { transform: translateY(0); }
     50% { transform: translateY(-12px); }
