@@ -1,7 +1,7 @@
 /* ==========================================================================
    MySweetPea — Premium Pack JS (2026-08)
-   Count-up stats, service ticker, toast notifications, live service dots,
-   footer status widget. Loaded after site.js on all pages.
+   Count-up stats, rippling ASCII hero, toast notifications, live service
+   dots, footer status widget. Loaded after site.js on all pages.
    ========================================================================== */
 (function () {
     'use strict';
@@ -46,12 +46,88 @@
         }
     }
 
-    /* === 2. Service ticker (duplicate track for seamless loop) === */
-    var tickerTrack = document.querySelector('.ticker-track');
-    if (tickerTrack) {
-        var clone = tickerTrack.cloneNode(true);
-        clone.setAttribute('aria-hidden', 'true');
-        tickerTrack.parentNode.appendChild(clone);
+    /* === 2. Rippling ASCII hero (openclaw.ai-style) ===
+       A 220x26 char grid where each cell's brightness is a sine wave
+       radiating from the center (distance d, time t):
+         b = (0.5 + 0.5*sin(d*0.3 - t*0.35))^3.5
+       Mapped through the dither ramp ' .:-=+xX#8@' with a 4x4 threshold
+       pattern for organic anti-aliasing. The center stays a calm dark
+       void — the site logo floats there. Pauses off-screen / hidden tab. */
+    var asciiPre = document.getElementById('asciiRipple');
+    if (asciiPre) {
+        var asciiLogo = document.createElement('img');
+        asciiLogo.className = 'ascii-logo';
+        asciiLogo.src = '/logo.svg';
+        asciiLogo.alt = '';
+        asciiLogo.width = 150;
+        asciiLogo.height = 150;
+        asciiLogo.loading = 'eager';
+        asciiLogo.decoding = 'async';
+        asciiPre.parentNode.appendChild(asciiLogo);
+
+        var COLS = 220, ROWS = 26;
+        var RAMP = ' .:-=+xX#8@';
+        var THRESH = [[0, 8, 2, 10], [12, 4, 14, 6], [3, 11, 1, 9], [15, 7, 13, 5]];
+        var CELLS = [];
+        for (var r = 0; r < ROWS; r++) {
+            for (var c = 0; c < COLS; c++) {
+                var dx = c - COLS / 2;
+                var dy = (ROWS - 1 - r) * 1.9;
+                var dist = Math.sqrt(dx * dx + dy * dy);
+                var envelope = Math.pow(Math.sin(Math.atan2(dy, dx)), 2);
+                var fadeIn = Math.min(Math.max(1.15 - dist / 110, 0), 1);
+                var fadeOut = Math.min(Math.max((dist - 24) / 18, 0), 1);
+                CELLS.push({
+                    dist: dist,
+                    env: envelope * fadeIn * fadeOut * 1.4,
+                    thr: (THRESH[r % 4][c % 4] + 0.5) / 16
+                });
+            }
+        }
+
+        function renderRipple(t) {
+            var out = '';
+            for (var i = 0; i < CELLS.length; i++) {
+                var cell = CELLS[i];
+                var wave = Math.pow(0.5 + 0.5 * Math.sin(cell.dist * 0.3 - t * 0.35), 3.5) * cell.env;
+                if (wave < 0.05) wave = 0;
+                wave = Math.min(Math.max(wave, 0), 1);
+                var v = wave * 10;
+                var idx = Math.min(10, Math.floor(v) + (v % 1 > cell.thr ? 1 : 0));
+                out += RAMP.charAt(idx);
+                if ((i + 1) % COLS === 0) out += '\n';
+            }
+            asciiPre.textContent = out;
+        }
+
+        var rafId = 0, running = false, visible = true, reduced = false;
+        var lastTs = 0;
+        function frame(ts) {
+            if (!visible || !running) { rafId = 0; return; }
+            if (ts - lastTs >= 100) { lastTs = ts; renderRipple(ts / 1000); }
+            rafId = requestAnimationFrame(frame);
+        }
+        function start() { if (!running && !reduced) { running = true; lastTs = 0; rafId = requestAnimationFrame(frame); } }
+        function stop() { running = false; if (rafId) cancelAnimationFrame(rafId); rafId = 0; }
+        document.addEventListener('visibilitychange', function () {
+            visible = !document.hidden;
+            visible ? start() : stop();
+        });
+        var asciiObserver = new IntersectionObserver(function (entries) {
+            entries.forEach(function (entry) {
+                if (entry.isIntersecting) start(); else stop();
+            });
+        }, { rootMargin: '160px 0px' });
+        asciiObserver.observe(asciiPre);
+
+        // Reduced-motion: render one static frame instead of animating
+        if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+            reduced = true;
+            renderRipple(1.2);
+        } else {
+            renderRipple(0);
+            start();
+        }
     }
 
     /* === 3. Toast notifications === */

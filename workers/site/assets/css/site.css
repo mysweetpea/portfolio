@@ -3353,8 +3353,7 @@ body[data-page='status'] .hero.status-hero h1 { font-size: 2rem; font-weight: 70
 [data-theme="light"] .form-card .how-it-works,
 [data-theme="light"] .coming-soon-card,
 [data-theme="light"] .value-tabs,
-[data-theme="light"] .view-tabs,
-[data-theme="light"] .ticker-wrap {
+[data-theme="light"] .view-tabs {
     background:
         linear-gradient(160deg, rgba(255,255,255,0.6), transparent 40%),
         rgba(250, 253, 250, 0.8);
@@ -3488,12 +3487,6 @@ body[data-page='status'] .hero.status-hero h1 { font-size: 2rem; font-weight: 70
 [data-theme="light"] .form-submit.loading::after {
     border-color: rgba(46, 92, 70, 0.3);
     border-top-color: var(--primary);
-}
-[data-theme="light"] .ticker-wrap {
-    background:
-        linear-gradient(160deg, rgba(255,255,255,0.6), transparent 40%),
-        rgba(250, 253, 250, 0.8);
-    border-color: rgba(46, 92, 70, 0.14);
 }
 [data-theme="light"] .value-tabs, [data-theme="light"] .view-tabs {
     background: rgba(242, 245, 246, 0.85);

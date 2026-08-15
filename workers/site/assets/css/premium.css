@@ -1,6 +1,6 @@
 /* ==========================================================================
-   Premium Pack (2026-08) — Fraunces headings, hero proof row, ticker,
-   live service dots, toasts, view transitions, footer columns
+   Premium Pack (2026-08) — Fraunces headings, hero proof row, rippling
+   ASCII hero, live service dots, toasts, view transitions, footer columns
    ========================================================================== */
 
 /* === 1. Fraunces editorial headings === */
@@ -32,76 +32,76 @@
     .proof-divider { display: none; }
 }
 
-/* === 3. Service ticker marquee === */
-.ticker-wrap {
-    position: relative; overflow: hidden;
-    width: 100%; max-width: 100%;
-    margin-top: 44px; padding: 14px 0;
-    border-top: 1px solid var(--border);
-    border-bottom: 1px solid var(--border);
-    -webkit-mask-image: linear-gradient(90deg, transparent, #000 12%, #000 88%, transparent);
-    mask-image: linear-gradient(90deg, transparent, #000 12%, #000 88%, transparent);
-}
-.ticker-track {
-    display: flex; gap: 48px; width: max-content;
-    animation: tickerScroll 36s linear infinite;
-}
-.ticker-wrap:hover .ticker-track { animation-play-state: paused; }
-.ticker-item {
-    display: flex; align-items: center; gap: 10px;
-    font-size: 0.9rem; color: var(--text-dim); white-space: nowrap;
-}
-.ticker-item img { width: 20px; height: 20px; opacity: 0.8; }
-.ticker-item .status-dot { width: 7px; height: 7px; margin-right: 0; }
-/* ASCII-art service glyphs */
-.ticker-art {
-    margin: 0; padding: 0;
-    font-family: 'Cascadia Mono', 'Consolas', 'Courier New', monospace;
-    font-size: 0.6rem; line-height: 1.1;
-    color: var(--sage);
-    text-align: center;
+/* === 3. Rippling ASCII hero (openclaw.ai-style) === */
+.ascii-hero {
+    position: relative;
+    width: 100%;
+    height: clamp(180px, 26vh, 260px);
+    margin-top: 40px;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    pointer-events: none;
     user-select: none;
     -webkit-user-select: none;
+    /* fade the ASCII art in from the edges so it melts into the page */
+    -webkit-mask-image: linear-gradient(#0000 0%, #000 38% 70%, #0000 100%);
+    mask-image: linear-gradient(#0000 0%, #000 38% 70%, #0000 100%);
 }
-.ticker-name { font-weight: 600; letter-spacing: 0.01em; }
-/* Animated ASCII glyphs: the center character pulses (glow + brightness)
-   and the whole art block gently floats. Staggered per item so the ticker
-   feels alive without being busy. */
-.ticker-art {
-    animation: tickerFloat 3.2s ease-in-out infinite;
+.ascii-ripple {
+    margin: 0;
+    padding: 0;
+    font-family: 'Cascadia Mono', 'Consolas', 'Courier New', monospace;
+    font-size: clamp(7px, 0.72vw, 11px);
+    line-height: 1.28;
+    letter-spacing: 1px;
+    color: var(--sage);
+    opacity: 0.7;
+    text-align: center;
+    white-space: pre;
+    flex-shrink: 0;
 }
-.ticker-glyph {
-    display: inline-block;
-    animation: tickerPulse 2.4s ease-in-out infinite;
+/* The logo floats dead-center in the ripple's calm eye */
+.ascii-hero .ascii-logo {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: clamp(96px, 14vw, 150px);
+    height: auto;
+    filter: drop-shadow(0 0 28px rgba(94, 184, 168, 0.45)) drop-shadow(0 8px 30px rgba(0, 0, 0, 0.5));
+    z-index: 2;
+    animation: asciiLogoBreath 7s ease-in-out infinite;
+    pointer-events: auto;
 }
-.ticker-item:nth-child(2n) .ticker-art { animation-delay: -1.6s; }
-.ticker-item:nth-child(2n) .ticker-glyph { animation-delay: -1.2s; }
-.ticker-item:nth-child(3n) .ticker-art { animation-delay: -0.8s; }
-.ticker-item:nth-child(3n) .ticker-glyph { animation-delay: -0.4s; }
-@keyframes tickerPulse {
-    0%, 100% { opacity: 0.55; text-shadow: 0 0 0 transparent; }
-    50% { opacity: 1; text-shadow: 0 0 10px rgba(163, 201, 182, 0.55); }
+@keyframes asciiLogoBreath {
+    0%, 100% { transform: translate(-50%, -50%) scale(1); filter: drop-shadow(0 0 28px rgba(94, 184, 168, 0.45)) drop-shadow(0 8px 30px rgba(0, 0, 0, 0.5)); }
+    50% { transform: translate(-50%, -50%) scale(1.04); filter: drop-shadow(0 0 40px rgba(94, 184, 168, 0.65)) drop-shadow(0 10px 38px rgba(0, 0, 0, 0.55)); }
 }
-@keyframes tickerFloat {
-    0%, 100% { transform: translateY(0); }
-    50% { transform: translateY(-2px); }
+/* Soft vignette behind the logo so the ASCII never fights it */
+.ascii-hero::before {
+    content: '';
+    position: absolute;
+    top: 50%; left: 50%;
+    width: clamp(200px, 30vw, 320px);
+    height: clamp(200px, 30vw, 320px);
+    transform: translate(-50%, -50%);
+    background: radial-gradient(circle, rgba(4, 9, 11, 0.85) 0%, rgba(4, 9, 11, 0.4) 45%, transparent 72%);
+    border-radius: 50%;
+    z-index: 1;
+    pointer-events: none;
 }
-@keyframes tickerScroll {
-    0% { transform: translateX(0); }
-    100% { transform: translateX(-50%); }
+[data-theme="light"] .ascii-ripple { color: #2F5560; opacity: 0.55; }
+[data-theme="light"] .ascii-hero::before {
+    background: radial-gradient(circle, rgba(232, 239, 234, 0.9) 0%, rgba(232, 239, 234, 0.45) 45%, transparent 72%);
 }
 @media (prefers-reduced-motion: reduce) {
-    .ticker-track { animation: none; flex-wrap: wrap; justify-content: center; gap: 20px; }
-    /* The clone track exists only for the seamless marquee loop — hide it
-       when animation is off, otherwise the same services show twice. */
-    .ticker-track[aria-hidden="true"] { display: none; }
-    .ticker-art, .ticker-glyph { animation: none; }
+    .ascii-ripple, .ascii-logo { animation: none; }
 }
 @media (max-width: 640px) {
-    .ticker-wrap { margin-top: 30px; padding: 10px 0; }
-    .ticker-track { gap: 28px; }
-    .ticker-art { font-size: 0.52rem; }
-    .ticker-item { gap: 7px; font-size: 0.8rem; }
+    .ascii-hero { height: 150px; margin-top: 30px; }
+    .ascii-logo { width: 90px; }
 }
 
 /* === 4. Live status dots on service cards === */
@@ -210,5 +210,5 @@
 
 /* === 10. Light theme polish for new elements === */
 [data-theme="light"] .toast { background: rgba(255, 255, 255, 0.95); color: var(--text); box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15); }
-[data-theme="light"] .ticker-wrap { border-color: var(--border-primary); }
+[data-theme="light"] .ascii-hero { border-color: var(--border-primary); }
 [data-theme="light"] .footer-status { border-color: var(--border-primary); }

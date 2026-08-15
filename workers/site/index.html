@@ -15,9 +15,9 @@
     <link rel="apple-touch-icon" href="/apple-touch-icon.png">
     <link rel="manifest" href="/manifest.json">
     <link rel="preload" as="image" href="/logo.svg">
-                    <link rel="stylesheet" href="/assets/css/fonts.css?v=11">
-    <link rel="stylesheet" href="/assets/css/site.css?v=11">
-    <link rel="stylesheet" href="/assets/css/premium.css?v=11">
+                    <link rel="stylesheet" href="/assets/css/fonts.css?v=12">
+    <link rel="stylesheet" href="/assets/css/site.css?v=12">
+    <link rel="stylesheet" href="/assets/css/premium.css?v=12">
 </head>
 <body data-page="home">
     <a href="#main-content" class="skip-link">Skip to content</a>
@@ -66,8 +66,6 @@
 
 <main id="main-content" class="content-wrapper">
         <div class="hero">
-            <img src="/logo.svg" alt="" class="hero-watermark" aria-hidden="true" loading="lazy" decoding="async">
-            <img src="/logo.svg" alt="MySweetPea logo" class="logo" width="220" height="220">
             <h1 class="glass-text">MySweetPea</h1>
             <p class="hero-sub pop-text">Private alternatives to the services you use every day. No ads, no tracking, no subscriptions.</p>
             <div class="hero-buttons">
@@ -85,36 +83,8 @@
                 <div class="proof-divider" aria-hidden="true"></div>
                 <div class="proof-stat"><span class="proof-value" data-count="0" data-suffix="">0</span><span class="proof-label">Ads · trackers · subscriptions</span></div>
             </div>
-            <div class="ticker-wrap" aria-hidden="true">
-                <div class="ticker-track">
-                    <span class="ticker-item"><pre class="ticker-art">┌───┐
-│ <span class="ticker-glyph">█</span> │
-└───┘</pre><span class="ticker-name">Vaultwarden</span></span>
-                    <span class="ticker-item"><pre class="ticker-art">╭───╮
-│ <span class="ticker-glyph">·</span> │
-╰─┬─╯</pre><span class="ticker-name">Matrix</span></span>
-                    <span class="ticker-item"><pre class="ticker-art">┌───┐
-│<span class="ticker-glyph">▐▌</span> │
-└───┘</pre><span class="ticker-name">AFFiNE</span></span>
-                    <span class="ticker-item"><pre class="ticker-art">╭───╮
-│ <span class="ticker-glyph">▶</span> │
-╰───╯</pre><span class="ticker-name">KoalaSync</span></span>
-                    <span class="ticker-item"><pre class="ticker-art">╔═══╗
-║<span class="ticker-glyph">▐▌</span>║
-╚═══╝</pre><span class="ticker-name">Jellyfin</span></span>
-                    <span class="ticker-item"><pre class="ticker-art">╭───╮
-│ <span class="ticker-glyph">★</span> │
-╰───╯</pre><span class="ticker-name">Seerr</span></span>
-                    <span class="ticker-item"><pre class="ticker-art"> ╭──╮
-╭╯  ╰╮
-╰────╯</pre><span class="ticker-name">Nextcloud</span></span>
-                    <span class="ticker-item"><pre class="ticker-art">┌────┐
-│<span class="ticker-glyph">▐▌</span>  │
-└────┘</pre><span class="ticker-name">Immich</span></span>
-                    <span class="ticker-item"><pre class="ticker-art">╭───╮
-│ <span class="ticker-glyph">✦</span> │
-╰───╯</pre><span class="ticker-name">Open WebUI</span></span>
-                </div>
+            <div class="ascii-hero" aria-hidden="true">
+                <pre id="asciiRipple" class="ascii-ripple"></pre>
             </div>
             <ol class="hero-steps" aria-label="How to get access">
                 <li><span>1</span><strong>Choose a tier</strong><em>Seedling or Sweet Pea</em></li>
@@ -198,8 +168,8 @@
 
 
 
-    <script src="/assets/js/site.js?v=11" defer></script>
-    <script src="/assets/js/premium.js?v=11" defer></script>
+    <script src="/assets/js/site.js?v=12" defer></script>
+    <script src="/assets/js/premium.js?v=12" defer></script>
     <script>
 // === Animated Counter for Stats ===
         const counterObserver = new IntersectionObserver(function(entries) {
