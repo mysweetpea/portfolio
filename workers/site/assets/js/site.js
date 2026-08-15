@@ -874,7 +874,7 @@
     var armed = false;
     var open = false;
     var video = portal.querySelector('video');
-    var footerBottom = document.querySelector('.footer-bottom');
+    var spacer = document.getElementById('portalSpacer');
     var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
     function setOpacity(o) {
@@ -897,11 +897,12 @@
         if (!armed) return;
         var vh = window.innerHeight;
         var o = 0;
-        if (footerBottom) {
-            var top = footerBottom.getBoundingClientRect().top;
-            // Reveal zone: from when the footer-bottom enters the viewport
-            // bottom (start) until it reaches ~55% up the viewport (full).
-            o = (vh - top) / (vh * 0.45);
+        if (spacer) {
+            var top = spacer.getBoundingClientRect().top;
+            // The spacer is 100vh tall when armed. Opacity ramps 0→1 as the
+            // spacer's top travels from the viewport bottom up to the top —
+            // i.e. fully revealed exactly when the page is scrolled to the end.
+            o = (vh - top) / vh;
         } else {
             // Fallback: last 45% of the page.
             var doc = document.documentElement;
@@ -919,6 +920,7 @@
         portal.classList.remove('open', 'armed');
         portal.setAttribute('aria-hidden', 'true');
         portal.style.opacity = '';
+        if (spacer) spacer.classList.remove('armed');
         if (hint) hint.classList.remove('visible');
         if (video) video.pause();
         document.removeEventListener('scroll', onScroll, { passive: true });
@@ -932,6 +934,7 @@
         armed = true;
         portal.classList.add('armed');
         portal.setAttribute('aria-hidden', 'false');
+        if (spacer) spacer.classList.add('armed');
         if (hint) hint.classList.add('visible');
         if (reduceMotion) {
             // Reduced motion: reveal immediately instead of scroll-ramping.

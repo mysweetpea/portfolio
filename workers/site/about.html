@@ -15,9 +15,9 @@
     <link rel="apple-touch-icon" href="/apple-touch-icon.png">
     <link rel="manifest" href="/manifest.json">
     <link rel="preload" as="image" href="/logo.svg">
-                    <link rel="stylesheet" href="/assets/css/fonts.css?v=17">
-    <link rel="stylesheet" href="/assets/css/site.css?v=17">
-    <link rel="stylesheet" href="/assets/css/premium.css?v=17">
+                    <link rel="stylesheet" href="/assets/css/fonts.css?v=18">
+    <link rel="stylesheet" href="/assets/css/site.css?v=18">
+    <link rel="stylesheet" href="/assets/css/premium.css?v=18">
 </head>
 <body data-page="about">
     <a href="#main-content" class="skip-link">Skip to content</a>
@@ -177,6 +177,11 @@
             <a href="https://github.com/mysweetpea" target="_blank" rel="noopener noreferrer">GitHub</a>
         </div>
     </div>
+    <!-- Easter-egg scroll spacer: grows to 100vh when armed so the user can
+         scroll further; the girl fades in as this space passes through the
+         viewport (Hermes-site style). Sits ABOVE the footer-bottom so the
+         copyright line stays visible at the bottom. -->
+    <div class="portal-spacer" id="portalSpacer" aria-hidden="true"></div>
     <div class="footer-bottom">
         <p>&copy; 2026 MySweetPea. Privacy-first, self-hosted, community funded.</p>
         <p class="footer-help">Need help? <a href="mailto:support@mysweetpea.cc">support@mysweetpea.cc</a></p>
@@ -189,8 +194,8 @@
 
 
 
-    <script src="/assets/js/site.js?v=17" defer></script>
-    <script src="/assets/js/premium.js?v=17" defer></script>
+    <script src="/assets/js/site.js?v=18" defer></script>
+    <script src="/assets/js/premium.js?v=18" defer></script>
     <script>
     if ('serviceWorker' in navigator) {
         window.addEventListener('load', function () {

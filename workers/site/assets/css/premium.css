@@ -250,6 +250,15 @@
     position: relative;
     z-index: 50;
 }
+/* Easter-egg scroll spacer: 0 height normally; grows to 100vh when armed so
+   the user can scroll further and the girl fades in over that distance. */
+.portal-spacer {
+    height: 0;
+    transition: height 0.6s ease;
+}
+.portal-spacer.armed {
+    height: 100vh;
+}
 @keyframes portal-float {
     0%, 100% { transform: translateY(0); }
     50% { transform: translateY(-12px); }
