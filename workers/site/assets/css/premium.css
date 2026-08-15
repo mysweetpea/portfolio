@@ -180,13 +180,15 @@
     overflow: hidden;
 }
 .portal-reveal.armed {
-    opacity: 1; /* always "there" when armed — hidden behind the content cover */
     visibility: visible;
     pointer-events: none; /* inert until fully revealed */
+    /* opacity stays 0 when armed — JS ramps it 0→1 with scroll so the girl
+       fades in gradually as the cover lifts (no show-through, no pop-in) */
 }
 .portal-reveal.open {
-    z-index: 60; /* above the nav (z 50) so the close button is clickable */
-    pointer-events: auto;
+    /* stays at z-index 0 — the girl never covers the footer-bottom (z 50);
+       only the close button is elevated (z 100) so it's clickable */
+    pointer-events: none;
 }
 .portal-stage {
     width: min(52vh, 480px);
@@ -219,7 +221,7 @@
     visibility: visible;
 }
 .portal-close {
-    position: absolute;
+    position: fixed;
     top: 20px;
     right: 24px;
     background: rgba(0, 0, 0, 0.5);
@@ -231,9 +233,16 @@
     line-height: 1;
     font-size: 1.3rem;
     cursor: pointer;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.2s, visibility 0.2s;
+    z-index: 100; /* above everything — sibling of the portal, not trapped */
+    pointer-events: none;
+}
+.portal-reveal.open ~ .portal-close {
     opacity: 0.7;
-    transition: opacity 0.2s;
-    z-index: 100; /* above the nav (z 50) so it's clickable when revealed */
+    visibility: visible;
+    pointer-events: auto;
 }
 .portal-close:hover { opacity: 1; }
 /* The trigger is intentionally subtle — no glow, no underline, no pointer
@@ -246,16 +255,16 @@
 #supportTrigger::after {
     display: none; /* no underline indicator */
 }
-/* The page content (main + footer) is the "cover" — it must paint ABOVE
-   the fixed girl layer (z-index 0) AND be opaque, so the girl stays hidden
-   until the cover lifts as the user scrolls into the spacer. */
+/* The page content (main + footer) is the "cover" — it paints ABOVE the
+   fixed girl layer (z-index 0). The footer is TRANSPARENT so the girl fades
+   in through it as the cover lifts (gradual reveal, no pop-in). */
 .content-wrapper {
     background: var(--bg);
 }
 .page-footer {
     position: relative;
     z-index: 1;
-    background: var(--bg);
+    background: transparent; /* let the girl show through as she fades in */
 }
 /* footer-bottom stays visible above the revealed girl */
 .footer-bottom {
