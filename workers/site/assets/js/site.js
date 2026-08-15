@@ -866,12 +866,11 @@
    ========================================================================== */
 (function () {
     'use strict';
-    var supportCta = document.getElementById('supportCta');
-    if (!supportCta) return;
-    supportCta.addEventListener('click', function (e) {
+    var supportTrigger = document.getElementById('supportTrigger');
+    if (!supportTrigger) return;
+    supportTrigger.addEventListener('click', function (e) {
         var portal = document.getElementById('portalReveal');
         if (!portal) return;
-        e.preventDefault();
         portal.classList.add('open');
         portal.setAttribute('aria-hidden', 'false');
         var v = portal.querySelector('video');
