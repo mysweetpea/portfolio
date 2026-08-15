@@ -826,13 +826,9 @@
         var action = el.getAttribute('data-action');
 
         if (action === 'close-portal') {
-            var portal = document.getElementById('portalReveal');
-            if (portal) {
-                portal.classList.remove('open');
-                portal.setAttribute('aria-hidden', 'true');
-                var v = portal.querySelector('video');
-                if (v) v.pause();
-            }
+            // The v46 easter-egg block owns the portal state machine; ask it
+            // to close so its armed/open flags stay consistent.
+            document.dispatchEvent(new CustomEvent('portal-close-request'));
             return;
         }
         if (action === 'back-to-top') {
@@ -861,43 +857,88 @@
 })();
 
 /* ==========================================================================
-   v45: Hermes-style portal easter egg — click "Support the Project" on
-   about.html to reveal the girl-with-moon full-screen (like hermes-agent.nousresearch.com)
+   v46: Hermes-style portal easter egg — click "Support the Project" on
+   about.html ARMS the reveal; the girl fades in full-screen as the user
+   scrolls toward the bottom (mimics hermes-agent.nousresearch.com:
+   opacity ramps 0→1 over the last ~38% of the page, girl is the only
+   thing that shows). Close via × / Escape / backdrop click.
    ========================================================================== */
 (function () {
     'use strict';
     var supportTrigger = document.getElementById('supportTrigger');
-    if (!supportTrigger) return;
-    supportTrigger.addEventListener('click', function (e) {
-        var portal = document.getElementById('portalReveal');
-        if (!portal) return;
-        portal.classList.add('open');
-        portal.setAttribute('aria-hidden', 'false');
-        var v = portal.querySelector('video');
-        if (v) { v.currentTime = 0; v.play().catch(function () {}); }
-        document.body.style.overflow = 'hidden';
-    });
     var portal = document.getElementById('portalReveal');
-    if (portal) {
-        portal.addEventListener('click', function (e) {
-            if (e.target === portal) {
-                portal.classList.remove('open');
-                portal.setAttribute('aria-hidden', 'true');
-                var v = portal.querySelector('video');
-                if (v) v.pause();
-                document.body.style.overflow = '';
-            }
-        });
-        document.addEventListener('keydown', function (e) {
-            if (e.key === 'Escape' && portal.classList.contains('open')) {
-                portal.classList.remove('open');
-                portal.setAttribute('aria-hidden', 'true');
-                var v = portal.querySelector('video');
-                if (v) v.pause();
-                document.body.style.overflow = '';
-            }
-        });
+    if (!supportTrigger || !portal) return;
+
+    var armed = false;
+    var open = false;
+    var video = portal.querySelector('video');
+    var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    function setOpacity(o) {
+        portal.style.opacity = String(o);
+        if (o > 0.98) {
+            portal.classList.add('open');
+            portal.setAttribute('aria-hidden', 'false');
+            if (video && video.paused) { video.play().catch(function () {}); }
+        }
     }
+
+    function onScroll() {
+        if (!armed || open) return;
+        var doc = document.documentElement;
+        var max = doc.scrollHeight - window.innerHeight;
+        if (max <= 0) return;
+        var remaining = max - (window.scrollY || doc.scrollTop || 0);
+        var vh = window.innerHeight;
+        // Hermes-site math: opacity ramps 0→1 as remaining distance shrinks
+        // from 0.72*vh down to 0.34*vh (last ~38% of the page).
+        var o = (0.72 * vh - remaining) / (0.38 * vh);
+        o = Math.max(0, Math.min(1, o));
+        setOpacity(o);
+        if (o >= 1) {
+            open = true;
+            document.removeEventListener('scroll', onScroll, { passive: true });
+            window.removeEventListener('resize', onScroll);
+        }
+    }
+
+    function close() {
+        if (!open && !armed) return;
+        armed = false;
+        open = false;
+        portal.classList.remove('open', 'armed');
+        portal.setAttribute('aria-hidden', 'true');
+        portal.style.opacity = '';
+        if (video) video.pause();
+        document.removeEventListener('scroll', onScroll, { passive: true });
+        window.removeEventListener('resize', onScroll);
+    }
+
+    supportTrigger.addEventListener('click', function (e) {
+        // Never interfere with the Donate Now button — this is the h2 text only.
+        e.preventDefault();
+        if (open) { close(); return; }
+        armed = true;
+        portal.classList.add('armed');
+        portal.setAttribute('aria-hidden', 'false');
+        if (reduceMotion) {
+            // Reduced motion: reveal immediately instead of scroll-ramping.
+            setOpacity(1);
+            open = true;
+            return;
+        }
+        document.addEventListener('scroll', onScroll, { passive: true });
+        window.addEventListener('resize', onScroll);
+        onScroll();
+    });
+
+    portal.addEventListener('click', function (e) {
+        if (e.target === portal) close();
+    });
+    document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape' && (open || armed)) close();
+    });
+    document.addEventListener('portal-close-request', close);
 })();
 
 /* ==========================================================================

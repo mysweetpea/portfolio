@@ -159,49 +159,70 @@
 
 /* === 7. Footer columns === */
 .page-footer { text-align: left; padding: 56px 32px 40px; position: relative; overflow: hidden; }
-/* Hermes-style portal easter egg — full-screen reveal, girl centered */
+/* === 7b. Hermes-style portal easter egg — full-viewport scroll reveal ===
+   Mimics hermes-agent.nousresearch.com: after arming (click "Support the
+   Project"), a fixed full-screen layer fades in as the user scrolls toward
+   the bottom; the girl is the only thing that shows. */
 .portal-reveal {
     position: fixed;
-    right: 24px;
-    bottom: 0;
+    inset: 0;
     z-index: 90;
-    width: min(30vh, 240px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--bg, #0b0e14);
     opacity: 0;
     visibility: hidden;
-    transform: translateY(30px);
-    transition: opacity 0.8s ease, transform 0.8s ease, visibility 0.8s ease;
     pointer-events: none;
+    transition: opacity 0.25s ease, visibility 0.25s ease;
+    overflow: hidden;
+}
+.portal-reveal.armed {
+    visibility: visible;
+    pointer-events: none; /* still inert until fully revealed */
 }
 .portal-reveal.open {
     opacity: 1;
     visibility: visible;
-    transform: translateY(0);
     pointer-events: auto;
 }
 .portal-stage {
-    width: 100%;
+    width: min(46vh, 420px);
     animation: portal-float 4s ease-in-out infinite;
+    filter: drop-shadow(0 0 60px rgba(201, 168, 106, 0.25));
 }
 .portal-stage video {
     display: block;
     width: 100%;
     height: auto;
     mix-blend-mode: screen;
-    -webkit-mask-image: linear-gradient(to top, #000 70%, transparent 100%);
-    mask-image: linear-gradient(to top, #000 70%, transparent 100%);
+    -webkit-mask-image: linear-gradient(to top, #000 78%, transparent 100%);
+    mask-image: linear-gradient(to top, #000 78%, transparent 100%);
+}
+.portal-hint {
+    position: absolute;
+    bottom: 7vh;
+    left: 0;
+    right: 0;
+    text-align: center;
+    font-size: 0.8rem;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.45);
+    animation: portal-hint-pulse 2.4s ease-in-out infinite;
 }
 .portal-close {
     position: absolute;
-    top: -8px;
-    right: 0;
+    top: 20px;
+    right: 24px;
     background: rgba(0, 0, 0, 0.5);
     border: 1px solid rgba(255, 255, 255, 0.2);
     border-radius: 50%;
     color: #fff;
-    width: 28px;
-    height: 28px;
+    width: 36px;
+    height: 36px;
     line-height: 1;
-    font-size: 1.1rem;
+    font-size: 1.3rem;
     cursor: pointer;
     opacity: 0.7;
     transition: opacity 0.2s;
@@ -227,10 +248,15 @@
 #supportTrigger:hover::after { opacity: 1; }
 @keyframes portal-float {
     0%, 100% { transform: translateY(0); }
-    50% { transform: translateY(-10px); }
+    50% { transform: translateY(-12px); }
+}
+@keyframes portal-hint-pulse {
+    0%, 100% { opacity: 0.35; }
+    50% { opacity: 0.7; }
 }
 @media (prefers-reduced-motion: reduce) {
     .portal-stage { animation: none; }
+    .portal-hint { animation: none; }
     .portal-reveal { transition: opacity 0.2s ease; }
 }
 .footer-grid {
