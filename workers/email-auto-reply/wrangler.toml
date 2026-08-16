@@ -1,4 +1,4 @@
-name = "email-auto-reply"
+name = "email-auto-replies"
 main = "src/index.js"
 compatibility_date = "2026-06-25"
 compatibility_flags = ["nodejs_compat"]
