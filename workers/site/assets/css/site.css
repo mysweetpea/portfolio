@@ -69,7 +69,10 @@ body {
 /* === Decorative background === */
 #petalCanvas {
     position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-    z-index: 0; pointer-events: none;
+    /* z-3: above the opaque .content-wrapper (z-1, made opaque by the
+       easter-egg cover) and .grain-overlay (z-2) so petals stay visible;
+       below nav (z-50). Petals are tiny/low-opacity + pointer-events:none. */
+    z-index: 3; pointer-events: none;
 }
 .content-wrapper { position: relative; z-index: 1; }
 .bg-gradient {
@@ -5523,7 +5526,7 @@ body[data-page='home'] .hero h1 { font-size: clamp(2.75rem, 6.5vw, 4.5rem); }
 
 /* --- Floating garden pollen / light particles (JS adds .garden-pollen) --- */
 .garden-pollen {
-    position: fixed; inset: 0; z-index: 0; pointer-events: none; overflow: hidden;
+    position: fixed; inset: 0; z-index: 3; pointer-events: none; overflow: hidden;
 }
 .garden-pollen span {
     position: absolute; border-radius: 50%;
