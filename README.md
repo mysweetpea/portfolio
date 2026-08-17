@@ -16,7 +16,7 @@ as static files through a Cloudflare Worker.
 | Hosting | Cloudflare Worker + Workers Assets |
 | Frontend | Vanilla HTML / CSS / JS (no framework, no build step) |
 | Fonts | Self-hosted Inter + Fraunces (variable, `font-display: swap`) |
-| PWA | `manifest.json` + service worker (`sw.js`) |
+| PWA | `manifest.json` + service worker (`sw.js`, v22) |
 | Backend | n8n webhooks at `https://subscribe.mysweetpea.cc/webhook/*` |
 | Status | Uptime Kuma at `https://status.mysweetpea.cc` |
 
@@ -40,7 +40,7 @@ workers/site/
 ├── error.html          # Generic error page
 ├── 404.html            # Not-found page
 ├── manifest.json       # PWA manifest (installable, shortcuts, maskable icon)
-├── sw.js               # Service worker (stale-while-revalidate, v8)
+├── sw.js               # Service worker (stale-while-revalidate, v22)
 ├── robots.txt          # Search engines allowed, AI crawlers blocked
 ├── sitemap.xml         # SEO sitemap
 ├── src/index.js        # Cloudflare Worker: CSP nonces, security headers,
@@ -48,7 +48,10 @@ workers/site/
 ├── assets/
 │   ├── css/site.css    # Shared theme: tokens, nav, footer, animations, petals
 │   ├── css/fonts.css   # @font-face declarations
+│   ├── css/premium.css # Premium pack: hero proof row, count-up, glass cards
 │   ├── js/site.js      # Petals, scroll progress, reveal, glow cards, Ctrl+K palette
+│   ├── js/premium.js   # Count-up stats, live status dots, view-switcher
+│   ├── js/qrcode.min.js# QR code rendering (form/support pages)
 │   └── icons/          # Service + UI icons (SVG)
 └── wrangler.jsonc      # Worker config (routes, assets)
 ```
@@ -81,10 +84,12 @@ param and shows the appropriate message and next-steps list.
 ## Security
 
 The Cloudflare Worker (`src/index.js`) enforces a **strict Content-Security-Policy**
-with **per-request nonces** — `'unsafe-inline'` is **not** used for scripts or styles:
+with **per-request nonces**:
 
-- `script-src 'self' 'nonce-<random>'`
-- `style-src 'self' 'nonce-<random>'`
+- `script-src 'self' 'nonce-<random>'` — no `unsafe-inline` for scripts
+- `style-src 'self' 'unsafe-inline'` — styles use `unsafe-inline` **without** a
+  nonce (per CSP spec, `unsafe-inline` is ignored when a nonce is present in
+  the same source list, so the two must not be mixed)
 - `object-src 'none'`, `base-uri 'self'`, `form-action 'self' https://subscribe.mysweetpea.cc`
 - `frame-ancestors 'none'`, `upgrade-insecure-requests`
 
@@ -104,9 +109,12 @@ The Worker also:
 - Serves `404.html` for unknown HTML routes
 - Proxies `/api/commits` to GitHub (token stays server-side, 5-min cache)
 
-> **Note:** The Worker must be redeployed (`wrangler deploy`) after any change to
-> `src/index.js` for header/nonce changes to take effect. Static asset changes
-> (HTML/CSS/JS) are served directly from the repo.
+> **Note:** HTML responses are **dynamic** (per-request nonces) — the Worker
+> sets `Cache-Control: no-store` and strips `If-None-Match`/`If-Modified-Since`
+> before `env.ASSETS.fetch` so edge caching never serves stale nonces. The
+> Worker must be redeployed (`wrangler deploy`) after any change to
+> `src/index.js`; static asset changes (HTML/CSS/JS) are served directly from
+> the repo.
 
 ---
 
