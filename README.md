@@ -55,6 +55,14 @@ break.
 
 ---
 
+## Screenshots
+
+| | |
+|---|---|
+| ![MySweetPea homepage — hero with live status](docs/screenshots/website-home.png) | ![Services page — live service catalog](docs/screenshots/website-services.png) |
+
+---
+
 ## How it works
 
 ### Static pages, dynamic features
