@@ -34,25 +34,27 @@ sed -i "s/mysweetpea-v[0-9]*/mysweetpea-v3/" sw.js
 The site auto-deploys via Cloudflare Workers Git integration on every push to
 `main`. No manual step needed.
 
-## Backend integration (pending)
+## Backend integration
 
-These live features are wired but need backend endpoints to fully function:
+These live features are wired to real backends:
 
 | Feature | Endpoint | Status |
 |---------|----------|--------|
-| Live status pill (home) | `https://status.mysweetpea.cc/api/status-page/heartbeat/1` | Needs Uptime Kuma behind tunnel |
-| Notify-me buttons (services) | `https://subscribe.mysweetpea.cc/webhook/suggest` | Needs n8n webhook |
-| Invite-code check (redeem) | `https://subscribe.mysweetpea.cc/webhook/check-code` | Needs n8n webhook |
-| Incidents (status) | `https://subscribe.mysweetpea.cc/webhook/incidents` | Needs n8n webhook + Telegram `/incident` command |
+| Live status pill (home) | `https://status.mysweetpea.cc/api/status-page/heartbeat/homelab` | Live (Uptime Kuma) |
+| Notify-me buttons (services) | `https://subscribe.mysweetpea.cc/webhook/suggest` | Live (n8n) |
+| Invite-code check (redeem) | `https://subscribe.mysweetpea.cc/webhook/check-code` | Live (n8n) |
+| Incidents (status) | `https://subscribe.mysweetpea.cc/webhook/incidents` | Live (n8n + Telegram `/incident`) |
+| Donation requests (form) | `https://subscribe.mysweetpea.cc/webhook/donation-request` | Live (n8n) |
+| Sweet Pea requests (form) | `https://subscribe.mysweetpea.cc/webhook/sweetpea-request` | Live (n8n) |
+| Changelog commits | `/api/commits` (worker proxy) | Live (GitHub API, 5-min cache) |
 
-Until these exist, they gracefully fall back (status shows "All systems
-operational", buttons flip to "We'll let you know", code check keeps default
-hint).
+All endpoints fail gracefully (status shows "All systems operational",
+buttons flip to "We'll let you know", code check keeps default hint).
 
-## Service URLs (pending Session 32)
+## Service URLs
 
-The services page advertises these as LIVE but they're still on MetalLB LAN
-IPs until Traefik IngressRoutes + Cloudflare DNS records are created:
+The services page advertises these as LIVE and they resolve through the
+Cloudflare tunnel to the cluster:
 - `cloud.mysweetpea.cc` (Nextcloud)
 - `photos.mysweetpea.cc` (Immich)
 - `chat.mysweetpea.cc` (Open WebUI)

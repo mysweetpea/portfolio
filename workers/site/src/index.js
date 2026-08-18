@@ -32,6 +32,30 @@ function generateNonce() {
     .replace(/=+$/, '');
 }
 
+// Build the strict CSP for a fresh nonce (shared by normal pages and 404s)
+function buildCsp(nonce) {
+  return [
+    "default-src 'self'",
+    "script-src 'self' 'nonce-" + nonce + "'",
+    "style-src 'self' 'unsafe-inline'",
+    "font-src 'self'",
+    "img-src 'self' data:",
+    "connect-src 'self' https://subscribe.mysweetpea.cc https://status.mysweetpea.cc",
+    "object-src 'none'",
+    "base-uri 'self'",
+    "form-action 'self' https://subscribe.mysweetpea.cc",
+    "frame-ancestors 'none'",
+    "upgrade-insecure-requests"
+  ].join('; ');
+}
+
+// Inject nonce into all <script> and <style> tags in the HTML body
+function injectNonces(text, nonce) {
+  return text
+    .replace(/<script(?![^>]*nonce=)/g, '<script nonce="' + nonce + '"')
+    .replace(/<style(?![^>]*nonce=)/g, '<style nonce="' + nonce + '"');
+}
+
 // In-memory cache for /api/commits (survives across requests within an isolate)
 let commitsCache = { data: null, ts: 0 };
 const COMMITS_TTL = 300_000; // 5 minutes in ms
@@ -122,12 +146,16 @@ export default {
     const res = await env.ASSETS.fetch(new Request(request, { headers: freshHeaders }));
     const contentType = res.headers.get('Content-Type') || '';
 
-    // Handle 404: serve 404.html for unknown HTML routes
-    if (res.status === 404 && !url.pathname.includes('.')) {
+    // Handle 404: serve 404.html for unknown HTML routes (both extensionless
+    // and .html paths — a dot in the path used to mean "asset", but .html
+    // pages are HTML too and deserve the branded 404, not an empty body)
+    const isHtmlPath = !url.pathname.includes('.') || url.pathname.endsWith('.html');
+    if (res.status === 404 && isHtmlPath) {
       const notFoundRes = await env.ASSETS.fetch(new Request('https://dummy.local/404.html'));
       if (notFoundRes.ok) {
         const body = await notFoundRes.text();
-        const out = new Response(body, {
+        const nonce = generateNonce();
+        const out = new Response(injectNonces(body, nonce), {
           status: 404,
           headers: {
             'Content-Type': 'text/html; charset=utf-8',
@@ -136,6 +164,7 @@ export default {
         });
         Object.entries(securityHeaders).forEach(([k, v]) => out.headers.set(k, v));
         out.headers.set('Cross-Origin-Resource-Policy', 'same-origin');
+        out.headers.set('Content-Security-Policy', buildCsp(nonce));
         return out;
       }
     }
@@ -162,27 +191,13 @@ export default {
       // ignored when a nonce/hash is present in the same source list, and the
       // pages rely on inline style="" attributes (static widths, JS-set
       // transforms). The <style> blocks are static, worker-served content.
-      const csp = [
-        "default-src 'self'",
-        "script-src 'self' 'nonce-" + nonce + "'",
-        "style-src 'self' 'unsafe-inline'",
-        "font-src 'self'",
-        "img-src 'self' data:",
-        "connect-src 'self' https://subscribe.mysweetpea.cc https://status.mysweetpea.cc",
-        "object-src 'none'",
-        "base-uri 'self'",
-        "form-action 'self' https://subscribe.mysweetpea.cc",
-        "frame-ancestors 'none'",
-        "upgrade-insecure-requests"
-      ].join('; ');
+      const csp = buildCsp(nonce);
 
       out.headers.set('Content-Security-Policy', csp);
 
       // Inject nonce into all <script> and <style> tags in the HTML body
       const text = await out.text();
-      let injected = text
-        .replace(/<script(?![^>]*nonce=)/g, '<script nonce="' + nonce + '"')
-        .replace(/<style(?![^>]*nonce=)/g, '<style nonce="' + nonce + '"');
+      let injected = injectNonces(text, nonce);
 
       // Inject canonical URL + JSON-LD Organization schema into <head>
       const page = url.pathname === '/' ? 'index.html' : url.pathname.replace(/^\//, '');

@@ -65,25 +65,40 @@
         asciiLogo.decoding = 'async';
         asciiPre.parentNode.appendChild(asciiLogo);
 
-        var COLS = 220, ROWS = 26;
         var RAMP = ' .:-=+xX#8@';
         var THRESH = [[0, 8, 2, 10], [12, 4, 14, 6], [3, 11, 1, 9], [15, 7, 13, 5]];
-        var CELLS = [];
-        for (var r = 0; r < ROWS; r++) {
-            for (var c = 0; c < COLS; c++) {
-                var dx = c - COLS / 2;
-                var dy = (ROWS - 1 - r) * 1.9;
-                var dist = Math.sqrt(dx * dx + dy * dy);
-                var envelope = Math.pow(Math.sin(Math.atan2(dy, dx)), 2);
-                var fadeIn = Math.min(Math.max(1.15 - dist / 110, 0), 1);
-                var fadeOut = Math.min(Math.max((dist - 24) / 18, 0), 1);
-                CELLS.push({
-                    dist: dist,
-                    env: envelope * fadeIn * fadeOut * 1.4,
-                    thr: (THRESH[r % 4][c % 4] + 0.5) / 16
-                });
+        var COLS = 220, ROWS = 26, CELLS = [];
+
+        // Mobile: shrink the grid to fit the viewport (~6px per char at the
+        // 7px minimum font size, 24px side padding) so the ripple fills the
+        // screen instead of being cropped to a sliver by overflow:hidden.
+        function computeCols() {
+            var w = window.innerWidth || document.documentElement.clientWidth || 1024;
+            return Math.max(60, Math.min(220, Math.floor((w - 24) / 6)));
+        }
+        function buildCells() {
+            COLS = computeCols();
+            CELLS = [];
+            var half = COLS / 2;
+            for (var r = 0; r < ROWS; r++) {
+                for (var c = 0; c < COLS; c++) {
+                    var dx = c - half;
+                    var dy = (ROWS - 1 - r) * 1.9;
+                    var dist = Math.sqrt(dx * dx + dy * dy);
+                    var envelope = Math.pow(Math.sin(Math.atan2(dy, dx)), 2);
+                    // Envelope constants scale with grid size so the ripple
+                    // keeps its shape on small screens (was tuned for 220).
+                    var fadeIn = Math.min(Math.max(1.15 - dist / (half * 1.0), 0), 1);
+                    var fadeOut = Math.min(Math.max((dist - half * 0.22) / (half * 0.16), 0), 1);
+                    CELLS.push({
+                        dist: dist,
+                        env: envelope * fadeIn * fadeOut * 1.4,
+                        thr: (THRESH[r % 4][c % 4] + 0.5) / 16
+                    });
+                }
             }
         }
+        buildCells();
 
         function renderRipple(t) {
             var out = '';
@@ -119,6 +134,19 @@
             });
         }, { rootMargin: '160px 0px' });
         asciiObserver.observe(asciiPre);
+
+        // Rebuild the grid on resize/orientation change (mobile rotation)
+        var resizeTimer = 0;
+        window.addEventListener('resize', function () {
+            clearTimeout(resizeTimer);
+            resizeTimer = setTimeout(function () {
+                var newCols = computeCols();
+                if (newCols !== COLS) {
+                    buildCells();
+                    renderRipple(reduced ? 1.2 : 0);
+                }
+            }, 200);
+        });
 
         // Reduced-motion: render one static frame instead of animating
         if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {

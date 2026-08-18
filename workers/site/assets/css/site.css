@@ -672,7 +672,7 @@ background: rgba(14, 22, 26, 0.6);
 border: 1px solid var(--border);
 border-radius: var(--radius-sm);
 color: var(--text);
-font-size: 0.9rem;
+font-size: 1rem;
 font-family: inherit;
 transition: var(--transition);
 outline: none }
@@ -1557,7 +1557,7 @@ background: rgba(14, 22, 26, 0.6);
 border: 1px solid var(--border);
 border-radius: var(--radius-sm);
 color: var(--text);
-font-size: 0.9rem;
+font-size: 1rem;
 font-family: inherit;
 transition: var(--transition);
 outline: none }
