@@ -15,9 +15,11 @@
     <link rel="apple-touch-icon" href="/apple-touch-icon.png">
     <link rel="manifest" href="/manifest.json">
     <link rel="preload" as="image" href="/logo.svg">
-                    <link rel="stylesheet" href="/assets/css/fonts.css?v=24">
-    <link rel="stylesheet" href="/assets/css/site.css?v=24">
-    <link rel="stylesheet" href="/assets/css/premium.css?v=24">
+    <link rel="preload" as="font" type="font/woff2" href="/assets/fonts/inter-var.woff2" crossorigin>
+    <link rel="preload" as="font" type="font/woff2" href="/assets/fonts/fraunces-var.woff2" crossorigin>
+                    <link rel="stylesheet" href="/assets/css/fonts.css?v=25">
+    <link rel="stylesheet" href="/assets/css/site.css?v=25">
+    <link rel="stylesheet" href="/assets/css/premium.css?v=25">
 </head>
 <body data-page="home">
     <a href="#main-content" class="skip-link">Skip to content</a>
@@ -168,30 +170,8 @@
 
 
 
-    <script src="/assets/js/site.js?v=24" defer></script>
-    <script src="/assets/js/premium.js?v=24" defer></script>
-    <script>
-// === Animated Counter for Stats ===
-        const counterObserver = new IntersectionObserver(function(entries) {
-            entries.forEach(function(entry) {
-                if (entry.isIntersecting) {
-                    const el = entry.target;
-                    const target = parseInt(el.dataset.target);
-                    if (isNaN(target)) { counterObserver.unobserve(el); return; }
-                    const suffix = el.dataset.suffix || '';
-                    let current = 0;
-                    const increment = target / 30;
-                    const timer = setInterval(function() {
-                        current += increment;
-                        if (current >= target) { current = target; clearInterval(timer); }
-                        el.textContent = Math.floor(current) + suffix;
-                    }, 30);
-                    counterObserver.unobserve(el);
-                }
-            });
-        }, { threshold: 0.5 });
-        document.querySelectorAll('.stat-card .number').forEach(function(el) { counterObserver.observe(el); });
-    </script>
+    <script src="/assets/js/site.js?v=25" defer></script>
+    <script src="/assets/js/premium.js?v=25" defer></script>
     <script>
     if ('serviceWorker' in navigator) {
         window.addEventListener('load', function () {

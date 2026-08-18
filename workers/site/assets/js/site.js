@@ -385,37 +385,10 @@
         });
     }
 
-    /* === Animated counters (uses data-target/data-suffix, falls back to text) === */
-    var numbers = document.querySelectorAll('.stat-card .number, .number[data-target]');
-    if (numbers.length && 'IntersectionObserver' in window && !reduceMotion2.matches) {
-        var cObs = new IntersectionObserver(function (entries) {
-            entries.forEach(function (entry) {
-                if (!entry.isIntersecting) return;
-                cObs.unobserve(entry.target);
-                var el = entry.target;
-                var target = parseFloat(el.getAttribute('data-target'));
-                var suffix = el.getAttribute('data-suffix') || '';
-                if (isNaN(target)) {
-                    target = parseFloat(el.textContent.replace(/[^0-9.]/g, ''));
-                    suffix = suffix || el.textContent.replace(/[0-9.,]/g, '');
-                }
-                if (isNaN(target)) return;
-                var start = performance.now(), dur = 1400;
-                (function tick(now) {
-                    var t = Math.min((now - start) / dur, 1);
-                    var eased = 1 - Math.pow(1 - t, 3);
-                    el.textContent = Math.round(target * eased) + suffix;
-                    if (t < 1) requestAnimationFrame(tick);
-                })(start);
-            });
-        }, { threshold: 0.4 });
-        numbers.forEach(function (n) { cObs.observe(n); });
-    } else {
-        /* Reduced motion / no IO: set final values immediately */
-        document.querySelectorAll('.number[data-target]').forEach(function (el) {
-            el.textContent = el.getAttribute('data-target') + (el.getAttribute('data-suffix') || '');
-        });
-    }
+    /* === Animated counters (uses data-target/data-suffix, falls back to text) ===
+       NOTE: the live homepage counters use .proof-value[data-count] and are
+       animated by premium.js; this block is a no-op fallback for any page that
+       carries the older .number[data-target] markup. */
 
     /* === Command palette (Ctrl+K / Cmd+K) — dynamic index ===
        Pages are discovered from the nav links (present on every page) and
