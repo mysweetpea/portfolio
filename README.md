@@ -49,7 +49,7 @@ break.
 | Hosting | Cloudflare Worker + Workers Assets |
 | Frontend | Vanilla HTML / CSS / JS (no framework, no build step) |
 | Fonts | Self-hosted Inter + Fraunces (variable, `font-display: swap`) |
-| PWA | `manifest.json` + service worker (`sw.js`, v22) |
+| PWA | `manifest.json` + service worker (`sw.js`, v25) |
 | Backend | n8n webhooks at `https://subscribe.mysweetpea.cc/webhook/*` |
 | Status | Uptime Kuma at `https://status.mysweetpea.cc` |
 
@@ -141,7 +141,7 @@ workers/site/
 ├── error.html          # Generic error page
 ├── 404.html            # Not-found page
 ├── manifest.json       # PWA manifest (installable, shortcuts, maskable icon)
-├── sw.js               # Service worker (stale-while-revalidate, v22)
+├── sw.js               # Service worker (stale-while-revalidate, v25)
 ├── robots.txt          # Search engines allowed, AI crawlers blocked
 ├── sitemap.xml         # SEO sitemap
 ├── src/index.js        # Cloudflare Worker: CSP nonces, security headers,
