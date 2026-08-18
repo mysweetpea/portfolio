@@ -335,6 +335,15 @@ justify-content: center;
 align-items: center;
 text-align: center;
 padding: 100px 24px 40px }
+body[data-page='p404'] .hero img.logo {
+    width: 160px; height: 160px;
+    margin-bottom: 12px;
+    filter: drop-shadow(0 8px 24px rgba(197, 213, 216, 0.12));
+    animation: float3D 7s ease-in-out infinite;
+}
+@media (max-width: 768px) {
+    body[data-page='p404'] .hero img.logo { width: 120px; height: 120px; }
+}
 body[data-page='p404'] .code { font-size: 5rem;
 font-weight: 800;
 letter-spacing: -3px;
