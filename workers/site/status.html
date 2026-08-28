@@ -317,8 +317,8 @@
         // Reverse map: monitor ID -> service key
         var ID_TO_KEY = {};
         Object.keys(MONITOR_IDS).forEach(function (k) { ID_TO_KEY[MONITOR_IDS[k]] = k; });
-        // Status page slug in Uptime Kuma (public URL /status/homelab)
-        var STATUS_SLUG = 'homelab';
+        // Status page slug in Uptime Kuma (public URL /status/public)
+        var STATUS_SLUG = 'public';
 
         function setRow(row, up, pct) {
             var badge = row.querySelector('.status-badge');
