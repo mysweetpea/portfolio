@@ -227,10 +227,17 @@ export default {
     if (path === '/auth/ceremony') {
       // authentik's embedded user interface handles all self-service
       // ceremonies with the user's own browser session (stock-supported).
-      // f=password|mfa|sessions selects the section.
+      // 2026.8 dropped #/mfa-style fragments: deep links are now
+      // #/settings;{"page":"page-<key>"} (verified in the UI bundle).
+      // Serve a tiny client-side redirector instead of a Location header so
+      // the raw JSON fragment survives without URL-encoding questions.
       const f = url.searchParams.get('f') || 'mfa';
-      const frag = f === 'password' ? '#/user-details' : f === 'sessions' ? '#/sessions' : '#/mfa';
-      return Response.redirect(`${env.AUTH_BASE}/if/user/${frag}`, 302);
+      const page = f === 'password' ? 'page-details'
+                 : f === 'sessions' ? 'page-sessions'
+                 : 'page-credentials';
+      const html = `<!doctype html><meta charset="utf-8"><title>Opening settings…</title>
+<script>location.replace(${JSON.stringify(env.AUTH_BASE + '/if/user/#/settings;')} + ${JSON.stringify(JSON.stringify({ page }))});</script>`;
+      return new Response(html, { headers: { 'content-type': 'text/html;charset=utf-8', 'cache-control': 'no-store' } });
     }
 
     if (path === '/auth/land' && request.method === 'POST') {
@@ -278,19 +285,6 @@ export default {
         const r3 = await authentikFetch(env, sess.at, '/api/v3/authenticators/static/');
         const [totp, webauthn, statics] = await Promise.all([r.json(), r2.json(), r3.json()]);
         return json({ totp: totp.results ?? [], webauthn: webauthn.results ?? [], static: statics.results ?? [] });
-      }
-      if (path === '/api/debug-session') {
-        const cookie = request.headers.get('cookie') || '(none)';
-        const m = cookie.match(new RegExp(COOKIE + '=([a-zA-Z0-9_-]+)'));
-        const sid = m ? m[1] : null;
-        const raw = sid ? await env.SESSIONS.get('sess:' + sid) : null;
-        return json({
-          cookie_present: !!sid,
-          sid_prefix: sid ? sid.slice(0, 8) : null,
-          kv_session_exists: !!raw,
-          kv_username: raw ? (JSON.parse(raw).username || null) : null,
-          ts: Date.now(),
-        });
       }
       if (path === '/api/status') {
         const cache = await env.SESSIONS.get('cache:kuma');
