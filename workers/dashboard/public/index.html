@@ -19,6 +19,8 @@
 --t-fast:.16s cubic-bezier(.4,0,.2,1);
 --t-med:.24s cubic-bezier(.4,0,.2,1);
 --t-slow:.4s cubic-bezier(.22,1,.36,1);
+--ease-premium:cubic-bezier(.16,1,.3,1);
+--nav-bg:rgba(12,19,22,.55);--nav-bg-scrolled:rgba(12,19,22,.8);--nav-pop:rgba(15,24,28,.97);
 --card-edge:linear-gradient(180deg,rgba(197,213,216,.09),rgba(197,213,216,0) 36%);--transition:.35s cubic-bezier(.4,0,.2,1);--error:#D98C8C;--success:#A3C9B6;color-scheme:dark}
 *{margin:0;padding:0;box-sizing:border-box}
 body{background:var(--bg);color:var(--text);font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-serif;min-height:100vh}
@@ -29,15 +31,23 @@ h1{font-family:'Fraunces','Inter',Georgia,serif;font-weight:600;font-size:1.8rem
 p{color:var(--text-dim);margin-bottom:24px;line-height:1.6}
 a.btn{display:inline-block;background:var(--primary);color:var(--bg);text-decoration:none;font-weight:600;padding:12px 28px;border-radius:var(--radius-sm);transition:var(--t-fast)}
 a.btn:hover{background:var(--primary-bright);transform:translateY(-2px)}
-/* ---- shell ---- */
-.shell{width:min(1080px,92vw);margin:0 auto;padding:28px 0 0;position:relative;z-index:1}
-.topbar{display:flex;justify-content:space-between;align-items:center;padding:14px 0 26px}
+/* ---- shell + site-style top nav (phase 14) ---- */
+.shell{width:min(1080px,92vw);margin:0 auto;padding:96px 0 0;position:relative;z-index:1}
+.top-nav{position:fixed;top:0;left:0;right:0;z-index:50;display:flex;justify-content:space-between;align-items:center;gap:14px;padding:18px 32px;background:var(--nav-bg);backdrop-filter:blur(20px) saturate(1.4);-webkit-backdrop-filter:blur(20px) saturate(1.4);border-bottom:1px solid var(--border);transition:padding .3s var(--ease-premium),background .3s var(--ease-premium)}
+.top-nav.nav-scrolled{padding:10px 32px;background:var(--nav-bg-scrolled)}
 .brand{font-family:'Fraunces','Inter',Georgia,serif;font-size:1.25rem;display:flex;align-items:center;gap:10px;color:inherit;text-decoration:none}
+.brand img{width:28px;height:28px;border-radius:8px;flex:none}
 .mark{color:var(--sage)}
-.who{display:flex;align-items:center;gap:14px}
-.name{color:var(--text-dim);font-size:.95rem}
+.nav-id{display:flex;align-items:center;gap:12px}
+.nav-avatar{width:30px;height:30px;border-radius:50%;background:linear-gradient(135deg,var(--primary),var(--sage));display:flex;align-items:center;justify-content:center;font-size:.68rem;font-weight:700;color:var(--bg);overflow:hidden;flex:none;cursor:default}
+.nav-avatar img{width:100%;height:100%;object-fit:cover;border-radius:50%;display:block}
 .out{color:var(--gold);text-decoration:none;font-size:.9rem}
 .out:hover{text-decoration:underline}
+.nav-toggle{display:none;flex-direction:column;align-items:center;justify-content:center;gap:4px;width:38px;height:38px;padding:0;background:transparent;border:1px solid rgba(143,175,181,.25);border-radius:10px;cursor:pointer}
+.nav-toggle-bar{display:block;width:16px;height:2px;border-radius:2px;background:var(--text-dim);transition:transform .25s var(--ease-premium),opacity .2s}
+.top-nav.nav-open .nav-toggle-bar:nth-child(1){transform:translateY(6px) rotate(45deg)}
+.top-nav.nav-open .nav-toggle-bar:nth-child(2){opacity:0}
+.top-nav.nav-open .nav-toggle-bar:nth-child(3){transform:translateY(-6px) rotate(-45deg)}
 .grid{display:grid;grid-template-columns:repeat(2,1fr);gap:18px}
 .hero{display:flex;gap:22px;align-items:center;grid-column:1 / -1}
 .avatar{width:72px;height:72px;border-radius:50%;background:linear-gradient(135deg,var(--primary),var(--sage));display:flex;align-items:center;justify-content:center;font-size:1.5rem;font-weight:700;color:var(--bg);flex:none}
@@ -172,12 +182,14 @@ section h3::before{content:"";display:inline-block;width:3px;height:18px;border-
 #sec-account .row b{font-size:.92rem}
 #sec-account .row{padding:9px 0}
 /* ---- phase 9: tabs, uptime bars, library chart ---- */
-.tabs{position:sticky;top:0;z-index:30;display:flex;flex-wrap:nowrap;gap:8px;overflow-x:auto;scrollbar-width:none;background:rgba(12,19,22,.82);backdrop-filter:blur(16px);border:1px solid rgba(143,175,181,.09);border-radius:14px;padding:8px;margin:0 0 20px}
-.tabs::-webkit-scrollbar{display:none}
-.tab{position:relative;flex:none;background:var(--card);border:1px solid transparent;color:var(--text-dim);font:inherit;font-size:.9rem;font-weight:600;padding:9px 18px;border-radius:99px;cursor:pointer;transition:var(--t-fast)}
-.tab:hover{color:var(--text)}
-.tab.active{background:var(--primary);border-color:var(--primary);color:var(--bg)}
-.tab-dot{position:absolute;top:7px;right:9px;width:7px;height:7px;border-radius:50%;background:var(--gold);display:none}
+/* ---- phase 14: tabs as site .nav-btn grammar (underlined text links) ---- */
+.nav-tabs{display:flex;flex-wrap:nowrap;gap:2px;align-items:center}
+.tab{position:relative;flex:none;background:transparent;border:0;border-radius:0;color:var(--text-dim);font:inherit;font-size:.9rem;font-weight:500;padding:8px 13px;cursor:pointer;transition:color .3s var(--ease-premium)}
+.tab::after{content:'';display:block;height:2px;margin-top:2px;border-radius:2px;background:transparent;transition:background .3s var(--ease-premium)}
+.tab:hover{color:var(--primary-bright)}
+.tab.active{color:var(--primary-bright)}
+.tab.active::after{background:var(--primary)}
+.tab-dot{position:absolute;top:5px;right:3px;width:7px;height:7px;border-radius:50%;background:var(--gold);display:none}
 .tab.has-dot .tab-dot{display:block}
 .tabpanel{grid-column:1/-1;display:flex;flex-direction:column;gap:18px}
 .tabpanel[hidden]{display:none}
@@ -255,28 +267,71 @@ img.svc-guide-ico{object-fit:contain;padding:2px}
 @keyframes auroraDrift{0%{transform:translate3d(0,0,0) scale(1)}50%{transform:translate3d(3.5vmax,-2.5vmax,0) scale(1.08)}100%{transform:translate3d(-2.5vmax,1.5vmax,0) scale(.96)}}
 @media (prefers-color-scheme: light){.aurora::before{opacity:.14}.aurora::after{opacity:.125}}
 .grain-overlay{position:fixed;inset:0;z-index:2;pointer-events:none;opacity:.028;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
-.garden-pollen{position:fixed;inset:0;z-index:3;pointer-events:none;overflow:hidden}
-.garden-pollen span{position:absolute;border-radius:50%;background:radial-gradient(circle,rgba(163,201,182,.5),rgba(163,201,182,0));animation:pollenFloat linear infinite;opacity:0}
-@keyframes pollenFloat{0%{transform:translateY(110vh) translateX(0);opacity:0}10%{opacity:.6}90%{opacity:.4}100%{transform:translateY(-10vh) translateX(30px);opacity:0}}
+#petalCanvas{position:fixed;top:0;left:0;width:100%;height:100%;z-index:3;pointer-events:none}
 .ripple-strip{margin:14px auto 0;padding:0 20px;max-width:760px;font-family:ui-monospace,'Cascadia Mono','Courier New',monospace;font-size:10px;line-height:1.1;color:var(--text-faint);opacity:.55;text-align:center;user-select:none;white-space:pre;overflow:hidden}
 .vine-divider{display:flex;align-items:center;justify-content:center;gap:14px;margin:2px auto;max-width:720px;padding:0 20px;color:var(--sage);opacity:.6}
 .vine-divider::before,.vine-divider::after{content:'';flex:1;height:1px;background:linear-gradient(90deg,transparent,var(--border-primary),transparent)}
 .vine-divider svg{width:26px;height:26px}
-.portal-reveal{position:fixed;inset:0;z-index:0;display:flex;align-items:flex-end;justify-content:center;opacity:0;visibility:hidden;pointer-events:none;transition:opacity .3s ease,visibility .3s ease;overflow:hidden}
-.portal-reveal.armed{visibility:visible}
-.portal-stage{width:min(68vh,640px);margin-bottom:2vh;animation:portal-float 4s ease-in-out infinite;filter:drop-shadow(0 0 40px rgba(217,168,108,.18))}
-.portal-stage video{display:block;width:100%;height:auto;mix-blend-mode:screen;-webkit-mask-image:linear-gradient(to top,#000 82%,transparent 100%);mask-image:linear-gradient(to top,#000 82%,transparent 100%)}
-.portal-close{position:fixed;top:20px;right:24px;background:rgba(0,0,0,.5);border:1px solid rgba(255,255,255,.2);border-radius:50%;color:#fff;width:36px;height:36px;line-height:1;font-size:1.3rem;cursor:pointer;opacity:0;visibility:hidden;transition:opacity .2s,visibility .2s;z-index:100;pointer-events:none}
-body.portal-open .portal-close{opacity:.7;visibility:visible;pointer-events:auto}
-.portal-close:hover{opacity:1}
-.portal-spacer{height:0;transition:height .6s ease}
-.portal-spacer.armed{height:100vh}
+.portal-embed{display:flex;flex-direction:column;align-items:center;text-align:center}
+.portal-frame{width:min(300px,78%);margin:8px 0 0;padding:12px;border-radius:var(--radius);border:1px solid var(--border);background:rgba(19,30,34,.35);animation:portal-float 4s ease-in-out infinite;filter:drop-shadow(0 0 40px rgba(217,168,108,.18))}
+.portal-frame video{display:block;width:100%;height:auto;mix-blend-mode:screen}
 @keyframes portal-float{0%,100%{transform:translateY(0)}50%{transform:translateY(-12px)}}
 .eyebrow{display:block;font-size:.72rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--sage);margin-bottom:10px}
+/* ---- phase 14: contact tab ---- */
+.contact-mail{text-align:center;padding:8px 0 2px}
+.contact-pill{display:inline-flex;align-items:center;gap:10px;background:rgba(143,175,181,.1);border:1px solid var(--border-primary);border-radius:999px;padding:14px 26px;color:var(--primary-bright);font-family:'Fraunces','Inter',Georgia,serif;font-size:1.15rem;font-weight:600;text-decoration:none;transition:.3s var(--ease-premium)}
+.contact-pill:hover{border-color:var(--gold);color:var(--gold);transform:translateY(-2px)}
+.contact-actions{display:flex;justify-content:center;margin-top:14px}
+.contact-note{margin:16px 0 0;text-align:center}
+.ct-list{list-style:none;display:flex;flex-direction:column;gap:12px;margin:4px 0 0;padding:0}
+.ct-list li{display:flex;gap:10px;align-items:flex-start;font-size:.92rem;line-height:1.5;color:var(--text-dim)}
+.ct-list li::before{content:'✿';color:var(--sage);font-size:.8rem;line-height:1.7;flex:none}
+.ct-list a{color:var(--primary-bright)}
+.ct-detail{margin:14px 0 0;line-height:1.5}
+/* ---- phase 14: platform chips (guides) ---- */
+.plat-cap{font-size:.68rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--text-faint);margin:18px 0 0}
+.plat-grid{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0 4px;padding-top:12px;border-top:1px solid rgba(143,175,181,.08)}
+.plat-chip{display:inline-flex;align-items:center;gap:7px;background:rgba(143,175,181,.08);border:1px solid rgba(143,175,181,.16);border-radius:999px;padding:6px 13px 6px 9px;color:var(--text-dim);font-size:.82rem;font-weight:600;text-decoration:none;transition:.3s var(--ease-premium)}
+.plat-chip:hover{color:var(--primary-bright);border-color:var(--border-primary);transform:translateY(-1px)}
+.plat-ico{width:17px;height:17px;display:flex;align-items:center;justify-content:center;flex:none;color:var(--primary)}
+.plat-ico svg{width:15px;height:15px;display:block}
+.plat-mono{width:16px;height:16px;border-radius:5px;background:rgba(143,175,181,.18);color:var(--primary-bright);font-size:.55rem;font-weight:700;display:flex;align-items:center;justify-content:center;flex:none}
+/* ---- phase 14: sessions + activity ---- */
+.sess-head{display:grid;grid-template-columns:1.5fr .8fr 1fr auto;gap:12px;padding:4px 0 8px;border-bottom:1px solid rgba(143,175,181,.14);font-size:.66rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--text-faint)}
+.sess-row{display:grid;grid-template-columns:1.5fr .8fr 1fr auto;gap:12px;align-items:center;padding:12px 0;border-bottom:1px solid rgba(143,175,181,.08);line-height:1.5}
+.sess-row:last-of-type{border-bottom:0}
+.sess-dev{display:flex;align-items:center;gap:10px;min-width:0;flex-wrap:wrap}
+.sess-dev svg{color:var(--primary);flex:none}
+.sess-dev b{font-size:.92rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.sess-dev .pill{margin-top:0}
+.sess-act{display:flex;justify-content:flex-end}
+.act-row{display:flex;align-items:flex-start;gap:12px;padding:12px 0;border-bottom:1px solid rgba(143,175,181,.08);line-height:1.5}
+.act-row:last-of-type{border-bottom:0}
+.act-ico{width:28px;height:28px;border-radius:50%;background:rgba(143,175,181,.12);color:var(--primary);display:flex;align-items:center;justify-content:center;flex:none;margin-top:2px}
+.act-ico svg{width:14px;height:14px}
+/* ---- phase 14: inline password change ---- */
+.pwf{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin:4px 0 2px}
+.pwf label{display:block;font-size:.85rem;font-weight:600;margin-bottom:5px}
+.pwf input{width:100%;background:var(--bg);border:1px solid rgba(143,175,181,.2);border-radius:10px;color:var(--text);padding:10px 13px;font:inherit;font-size:.92rem;outline:none;transition:border-color .25s}
+.pwf input:focus{border-color:var(--primary)}
+.pwf-actions{display:flex;justify-content:flex-end;align-items:center;gap:18px;margin-top:12px;flex-wrap:wrap}
+.pwf-adv{font-size:.82rem;color:var(--text-dim);text-decoration:underline;text-underline-offset:3px}
+.pwf-adv:hover{color:var(--gold)}
+/* ---- phase 14: stats tab ---- */
+.icon-btn{display:inline-flex;align-items:center;justify-content:center;width:30px;height:30px;padding:0;border-radius:8px;vertical-align:middle;margin-left:10px}
+.icon-btn svg{width:15px;height:15px}
+.svc-stats{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:12px}
+.svc-stats .stat{padding:14px 16px}
+.svc-stats .stat .n{font-size:1.3rem}
+.stat .kpi-ico{width:16px;height:16px;color:var(--sage);display:block;margin-bottom:8px}
+/* ---- phase 14: get-started human line ---- */
+.ob-human{margin:16px 0 0;font-size:.88rem;color:var(--text-dim);line-height:1.5}
+.ob-link{background:none;border:0;padding:0;font:inherit;font-size:.88rem;font-weight:600;color:var(--gold);cursor:pointer;text-decoration:underline;text-underline-offset:3px}
+.ob-link:hover{color:var(--gold)}
 @media (prefers-reduced-motion: reduce){
 .aurora::before,.aurora::after{animation:none}
-.garden-pollen{display:none}
-.portal-stage{animation:none}
+#petalCanvas{display:none}
+.portal-frame{animation:none}
 .ripple-strip{opacity:.4}
 }
 @media (prefers-reduced-motion: no-preference){
@@ -287,13 +342,22 @@ main section{opacity:0;animation:msp-in .5s ease-out forwards;animation-delay:ca
 /* ---- phase 11: mobile optimization (additive only — desktop styles untouched) ---- */
 @media(max-width:760px){
 body{-webkit-tap-highlight-color:transparent}
-.topbar{flex-direction:column;align-items:flex-start;gap:10px;padding:12px 0 18px}
+.shell{padding-top:80px}
+.top-nav{padding:12px 16px}
+.top-nav.nav-scrolled{padding:10px 16px}
 .brand{font-size:1.1rem}
-.who{gap:8px}
+.nav-id{gap:8px}
+#who-tier{display:none}
+.out{display:none}
 #pal-open{display:none}
-.tabs{-webkit-overflow-scrolling:touch}
-.tabs::-webkit-scrollbar{display:none}
-.tab{min-height:40px}
+.nav-toggle{display:flex}
+.nav-tabs{position:absolute;top:calc(100% + 8px);left:12px;right:12px;flex-direction:column;align-items:stretch;gap:2px;background:var(--nav-pop);backdrop-filter:blur(20px) saturate(1.4);-webkit-backdrop-filter:blur(20px) saturate(1.4);border:1px solid var(--border);border-radius:var(--radius);padding:8px;display:none;box-shadow:var(--e3);z-index:60}
+.top-nav.nav-open .nav-tabs{display:flex}
+.tab{text-align:left;padding:11px 14px;min-height:40px}
+.tab::after{display:none}
+.tab.active{background:rgba(143,175,181,.14);border-radius:var(--radius-sm)}
+.sess-head{display:none}
+.sess-row{grid-template-columns:auto 1fr auto;gap:10px}
 .mini{min-height:40px}
 a.btn{min-height:40px;display:inline-flex;align-items:center;justify-content:center}
 .hero{flex-direction:column;align-items:flex-start;gap:14px;padding:18px}
@@ -315,7 +379,7 @@ a.btn{min-height:40px;display:inline-flex;align-items:center;justify-content:cen
 .foot{padding:20px 0;text-align:center}
 }
 @media(max-width:420px){
-.who .name{display:none}
+#who-tier{display:none}
 }
 
 @media (prefers-color-scheme: light){
@@ -336,6 +400,9 @@ a.btn{min-height:40px;display:inline-flex;align-items:center;justify-content:cen
     --ice:#F7FAFA;
     --success:#3E7A5C;
     --error:#B05C5C;
+    --nav-bg:rgba(233,239,240,.6);
+    --nav-bg-scrolled:rgba(233,239,240,.88);
+    --nav-pop:rgba(255,255,255,.97);
     color-scheme:light;
   }
 }
@@ -363,11 +430,10 @@ input:focus-visible,select:focus-visible,textarea:focus-visible{border-radius:va
 </style></head><body>
 <div class="aurora" aria-hidden="true"></div>
 <div class="grain-overlay" aria-hidden="true"></div>
+<canvas id="petalCanvas" aria-hidden="true"></canvas>
 <div id="app"><div class="card" id="gate"><a href="https://mysweetpea.cc" style="display:block;color:inherit;text-decoration:none"><img class="gate-logo" src="https://mysweetpea.cc/logo.svg" alt="MySweetPea logo"/></a><h1>MySweetPea</h1><p>Checking your session…</p></div></div>
 <div id="modal"><div class="mcard" id="mbody"></div></div>
-<div class="portal-reveal" id="portal-reveal" aria-hidden="true"><div class="portal-stage"><video loop muted playsinline preload="metadata"><source src="/videos/hermes-girl-orb.webm" type="video/webm"><source src="/videos/hermes-girl-orb.mp4" type="video/mp4"></video></div></div>
-<button class="portal-close" id="portal-close" type="button" aria-label="Close">&times;</button>
-<div id="toasts"></div>
+<div id="toasts" aria-live="polite"></div>
 
 <div class="pal-backdrop" id="pal">
   <div class="palette">
@@ -393,25 +459,104 @@ function modal(html) { $('#mbody').innerHTML = html; $('#modal').classList.add('
 function closeModal() { $('#modal').classList.remove('open'); }
 $('#modal').addEventListener('click', e => { if (e.target.id === 'modal') closeModal(); });
 
-// ===== PHASE 13: garden pollen (site v37 port — pure CSS animations, generated spans) =====
-(function gardenPollen() {
+// ===== PHASE 14: falling petals (site ground truth port — canvas, 22 petals) =====
+(function fallingPetals() {
+  const canvas = document.getElementById('petalCanvas');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  if (!ctx) return;
   let reduce = false;
   try { reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (e) {}
-  if (reduce) return;
-  const wrap = document.createElement('div');
-  wrap.className = 'garden-pollen';
-  wrap.setAttribute('aria-hidden', 'true');
-  for (let i = 0; i < 14; i++) {
-    const s = document.createElement('span');
-    const size = 3 + Math.random() * 5;
-    s.style.width = size.toFixed(2) + 'px';
-    s.style.height = size.toFixed(2) + 'px';
-    s.style.left = (Math.random() * 100).toFixed(2) + '%';
-    s.style.animationDuration = (12 + Math.random() * 14).toFixed(2) + 's';
-    s.style.animationDelay = (Math.random() * 12).toFixed(2) + 's';
-    wrap.appendChild(s);
+  if (reduce) return; // static/hidden under reduced motion
+  let petals = [];
+  let width = 0, height = 0, dpr = 1, rafId = null, resizeTimer = null, lastViewportWidth = 0;
+  const PETAL_COUNT = 22;
+  function resize(force) {
+    const nextWidth = window.innerWidth, nextHeight = window.innerHeight;
+    if (!force && nextWidth === lastViewportWidth) return;
+    width = nextWidth; height = nextHeight; lastViewportWidth = nextWidth;
+    dpr = Math.min(window.devicePixelRatio || 1, 2);
+    canvas.width = Math.round(width * dpr);
+    canvas.height = Math.round(height * dpr);
+    canvas.style.width = width + 'px';
+    canvas.style.height = height + 'px';
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
   }
-  document.body.appendChild(wrap);
+  function createPetal() {
+    return {
+      x: Math.random() * width,
+      y: -20,
+      size: 3 + Math.random() * 6,
+      speedY: 0.35 + Math.random() * 0.9,
+      speedX: -0.3 + Math.random() * 0.6,
+      rotation: Math.random() * Math.PI * 2,
+      rotSpeed: -0.012 + Math.random() * 0.024,
+      opacity: 0.08 + Math.random() * 0.16,
+      sway: Math.random() * Math.PI * 2,
+      swaySpeed: 0.008 + Math.random() * 0.014,
+      tone: Math.random() // 0 = frost/ice, 1 = sage/green
+    };
+  }
+  function drawPetal(petal) {
+    ctx.save();
+    ctx.translate(petal.x, petal.y);
+    ctx.rotate(petal.rotation);
+    ctx.globalAlpha = petal.opacity;
+    const gradient = ctx.createRadialGradient(0, 0, 0, 0, 0, petal.size);
+    if (petal.tone > 0.5) {
+      gradient.addColorStop(0, '#C4E1CC');
+      gradient.addColorStop(0.5, '#A3C9B6');
+      gradient.addColorStop(1, 'rgba(93, 122, 110, 0.28)');
+    } else {
+      gradient.addColorStop(0, '#DDE6E8');
+      gradient.addColorStop(0.5, '#B8CDD2');
+      gradient.addColorStop(1, 'rgba(143, 175, 181, 0.26)');
+    }
+    ctx.fillStyle = gradient;
+    ctx.beginPath();
+    ctx.moveTo(0, -petal.size);
+    ctx.bezierCurveTo(petal.size * 0.6, -petal.size * 0.5, petal.size * 0.6, petal.size * 0.5, 0, petal.size);
+    ctx.bezierCurveTo(-petal.size * 0.6, petal.size * 0.5, -petal.size * 0.6, -petal.size * 0.5, 0, -petal.size);
+    ctx.fill();
+    ctx.restore();
+  }
+  function animate() {
+    ctx.clearRect(0, 0, width, height);
+    for (let i = 0; i < petals.length; i++) {
+      const petal = petals[i];
+      petal.sway += petal.swaySpeed;
+      petal.x += petal.speedX + Math.sin(petal.sway) * 0.4;
+      petal.y += petal.speedY;
+      petal.rotation += petal.rotSpeed;
+      if (petal.y > height + 20) petals[i] = createPetal();
+      if (petal.x < -20) petal.x = width + 20;
+      if (petal.x > width + 20) petal.x = -20;
+      drawPetal(petals[i]);
+    }
+    rafId = requestAnimationFrame(animate);
+  }
+  function start() {
+    if (rafId !== null || document.hidden) return;
+    resize(true);
+    petals = [];
+    for (let i = 0; i < PETAL_COUNT; i++) {
+      const petal = createPetal();
+      petal.y = Math.random() * height;
+      petals.push(petal);
+    }
+    animate();
+  }
+  function stop() {
+    if (rafId !== null) { cancelAnimationFrame(rafId); rafId = null; }
+    petals = [];
+    ctx.clearRect(0, 0, width, height);
+  }
+  window.addEventListener('resize', function () {
+    window.clearTimeout(resizeTimer);
+    resizeTimer = window.setTimeout(function () { if (window.innerWidth !== lastViewportWidth) resize(false); }, 150);
+  }, { passive: true });
+  document.addEventListener('visibilitychange', function () { document.hidden ? stop() : start(); });
+  start();
 })();
 
 // Popup ceremony helper (authentik-hosted, branded, deep-links back)
@@ -432,8 +577,8 @@ function ceremony(flowSlug, label) {
 }
 
 // ===== PHASE 9: TABS + shared pure helpers (top-level: palette block reuses them) =====
-const TABS = ['home', 'media', 'services', 'guides', 'security', 'account'];
-const TAB_LABELS = { home: 'Home', media: 'Media', services: 'Services', guides: 'Guides', security: 'Security', account: 'Account' };
+const TABS = ['home', 'stats', 'media', 'services', 'guides', 'contact', 'security', 'account'];
+const TAB_LABELS = { home: 'Home', stats: 'Statistics', media: 'Media', services: 'Services', guides: 'Guides', contact: 'Contact', security: 'Security', account: 'Account' };
 let currentTab = 'home';
 function setTab(name, opts) {
   opts = opts || {};
@@ -448,9 +593,10 @@ function setTab(name, opts) {
   if (!opts.fromHash) { try { history.replaceState(null, '', '#' + name); } catch (e) {} }
   try { localStorage.setItem('msp-tab', name); } catch (e) {}
   window.scrollTo(0, 0);
+  if (name === 'stats' && typeof window.loadStats === 'function') window.loadStats();
 }
 function goSection(id) {
-  const map = { 'sec-media': 'media', 'sec-media-m': 'media', 'sec-library': 'media', 'sec-services': 'services', 'sec-uptime': 'services', 'sec-security': 'security', 'sec-sessions': 'security', 'sec-apps': 'security', 'sec-account': 'account', 'sec-status': 'home', 'stats': 'home' };
+  const map = { 'sec-media': 'media', 'sec-media-m': 'media', 'sec-library': 'media', 'sec-services': 'services', 'sec-uptime': 'services', 'sec-security': 'security', 'sec-sessions': 'security', 'sec-apps': 'security', 'sec-account': 'account', 'sec-status': 'home', 'stats': 'stats', 'sec-spirit': 'account' };
   if (map[id]) setTab(map[id]);
   const el = document.getElementById(id);
   if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
@@ -459,7 +605,19 @@ function mergeStats(d) {
   const s = (d && typeof d === 'object') ? d : {};
   const num = (v) => (typeof v === 'number' && isFinite(v) ? v : null);
   return { movies: num(s.movies), series: num(s.series), photos: num(s.photos), sessions: num(s.sessions),
-    episodes: num(s.episodes), songs: num(s.songs), boxsets: num(s.boxsets), users: num(s.users) };
+    episodes: num(s.episodes), songs: num(s.songs), boxsets: num(s.boxsets), users: num(s.users),
+    videos: num(s.videos), usage_mb: num(s.usage_mb), jf_resume: num(s.jf_resume),
+    seerr_total: num(s.seerr_total), seerr_pending: num(s.seerr_pending),
+    seerr_approved: num(s.seerr_approved), seerr_available: num(s.seerr_available), seerr_media: num(s.seerr_media) };
+}
+function relTime(v) {
+  const t = (typeof v === 'number') ? v : Date.parse(String(v || ''));
+  if (!isFinite(t) || !t) return '';
+  const sec = Math.max(0, (Date.now() - t) / 1000);
+  if (sec < 60) return 'Just now';
+  if (sec < 3600) return Math.floor(sec / 60) + 'm ago';
+  if (sec < 86400) return Math.floor(sec / 3600) + 'h ago';
+  return new Date(t).toLocaleDateString(undefined, { month: 'short', day: 'numeric' });
 }
 function countUp(el, target, dur) {
   if (!el) return;
@@ -515,6 +673,68 @@ const GUIDE_COLORS = [
   { fg: 'var(--gold)',           bg: 'rgba(217,168,108,.15)' },
 ];
 let guideSel = 'jellyfin';
+// ---- phase 14: platform download chips (per-guide) ----
+const PLAT_ICONS = {
+  apple: '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M16.7 12.9c0-2.4 2-3.6 2.1-3.7-1.1-1.7-2.9-1.9-3.5-1.9-1.5-.2-2.9.9-3.7.9-.8 0-1.9-.9-3.2-.8-1.6 0-3.1 1-4 2.4-1.7 3-0.4 7.4 1.2 9.8.8 1.2 1.8 2.5 3.1 2.4 1.2 0 1.7-.8 3.2-.8s1.9.8 3.2.8c1.3 0 2.2-1.2 3-2.4.9-1.4 1.3-2.7 1.3-2.8-.1 0-2.6-1-2.7-3.9zM14.4 5.6c.7-.8 1.1-1.9 1-3.1-1 0-2.2.7-2.9 1.5-.6.7-1.2 1.9-1 3 1.1.1 2.2-.6 2.9-1.4z"/></svg>',
+  android: '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M17.6 9.5l1.3-2.2c.1-.2 0-.4-.1-.5-.2-.1-.4-.1-.5.1l-1.3 2.3c-1.5-.7-3.2-1-5-1s-3.5.4-5 1L5.7 6.9c-.1-.2-.3-.2-.5-.1-.2.1-.2.3-.1.5l1.3 2.2C3.9 10.9 2.1 13.5 2 16.5h20c-.1-3-1.9-5.6-4.4-7zM7.5 14.2c-.5 0-.9-.4-.9-.9s.4-.9.9-.9.9.4.9.9-.4.9-.9.9zm9 0c-.5 0-.9-.4-.9-.9s.4-.9.9-.9.9.4.9.9-.4.9-.9.9z"/></svg>',
+  windows: '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M3 5.5L10.5 4.4V11.2H3V5.5zM3 12.8H10.5V19.6L3 18.5V12.8zM11.5 4.2L21 3V11.2H11.5V4.2zM11.5 12.8H21V21L11.5 19.8V12.8z"/></svg>',
+  globe: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18"/></svg>',
+  cast: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 8V6a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2h-6"/><path d="M2 12a9 9 0 0 1 8 8M2 16a5 5 0 0 1 4 4M2 20h.01"/></svg>'
+};
+const PLAT = {
+  ios: { name: 'iOS', icon: 'apple' },
+  android: { name: 'Android', icon: 'android' },
+  windows: { name: 'Windows', icon: 'windows' },
+  macos: { name: 'macOS', icon: 'apple' },
+  linux: { name: 'Linux', icon: 'L' },
+  firetv: { name: 'Fire TV', icon: 'F' },
+  roku: { name: 'Roku', icon: 'R' },
+  androidtv: { name: 'Android TV / Google TV', icon: 'android' },
+  appletv: { name: 'Apple TV', icon: 'apple' },
+  kodi: { name: 'Kodi', icon: 'K' },
+  web: { name: 'Web browser', icon: 'globe' },
+  cast: { name: 'AnyCast / Cast', icon: 'cast' },
+  desktop: { name: 'Desktop (Windows / macOS / Linux)', icon: 'windows' },
+  extension: { name: 'Browser extension', icon: 'globe' }
+};
+const PLATFORMS = {
+  jellyfin: [
+    { p: 'ios', url: 'https://jellyfin.org/downloads' },
+    { p: 'android', url: 'https://jellyfin.org/downloads' },
+    { p: 'windows', url: 'https://jellyfin.org/downloads' },
+    { p: 'macos', url: 'https://jellyfin.org/downloads' },
+    { p: 'linux', url: 'https://jellyfin.org/downloads' },
+    { p: 'firetv', url: 'https://moonfin.io/#clients' },
+    { p: 'roku', url: 'https://moonfin.io/#clients' },
+    { p: 'androidtv', url: 'https://moonfin.io/#clients' },
+    { p: 'appletv', url: 'https://moonfin.io/#clients' },
+    { p: 'kodi', url: 'https://jellyfin.org/downloads' },
+    { p: 'web', url: 'https://media.mysweetpea.cc/Moonfin/Web/' },
+    { p: 'cast', url: 'https://jellyfin.org/downloads' },
+  ],
+  nextcloud: [
+    { p: 'ios', url: 'https://nextcloud.com/install/' },
+    { p: 'android', url: 'https://nextcloud.com/install/' },
+    { p: 'desktop', url: 'https://nextcloud.com/install/' },
+  ],
+  immich: [
+    { p: 'ios', url: 'https://immich.app/' },
+    { p: 'android', url: 'https://immich.app/' },
+    { p: 'web', url: 'https://immich.app/' },
+  ],
+  matrix: [
+    { p: 'ios', url: 'https://element.io/download' },
+    { p: 'android', url: 'https://element.io/download' },
+    { p: 'desktop', url: 'https://element.io/download' },
+    { p: 'web', url: 'https://element.io/download' },
+  ],
+  vaultwarden: [
+    { p: 'ios', url: 'https://bitwarden.com/download' },
+    { p: 'android', url: 'https://bitwarden.com/download' },
+    { p: 'extension', url: 'https://bitwarden.com/download' },
+    { p: 'desktop', url: 'https://bitwarden.com/download' },
+  ],
+};
 const GUIDES = {
   vaultwarden: {
     name: 'Vaultwarden',
@@ -623,6 +843,19 @@ function guideChipHtml(key, sel) {
     : '<span class="svc-guide-ico" style="color:' + c.fg + ';background:' + c.bg + '">' + esc(g.name[0].toUpperCase()) + '</span>';
   return '<button type="button" class="svc-guide-chip" data-guide="' + esc(key) + '" aria-pressed="' + (key === sel ? 'true' : 'false') + '">' + inner + '<span>' + esc(g.name) + '</span></button>';
 }
+function platChipHtml(entry) {
+  const p = PLAT[entry.p];
+  if (!p) return '';
+  const ico = PLAT_ICONS[p.icon]
+    ? '<span class="plat-ico" aria-hidden="true">' + PLAT_ICONS[p.icon] + '</span>'
+    : '<span class="plat-mono" aria-hidden="true">' + esc(String(p.icon).slice(0, 1)) + '</span>';
+  return '<a class="plat-chip" href="' + esc(entry.url) + '" target="_blank" rel="noopener noreferrer" aria-label="' + esc(p.name) + ' download">' + ico + esc(p.name) + '</a>';
+}
+function platformsHtml(key) {
+  const list = PLATFORMS[key];
+  if (!list || !list.length) return '';
+  return '<p class="plat-cap">Get the app on</p><div class="plat-grid">' + list.map(platChipHtml).join('') + '</div>';
+}
 function guideDetailHtml(key) {
   const g = GUIDES[key];
   if (!g) return '';
@@ -632,6 +865,7 @@ function guideDetailHtml(key) {
       (s.url && s.btn ? '<a class="svc-guide-btn" href="' + esc(s.url) + '" target="_blank" rel="noopener noreferrer">' + esc(s.btn) + '</a>' : '') +
       '</div></div>';
   });
+  h += platformsHtml(key);
   return h;
 }
 
@@ -651,6 +885,8 @@ function guideDetailHtml(key) {
       const el = document.getElementById(id);
       if (el) el.innerHTML = avatarInner() + CAM;
     });
+    const nav = document.getElementById('nav-avatar');
+    if (nav) nav.innerHTML = avatarInner();
   };
 
   const TIER_COPY = {
@@ -672,7 +908,6 @@ function guideDetailHtml(key) {
     const ht = document.getElementById('hero-tier');
     if (ht) ht.innerHTML = tierBadge(me.tier, true) + '<span class="tier-copy">' + esc(TIER_COPY[(me.tier === 'sweetpea') ? 'sweetpea' : 'seedling']) + '</span>';
     const hs = $('#hero-sub'); if (hs) hs.innerHTML = esc(me.email) + ' &middot; @' + esc(me.username);
-    const tn = document.querySelector('.who .name'); if (tn) tn.textContent = me.name || me.username;
     const wt = document.getElementById('who-tier'); if (wt) wt.innerHTML = tierBadge(me.tier);
     const es = document.getElementById('tier-echo-services'); if (es) es.innerHTML = tierBadge(me.tier);
     const eg = document.getElementById('tier-echo-guides'); if (eg) eg.innerHTML = tierBadge(me.tier);
@@ -690,16 +925,23 @@ function guideDetailHtml(key) {
       '<div class="ob-steps">' +
       '<div class="ob-step"><span class="ob-num">1</span><b>Sign in</b><p>You&rsquo;re already in (this dashboard). Your account unlocks everything.</p></div>' +
       '<div class="ob-step"><span class="ob-num">2</span><b>Set up your vault</b><p>Vaultwarden stores your passwords. Open Guides &rarr; Vaultwarden.</p><button type="button" class="ob-btn" id="ob-vault">Open the guide</button></div>' +
-      '<div class="ob-step"><span class="ob-num">3</span><b>Watch something</b><p>Jellyfin is your media home.</p><a class="ob-btn" href="https://media.mysweetpea.cc" target="_blank" rel="noopener noreferrer">Open Jellyfin</a></div>' +
-      '</div></section>';
+      '<div class="ob-step"><span class="ob-num">3</span><b>Questions?</b><p>Email us or use the Contact tab — we reply within 24&ndash;48h.</p><button type="button" class="ob-btn" id="ob-contact">Open Contact</button></div>' +
+      '</div>' +
+      '<p class="ob-human">Need a human? <button type="button" class="ob-link" id="ob-human">Open the Contact tab</button> &mdash; we reply within 24-48h.</p>' +
+      '</section>';
   } catch (e) {}
   app.innerHTML =
     '<div class="shell">' +
-    '<header class="topbar"><a class="brand" href="https://mysweetpea.cc"><img src="https://mysweetpea.cc/logo.svg" alt="MySweetPea logo"/>MySweet<span class="mark">Pea</span></a>' +
-    '<div class="who"><span class="name">' + esc(me.name || me.username) + '</span><span id="who-tier"></span><button class="mini" id="pal-open" title="Command palette (Ctrl+K)" style="margin-right:10px">⌘K</button><a class="out" href="/auth/logout">Sign out</a></div></header>' +
-    '<nav class="tabs" id="tabs" role="tablist" aria-label="Dashboard sections">' +
+    '<nav class="top-nav" id="top-nav" aria-label="Primary navigation">' +
+    '<a class="brand" href="https://mysweetpea.cc"><img src="https://mysweetpea.cc/logo.svg" alt="MySweetPea logo"/>MySweet<span class="mark">Pea</span></a>' +
+    '<div class="nav-tabs" id="tabs" role="tablist" aria-label="Dashboard sections">' +
     TABS.map((t) => '<button type="button" class="tab" id="tab-' + t + '" data-tab="' + t + '" role="tab" aria-controls="panel-' + t + '" aria-selected="false">' + TAB_LABELS[t] + (t === 'security' ? '<span class="tab-dot" aria-hidden="true"></span>' : '') + '</button>').join('') +
-    '</nav>' +
+    '</div>' +
+    '<div class="nav-id"><span class="nav-avatar" id="nav-avatar">' + avatarInner() + '</span><span id="who-tier"></span>' +
+    '<button class="mini" id="pal-open" title="Command palette (Ctrl+K)" aria-label="Command palette (Ctrl+K)">&#8984;K</button>' +
+    '<a class="out" href="/auth/logout">Sign out</a>' +
+    '<button class="nav-toggle" id="nav-toggle" aria-expanded="false" aria-controls="tabs" aria-label="Toggle navigation menu"><span class="nav-toggle-bar"></span><span class="nav-toggle-bar"></span><span class="nav-toggle-bar"></span></button>' +
+    '</div></nav>' +
     '<main class="grid">' +
     '<div class="tabpanel" id="panel-home" role="tabpanel" aria-labelledby="tab-home">' + obHtml +
     '<section class="card hero" style="--i:0"><div class="avatar" id="hero-avatar" onclick="openAvatarModal()" title="Change profile picture">' + avatarInner() + CAM + '</div><div>' +
@@ -710,6 +952,11 @@ function guideDetailHtml(key) {
     '<div class="vine-divider" aria-hidden="true"></div>' +
     '<section id="sec-media" class="media-sec" style="--i:2"></section>' +
     '<section class="card" id="sec-status" style="--i:3"><p class="eyebrow">Service status</p><h3>Service status</h3><div class="skel"></div></section>' +
+    '</div>' +
+    '<div class="tabpanel" id="panel-stats" role="tabpanel" aria-labelledby="tab-stats">' +
+    '<section class="card" id="sec-stats"><p class="eyebrow">Statistics</p><h3>The garden in numbers<button type="button" class="mini icon-btn" id="stats-refresh" aria-label="Refresh statistics" title="Refresh statistics"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12a9 9 0 1 1-2.64-6.36"/><path d="M21 3v6h-6"/></svg></button></h3>' +
+    '<div class="stats" id="stats-kpi" aria-live="polite"></div>' +
+    '<div id="stats-services" aria-live="polite"></div></section>' +
     '</div>' +
     '<div class="tabpanel" id="panel-media" role="tabpanel" aria-labelledby="tab-media">' +
     '<section id="sec-media-m" class="media-sec"></section>' +
@@ -735,10 +982,26 @@ function guideDetailHtml(key) {
     '<section class="card" id="sec-guides"><p class="eyebrow">Setup guides</p><h3>Setup guides<span class="tier-echo" id="tier-echo-guides"></span></h3><pre class="ripple-strip" id="ripple-strip-guides" aria-hidden="true"></pre><p class="dim" style="margin:10px 0 16px">How to get started with each MySweetPea service — step by step.</p>' +
     '<div class="svc-guide"><div class="svc-guide-nav" id="guide-nav" role="group" aria-label="Choose a service"></div><div class="svc-guide-detail" id="guide-body" aria-live="polite"></div></div></section>' +
     '</div>' +
+    '<div class="tabpanel" id="panel-contact" role="tabpanel" aria-labelledby="tab-contact">' +
+    '<section class="card"><p class="eyebrow">Contact</p><h3>Email us anytime</h3>' +
+    '<p class="dim">The fastest way to reach us is by email. Whether you are stuck creating an account, curious about a service, or just want to say hello &mdash; we are happy to help.</p>' +
+    '<div class="contact-mail"><a class="contact-pill" href="mailto:support@mysweetpea.cc">support@mysweetpea.cc</a></div>' +
+    '<div class="contact-actions"><button type="button" class="ob-btn" id="ct-copy">Copy email address</button></div>' +
+    '<p class="dim contact-note"><span class="dot ok" style="margin-right:8px"></span>We usually reply within 24&ndash;48 hours.</p></section>' +
+    '<section class="card"><p class="eyebrow">Before you write</p><h3>Before you write</h3>' +
+    '<p class="dim">A few things that help us reply faster.</p>' +
+    '<ul class="ct-list">' +
+    '<li><span>Many questions are answered on the <a href="https://mysweetpea.cc/pricing.html" target="_blank" rel="noopener noreferrer">How It Works</a> page &mdash; how to get access, what the $5 donation covers, and how your sign-in works.</span></li>' +
+    '<li><span><b>Your name</b> &mdash; so we know who you are.</span></li>' +
+    '<li><span><b>What you need help with</b> &mdash; account, service, or donation.</span></li>' +
+    '<li><span><b>Your username</b> &mdash; if you already have one.</span></li>' +
+    '</ul>' +
+    '<p class="dim ct-detail">Include as much detail as you can &mdash; it helps us help you faster.</p></section>' +
+    '</div>' +
     '<div class="tabpanel" id="panel-security" role="tabpanel" aria-labelledby="tab-security">' +
     '<section class="card" id="sec-security"><p class="eyebrow">Security</p><h3>Security</h3><div class="skel"></div></section>' +
     '<section class="card" id="sec-sessions"><p class="eyebrow">Sessions</p><h3>Your sessions</h3><div class="skel"></div></section>' +
-    '<section class="card" id="sec-activity" style="--i:5"><p class="eyebrow">Recent activity</p><h3>Recent activity</h3><div class="skel"></div></section>' +
+    '<section class="card" id="sec-activity" style="--i:5" aria-live="polite"><p class="eyebrow">Recent activity</p><h3>Recent activity</h3><div class="skel"></div></section>' +
     '<section class="card" id="sec-apps"><p class="eyebrow">Connected apps</p><h3>Connected apps</h3><div class="skel"></div></section>' +
     '</div>' +
     '<div class="tabpanel" id="panel-account" role="tabpanel" aria-labelledby="tab-account">' +
@@ -752,10 +1015,22 @@ function guideDetailHtml(key) {
     '</div>' +
     '<button class="mini primary" onclick="openProfileModal()">Edit profile</button>' +
     '</div></section>' +
+    '<section class="card" id="sec-password" style="--i:1"><p class="eyebrow">Password</p><h3>Change password</h3>' +
+    '<p class="dim" style="margin-bottom:14px">At least 12 characters. This updates your sign-in password for every MySweetPea service.</p>' +
+    '<form id="pwf" class="pwf" novalidate>' +
+    '<div><label for="pw-current">Current password</label><input type="password" id="pw-current" autocomplete="current-password"/></div>' +
+    '<div><label for="pw-new">New password</label><input type="password" id="pw-new" autocomplete="new-password" minlength="12"/></div>' +
+    '<div><label for="pw-confirm">Confirm new password</label><input type="password" id="pw-confirm" autocomplete="new-password"/></div>' +
+    '</form>' +
+    '<div class="merr" id="pw-err" aria-live="polite" style="margin-top:8px"></div>' +
+    '<div class="pwf-actions"><a class="pwf-adv" href="#" onclick="ceremony(\'password\',\'Password change\');return false">Advanced options</a>' +
+    '<button type="button" class="sgf-submit" id="pw-save" disabled>Update password</button></div></section>' +
+    '<section class="card" id="sec-spirit" style="--i:2"><p class="eyebrow">Behind the garden</p><h3>The spirit of MySweetPea</h3>' +
+    '<p class="dim">The little spirit tending the garden &mdash; drawn by us, for you.</p>' +
+    '<div class="portal-embed"><figure class="portal-frame"><video id="spirit-video" autoplay muted loop playsinline preload="metadata" aria-label="The MySweetPea garden spirit, a small animated drawing"><source src="/videos/hermes-girl-orb.webm" type="video/webm"><source src="/videos/hermes-girl-orb.mp4" type="video/mp4"></video></figure></div></section>' +
     '<pre class="ripple-strip" id="ripple-strip" aria-hidden="true"></pre>' +
     '</div>' +
-    '</main><footer class="foot"><img src="https://mysweetpea.cc/logo.svg" alt=""/> <a href="https://mysweetpea.cc">mysweetpea.cc</a> &middot; homelab dashboard</footer>' +
-    '<div class="portal-spacer" id="portal-spacer" aria-hidden="true"></div></div>';
+    '</main><footer class="foot"><img src="https://mysweetpea.cc/logo.svg" alt=""/> <a href="https://mysweetpea.cc">mysweetpea.cc</a> &middot; homelab dashboard</footer></div>';
 
   // tier badges everywhere (hero, topbar, services/guides echoes) — initial render
   window.applyProfile();
@@ -844,68 +1119,99 @@ function guideDetailHtml(key) {
     start();
   })();
 
-  // ===== PHASE 13: moon-girl portal easter egg (site v47 mechanism, tier-badge trigger) =====
-  (function initPortal() {
-    const portal = document.getElementById('portal-reveal');
-    const closeBtn = document.getElementById('portal-close');
-    const spacer = document.getElementById('portal-spacer');
-    if (!portal || !closeBtn || !spacer) return;
+  // ===== PHASE 14: moon-girl as Account-tab resident (no easter-egg arming) =====
+  (function initSpirit() {
+    const v = document.getElementById('spirit-video');
+    if (!v) return;
     let reduce = false;
     try { reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (e) {}
-    if (reduce) return; // the whole easter egg is skipped under reduced motion
-    const video = portal.querySelector('video');
-    let armed = false, open = false;
-    function setOpacity(o) {
-      portal.style.opacity = String(o);
-      if (o > 0.98 && !open) {
-        open = true;
-        portal.classList.add('open');
-        portal.setAttribute('aria-hidden', 'false');
-        document.body.classList.add('portal-open');
-        if (video && video.paused) { video.play().catch(function () {}); }
-      } else if (o <= 0.98 && open) {
-        open = false;
-        portal.classList.remove('open');
-        portal.setAttribute('aria-hidden', 'true');
-        document.body.classList.remove('portal-open');
-        if (video) video.pause();
-      }
+    if (reduce) { v.removeAttribute('autoplay'); v.pause(); return; } // paused, first frame as poster
+    const tryPlay = () => { const p = v.play(); if (p && p.catch) p.catch(function () {}); };
+    tryPlay();
+    const panel = document.getElementById('panel-account');
+    if (panel && 'MutationObserver' in window) {
+      new MutationObserver(() => { if (panel.hidden) v.pause(); else tryPlay(); })
+        .observe(panel, { attributes: true, attributeFilter: ['hidden'] });
     }
-    function onScroll() {
-      if (!armed) return;
-      const vh = window.innerHeight;
-      const top = spacer.getBoundingClientRect().top;
-      const o = Math.max(0, Math.min(1, (vh - top) / vh));
-      setOpacity(o);
-    }
-    function close() {
-      if (!armed && !open) return;
-      armed = false; open = false;
-      portal.classList.remove('open', 'armed');
-      portal.setAttribute('aria-hidden', 'true');
-      portal.style.opacity = '';
-      document.body.classList.remove('portal-open');
-      spacer.classList.remove('armed');
-      if (video) video.pause();
-      document.removeEventListener('scroll', onScroll, { passive: true });
-      window.removeEventListener('resize', onScroll);
-    }
-    closeBtn.addEventListener('click', close);
-    document.addEventListener('keydown', (e) => { if (e.key === 'Escape') close(); });
-    document.addEventListener('click', (e) => {
-      const badge = e.target && e.target.closest ? e.target.closest('.tier-badge') : null;
-      if (!badge) return;
-      if (armed || open) { close(); return; }
-      armed = true;
-      portal.classList.add('armed');
-      portal.setAttribute('aria-hidden', 'false');
-      spacer.classList.add('armed');
-      if (video && video.paused) { video.play().catch(function () {}); }
-      document.addEventListener('scroll', onScroll, { passive: true });
-      window.addEventListener('resize', onScroll);
-      onScroll();
-    });
   })();
+
+  // ===== PHASE 14: site-style nav — condensed on scroll + mobile hamburger =====
+  (function initNavShell() {
+    const nav = document.getElementById('top-nav');
+    if (nav) {
+      let queued = false;
+      const update = () => { queued = false; nav.classList.toggle('nav-scrolled', window.scrollY > 40); };
+      update();
+      window.addEventListener('scroll', () => { if (!queued) { queued = true; requestAnimationFrame(update); } }, { passive: true });
+    }
+    const tg = document.getElementById('nav-toggle');
+    const links = document.getElementById('tabs');
+    if (!nav || !tg || !links) return;
+    const close = () => { nav.classList.remove('nav-open'); tg.setAttribute('aria-expanded', 'false'); };
+    tg.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const open = nav.classList.toggle('nav-open');
+      tg.setAttribute('aria-expanded', open ? 'true' : 'false');
+    });
+    document.addEventListener('click', (e) => {
+      if (nav.classList.contains('nav-open') && !links.contains(e.target) && !tg.contains(e.target)) close();
+    });
+    document.addEventListener('keydown', (e) => { if (e.key === 'Escape') close(); });
+    links.addEventListener('click', (e) => { if (e.target && e.target.closest && e.target.closest('.tab')) close(); });
+    window.addEventListener('resize', () => { if (window.innerWidth > 760) close(); });
+  })();
+
+  // ===== PHASE 14: STATISTICS TAB (poll once per open + manual refresh) =====
+  let statsLoaded = false, statsLoading = false;
+  const KPI_ICONS = {
+    film: '<rect x="2" y="4" width="20" height="16" rx="2"/><path d="M7 4v16M17 4v16M2 9h5M2 15h5M17 9h5M17 15h5"/>',
+    tv: '<rect x="2" y="7" width="20" height="14" rx="2"/><path d="m17 2-5 5-5-5"/>',
+    image: '<rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-4.5-4.5L6 21"/>',
+    users: '<path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/>'
+  };
+  const fmtStorage = (mb) => (mb == null ? '—' : (mb >= 1024 ? (mb / 1024).toFixed(1) + ' GB' : Math.round(mb) + ' MB'));
+  const statTile = (label, value) => '<div class="stat"><div class="n">' + (typeof value === 'number' ? Number(value).toLocaleString() : esc(String(value))) + '</div><div class="l">' + esc(label) + '</div></div>';
+  const kpiTile = (label, value, icon) => '<div class="stat"><svg class="kpi-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' + icon + '</svg><div class="n">' + (value == null ? '—' : Number(value).toLocaleString()) + '</div><div class="l">' + esc(label) + '</div></div>';
+  const statSection = (label, tiles) => {
+    const inner = tiles.filter((t) => t[1] != null).map((t) => statTile(t[0], t[1])).join('');
+    if (!inner) return '';
+    return '<p class="eyebrow" style="margin-top:20px">' + esc(label) + '</p><div class="svc-stats">' + inner + '</div>';
+  };
+  function renderStats(s) {
+    const kpi = document.getElementById('stats-kpi');
+    const svc = document.getElementById('stats-services');
+    const pvTotal = (s.photos == null && s.videos == null) ? null : ((s.photos || 0) + (s.videos || 0));
+    if (kpi) kpi.innerHTML =
+      kpiTile('Movies', s.movies, KPI_ICONS.film) +
+      kpiTile('Episodes', s.episodes, KPI_ICONS.tv) +
+      kpiTile('Photos &amp; videos', pvTotal, KPI_ICONS.image) +
+      kpiTile('Members', s.users, KPI_ICONS.users);
+    if (!svc) return;
+    let h = '';
+    h += statSection('Jellyfin', [['Movies', s.movies], ['Series', s.series], ['Episodes', s.episodes], ['Boxsets', s.boxsets], ['Songs', s.songs], ['Resume queue', s.jf_resume]]);
+    h += statSection('Immich', [['Photos', s.photos], ['Videos', s.videos], ['Storage', s.usage_mb == null ? null : fmtStorage(s.usage_mb)]]);
+    const seerrTiles = [['Requests', s.seerr_total], ['Pending', s.seerr_pending], ['Approved', s.seerr_approved], ['Available', s.seerr_available]];
+    if (s.seerr_media != null) seerrTiles.push(['Titles tracked', s.seerr_media]);
+    h += statSection('Jellyseerr', seerrTiles);
+    h += statSection('Accounts', [['Members', s.users], ['Active sessions', s.sessions]]);
+    svc.innerHTML = h;
+  }
+  async function loadStats(force) {
+    if (statsLoading || (statsLoaded && !force)) return;
+    statsLoading = true;
+    const kpi = document.getElementById('stats-kpi');
+    const svc = document.getElementById('stats-services');
+    if (kpi) kpi.innerHTML = '<div class="skel" style="grid-column:1/-1"></div>';
+    if (svc) svc.innerHTML = '<div class="skel" style="margin-top:6px"></div>';
+    let d = {};
+    try { const r = await fetch('/api/stats'); if (r.ok) d = await r.json(); } catch (e) {}
+    renderStats(mergeStats(d));
+    statsLoaded = true;
+    statsLoading = false;
+  }
+  window.loadStats = loadStats;
+  const refreshBtn = document.getElementById('stats-refresh');
+  if (refreshBtn) refreshBtn.addEventListener('click', () => loadStats(true));
 
   // ===== PHASE 9: TAB WIRING (click, arrows, deep-link, remember) =====
   TABS.forEach((t) => {
@@ -1033,6 +1339,43 @@ function guideDetailHtml(key) {
     };
   };
 
+  // ===== PHASE 14: INLINE PASSWORD CHANGE (writes through to authentik) =====
+  (function initPasswordForm() {
+    const cur = document.getElementById('pw-current');
+    const nw = document.getElementById('pw-new');
+    const cf = document.getElementById('pw-confirm');
+    const btn = document.getElementById('pw-save');
+    const err = document.getElementById('pw-err');
+    if (!cur || !nw || !cf || !btn) return;
+    const validate = () => {
+      const okLen = nw.value.length >= 12;
+      const okMatch = cf.value.length > 0 && cf.value === nw.value;
+      btn.disabled = !(cur.value.length > 0 && okLen && okMatch);
+      return okLen && okMatch;
+    };
+    [cur, nw, cf].forEach((el) => el.addEventListener('input', validate));
+    btn.addEventListener('click', async () => {
+      err.textContent = '';
+      if (!validate()) {
+        err.textContent = nw.value.length < 12 ? 'New password must be at least 12 characters.' : 'Passwords do not match.';
+        return;
+      }
+      btn.disabled = true;
+      try {
+        const r = await fetch('/api/password/change', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ currentPassword: cur.value, newPassword: nw.value }) });
+        const d = await r.json().catch(() => ({}));
+        if (r.ok && d.ok) {
+          cur.value = ''; nw.value = ''; cf.value = '';
+          validate();
+          toast('Password updated — use it everywhere you sign in.', { ok: true });
+        } else {
+          err.textContent = d.error || 'Password change failed.';
+          btn.disabled = false;
+        }
+      } catch (e) { err.textContent = 'Password change failed.'; btn.disabled = false; }
+    });
+  })();
+
   // ===== PHASE 5: MEDIA ROWS (rendered into every .media-sec slot: Home + Media tabs) =====
   (async () => {
     const JF_ITEM = 'https://media.mysweetpea.cc/web/index.html#!/item?id=';
@@ -1063,9 +1406,7 @@ function guideDetailHtml(key) {
     { name: 'Vaultwarden', url: 'https://vault.mysweetpea.cc',   blurb: 'Passwords', icon: '/icons/vaultwarden.svg' },
     { name: 'Element',     url: 'https://chat.mysweetpea.cc',    blurb: 'Matrix chat', icon: '/icons/matrix.svg' },
     { name: 'Open WebUI',  url: 'https://ai.mysweetpea.cc',      blurb: 'AI assistants', icon: '/icons/openwebui.svg' },
-    { name: 'n8n',         url: 'https://n8n.mysweetpea.cc',     blurb: 'Automation' },
     { name: 'KoalaSync',   url: 'https://sync.mysweetpea.cc',    blurb: 'Jellyfin &harr; AniList sync', icon: '/icons/koalasync.svg' },
-    { name: 'Authentik',   url: 'https://auth.mysweetpea.cc',    blurb: 'SSO & account' },
   ];
   const SVC_COLORS = [
     { fg: 'var(--primary-bright)', bg: 'rgba(143,175,181,.14)' },
@@ -1096,7 +1437,7 @@ function guideDetailHtml(key) {
     });
   }
 
-  // ===== PHASE 12: ONBOARDING wiring (dismiss + vault guide jump) =====
+  // ===== PHASE 12 + 14: ONBOARDING wiring (dismiss + guide/contact jumps) + contact copy =====
   const obCard = document.getElementById('ob-card');
   if (obCard) {
     const obDismiss = () => { try { localStorage.setItem('msp_onboarded', '1'); } catch (e) {} obCard.remove(); };
@@ -1109,6 +1450,30 @@ function guideDetailHtml(key) {
       if (chip) chip.click();
     });
   }
+  const obContact = document.getElementById('ob-contact');
+  if (obContact) obContact.addEventListener('click', () => setTab('contact'));
+  const obHuman = document.getElementById('ob-human');
+  if (obHuman) obHuman.addEventListener('click', () => setTab('contact'));
+  const ctCopy = document.getElementById('ct-copy');
+  if (ctCopy) ctCopy.addEventListener('click', async () => {
+    const email = 'support@mysweetpea.cc';
+    try {
+      await navigator.clipboard.writeText(email);
+      toast('Copied', { ok: true });
+    } catch (e) {
+      const ta = document.createElement('textarea');
+      ta.value = email;
+      ta.style.position = 'fixed';
+      ta.style.opacity = '0';
+      document.body.appendChild(ta);
+      ta.select();
+      let ok = false;
+      try { ok = document.execCommand('copy'); } catch (e2) {}
+      ta.remove();
+      if (ok) toast('Copied', { ok: true });
+      else toast('Could not copy — the address is ' + email, { err: true });
+    }
+  });
 
   // ===== PHASE 12: SUGGEST A SERVICE (same webhook + payload as site suggest.html) =====
   (function initSuggest() {
@@ -1214,7 +1579,7 @@ function guideDetailHtml(key) {
     '<div class="sec-checklist" style="flex:1">' +
     items.map(i => '<div class="check ' + (i.done ? 'done' : 'todo') + '"><span class="ico">' + (i.done ? '&#10003;' : '!') + '</span><span class="label">' + esc(i.label) + '</span>' +
       (i.act ? '<a class="act" onclick="' + i.act[1] + '">' + i.act[0] + '</a>' : '') + '</div>').join('') +
-    '<div class="check todo" style="border:0"><span class="ico">&#9998;</span><span class="label">Change password</span><a class="act" onclick="ceremony(\'password\',\'Password change\')">Change</a></div>' +
+    '<div class="check todo" style="border:0"><span class="ico">&#9998;</span><span class="label">Change password</span><a class="act" onclick="setTab(\'account\')">Change</a></div>' +
     '</div></div>' +
     ((hasTotp || hasWebauthn) ? '<div style="margin-top:10px"><div class="row"><div class="left"><b>MFA devices</b><span class="dim">' + (devices.totp.length + devices.webauthn.length) + ' enrolled</span></div>' +
       '<button class="mini" onclick="manageDevices()">Manage</button></div></div>' : '');
@@ -1247,33 +1612,93 @@ function guideDetailHtml(key) {
     }).join('');
   }).catch(() => { $('#sec-status').innerHTML = '<p class="eyebrow">Service status</p><h3>Service status</h3><p class="dim">Unavailable.</p>'; });
 
-  // ===== RECENT ACTIVITY (audit feed) =====
-  const ACT_LABEL = { login: 'Signed in', logout: 'Signed out', session_revoked: 'Session revoked',
-    totp_removed: 'TOTP removed', passkey_removed: 'Passkey removed', device_removed: 'Device removed',
-    consent_revoked: 'App consent revoked', profile_updated: 'Profile updated',
-    avatar_set: 'Avatar updated', avatar_removed: 'Avatar removed' };
+  // ===== RECENT ACTIVITY (audit feed — icons + verbs + relative time) =====
+  const ACT_SVG =
+    '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">';
+  const ACT_ICONS = {
+    login: ACT_SVG + '<path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><path d="m10 17 5-5-5-5"/><path d="M15 12H3"/></svg>',
+    logout: ACT_SVG + '<path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="m16 17 5-5-5-5"/><path d="M21 12H9"/></svg>',
+    session_revoked: ACT_SVG + '<path d="M12 22s8-3.6 8-10V5l-8-3-8 3v7c0 6.4 8 10 8 10z"/><path d="m9.5 9.5 5 5"/><path d="m14.5 9.5-5 5"/></svg>',
+    totp_removed: ACT_SVG + '<circle cx="7.5" cy="15.5" r="4.5"/><path d="m11 12 9-9"/><path d="m17 5 3 3"/><path d="m4 4 16 16"/></svg>',
+    passkey_removed: ACT_SVG + '<path d="M12 10a4 4 0 0 0-4 4c0 2.2-.5 3.6-1.3 5"/><path d="M12 10a4 4 0 0 1 4 4c0 2.2.4 3.5 1 4.7"/><path d="M8.6 7.6A6 6 0 0 1 18 11c0 1 .1 1.9.3 2.7"/><path d="M6.2 11c-.1.3-.2.7-.2 1"/><path d="m16.5 15.5 5 5"/><path d="m21.5 15.5-5 5"/></svg>',
+    consent_revoked: ACT_SVG + '<path d="M18 11V6a2 2 0 0 0-4 0v5"/><path d="M14 10V4a2 2 0 0 0-4 0v6"/><path d="M10 10.5V6a2 2 0 0 0-4 0v8"/><path d="M18 8a2 2 0 0 1 4 0v6a8 8 0 0 1-8 8h-2c-2.8 0-4.5-.86-5.99-2.34l-3.6-3.6a2 2 0 0 1 2.83-2.82L7 15"/><path d="m16 16 5 5"/><path d="m21 16-5 5"/></svg>',
+    profile_updated: ACT_SVG + '<path d="M17 3a2.83 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/><path d="m15 5 4 4"/></svg>',
+    avatar_set: ACT_SVG + '<path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>',
+    avatar_delete: ACT_SVG + '<path d="M1 5v14a2 2 0 0 0 2 2h13a2 2 0 0 0 1.4-.6"/><path d="M10.7 5H11l2-3h6l2 3h1a2 2 0 0 1 2 2v8.7"/><path d="M9.3 9.3A4 4 0 0 0 12 17a4 4 0 0 0 3.7-2.3"/><path d="m2 2 20 20"/></svg>',
+    avatar_removed: ACT_SVG + '<path d="M1 5v14a2 2 0 0 0 2 2h13a2 2 0 0 0 1.4-.6"/><path d="M10.7 5H11l2-3h6l2 3h1a2 2 0 0 1 2 2v8.7"/><path d="M9.3 9.3A4 4 0 0 0 12 17a4 4 0 0 0 3.7-2.3"/><path d="m2 2 20 20"/></svg>',
+    device_removed: ACT_SVG + '<rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8"/><path d="m2 2 20 20"/></svg>'
+  };
+  const ACT_LABEL = { login: 'Signed in', logout: 'Signed out', session_revoked: 'Signed out a device',
+    totp_removed: 'Removed 2FA app', passkey_removed: 'Removed a passkey', device_removed: 'Device removed',
+    consent_revoked: 'Revoked app access', profile_updated: 'Updated profile',
+    avatar_set: 'Updated profile photo', avatar_delete: 'Removed profile photo', avatar_removed: 'Removed profile photo' };
   fetch('/api/audit').then(r => r.ok ? r.json() : []).then(list => {
     const el = $('#sec-activity');
     if (!el) return;
-    if (!Array.isArray(list) || !list.length) { el.innerHTML = '<p class="eyebrow">Recent activity</p><h3>Recent activity</h3><p class="dim">No activity recorded yet.</p>'; return; }
+    if (!Array.isArray(list) || !list.length) { el.innerHTML = '<p class="eyebrow">Recent activity</p><h3>Recent activity</h3><p class="dim">No activity yet &mdash; it will appear here as you use your account.</p>'; return; }
     el.innerHTML = '<p class="eyebrow">Recent activity</p><h3>Recent activity</h3>' + list.slice(0, 10).map(a => {
-      const d = new Date(a.t || a.ts || Date.now());
-      const when = d.toLocaleDateString(undefined, { month: 'short', day: 'numeric' }) + ' · ' + d.toLocaleTimeString(undefined, { hour: '2-digit', minute: '2-digit' });
+      const when = relTime(a.t || a.ts);
       const label = ACT_LABEL[a.event] || a.event;
-      const detail = a.ip ? '<span class="dim"> · ' + esc(a.ip) + '</span>' : '';
-      return '<div class="row"><div class="left"><b>' + esc(label) + '</b><span class="dim">' + esc(when) + detail + '</span></div></div>';
+      const ico = ACT_ICONS[a.event] || ACT_ICONS.login;
+      const detail = a.ip ? ' &middot; ' + esc(a.ip) : '';
+      return '<div class="act-row"><span class="act-ico">' + ico + '</span><div class="left"><b>' + esc(label) + '</b><span class="dim">' + esc(when) + detail + '</span></div></div>';
     }).join('');
   }).catch(() => { const el = $('#sec-activity'); if (el) el.innerHTML = '<p class="eyebrow">Recent activity</p><h3>Recent activity</h3><p class="dim">Unavailable.</p>'; });
 
-  // ===== SESSIONS =====
+  // ===== SESSIONS (device icons + friendly labels + last seen) =====
+  const DEV_SVG =
+    '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">';
+  const DEV_ICONS = {
+    desktop: DEV_SVG + '<rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8"/><path d="M12 17v4"/></svg>',
+    laptop: DEV_SVG + '<rect x="4" y="4" width="16" height="11" rx="2"/><path d="M2 19h20"/></svg>',
+    mobile: DEV_SVG + '<rect x="7" y="2" width="10" height="20" rx="2"/><path d="M11 18h2"/></svg>',
+    tablet: DEV_SVG + '<rect x="4" y="2" width="16" height="20" rx="2"/><path d="M11 18h2"/></svg>',
+    tv: DEV_SVG + '<rect x="2" y="4" width="20" height="13" rx="2"/><path d="M8 21h8"/><path d="M12 17v4"/></svg>'
+  };
+  function uaString(s) {
+    if (typeof s.user_agent === 'string' && s.user_agent) return s.user_agent;
+    if (s.agent && typeof s.agent === 'object') return String(s.agent.raw || s.agent.device || s.agent.os || '');
+    return '';
+  }
+  function devType(ua) {
+    if (/TV|Tizen|WebOS|webOS|SmartTV|AppleTV|GoogleTV|CrKey/i.test(ua)) return 'tv';
+    if (/iPad|Tablet|Kindle|Nook|PlayBook|Silk/i.test(ua)) return 'tablet';
+    if (/iPhone|iPod|Android.*Mobile|Windows Phone|BlackBerry|Opera Mini/i.test(ua)) return 'mobile';
+    if (/Android/i.test(ua)) return 'mobile';
+    if (/Windows|Macintosh|Mac OS|X11|CrOS|Ubuntu|Linux/i.test(ua)) return 'desktop';
+    return 'laptop';
+  }
+  function devLabel(ua, type) {
+    if (type === 'tv') return 'TV device';
+    if (type === 'tablet') return /iPad/i.test(ua) ? 'iPad' : 'Tablet';
+    if (type === 'mobile') {
+      if (/iPhone/i.test(ua)) return 'iPhone';
+      if (/Android/i.test(ua)) return 'Android device';
+      if (/Windows Phone/i.test(ua)) return 'Windows phone';
+      return 'Mobile device';
+    }
+    if (/Windows/i.test(ua)) return 'Windows desktop';
+    if (/Macintosh|Mac OS/i.test(ua)) return 'Mac desktop';
+    if (/Ubuntu/i.test(ua)) return 'Ubuntu desktop';
+    if (/Linux|X11/i.test(ua)) return 'Linux desktop';
+    if (/CrOS/i.test(ua)) return 'Chromebook';
+    return 'Device';
+  }
   fetch('/api/sessions').then(r => r.json()).then(d => {
     const el = $('#sec-sessions'); const list = (d && d.results) || [];
     if (!list.length) { el.innerHTML = '<p class="eyebrow">Sessions</p><h3>Your sessions</h3><p class="dim">No sessions found.</p>'; return; }
-    el.innerHTML = '<p class="eyebrow">Sessions</p><h3>Your sessions</h3>' + list.slice(0, 6).map(s => {
-      const dev = (s.current_session ? 'This device' : ((s.agent && (s.agent.device || s.agent.os)) || 'Session'));
-      return '<div class="row"><div class="left"><b>' + esc(dev) + '</b><span class="dim">' + esc(s.last_ip || '') + '</span></div>' +
-        (s.current_session ? '<span class="pill ok">current</span>' : '<button class="mini" data-sid="' + esc(s.uuid) + '">Revoke</button>') + '</div>';
-    }).join('') + '<div class="row"><div class="left"><b>Sign out everywhere</b><span class="dim">End all other sessions</span></div><button class="mini" id="revoke-all">Revoke all</button></div>';
+    el.innerHTML = '<p class="eyebrow">Sessions</p><h3>Your sessions</h3>' +
+      '<div class="sess-head"><span>Device</span><span>Last seen</span><span>Location / IP</span><span>Action</span></div>' +
+      list.slice(0, 6).map(s => {
+        const ua = uaString(s);
+        const type = devType(ua);
+        const label = s.current_session ? (devLabel(ua, type) + ' (this device)') : devLabel(ua, type);
+        return '<div class="sess-row">' +
+          '<span class="sess-dev">' + DEV_ICONS[type] + '<b>' + esc(devLabel(ua, type)) + '</b>' + (s.current_session ? '<span class="pill ok">This device</span>' : '') + '</span>' +
+          '<span class="dim">' + esc(relTime(s.last_seen) || '—') + '</span>' +
+          '<span class="dim">' + esc(s.last_ip || '—') + '</span>' +
+          '<span class="sess-act">' + (s.current_session ? '' : '<button class="mini" data-sid="' + esc(s.uuid) + '" aria-label="Revoke session on ' + esc(label) + '">Revoke</button>') + '</span></div>';
+      }).join('') + '<div class="row"><div class="left"><b>Sign out everywhere</b><span class="dim">End all other sessions</span></div><button class="mini" id="revoke-all">Revoke all</button></div>';
     el.querySelectorAll('button.mini[data-sid]').forEach(b => b.onclick = async () => {
       b.disabled = true; b.textContent = '…';
       await fetch('/api/sessions/' + b.dataset.sid, { method: 'DELETE' });
@@ -1307,12 +1732,14 @@ function guideDetailHtml(key) {
 (function () {
   const COMMANDS = [
     { t: 'Go to Home',                 d: 'Dashboard tab',             run: () => setTab('home') },
+    { t: 'Go to Statistics',           d: 'Library, photos & members', run: () => setTab('stats') },
     { t: 'Go to Media',                d: 'Watch & library stats',     run: () => setTab('media') },
     { t: 'Go to Services',             d: 'Launchers & uptime',        run: () => setTab('services') },
     { t: 'Go to Guides',               d: 'Setup how-tos per service', run: () => setTab('guides') },
+    { t: 'Go to Contact',              d: 'Email us anytime',          run: () => setTab('contact') },
     { t: 'Go to Security',             d: 'Checklist, MFA, sessions',  run: () => setTab('security') },
     { t: 'Go to Account',              d: 'Profile & avatar',          run: () => setTab('account') },
-    { t: 'Change password',            d: 'Authentik · user details',  run: () => ceremony('password', 'Password change') },
+    { t: 'Change password',            d: 'Account tab · inline form',  run: () => { setTab('account'); const el = document.getElementById('pw-current'); if (el) el.focus(); } },
     { t: 'Set up TOTP',                d: 'Authentik · MFA',           run: () => ceremony('mfa', 'TOTP setup') },
     { t: 'Add a passkey',              d: 'Authentik · MFA',           run: () => ceremony('mfa', 'Passkey setup') },
     { t: 'Recovery codes',             d: 'Authentik · MFA',           run: () => ceremony('mfa', 'Recovery codes') },

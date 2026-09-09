@@ -177,6 +177,21 @@ async function requireSession(request: Request, env: Env): Promise<{ sess: Sessi
   return { sess, sid };
 }
 
+// Resolve the NUMERIC authentik pk for a session user (404 on uuid in
+// /core/users/{id}/). Looked up once via the admin token, cached 30d in KV.
+async function resolveUpk(env: Env, sess: SessionData): Promise<number> {
+  let upk = parseInt((await env.SESSIONS.get(`upk:${sess.sub}`)) || '', 10);
+  if (upk) return upk;
+  const lookup = await authentikFetch(env, env.AUTHENTIK_ADMIN_TOKEN, `/api/v3/core/users/?uuid=${sess.sub}`);
+  if (!lookup.ok) return 0;
+  const arr = (await lookup.json() as { results?: { pk?: number }[] }).results || [];
+  if (arr[0]?.pk) {
+    upk = arr[0].pk;
+    await env.SESSIONS.put(`upk:${sess.sub}`, String(upk), { expirationTtl: 86400 * 30 });
+  }
+  return upk || 0;
+}
+
 export default {
   async fetch(request: Request, env: Env): Promise<Response> {
     const res = await this.handle(request, env);
@@ -335,6 +350,24 @@ export default {
     }
 
     // ---------- API ----------
+    // Portal identity probe (no auth roundtrip): the site worker proxies this
+    // so its nav chip can show "Sign in" vs the user's first name.
+    if (path === '/api/auth/state') {
+      const cookie = request.headers.get('cookie') || '';
+      const m = cookie.match(new RegExp(`${COOKIE}=([a-zA-Z0-9_-]+)`));
+      let raw: string | null = null;
+      if (m) raw = await env.SESSIONS.get(`sess:${m[1]}`);
+      const logged_in = !!raw;
+      if (logged_in && url.searchParams.get('name') === '1') {
+        try {
+          const s = JSON.parse(raw as string) as Partial<SessionData>;
+          return json({ logged_in, name: s.name || s.username || '' });
+        } catch {
+          return json({ logged_in });
+        }
+      }
+      return json({ logged_in });
+    }
     if (path.startsWith('/api/')) {
       const auth = await requireSession(request, env);
       if (auth instanceof Response) return auth;
@@ -445,15 +478,7 @@ export default {
 
         // authentik FOSS denies self-writes; the worker patches via an admin
         // token, gated by the step-up above (user can only change their own).
-        // /core/users/{id}/ takes the NUMERIC pk (404 on uuid) — resolve+cache it.
-        let upk = parseInt((await env.SESSIONS.get(`upk:${sess.sub}`)) || '', 10);
-        if (!upk) {
-          const lookup = await authentikFetch(env, env.AUTHENTIK_ADMIN_TOKEN, `/api/v3/core/users/?uuid=${sess.sub}`);
-          if (lookup.ok) {
-            const arr = (await lookup.json() as { results?: { pk?: number }[] }).results || [];
-            if (arr[0]?.pk) { upk = arr[0].pk; await env.SESSIONS.put(`upk:${sess.sub}`, String(upk), { expirationTtl: 86400 * 30 }); }
-          }
-        }
+        const upk = await resolveUpk(env, sess);
         if (!upk) return json({ error: 'Profile update failed.' }, 502);
         const pr = await authentikFetch(env, env.AUTHENTIK_ADMIN_TOKEN, `/api/v3/core/users/${upk}/`, {
           method: 'PATCH',
@@ -475,6 +500,38 @@ export default {
         return json({ ok: true, name: updates.name ?? sess.name, email: updates.email ?? sess.email });
       }
 
+      // ---------- inline password change (verifies current, writes to authentik) ----------
+      if (path === '/api/password/change' && request.method === 'POST') {
+        let body: { currentPassword?: unknown; newPassword?: unknown } = {};
+        try { body = await request.json() as typeof body; } catch {}
+        const currentPassword = typeof body.currentPassword === 'string' ? body.currentPassword : '';
+        const newPassword = typeof body.newPassword === 'string' ? body.newPassword : '';
+        if (!currentPassword || !newPassword) return json({ error: 'Both fields are required.' }, 400);
+        if (newPassword.length < 12) return json({ error: 'New password must be at least 12 characters.' }, 400);
+
+        // rate limit: 5 attempts per hour (counter increments even on failure)
+        const rlKey = `rl:pw:${sess.sub}`;
+        const count = (parseInt((await env.SESSIONS.get(rlKey)) || '0', 10) || 0) + 1;
+        await env.SESSIONS.put(rlKey, String(count), { expirationTtl: 3600 });
+        if (count > 5) return json({ error: 'Too many attempts, try again later' }, 429);
+
+        if (!(await verifyPassword(env, sess.username, currentPassword))) {
+          return json({ error: 'Incorrect current password' }, 401);
+        }
+
+        const upk = await resolveUpk(env, sess);
+        if (!upk) return json({ error: 'Password change failed.' }, 502);
+        const pr = await authentikFetch(env, env.AUTHENTIK_ADMIN_TOKEN, `/api/v3/core/users/${upk}/set_password/`, {
+          method: 'POST',
+          body: JSON.stringify({ password: newPassword }),
+        });
+        if (!pr.ok) return json({ error: 'Password change failed.' }, 502);
+
+        const now = Date.now();
+        await env.SESSIONS.put(`audit:${sess.sub}:${now}`, JSON.stringify({ t: now, event: 'password_changed' }), { expirationTtl: 90 * 86400 });
+        return json({ ok: true });
+      }
+
       if (path === '/api/sessions') {
         const r = await authentikFetch(env, sess.at, '/api/v3/core/authenticated_sessions/');
         return json(await r.json(), r.status);
@@ -494,24 +551,86 @@ export default {
         const cache = await env.SESSIONS.get('cache:stats');
         if (cache) return json(JSON.parse(cache));
         const stat = async (): Promise<string> => {
-          const out: Record<string, number | null> = { movies: null, series: null, photos: null, sessions: null };
+          const out: Record<string, number | null> = {
+            movies: null, series: null, episodes: null, songs: null, boxsets: null, jf_resume: null,
+            photos: null, videos: null, usage_mb: null,
+            users: null, sessions: null,
+            seerr_total: null, seerr_pending: null, seerr_approved: null, seerr_available: null, seerr_media: null,
+          };
           await Promise.all([
             (async () => {
               try {
                 const r = await fetch(env.JELLYFIN_URL + '/Items/Counts', { headers: { 'x-emby-token': env.JELLYFIN_API_KEY } });
-                if (r.ok) { const d = await r.json() as any; out.movies = d.MovieCount ?? null; out.series = d.SeriesCount ?? null; }
+                if (r.ok) {
+                  const d = await r.json() as any;
+                  out.movies = d.MovieCount ?? null;
+                  out.series = d.SeriesCount ?? null;
+                  out.episodes = d.EpisodeCount ?? null;
+                  out.songs = d.SongCount ?? null;
+                  out.boxsets = d.BoxSetCount ?? null;
+                }
+              } catch {}
+            })(),
+            (async () => {
+              // resume/watching count — TotalRecordCount only, no item fetch
+              try {
+                const r = await fetch(env.JELLYFIN_URL + '/Items?userId=' + env.JELLYFIN_USER_ID +
+                  '&Recursive=true&Filters=IsResumable&Limit=1',
+                  { headers: { 'x-emby-token': env.JELLYFIN_API_KEY } });
+                if (r.ok) {
+                  const d = await r.json() as any;
+                  out.jf_resume = typeof d.TotalRecordCount === 'number' ? d.TotalRecordCount : null;
+                }
               } catch {}
             })(),
             (async () => {
               try {
                 const r = await fetch(env.IMMICH_URL + '/api/server/statistics', { headers: { 'x-api-key': env.IMMICH_API_KEY } });
-                if (r.ok) { const d = await r.json() as any; out.photos = (d.photos ?? 0) + (d.videos ?? 0); }
+                if (r.ok) {
+                  const d = await r.json() as any;
+                  out.photos = d.photos ?? null;
+                  out.videos = d.videos ?? null;
+                  if (typeof d.usage === 'number') out.usage_mb = Math.round(d.usage / 1048576);
+                }
+              } catch {}
+            })(),
+            (async () => {
+              try {
+                // admin token: total member count from the users pagination header
+                const r = await authentikFetch(env, env.AUTHENTIK_ADMIN_TOKEN, '/api/v3/core/users/?page=1&page_size=1');
+                if (r.ok) {
+                  const d = await r.json() as any;
+                  const c = d && d.pagination && typeof d.pagination.count === 'number' ? d.pagination.count : null;
+                  out.users = c;
+                }
               } catch {}
             })(),
             (async () => {
               try {
                 const s = await authentikFetch(env, sess.at, '/api/v3/core/authenticated_sessions/');
                 if (s.ok) { const d = await s.json() as any; out.sessions = (d.results ?? []).length; }
+              } catch {}
+            })(),
+            (async () => {
+              try {
+                const r = await fetch(env.SEERR_URL + '/api/v3/request/count', { headers: { 'X-Api-Key': env.SEERR_API_KEY } });
+                if (r.ok) {
+                  const d = await r.json() as any;
+                  out.seerr_total = typeof d.total === 'number' ? d.total : null;
+                  out.seerr_pending = typeof d.pending === 'number' ? d.pending : null;
+                  out.seerr_approved = typeof d.approved === 'number' ? d.approved : null;
+                  out.seerr_available = typeof d.available === 'number' ? d.available : null;
+                }
+              } catch {}
+            })(),
+            (async () => {
+              try {
+                const r = await fetch(env.SEERR_URL + '/api/v3/media?take=1', { headers: { 'X-Api-Key': env.SEERR_API_KEY } });
+                if (r.ok) {
+                  const d = await r.json() as any;
+                  const total = d && d.pageInfo && (d.pageInfo.results ?? d.pageInfo.resultsTotal);
+                  out.seerr_media = typeof total === 'number' ? total : null;
+                }
               } catch {}
             })(),
           ]);

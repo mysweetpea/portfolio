@@ -60,6 +60,61 @@ function injectNonces(text, nonce) {
 let commitsCache = { data: null, ts: 0 };
 const COMMITS_TTL = 300_000; // 5 minutes in ms
 
+// Portal identity: replace the static "Sign in" link with a live account
+// chip + inline popup on EVERY page (serve-time transform, one place).
+// Applied to all HTML responses (pages and the branded 404 alike).
+function navAccountMarkup(nonce) {
+  const person =
+    '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 3.6-6.5 8-6.5s8 2.5 8 6.5"/></svg>';
+  const popOut =
+    '<a class="nap-primary" href="https://dashboard.mysweetpea.cc/auth/login">Dashboard</a>' +
+    '<a href="https://dashboard.mysweetpea.cc/#account">My account</a>' +
+    '<a href="/status.html">Status</a>' +
+    '<a href="/contact.html">Contact</a>';
+  const css =
+    '<style>.nav-account{position:relative;display:inline-flex;align-items:center}' +
+    '.nav-account-chip{display:inline-flex;align-items:center;gap:7px}' +
+    '.nav-account-pop{position:absolute;top:calc(100% + 10px);right:0;min-width:216px;max-width:calc(100vw - 24px);background:rgba(12,19,22,.94);backdrop-filter:blur(20px) saturate(1.4);-webkit-backdrop-filter:blur(20px) saturate(1.4);border:1px solid rgba(143,175,181,.18);border-radius:14px;padding:8px;display:flex;flex-direction:column;gap:2px;box-shadow:0 12px 40px rgba(0,0,0,.45);z-index:80}' +
+    '.nav-account-pop a{display:block;padding:9px 12px;border-radius:10px;color:#A9BEC2;font-size:.88rem;text-decoration:none;transition:background .2s,color .2s}' +
+    '.nav-account-pop a:hover{background:rgba(143,175,181,.12);color:#C5D5D8}' +
+    '.nav-account-pop a.nap-primary{background:linear-gradient(135deg,#8FAFB5,#6B9AA6);color:#0C1316;font-weight:600;text-align:center;margin-bottom:4px}' +
+    '.nav-account-pop a.nap-primary:hover{background:linear-gradient(135deg,#C5D5D8,#8FAFB5);color:#0C1316}' +
+    '@media (max-width:768px){.nav-account-pop{position:absolute;right:0}}</style>';
+  const js =
+    '<script nonce="' + nonce + '">' +
+    '(function(){"use strict";' +
+    'var chip=document.getElementById("nav-account-chip"),pop=document.getElementById("nav-account-pop"),label=document.getElementById("nav-account-label");' +
+    'if(!chip||!pop)return;' +
+    'function close(){pop.hidden=true;chip.setAttribute("aria-expanded","false")}' +
+    'function open(){pop.hidden=false;chip.setAttribute("aria-expanded","true")}' +
+    'chip.addEventListener("click",function(e){e.stopPropagation();pop.hidden?open():close()});' +
+    'document.addEventListener("click",function(e){if(!pop.hidden&&e.target!==chip&&!pop.contains(e.target)&&!chip.contains(e.target))close()});' +
+    'document.addEventListener("keydown",function(e){if(e.key==="Escape")close()});' +
+    'var dash="https://dashboard.mysweetpea.cc";' +
+    'fetch("/api/auth/state?name=1",{credentials:"same-origin"}).then(function(r){return r.ok?r.json():null}).then(function(s){' +
+    'if(!s||!s.logged_in)return;' +
+    'var first=String(s.name||"").trim().split(/\\s+/)[0];' +
+    'label.textContent=first||"Account";' +
+    'pop.innerHTML=\'<a class="nap-primary" href="\'+dash+\'">Open dashboard</a>\'' +
+    '+\'<a href="\'+dash+\'/#account">My account</a>\'' +
+    '+\'<a href="/contact.html">Contact</a>\'' +
+    '+\'<a href="\'+dash+\'/auth/logout">Sign out</a>\';' +
+    '}).catch(function(){});' +
+    '})();</' + 'script>';
+  return '<div class="nav-account" id="nav-account">' +
+    '<button type="button" class="nav-btn nav-signin nav-account-chip" id="nav-account-chip" aria-expanded="false" aria-controls="nav-account-pop" aria-haspopup="true">' +
+    person + '<span id="nav-account-label">Sign in</span></button>' +
+    '<div class="nav-account-pop" id="nav-account-pop" hidden>' + popOut + '</div></div>' +
+    css + js;
+}
+
+const NAV_SIGNIN_LINK = '<a href="https://dashboard.mysweetpea.cc" class="nav-btn nav-signin">Sign in</a>';
+
+function injectNavAccount(html, nonce) {
+  if (html.indexOf(NAV_SIGNIN_LINK) === -1) return html;
+  return html.replace(NAV_SIGNIN_LINK, navAccountMarkup(nonce));
+}
+
 export default {
   async fetch(request, env) {
     const url = new URL(request.url);
@@ -117,6 +172,36 @@ export default {
       });
     }
 
+    // --- Portal identity: proxy auth state from the dashboard worker ---
+    // Forwards the incoming Cookie header verbatim so the dashboard can
+    // resolve the session; Set-Cookie is intentionally not passed through.
+    // Browser headers ride along so the dashboard's WAF lets the fetch through.
+    if (url.pathname === '/api/auth/state') {
+      const fwd = {};
+      const cookie = request.headers.get('Cookie');
+      const ua = request.headers.get('User-Agent');
+      const accept = request.headers.get('Accept');
+      const lang = request.headers.get('Accept-Language');
+      if (cookie) fwd['Cookie'] = cookie;
+      if (ua) fwd['User-Agent'] = ua;
+      if (accept) fwd['Accept'] = accept;
+      if (lang) fwd['Accept-Language'] = lang;
+      let upstream;
+      try {
+        upstream = await fetch('https://dashboard.mysweetpea.cc/api/auth/state' + (url.search || ''), { headers: fwd });
+      } catch (e) {
+        return new Response(JSON.stringify({ logged_in: false, error: 'upstream_unreachable' }), {
+          status: 502,
+          headers: { 'Content-Type': 'application/json', 'Cache-Control': 'no-store' }
+        });
+      }
+      const body = await upstream.text();
+      return new Response(body, {
+        status: upstream.status,
+        headers: { 'Content-Type': 'application/json', 'Cache-Control': 'no-store' }
+      });
+    }
+
     // --- Matrix federation well-known ---
     if (url.pathname === '/.well-known/matrix/server') {
       return new Response(JSON.stringify({
@@ -155,7 +240,7 @@ export default {
       if (notFoundRes.ok) {
         const body = await notFoundRes.text();
         const nonce = generateNonce();
-        const out = new Response(injectNonces(body, nonce), {
+        const out = new Response(injectNavAccount(injectNonces(body, nonce), nonce), {
           status: 404,
           headers: {
             'Content-Type': 'text/html; charset=utf-8',
@@ -215,6 +300,9 @@ export default {
         }) + '</script>';
       const headInject = '<link rel="canonical" href="' + canonical + '">' + jsonLd;
       injected = injected.replace('</head>', headInject + '</head>');
+
+      // Live account chip on every page (replaces the static Sign in link)
+      injected = injectNavAccount(injected, nonce);
 
       return new Response(injected, {
         status: out.status,
