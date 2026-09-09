@@ -123,33 +123,38 @@ export default {
 
     // ---------- auth ----------
     if (path === '/auth/login') {
+      // Cookie-free PKCE: the verifier lives server-side in KV keyed by
+      // state (state already travels in the authorize URL). The previous
+      // design set the pkce cookie on this cross-site 302; some
+      // browsers/extensions drop Set-Cookie during redirect chains, the
+      // callback then 400'd on a missing cookie and login looped forever.
       const state = randomB64u(16);
       const verifier = randomB64u(64);
       const challenge = b64uEncode(await sha256(verifier));
-      const redirect = new URL('/auth/callback', env.APP_URL).toString();
+      await env.SESSIONS.put(`pkce:${state}`, verifier, { expirationTtl: 600 });
       const authorizeUrl = new URL(`${env.AUTH_ISSUER}/authorize/`);
       authorizeUrl.searchParams.set('client_id', env.AUTHENTIK_CLIENT_ID);
-      authorizeUrl.searchParams.set('redirect_uri', redirect);
+      authorizeUrl.searchParams.set('redirect_uri', new URL('/auth/callback', env.APP_URL).toString());
       authorizeUrl.searchParams.set('response_type', 'code');
       authorizeUrl.searchParams.set('scope', SCOPES);
       authorizeUrl.searchParams.set('state', state);
       authorizeUrl.searchParams.set('code_challenge', challenge);
       authorizeUrl.searchParams.set('code_challenge_method', 'S256');
-      const res = Response.redirect(authorizeUrl.toString(), 302);
-      const headers = new Headers(res.headers);
-      headers.append('set-cookie', `msp_pkce=${state}.${verifier}; Path=/auth; HttpOnly; Secure; SameSite=Lax; Max-Age=600`);
-      return new Response(null, { status: 302, headers });
+      return Response.redirect(authorizeUrl.toString(), 302);
     }
 
     if (path === '/auth/callback') {
       const code = url.searchParams.get('code');
       const state = url.searchParams.get('state');
-      const cookie = request.headers.get('cookie') || '';
-      const m = cookie.match(/msp_pkce=([^.]+)\.([a-zA-Z0-9_-]+)/);
-      if (!code || !state || !m || m[1] !== state) {
+      if (!code || !state) {
         return new Response('Invalid OAuth state', { status: 400 });
       }
-      const verifier = m[2];
+      // Cookie-free PKCE: verifier from KV by state (one-time read).
+      const verifier = await env.SESSIONS.get(`pkce:${state}`);
+      if (!verifier) {
+        return new Response('Invalid OAuth state', { status: 400 });
+      }
+      await env.SESSIONS.delete(`pkce:${state}`);
       const body = new URLSearchParams({
         grant_type: 'authorization_code',
         code,
