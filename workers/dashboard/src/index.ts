@@ -186,20 +186,30 @@ export default {
       const audit = { t: Date.now(), event: 'login', ip: request.headers.get('cf-connecting-ip') || '' };
       await env.SESSIONS.put(`audit:${sess.sub}:${Date.now()}`, JSON.stringify(audit), { expirationTtl: 90 * 86400 });
 
-      const headers = new Headers({ location: '/' });
+      const headers = new Headers({ 'content-type': 'text/html;charset=utf-8', 'cache-control': 'no-store' });
       headers.append('set-cookie', `${COOKIE}=${sid}; Path=/; HttpOnly; Secure; SameSite=Lax; Max-Age=86400`);
       headers.append('set-cookie', 'msp_pkce=; Path=/auth; HttpOnly; Secure; Max-Age=0');
-      return new Response(null, { status: 302, headers });
+      // Interstitial: cookie lands on a 200 (browsers can drop Set-Cookie on
+      // cross-site redirect hops), then a top-level navigation cements it.
+      const html = `<!doctype html><html><head><meta charset="utf-8"><title>Signing you in…</title>
+<meta http-equiv="refresh" content="0;url=/">
+<style>body{background:#0C1316;color:#EDF3F4;font-family:Inter,system-ui,sans-serif;display:flex;align-items:center;justify-content:center;height:100vh;margin:0}
+.c{width:46px;height:46px;border:3px solid rgba(143,175,181,.2);border-top-color:#8FAFB5;border-radius:50%;animation:s 0.9s linear infinite}
+@keyframes s{to{transform:rotate(360deg)}}</style></head>
+<body><div class="c"></div><script>location.replace('/');</script></body></html>`;
+      return new Response(html, { status: 200, headers });
     }
 
     // Popup ceremony: deep-link into an authentik-hosted setup flow with
     // a return-to-dashboard next. The user's authentik browser session runs
     // the ceremony (stock-supported path); completion lands back on /.
     if (path === '/auth/ceremony') {
-      const flow = url.searchParams.get('f') || '';
-      if (!/^[a-z0-9-]+$/.test(flow)) return new Response('Bad flow', { status: 400 });
-      const next = encodeURIComponent(env.APP_URL + '/');
-      return Response.redirect(`${env.AUTH_BASE}/if/flow/${flow}/?next=${next}`, 302);
+      // authentik's embedded user interface handles all self-service
+      // ceremonies with the user's own browser session (stock-supported).
+      // f=password|mfa|sessions selects the section.
+      const f = url.searchParams.get('f') || 'mfa';
+      const frag = f === 'password' ? '#/user-details' : f === 'sessions' ? '#/sessions' : '#/mfa';
+      return Response.redirect(`${env.AUTH_BASE}/if/user/${frag}`, 302);
     }
 
     if (path === '/auth/logout') {

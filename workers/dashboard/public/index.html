@@ -145,9 +145,9 @@ function ceremony(flowSlug, label) {
   const hasStatic = (devices.static || []).length > 0;
   const items = [
     { done: true,  label: 'Account created & active' },
-    { done: hasTotp,    label: 'Authenticator app (TOTP)', act: hasTotp ? null : ['Set up', "ceremony('default-authenticator-totp-setup','TOTP setup')"] },
-    { done: hasWebauthn,label: 'Passkey / security key', act: hasWebauthn ? null : ['Add passkey', "ceremony('default-authenticator-webauthn-setup','Passkey setup')"] },
-    { done: hasStatic,  label: 'Recovery codes saved', act: hasStatic ? ['View info', "toast('Recovery codes were shown once at setup — regenerate via passkey/TOTP settings if lost')"] : ['Generate', "ceremony('default-authenticator-static-setup','Recovery codes')"] },
+    { done: hasTotp,    label: 'Authenticator app (TOTP)', act: hasTotp ? null : ['Set up', "ceremony('mfa','TOTP setup')"] },
+    { done: hasWebauthn,label: 'Passkey / security key', act: hasWebauthn ? null : ['Add passkey', "ceremony('mfa','Passkey setup')"] },
+    { done: hasStatic,  label: 'Recovery codes saved', act: hasStatic ? ['View info', "toast('Recovery codes were shown once at setup — regenerate via passkey/TOTP settings if lost')"] : ['Generate', "ceremony('mfa','Recovery codes')"] },
   ];
   const doneCount = items.filter(i => i.done).length;
   const pct = Math.round(doneCount / items.length * 100);
