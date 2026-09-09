@@ -336,7 +336,7 @@ export default {
       if (!sid) return json({ ok: false, error: 'token expired' }, 401);
       await env.SESSIONS.delete('land:' + token);
       const headers = new Headers({ 'content-type': 'application/json', 'cache-control': 'no-store' });
-      headers.append('set-cookie', `${COOKIE}=${sid}; Path=/; HttpOnly; Secure; SameSite=Lax; Max-Age=86400`);
+      headers.append('set-cookie', `${COOKIE}=${sid}; Domain=.mysweetpea.cc; Path=/; HttpOnly; Secure; SameSite=Lax; Max-Age=86400`);
       return new Response(JSON.stringify({ ok: true }), { status: 200, headers });
     }
 
@@ -345,7 +345,7 @@ export default {
       const m = cookie.match(new RegExp(`${COOKIE}=([a-zA-Z0-9_-]+)`));
       if (m) await env.SESSIONS.delete(`sess:${m[1]}`);
       const headers = new Headers({ location: '/' });
-      headers.append('set-cookie', `${COOKIE}=; Path=/; HttpOnly; Secure; Max-Age=0`);
+      headers.append('set-cookie', `${COOKIE}=; Domain=.mysweetpea.cc; Path=/; HttpOnly; Secure; Max-Age=0`);
       return new Response(null, { status: 302, headers });
     }
 
