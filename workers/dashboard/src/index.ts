@@ -186,26 +186,31 @@ export default {
       const audit = { t: Date.now(), event: 'login', ip: request.headers.get('cf-connecting-ip') || '' };
       await env.SESSIONS.put(`audit:${sess.sub}:${Date.now()}`, JSON.stringify(audit), { expirationTtl: 90 * 86400 });
 
+      // One-time landing token: avoids Set-Cookie during the cross-site
+      // navigation (privacy blockers eat those). The interstitial exchanges
+      // this token for the session cookie via a same-site fetch.
+      const token = randomB64u(32);
+      await env.SESSIONS.put('land:' + token, sid, { expirationTtl: 60 });
       const headers = new Headers({ 'content-type': 'text/html;charset=utf-8', 'cache-control': 'no-store' });
-      headers.append('set-cookie', `${COOKIE}=${sid}; Path=/; HttpOnly; Secure; SameSite=Lax; Max-Age=86400`);
       headers.append('set-cookie', 'msp_pkce=; Path=/auth; HttpOnly; Secure; Max-Age=0');
-      // Interstitial: cookie lands on a 200 (browsers can drop Set-Cookie on
-      // cross-site redirect hops), then a top-level navigation cements it.
       const html = `<!doctype html><html><head><meta charset="utf-8"><title>Signing you in…</title>
-<meta http-equiv="refresh" content="0;url=/">
 <style>body{background:#0C1316;color:#EDF3F4;font-family:Inter,system-ui,sans-serif;display:flex;align-items:center;justify-content:center;height:100vh;margin:0}
 .c{width:46px;height:46px;border:3px solid rgba(143,175,181,.2);border-top-color:#8FAFB5;border-radius:50%;animation:s 0.9s linear infinite}
 @keyframes s{to{transform:rotate(360deg)}}</style></head>
 <body><div class="c"></div><script>
-// Wait for the KV session to be readable before navigating (KV is eventually
-// consistent; navigating instantly can beat the write and bounce to sign-in).
-let n=0;
-(function go(){
-  fetch('/api/me',{credentials:'include'}).then(r=>{
-    if(r.ok){ location.replace('/'); }
-    else if(++n<20){ setTimeout(go,250); }
-    else { location.replace('/?login_retry=1'); }
-  }).catch(()=>{ if(++n<20) setTimeout(go,250); else location.replace('/?login_retry=1'); });
+(async () => {
+  const t = ${JSON.stringify(token)};
+  try {
+    const lr = await fetch('/auth/land', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ token: t }), credentials: 'include' });
+    if (!lr.ok) throw new Error('land failed ' + lr.status);
+  } catch (e) { location.replace('/?login_retry=1'); return; }
+  let n = 0;
+  const go = () => fetch('/api/me', { credentials: 'include' }).then(r => {
+    if (r.ok) location.replace('/');
+    else if (++n < 20) setTimeout(go, 250);
+    else location.replace('/?login_retry=1');
+  }).catch(() => { if (++n < 20) setTimeout(go, 250); else location.replace('/?login_retry=1'); });
+  go();
 })();
 </script></body></html>`;
       return new Response(html, { status: 200, headers });
@@ -221,6 +226,17 @@ let n=0;
       const f = url.searchParams.get('f') || 'mfa';
       const frag = f === 'password' ? '#/user-details' : f === 'sessions' ? '#/sessions' : '#/mfa';
       return Response.redirect(`${env.AUTH_BASE}/if/user/${frag}`, 302);
+    }
+
+    if (path === '/auth/land' && request.method === 'POST') {
+      const { token } = await request.json() as { token?: string };
+      if (!token) return json({ ok: false, error: 'no token' }, 400);
+      const sid = await env.SESSIONS.get('land:' + token);
+      if (!sid) return json({ ok: false, error: 'token expired' }, 401);
+      await env.SESSIONS.delete('land:' + token);
+      const headers = new Headers({ 'content-type': 'application/json', 'cache-control': 'no-store' });
+      headers.append('set-cookie', `${COOKIE}=${sid}; Path=/; HttpOnly; Secure; SameSite=Lax; Max-Age=86400`);
+      return new Response(JSON.stringify({ ok: true }), { status: 200, headers });
     }
 
     if (path === '/auth/logout') {
@@ -257,6 +273,19 @@ let n=0;
         const r3 = await authentikFetch(env, sess.at, '/api/v3/authenticators/static/');
         const [totp, webauthn, statics] = await Promise.all([r.json(), r2.json(), r3.json()]);
         return json({ totp: totp.results ?? [], webauthn: webauthn.results ?? [], static: statics.results ?? [] });
+      }
+      if (path === '/api/debug-session') {
+        const cookie = request.headers.get('cookie') || '(none)';
+        const m = cookie.match(new RegExp(COOKIE + '=([a-zA-Z0-9_-]+)'));
+        const sid = m ? m[1] : null;
+        const raw = sid ? await env.SESSIONS.get('sess:' + sid) : null;
+        return json({
+          cookie_present: !!sid,
+          sid_prefix: sid ? sid.slice(0, 8) : null,
+          kv_session_exists: !!raw,
+          kv_username: raw ? (JSON.parse(raw).username || null) : null,
+          ts: Date.now(),
+        });
       }
       if (path === '/api/status') {
         const cache = await env.SESSIONS.get('cache:kuma');
