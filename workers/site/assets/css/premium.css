@@ -327,6 +327,10 @@
     .footer-grid { grid-template-columns: 1fr; }
 }
 
+/* === Nav sign-in (dashboard entry) === */
+.nav-signin { border: 1px solid rgba(217,168,108,.45); border-radius: 999px; padding: 7px 16px; color: var(--gold, #D9A86C); }
+.nav-signin:hover { border-color: rgba(217,168,108,.8); background: rgba(217,168,108,.08); }
+
 /* === 8. Micro-interaction polish === */
 .hero-btn, .cta-btn, .nav-cta { transition: transform 0.25s ease, box-shadow 0.25s ease, background 0.25s ease, color 0.25s ease; }
 .hero-btn:hover, .cta-btn:hover, .nav-cta:hover { transform: translateY(-2px); }
