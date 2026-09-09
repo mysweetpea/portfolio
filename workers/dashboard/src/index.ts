@@ -333,6 +333,11 @@ export default {
         const user = d && d.user ? d.user : d;
         user.has_avatar = false;
         user.avatar_ts = 0;
+        // tier badge: membership of the authentik 'sweetpea' / 'seedling' groups
+        const groupNames = (user.groups || []).map((g: any) => String(g && g.name || '').toLowerCase());
+        user.tier = groupNames.includes('sweetpea') ? 'sweetpea'
+                  : groupNames.includes('seedling') ? 'seedling'
+                  : 'seedling';
         try {
           const m = await env.SESSIONS.get(`avm:${sess.sub}`);
           if (m) {

@@ -116,6 +116,11 @@ h3{font-family:Fraunces,Georgia,serif;font-size:1.05rem;font-weight:600;margin-b
 img.svc-ico{object-fit:contain;padding:3px}
 .svc-name{font-size:.92rem;font-weight:600}
 .svc-blurb{font-size:.78rem;color:var(--text-dim)}
+/* ---- tier badge ---- */
+.tier-badge{display:inline-flex;align-items:center;gap:6px;padding:3px 10px;border-radius:999px;font-size:.72rem;font-weight:600;letter-spacing:.04em;text-transform:uppercase;vertical-align:middle}
+.tier-badge svg{width:11px;height:11px}
+.tier-sweetpea{background:rgba(217,168,108,.14);color:var(--gold);border:1px solid rgba(217,168,108,.45)}
+.tier-seedling{background:rgba(163,201,182,.13);color:var(--sage);border:1px solid rgba(163,201,182,.4)}
 /* ---- phase 5: media rows ---- */
 .media-sec{grid-column:1/-1;display:flex;flex-direction:column;gap:18px}
 .media-sec:empty{display:none}
@@ -465,10 +470,21 @@ function guideDetailHtml(key) {
       if (el) el.innerHTML = avatarInner() + CAM;
     });
   };
+
+  const tierBadge = (t) => {
+    const tier = (t === 'sweetpea') ? 'sweetpea' : 'seedling';
+    const ico = tier === 'sweetpea'
+      ? '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2C9 6 4 7 4 12c0 4.4 3.6 8 8 8s8-3.6 8-8c0-5-5-6-8-10z"/></svg>'
+      : '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2v10m0 0c0 4-3 7-7 7 0-4 3-7 7-7zm0 0c0 4 3 7 7 7 0-4-3-7-7-7z"/></svg>';
+    const label = tier === 'sweetpea' ? 'Sweet Pea' : 'Seedling';
+    return '<span class="tier-badge tier-' + tier + '">' + ico + label + '</span>';
+  };
+  window.tierBadge = tierBadge;
+
   window.applyProfile = () => {
-    const hn = $('#hero-name'); if (hn) hn.textContent = me.name || me.username;
+    const hn = $('#hero-name'); if (hn) { hn.textContent = me.name || me.username; hn.insertAdjacentHTML('afterend', tierBadge(me.tier)); }
     const hs = $('#hero-sub'); if (hs) hs.innerHTML = esc(me.email) + ' &middot; @' + esc(me.username);
-    const tn = document.querySelector('.who .name'); if (tn) tn.textContent = me.name || me.username;
+    const tn = document.querySelector('.who .name'); if (tn) { tn.textContent = me.name || me.username; tn.insertAdjacentHTML('afterend', tierBadge(me.tier)); }
     const an = $('#acct-name'); if (an) an.textContent = me.name || me.username;
     const ae = $('#acct-email'); if (ae) ae.textContent = me.email;
     window.setAvatars();
