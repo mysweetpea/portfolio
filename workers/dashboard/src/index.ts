@@ -196,7 +196,18 @@ export default {
 <style>body{background:#0C1316;color:#EDF3F4;font-family:Inter,system-ui,sans-serif;display:flex;align-items:center;justify-content:center;height:100vh;margin:0}
 .c{width:46px;height:46px;border:3px solid rgba(143,175,181,.2);border-top-color:#8FAFB5;border-radius:50%;animation:s 0.9s linear infinite}
 @keyframes s{to{transform:rotate(360deg)}}</style></head>
-<body><div class="c"></div><script>location.replace('/');</script></body></html>`;
+<body><div class="c"></div><script>
+// Wait for the KV session to be readable before navigating (KV is eventually
+// consistent; navigating instantly can beat the write and bounce to sign-in).
+let n=0;
+(function go(){
+  fetch('/api/me',{credentials:'include'}).then(r=>{
+    if(r.ok){ location.replace('/'); }
+    else if(++n<20){ setTimeout(go,250); }
+    else { location.replace('/?login_retry=1'); }
+  }).catch(()=>{ if(++n<20) setTimeout(go,250); else location.replace('/?login_retry=1'); });
+})();
+</script></body></html>`;
       return new Response(html, { status: 200, headers });
     }
 
