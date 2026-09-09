@@ -109,6 +109,19 @@ h3{font-size:1rem;font-weight:600;margin-bottom:10px;letter-spacing:.01em}
 .svc-ico{width:34px;height:34px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:.95rem;flex:none}
 .svc-name{font-size:.92rem;font-weight:600}
 .svc-blurb{font-size:.78rem;color:var(--text-dim)}
+/* ---- phase 5: media rows ---- */
+.media-sec{grid-column:1/-1;display:flex;flex-direction:column;gap:18px}
+#sec-media:empty{display:none}
+.media-row{display:flex;gap:12px;overflow-x:auto;scrollbar-width:none}
+.media-row::-webkit-scrollbar{display:none}
+.mitem{position:relative;flex:none;width:120px;display:block;text-decoration:none;color:var(--text);transition:.35s cubic-bezier(.4,0,.2,1)}
+.mitem:hover{transform:translateY(-2px)}
+.mposter{width:120px;aspect-ratio:2/3;object-fit:cover;border-radius:12px;background:var(--card);display:block}
+.mtitle{font-size:.78rem;font-weight:600;margin-top:6px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.msub{font-size:.7rem;color:var(--text-dim);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.mprog{height:3px;border-radius:99px;background:rgba(143,175,181,.15);margin-top:6px;overflow:hidden}
+.mprog i{display:block;height:100%;border-radius:99px;background:var(--gold)}
+.mtype{position:absolute;top:6px;left:6px;font-size:.62rem;font-weight:600;padding:2px 8px;border-radius:99px;background:rgba(6,10,12,.72);color:var(--primary-bright);border:1px solid rgba(143,175,181,.25)}
 </style></head><body>
 <div id="app"><div class="card" id="gate"><h1>MySweetPea</h1><p>Checking your session…</p></div></div>
 <div id="modal"><div class="mcard" id="mbody"></div></div>
@@ -169,6 +182,7 @@ function ceremony(flowSlug, label) {
     '<header class="topbar"><div class="brand"><span class="mark">&#10047;</span> MySweetPea</div>' +
     '<div class="who"><span class="name">' + esc(me.name || me.username) + '</span><button class="mini" id="pal-open" title="Command palette (Ctrl+K)" style="margin-right:10px">⌘K</button><a class="out" href="/auth/logout">Sign out</a></div></header>' +
     '<main class="grid"><div class="stats" id="stats"></div>' +
+    '<section id="sec-media" class="media-sec"></section>' +
     '<section class="card" id="sec-services"><h3>Services</h3><div class="svc-grid" id="svc-grid"></div></section>' +
     '<section class="card hero"><div class="avatar">' + esc(initials) + '</div><div>' +
     '<h2>' + esc(me.name || me.username) + '</h2><p class="dim">' + esc(me.email) + ' &middot; @' + esc(me.username) + '</p>' +
@@ -178,6 +192,30 @@ function ceremony(flowSlug, label) {
     '<section class="card" id="sec-sessions"><h3>Your sessions</h3><div class="skel"></div></section>' +
     '<section class="card" id="sec-apps"><h3>Connected apps</h3><div class="skel"></div></section>' +
     '</main><footer class="foot">MySweetPea &middot; your account, your services, one place</footer></div>';
+
+  // ===== PHASE 5: MEDIA ROWS (continue watching + recently added) =====
+  (async () => {
+    const host = $('#sec-media');
+    if (!host) return;
+    const JF_ITEM = 'https://media.mysweetpea.cc/web/index.html#!/item?id=';
+    const grab = (u) => fetch(u).then(r => (r.ok ? r.json() : { items: [] })).catch(() => ({ items: [] }));
+    const [cont, latest] = await Promise.all([grab('/api/media/continue'), grab('/api/media/latest')]);
+    const posterCard = (it, o) => {
+      const pct = Math.max(0, Math.min(100, Number(it.progressPct) || 0));
+      let h = '<a class="mitem" href="' + JF_ITEM + encodeURIComponent(String(it.id ?? '')) + '" target="_blank" rel="noopener">';
+      if (o.badge && it.type) h += '<span class="mtype">' + esc(it.type) + '</span>';
+      h += '<img class="mposter" loading="lazy" alt="" src="' + esc(it.img) + '"/>';
+      h += '<div class="mtitle">' + esc(it.name || '') + '</div>';
+      if (it.seriesName) h += '<div class="msub">' + esc(it.seriesName) + '</div>';
+      if (o.progress) h += '<div class="mprog"><i style="width:' + pct + '%"></i></div>';
+      return h + '</a>';
+    };
+    let html = '';
+    if ((cont.items || []).length) html += '<section class="card"><h3>Continue Watching</h3><div class="media-row">' + cont.items.map(it => posterCard(it, { progress: true })).join('') + '</div></section>';
+    if ((latest.items || []).length) html += '<section class="card"><h3>Recently Added</h3><div class="media-row">' + latest.items.map(it => posterCard(it, { badge: true })).join('') + '</div></section>';
+    if (!html) { host.remove(); return; }
+    host.innerHTML = html;
+  })();
 
   // ===== SERVICES LAUNCHER =====
   const SERVICES = [

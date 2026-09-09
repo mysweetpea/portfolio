@@ -16,7 +16,9 @@ export interface Env {
   SEERR_API_KEY: string;
 
   IMMICH_URL: string;
-  IMMICH_API_KEY: string;}
+  IMMICH_API_KEY: string;
+  JELLYFIN_USER_ID: string;
+}
 
 interface SessionData {
   at: string;            // access token
@@ -318,6 +320,53 @@ export default {
         const payload = await stat();
         await env.SESSIONS.put('cache:stats', payload, { expirationTtl: 300 });
         return new Response(payload, { headers: { 'content-type': 'application/json', 'cache-control': 'no-store' } });
+      }
+      if (path === '/api/media/continue') {
+        const cache = await env.SESSIONS.get('cache:media-cont');
+        if (cache) return json(JSON.parse(cache));
+        try {
+          const r = await fetch(env.JELLYFIN_URL + '/Items?userId=' + env.JELLYFIN_USER_ID +
+            '&Recursive=true&SortBy=DatePlayed&SortOrder=Descending&Filters=IsResumable' +
+            '&IncludeItemTypes=Movie,Episode&Limit=12&Fields=ProductionYear,SeriesName&EnableImages=true',
+            { headers: { 'x-emby-token': env.JELLYFIN_API_KEY } });
+          if (!r.ok) throw new Error('jellyfin ' + r.status);
+          const d = await r.json() as any;
+          const items = ((d.Items ?? []) as any[]).map((it) => ({
+            id: it.Id,
+            name: it.Name,
+            seriesName: it.SeriesName ?? '',
+            type: it.Type,
+            progressPct: Math.round(it.UserData?.PlayedPercentage ?? 0),
+            img: env.JELLYFIN_URL + '/Items/' + it.Id + '/Images/Primary?fillHeight=420&fillWidth=280&quality=75',
+          }));
+          const payload = JSON.stringify({ items });
+          await env.SESSIONS.put('cache:media-cont', payload, { expirationTtl: 120 });
+          return json({ items });
+        } catch {
+          return json({ items: [] });
+        }
+      }
+      if (path === '/api/media/latest') {
+        const cache = await env.SESSIONS.get('cache:media-latest');
+        if (cache) return json(JSON.parse(cache));
+        try {
+          const r = await fetch(env.JELLYFIN_URL + '/Items/Latest?userId=' + env.JELLYFIN_USER_ID + '&Limit=12&EnableImages=true',
+            { headers: { 'x-emby-token': env.JELLYFIN_API_KEY } });
+          if (!r.ok) throw new Error('jellyfin ' + r.status);
+          const d = await r.json() as any;
+          const items = ((Array.isArray(d) ? d : []) as any[]).map((it) => ({
+            id: it.Id,
+            name: it.Name,
+            seriesName: it.SeriesName ?? '',
+            type: it.Type,
+            img: env.JELLYFIN_URL + '/Items/' + it.Id + '/Images/Primary?fillHeight=420&fillWidth=280&quality=75',
+          }));
+          const payload = JSON.stringify({ items });
+          await env.SESSIONS.put('cache:media-latest', payload, { expirationTtl: 300 });
+          return json({ items });
+        } catch {
+          return json({ items: [] });
+        }
       }
       if (path === '/api/status') {
         const cache = await env.SESSIONS.get('cache:kuma');
