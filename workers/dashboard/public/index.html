@@ -30,7 +30,7 @@ p{color:var(--text-dim);margin-bottom:24px;line-height:1.6}
 a.btn{display:inline-block;background:var(--primary);color:var(--bg);text-decoration:none;font-weight:600;padding:12px 28px;border-radius:var(--radius-sm);transition:var(--t-fast)}
 a.btn:hover{background:var(--primary-bright);transform:translateY(-2px)}
 /* ---- shell ---- */
-.shell{width:min(1080px,92vw);margin:0 auto;padding:28px 0 0}
+.shell{width:min(1080px,92vw);margin:0 auto;padding:28px 0 0;position:relative;z-index:1}
 .topbar{display:flex;justify-content:space-between;align-items:center;padding:14px 0 26px}
 .brand{font-family:'Fraunces','Inter',Georgia,serif;font-size:1.25rem;display:flex;align-items:center;gap:10px;color:inherit;text-decoration:none}
 .mark{color:var(--sage)}
@@ -126,11 +126,17 @@ h3{font-family:'Fraunces','Inter',Georgia,serif;font-size:1.05rem;font-weight:60
 img.svc-ico{object-fit:contain;padding:3px}
 .svc-name{font-size:.92rem;font-weight:600}
 .svc-blurb{font-size:.78rem;color:var(--text-dim)}
-/* ---- tier badge ---- */
-.tier-badge{display:inline-flex;align-items:center;gap:6px;padding:3px 10px;border-radius:999px;font-size:.72rem;font-weight:600;letter-spacing:.04em;text-transform:uppercase;vertical-align:middle}
-.tier-badge svg{width:11px;height:11px}
+/* ---- tier badge (phase 13: prominent site-style treatment) ---- */
+.tier-badge{display:inline-flex;align-items:center;gap:6px;padding:4px 12px;border-radius:999px;font-family:'Inter',sans-serif;font-size:.75rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;vertical-align:middle;cursor:default}
+.tier-badge svg{width:12px;height:12px}
+.tier-badge.lg{font-size:.85rem;padding:7px 16px;gap:8px;letter-spacing:.12em}
+.tier-badge.lg svg{width:14px;height:14px}
 .tier-sweetpea{background:rgba(217,168,108,.14);color:var(--gold);border:1px solid rgba(217,168,108,.45)}
 .tier-seedling{background:rgba(163,201,182,.13);color:var(--sage);border:1px solid rgba(163,201,182,.4)}
+.tier-line{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin:2px 0 6px}
+.tier-copy{font-size:.82rem;color:var(--text-dim);line-height:1.5}
+.tier-echo{margin-left:10px}
+.tier-echo .tier-badge{font-size:.66rem;padding:2px 9px}
 /* ---- phase 5: media rows ---- */
 .media-sec{grid-column:1/-1;display:flex;flex-direction:column;gap:18px}
 .media-sec:empty{display:none}
@@ -241,6 +247,38 @@ img.svc-guide-ico{object-fit:contain;padding:2px}
 .toast.ok{border-color:rgba(163,201,182,.55)}
 .toast.err{border-color:rgba(217,140,140,.55)}
 @media(max-width:760px){.ob-steps{grid-template-columns:1fr}.sgf{grid-template-columns:1fr}.sgf-actions button{width:100%}}
+/* ---- phase 13: same garden, indoors (atmosphere + brand port from the site) ---- */
+.aurora{position:fixed;inset:0;z-index:-1;pointer-events:none;overflow:hidden}
+.aurora::before,.aurora::after{content:'';position:absolute;border-radius:50%;filter:blur(70px)}
+.aurora::before{width:55vmax;height:55vmax;top:-18vmax;left:-12vmax;background:radial-gradient(circle at 30% 30%,rgba(143,175,181,.28),transparent 60%);opacity:.28;animation:auroraDrift 22s ease-in-out infinite alternate}
+.aurora::after{width:45vmax;height:45vmax;bottom:-16vmax;right:-10vmax;background:radial-gradient(circle at 60% 40%,rgba(163,201,182,.22),transparent 60%);opacity:.25;animation:auroraDrift 26s ease-in-out infinite alternate-reverse}
+@keyframes auroraDrift{0%{transform:translate3d(0,0,0) scale(1)}50%{transform:translate3d(3.5vmax,-2.5vmax,0) scale(1.08)}100%{transform:translate3d(-2.5vmax,1.5vmax,0) scale(.96)}}
+@media (prefers-color-scheme: light){.aurora::before{opacity:.14}.aurora::after{opacity:.125}}
+.grain-overlay{position:fixed;inset:0;z-index:2;pointer-events:none;opacity:.028;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
+.garden-pollen{position:fixed;inset:0;z-index:3;pointer-events:none;overflow:hidden}
+.garden-pollen span{position:absolute;border-radius:50%;background:radial-gradient(circle,rgba(163,201,182,.5),rgba(163,201,182,0));animation:pollenFloat linear infinite;opacity:0}
+@keyframes pollenFloat{0%{transform:translateY(110vh) translateX(0);opacity:0}10%{opacity:.6}90%{opacity:.4}100%{transform:translateY(-10vh) translateX(30px);opacity:0}}
+.ripple-strip{margin:14px auto 0;padding:0 20px;max-width:760px;font-family:ui-monospace,'Cascadia Mono','Courier New',monospace;font-size:10px;line-height:1.1;color:var(--text-faint);opacity:.55;text-align:center;user-select:none;white-space:pre;overflow:hidden}
+.vine-divider{display:flex;align-items:center;justify-content:center;gap:14px;margin:2px auto;max-width:720px;padding:0 20px;color:var(--sage);opacity:.6}
+.vine-divider::before,.vine-divider::after{content:'';flex:1;height:1px;background:linear-gradient(90deg,transparent,var(--border-primary),transparent)}
+.vine-divider svg{width:26px;height:26px}
+.portal-reveal{position:fixed;inset:0;z-index:0;display:flex;align-items:flex-end;justify-content:center;opacity:0;visibility:hidden;pointer-events:none;transition:opacity .3s ease,visibility .3s ease;overflow:hidden}
+.portal-reveal.armed{visibility:visible}
+.portal-stage{width:min(68vh,640px);margin-bottom:2vh;animation:portal-float 4s ease-in-out infinite;filter:drop-shadow(0 0 40px rgba(217,168,108,.18))}
+.portal-stage video{display:block;width:100%;height:auto;mix-blend-mode:screen;-webkit-mask-image:linear-gradient(to top,#000 82%,transparent 100%);mask-image:linear-gradient(to top,#000 82%,transparent 100%)}
+.portal-close{position:fixed;top:20px;right:24px;background:rgba(0,0,0,.5);border:1px solid rgba(255,255,255,.2);border-radius:50%;color:#fff;width:36px;height:36px;line-height:1;font-size:1.3rem;cursor:pointer;opacity:0;visibility:hidden;transition:opacity .2s,visibility .2s;z-index:100;pointer-events:none}
+body.portal-open .portal-close{opacity:.7;visibility:visible;pointer-events:auto}
+.portal-close:hover{opacity:1}
+.portal-spacer{height:0;transition:height .6s ease}
+.portal-spacer.armed{height:100vh}
+@keyframes portal-float{0%,100%{transform:translateY(0)}50%{transform:translateY(-12px)}}
+.eyebrow{display:block;font-size:.72rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--sage);margin-bottom:10px}
+@media (prefers-reduced-motion: reduce){
+.aurora::before,.aurora::after{animation:none}
+.garden-pollen{display:none}
+.portal-stage{animation:none}
+.ripple-strip{opacity:.4}
+}
 @media (prefers-reduced-motion: no-preference){
 html{scroll-behavior:smooth}
 @keyframes msp-in{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
@@ -323,8 +361,12 @@ input:focus-visible,select:focus-visible,textarea:focus-visible{border-radius:va
   *,*::before,*::after{animation-duration:.01ms !important;animation-iteration-count:1 !important;transition-duration:.01ms !important;scroll-behavior:auto !important}
 }
 </style></head><body>
+<div class="aurora" aria-hidden="true"></div>
+<div class="grain-overlay" aria-hidden="true"></div>
 <div id="app"><div class="card" id="gate"><a href="https://mysweetpea.cc" style="display:block;color:inherit;text-decoration:none"><img class="gate-logo" src="https://mysweetpea.cc/logo.svg" alt="MySweetPea logo"/></a><h1>MySweetPea</h1><p>Checking your session…</p></div></div>
 <div id="modal"><div class="mcard" id="mbody"></div></div>
+<div class="portal-reveal" id="portal-reveal" aria-hidden="true"><div class="portal-stage"><video loop muted playsinline preload="metadata"><source src="/videos/hermes-girl-orb.webm" type="video/webm"><source src="/videos/hermes-girl-orb.mp4" type="video/mp4"></video></div></div>
+<button class="portal-close" id="portal-close" type="button" aria-label="Close">&times;</button>
 <div id="toasts"></div>
 
 <div class="pal-backdrop" id="pal">
@@ -350,6 +392,27 @@ function toast(msg, opts) {
 function modal(html) { $('#mbody').innerHTML = html; $('#modal').classList.add('open'); }
 function closeModal() { $('#modal').classList.remove('open'); }
 $('#modal').addEventListener('click', e => { if (e.target.id === 'modal') closeModal(); });
+
+// ===== PHASE 13: garden pollen (site v37 port — pure CSS animations, generated spans) =====
+(function gardenPollen() {
+  let reduce = false;
+  try { reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (e) {}
+  if (reduce) return;
+  const wrap = document.createElement('div');
+  wrap.className = 'garden-pollen';
+  wrap.setAttribute('aria-hidden', 'true');
+  for (let i = 0; i < 14; i++) {
+    const s = document.createElement('span');
+    const size = 3 + Math.random() * 5;
+    s.style.width = size.toFixed(2) + 'px';
+    s.style.height = size.toFixed(2) + 'px';
+    s.style.left = (Math.random() * 100).toFixed(2) + '%';
+    s.style.animationDuration = (12 + Math.random() * 14).toFixed(2) + 's';
+    s.style.animationDelay = (Math.random() * 12).toFixed(2) + 's';
+    wrap.appendChild(s);
+  }
+  document.body.appendChild(wrap);
+})();
 
 // Popup ceremony helper (authentik-hosted, branded, deep-links back)
 async function revokeAll() {
@@ -590,20 +653,29 @@ function guideDetailHtml(key) {
     });
   };
 
-  const tierBadge = (t) => {
+  const TIER_COPY = {
+    sweetpea: 'Full garden access — every service, all features.',
+    seedling: 'Seedling access — core services included. Sweet Pea unlocks media & more.'
+  };
+  const tierBadge = (t, prominent) => {
     const tier = (t === 'sweetpea') ? 'sweetpea' : 'seedling';
     const ico = tier === 'sweetpea'
-      ? '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2C9 6 4 7 4 12c0 4.4 3.6 8 8 8s8-3.6 8-8c0-5-5-6-8-10z"/></svg>'
+      ? '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M6.05 8.05c-2.73 2.73-2.73 7.15-.02 9.88 1.47-3.4 4.09-6.24 7.36-7.93-2.77 2.34-4.71 5.61-5.39 9.32 2.6 1.23 5.8.78 7.95-1.37C19.43 14.47 20 4 20 4S9.53 4.57 6.05 8.05z"/></svg>'
       : '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2v10m0 0c0 4-3 7-7 7 0-4 3-7 7-7zm0 0c0 4 3 7 7 7 0-4-3-7-7-7z"/></svg>';
     const label = tier === 'sweetpea' ? 'Sweet Pea' : 'Seedling';
-    return '<span class="tier-badge tier-' + tier + '">' + ico + label + '</span>';
+    return '<span class="tier-badge tier-' + tier + (prominent ? ' lg' : '') + '" title="There is more in the garden…">' + ico + label + '</span>';
   };
   window.tierBadge = tierBadge;
 
   window.applyProfile = () => {
-    const hn = $('#hero-name'); if (hn) { hn.textContent = me.name || me.username; hn.insertAdjacentHTML('afterend', tierBadge(me.tier)); }
+    const hn = $('#hero-name'); if (hn) hn.textContent = me.name || me.username;
+    const ht = document.getElementById('hero-tier');
+    if (ht) ht.innerHTML = tierBadge(me.tier, true) + '<span class="tier-copy">' + esc(TIER_COPY[(me.tier === 'sweetpea') ? 'sweetpea' : 'seedling']) + '</span>';
     const hs = $('#hero-sub'); if (hs) hs.innerHTML = esc(me.email) + ' &middot; @' + esc(me.username);
-    const tn = document.querySelector('.who .name'); if (tn) { tn.textContent = me.name || me.username; tn.insertAdjacentHTML('afterend', tierBadge(me.tier)); }
+    const tn = document.querySelector('.who .name'); if (tn) tn.textContent = me.name || me.username;
+    const wt = document.getElementById('who-tier'); if (wt) wt.innerHTML = tierBadge(me.tier);
+    const es = document.getElementById('tier-echo-services'); if (es) es.innerHTML = tierBadge(me.tier);
+    const eg = document.getElementById('tier-echo-guides'); if (eg) eg.innerHTML = tierBadge(me.tier);
     const an = $('#acct-name'); if (an) an.textContent = me.name || me.username;
     const ae = $('#acct-email'); if (ae) ae.textContent = me.email;
     window.setAvatars();
@@ -624,27 +696,30 @@ function guideDetailHtml(key) {
   app.innerHTML =
     '<div class="shell">' +
     '<header class="topbar"><a class="brand" href="https://mysweetpea.cc"><img src="https://mysweetpea.cc/logo.svg" alt="MySweetPea logo"/>MySweet<span class="mark">Pea</span></a>' +
-    '<div class="who"><span class="name">' + esc(me.name || me.username) + '</span><button class="mini" id="pal-open" title="Command palette (Ctrl+K)" style="margin-right:10px">⌘K</button><a class="out" href="/auth/logout">Sign out</a></div></header>' +
+    '<div class="who"><span class="name">' + esc(me.name || me.username) + '</span><span id="who-tier"></span><button class="mini" id="pal-open" title="Command palette (Ctrl+K)" style="margin-right:10px">⌘K</button><a class="out" href="/auth/logout">Sign out</a></div></header>' +
     '<nav class="tabs" id="tabs" role="tablist" aria-label="Dashboard sections">' +
     TABS.map((t) => '<button type="button" class="tab" id="tab-' + t + '" data-tab="' + t + '" role="tab" aria-controls="panel-' + t + '" aria-selected="false">' + TAB_LABELS[t] + (t === 'security' ? '<span class="tab-dot" aria-hidden="true"></span>' : '') + '</button>').join('') +
     '</nav>' +
     '<main class="grid">' +
     '<div class="tabpanel" id="panel-home" role="tabpanel" aria-labelledby="tab-home">' + obHtml +
     '<section class="card hero" style="--i:0"><div class="avatar" id="hero-avatar" onclick="openAvatarModal()" title="Change profile picture">' + avatarInner() + CAM + '</div><div>' +
-    '<h2 id="hero-name">' + esc(me.name || me.username) + '</h2><p class="dim" id="hero-sub">' + esc(me.email) + ' &middot; @' + esc(me.username) + '</p>' +
+    '<h2 id="hero-name">' + esc(me.name || me.username) + '</h2><div class="tier-line" id="hero-tier"></div><p class="dim" id="hero-sub">' + esc(me.email) + ' &middot; @' + esc(me.username) + '</p>' +
     '<span class="pill ok">Account active</span></div></section>' +
+    '<p class="eyebrow">At a glance</p>' +
     '<div class="stats" id="stats" style="--i:1"></div>' +
+    '<div class="vine-divider" aria-hidden="true"></div>' +
     '<section id="sec-media" class="media-sec" style="--i:2"></section>' +
-    '<section class="card" id="sec-status" style="--i:3"><h3>Service status</h3><div class="skel"></div></section>' +
+    '<section class="card" id="sec-status" style="--i:3"><p class="eyebrow">Service status</p><h3>Service status</h3><div class="skel"></div></section>' +
     '</div>' +
     '<div class="tabpanel" id="panel-media" role="tabpanel" aria-labelledby="tab-media">' +
     '<section id="sec-media-m" class="media-sec"></section>' +
-    '<section class="card" id="sec-library"><h3>Library</h3><div id="lib-body"><div class="skel"></div></div><p class="dim lib-cap">Library totals — live from Jellyfin</p></section>' +
+    '<section class="card" id="sec-library"><p class="eyebrow">Your library</p><h3>Library</h3><div id="lib-body"><div class="skel"></div></div><p class="dim lib-cap">Library totals — live from Jellyfin</p></section>' +
     '</div>' +
     '<div class="tabpanel" id="panel-services" role="tabpanel" aria-labelledby="tab-services">' +
-    '<section class="card" id="sec-services"><h3>Services</h3><div class="svc-grid" id="svc-grid"></div></section>' +
-    '<section class="card" id="sec-uptime"><h3>Uptime — last 24h</h3><div class="skel"></div></section>' +
-    '<section class="card" id="sec-suggest"><h3>Missing something?</h3>' +
+    '<section class="card" id="sec-services"><p class="eyebrow">Services</p><h3>Services<span class="tier-echo" id="tier-echo-services"></span></h3><div class="svc-grid" id="svc-grid"></div></section>' +
+    '<section class="card" id="sec-uptime"><p class="eyebrow">Uptime</p><h3>Uptime — last 24h</h3><div class="skel"></div></section>' +
+    '<div class="vine-divider" aria-hidden="true"></div>' +
+    '<section class="card" id="sec-suggest"><p class="eyebrow">Shape the garden</p><h3>Missing something?</h3>' +
     '<p class="dim sgf-note"><b>Before you suggest:</b> we look for open source, self-hostable, privacy-focused, community-driven services — and we only add ones we don&rsquo;t already provide.</p>' +
     '<form id="sgf" class="sgf" novalidate>' +
     '<div><label for="sg-name">Service name<span class="req">required</span></label><input type="text" id="sg-name" maxlength="60" placeholder="e.g., Mastodon, Gitea" autocomplete="off"/><div class="hint" id="sg-name-hint">Please enter a service name (min 2 characters).</div></div>' +
@@ -657,17 +732,17 @@ function guideDetailHtml(key) {
     '</form></section>' +
     '</div>' +
     '<div class="tabpanel" id="panel-guides" role="tabpanel" aria-labelledby="tab-guides">' +
-    '<section class="card" id="sec-guides"><h3>Setup guides</h3><p class="dim" style="margin-bottom:16px">How to get started with each MySweetPea service — step by step.</p>' +
+    '<section class="card" id="sec-guides"><p class="eyebrow">Setup guides</p><h3>Setup guides<span class="tier-echo" id="tier-echo-guides"></span></h3><pre class="ripple-strip" id="ripple-strip-guides" aria-hidden="true"></pre><p class="dim" style="margin:10px 0 16px">How to get started with each MySweetPea service — step by step.</p>' +
     '<div class="svc-guide"><div class="svc-guide-nav" id="guide-nav" role="group" aria-label="Choose a service"></div><div class="svc-guide-detail" id="guide-body" aria-live="polite"></div></div></section>' +
     '</div>' +
     '<div class="tabpanel" id="panel-security" role="tabpanel" aria-labelledby="tab-security">' +
-    '<section class="card" id="sec-security"><h3>Security</h3><div class="skel"></div></section>' +
-    '<section class="card" id="sec-sessions"><h3>Your sessions</h3><div class="skel"></div></section>' +
-    '<section class="card" id="sec-activity" style="--i:5"><h3>Recent activity</h3><div class="skel"></div></section>' +
-    '<section class="card" id="sec-apps"><h3>Connected apps</h3><div class="skel"></div></section>' +
+    '<section class="card" id="sec-security"><p class="eyebrow">Security</p><h3>Security</h3><div class="skel"></div></section>' +
+    '<section class="card" id="sec-sessions"><p class="eyebrow">Sessions</p><h3>Your sessions</h3><div class="skel"></div></section>' +
+    '<section class="card" id="sec-activity" style="--i:5"><p class="eyebrow">Recent activity</p><h3>Recent activity</h3><div class="skel"></div></section>' +
+    '<section class="card" id="sec-apps"><p class="eyebrow">Connected apps</p><h3>Connected apps</h3><div class="skel"></div></section>' +
     '</div>' +
     '<div class="tabpanel" id="panel-account" role="tabpanel" aria-labelledby="tab-account">' +
-    '<section class="card" id="sec-account"><h3>Account</h3>' +
+    '<section class="card" id="sec-account"><p class="eyebrow">Your account</p><h3>Account</h3>' +
     '<div style="display:flex;gap:20px;align-items:center;flex-wrap:wrap">' +
     '<div class="avatar" id="acct-avatar" onclick="openAvatarModal()" title="Change profile picture">' + avatarInner() + CAM + '</div>' +
     '<div style="flex:1;min-width:220px">' +
@@ -677,8 +752,160 @@ function guideDetailHtml(key) {
     '</div>' +
     '<button class="mini primary" onclick="openProfileModal()">Edit profile</button>' +
     '</div></section>' +
+    '<pre class="ripple-strip" id="ripple-strip" aria-hidden="true"></pre>' +
     '</div>' +
-    '</main><footer class="foot"><img src="https://mysweetpea.cc/logo.svg" alt=""/> <a href="https://mysweetpea.cc">mysweetpea.cc</a> &middot; homelab dashboard</footer></div>';
+    '</main><footer class="foot"><img src="https://mysweetpea.cc/logo.svg" alt=""/> <a href="https://mysweetpea.cc">mysweetpea.cc</a> &middot; homelab dashboard</footer>' +
+    '<div class="portal-spacer" id="portal-spacer" aria-hidden="true"></div></div>';
+
+  // tier badges everywhere (hero, topbar, services/guides echoes) — initial render
+  window.applyProfile();
+
+  // ===== PHASE 13: vine dividers (site v37 SVG, verbatim) =====
+  (function injectVines() {
+    const vineSvg = '<svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">' +
+      '<path d="M32 6C22 10 16 20 18 32c2 12 12 20 14 26" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>' +
+      '<path d="M32 6c10 4 16 14 14 26-2 12-12 20-14 26" stroke="currentColor" stroke-width="2" stroke-linecap="round" opacity=".5"/>' +
+      '<path d="M20 18c-4-1-7-5-6-9 4 0 7 4 6 9Z" fill="currentColor" opacity=".6"/>' +
+      '<path d="M19 26c-4-1-7-5-6-9 4 0 7 4 6 9Z" fill="currentColor" opacity=".5"/>' +
+      '<path d="M19 34c-4-1-7-5-6-9 4 0 7 4 6 9Z" fill="currentColor" opacity=".4"/>' +
+      '<path d="M44 18c4-1 7-5 6-9-4 0-7 4-6 9Z" fill="currentColor" opacity=".6"/>' +
+      '<path d="M45 26c4-1 7-5 6-9-4 0-7 4-6 9Z" fill="currentColor" opacity=".5"/>' +
+      '<path d="M45 34c4-1 7-5 6-9-4 0-7 4-6 9Z" fill="currentColor" opacity=".4"/>' +
+      '<path d="M18 32c-5-1-8-5-7-9" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" opacity=".6"/>' +
+      '<path d="M46 32c5-1 8-5 7-9" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" opacity=".6"/>' +
+      '<circle cx="32" cy="32" r="3" fill="currentColor" opacity=".8"/>' +
+      '<circle cx="32" cy="32" r="5.5" fill="none" stroke="currentColor" stroke-width="1" opacity=".4"/>' +
+      '</svg>';
+    document.querySelectorAll('.vine-divider').forEach((el) => { el.innerHTML = vineSvg; });
+  })();
+
+  // ===== PHASE 13: asciiRipple — garden ASCII wave strip (Bayer-dithered, rAF @100ms) =====
+  (function initAsciiRipple() {
+    const strips = Array.prototype.slice.call(document.querySelectorAll('.ripple-strip'));
+    if (!strips.length) return;
+    const RAMP = ' .:-=+xX#8@';
+    const BAYER = [[0, 8, 2, 10], [12, 4, 14, 6], [3, 11, 1, 9], [15, 7, 13, 5]];
+    const ROWS = 6;
+    let reduce = false;
+    try { reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (e) {}
+    const state = strips.map((el) => ({ el: el, cols: 0, visible: true }));
+    function wave(t, cols) {
+      const cx = (cols - 1) / 2, cy = (ROWS - 1) / 2;
+      const maxD = Math.sqrt(cx * cx + cy * cy * 4.84) || 1;
+      const lines = [];
+      for (let y = 0; y < ROWS; y++) {
+        let line = '';
+        for (let x = 0; x < cols; x++) {
+          const dx = x - cx, dy = (y - cy) * 2.2;
+          const dist = Math.sqrt(dx * dx + dy * dy);
+          const env = Math.max(0, 1 - dist / maxD);
+          const v = Math.pow(0.5 + 0.5 * Math.sin(dist * 0.3 - t * 0.35), 3.5) * env;
+          const b = BAYER[y & 3][x & 3] / 16;
+          const lv = Math.min(RAMP.length - 1, Math.max(0, Math.floor(v * (RAMP.length - 1) + b)));
+          line += RAMP[lv];
+        }
+        lines.push(line);
+      }
+      return lines.join('\n');
+    }
+    function rebuild() {
+      state.forEach((s) => {
+        const w = Math.max(240, (s.el.clientWidth || 760) - 40);
+        s.cols = Math.max(40, Math.min(120, Math.floor(w / 6)));
+      });
+    }
+    function paint(t) {
+      state.forEach((s) => { if (s.cols) s.el.textContent = wave(t, s.cols); });
+    }
+    rebuild();
+    paint(0);
+    if (reduce) return; // one static frame only
+    let raf = 0, last = -1000, rt = 0;
+    const anyVisible = () => state.some((s) => s.visible);
+    function tick(now) {
+      raf = 0;
+      if (document.hidden || !anyVisible()) return;
+      if (now - last >= 100) { last = now; paint(now / 1000); }
+      raf = requestAnimationFrame(tick);
+    }
+    function start() { if (!raf && !document.hidden && anyVisible()) raf = requestAnimationFrame(tick); }
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach((en) => {
+        const s = state.find((x) => x.el === en.target);
+        if (s) { s.visible = en.isIntersecting; if (en.isIntersecting) start(); }
+      });
+    }, { threshold: 0 });
+    state.forEach((s) => io.observe(s.el));
+    document.addEventListener('visibilitychange', () => { if (!document.hidden) start(); });
+    window.addEventListener('resize', () => {
+      clearTimeout(rt);
+      rt = setTimeout(() => { rebuild(); }, 200);
+    });
+    start();
+  })();
+
+  // ===== PHASE 13: moon-girl portal easter egg (site v47 mechanism, tier-badge trigger) =====
+  (function initPortal() {
+    const portal = document.getElementById('portal-reveal');
+    const closeBtn = document.getElementById('portal-close');
+    const spacer = document.getElementById('portal-spacer');
+    if (!portal || !closeBtn || !spacer) return;
+    let reduce = false;
+    try { reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (e) {}
+    if (reduce) return; // the whole easter egg is skipped under reduced motion
+    const video = portal.querySelector('video');
+    let armed = false, open = false;
+    function setOpacity(o) {
+      portal.style.opacity = String(o);
+      if (o > 0.98 && !open) {
+        open = true;
+        portal.classList.add('open');
+        portal.setAttribute('aria-hidden', 'false');
+        document.body.classList.add('portal-open');
+        if (video && video.paused) { video.play().catch(function () {}); }
+      } else if (o <= 0.98 && open) {
+        open = false;
+        portal.classList.remove('open');
+        portal.setAttribute('aria-hidden', 'true');
+        document.body.classList.remove('portal-open');
+        if (video) video.pause();
+      }
+    }
+    function onScroll() {
+      if (!armed) return;
+      const vh = window.innerHeight;
+      const top = spacer.getBoundingClientRect().top;
+      const o = Math.max(0, Math.min(1, (vh - top) / vh));
+      setOpacity(o);
+    }
+    function close() {
+      if (!armed && !open) return;
+      armed = false; open = false;
+      portal.classList.remove('open', 'armed');
+      portal.setAttribute('aria-hidden', 'true');
+      portal.style.opacity = '';
+      document.body.classList.remove('portal-open');
+      spacer.classList.remove('armed');
+      if (video) video.pause();
+      document.removeEventListener('scroll', onScroll, { passive: true });
+      window.removeEventListener('resize', onScroll);
+    }
+    closeBtn.addEventListener('click', close);
+    document.addEventListener('keydown', (e) => { if (e.key === 'Escape') close(); });
+    document.addEventListener('click', (e) => {
+      const badge = e.target && e.target.closest ? e.target.closest('.tier-badge') : null;
+      if (!badge) return;
+      if (armed || open) { close(); return; }
+      armed = true;
+      portal.classList.add('armed');
+      portal.setAttribute('aria-hidden', 'false');
+      spacer.classList.add('armed');
+      if (video && video.paused) { video.play().catch(function () {}); }
+      document.addEventListener('scroll', onScroll, { passive: true });
+      window.addEventListener('resize', onScroll);
+      onScroll();
+    });
+  })();
 
   // ===== PHASE 9: TAB WIRING (click, arrows, deep-link, remember) =====
   TABS.forEach((t) => {
@@ -822,8 +1049,8 @@ function guideDetailHtml(key) {
       return h + '</a>';
     };
     let html = '';
-    if ((cont.items || []).length) html += '<section class="card"><h3>Continue Watching</h3><div class="media-row">' + cont.items.map(it => posterCard(it, { progress: true })).join('') + '</div></section>';
-    if ((latest.items || []).length) html += '<section class="card"><h3>Recently Added</h3><div class="media-row">' + latest.items.map(it => posterCard(it, { badge: true })).join('') + '</div></section>';
+    if ((cont.items || []).length) html += '<section class="card"><p class="eyebrow">Your library</p><h3>Continue Watching</h3><div class="media-row">' + cont.items.map(it => posterCard(it, { progress: true })).join('') + '</div></section>';
+    if ((latest.items || []).length) html += '<section class="card"><p class="eyebrow">Your library</p><h3>Recently Added</h3><div class="media-row">' + latest.items.map(it => posterCard(it, { badge: true })).join('') + '</div></section>';
     document.querySelectorAll('.media-sec').forEach((s) => { s.innerHTML = html; });
   })();
 
@@ -953,9 +1180,9 @@ function guideDetailHtml(key) {
   const renderUptime = (d) => {
     if (!upHost) return;
     const rows = uptimeRows(((d && d.monitors) || []).filter((m) => m && Array.isArray(m.beats) && m.beats.length));
-    if (!rows.length) { upHost.innerHTML = '<h3>Uptime — last 24h</h3><p class="dim">No uptime data right now.</p>'; return; }
+    if (!rows.length) { upHost.innerHTML = '<p class="eyebrow">Uptime</p><h3>Uptime — last 24h</h3><p class="dim">No uptime data right now.</p>'; return; }
     const shown = rows.slice(0, 20);
-    let html = '<h3>Uptime — last 24h</h3>';
+    let html = '<p class="eyebrow">Uptime</p><h3>Uptime — last 24h</h3>';
     let lastGroup = null;
     shown.forEach((r) => {
       if (r.group && r.group !== lastGroup) { html += '<div class="up-group">' + esc(r.group) + '</div>'; lastGroup = r.group; }
@@ -964,7 +1191,7 @@ function guideDetailHtml(key) {
     if (rows.length > shown.length) html += '<p class="dim up-more">+' + (rows.length - shown.length) + ' more</p>';
     upHost.innerHTML = html;
   };
-  fetch('/api/status/extended').then(r => r.json()).then(renderUptime).catch(() => { if (upHost) upHost.innerHTML = '<h3>Uptime — last 24h</h3><p class="dim">Unavailable.</p>'; });
+  fetch('/api/status/extended').then(r => r.json()).then(renderUptime).catch(() => { if (upHost) upHost.innerHTML = '<p class="eyebrow">Uptime</p><h3>Uptime — last 24h</h3><p class="dim">Unavailable.</p>'; });
 
   // ===== SECURITY CENTER (checklist + actions) =====
   let devices = { totp: [], webauthn: [], static: [] };
@@ -982,7 +1209,7 @@ function guideDetailHtml(key) {
   const pct = Math.round(doneCount / items.length * 100);
   const C = 2 * Math.PI * 24;
   const sec = $('#sec-security');
-  sec.innerHTML = '<h3>Security</h3><div style="display:flex;gap:20px;align-items:center">' +
+  sec.innerHTML = '<p class="eyebrow">Security</p><h3>Security</h3><div style="display:flex;gap:20px;align-items:center">' +
     '<svg class="ring" viewBox="0 0 54 54"><circle class="bg" cx="27" cy="27" r="24"/><circle class="fg" cx="27" cy="27" r="24" stroke-dasharray="' + C + '" stroke-dashoffset="' + (C * (1 - pct / 100)) + '"/><text x="27" y="31">' + pct + '%</text></svg>' +
     '<div class="sec-checklist" style="flex:1">' +
     items.map(i => '<div class="check ' + (i.done ? 'done' : 'todo') + '"><span class="ico">' + (i.done ? '&#10003;' : '!') + '</span><span class="label">' + esc(i.label) + '</span>' +
@@ -1013,12 +1240,12 @@ function guideDetailHtml(key) {
   // ===== STATUS =====
   fetch('/api/status').then(r => r.json()).then(d => {
     const el = $('#sec-status'); const mons = (d && d.monitors) || [];
-    if (!mons.length) { el.innerHTML = '<h3>Service status</h3><p class="dim">No status data.</p>'; return; }
-    el.innerHTML = '<h3>Service status</h3>' + mons.slice(0, 8).map(m => {
+    if (!mons.length) { el.innerHTML = '<p class="eyebrow">Service status</p><h3>Service status</h3><p class="dim">No status data.</p>'; return; }
+    el.innerHTML = '<p class="eyebrow">Service status</p><h3>Service status</h3>' + mons.slice(0, 8).map(m => {
       const up = (m.uptime24h == null ? 100 : m.uptime24h) > 50;
       return '<div class="row"><div class="left"><span><span class="dot ' + (up ? 'ok' : 'down') + '"></span>' + esc(m.name) + '</span></div><span class="dim">' + Math.round(m.uptime24h || 0) + '%</span></div>';
     }).join('');
-  }).catch(() => { $('#sec-status').innerHTML = '<h3>Service status</h3><p class="dim">Unavailable.</p>'; });
+  }).catch(() => { $('#sec-status').innerHTML = '<p class="eyebrow">Service status</p><h3>Service status</h3><p class="dim">Unavailable.</p>'; });
 
   // ===== RECENT ACTIVITY (audit feed) =====
   const ACT_LABEL = { login: 'Signed in', logout: 'Signed out', session_revoked: 'Session revoked',
@@ -1028,21 +1255,21 @@ function guideDetailHtml(key) {
   fetch('/api/audit').then(r => r.ok ? r.json() : []).then(list => {
     const el = $('#sec-activity');
     if (!el) return;
-    if (!Array.isArray(list) || !list.length) { el.innerHTML = '<h3>Recent activity</h3><p class="dim">No activity recorded yet.</p>'; return; }
-    el.innerHTML = '<h3>Recent activity</h3>' + list.slice(0, 10).map(a => {
+    if (!Array.isArray(list) || !list.length) { el.innerHTML = '<p class="eyebrow">Recent activity</p><h3>Recent activity</h3><p class="dim">No activity recorded yet.</p>'; return; }
+    el.innerHTML = '<p class="eyebrow">Recent activity</p><h3>Recent activity</h3>' + list.slice(0, 10).map(a => {
       const d = new Date(a.t || a.ts || Date.now());
       const when = d.toLocaleDateString(undefined, { month: 'short', day: 'numeric' }) + ' · ' + d.toLocaleTimeString(undefined, { hour: '2-digit', minute: '2-digit' });
       const label = ACT_LABEL[a.event] || a.event;
       const detail = a.ip ? '<span class="dim"> · ' + esc(a.ip) + '</span>' : '';
       return '<div class="row"><div class="left"><b>' + esc(label) + '</b><span class="dim">' + esc(when) + detail + '</span></div></div>';
     }).join('');
-  }).catch(() => { const el = $('#sec-activity'); if (el) el.innerHTML = '<h3>Recent activity</h3><p class="dim">Unavailable.</p>'; });
+  }).catch(() => { const el = $('#sec-activity'); if (el) el.innerHTML = '<p class="eyebrow">Recent activity</p><h3>Recent activity</h3><p class="dim">Unavailable.</p>'; });
 
   // ===== SESSIONS =====
   fetch('/api/sessions').then(r => r.json()).then(d => {
     const el = $('#sec-sessions'); const list = (d && d.results) || [];
-    if (!list.length) { el.innerHTML = '<h3>Your sessions</h3><p class="dim">No sessions found.</p>'; return; }
-    el.innerHTML = '<h3>Your sessions</h3>' + list.slice(0, 6).map(s => {
+    if (!list.length) { el.innerHTML = '<p class="eyebrow">Sessions</p><h3>Your sessions</h3><p class="dim">No sessions found.</p>'; return; }
+    el.innerHTML = '<p class="eyebrow">Sessions</p><h3>Your sessions</h3>' + list.slice(0, 6).map(s => {
       const dev = (s.current_session ? 'This device' : ((s.agent && (s.agent.device || s.agent.os)) || 'Session'));
       return '<div class="row"><div class="left"><b>' + esc(dev) + '</b><span class="dim">' + esc(s.last_ip || '') + '</span></div>' +
         (s.current_session ? '<span class="pill ok">current</span>' : '<button class="mini" data-sid="' + esc(s.uuid) + '">Revoke</button>') + '</div>';
@@ -1064,14 +1291,14 @@ function guideDetailHtml(key) {
         setTimeout(() => location.reload(), 900);
       };
     };
-  }).catch(() => { $('#sec-sessions').innerHTML = '<h3>Your sessions</h3><p class="dim">Unavailable.</p>'; });
+  }).catch(() => { $('#sec-sessions').innerHTML = '<p class="eyebrow">Sessions</p><h3>Your sessions</h3><p class="dim">Unavailable.</p>'; });
 
   // ===== CONNECTED APPS =====
   fetch('/api/consents').then(r => r.json()).then(d => {
     const el = $('#sec-apps'); const list = (d && d.results) || [];
-    if (!list.length) { el.innerHTML = '<h3>Connected apps</h3><p class="dim">No app consents yet.</p>'; return; }
-    el.innerHTML = '<h3>Connected apps</h3>' + list.map(c => '<div class="row"><div class="left"><b>' + esc((c.application && c.application.name) || 'Application') + '</b></div><span class="dim">' + new Date(c.expires || Date.now()).toLocaleDateString() + '</span></div>').join('');
-  }).catch(() => { $('#sec-apps').innerHTML = '<h3>Connected apps</h3><p class="dim">Unavailable.</p>'; });
+    if (!list.length) { el.innerHTML = '<p class="eyebrow">Connected apps</p><h3>Connected apps</h3><p class="dim">No app consents yet.</p>'; return; }
+    el.innerHTML = '<p class="eyebrow">Connected apps</p><h3>Connected apps</h3>' + list.map(c => '<div class="row"><div class="left"><b>' + esc((c.application && c.application.name) || 'Application') + '</b></div><span class="dim">' + new Date(c.expires || Date.now()).toLocaleDateString() + '</span></div>').join('');
+  }).catch(() => { $('#sec-apps').innerHTML = '<p class="eyebrow">Connected apps</p><h3>Connected apps</h3><p class="dim">Unavailable.</p>'; });
 })();
 </script>
 <script>
