@@ -9,20 +9,20 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=Fraunces:opsz,wght@9..144,500;9..144,600&amp;display=swap">
 <style>
-:root{--bg:#0C1316;--primary:#8FAFB5;--primary-bright:#C5D5D8;--sage:#A3C9B6;--gold:#D9A86C;
---text:#EDF3F4;--text-dim:#A9BEC2;--card:rgba(19,30,34,.55);--radius:18px;--radius-sm:12px;--error:#D98C8C}
+:root{--bg:#0C1316;--primary:#8FAFB5;--primary-dim:#6B9AA6;--primary-bright:#C5D5D8;--ice:#EEF2F3;--sage:#A3C9B6;--slate:#85929E;--gold:#D9A86C;
+--text:#EDF3F4;--text-dim:#A9BEC2;--text-faint:#74878C;--border:rgba(143,175,181,.09);--border-primary:rgba(143,175,181,.28);--card-bg:rgba(19,30,34,.55);--card:rgba(19,30,34,.55);--radius:18px;--radius-sm:12px;--transition:.35s cubic-bezier(.4,0,.2,1);--error:#D98C8C;--success:#A3C9B6}
 *{margin:0;padding:0;box-sizing:border-box}
-body{background:var(--bg);color:var(--text);font-family:Inter,system-ui,sans-serif;min-height:100vh}
+body{background:var(--bg);color:var(--text);font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-serif;min-height:100vh}
 #app{display:flex;align-items:center;justify-content:center;min-height:100vh}
 .card{background:var(--card);backdrop-filter:blur(16px);border:1px solid rgba(143,175,181,.09);border-radius:var(--radius);padding:40px 44px}
-h1{font-family:Fraunces,Georgia,serif;font-weight:600;font-size:1.8rem;margin-bottom:8px}
+h1{font-family:'Fraunces','Inter',Georgia,serif;font-weight:600;font-size:1.8rem;margin-bottom:8px}
 p{color:var(--text-dim);margin-bottom:24px;line-height:1.6}
 a.btn{display:inline-block;background:var(--primary);color:var(--bg);text-decoration:none;font-weight:600;padding:12px 28px;border-radius:var(--radius-sm);transition:.35s cubic-bezier(.4,0,.2,1)}
 a.btn:hover{background:var(--primary-bright);transform:translateY(-2px)}
 /* ---- shell ---- */
 .shell{width:min(1080px,92vw);margin:0 auto;padding:28px 0 0}
 .topbar{display:flex;justify-content:space-between;align-items:center;padding:14px 0 26px}
-.brand{font-family:Fraunces,Georgia,serif;font-size:1.25rem;display:flex;align-items:center;gap:10px;color:inherit;text-decoration:none}
+.brand{font-family:'Fraunces','Inter',Georgia,serif;font-size:1.25rem;display:flex;align-items:center;gap:10px;color:inherit;text-decoration:none}
 .mark{color:var(--sage)}
 .who{display:flex;align-items:center;gap:14px}
 .name{color:var(--text-dim);font-size:.95rem}
@@ -31,8 +31,8 @@ a.btn:hover{background:var(--primary-bright);transform:translateY(-2px)}
 .grid{display:grid;grid-template-columns:repeat(2,1fr);gap:18px}
 .hero{display:flex;gap:22px;align-items:center;grid-column:1 / -1}
 .avatar{width:72px;height:72px;border-radius:50%;background:linear-gradient(135deg,var(--primary),var(--sage));display:flex;align-items:center;justify-content:center;font-size:1.5rem;font-weight:700;color:var(--bg);flex:none}
-h2{font-family:Fraunces,Georgia,serif;font-weight:600;margin-bottom:2px}
-h3{font-family:Fraunces,Georgia,serif;font-size:1.05rem;font-weight:600;margin-bottom:10px;letter-spacing:.01em}
+h2{font-family:'Fraunces','Inter',Georgia,serif;font-weight:600;margin-bottom:2px}
+h3{font-family:'Fraunces','Inter',Georgia,serif;font-size:1.05rem;font-weight:600;margin-bottom:10px;letter-spacing:.01em}
 .dim{color:var(--text-dim);font-size:.9rem}
 .pill{display:inline-block;font-size:.75rem;padding:3px 10px;border-radius:99px;margin-top:8px}
 .pill.ok{background:rgba(163,201,182,.15);color:var(--sage)}
@@ -104,7 +104,7 @@ h3{font-family:Fraunces,Georgia,serif;font-size:1.05rem;font-weight:600;margin-b
 .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin:18px 0;grid-column:1/-1}
 @media(max-width:760px){.stats{grid-template-columns:repeat(2,1fr)}}
 .stat{background:var(--card);backdrop-filter:blur(16px);border:1px solid rgba(143,175,181,.09);border-radius:var(--radius-sm);padding:16px 18px}
-.stat .n{font-family:Fraunces,Georgia,serif;font-size:1.6rem;font-weight:600;color:var(--primary-bright)}
+.stat .n{font-family:'Fraunces','Inter',Georgia,serif;font-size:1.6rem;font-weight:600;color:var(--primary-bright)}
 .stat .l{font-size:.68rem;color:var(--text-dim);margin-top:4px;letter-spacing:.08em;text-transform:uppercase}
 .toast{position:relative}
 .toast .undo{margin-left:14px;color:var(--gold);cursor:pointer;font-weight:600;text-decoration:underline;text-underline-offset:3px}
@@ -187,7 +187,7 @@ section h3::before{content:"";display:inline-block;width:3px;height:18px;border-
 .svc-guide-ico{width:28px;height:28px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:.8rem;flex:none}
 img.svc-guide-ico{object-fit:contain;padding:2px}
 .svc-guide-detail{min-width:0}
-.svc-guide-title{font-family:Fraunces,Georgia,serif;font-weight:600;font-size:1.15rem;margin-bottom:2px}
+.svc-guide-title{font-family:'Fraunces','Inter',Georgia,serif;font-weight:600;font-size:1.15rem;margin-bottom:2px}
 .svc-guide-intro{margin-bottom:14px}
 .svc-guide-step{display:flex;gap:14px;padding:12px 0;border-bottom:1px solid rgba(143,175,181,.08)}
 .svc-guide-step:last-child{border-bottom:0}
@@ -198,6 +198,39 @@ img.svc-guide-ico{object-fit:contain;padding:2px}
 .svc-guide-btn{display:inline-block;margin-top:9px;background:transparent;border:1px solid rgba(143,175,181,.4);color:var(--primary-bright);text-decoration:none;font-size:.8rem;font-weight:600;padding:5px 14px;border-radius:99px;transition:.35s cubic-bezier(.4,0,.2,1)}
 .svc-guide-btn:hover{border-color:var(--gold);color:var(--gold)}
 @media(max-width:760px){.svc-guide{grid-template-columns:1fr}.svc-guide-nav{flex-direction:row;overflow-x:auto;scrollbar-width:none;padding-bottom:4px}.svc-guide-nav::-webkit-scrollbar{display:none}.svc-guide-chip{width:auto;flex:none;white-space:nowrap}}
+/* ---- phase 12: get-started onboarding + suggest a service ---- */
+.ob-card{border-color:rgba(217,168,108,.22)}
+.ob-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px}
+.ob-x{background:transparent;border:0;color:var(--text-dim);font:inherit;font-size:1rem;line-height:1;cursor:pointer;padding:6px 8px;border-radius:8px;transition:.35s cubic-bezier(.4,0,.2,1)}
+.ob-x:hover{color:var(--text);background:rgba(143,175,181,.12)}
+.ob-steps{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:14px}
+.ob-step{display:flex;flex-direction:column;gap:7px}
+.ob-num{width:26px;height:26px;border-radius:50%;background:rgba(217,168,108,.16);color:var(--gold);display:flex;align-items:center;justify-content:center;font-size:.78rem;font-weight:700;flex:none}
+.ob-step b{font-size:.95rem;font-weight:600}
+.ob-step p{margin:0;font-size:.85rem;line-height:1.55}
+.ob-btn{align-self:flex-start;display:inline-block;background:transparent;border:1px solid rgba(143,175,181,.4);color:var(--primary-bright);text-decoration:none;font-family:inherit;font-size:.8rem;font-weight:600;padding:5px 14px;border-radius:99px;cursor:pointer;transition:.35s cubic-bezier(.4,0,.2,1)}
+.ob-btn:hover{border-color:var(--gold);color:var(--gold)}
+.sgf-note{margin:0 0 14px;font-size:.85rem;line-height:1.6}
+.sgf{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.sgf .full{grid-column:1/-1}
+.sgf label{display:block;font-size:.85rem;font-weight:600;margin-bottom:5px}
+.sgf .req{font-size:.62rem;color:var(--gold);letter-spacing:.06em;text-transform:uppercase;margin-left:6px}
+.sgf .opt{font-size:.62rem;color:var(--text-faint);letter-spacing:.06em;text-transform:uppercase;margin-left:6px}
+.sgf input,.sgf select,.sgf textarea{width:100%;background:#0C1316;border:1px solid rgba(143,175,181,.2);border-radius:10px;color:var(--text);padding:10px 13px;font:inherit;font-size:.92rem;outline:none;transition:border-color .25s}
+.sgf textarea{resize:vertical;min-height:84px}
+.sgf input:focus,.sgf select:focus,.sgf textarea:focus{border-color:var(--primary)}
+.sgf .valid{border-color:rgba(163,201,182,.55)}
+.sgf .invalid{border-color:rgba(217,140,140,.6)}
+.sgf .hint{font-size:.76rem;color:var(--text-dim);margin-top:4px}
+.sgf .hint.error{color:var(--error)}
+.sgf .hint.success{color:var(--sage)}
+.sgf-actions{display:flex;justify-content:flex-end}
+.sgf-submit{border:none;border-radius:10px;padding:10px 22px;font:inherit;font-size:.9rem;font-weight:600;cursor:pointer;background:var(--primary);color:var(--bg);transition:.35s cubic-bezier(.4,0,.2,1)}
+.sgf-submit:hover:not(:disabled){background:var(--primary-bright)}
+.sgf-submit:disabled{opacity:.55;cursor:wait}
+.toast.ok{border-color:rgba(163,201,182,.55)}
+.toast.err{border-color:rgba(217,140,140,.55)}
+@media(max-width:760px){.ob-steps{grid-template-columns:1fr}.sgf{grid-template-columns:1fr}.sgf-actions button{width:100%}}
 @media (prefers-reduced-motion: no-preference){
 html{scroll-behavior:smooth}
 @keyframes msp-in{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
@@ -255,7 +288,7 @@ const $ = (s) => document.querySelector(s);
 const esc = (x) => String(x == null ? '' : x).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 function toast(msg, opts) {
   // opts: { action: fn, label: 'Undo' } -> action button inside the toast
-  const t = document.createElement('div'); t.className = 'toast';
+  const t = document.createElement('div'); t.className = 'toast' + (opts && opts.ok ? ' ok' : '') + (opts && opts.err ? ' err' : '');
   t.innerHTML = '<span class="msg">' + esc(msg) + '</span>' + (opts && opts.action ? '<span class="undo">' + esc((opts && opts.label) || 'Undo') + '</span>' : '');
   if (opts && opts.action) t.querySelector('.undo').onclick = () => { t.remove(); opts.action(); };
   $('#toasts').appendChild(t);
@@ -522,6 +555,19 @@ function guideDetailHtml(key) {
     const ae = $('#acct-email'); if (ae) ae.textContent = me.email;
     window.setAvatars();
   };
+  // ===== PHASE 12: GET STARTED onboarding (dismissible, localStorage msp_onboarded) =====
+  let obHtml = '';
+  try {
+    if (localStorage.getItem('msp_onboarded') !== '1') obHtml =
+      '<section class="card ob-card" id="ob-card" style="--i:0">' +
+      '<div class="ob-head"><div><h3 style="margin-bottom:2px">Get started</h3><p class="dim" style="margin:0">Three quick steps to make yourself at home.</p></div>' +
+      '<button type="button" class="ob-x" id="ob-dismiss" aria-label="Dismiss getting started">&#10005;</button></div>' +
+      '<div class="ob-steps">' +
+      '<div class="ob-step"><span class="ob-num">1</span><b>Sign in</b><p>You&rsquo;re already in (this dashboard). Your account unlocks everything.</p></div>' +
+      '<div class="ob-step"><span class="ob-num">2</span><b>Set up your vault</b><p>Vaultwarden stores your passwords. Open Guides &rarr; Vaultwarden.</p><button type="button" class="ob-btn" id="ob-vault">Open the guide</button></div>' +
+      '<div class="ob-step"><span class="ob-num">3</span><b>Watch something</b><p>Jellyfin is your media home.</p><a class="ob-btn" href="https://media.mysweetpea.cc" target="_blank" rel="noopener noreferrer">Open Jellyfin</a></div>' +
+      '</div></section>';
+  } catch (e) {}
   app.innerHTML =
     '<div class="shell">' +
     '<header class="topbar"><a class="brand" href="https://mysweetpea.cc"><img src="https://mysweetpea.cc/logo.svg" alt="MySweetPea logo"/>MySweet<span class="mark">Pea</span></a>' +
@@ -530,7 +576,7 @@ function guideDetailHtml(key) {
     TABS.map((t) => '<button type="button" class="tab" id="tab-' + t + '" data-tab="' + t + '" role="tab" aria-controls="panel-' + t + '" aria-selected="false">' + TAB_LABELS[t] + (t === 'security' ? '<span class="tab-dot" aria-hidden="true"></span>' : '') + '</button>').join('') +
     '</nav>' +
     '<main class="grid">' +
-    '<div class="tabpanel" id="panel-home" role="tabpanel" aria-labelledby="tab-home">' +
+    '<div class="tabpanel" id="panel-home" role="tabpanel" aria-labelledby="tab-home">' + obHtml +
     '<section class="card hero" style="--i:0"><div class="avatar" id="hero-avatar" onclick="openAvatarModal()" title="Change profile picture">' + avatarInner() + CAM + '</div><div>' +
     '<h2 id="hero-name">' + esc(me.name || me.username) + '</h2><p class="dim" id="hero-sub">' + esc(me.email) + ' &middot; @' + esc(me.username) + '</p>' +
     '<span class="pill ok">Account active</span></div></section>' +
@@ -545,6 +591,17 @@ function guideDetailHtml(key) {
     '<div class="tabpanel" id="panel-services" role="tabpanel" aria-labelledby="tab-services">' +
     '<section class="card" id="sec-services"><h3>Services</h3><div class="svc-grid" id="svc-grid"></div></section>' +
     '<section class="card" id="sec-uptime"><h3>Uptime — last 24h</h3><div class="skel"></div></section>' +
+    '<section class="card" id="sec-suggest"><h3>Missing something?</h3>' +
+    '<p class="dim sgf-note"><b>Before you suggest:</b> we look for open source, self-hostable, privacy-focused, community-driven services — and we only add ones we don&rsquo;t already provide.</p>' +
+    '<form id="sgf" class="sgf" novalidate>' +
+    '<div><label for="sg-name">Service name<span class="req">required</span></label><input type="text" id="sg-name" maxlength="60" placeholder="e.g., Mastodon, Gitea" autocomplete="off"/><div class="hint" id="sg-name-hint">Please enter a service name (min 2 characters).</div></div>' +
+    '<div><label for="sg-url">Link<span class="opt">optional</span></label><input type="url" id="sg-url" maxlength="200" placeholder="https://github.com/..."/><div class="hint" id="sg-url-hint">Project website or GitHub repo, so we can evaluate it.</div></div>' +
+    '<div class="full"><label for="sg-category">Category<span class="req">required</span></label><select id="sg-category"><option value="">Select a category...</option><option value="media">Media &amp; Entertainment</option><option value="productivity">Productivity</option><option value="communication">Communication</option><option value="security">Security &amp; Privacy</option><option value="development">Development</option><option value="monitoring">Monitoring &amp; Analytics</option><option value="storage">File Storage &amp; Sync</option><option value="other">Other</option></select><div class="hint" id="sg-category-hint">Please select a category.</div></div>' +
+    '<div class="full"><label for="sg-reason">Why<span class="req">required</span></label><textarea id="sg-reason" maxlength="500" placeholder="Explain why this service would be valuable..."></textarea><div class="hint" id="sg-reason-hint">Please provide an explanation (min 10 characters).</div></div>' +
+    '<div><label for="sg-yourname">Your name<span class="opt">optional</span></label><input type="text" id="sg-yourname" maxlength="60" placeholder="Leave blank to submit anonymously." autocomplete="off"/></div>' +
+    '<div><label for="sg-youremail">Your email<span class="opt">optional</span></label><input type="email" id="sg-youremail" maxlength="120" placeholder="Only if you want us to follow up with you." autocomplete="off"/></div>' +
+    '<div class="full sgf-actions"><button type="submit" class="sgf-submit" id="sg-submit" disabled>Send suggestion</button></div>' +
+    '</form></section>' +
     '</div>' +
     '<div class="tabpanel" id="panel-guides" role="tabpanel" aria-labelledby="tab-guides">' +
     '<section class="card" id="sec-guides"><h3>Setup guides</h3><p class="dim" style="margin-bottom:16px">How to get started with each MySweetPea service — step by step.</p>' +
@@ -758,6 +815,85 @@ function guideDetailHtml(key) {
       guideBody.innerHTML = guideDetailHtml(guideSel);
     });
   }
+
+  // ===== PHASE 12: ONBOARDING wiring (dismiss + vault guide jump) =====
+  const obCard = document.getElementById('ob-card');
+  if (obCard) {
+    const obDismiss = () => { try { localStorage.setItem('msp_onboarded', '1'); } catch (e) {} obCard.remove(); };
+    const obX = document.getElementById('ob-dismiss');
+    if (obX) obX.addEventListener('click', obDismiss);
+    const obVault = document.getElementById('ob-vault');
+    if (obVault) obVault.addEventListener('click', () => {
+      setTab('guides');
+      const chip = document.querySelector('.svc-guide-chip[data-guide="vaultwarden"]');
+      if (chip) chip.click();
+    });
+  }
+
+  // ===== PHASE 12: SUGGEST A SERVICE (same webhook + payload as site suggest.html) =====
+  (function initSuggest() {
+    const form = document.getElementById('sgf');
+    if (!form) return;
+    const SUGGEST_URL = 'https://subscribe.mysweetpea.cc/webhook/suggest';
+    const submit = document.getElementById('sg-submit');
+    const fields = [
+      { el: document.getElementById('sg-name'), type: 'name' },
+      { el: document.getElementById('sg-url'), type: 'url' },
+      { el: document.getElementById('sg-category'), type: 'category', okText: 'Category selected.', badText: 'Please select a category.' },
+      { el: document.getElementById('sg-reason'), type: 'reason' },
+    ];
+    const validate = (f) => {
+      const val = String(f.el.value || '').trim();
+      const hint = document.getElementById(f.el.id + '-hint');
+      let valid = false;
+      if (f.type === 'name') valid = val.length >= 2;
+      else if (f.type === 'url') valid = val === '' || /^https?:\/\/.+\..+/.test(val);
+      else if (f.type === 'category') valid = val !== '';
+      else if (f.type === 'reason') valid = val.length >= 10;
+      f.el.classList.remove('valid', 'invalid');
+      if (val.length > 0 || f.type === 'category') {
+        f.el.classList.add(valid ? 'valid' : 'invalid');
+        if (hint) {
+          hint.classList.toggle('error', !valid);
+          hint.classList.toggle('success', valid);
+          if (f.okText) hint.textContent = valid ? f.okText : (f.badText || f.okText);
+        }
+      } else if (hint) hint.classList.remove('error', 'success');
+      return valid;
+    };
+    const checkSubmit = () => { submit.disabled = !fields.every(validate); };
+    fields.forEach((f) => ['input', 'change', 'blur'].forEach((ev) => f.el.addEventListener(ev, () => checkSubmit())));
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      if (!fields.every(validate)) { toast('Please fix the highlighted fields', { err: true }); return; }
+      submit.disabled = true;
+      submit.textContent = 'Sending…';
+      const payload = {
+        service_name: fields[0].el.value.trim(),
+        project_url: fields[1].el.value.trim() || '',
+        category: fields[2].el.value.trim(),
+        reason: fields[3].el.value.trim(),
+        your_name: String(document.getElementById('sg-yourname').value || '').trim() || '',
+        your_email: String(document.getElementById('sg-youremail').value || '').trim() || ''
+      };
+      fetch(SUGGEST_URL, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) })
+        .then((r) => r.text().then((t) => { let d = { ok: r.ok }; if (t) { try { d = JSON.parse(t); } catch (e2) {} } return d; }))
+        .then((d) => {
+          if (d && d.ok) {
+            toast('Thanks — suggestion sent!', { ok: true });
+            form.reset();
+          } else {
+            toast((d && d.msg) || 'Submission failed — please try again', { err: true });
+          }
+        })
+        .catch(() => { toast('Network error. Try again.', { err: true }); })
+        .then(() => {
+          submit.textContent = 'Send suggestion';
+          fields.forEach((f) => { f.el.classList.remove('valid', 'invalid'); const h = document.getElementById(f.el.id + '-hint'); if (h) { h.classList.remove('error', 'success'); if (f.okText) h.textContent = f.badText; } });
+          checkSubmit();
+        });
+    });
+  })();
 
   // ===== PHASE 9: PER-SERVICE UPTIME BARS (/api/status/extended) =====
   const upHost = document.getElementById('sec-uptime');
