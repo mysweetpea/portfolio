@@ -232,8 +232,8 @@ export default {
       // Serve a tiny client-side redirector instead of a Location header so
       // the raw JSON fragment survives without URL-encoding questions.
       const f = url.searchParams.get('f') || 'mfa';
-      const page = f === 'password' ? 'page-details'
-                 : f === 'sessions' ? 'page-sessions'
+      const page = /password/.test(f) ? 'page-details'
+                 : /session/.test(f) ? 'page-sessions'
                  : 'page-credentials';
       const html = `<!doctype html><meta charset="utf-8"><title>Opening settings…</title>
 <script>location.replace(${JSON.stringify(env.AUTH_BASE + '/if/user/#/settings;')} + ${JSON.stringify(JSON.stringify({ page }))});</script>`;

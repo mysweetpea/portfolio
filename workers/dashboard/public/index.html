@@ -158,7 +158,7 @@ function ceremony(flowSlug, label) {
     '<div class="sec-checklist" style="flex:1">' +
     items.map(i => '<div class="check ' + (i.done ? 'done' : 'todo') + '"><span class="ico">' + (i.done ? '&#10003;' : '!') + '</span><span class="label">' + esc(i.label) + '</span>' +
       (i.act ? '<a class="act" onclick="' + i.act[1] + '">' + i.act[0] + '</a>' : '') + '</div>').join('') +
-    '<div class="check todo" style="border:0"><span class="ico">&#9998;</span><span class="label">Change password</span><a class="act" onclick="ceremony(\'default-password-change\',\'Password change\')">Change</a></div>' +
+    '<div class="check todo" style="border:0"><span class="ico">&#9998;</span><span class="label">Change password</span><a class="act" onclick="ceremony(\'password\',\'Password change\')">Change</a></div>' +
     '</div></div>' +
     ((hasTotp || hasWebauthn) ? '<div style="margin-top:10px"><div class="row"><div class="left"><b>MFA devices</b><span class="dim">' + (devices.totp.length + devices.webauthn.length) + ' enrolled</span></div>' +
       '<button class="mini" onclick="manageDevices()">Manage</button></div></div>' : '');
