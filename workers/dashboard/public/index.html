@@ -57,7 +57,6 @@ h3{font-family:Fraunces,Georgia,serif;font-size:1.05rem;font-weight:600;margin-b
 .check.done .ico{background:rgba(163,201,182,.18);color:var(--sage)}
 .check.todo .ico{background:rgba(217,168,108,.15);color:var(--gold)}
 .check .label{flex:1;font-size:.92rem}
-.check.todo .label{color:var(--text-dim)}
 .check .act{font-size:.8rem;color:var(--gold);cursor:pointer;text-decoration:none}
 .check .act:hover{text-decoration:underline}
 .ring{width:54px;height:54px;flex:none}
@@ -113,12 +112,13 @@ h3{font-family:Fraunces,Georgia,serif;font-size:1.05rem;font-weight:600;margin-b
 .svc-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:12px}
 .svc{display:flex;flex-direction:column;gap:6px;background:var(--card);backdrop-filter:blur(16px);border:1px solid rgba(143,175,181,.09);border-radius:var(--radius-sm);padding:14px;text-decoration:none;color:var(--text);transition:.35s cubic-bezier(.4,0,.2,1)}
 .svc:hover{transform:translateY(-2px);border-color:rgba(143,175,181,.4)}
-.svc-ico{width:34px;height:34px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:.95rem;flex:none}img.svc-ico{object-fit:contain;padding:3px}
+.svc-ico{width:34px;height:34px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:.95rem;flex:none}
+img.svc-ico{object-fit:contain;padding:3px}
 .svc-name{font-size:.92rem;font-weight:600}
 .svc-blurb{font-size:.78rem;color:var(--text-dim)}
 /* ---- phase 5: media rows ---- */
 .media-sec{grid-column:1/-1;display:flex;flex-direction:column;gap:18px}
-#sec-media:empty{display:none}
+.media-sec:empty{display:none}
 .media-row{display:flex;gap:12px;overflow-x:auto;scrollbar-width:none}
 .media-row::-webkit-scrollbar{display:none}
 .mitem{position:relative;flex:none;width:120px;display:block;text-decoration:none;color:var(--text);transition:.35s cubic-bezier(.4,0,.2,1)}
@@ -150,6 +150,29 @@ section h3::before{content:"";display:inline-block;width:3px;height:18px;border-
 .av-badge svg{display:block}
 #sec-account .row b{font-size:.92rem}
 #sec-account .row{padding:9px 0}
+/* ---- phase 9: tabs, uptime bars, library chart ---- */
+.tabs{position:sticky;top:0;z-index:30;display:flex;flex-wrap:nowrap;gap:8px;overflow-x:auto;scrollbar-width:none;background:rgba(12,19,22,.82);backdrop-filter:blur(16px);border:1px solid rgba(143,175,181,.09);border-radius:14px;padding:8px;margin:0 0 20px}
+.tabs::-webkit-scrollbar{display:none}
+.tab{position:relative;flex:none;background:var(--card);border:1px solid transparent;color:var(--text-dim);font:inherit;font-size:.9rem;font-weight:600;padding:9px 18px;border-radius:99px;cursor:pointer;transition:.35s cubic-bezier(.4,0,.2,1)}
+.tab:hover{color:var(--text)}
+.tab.active{background:var(--primary);border-color:var(--primary);color:var(--bg)}
+.tab-dot{position:absolute;top:7px;right:9px;width:7px;height:7px;border-radius:50%;background:var(--gold);display:none}
+.tab.has-dot .tab-dot{display:block}
+.tabpanel{grid-column:1/-1;display:flex;flex-direction:column;gap:18px}
+.tabpanel[hidden]{display:none}
+.strip{display:flex;gap:2px;margin-top:7px}
+.strip .b{width:5px;height:14px;border-radius:2px;background:var(--sage);flex:none}
+.strip .b.down{background:var(--error)}
+.strip .b.pad{background:rgba(143,175,181,.14)}
+.up-group{font-size:.68rem;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--text-dim);margin:14px 0 0}
+.up-row{flex-wrap:wrap}
+.up-more{margin:10px 0 0}
+.lib-row{display:flex;align-items:center;gap:12px;padding:8px 0}
+.lib-l{flex:none;width:78px;font-size:.85rem;color:var(--text-dim)}
+.lib-bar{flex:1;height:10px;border-radius:99px;background:rgba(143,175,181,.1);overflow:hidden}
+.lib-bar i{display:block;height:100%;border-radius:99px;background:linear-gradient(90deg,var(--primary),var(--sage));transition:width .6s cubic-bezier(.4,0,.2,1)}
+.lib-n{flex:none;width:70px;text-align:right;font-size:.85rem;font-weight:600;color:var(--primary-bright)}
+.lib-cap{margin:10px 0 0;font-size:.78rem}
 @media (prefers-reduced-motion: no-preference){
 html{scroll-behavior:smooth}
 @keyframes msp-in{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
@@ -198,7 +221,82 @@ function ceremony(flowSlug, label) {
   const timer = setInterval(() => {
     if (w.closed) { clearInterval(timer); location.reload(); }
   }, 700);
-  toast(label + ' opened - complete it in the popup');
+  toast(label + ' opened — complete it in the popup');
+}
+
+// ===== PHASE 9: TABS + shared pure helpers (top-level: palette block reuses them) =====
+const TABS = ['home', 'media', 'services', 'security', 'account'];
+const TAB_LABELS = { home: 'Home', media: 'Media', services: 'Services', security: 'Security', account: 'Account' };
+let currentTab = 'home';
+function setTab(name, opts) {
+  opts = opts || {};
+  if (TABS.indexOf(name) < 0) name = 'home';
+  currentTab = name;
+  TABS.forEach((t) => {
+    const b = document.getElementById('tab-' + t);
+    const p = document.getElementById('panel-' + t);
+    if (b) { b.classList.toggle('active', t === name); b.setAttribute('aria-selected', t === name ? 'true' : 'false'); }
+    if (p) p.hidden = t !== name;
+  });
+  if (!opts.fromHash) { try { history.replaceState(null, '', '#' + name); } catch (e) {} }
+  try { localStorage.setItem('msp-tab', name); } catch (e) {}
+  window.scrollTo(0, 0);
+}
+function goSection(id) {
+  const map = { 'sec-media': 'media', 'sec-media-m': 'media', 'sec-library': 'media', 'sec-services': 'services', 'sec-uptime': 'services', 'sec-security': 'security', 'sec-sessions': 'security', 'sec-apps': 'security', 'sec-account': 'account', 'sec-status': 'home', 'stats': 'home' };
+  if (map[id]) setTab(map[id]);
+  const el = document.getElementById(id);
+  if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+function mergeStats(d) {
+  const s = (d && typeof d === 'object') ? d : {};
+  const num = (v) => (typeof v === 'number' && isFinite(v) ? v : null);
+  return { movies: num(s.movies), series: num(s.series), photos: num(s.photos), sessions: num(s.sessions),
+    episodes: num(s.episodes), songs: num(s.songs), boxsets: num(s.boxsets), users: num(s.users) };
+}
+function countUp(el, target, dur) {
+  if (!el) return;
+  if (target == null) { el.textContent = '—'; return; }
+  let reduce = false;
+  try { reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (e) {}
+  if (reduce || dur === 0) { el.textContent = String(target); return; }
+  const t0 = performance.now();
+  const span = dur || 900;
+  const step = (t) => {
+    const p = Math.min(1, (t - t0) / span);
+    el.textContent = String(Math.round(target * (1 - Math.pow(1 - p, 3))));
+    if (p < 1) requestAnimationFrame(step);
+  };
+  requestAnimationFrame(step);
+}
+function sortMonitors(mons) {
+  return (mons || []).slice().sort((a, b) =>
+    ((a && a.current ? 0 : 1) - (b && b.current ? 0 : 1)) ||
+    String((a && a.name) || '').localeCompare(String((b && b.name) || '')));
+}
+function groupMonitors(mons) {
+  const out = [];
+  const idx = Object.create(null);
+  (mons || []).forEach((m) => {
+    const g = m && typeof m.group === 'string' && m.group ? m.group : '';
+    if (!g) return;
+    if (!(g in idx)) { idx[g] = out.length; out.push({ name: g, mons: [] }); }
+    out[idx[g]].mons.push(m);
+  });
+  return out;
+}
+function uptimeRows(mons) {
+  const rows = [];
+  groupMonitors(mons).forEach((g) => { sortMonitors(g.mons).forEach((m) => rows.push({ group: g.name, m: m })); });
+  sortMonitors((mons || []).filter((m) => !(m && typeof m.group === 'string' && m.group))).forEach((m) => rows.push({ group: '', m: m }));
+  return rows;
+}
+function beatStrip(beats) {
+  const arr = (Array.isArray(beats) ? beats : []).map((b) => (b ? 1 : 0)).slice(-40);
+  let out = '';
+  for (let i = 0; i < 40 - arr.length; i++) out += '<i class="b pad"></i>';
+  for (let i = 0; i < arr.length; i++) out += '<i class="b ' + (arr[i] ? 'up' : 'down') + '"></i>';
+  return out;
 }
 
 (async () => {
@@ -230,8 +328,33 @@ function ceremony(flowSlug, label) {
     '<div class="shell">' +
     '<header class="topbar"><a class="brand" href="https://mysweetpea.cc"><img src="https://mysweetpea.cc/logo.svg" alt="MySweetPea logo"/>MySweet<span class="mark">Pea</span></a>' +
     '<div class="who"><span class="name">' + esc(me.name || me.username) + '</span><button class="mini" id="pal-open" title="Command palette (Ctrl+K)" style="margin-right:10px">⌘K</button><a class="out" href="/auth/logout">Sign out</a></div></header>' +
-    '<main class="grid"><div class="stats" id="stats" style="--i:0"></div>' +
-    '<section class="card" id="sec-account" style="--i:1;grid-column:1/-1"><h3>Account</h3>' +
+    '<nav class="tabs" id="tabs" role="tablist" aria-label="Dashboard sections">' +
+    TABS.map((t) => '<button type="button" class="tab" id="tab-' + t + '" data-tab="' + t + '" role="tab" aria-controls="panel-' + t + '" aria-selected="false">' + TAB_LABELS[t] + (t === 'security' ? '<span class="tab-dot" aria-hidden="true"></span>' : '') + '</button>').join('') +
+    '</nav>' +
+    '<main class="grid">' +
+    '<div class="tabpanel" id="panel-home" role="tabpanel" aria-labelledby="tab-home">' +
+    '<section class="card hero" style="--i:0"><div class="avatar" id="hero-avatar" onclick="openAvatarModal()" title="Change profile picture">' + avatarInner() + CAM + '</div><div>' +
+    '<h2 id="hero-name">' + esc(me.name || me.username) + '</h2><p class="dim" id="hero-sub">' + esc(me.email) + ' &middot; @' + esc(me.username) + '</p>' +
+    '<span class="pill ok">Account active</span></div></section>' +
+    '<div class="stats" id="stats" style="--i:1"></div>' +
+    '<section id="sec-media" class="media-sec" style="--i:2"></section>' +
+    '<section class="card" id="sec-status" style="--i:3"><h3>Service status</h3><div class="skel"></div></section>' +
+    '</div>' +
+    '<div class="tabpanel" id="panel-media" role="tabpanel" aria-labelledby="tab-media">' +
+    '<section id="sec-media-m" class="media-sec"></section>' +
+    '<section class="card" id="sec-library"><h3>Library</h3><div id="lib-body"><div class="skel"></div></div><p class="dim lib-cap">Library totals — live from Jellyfin</p></section>' +
+    '</div>' +
+    '<div class="tabpanel" id="panel-services" role="tabpanel" aria-labelledby="tab-services">' +
+    '<section class="card" id="sec-services"><h3>Services</h3><div class="svc-grid" id="svc-grid"></div></section>' +
+    '<section class="card" id="sec-uptime"><h3>Uptime — last 24h</h3><div class="skel"></div></section>' +
+    '</div>' +
+    '<div class="tabpanel" id="panel-security" role="tabpanel" aria-labelledby="tab-security">' +
+    '<section class="card" id="sec-security"><h3>Security</h3><div class="skel"></div></section>' +
+    '<section class="card" id="sec-sessions"><h3>Your sessions</h3><div class="skel"></div></section>' +
+    '<section class="card" id="sec-apps"><h3>Connected apps</h3><div class="skel"></div></section>' +
+    '</div>' +
+    '<div class="tabpanel" id="panel-account" role="tabpanel" aria-labelledby="tab-account">' +
+    '<section class="card" id="sec-account"><h3>Account</h3>' +
     '<div style="display:flex;gap:20px;align-items:center;flex-wrap:wrap">' +
     '<div class="avatar" id="acct-avatar" onclick="openAvatarModal()" title="Change profile picture">' + avatarInner() + CAM + '</div>' +
     '<div style="flex:1;min-width:220px">' +
@@ -241,16 +364,37 @@ function ceremony(flowSlug, label) {
     '</div>' +
     '<button class="mini primary" onclick="openProfileModal()">Edit profile</button>' +
     '</div></section>' +
-    '<section id="sec-media" class="media-sec" style="--i:2"></section>' +
-    '<section class="card" id="sec-services" style="--i:3"><h3>Services</h3><div class="svc-grid" id="svc-grid"></div></section>' +
-    '<section class="card hero" style="--i:4"><div class="avatar" id="hero-avatar" onclick="openAvatarModal()" title="Change profile picture">' + avatarInner() + CAM + '</div><div>' +
-    '<h2 id="hero-name">' + esc(me.name || me.username) + '</h2><p class="dim" id="hero-sub">' + esc(me.email) + ' &middot; @' + esc(me.username) + '</p>' +
-    '<span class="pill ok">Account active</span></div></section>' +
-    '<section class="card" id="sec-security" style="--i:5"><h3>Security</h3><div class="skel"></div></section>' +
-    '<section class="card" id="sec-status" style="--i:6"><h3>Service status</h3><div class="skel"></div></section>' +
-    '<section class="card" id="sec-sessions" style="--i:7"><h3>Your sessions</h3><div class="skel"></div></section>' +
-    '<section class="card" id="sec-apps" style="--i:8"><h3>Connected apps</h3><div class="skel"></div></section>' +
+    '</div>' +
     '</main><footer class="foot"><img src="https://mysweetpea.cc/logo.svg" alt=""/> <a href="https://mysweetpea.cc">mysweetpea.cc</a> &middot; homelab dashboard</footer></div>';
+
+  // ===== PHASE 9: TAB WIRING (click, arrows, deep-link, remember) =====
+  TABS.forEach((t) => {
+    const b = document.getElementById('tab-' + t);
+    if (b) b.addEventListener('click', () => setTab(t));
+  });
+  $('#tabs').addEventListener('keydown', (e) => {
+    if (e.key !== 'ArrowLeft' && e.key !== 'ArrowRight') return;
+    e.preventDefault();
+    const dir = e.key === 'ArrowRight' ? 1 : TABS.length - 1;
+    const next = TABS[(TABS.indexOf(currentTab) + dir) % TABS.length];
+    const b = document.getElementById('tab-' + next);
+    if (b) b.focus();
+    setTab(next);
+  });
+  let initialTab = 'home';
+  try {
+    const h = (location.hash || '').replace(/^#/, '');
+    if (TABS.indexOf(h) >= 0) initialTab = h;
+    else {
+      const saved = localStorage.getItem('msp-tab');
+      if (saved && TABS.indexOf(saved) >= 0) initialTab = saved;
+    }
+  } catch (e) {}
+  setTab(initialTab, { fromHash: true });
+  window.addEventListener('hashchange', () => {
+    const h = (location.hash || '').replace(/^#/, '');
+    if (TABS.indexOf(h) >= 0 && h !== currentTab) setTab(h, { fromHash: true });
+  });
 
   // ===== PHASE 8: AVATAR MODAL (upload / remove / preview) =====
   window.openAvatarModal = async () => {
@@ -349,10 +493,8 @@ function ceremony(flowSlug, label) {
     };
   };
 
-  // ===== PHASE 5: MEDIA ROWS (continue watching + recently added) =====
+  // ===== PHASE 5: MEDIA ROWS (rendered into every .media-sec slot: Home + Media tabs) =====
   (async () => {
-    const host = $('#sec-media');
-    if (!host) return;
     const JF_ITEM = 'https://media.mysweetpea.cc/web/index.html#!/item?id=';
     const grab = (u) => fetch(u).then(r => (r.ok ? r.json() : { items: [] })).catch(() => ({ items: [] }));
     const [cont, latest] = await Promise.all([grab('/api/media/continue'), grab('/api/media/latest')]);
@@ -369,8 +511,7 @@ function ceremony(flowSlug, label) {
     let html = '';
     if ((cont.items || []).length) html += '<section class="card"><h3>Continue Watching</h3><div class="media-row">' + cont.items.map(it => posterCard(it, { progress: true })).join('') + '</div></section>';
     if ((latest.items || []).length) html += '<section class="card"><h3>Recently Added</h3><div class="media-row">' + latest.items.map(it => posterCard(it, { badge: true })).join('') + '</div></section>';
-    if (!html) { host.remove(); return; }
-    host.innerHTML = html;
+    document.querySelectorAll('.media-sec').forEach((s) => { s.innerHTML = html; });
   })();
 
   // ===== SERVICES LAUNCHER =====
@@ -400,6 +541,24 @@ function ceremony(flowSlug, label) {
       '<span class="svc-blurb">' + esc(s.blurb) + '</span></a>';
   }).join('');
 
+  // ===== PHASE 9: PER-SERVICE UPTIME BARS (/api/status/extended) =====
+  const upHost = document.getElementById('sec-uptime');
+  const renderUptime = (d) => {
+    if (!upHost) return;
+    const rows = uptimeRows(((d && d.monitors) || []).filter((m) => m && Array.isArray(m.beats) && m.beats.length));
+    if (!rows.length) { upHost.innerHTML = '<h3>Uptime — last 24h</h3><p class="dim">No uptime data right now.</p>'; return; }
+    const shown = rows.slice(0, 20);
+    let html = '<h3>Uptime — last 24h</h3>';
+    let lastGroup = null;
+    shown.forEach((r) => {
+      if (r.group && r.group !== lastGroup) { html += '<div class="up-group">' + esc(r.group) + '</div>'; lastGroup = r.group; }
+      html += '<div class="row up-row"><div class="left"><span><span class="dot ' + (r.m.current ? 'ok' : 'down') + '"></span>' + esc(r.m.name || 'Monitor') + '</span><span class="strip">' + beatStrip(r.m.beats) + '</span></div><span class="dim">' + (r.m.up24 == null ? '—' : Math.round(r.m.up24) + '%') + '</span></div>';
+    });
+    if (rows.length > shown.length) html += '<p class="dim up-more">+' + (rows.length - shown.length) + ' more</p>';
+    upHost.innerHTML = html;
+  };
+  fetch('/api/status/extended').then(r => r.json()).then(renderUptime).catch(() => { if (upHost) upHost.innerHTML = '<h3>Uptime — last 24h</h3><p class="dim">Unavailable.</p>'; });
+
   // ===== SECURITY CENTER (checklist + actions) =====
   let devices = { totp: [], webauthn: [], static: [] };
   try { const r = await fetch('/api/devices'); if (r.ok) devices = await r.json(); } catch (e) {}
@@ -417,7 +576,7 @@ function ceremony(flowSlug, label) {
   const C = 2 * Math.PI * 24;
   const sec = $('#sec-security');
   sec.innerHTML = '<h3>Security</h3><div style="display:flex;gap:20px;align-items:center">' +
-    '<svg class="ring" viewBox="0 0 54 54"><circle class="bg" cx="27" cy="27" r="24"/><circle class="fg" cx="27" cy="27" r="24" stroke-dasharray="' + C + '" stroke-dashoffset="' + (C * (1 - pct/100)) + '"/><text x="27" y="31">' + pct + '%</text></svg>' +
+    '<svg class="ring" viewBox="0 0 54 54"><circle class="bg" cx="27" cy="27" r="24"/><circle class="fg" cx="27" cy="27" r="24" stroke-dasharray="' + C + '" stroke-dashoffset="' + (C * (1 - pct / 100)) + '"/><text x="27" y="31">' + pct + '%</text></svg>' +
     '<div class="sec-checklist" style="flex:1">' +
     items.map(i => '<div class="check ' + (i.done ? 'done' : 'todo') + '"><span class="ico">' + (i.done ? '&#10003;' : '!') + '</span><span class="label">' + esc(i.label) + '</span>' +
       (i.act ? '<a class="act" onclick="' + i.act[1] + '">' + i.act[0] + '</a>' : '') + '</div>').join('') +
@@ -425,6 +584,10 @@ function ceremony(flowSlug, label) {
     '</div></div>' +
     ((hasTotp || hasWebauthn) ? '<div style="margin-top:10px"><div class="row"><div class="left"><b>MFA devices</b><span class="dim">' + (devices.totp.length + devices.webauthn.length) + ' enrolled</span></div>' +
       '<button class="mini" onclick="manageDevices()">Manage</button></div></div>' : '');
+  if (doneCount < items.length) {
+    const secTab = document.getElementById('tab-security');
+    if (secTab) secTab.classList.add('has-dot');
+  }
 
   // device management modal
   window.manageDevices = async () => {
@@ -488,9 +651,14 @@ function ceremony(flowSlug, label) {
 </script>
 <script>
 'use strict';
-/* ================= PHASE 3: command palette + stat cards ================= */
+/* ================= PHASE 3+9: command palette + stat cards + library chart ================= */
 (function () {
   const COMMANDS = [
+    { t: 'Go to Home',                 d: 'Dashboard tab',             run: () => setTab('home') },
+    { t: 'Go to Media',                d: 'Watch & library stats',     run: () => setTab('media') },
+    { t: 'Go to Services',             d: 'Launchers & uptime',        run: () => setTab('services') },
+    { t: 'Go to Security',             d: 'Checklist, MFA, sessions',  run: () => setTab('security') },
+    { t: 'Go to Account',              d: 'Profile & avatar',          run: () => setTab('account') },
     { t: 'Change password',            d: 'Authentik · user details',  run: () => ceremony('password', 'Password change') },
     { t: 'Set up TOTP',                d: 'Authentik · MFA',           run: () => ceremony('mfa', 'TOTP setup') },
     { t: 'Add a passkey',              d: 'Authentik · MFA',           run: () => ceremony('mfa', 'Passkey setup') },
@@ -504,7 +672,6 @@ function ceremony(flowSlug, label) {
     { t: 'Open Notes (AFFiNE)',        d: 'notes.mysweetpea.cc',       run: () => location.assign('https://notes.mysweetpea.cc') },
       ];
   let sel = 0, filtered = COMMANDS.slice();
-  const goSection = (id) => { const el = document.getElementById(id); if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' }); };
 
   const pal = $('#pal'), input = $('#pal-q'), list = $('#pal-list');
 
@@ -541,8 +708,7 @@ function ceremony(flowSlug, label) {
     if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') { e.preventDefault(); pal.classList.contains('open') ? close() : open(); }
   });
 
-  /* ---- stat cards (Jellyfin + Immich + sessions) ---- */
-  function stat(n, l) { return '<div class="stat"><div class="n">' + n + '</div><div class="l">' + esc(l) + '</div></div>'; }
+  /* ---- stat tiles (count-up) + library bar chart ---- */
   function waitFor(sel) {
     return new Promise(resolve => {
       const el = document.querySelector(sel);
@@ -552,21 +718,35 @@ function ceremony(flowSlug, label) {
     });
   }
   function dashRow() {
-    return stat('—', 'Movies') + stat('—', 'Series') + stat('—', 'Photos') + stat('—', 'Active sessions');
+    return '<div class="stat"><div class="n">—</div><div class="l">Movies</div></div>' +
+      '<div class="stat"><div class="n">—</div><div class="l">Series</div></div>' +
+      '<div class="stat"><div class="n">—</div><div class="l">Photos</div></div>' +
+      '<div class="stat"><div class="n">—</div><div class="l">Active sessions</div></div>';
+  }
+  function statTmpl() {
+    const mk = (k, l) => '<div class="stat"><div class="n" data-k="' + k + '">0</div><div class="l">' + esc(l) + '</div></div>';
+    return mk('movies', 'Movies') + mk('series', 'Series') + mk('photos', 'Photos') + mk('sessions', 'Active sessions');
+  }
+  function libHtml(s) {
+    const rows = [['Movies', s.movies], ['Episodes', s.episodes], ['Series', s.series], ['Songs', s.songs], ['Boxsets', s.boxsets]].filter((x) => x[1] != null);
+    if (!rows.length) return '<p class="dim">No library data yet.</p>';
+    const max = Math.max.apply(null, rows.map((x) => x[1]).concat([1]));
+    return rows.map((x) => '<div class="lib-row"><span class="lib-l">' + esc(x[0]) + '</span><span class="lib-bar"><i style="width:' + Math.max(2, Math.round(x[1] / max * 100)) + '%"></i></span><span class="lib-n">' + x[1].toLocaleString() + '</span></div>').join('');
   }
   (async () => {
     const el = await waitFor('#stats');
     if (!el) return;
     el.innerHTML = dashRow();
+    let d = {};
     try {
       const r = await fetch('/api/stats');
-      const d = r.ok ? await r.json() : {};
-      el.innerHTML =
-        stat(d.movies ?? '—', 'Movies') +
-        stat(d.series ?? '—', 'Series') +
-        stat(d.photos ?? '—', 'Photos') +
-        stat(d.sessions ?? '—', 'Active sessions');
+      if (r.ok) d = await r.json();
     } catch (e) { /* keep dashes */ }
+    const s = mergeStats(d);
+    el.innerHTML = statTmpl();
+    el.querySelectorAll('.stat .n').forEach((n) => countUp(n, s[n.dataset.k]));
+    const lib = document.getElementById('lib-body');
+    if (lib) lib.innerHTML = libHtml(s);
   })();
 
   /* palette button (topbar is built dynamically -> delegated) */
