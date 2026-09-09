@@ -203,6 +203,39 @@ html{scroll-behavior:smooth}
 @keyframes msp-in{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
 main section{opacity:0;animation:msp-in .5s ease-out forwards;animation-delay:calc(var(--i,0)*60ms)}
 }
+/* ---- phase 11: mobile optimization (additive only — desktop styles untouched) ---- */
+@media(max-width:760px){
+body{-webkit-tap-highlight-color:transparent}
+.topbar{flex-direction:column;align-items:flex-start;gap:10px;padding:12px 0 18px}
+.brand{font-size:1.1rem}
+.who{gap:8px}
+#pal-open{display:none}
+.tabs{-webkit-overflow-scrolling:touch}
+.tabs::-webkit-scrollbar{display:none}
+.tab{min-height:40px}
+.mini{min-height:40px}
+a.btn{min-height:40px;display:inline-flex;align-items:center;justify-content:center}
+.hero{flex-direction:column;align-items:flex-start;gap:14px;padding:18px}
+.hero .avatar{width:64px;height:64px}
+.stat{padding:12px 14px}
+.stat .n{font-size:1.4rem}
+.svc-grid{grid-template-columns:repeat(auto-fill,minmax(132px,1fr))}
+.svc-ico{width:28px;height:28px}
+.svc-blurb{font-size:.72rem}
+.media-row{-webkit-overflow-scrolling:touch}
+.mitem{width:150px}
+.mposter{width:150px}
+.mcard{width:min(440px,calc(100vw - 24px));max-height:86vh;max-height:86dvh;overflow-y:auto;padding:24px 20px}
+.pal-backdrop{padding-top:8vh}
+.palette{width:min(560px,calc(100vw - 24px));max-height:86vh;max-height:86dvh}
+.pal-list{max-height:min(320px,50dvh)}
+#toasts{left:12px;right:12px;bottom:calc(12px + env(safe-area-inset-bottom))}
+.toast{width:calc(100vw - 24px);min-width:0}
+.foot{padding:20px 0;text-align:center}
+}
+@media(max-width:420px){
+.who .name{display:none}
+}
 </style></head><body>
 <div id="app"><div class="card" id="gate"><a href="https://mysweetpea.cc" style="display:block;color:inherit;text-decoration:none"><img class="gate-logo" src="https://mysweetpea.cc/logo.svg" alt="MySweetPea logo"/></a><h1>MySweetPea</h1><p>Checking your session…</p></div></div>
 <div id="modal"><div class="mcard" id="mbody"></div></div>
