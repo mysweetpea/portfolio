@@ -18,6 +18,7 @@ export interface Env {
   IMMICH_URL: string;
   IMMICH_API_KEY: string;
   JELLYFIN_USER_ID: string;
+  AUTHENTIK_ADMIN_TOKEN: string;
 }
 
 interface SessionData {
@@ -73,6 +74,62 @@ async function authentikFetch(env: Env, token: string, path: string, init: Reque
       ...(init.headers as Record<string, string> || {}),
     },
   });
+}
+
+// Sniff magic bytes — never trust a client-supplied mime type.
+function sniffImageMime(b: Uint8Array): string | null {
+  if (b.length > 8 && b[0] === 0x89 && b[1] === 0x50 && b[2] === 0x4e && b[3] === 0x47 &&
+      b[4] === 0x0d && b[5] === 0x0a && b[6] === 0x1a && b[7] === 0x0a) return 'image/png';
+  if (b.length > 3 && b[0] === 0xff && b[1] === 0xd8 && b[2] === 0xff) return 'image/jpeg';
+  if (b.length > 12 && b[0] === 0x52 && b[1] === 0x49 && b[2] === 0x46 && b[3] === 0x46 &&
+      b[8] === 0x57 && b[9] === 0x45 && b[10] === 0x42 && b[11] === 0x50) return 'image/webp';
+  return null;
+}
+
+// Password step-up: drive the default authentication flow headlessly with a
+// minimal cookie jar and check the password stage accepts. The submitted
+// password is only ever sent to authentik's flow executor — never stored or
+// logged anywhere.
+async function verifyPassword(env: Env, username: string, password: string): Promise<boolean> {
+  const url = `${env.AUTH_BASE}/api/v3/flows/executor/default-authentication-flow/`;
+  let jar: string[] = [];
+  const absorb = (r: Response) => {
+    try {
+      const sc = typeof r.headers.getSetCookie === 'function'
+        ? r.headers.getSetCookie()
+        : (r.headers.get('set-cookie') ? [r.headers.get('set-cookie') as string] : []);
+      jar = jar.concat(sc.map((c) => c.split(';')[0]));
+    } catch { /* keep whatever jar we have */ }
+  };
+  const cookieHeader = (): Record<string, string> => (jar.length ? { cookie: jar.join('; ') } : {});
+  const post = (payload: unknown) => fetch(url, {
+    method: 'POST',
+    headers: { 'content-type': 'application/json', 'x-msp-internal': env.MSP_INTERNAL_HEADER, ...cookieHeader() },
+    body: JSON.stringify(payload),
+  });
+  try {
+    // 1. start the flow, capture session/csrf cookies
+    absorb(await fetch(url, { headers: { 'x-msp-internal': env.MSP_INTERNAL_HEADER } }));
+    // 2. identification stage
+    absorb(await post({ component: 'ak-stage-identification', uid_field: username }));
+    // 3. password stage
+    const pr = await post({ component: 'ak-stage-password', password });
+    if (!pr.ok) return false;
+    let data: any = null;
+    try { data = await pr.json(); } catch { return false; }
+    if (!data || typeof data !== 'object') return false;
+    const errs = !!(Array.isArray(data.non_field_errors) && data.non_field_errors.length) ||
+      !!data.responseErrors || !!(Array.isArray(data.messages) && data.messages.length);
+    // wrong password: executor re-renders the password stage with errors
+    if (data.component === 'ak-stage-password' && errs) return false;
+    // flow completed -> redirect target present
+    if (typeof data.to === 'string' && data.to) return true;
+    // password accepted, flow advanced to another stage (e.g. MFA)
+    if (data.component && data.component !== 'ak-stage-password') return true;
+    return false;
+  } catch {
+    return false;
+  }
 }
 
 async function getSession(request: Request, env: Env): Promise<SessionData | null> {
@@ -268,13 +325,138 @@ export default {
     if (path.startsWith('/api/')) {
       const auth = await requireSession(request, env);
       if (auth instanceof Response) return auth;
-      const { sess } = auth;
+      const { sess, sid } = auth;
 
       if (path === '/api/me') {
         const r = await authentikFetch(env, sess.at, '/api/v3/core/users/me/');
-        const d = await r.json();
-        return json(d.user ?? d, r.status);
+        const d = await r.json() as any;
+        const user = d && d.user ? d.user : d;
+        user.has_avatar = false;
+        user.avatar_ts = 0;
+        try {
+          const m = await env.SESSIONS.get(`avm:${sess.sub}`);
+          if (m) {
+            const meta = JSON.parse(m) as { updated?: number };
+            user.has_avatar = true;
+            user.avatar_ts = meta.updated || 0;
+          }
+        } catch { /* fall back to initials */ }
+        return json(user, r.status);
       }
+
+      // ---------- avatar (KV-stored profile picture) ----------
+      if (path === '/api/avatar/meta') {
+        const m = await env.SESSIONS.get(`avm:${sess.sub}`);
+        if (!m) return json({ has: false, mime: '', bytes: 0, updated: 0 });
+        try {
+          const meta = JSON.parse(m) as { mime: string; bytes: number; updated: number };
+          return json({ has: true, mime: meta.mime || '', bytes: meta.bytes || 0, updated: meta.updated || 0 });
+        } catch {
+          return json({ has: false, mime: '', bytes: 0, updated: 0 });
+        }
+      }
+      if (path === '/api/avatar' && request.method === 'POST') {
+        let body: { data?: string } = {};
+        try { body = await request.json() as { data?: string }; } catch {}
+        if (!body.data || typeof body.data !== 'string') return json({ error: 'Missing image data' }, 400);
+        // 512KB max after base64 decode (~700KB of base64 text); reject before decoding huge payloads
+        if (body.data.length > 700000) return json({ error: 'Image too large (max 512KB)' }, 413);
+        let bin: string;
+        try { bin = atob(body.data); } catch { return json({ error: 'Invalid image data' }, 400); }
+        const bytes = new Uint8Array(bin.length);
+        for (let i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i);
+        if (bytes.length > 512 * 1024) return json({ error: 'Image too large (max 512KB)' }, 413);
+        const mime = sniffImageMime(bytes);
+        if (!mime) return json({ error: 'Unsupported image type (use PNG, JPEG or WebP)' }, 400);
+        await env.SESSIONS.put(`av:${sess.sub}`, bytes.buffer as ArrayBuffer);
+        const updated = Date.now();
+        await env.SESSIONS.put(`avm:${sess.sub}`, JSON.stringify({ mime, bytes: bytes.length, updated }));
+        await env.SESSIONS.put(`audit:${sess.sub}:${updated}`, JSON.stringify({ t: updated, event: 'avatar_set' }), { expirationTtl: 90 * 86400 });
+        return json({ ok: true });
+      }
+      if (path === '/api/avatar' && request.method === 'DELETE') {
+        await env.SESSIONS.delete(`av:${sess.sub}`);
+        await env.SESSIONS.delete(`avm:${sess.sub}`);
+        const now = Date.now();
+        await env.SESSIONS.put(`audit:${sess.sub}:${now}`, JSON.stringify({ t: now, event: 'avatar_removed' }), { expirationTtl: 90 * 86400 });
+        return json({ ok: true });
+      }
+      if (path === '/api/avatar') {
+        const m = await env.SESSIONS.get(`avm:${sess.sub}`);
+        if (!m) return json({ error: 'no avatar' }, 404);
+        const data = await env.SESSIONS.get(`av:${sess.sub}`, { type: 'arrayBuffer' });
+        if (!data) return json({ error: 'no avatar' }, 404);
+        let mime = 'application/octet-stream';
+        try { mime = (JSON.parse(m) as { mime?: string }).mime || mime; } catch {}
+        return new Response(data, {
+          headers: { 'content-type': mime, 'cache-control': 'private, max-age=300' },
+        });
+      }
+
+      // ---------- profile edit (name + email) with password step-up ----------
+      if (path === '/api/profile/update' && request.method === 'POST') {
+        let body: { name?: unknown; email?: unknown; password?: unknown } = {};
+        try { body = await request.json() as typeof body; } catch {}
+        const password = typeof body.password === 'string' ? body.password : '';
+        if (!password) return json({ error: 'Your password is required to save changes.' }, 400);
+
+        const updates: { name?: string; email?: string } = {};
+        if (body.name !== undefined) {
+          if (typeof body.name !== 'string') return json({ error: 'Name must be 1-80 characters.' }, 400);
+          const name = body.name.trim();
+          if (name.length < 1 || name.length > 80) return json({ error: 'Name must be 1-80 characters.' }, 400);
+          updates.name = name;
+        }
+        if (body.email !== undefined) {
+          if (typeof body.email !== 'string') return json({ error: 'Enter a valid email address.' }, 400);
+          const email = body.email.trim();
+          if (email.length > 254 || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return json({ error: 'Enter a valid email address.' }, 400);
+          updates.email = email;
+        }
+        if (!updates.name && !updates.email) return json({ error: 'Nothing to update.' }, 400);
+
+        // rate limit: 5 attempts per hour (counter increments even on failure)
+        const rlKey = `rl:prof:${sess.sub}`;
+        const count = (parseInt((await env.SESSIONS.get(rlKey)) || '0', 10) || 0) + 1;
+        await env.SESSIONS.put(rlKey, String(count), { expirationTtl: 3600 });
+        if (count > 5) return json({ error: 'Too many attempts, try again later' }, 429);
+
+        if (!(await verifyPassword(env, sess.username, password))) {
+          return json({ error: 'Incorrect password' }, 401);
+        }
+
+        // authentik FOSS denies self-writes; the worker patches via an admin
+        // token, gated by the step-up above (user can only change their own).
+        // /core/users/{id}/ takes the NUMERIC pk (404 on uuid) — resolve+cache it.
+        let upk = parseInt((await env.SESSIONS.get(`upk:${sess.sub}`)) || '', 10);
+        if (!upk) {
+          const lookup = await authentikFetch(env, env.AUTHENTIK_ADMIN_TOKEN, `/api/v3/core/users/?uuid=${sess.sub}`);
+          if (lookup.ok) {
+            const arr = (await lookup.json() as { results?: { pk?: number }[] }).results || [];
+            if (arr[0]?.pk) { upk = arr[0].pk; await env.SESSIONS.put(`upk:${sess.sub}`, String(upk), { expirationTtl: 86400 * 30 }); }
+          }
+        }
+        if (!upk) return json({ error: 'Profile update failed.' }, 502);
+        const pr = await authentikFetch(env, env.AUTHENTIK_ADMIN_TOKEN, `/api/v3/core/users/${upk}/`, {
+          method: 'PATCH',
+          body: JSON.stringify(updates),
+        });
+        if (!pr.ok) return json({ error: 'Profile update failed.' }, 502);
+
+        // keep the KV session doc in sync so the dashboard reflects immediately
+        const raw = await env.SESSIONS.get(`sess:${sid}`);
+        if (raw) {
+          const doc = JSON.parse(raw) as SessionData;
+          if (updates.name) doc.name = updates.name;
+          if (updates.email) doc.email = updates.email;
+          await env.SESSIONS.put(`sess:${sid}`, JSON.stringify(doc), { expirationTtl: 86400 });
+        }
+
+        const now = Date.now();
+        await env.SESSIONS.put(`audit:${sess.sub}:${now}`, JSON.stringify({ t: now, event: 'profile_updated', fields: Object.keys(updates) }), { expirationTtl: 90 * 86400 });
+        return json({ ok: true, name: updates.name ?? sess.name, email: updates.email ?? sess.email });
+      }
+
       if (path === '/api/sessions') {
         const r = await authentikFetch(env, sess.at, '/api/v3/core/authenticated_sessions/');
         return json(await r.json(), r.status);
