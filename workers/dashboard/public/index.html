@@ -961,28 +961,7 @@ function guideDetailHtml(key) {
     const at = document.getElementById('acct-tier'); if (at) at.innerHTML = tierBadge(me.tier, false);
     window.setAvatars && window.setAvatars();
   };
-  (function () {
-    const trig = document.getElementById('acct-trigger');
-    const pop = document.getElementById('acct-pop');
-    if (!trig || !pop) return;
-    const close = () => { pop.hidden = true; trig.setAttribute('aria-expanded', 'false'); };
-    trig.addEventListener('click', (e) => {
-      e.stopPropagation();
-      const open = pop.hidden;
-      pop.hidden = !open;
-      trig.setAttribute('aria-expanded', String(open));
-    });
-    document.addEventListener('click', (e) => {
-      if (!pop.hidden && !pop.contains(e.target) && e.target !== trig) close();
-    });
-    document.addEventListener('keydown', (e) => { if (e.key === 'Escape') close(); });
-    pop.querySelectorAll('[data-goto]').forEach((a) => a.addEventListener('click', (e) => {
-      e.preventDefault(); close();
-      const t = a.getAttribute('data-goto');
-      if (typeof setTab === 'function') setTab(t);
-      else if (window.switchTab) window.switchTab(t);
-    }));
-  })();
+  
   // ===== PHASE 12: GET STARTED onboarding (dismissible, localStorage msp_onboarded) =====
   let obHtml = '';
   try {
@@ -1917,5 +1896,34 @@ function guideDetailHtml(key) {
     if (e.target && e.target.id === 'pal-open') { e.preventDefault(); window.mspPalette.open(); }
   });
 })();
+
+  // ===== account dropdown: delegated handlers (work regardless of render timing) =====
+  (function () {
+    'use strict';
+    const getTrig = () => document.getElementById('acct-trigger');
+    const getPop  = () => document.getElementById('acct-pop');
+    function close() {
+      const pop = getPop(), trig = getTrig();
+      if (pop && !pop.hidden) { pop.hidden = true; }
+      if (trig) trig.setAttribute('aria-expanded', 'false');
+    }
+    document.addEventListener('click', (e) => {
+      const trig = e.target.closest ? e.target.closest('#acct-trigger') : null;
+      const pop = getPop();
+      if (trig) {
+        e.preventDefault(); e.stopPropagation();
+        if (!pop) return;
+        const open = pop.hidden;
+        pop.hidden = !open;
+        trig.setAttribute('aria-expanded', String(open));
+        return;
+      }
+      // outside click or any menu item click closes
+      if (pop && !pop.hidden && !(e.target.closest && e.target.closest('#acct-pop'))) close();
+    });
+    document.addEventListener('keydown', (e) => { if (e.key === 'Escape') close(); });
+    // tab switches should also close it
+    window.addEventListener('hashchange', close);
+  })();
 </script>
 </body></html>
