@@ -632,7 +632,15 @@ export default {
     // Real asset files (site.webmanifest, icons) — fall through to the assets
     // binding before 404ing. run_worker_first sends everything here first.
     const asset = await env.ASSETS.fetch(new URL(path, request.url));
-    if (asset.status !== 404) return asset;
+    if (asset.status !== 404) {
+      // Immutable versioned assets get long-lived caching (fonts/icons/manifest)
+      if (/\.(woff2|svg|png|webp)$/.test(path)) {
+        const h = new Headers(asset.headers);
+        h.set('cache-control', 'public, max-age=31536000, immutable');
+        return new Response(asset.body, { status: asset.status, headers: h });
+      }
+      return asset;
+    }
     return new Response('Not found', { status: 404 });
   },
 };
