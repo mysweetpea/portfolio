@@ -1,45 +1,61 @@
 # MySweetPea Dashboard — deploy runbook (manual CF steps)
 
-**Status: Phase 0-1 code complete in `workers/dashboard/`. Authentik provider #29 + app `dashboard` already created and verified (discovery live, scopes `goauthentik.io/api` + `offline_access` confirmed).**
+**Status: Authentik provider + app created & verified. Worker code complete. KV namespace `8fdd1c40796c413ebbd479c42c90ef44` (`msp-dashboard-sessions`) confirmed via CF API and wired into wrangler.toml.**
 
-## One-time Cloudflare steps (user, ~5 minutes)
+## One-time steps (user)
 
-### 1. Create the KV namespace
-Dashboard → Storage & Databases → Workers KV → Create namespace → name: `msp-dashboard-sessions`
-→ copy the **Namespace ID** and paste it into `wrangler.toml` replacing `REPLACE_WITH_KV_NAMESPACE_ID`.
+### 1. ~~Create the KV namespace~~ ✅ DONE (id confirmed)
 
-### 2. Deploy the Worker
+### 2. Deploy the Worker (~2 min)
+Open a terminal (PowerShell or Git Bash) and run:
+
 ```bash
 cd "D:/home lab/github repo/portfolio/workers/dashboard"
-npx wrangler login        # one-time browser auth
-npx wrangler secret put AUTHENTIK_CLIENT_ID     # paste: KKscbPxCeEB1O2TqAWbhDQ92pYvcX8NsdAQqRHD7
-npx wrangler secret put MSP_INTERNAL_HEADER     # paste any long random string (shared secret)
-npx wrangler secret put JELLYFIN_API_KEY        # (phase 3; can skip now)
-npx wrangler secret put SEERR_API_KEY           # (phase 3; can skip now)
+
+# one-time browser login (a browser window opens; click Allow)
+npx wrangler login
+
+# set secrets (each prompts for a value, paste, Enter)
+npx wrangler secret put AUTHENTIK_CLIENT_ID
+#   paste: KKscbPxCeEB1O2TqAWbhDQ92pYvcX8NsdAQqRHD7
+
+npx wrangler secret put MSP_INTERNAL_HEADER
+#   paste: any long random string (SAVE it — the WAF rule needs the exact same value)
+#   e.g. generate one:  openssl rand -hex 32   (or any 40+ char random text)
+
 npx wrangler deploy
 ```
 
-### 3. Bind the custom domain
-Dashboard → Workers & Pages → `dashboard` → Settings → Domains & Routes → Add → Custom domain → `dashboard.mysweetpea.cc`
-(Cloudflare auto-creates the DNS record + cert.)
+> `npx` may ask to install wrangler the first time — answer yes. Node v22 + wrangler 4.130 are already installed on this PC and working.
 
-### 4. WAF skip rules (protect Worker→authentik calls from BFM)
-Security → WAF → Custom rules → Create (place ABOVE the block rules, below the Telegram skip):
-- Name: `skip-dashboard-api`
-- Expression: `(http.host eq "auth.mysweetpea.cc" and starts_with(http.request.uri.path, "/api/v3/") and http.request.headers["x-msp-internal"][0] eq "<the MSP_INTERNAL_HEADER value>")`
-- Action: **Skip** → all remaining rules + Bot Fight Mode
+### 3. Bind the custom domain (~1 min)
+1. Cloudflare dashboard → **Workers & Pages** (left sidebar)
+2. Click the **`dashboard`** worker (appears after step 2 deploy)
+3. **Settings** tab → **Domains & Routes** → **Add** → **Custom domain**
+4. Type: `dashboard.mysweetpea.cc` → Add domain
+   - Cloudflare auto-creates the DNS record and the certificate (takes ~1 min to go live)
 
-Optional second rule (Phase 3, for Seerr stats):
-- Name: `skip-dashboard-seerr`
-- Expression: `(http.host eq "request.mysweetpea.cc" and http.request.headers["x-msp-internal"][0] eq "<same secret>")`
-- Action: Skip (same)
+### 4. Update the combined WAF skip rule (~1 min)
+Security → WAF → Custom rules → edit your existing Telegram skip rule → replace the expression with (keep action **Skip**, keep it at position 1):
 
-## Verify Phase 1
-1. Visit `https://dashboard.mysweetpea.cc` → glass card with "Sign in with MySweetPea"
-2. Click → Authentik branded login → complete → redirected back, session cookie set
-3. `GET /api/me` (browser console: `fetch('/api/me').then(r=>r.json()).then(console.log)`) → your profile JSON
+```
+(ip.src in {149.154.160.0/20 91.108.4.0/22}) or (http.host eq "subscribe.mysweetpea.cc") or (http.host eq "auth.mysweetpea.cc" and starts_with(http.request.uri.path, "/api/v3/") and http.request.headers["x-msp-internal"][0] eq "PASTE_YOUR_SECRET_HERE")
+```
 
-## Current state of the code
-- `src/index.ts` — OIDC PKCE auth (login/callback/logout), KV sessions + refresh, authentik API proxy as the user (me/sessions/consents/devices/status/audit + DELETE revokes), phase-1 glass UI placeholder
-- Authentik: provider `dashboard` (public client, PKCE S256, 15-min access / 30-day refresh), scopes incl. `goauthentik.io/api`
-- Redirect URI registered: `https://dashboard.mysweetpea.cc/auth/callback`
+Replace `PASTE_YOUR_SECRET_HERE` with the exact same string you set as `MSP_INTERNAL_HEADER` in step 2 (no angle brackets, no quotes-in-quotes — just the raw string inside the CF quotes).
+
+Skip options: check **All remaining custom rules** + **Bot Fight Mode** (same as the rule already does).
+
+## Verify Phase 1 (after all steps)
+1. Visit `https://dashboard.mysweetpea.cc` → glass card, "Sign in with MySweetPea"
+2. Click → Authentik branded login → complete → back on the dashboard
+3. In the browser console on the dashboard page:
+   `fetch('/api/me').then(r=>r.json()).then(console.log)` → your profile JSON
+
+Then tell the agent — Phase 2 (security center) begins.
+
+## Architecture notes
+- Worker: `dashboard` in this folder; static phase-1 UI embedded in `src/index.ts`
+- KV binding `SESSIONS` → namespace `msp-dashboard-sessions`
+- All authentik calls server-side with user Bearer token + `x-msp-internal` header
+- Authentik provider: `dashboard` (public client, PKCE S256, scopes incl. `goauthentik.io/api`)

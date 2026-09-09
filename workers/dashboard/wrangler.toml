@@ -2,24 +2,18 @@ name = "dashboard"
 main = "src/index.ts"
 compatibility_date = "2026-09-01"
 
-# Custom domain (user adds via dashboard after first deploy):
-#   dashboard.mysweetpea.cc
-# KV namespace (user creates, pastes id below):
-#   wrangler kv namespace create SESSIONS
+# Custom domain: dashboard.mysweetpea.cc (bound in CF dashboard)
+
 [[kv_namespaces]]
 binding = "SESSIONS"
-id = "REPLACE_WITH_KV_NAMESPACE_ID"
+id = "8fdd1c40796c413ebbd479c42c90ef44"
 
 [vars]
-AUTH_ISSUER = "https://auth.mysweetpea.cc/application/o/dashboard"
+# authentik 2026.8: authorize/token are GENERIC (not slug-scoped)
+AUTH_ISSUER = "https://auth.mysweetpea.cc/application/o"
 AUTH_BASE = "https://auth.mysweetpea.cc"
 APP_URL = "https://dashboard.mysweetpea.cc"
-KUMA_STATUS_URL = "https://status.mysweetpea.cc/api/status-page/public"
-JELLYFIN_URL = "https://media.mysweetpea.cc"
-SEERR_URL = "https://request.mysweetpea.cc"
 
-# Secrets (set with: npx wrangler secret put NAME)
-#   AUTHENTIK_CLIENT_ID      — KKscbPxCeEB1O2TqAWbhDQ92pYvcX8NsdAQqRHD7 (public client id, but env'd)
-#   MSP_INTERNAL_HEADER      — shared secret sent as X-MSP-Internal on Worker->authentik calls
-#   JELLYFIN_API_KEY         — admin key for user_usage_stats queries
-#   SEERR_API_KEY            — seerr key for request counts
+# Secrets (set via `npx wrangler secret put ...`):
+#   AUTHENTIK_CLIENT_ID
+#   MSP_INTERNAL_HEADER

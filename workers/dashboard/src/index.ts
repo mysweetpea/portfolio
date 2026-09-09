@@ -277,7 +277,7 @@ export default {
 
     // ---------- static ----------
     if (path === '/' || path === '/index.html') {
-      return new Response((await STATIC_INDEX) || FALLBACK_HTML, { headers: { 'content-type': 'text/html;charset=utf-8' } });
+      return new Response(FALLBACK_HTML, { headers: { 'content-type': 'text/html;charset=utf-8', 'cache-control': 'no-store' } });
     }
     return new Response('Not found', { status: 404 });
   },
