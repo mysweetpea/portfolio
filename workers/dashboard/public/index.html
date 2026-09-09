@@ -102,6 +102,13 @@ h3{font-size:1rem;font-weight:600;margin-bottom:10px;letter-spacing:.01em}
 .stat .l{font-size:.78rem;color:var(--text-dim);margin-top:3px;letter-spacing:.02em}
 .toast{position:relative}
 .toast .undo{margin-left:14px;color:var(--gold);cursor:pointer;font-weight:600;text-decoration:underline;text-underline-offset:3px}
+/* ---- phase 4: services launcher grid ---- */
+.svc-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:12px}
+.svc{display:flex;flex-direction:column;gap:6px;background:var(--card);backdrop-filter:blur(16px);border:1px solid rgba(143,175,181,.09);border-radius:var(--radius-sm);padding:14px;text-decoration:none;color:var(--text);transition:.35s cubic-bezier(.4,0,.2,1)}
+.svc:hover{transform:translateY(-2px);border-color:rgba(143,175,181,.4)}
+.svc-ico{width:34px;height:34px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:.95rem;flex:none}
+.svc-name{font-size:.92rem;font-weight:600}
+.svc-blurb{font-size:.78rem;color:var(--text-dim)}
 </style></head><body>
 <div id="app"><div class="card" id="gate"><h1>MySweetPea</h1><p>Checking your session…</p></div></div>
 <div id="modal"><div class="mcard" id="mbody"></div></div>
@@ -162,6 +169,7 @@ function ceremony(flowSlug, label) {
     '<header class="topbar"><div class="brand"><span class="mark">&#10047;</span> MySweetPea</div>' +
     '<div class="who"><span class="name">' + esc(me.name || me.username) + '</span><button class="mini" id="pal-open" title="Command palette (Ctrl+K)" style="margin-right:10px">⌘K</button><a class="out" href="/auth/logout">Sign out</a></div></header>' +
     '<main class="grid"><div class="stats" id="stats"></div>' +
+    '<section class="card" id="sec-services"><h3>Services</h3><div class="svc-grid" id="svc-grid"></div></section>' +
     '<section class="card hero"><div class="avatar">' + esc(initials) + '</div><div>' +
     '<h2>' + esc(me.name || me.username) + '</h2><p class="dim">' + esc(me.email) + ' &middot; @' + esc(me.username) + '</p>' +
     '<span class="pill ok">Account active</span></div></section>' +
@@ -170,6 +178,35 @@ function ceremony(flowSlug, label) {
     '<section class="card" id="sec-sessions"><h3>Your sessions</h3><div class="skel"></div></section>' +
     '<section class="card" id="sec-apps"><h3>Connected apps</h3><div class="skel"></div></section>' +
     '</main><footer class="foot">MySweetPea &middot; your account, your services, one place</footer></div>';
+
+  // ===== SERVICES LAUNCHER =====
+  const SERVICES = [
+    { name: 'Jellyfin',    url: 'https://media.mysweetpea.cc',   blurb: 'Movies & TV' },
+    { name: 'Jellyseerr',  url: 'https://request.mysweetpea.cc', blurb: 'Request media' },
+    { name: 'Nextcloud',   url: 'https://cloud.mysweetpea.cc',   blurb: 'Files & calendar' },
+    { name: 'Immich',      url: 'https://photos.mysweetpea.cc',  blurb: 'Photo library' },
+    { name: 'Vaultwarden', url: 'https://vault.mysweetpea.cc',   blurb: 'Passwords' },
+    { name: 'Element',     url: 'https://chat.mysweetpea.cc',    blurb: 'Matrix chat' },
+    { name: 'Open WebUI',  url: 'https://ai.mysweetpea.cc',      blurb: 'AI assistants' },
+    { name: 'n8n',         url: 'https://n8n.mysweetpea.cc',     blurb: 'Automation' },
+    { name: 'Gotify',      url: 'https://gotify.mysweetpea.cc',  blurb: 'Notifications' },
+    { name: 'KoalaSync',   url: 'https://sync.mysweetpea.cc',    blurb: 'Jellyfin &harr; AniList sync' },
+    { name: 'Uptime',      url: 'https://status.mysweetpea.cc',  blurb: 'Service status' },
+    { name: 'Authentik',   url: 'https://auth.mysweetpea.cc',    blurb: 'SSO & account' },
+  ];
+  const SVC_COLORS = [
+    { fg: 'var(--primary-bright)', bg: 'rgba(143,175,181,.14)' },
+    { fg: 'var(--sage)',           bg: 'rgba(163,201,182,.15)' },
+    { fg: 'var(--gold)',           bg: 'rgba(217,168,108,.15)' },
+  ];
+  const svcGrid = $('#svc-grid');
+  if (svcGrid) svcGrid.innerHTML = SERVICES.map((s, i) => {
+    const c = SVC_COLORS[i % SVC_COLORS.length];
+    return '<a class="svc" href="' + s.url + '" target="_blank" rel="noopener noreferrer">' +
+      '<span class="svc-ico" style="color:' + c.fg + ';background:' + c.bg + '">' + esc(s.name[0].toUpperCase()) + '</span>' +
+      '<span class="svc-name">' + esc(s.name) + '</span>' +
+      '<span class="svc-blurb">' + esc(s.blurb) + '</span></a>';
+  }).join('');
 
   // ===== SECURITY CENTER (checklist + actions) =====
   let devices = { totp: [], webauthn: [], static: [] };
