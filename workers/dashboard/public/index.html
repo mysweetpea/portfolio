@@ -173,6 +173,26 @@ section h3::before{content:"";display:inline-block;width:3px;height:18px;border-
 .lib-bar i{display:block;height:100%;border-radius:99px;background:linear-gradient(90deg,var(--primary),var(--sage));transition:width .6s cubic-bezier(.4,0,.2,1)}
 .lib-n{flex:none;width:70px;text-align:right;font-size:.85rem;font-weight:600;color:var(--primary-bright)}
 .lib-cap{margin:10px 0 0;font-size:.78rem}
+/* ---- phase 10: setup guides ---- */
+.svc-guide{display:grid;grid-template-columns:220px 1fr;gap:22px;align-items:start}
+.svc-guide-nav{display:flex;flex-direction:column;gap:8px}
+.svc-guide-chip{display:flex;align-items:center;gap:10px;width:100%;background:transparent;border:1px solid rgba(143,175,181,.14);color:var(--text-dim);font:inherit;font-size:.88rem;font-weight:600;padding:9px 12px;border-radius:var(--radius-sm);cursor:pointer;text-align:left;transition:.35s cubic-bezier(.4,0,.2,1)}
+.svc-guide-chip:hover{color:var(--text);border-color:rgba(143,175,181,.4)}
+.svc-guide-chip[aria-pressed="true"]{background:rgba(143,175,181,.14);border-color:var(--primary);color:var(--text)}
+.svc-guide-ico{width:28px;height:28px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:.8rem;flex:none}
+img.svc-guide-ico{object-fit:contain;padding:2px}
+.svc-guide-detail{min-width:0}
+.svc-guide-title{font-family:Fraunces,Georgia,serif;font-weight:600;font-size:1.15rem;margin-bottom:2px}
+.svc-guide-intro{margin-bottom:14px}
+.svc-guide-step{display:flex;gap:14px;padding:12px 0;border-bottom:1px solid rgba(143,175,181,.08)}
+.svc-guide-step:last-child{border-bottom:0}
+.svc-guide-num{width:26px;height:26px;border-radius:50%;background:rgba(143,175,181,.14);color:var(--primary-bright);display:flex;align-items:center;justify-content:center;font-size:.78rem;font-weight:700;flex:none}
+.svc-guide-body{min-width:0;flex:1}
+.svc-guide-body h4{font-size:.95rem;font-weight:600;margin-bottom:2px}
+.svc-guide-body p{margin:0;font-size:.88rem;line-height:1.55}
+.svc-guide-btn{display:inline-block;margin-top:9px;background:transparent;border:1px solid rgba(143,175,181,.4);color:var(--primary-bright);text-decoration:none;font-size:.8rem;font-weight:600;padding:5px 14px;border-radius:99px;transition:.35s cubic-bezier(.4,0,.2,1)}
+.svc-guide-btn:hover{border-color:var(--gold);color:var(--gold)}
+@media(max-width:760px){.svc-guide{grid-template-columns:1fr}.svc-guide-nav{flex-direction:row;overflow-x:auto;scrollbar-width:none;padding-bottom:4px}.svc-guide-nav::-webkit-scrollbar{display:none}.svc-guide-chip{width:auto;flex:none;white-space:nowrap}}
 @media (prefers-reduced-motion: no-preference){
 html{scroll-behavior:smooth}
 @keyframes msp-in{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
@@ -225,8 +245,8 @@ function ceremony(flowSlug, label) {
 }
 
 // ===== PHASE 9: TABS + shared pure helpers (top-level: palette block reuses them) =====
-const TABS = ['home', 'media', 'services', 'security', 'account'];
-const TAB_LABELS = { home: 'Home', media: 'Media', services: 'Services', security: 'Security', account: 'Account' };
+const TABS = ['home', 'media', 'services', 'guides', 'security', 'account'];
+const TAB_LABELS = { home: 'Home', media: 'Media', services: 'Services', guides: 'Guides', security: 'Security', account: 'Account' };
 let currentTab = 'home';
 function setTab(name, opts) {
   opts = opts || {};
@@ -299,6 +319,135 @@ function beatStrip(beats) {
   return out;
 }
 
+// ===== PHASE 10: SETUP GUIDES — data from main site services.html + pure render helpers =====
+const GUIDE_ICONS = { jellyfin: '/icons/jellyfin.svg', seerr: '/icons/seerr.svg', nextcloud: '/icons/nextcloud.svg', immich: '/icons/immich.svg', vaultwarden: '/icons/vaultwarden.svg', matrix: '/icons/matrix.svg', koalasync: '/icons/koalasync.svg', openwebui: '/icons/openwebui.svg' };
+const GUIDE_ORDER = ['jellyfin', 'seerr', 'nextcloud', 'immich', 'vaultwarden', 'matrix', 'affine', 'openwebui', 'koalasync'];
+const GUIDE_COLORS = [
+  { fg: 'var(--primary-bright)', bg: 'rgba(143,175,181,.14)' },
+  { fg: 'var(--sage)',           bg: 'rgba(163,201,182,.15)' },
+  { fg: 'var(--gold)',           bg: 'rgba(217,168,108,.15)' },
+];
+let guideSel = 'jellyfin';
+const GUIDES = {
+  vaultwarden: {
+    name: 'Vaultwarden',
+    url: 'https://vault.mysweetpea.cc',
+    plain: 'A safe place to store all your passwords — like a locked drawer for your digital life.',
+    steps: [
+      { title: 'Open Vaultwarden', text: 'Go to vault.mysweetpea.cc and enter your email address.', url: 'https://vault.mysweetpea.cc', btn: 'Go to Vaultwarden' },
+      { title: 'Use single sign-on', text: 'Click "Use single sign-on" — you will be taken to Authentik. Log in with your MySweetPea account.', url: 'https://auth.mysweetpea.cc', btn: 'Go to sign-in' },
+      { title: 'Set your master password', text: 'You will be redirected back to Vaultwarden. Choose a strong master password — this unlocks your vault and cannot be reset by us.', url: '', btn: '' },
+      { title: 'Add the app (optional)', text: 'Install the Bitwarden app and enter your Vaultwarden address to use it on your phone.', url: 'https://bitwarden.com/download/', btn: 'Get the app' },
+    ],
+  },
+  matrix: {
+    name: 'Matrix / Element',
+    url: 'https://chat.mysweetpea.cc',
+    plain: 'A private chat app for messaging friends — nobody else can read your messages.',
+    steps: [
+      { title: 'Open Element', text: 'Go to chat.mysweetpea.cc and click "Continue with Authentik".', url: 'https://chat.mysweetpea.cc', btn: 'Open chat' },
+      { title: 'Sign in with Authentik', text: 'Log in with your MySweetPea account — you will be redirected back to Element.', url: 'https://auth.mysweetpea.cc', btn: 'Go to sign-in' },
+      { title: 'Click Continue', text: 'Element will ask you to confirm — click "Continue" and you are in.', url: '', btn: '' },
+      { title: 'Add the app (optional)', text: 'Install the Element app and enter your chat server address to chat on your phone.', url: 'https://element.io/download', btn: 'Get the app' },
+    ],
+  },
+  affine: {
+    name: 'AFFiNE',
+    url: 'https://notes.mysweetpea.cc',
+    plain: 'A place to write notes, build wikis, and sketch ideas — all kept private.',
+    steps: [
+      { title: 'Open AFFiNE', text: 'Go to notes.mysweetpea.cc and click "Continue with OIDC" (the sign-in button) — do not click "Sign In".', url: 'https://notes.mysweetpea.cc', btn: 'Open notes' },
+      { title: 'Sign in with Authentik', text: 'Log in with your MySweetPea account — you will be redirected back to AFFiNE.', url: 'https://auth.mysweetpea.cc', btn: 'Go to sign-in' },
+      { title: 'Start writing', text: 'Your workspace is ready. Create a document or whiteboard and go.', url: '', btn: '' },
+    ],
+  },
+  koalasync: {
+    name: 'KoalaSync',
+    url: 'https://sync.mysweetpea.cc',
+    plain: 'Watch movies and shows together with friends in real-time — everyone sees the same scene.',
+    steps: [
+      { title: 'Open KoalaSync', text: 'Go to sync.mysweetpea.cc — you will be taken to Authentik automatically.', url: 'https://sync.mysweetpea.cc', btn: 'Open watch party' },
+      { title: 'Sign in with Authentik', text: 'Log in with your MySweetPea account.', url: 'https://auth.mysweetpea.cc', btn: 'Go to sign-in' },
+      { title: 'You are in', text: 'You will see a page confirming KoalaSync is online and running.', url: '', btn: '' },
+      { title: 'Create a room', text: 'Share the room link with friends so you can all watch together.', url: '', btn: '' },
+    ],
+  },
+  jellyfin: {
+    name: 'Jellyfin / Moonfin',
+    url: 'https://media.mysweetpea.cc/Moonfin/Web/',
+    plain: 'Your own private movie and TV library — stream it on any device.',
+    steps: [
+      { title: 'Open Moonfin', text: 'Go to media.mysweetpea.cc and sign in with your Authentik account.', url: 'https://media.mysweetpea.cc/Moonfin/Web/', btn: 'Open Moonfin' },
+      { title: 'Sign in with Authentik', text: 'Log in with your MySweetPea account — you will be redirected back to Moonfin.', url: 'https://auth.mysweetpea.cc', btn: 'Go to sign-in' },
+      { title: 'Start watching', text: 'Your library is ready. Browse and stream on any device.', url: '', btn: '' },
+      { title: 'Add the Moonfin app (optional)', text: 'Install the Moonfin app on your TV or phone and enter your media server address.', url: 'https://moonfin.io/#clients', btn: 'Get Moonfin' },
+    ],
+  },
+  seerr: {
+    name: 'Seerr',
+    url: 'https://request.mysweetpea.cc',
+    plain: 'A wish list for movies and shows — request anything you want to watch.',
+    steps: [
+      { title: 'Open Seerr', text: 'Go to request.mysweetpea.cc and sign in with your Jellyfin login.', url: 'https://request.mysweetpea.cc', btn: 'Open requests' },
+      { title: 'Sign in with Jellyfin', text: 'Use the same Jellyfin account you use for Moonfin.', url: 'https://media.mysweetpea.cc', btn: 'Go to media' },
+      { title: 'Request something', text: 'Find a movie or show and click "Request" — it appears in Jellyfin automatically.', url: '', btn: '' },
+    ],
+  },
+  nextcloud: {
+    name: 'Nextcloud',
+    url: 'https://cloud.mysweetpea.cc',
+    plain: 'Your private place for files, calendar, and contacts — like a personal Google Workspace.',
+    steps: [
+      { title: 'Open Nextcloud', text: 'Go to cloud.mysweetpea.cc and click "Continue with Authentik".', url: 'https://cloud.mysweetpea.cc', btn: 'Open files' },
+      { title: 'Sign in with Authentik', text: 'Log in with your MySweetPea account — you will be redirected back to Nextcloud.', url: 'https://auth.mysweetpea.cc', btn: 'Go to sign-in' },
+      { title: 'Start using it', text: 'Your files, calendar, and contacts are ready.', url: '', btn: '' },
+      { title: 'Add the app (optional)', text: 'Install the Nextcloud app and enter your address to sync files on your phone.', url: 'https://nextcloud.com/install/', btn: 'Get the app' },
+    ],
+  },
+  immich: {
+    name: 'Immich',
+    url: 'https://photos.mysweetpea.cc',
+    plain: 'Back up your photos and videos privately — search them and keep them safe.',
+    steps: [
+      { title: 'Open Immich', text: 'Go to photos.mysweetpea.cc and click "Continue with OAuth".', url: 'https://photos.mysweetpea.cc', btn: 'Open photos' },
+      { title: 'Sign in with Authentik', text: 'Log in with your MySweetPea account — you will be redirected back to Immich.', url: 'https://auth.mysweetpea.cc', btn: 'Go to sign-in' },
+      { title: 'Start backing up', text: 'Your photo library is ready.', url: '', btn: '' },
+      { title: 'Add the app', text: 'Install the Immich app, point it at your address, and turn on auto-backup.', url: 'https://immich.app/', btn: 'Get the app' },
+    ],
+  },
+  openwebui: {
+    name: 'Open WebUI',
+    url: 'https://ai.mysweetpea.cc',
+    plain: 'A private AI chat assistant — your conversations stay on our servers.',
+    steps: [
+      { title: 'Open Open WebUI', text: 'Go to ai.mysweetpea.cc and click "Continue with OIDC".', url: 'https://ai.mysweetpea.cc', btn: 'Open chat' },
+      { title: 'Sign in with Authentik', text: 'Log in with your MySweetPea account — you will be redirected back to Open WebUI.', url: 'https://auth.mysweetpea.cc', btn: 'Go to sign-in' },
+      { title: 'Start chatting', text: 'Your conversations are private and stay on our servers.', url: '', btn: '' },
+    ],
+  },
+};
+function guideChipHtml(key, sel) {
+  const g = GUIDES[key];
+  if (!g) return '';
+  const c = GUIDE_COLORS[Math.max(0, GUIDE_ORDER.indexOf(key)) % GUIDE_COLORS.length];
+  const icon = GUIDE_ICONS[key];
+  const inner = icon
+    ? '<img class="svc-guide-ico" src="' + esc(icon) + '" alt="" width="28" height="28" loading="lazy">'
+    : '<span class="svc-guide-ico" style="color:' + c.fg + ';background:' + c.bg + '">' + esc(g.name[0].toUpperCase()) + '</span>';
+  return '<button type="button" class="svc-guide-chip" data-guide="' + esc(key) + '" aria-pressed="' + (key === sel ? 'true' : 'false') + '">' + inner + '<span>' + esc(g.name) + '</span></button>';
+}
+function guideDetailHtml(key) {
+  const g = GUIDES[key];
+  if (!g) return '';
+  let h = '<div class="svc-guide-title">' + esc(g.name) + '</div><p class="svc-guide-intro">' + esc(g.plain) + '</p>';
+  (g.steps || []).forEach((s, i) => {
+    h += '<div class="svc-guide-step"><span class="svc-guide-num">' + (i + 1) + '</span><div class="svc-guide-body"><h4>' + esc(s.title) + '</h4><p>' + esc(s.text) + '</p>' +
+      (s.url && s.btn ? '<a class="svc-guide-btn" href="' + esc(s.url) + '" target="_blank" rel="noopener noreferrer">' + esc(s.btn) + '</a>' : '') +
+      '</div></div>';
+  });
+  return h;
+}
+
 (async () => {
   const app = $('#app'); const gate = $('#gate');
   let me = null;
@@ -347,6 +496,10 @@ function beatStrip(beats) {
     '<div class="tabpanel" id="panel-services" role="tabpanel" aria-labelledby="tab-services">' +
     '<section class="card" id="sec-services"><h3>Services</h3><div class="svc-grid" id="svc-grid"></div></section>' +
     '<section class="card" id="sec-uptime"><h3>Uptime — last 24h</h3><div class="skel"></div></section>' +
+    '</div>' +
+    '<div class="tabpanel" id="panel-guides" role="tabpanel" aria-labelledby="tab-guides">' +
+    '<section class="card" id="sec-guides"><h3>Setup guides</h3><p class="dim" style="margin-bottom:16px">How to get started with each MySweetPea service — step by step.</p>' +
+    '<div class="svc-guide"><div class="svc-guide-nav" id="guide-nav" role="group" aria-label="Choose a service"></div><div class="svc-guide-detail" id="guide-body" aria-live="polite"></div></div></section>' +
     '</div>' +
     '<div class="tabpanel" id="panel-security" role="tabpanel" aria-labelledby="tab-security">' +
     '<section class="card" id="sec-security"><h3>Security</h3><div class="skel"></div></section>' +
@@ -541,6 +694,21 @@ function beatStrip(beats) {
       '<span class="svc-blurb">' + esc(s.blurb) + '</span></a>';
   }).join('');
 
+  // ===== PHASE 10: SETUP GUIDES (selector chips + live detail pane) =====
+  const guideNav = document.getElementById('guide-nav');
+  const guideBody = document.getElementById('guide-body');
+  if (guideNav && guideBody) {
+    guideNav.innerHTML = GUIDE_ORDER.map((k) => guideChipHtml(k, guideSel)).join('');
+    guideBody.innerHTML = guideDetailHtml(guideSel);
+    guideNav.addEventListener('click', (e) => {
+      const chip = e.target && e.target.closest ? e.target.closest('.svc-guide-chip') : null;
+      if (!chip) return;
+      guideSel = chip.dataset.guide;
+      guideNav.querySelectorAll('.svc-guide-chip').forEach((b) => b.setAttribute('aria-pressed', b.dataset.guide === guideSel ? 'true' : 'false'));
+      guideBody.innerHTML = guideDetailHtml(guideSel);
+    });
+  }
+
   // ===== PHASE 9: PER-SERVICE UPTIME BARS (/api/status/extended) =====
   const upHost = document.getElementById('sec-uptime');
   const renderUptime = (d) => {
@@ -657,6 +825,7 @@ function beatStrip(beats) {
     { t: 'Go to Home',                 d: 'Dashboard tab',             run: () => setTab('home') },
     { t: 'Go to Media',                d: 'Watch & library stats',     run: () => setTab('media') },
     { t: 'Go to Services',             d: 'Launchers & uptime',        run: () => setTab('services') },
+    { t: 'Go to Guides',               d: 'Setup how-tos per service', run: () => setTab('guides') },
     { t: 'Go to Security',             d: 'Checklist, MFA, sessions',  run: () => setTab('security') },
     { t: 'Go to Account',              d: 'Profile & avatar',          run: () => setTab('account') },
     { t: 'Change password',            d: 'Authentik · user details',  run: () => ceremony('password', 'Password change') },
