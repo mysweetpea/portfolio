@@ -520,6 +520,7 @@ function guideDetailHtml(key) {
     '<div class="tabpanel" id="panel-security" role="tabpanel" aria-labelledby="tab-security">' +
     '<section class="card" id="sec-security"><h3>Security</h3><div class="skel"></div></section>' +
     '<section class="card" id="sec-sessions"><h3>Your sessions</h3><div class="skel"></div></section>' +
+    '<section class="card" id="sec-activity" style="--i:5"><h3>Recent activity</h3><div class="skel"></div></section>' +
     '<section class="card" id="sec-apps"><h3>Connected apps</h3><div class="skel"></div></section>' +
     '</div>' +
     '<div class="tabpanel" id="panel-account" role="tabpanel" aria-labelledby="tab-account">' +
@@ -796,6 +797,24 @@ function guideDetailHtml(key) {
       return '<div class="row"><div class="left"><span><span class="dot ' + (up ? 'ok' : 'down') + '"></span>' + esc(m.name) + '</span></div><span class="dim">' + Math.round(m.uptime24h || 0) + '%</span></div>';
     }).join('');
   }).catch(() => { $('#sec-status').innerHTML = '<h3>Service status</h3><p class="dim">Unavailable.</p>'; });
+
+  // ===== RECENT ACTIVITY (audit feed) =====
+  const ACT_LABEL = { login: 'Signed in', logout: 'Signed out', session_revoked: 'Session revoked',
+    totp_removed: 'TOTP removed', passkey_removed: 'Passkey removed', device_removed: 'Device removed',
+    consent_revoked: 'App consent revoked', profile_updated: 'Profile updated',
+    avatar_set: 'Avatar updated', avatar_removed: 'Avatar removed' };
+  fetch('/api/audit').then(r => r.ok ? r.json() : []).then(list => {
+    const el = $('#sec-activity');
+    if (!el) return;
+    if (!Array.isArray(list) || !list.length) { el.innerHTML = '<h3>Recent activity</h3><p class="dim">No activity recorded yet.</p>'; return; }
+    el.innerHTML = '<h3>Recent activity</h3>' + list.slice(0, 10).map(a => {
+      const d = new Date(a.t || a.ts || Date.now());
+      const when = d.toLocaleDateString(undefined, { month: 'short', day: 'numeric' }) + ' · ' + d.toLocaleTimeString(undefined, { hour: '2-digit', minute: '2-digit' });
+      const label = ACT_LABEL[a.event] || a.event;
+      const detail = a.ip ? '<span class="dim"> · ' + esc(a.ip) + '</span>' : '';
+      return '<div class="row"><div class="left"><b>' + esc(label) + '</b><span class="dim">' + esc(when) + detail + '</span></div></div>';
+    }).join('');
+  }).catch(() => { const el = $('#sec-activity'); if (el) el.innerHTML = '<h3>Recent activity</h3><p class="dim">Unavailable.</p>'; });
 
   // ===== SESSIONS =====
   fetch('/api/sessions').then(r => r.json()).then(d => {
