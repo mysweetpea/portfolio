@@ -104,14 +104,12 @@ $('#modal').addEventListener('click', e => { if (e.target.id === 'modal') closeM
 
 // Popup ceremony helper (authentik-hosted, branded, deep-links back)
 function ceremony(flowSlug, label) {
-  const next = encodeURIComponent('/if/user/');
+  // Same-tab navigation (no popup): authentik sends X-Frame-Options DENY, so a
+  // true inline iframe would require stripping clickjacking protection at the
+  // proxy. Same-tab keeps the dashboard one Back-press away, avoids iOS popup
+  // blocking, and the security checklist refreshes on return (fresh load).
   const url = '/auth/ceremony?f=' + encodeURIComponent(flowSlug);
-  // We route through our worker which 302s to authentik with ?next set to return here
-  const w = window.open(url, 'msp-ceremony', 'width=480,height=680');
-  const timer = setInterval(() => {
-    if (w.closed) { clearInterval(timer); location.reload(); }
-  }, 700);
-  toast(label + ' opened — complete it in the popup window');
+  location.assign(url);
 }
 
 (async () => {
