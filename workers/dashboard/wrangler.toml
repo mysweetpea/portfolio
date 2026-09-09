@@ -22,3 +22,7 @@ APP_URL = "https://dashboard.mysweetpea.cc"
 directory = "./public"
 binding = "ASSETS"
 not_found_handling = "single-page-application"
+# Custom domain was serving index.html for /auth/* (assets-first short-circuit
+# running before the script). Force ALL requests through the Worker script;
+# the script proxies asset paths to ASSETS itself.
+run_worker_first = true
