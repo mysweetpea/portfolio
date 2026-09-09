@@ -14,7 +14,9 @@ export interface Env {
   SEERR_URL: string;
   JELLYFIN_API_KEY: string;
   SEERR_API_KEY: string;
-}
+
+  IMMICH_URL: string;
+  IMMICH_API_KEY: string;}
 
 interface SessionData {
   at: string;            // access token
@@ -285,6 +287,37 @@ export default {
         const r3 = await authentikFetch(env, sess.at, '/api/v3/authenticators/static/');
         const [totp, webauthn, statics] = await Promise.all([r.json(), r2.json(), r3.json()]);
         return json({ totp: totp.results ?? [], webauthn: webauthn.results ?? [], static: statics.results ?? [] });
+      }
+      if (path === '/api/stats') {
+        const cache = await env.SESSIONS.get('cache:stats');
+        if (cache) return json(JSON.parse(cache));
+        const stat = async (): Promise<string> => {
+          const out: Record<string, number | null> = { movies: null, series: null, photos: null, sessions: null };
+          await Promise.all([
+            (async () => {
+              try {
+                const r = await fetch(env.JELLYFIN_URL + '/Items/Counts', { headers: { 'x-emby-token': env.JELLYFIN_API_KEY } });
+                if (r.ok) { const d = await r.json() as any; out.movies = d.MovieCount ?? null; out.series = d.SeriesCount ?? null; }
+              } catch {}
+            })(),
+            (async () => {
+              try {
+                const r = await fetch(env.IMMICH_URL + '/api/server/statistics', { headers: { 'x-api-key': env.IMMICH_API_KEY } });
+                if (r.ok) { const d = await r.json() as any; out.photos = (d.photos ?? 0) + (d.videos ?? 0); }
+              } catch {}
+            })(),
+            (async () => {
+              try {
+                const s = await authentikFetch(env, sess.at, '/api/v3/core/authenticated_sessions/');
+                if (s.ok) { const d = await s.json() as any; out.sessions = (d.results ?? []).length; }
+              } catch {}
+            })(),
+          ]);
+          return JSON.stringify(out);
+        };
+        const payload = await stat();
+        await env.SESSIONS.put('cache:stats', payload, { expirationTtl: 300 });
+        return new Response(payload, { headers: { 'content-type': 'application/json', 'cache-control': 'no-store' } });
       }
       if (path === '/api/status') {
         const cache = await env.SESSIONS.get('cache:kuma');
