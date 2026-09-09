@@ -1,0 +1,225 @@
+<!doctype html><html><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>MySweetPea Dashboard</title>
+<style>
+:root{--bg:#0C1316;--primary:#8FAFB5;--primary-bright:#C5D5D8;--sage:#A3C9B6;--gold:#D9A86C;
+--text:#EDF3F4;--text-dim:#A9BEC2;--card:rgba(19,30,34,.55);--radius:18px;--radius-sm:12px;--error:#D98C8C}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:var(--bg);color:var(--text);font-family:Inter,system-ui,sans-serif;min-height:100vh}
+#app{display:flex;align-items:center;justify-content:center;min-height:100vh}
+.card{background:var(--card);backdrop-filter:blur(16px);border:1px solid rgba(143,175,181,.09);border-radius:var(--radius);padding:40px 44px}
+h1{font-family:Fraunces,Georgia,serif;font-weight:600;font-size:1.8rem;margin-bottom:8px}
+p{color:var(--text-dim);margin-bottom:24px;line-height:1.6}
+a.btn{display:inline-block;background:var(--primary);color:var(--bg);text-decoration:none;font-weight:600;padding:12px 28px;border-radius:var(--radius-sm);transition:.35s cubic-bezier(.4,0,.2,1)}
+a.btn:hover{background:var(--primary-bright);transform:translateY(-2px)}
+/* ---- shell ---- */
+.shell{width:min(1080px,92vw);margin:0 auto;padding:28px 0 0}
+.topbar{display:flex;justify-content:space-between;align-items:center;padding:14px 0 26px}
+.brand{font-family:Fraunces,Georgia,serif;font-size:1.25rem}
+.mark{color:var(--sage)}
+.who{display:flex;align-items:center;gap:14px}
+.name{color:var(--text-dim);font-size:.95rem}
+.out{color:var(--gold);text-decoration:none;font-size:.9rem}
+.out:hover{text-decoration:underline}
+.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:18px}
+.hero{display:flex;gap:22px;align-items:center;grid-column:1 / -1}
+.avatar{width:72px;height:72px;border-radius:50%;background:linear-gradient(135deg,var(--primary),var(--sage));display:flex;align-items:center;justify-content:center;font-size:1.5rem;font-weight:700;color:var(--bg);flex:none}
+h2{font-family:Fraunces,Georgia,serif;font-weight:600;margin-bottom:2px}
+h3{font-size:1rem;font-weight:600;margin-bottom:10px;letter-spacing:.01em}
+.dim{color:var(--text-dim);font-size:.9rem}
+.pill{display:inline-block;font-size:.75rem;padding:3px 10px;border-radius:99px;margin-top:8px}
+.pill.ok{background:rgba(163,201,182,.15);color:var(--sage)}
+.pill.warn{background:rgba(217,168,108,.15);color:var(--gold)}
+.row{display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid rgba(143,175,181,.08)}
+.row:last-child{border-bottom:0}
+.row .left{display:flex;flex-direction:column;gap:2px}
+.dot{width:9px;height:9px;border-radius:50%;display:inline-block;margin-right:10px}
+.dot.ok{background:var(--sage);box-shadow:0 0 8px rgba(163,201,182,.5)}
+.dot.down{background:var(--error)}
+.mini{background:transparent;border:1px solid rgba(143,175,181,.3);color:var(--text-dim);border-radius:8px;padding:4px 12px;cursor:pointer;font-size:.8rem}
+.mini:hover{border-color:var(--gold);color:var(--gold)}
+.mini.primary{border-color:rgba(143,175,181,.5);color:var(--primary-bright)}
+.skel{height:60px;border-radius:10px;background:linear-gradient(90deg,rgba(143,175,181,.06),rgba(143,175,181,.12),rgba(143,175,181,.06));background-size:200% 100%;animation:shimmer 1.4s infinite}
+@keyframes shimmer{to{background-position:-200% 0}}
+.foot{text-align:center;color:var(--text-dim);font-size:.85rem;padding:34px 0}
+/* ---- security center ---- */
+.sec-checklist{display:flex;flex-direction:column;gap:8px}
+.check{display:flex;align-items:center;gap:12px;padding:9px 0;border-bottom:1px solid rgba(143,175,181,.07)}
+.check:last-child{border-bottom:0}
+.check .ico{width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.8rem;flex:none}
+.check.done .ico{background:rgba(163,201,182,.18);color:var(--sage)}
+.check.todo .ico{background:rgba(217,168,108,.15);color:var(--gold)}
+.check .label{flex:1;font-size:.92rem}
+.check.todo .label{color:var(--text-dim)}
+.check .act{font-size:.8rem;color:var(--gold);cursor:pointer;text-decoration:none}
+.check .act:hover{text-decoration:underline}
+.ring{width:54px;height:54px;flex:none}
+.ring circle{fill:none;stroke-width:5}
+.ring .bg{stroke:rgba(143,175,181,.12)}
+.ring .fg{stroke:var(--sage);stroke-linecap:round;transform:rotate(-90deg);transform-origin:center;transition:stroke-dashoffset .6s cubic-bezier(.4,0,.2,1)}
+.ring text{fill:var(--text);font-size:.8rem;text-anchor:middle}
+/* ---- modal ---- */
+#modal{position:fixed;inset:0;background:rgba(6,10,12,.72);backdrop-filter:blur(4px);display:none;align-items:center;justify-content:center;z-index:50}
+#modal.open{display:flex}
+.mcard{background:#121d21;border:1px solid rgba(143,175,181,.14);border-radius:var(--radius);padding:32px 34px;width:min(440px,92vw);animation:mIn .3s cubic-bezier(.4,0,.2,1)}
+@keyframes mIn{from{opacity:0;transform:translateY(14px)}}
+.mcard h3{margin-bottom:6px;font-size:1.15rem}
+.mcard .sub{color:var(--text-dim);font-size:.88rem;margin-bottom:18px;line-height:1.5}
+.mcard input{width:100%;background:#0C1316;border:1px solid rgba(143,175,181,.2);border-radius:10px;color:var(--text);padding:11px 14px;font-size:.95rem;margin-bottom:12px;outline:none;transition:border-color .25s}
+.mcard input:focus{border-color:var(--primary)}
+.mrow{display:flex;gap:10px;justify-content:flex-end;margin-top:6px}
+.mrow button{border:none;border-radius:10px;padding:10px 20px;font-size:.9rem;cursor:pointer;font-weight:600}
+.b-cancel{background:transparent;color:var(--text-dim);border:1px solid rgba(143,175,181,.2)!important}
+.b-go{background:var(--primary);color:var(--bg)}
+.b-go:hover{background:var(--primary-bright)}
+.b-go:disabled{opacity:.5;cursor:wait}
+.merr{color:var(--error);font-size:.85rem;min-height:1.2em;margin-bottom:6px}
+/* ---- toast ---- */
+#toasts{position:fixed;bottom:22px;right:22px;display:flex;flex-direction:column;gap:10px;z-index:60}
+.toast{background:#131F24;border:1px solid rgba(143,175,181,.18);border-radius:12px;box-shadow:0 12px 40px rgba(0,0,0,.45);backdrop-filter:blur(16px);padding:13px 18px;display:flex;gap:14px;align-items:center;animation:tIn .3s cubic-bezier(.4,0,.2,1);min-width:260px}
+@keyframes tIn{from{opacity:0;transform:translateY(12px)}}
+.toast.t-out{animation:tOut .25s ease forwards}
+@keyframes tOut{to{opacity:0;transform:translateY(8px)}}
+.toast .msg{flex:1;font-size:.9rem}
+.toast .undo{color:var(--gold);cursor:pointer;font-size:.85rem;text-decoration:underline}
+@media(max-width:760px){.grid{grid-template-columns:1fr}}
+</style></head><body>
+<div id="app"><div class="card" id="gate"><h1>MySweetPea</h1><p>Checking your session…</p></div></div>
+<div id="modal"><div class="mcard" id="mbody"></div></div>
+<div id="toasts"></div>
+<script>
+'use strict';
+const $ = (s) => document.querySelector(s);
+const esc = (x) => String(x == null ? '' : x).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+function toast(msg, undoFn) {
+  const t = document.createElement('div'); t.className = 'toast';
+  t.innerHTML = '<span class="msg">' + esc(msg) + '</span>' + (undoFn ? '<span class="undo">Undo</span>' : '');
+  if (undoFn) t.querySelector('.undo').onclick = () => { undoFn(); t.remove(); };
+  $('#toasts').appendChild(t);
+  setTimeout(() => { t.classList.add('t-out'); setTimeout(() => t.remove(), 260); }, 5200);
+}
+function modal(html) { $('#mbody').innerHTML = html; $('#modal').classList.add('open'); }
+function closeModal() { $('#modal').classList.remove('open'); }
+$('#modal').addEventListener('click', e => { if (e.target.id === 'modal') closeModal(); });
+
+// Popup ceremony helper (authentik-hosted, branded, deep-links back)
+function ceremony(flowSlug, label) {
+  const next = encodeURIComponent('/if/user/');
+  const url = '/auth/ceremony?f=' + encodeURIComponent(flowSlug);
+  // We route through our worker which 302s to authentik with ?next set to return here
+  const w = window.open(url, 'msp-ceremony', 'width=480,height=680');
+  const timer = setInterval(() => {
+    if (w.closed) { clearInterval(timer); location.reload(); }
+  }, 700);
+  toast(label + ' opened — complete it in the popup window');
+}
+
+(async () => {
+  const app = $('#app'); const gate = $('#gate');
+  let me = null;
+  try { const r = await fetch('/api/me'); if (r.ok) me = await r.json(); } catch (e) {}
+  if (!me) {
+    gate.innerHTML = '<h1>MySweetPea</h1><p>Sign in with your MySweetPea account to manage everything in one place.</p><a class="btn" href="/auth/login">Sign in with MySweetPea</a>';
+    return;
+  }
+  const initials = (me.name || me.username || '?').trim().split(/\s+/).map(w => w[0]).slice(0,2).join('').toUpperCase();
+  app.innerHTML =
+    '<div class="shell">' +
+    '<header class="topbar"><div class="brand"><span class="mark">&#10047;</span> MySweetPea</div>' +
+    '<div class="who"><span class="name">' + esc(me.name || me.username) + '</span><a class="out" href="/auth/logout">Sign out</a></div></header>' +
+    '<main class="grid">' +
+    '<section class="card hero"><div class="avatar">' + esc(initials) + '</div><div>' +
+    '<h2>' + esc(me.name || me.username) + '</h2><p class="dim">' + esc(me.email) + ' &middot; @' + esc(me.username) + '</p>' +
+    '<span class="pill ok">Account active</span></div></section>' +
+    '<section class="card" id="sec-security"><h3>Security</h3><div class="skel"></div></section>' +
+    '<section class="card" id="sec-status"><h3>Service status</h3><div class="skel"></div></section>' +
+    '<section class="card" id="sec-sessions"><h3>Your sessions</h3><div class="skel"></div></section>' +
+    '<section class="card" id="sec-apps"><h3>Connected apps</h3><div class="skel"></div></section>' +
+    '</main><footer class="foot">MySweetPea &middot; your account, your services, one place</footer></div>';
+
+  // ===== SECURITY CENTER (checklist + actions) =====
+  let devices = { totp: [], webauthn: [], static: [] };
+  try { const r = await fetch('/api/devices'); if (r.ok) devices = await r.json(); } catch (e) {}
+  const hasTotp = (devices.totp || []).length > 0;
+  const hasWebauthn = (devices.webauthn || []).length > 0;
+  const hasStatic = (devices.static || []).length > 0;
+  const items = [
+    { done: true,  label: 'Account created & active' },
+    { done: hasTotp,    label: 'Authenticator app (TOTP)', act: hasTotp ? null : ['Set up', "ceremony('default-authenticator-totp-setup','TOTP setup')"] },
+    { done: hasWebauthn,label: 'Passkey / security key', act: hasWebauthn ? null : ['Add passkey', "ceremony('default-authenticator-webauthn-setup','Passkey setup')"] },
+    { done: hasStatic,  label: 'Recovery codes saved', act: hasStatic ? ['View info', "toast('Recovery codes were shown once at setup — regenerate via passkey/TOTP settings if lost')"] : ['Generate', "ceremony('default-authenticator-static-setup','Recovery codes')"] },
+  ];
+  const doneCount = items.filter(i => i.done).length;
+  const pct = Math.round(doneCount / items.length * 100);
+  const C = 2 * Math.PI * 24;
+  const sec = $('#sec-security');
+  sec.innerHTML = '<h3>Security</h3><div style="display:flex;gap:20px;align-items:center">' +
+    '<svg class="ring" viewBox="0 0 54 54"><circle class="bg" cx="27" cy="27" r="24"/><circle class="fg" cx="27" cy="27" r="24" stroke-dasharray="' + C + '" stroke-dashoffset="' + (C * (1 - pct/100)) + '"/><text x="27" y="31">' + pct + '%</text></svg>' +
+    '<div class="sec-checklist" style="flex:1">' +
+    items.map(i => '<div class="check ' + (i.done ? 'done' : 'todo') + '"><span class="ico">' + (i.done ? '&#10003;' : '!') + '</span><span class="label">' + esc(i.label) + '</span>' +
+      (i.act ? '<a class="act" onclick="' + i.act[1] + '">' + i.act[0] + '</a>' : '') + '</div>').join('') +
+    '<div class="check todo" style="border:0"><span class="ico">&#9998;</span><span class="label">Change password</span><a class="act" onclick="ceremony(\'default-password-change\',\'Password change\')">Change</a></div>' +
+    '</div></div>' +
+    ((hasTotp || hasWebauthn) ? '<div style="margin-top:10px"><div class="row"><div class="left"><b>MFA devices</b><span class="dim">' + (devices.totp.length + devices.webauthn.length) + ' enrolled</span></div>' +
+      '<button class="mini" onclick="manageDevices()">Manage</button></div></div>' : '');
+
+  // device management modal
+  window.manageDevices = async () => {
+    const rows = []
+      .concat(devices.totp.map(d => ({ kind: 'Authenticator app', name: d.name || 'TOTP', id: 'totp/' + d.pk })))
+      .concat(devices.webauthn.map(d => ({ kind: 'Passkey', name: d.name || d.device_type?.name || 'key', id: 'webauthn/' + d.pk })));
+    modal('<h3>MFA devices</h3><p class="sub">Remove devices you no longer use. Removing your last MFA device disables MFA.</p>' +
+      rows.map(r => '<div class="row"><div class="left"><b>' + esc(r.name) + '</b><span class="dim">' + esc(r.kind) + '</span></div><button class="mini" onclick="delDevice(\'' + r.id + '\')">Remove</button></div>').join('') +
+      '<div class="mrow"><button class="b-cancel" onclick="closeModal()">Close</button></div>');
+  };
+  window.delDevice = async (id) => {
+    const r = await fetch('/api/devices/' + id, { method: 'DELETE' });
+    if (r.ok) { toast('Device removed'); location.reload(); } else toast('Failed to remove');
+  };
+
+  // ===== STATUS =====
+  fetch('/api/status').then(r => r.json()).then(d => {
+    const el = $('#sec-status'); const mons = (d && d.monitors) || [];
+    if (!mons.length) { el.innerHTML = '<h3>Service status</h3><p class="dim">No status data.</p>'; return; }
+    el.innerHTML = '<h3>Service status</h3>' + mons.slice(0, 8).map(m => {
+      const up = (m.uptime24h == null ? 100 : m.uptime24h) > 50;
+      return '<div class="row"><div class="left"><span><span class="dot ' + (up ? 'ok' : 'down') + '"></span>' + esc(m.name) + '</span></div><span class="dim">' + Math.round(m.uptime24h || 0) + '%</span></div>';
+    }).join('');
+  }).catch(() => { $('#sec-status').innerHTML = '<h3>Service status</h3><p class="dim">Unavailable.</p>'; });
+
+  // ===== SESSIONS =====
+  fetch('/api/sessions').then(r => r.json()).then(d => {
+    const el = $('#sec-sessions'); const list = (d && d.results) || [];
+    if (!list.length) { el.innerHTML = '<h3>Your sessions</h3><p class="dim">No sessions found.</p>'; return; }
+    el.innerHTML = '<h3>Your sessions</h3>' + list.slice(0, 6).map(s => {
+      const dev = (s.current_session ? 'This device' : ((s.agent && (s.agent.device || s.agent.os)) || 'Session'));
+      return '<div class="row"><div class="left"><b>' + esc(dev) + '</b><span class="dim">' + esc(s.last_ip || '') + '</span></div>' +
+        (s.current_session ? '<span class="pill ok">current</span>' : '<button class="mini" data-sid="' + esc(s.uuid) + '">Revoke</button>') + '</div>';
+    }).join('') + '<div class="row"><div class="left"><b>Sign out everywhere</b><span class="dim">End all other sessions</span></div><button class="mini" id="revoke-all">Revoke all</button></div>';
+    el.querySelectorAll('button.mini[data-sid]').forEach(b => b.onclick = async () => {
+      b.disabled = true; b.textContent = '…';
+      await fetch('/api/sessions/' + b.dataset.sid, { method: 'DELETE' });
+      const row = b.closest('.row'); row.style.opacity = .35; b.textContent = 'Revoked';
+      toast('Session signed out', async () => { location.reload(); });
+    });
+    const all = el.querySelector('#revoke-all');
+    if (all) all.onclick = async () => {
+      modal('<h3>Sign out everywhere?</h3><p class="sub">This ends every session except the one you are using now.</p><div class="mrow"><button class="b-cancel" onclick="closeModal()">Cancel</button><button class="b-go" id="confirm-all">Sign them out</button></div>');
+      $('#confirm-all').onclick = async () => {
+        closeModal();
+        const others = list.filter(s => !s.current_session);
+        for (const s of others) await fetch('/api/sessions/' + s.uuid, { method: 'DELETE' });
+        toast('Signed out ' + others.length + ' session' + (others.length === 1 ? '' : 's'));
+        setTimeout(() => location.reload(), 900);
+      };
+    };
+  }).catch(() => { $('#sec-sessions').innerHTML = '<h3>Your sessions</h3><p class="dim">Unavailable.</p>'; });
+
+  // ===== CONNECTED APPS =====
+  fetch('/api/consents').then(r => r.json()).then(d => {
+    const el = $('#sec-apps'); const list = (d && d.results) || [];
+    if (!list.length) { el.innerHTML = '<h3>Connected apps</h3><p class="dim">No app consents yet.</p>'; return; }
+    el.innerHTML = '<h3>Connected apps</h3>' + list.map(c => '<div class="row"><div class="left"><b>' + esc((c.application && c.application.name) || 'Application') + '</b></div><span class="dim">' + new Date(c.expires || Date.now()).toLocaleDateString() + '</span></div>').join('');
+  }).catch(() => { $('#sec-apps').innerHTML = '<h3>Connected apps</h3><p class="dim">Unavailable.</p>'; });
+})();
+</script></body></html>

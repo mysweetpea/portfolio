@@ -17,3 +17,8 @@ APP_URL = "https://dashboard.mysweetpea.cc"
 # Secrets (set via `npx wrangler secret put ...`):
 #   AUTHENTIK_CLIENT_ID
 #   MSP_INTERNAL_HEADER
+
+[assets]
+directory = "./public"
+binding = "ASSETS"
+not_found_handling = "single-page-application"

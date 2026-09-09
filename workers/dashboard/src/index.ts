@@ -3,6 +3,7 @@
 
 export interface Env {
   SESSIONS: KVNamespace;
+  ASSETS: Fetcher;
   AUTHENTIK_CLIENT_ID: string;
   MSP_INTERNAL_HEADER: string;
   AUTH_ISSUER: string;
@@ -191,6 +192,16 @@ export default {
       return new Response(null, { status: 302, headers });
     }
 
+    // Popup ceremony: deep-link into an authentik-hosted setup flow with
+    // a return-to-dashboard next. The user's authentik browser session runs
+    // the ceremony (stock-supported path); completion lands back on /.
+    if (path === '/auth/ceremony') {
+      const flow = url.searchParams.get('f') || '';
+      if (!/^[a-z0-9-]+$/.test(flow)) return new Response('Bad flow', { status: 400 });
+      const next = encodeURIComponent(env.APP_URL + '/');
+      return Response.redirect(`${env.AUTH_BASE}/if/flow/${flow}/?next=${next}`, 302);
+    }
+
     if (path === '/auth/logout') {
       const cookie = request.headers.get('cookie') || '';
       const m = cookie.match(new RegExp(`${COOKIE}=([a-zA-Z0-9_-]+)`));
@@ -252,6 +263,14 @@ export default {
           await env.SESSIONS.put(`audit:${sess.sub}:${Date.now()}`, JSON.stringify({ t: Date.now(), event: 'session_revoked', target: uuid }));
           return json({ ok: r.ok }, r.status);
         }
+        if (path.startsWith('/api/devices/')) {
+          const [kind, pk] = path.split('/').slice(3);
+          const map: Record<string, string> = { totp: 'totp', webauthn: 'webauthn', static: 'static' };
+          if (!map[kind]) return json({ error: 'bad device type' }, 400);
+          const r = await authentikFetch(env, sess.at, `/api/v3/authenticators/${map[kind]}/${pk}/`, { method: 'DELETE' });
+          await env.SESSIONS.put(`audit:${sess.sub}:${Date.now()}`, JSON.stringify({ t: Date.now(), event: 'device_removed', target: kind + ':' + pk }));
+          return json({ ok: r.ok }, r.status);
+        }
         if (path.startsWith('/api/consents/')) {
           const id = path.split('/')[3];
           const r = await authentikFetch(env, sess.at, `/api/v3/core/user_consent/${id}/`, { method: 'DELETE' });
@@ -277,25 +296,9 @@ export default {
 
     // ---------- static ----------
     if (path === '/' || path === '/index.html') {
-      return new Response(FALLBACK_HTML, { headers: { 'content-type': 'text/html;charset=utf-8', 'cache-control': 'no-store' } });
+      return env.ASSETS.fetch(new URL('/', request.url));
     }
     return new Response('Not found', { status: 404 });
   },
 };
 
-const FALLBACK_HTML = `<!doctype html><html><head><meta charset="utf-8"><title>MySweetPea Dashboard</title>
-<style>
-:root{--bg:#0C1316;--primary:#8FAFB5;--primary-bright:#C5D5D8;--sage:#A3C9B6;--gold:#D9A86C;
---text:#EDF3F4;--text-dim:#A9BEC2;--card:rgba(19,30,34,.55);--radius:18px;--radius-sm:12px}
-*{margin:0;padding:0;box-sizing:border-box}
-body{background:var(--bg);color:var(--text);font-family:Inter,system-ui,sans-serif;min-height:100vh;display:flex;align-items:center;justify-content:center}
-.card{background:var(--card);backdrop-filter:blur(16px);border:1px solid rgba(143,175,181,.09);border-radius:var(--radius);padding:48px 56px;text-align:center;max-width:480px}
-h1{font-family:Fraunces,Georgia,serif;font-weight:600;font-size:1.8rem;margin-bottom:8px}
-p{color:var(--text-dim);margin-bottom:24px;line-height:1.6}
-a.btn{display:inline-block;background:var(--primary);color:var(--bg);text-decoration:none;font-weight:600;padding:12px 28px;border-radius:var(--radius-sm);transition:.35s cubic-bezier(.4,0,.2,1)}
-a.btn:hover{background:var(--primary-bright);transform:translateY(-2px)}
-</style></head><body><div class="card">
-<h1>MySweetPea</h1>
-<p>Phase 1 skeleton is live. Sign in with your MySweetPea account to begin.</p>
-<a class="btn" href="/auth/login">Sign in with MySweetPea</a>
-</div></body></html>`;
