@@ -429,6 +429,10 @@ export default {
     if (path === '/' || path === '/index.html') {
       return env.ASSETS.fetch(new URL('/', request.url));
     }
+    // Real asset files (site.webmanifest, icons) — fall through to the assets
+    // binding before 404ing. run_worker_first sends everything here first.
+    const asset = await env.ASSETS.fetch(new URL(path, request.url));
+    if (asset.status !== 404) return asset;
     return new Response('Not found', { status: 404 });
   },
 };

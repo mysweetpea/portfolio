@@ -1,6 +1,13 @@
 <!doctype html><html><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>MySweetPea Dashboard</title>
+<link rel="icon" type="image/svg+xml" href="https://mysweetpea.cc/logo-favicon.svg">
+<link rel="apple-touch-icon" href="https://mysweetpea.cc/apple-touch-icon.png">
+<meta name="theme-color" content="#0C1316">
+<link rel="manifest" href="/site.webmanifest">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=Fraunces:opsz,wght@9..144,500;9..144,600&amp;display=swap">
 <style>
 :root{--bg:#0C1316;--primary:#8FAFB5;--primary-bright:#C5D5D8;--sage:#A3C9B6;--gold:#D9A86C;
 --text:#EDF3F4;--text-dim:#A9BEC2;--card:rgba(19,30,34,.55);--radius:18px;--radius-sm:12px;--error:#D98C8C}
@@ -15,7 +22,7 @@ a.btn:hover{background:var(--primary-bright);transform:translateY(-2px)}
 /* ---- shell ---- */
 .shell{width:min(1080px,92vw);margin:0 auto;padding:28px 0 0}
 .topbar{display:flex;justify-content:space-between;align-items:center;padding:14px 0 26px}
-.brand{font-family:Fraunces,Georgia,serif;font-size:1.25rem}
+.brand{font-family:Fraunces,Georgia,serif;font-size:1.25rem;display:flex;align-items:center;gap:10px}
 .mark{color:var(--sage)}
 .who{display:flex;align-items:center;gap:14px}
 .name{color:var(--text-dim);font-size:.95rem}
@@ -25,7 +32,7 @@ a.btn:hover{background:var(--primary-bright);transform:translateY(-2px)}
 .hero{display:flex;gap:22px;align-items:center;grid-column:1 / -1}
 .avatar{width:72px;height:72px;border-radius:50%;background:linear-gradient(135deg,var(--primary),var(--sage));display:flex;align-items:center;justify-content:center;font-size:1.5rem;font-weight:700;color:var(--bg);flex:none}
 h2{font-family:Fraunces,Georgia,serif;font-weight:600;margin-bottom:2px}
-h3{font-size:1rem;font-weight:600;margin-bottom:10px;letter-spacing:.01em}
+h3{font-family:Fraunces,Georgia,serif;font-size:1.05rem;font-weight:600;margin-bottom:10px;letter-spacing:.01em}
 .dim{color:var(--text-dim);font-size:.9rem}
 .pill{display:inline-block;font-size:.75rem;padding:3px 10px;border-radius:99px;margin-top:8px}
 .pill.ok{background:rgba(163,201,182,.15);color:var(--sage)}
@@ -36,12 +43,12 @@ h3{font-size:1rem;font-weight:600;margin-bottom:10px;letter-spacing:.01em}
 .dot{width:9px;height:9px;border-radius:50%;display:inline-block;margin-right:10px}
 .dot.ok{background:var(--sage);box-shadow:0 0 8px rgba(163,201,182,.5)}
 .dot.down{background:var(--error)}
-.mini{background:transparent;border:1px solid rgba(143,175,181,.3);color:var(--text-dim);border-radius:8px;padding:4px 12px;cursor:pointer;font-size:.8rem}
+.mini{background:transparent;border:1px solid rgba(143,175,181,.3);color:var(--text-dim);border-radius:8px;padding:4px 12px;cursor:pointer;font-size:.8rem;transition:.35s cubic-bezier(.4,0,.2,1)}
 .mini:hover{border-color:var(--gold);color:var(--gold)}
 .mini.primary{border-color:rgba(143,175,181,.5);color:var(--primary-bright)}
 .skel{height:60px;border-radius:10px;background:linear-gradient(90deg,rgba(143,175,181,.06),rgba(143,175,181,.12),rgba(143,175,181,.06));background-size:200% 100%;animation:shimmer 1.4s infinite}
 @keyframes shimmer{to{background-position:-200% 0}}
-.foot{text-align:center;color:var(--text-dim);font-size:.85rem;padding:34px 0}
+.foot{text-align:center;color:var(--text-dim);font-size:.8rem;padding:34px 0}
 /* ---- security center ---- */
 .sec-checklist{display:flex;flex-direction:column;gap:8px}
 .check{display:flex;align-items:center;gap:12px;padding:9px 0;border-bottom:1px solid rgba(143,175,181,.07)}
@@ -98,8 +105,8 @@ h3{font-size:1rem;font-weight:600;margin-bottom:10px;letter-spacing:.01em}
 .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin:18px 0;grid-column:1/-1}
 @media(max-width:760px){.stats{grid-template-columns:repeat(2,1fr)}}
 .stat{background:var(--card);backdrop-filter:blur(16px);border:1px solid rgba(143,175,181,.09);border-radius:var(--radius-sm);padding:16px 18px}
-.stat .n{font-family:Fraunces,Georgia,serif;font-size:1.55rem;font-weight:600;color:var(--primary-bright)}
-.stat .l{font-size:.78rem;color:var(--text-dim);margin-top:3px;letter-spacing:.02em}
+.stat .n{font-family:Fraunces,Georgia,serif;font-size:1.6rem;font-weight:600;color:var(--primary-bright)}
+.stat .l{font-size:.68rem;color:var(--text-dim);margin-top:4px;letter-spacing:.08em;text-transform:uppercase}
 .toast{position:relative}
 .toast .undo{margin-left:14px;color:var(--gold);cursor:pointer;font-weight:600;text-decoration:underline;text-underline-offset:3px}
 /* ---- phase 4: services launcher grid ---- */
@@ -122,8 +129,26 @@ h3{font-size:1rem;font-weight:600;margin-bottom:10px;letter-spacing:.01em}
 .mprog{height:3px;border-radius:99px;background:rgba(143,175,181,.15);margin-top:6px;overflow:hidden}
 .mprog i{display:block;height:100%;border-radius:99px;background:var(--gold)}
 .mtype{position:absolute;top:6px;left:6px;font-size:.62rem;font-weight:600;padding:2px 8px;border-radius:99px;background:rgba(6,10,12,.72);color:var(--primary-bright);border:1px solid rgba(143,175,181,.25)}
+/* ---- phase 6: branding, aesthetics & ux polish ---- */
+.brand img{width:28px;height:28px;border-radius:8px;flex:none}
+.gate-logo{display:block;width:72px;height:72px;margin:0 auto 18px;border-radius:var(--radius);filter:drop-shadow(0 8px 24px rgba(0,0,0,.35))}
+section h3::before{content:"";display:inline-block;width:3px;height:18px;border-radius:99px;background:var(--sage);margin-right:10px;vertical-align:-3px}
+.hero{background:radial-gradient(600px 240px at 85% -20%,rgba(163,201,182,.08),transparent 60%),var(--card)}
+::selection{background:rgba(217,168,108,.35)}
+:focus-visible{outline:2px solid var(--sage);outline-offset:2px}
+::-webkit-scrollbar{width:10px}
+::-webkit-scrollbar-thumb{background:rgba(143,175,181,.25);border-radius:8px}
+::-webkit-scrollbar-track{background:transparent}
+.foot img{width:16px;height:16px;border-radius:4px;vertical-align:-3px;margin-right:3px}
+.foot a{color:inherit;text-decoration:none;transition:color .35s cubic-bezier(.4,0,.2,1)}
+.foot a:hover{color:var(--primary-bright)}
+@media (prefers-reduced-motion: no-preference){
+html{scroll-behavior:smooth}
+@keyframes msp-in{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+main section{opacity:0;animation:msp-in .5s ease-out forwards;animation-delay:calc(var(--i,0)*60ms)}
+}
 </style></head><body>
-<div id="app"><div class="card" id="gate"><h1>MySweetPea</h1><p>Checking your session…</p></div></div>
+<div id="app"><div class="card" id="gate"><img class="gate-logo" src="https://mysweetpea.cc/logo.svg" alt="MySweetPea logo"/><h1>MySweetPea</h1><p>Checking your session…</p></div></div>
 <div id="modal"><div class="mcard" id="mbody"></div></div>
 <div id="toasts"></div>
 
@@ -173,25 +198,25 @@ function ceremony(flowSlug, label) {
   let me = null;
   try { const r = await fetch('/api/me'); if (r.ok) me = await r.json(); } catch (e) {}
   if (!me) {
-    gate.innerHTML = '<h1>MySweetPea</h1><p>Sign in with your MySweetPea account to manage everything in one place.</p><a class="btn" href="/auth/login">Sign in with MySweetPea</a>';
+    gate.innerHTML = '<img class="gate-logo" src="https://mysweetpea.cc/logo.svg" alt="MySweetPea logo"/><h1>MySweetPea</h1><p>Sign in with your MySweetPea account to manage everything in one place.</p><a class="btn" href="/auth/login">Sign in with MySweetPea</a>';
     return;
   }
   const initials = (me.name || me.username || '?').trim().split(/\s+/).map(w => w[0]).slice(0,2).join('').toUpperCase();
   app.innerHTML =
     '<div class="shell">' +
-    '<header class="topbar"><div class="brand"><span class="mark">&#10047;</span> MySweetPea</div>' +
+    '<header class="topbar"><div class="brand"><img src="https://mysweetpea.cc/logo.svg" alt="MySweetPea logo"/>MySweet<span class="mark">Pea</span></div>' +
     '<div class="who"><span class="name">' + esc(me.name || me.username) + '</span><button class="mini" id="pal-open" title="Command palette (Ctrl+K)" style="margin-right:10px">⌘K</button><a class="out" href="/auth/logout">Sign out</a></div></header>' +
-    '<main class="grid"><div class="stats" id="stats"></div>' +
-    '<section id="sec-media" class="media-sec"></section>' +
-    '<section class="card" id="sec-services"><h3>Services</h3><div class="svc-grid" id="svc-grid"></div></section>' +
-    '<section class="card hero"><div class="avatar">' + esc(initials) + '</div><div>' +
+    '<main class="grid"><div class="stats" id="stats" style="--i:0"></div>' +
+    '<section id="sec-media" class="media-sec" style="--i:1"></section>' +
+    '<section class="card" id="sec-services" style="--i:2"><h3>Services</h3><div class="svc-grid" id="svc-grid"></div></section>' +
+    '<section class="card hero" style="--i:3"><div class="avatar">' + esc(initials) + '</div><div>' +
     '<h2>' + esc(me.name || me.username) + '</h2><p class="dim">' + esc(me.email) + ' &middot; @' + esc(me.username) + '</p>' +
     '<span class="pill ok">Account active</span></div></section>' +
-    '<section class="card" id="sec-security"><h3>Security</h3><div class="skel"></div></section>' +
-    '<section class="card" id="sec-status"><h3>Service status</h3><div class="skel"></div></section>' +
-    '<section class="card" id="sec-sessions"><h3>Your sessions</h3><div class="skel"></div></section>' +
-    '<section class="card" id="sec-apps"><h3>Connected apps</h3><div class="skel"></div></section>' +
-    '</main><footer class="foot">MySweetPea &middot; your account, your services, one place</footer></div>';
+    '<section class="card" id="sec-security" style="--i:4"><h3>Security</h3><div class="skel"></div></section>' +
+    '<section class="card" id="sec-status" style="--i:5"><h3>Service status</h3><div class="skel"></div></section>' +
+    '<section class="card" id="sec-sessions" style="--i:6"><h3>Your sessions</h3><div class="skel"></div></section>' +
+    '<section class="card" id="sec-apps" style="--i:7"><h3>Connected apps</h3><div class="skel"></div></section>' +
+    '</main><footer class="foot"><img src="https://mysweetpea.cc/logo.svg" alt=""/> <a href="https://mysweetpea.cc">mysweetpea.cc</a> &middot; homelab dashboard</footer></div>';
 
   // ===== PHASE 5: MEDIA ROWS (continue watching + recently added) =====
   (async () => {
@@ -240,7 +265,7 @@ function ceremony(flowSlug, label) {
   const svcGrid = $('#svc-grid');
   if (svcGrid) svcGrid.innerHTML = SERVICES.map((s, i) => {
     const c = SVC_COLORS[i % SVC_COLORS.length];
-    return '<a class="svc" href="' + s.url + '" target="_blank" rel="noopener noreferrer">' +
+    return '<a class="svc" href="' + s.url + '" target="_blank" rel="noopener noreferrer" title="' + esc(s.blurb) + '" aria-label="' + esc(s.name + ' — ' + s.blurb) + '">' +
       '<span class="svc-ico" style="color:' + c.fg + ';background:' + c.bg + '">' + esc(s.name[0].toUpperCase()) + '</span>' +
       '<span class="svc-name">' + esc(s.name) + '</span>' +
       '<span class="svc-blurb">' + esc(s.blurb) + '</span></a>';
@@ -341,8 +366,8 @@ function ceremony(flowSlug, label) {
     { t: 'Set up TOTP',                d: 'Authentik · MFA',           run: () => ceremony('mfa', 'TOTP setup') },
     { t: 'Add a passkey',              d: 'Authentik · MFA',           run: () => ceremony('mfa', 'Passkey setup') },
     { t: 'Recovery codes',             d: 'Authentik · MFA',           run: () => ceremony('mfa', 'Recovery codes') },
-    { t: 'Manage sessions',            d: 'Authentik · sessions',      run: () => ceremony('sessions', 'Sessions') },
-    { t: 'Sign out everywhere',        d: 'Revoke all other sessions', run: () => revokeAll() },
+    { t: 'Manage sessions',            d: 'Authentik · sessions',      run: () => { goSection('sec-sessions'); ceremony('sessions', 'Sessions'); } },
+    { t: 'Sign out everywhere',        d: 'Revoke all other sessions', run: () => { goSection('sec-sessions'); revokeAll(); } },
     { t: 'Open Jellyfin',              d: 'media.mysweetpea.cc',       run: () => location.assign('https://media.mysweetpea.cc') },
     { t: 'Open Vaultwarden',           d: 'vault.mysweetpea.cc',       run: () => location.assign('https://vault.mysweetpea.cc') },
     { t: 'Open Nextcloud',             d: 'cloud.mysweetpea.cc',       run: () => location.assign('https://cloud.mysweetpea.cc') },
@@ -351,6 +376,7 @@ function ceremony(flowSlug, label) {
     { t: 'Open Homepage',              d: 'home.mysweetpea.cc',        run: () => location.assign('https://home.mysweetpea.cc') },
   ];
   let sel = 0, filtered = COMMANDS.slice();
+  const goSection = (id) => { const el = document.getElementById(id); if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' }); };
 
   const pal = $('#pal'), input = $('#pal-q'), list = $('#pal-list');
 
