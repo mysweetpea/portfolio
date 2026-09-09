@@ -113,72 +113,7 @@ h3{font-size:1rem;font-weight:600;margin-bottom:10px;letter-spacing:.01em}
     <div class="pal-list" id="pal-list"></div>
   </div>
 </div>
-<script>
-'use strict';
-/* ================= PHASE 3: command palette + stat cards ================= */
-(function () {
-  const COMMANDS = [
-    { t: 'Change password',            d: 'Authentik · user details',  run: () => ceremony('password', 'Password change') },
-    { t: 'Set up TOTP',                d: 'Authentik · MFA',           run: () => ceremony('mfa', 'TOTP setup') },
-    { t: 'Add a passkey',              d: 'Authentik · MFA',           run: () => ceremony('mfa', 'Passkey setup') },
-    { t: 'Recovery codes',             d: 'Authentik · MFA',           run: () => ceremony('mfa', 'Recovery codes') },
-    { t: 'Manage sessions',            d: 'Authentik · sessions',      run: () => ceremony('sessions', 'Sessions') },
-    { t: 'Sign out everywhere',        d: 'Revoke all other sessions', run: () => revokeAll() },
-    { t: 'Open Jellyfin',              d: 'media.mysweetpea.cc',       run: () => location.assign('https://media.mysweetpea.cc') },
-    { t: 'Open Vaultwarden',           d: 'vault.mysweetpea.cc',       run: () => location.assign('https://vault.mysweetpea.cc') },
-    { t: 'Open Nextcloud',             d: 'cloud.mysweetpea.cc',       run: () => location.assign('https://cloud.mysweetpea.cc') },
-    { t: 'Open Photos (Immich)',       d: 'photos.mysweetpea.cc',      run: () => location.assign('https://photos.mysweetpea.cc') },
-    { t: 'Open Notes (AFFiNE)',        d: 'notes.mysweetpea.cc',       run: () => location.assign('https://notes.mysweetpea.cc') },
-    { t: 'Open Homepage',              d: 'home.mysweetpea.cc',        run: () => location.assign('https://home.mysweetpea.cc') },
-  ];
-  let sel = 0, filtered = COMMANDS.slice();
 
-  const pal = $('#pal'), input = $('#pal-q'), list = $('#pal-list');
-
-  function render() {
-    if (!filtered.length) { list.innerHTML = '<div class="pal-empty">No matching commands</div>'; return; }
-    list.innerHTML = filtered.map((c, i) =>
-      '<div class="pal-item' + (i === sel ? ' sel' : '') + '" data-i="' + i + '">' +
-      '<b>' + esc(c.t) + '</b><span class="dim">' + esc(c.d) + '</span></div>').join('');
-    list.querySelectorAll('.pal-item').forEach(el => {
-      el.onclick = () => { close(); filtered[+el.dataset.i].run(); };
-      el.onmouseenter = () => { sel = +el.dataset.i; render(); };
-    });
-    const s = list.querySelector('.sel'); if (s) s.scrollIntoView({ block: 'nearest' });
-  }
-  function open()  { pal.classList.add('open'); input.value = ''; filtered = COMMANDS.slice(); sel = 0; render(); setTimeout(() => input.focus(), 0); }
-  function close() { pal.classList.remove('open'); input.blur(); }
-
-  window.mspPalette = { open, close };
-
-  input.addEventListener('input', () => {
-    const q = input.value.trim().toLowerCase();
-    filtered = !q ? COMMANDS.slice() : COMMANDS.filter(c => (c.t + ' ' + c.d).toLowerCase().includes(q));
-    sel = 0; render();
-  });
-  input.addEventListener('keydown', (e) => {
-    if (e.key === 'ArrowDown') { e.preventDefault(); sel = Math.min(sel + 1, filtered.length - 1); render(); }
-    else if (e.key === 'ArrowUp') { e.preventDefault(); sel = Math.max(sel - 1, 0); render(); }
-    else if (e.key === 'Enter')  { e.preventDefault(); if (filtered[sel]) { close(); filtered[sel].run(); } }
-    else if (e.key === 'Escape') { close(); }
-  });
-  pal.addEventListener('mousedown', (e) => { if (e.target === pal) close(); });
-
-  document.addEventListener('keydown', (e) => {
-    if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') { e.preventDefault(); pal.classList.contains('open') ? close() : open(); }
-  });
-
-  /* ---- stat cards (Jellyfin + Immich + sessions + apps) ---- */
-  function stat(n, l) { return '<div class="stat"><div class="n">' + n + '</div><div class="l">' + esc(l) + '</div></div>'; }
-  fetch('/api/stats').then(r => r.ok ? r.json() : Promise.reject()).then(d => {
-    $('#stats').innerHTML =
-      stat(d.movies ?? '—', 'Movies') +
-      stat(d.series ?? '—', 'Series') +
-      stat(d.photos ?? '—', 'Photos') +
-      stat(d.sessions ?? '—', 'Active sessions');
-  }).catch(() => { $('#stats').innerHTML = ''; });
-})();
-</script>
 
 <script>
 'use strict';
@@ -225,7 +160,7 @@ function ceremony(flowSlug, label) {
   app.innerHTML =
     '<div class="shell">' +
     '<header class="topbar"><div class="brand"><span class="mark">&#10047;</span> MySweetPea</div>' +
-    '<div class="who"><span class="name">' + esc(me.name || me.username) + '</span><a class="out" href="/auth/logout">Sign out</a></div></header>' +
+    '<div class="who"><span class="name">' + esc(me.name || me.username) + '</span><button class="mini" id="pal-open" title="Command palette (Ctrl+K)" style="margin-right:10px">⌘K</button><a class="out" href="/auth/logout">Sign out</a></div></header>' +
     '<main class="grid"><div class="stats" id="stats"></div>' +
     '<section class="card hero"><div class="avatar">' + esc(initials) + '</div><div>' +
     '<h2>' + esc(me.name || me.username) + '</h2><p class="dim">' + esc(me.email) + ' &middot; @' + esc(me.username) + '</p>' +
@@ -321,4 +256,94 @@ function ceremony(flowSlug, label) {
     el.innerHTML = '<h3>Connected apps</h3>' + list.map(c => '<div class="row"><div class="left"><b>' + esc((c.application && c.application.name) || 'Application') + '</b></div><span class="dim">' + new Date(c.expires || Date.now()).toLocaleDateString() + '</span></div>').join('');
   }).catch(() => { $('#sec-apps').innerHTML = '<h3>Connected apps</h3><p class="dim">Unavailable.</p>'; });
 })();
-</script></body></html>
+</script>
+<script>
+'use strict';
+/* ================= PHASE 3: command palette + stat cards ================= */
+(function () {
+  const COMMANDS = [
+    { t: 'Change password',            d: 'Authentik · user details',  run: () => ceremony('password', 'Password change') },
+    { t: 'Set up TOTP',                d: 'Authentik · MFA',           run: () => ceremony('mfa', 'TOTP setup') },
+    { t: 'Add a passkey',              d: 'Authentik · MFA',           run: () => ceremony('mfa', 'Passkey setup') },
+    { t: 'Recovery codes',             d: 'Authentik · MFA',           run: () => ceremony('mfa', 'Recovery codes') },
+    { t: 'Manage sessions',            d: 'Authentik · sessions',      run: () => ceremony('sessions', 'Sessions') },
+    { t: 'Sign out everywhere',        d: 'Revoke all other sessions', run: () => revokeAll() },
+    { t: 'Open Jellyfin',              d: 'media.mysweetpea.cc',       run: () => location.assign('https://media.mysweetpea.cc') },
+    { t: 'Open Vaultwarden',           d: 'vault.mysweetpea.cc',       run: () => location.assign('https://vault.mysweetpea.cc') },
+    { t: 'Open Nextcloud',             d: 'cloud.mysweetpea.cc',       run: () => location.assign('https://cloud.mysweetpea.cc') },
+    { t: 'Open Photos (Immich)',       d: 'photos.mysweetpea.cc',      run: () => location.assign('https://photos.mysweetpea.cc') },
+    { t: 'Open Notes (AFFiNE)',        d: 'notes.mysweetpea.cc',       run: () => location.assign('https://notes.mysweetpea.cc') },
+    { t: 'Open Homepage',              d: 'home.mysweetpea.cc',        run: () => location.assign('https://home.mysweetpea.cc') },
+  ];
+  let sel = 0, filtered = COMMANDS.slice();
+
+  const pal = $('#pal'), input = $('#pal-q'), list = $('#pal-list');
+
+  function render() {
+    if (!filtered.length) { list.innerHTML = '<div class="pal-empty">No matching commands</div>'; return; }
+    list.innerHTML = filtered.map((c, i) =>
+      '<div class="pal-item' + (i === sel ? ' sel' : '') + '" data-i="' + i + '">' +
+      '<b>' + esc(c.t) + '</b><span class="dim">' + esc(c.d) + '</span></div>').join('');
+    list.querySelectorAll('.pal-item').forEach(el => {
+      el.onclick = () => { close(); filtered[+el.dataset.i].run(); };
+      el.onmouseenter = () => { sel = +el.dataset.i; render(); };
+    });
+    const s = list.querySelector('.sel'); if (s) s.scrollIntoView({ block: 'nearest' });
+  }
+  function open()  { pal.classList.add('open'); input.value = ''; filtered = COMMANDS.slice(); sel = 0; render(); setTimeout(() => input.focus(), 0); }
+  function close() { pal.classList.remove('open'); input.blur(); }
+
+  window.mspPalette = { open, close };
+
+  input.addEventListener('input', () => {
+    const q = input.value.trim().toLowerCase();
+    filtered = !q ? COMMANDS.slice() : COMMANDS.filter(c => (c.t + ' ' + c.d).toLowerCase().includes(q));
+    sel = 0; render();
+  });
+  input.addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowDown') { e.preventDefault(); sel = Math.min(sel + 1, filtered.length - 1); render(); }
+    else if (e.key === 'ArrowUp') { e.preventDefault(); sel = Math.max(sel - 1, 0); render(); }
+    else if (e.key === 'Enter')  { e.preventDefault(); if (filtered[sel]) { close(); filtered[sel].run(); } }
+    else if (e.key === 'Escape') { close(); }
+  });
+  pal.addEventListener('mousedown', (e) => { if (e.target === pal) close(); });
+
+  document.addEventListener('keydown', (e) => {
+    if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') { e.preventDefault(); pal.classList.contains('open') ? close() : open(); }
+  });
+
+  /* ---- stat cards (Jellyfin + Immich + sessions) ---- */
+  function stat(n, l) { return '<div class="stat"><div class="n">' + n + '</div><div class="l">' + esc(l) + '</div></div>'; }
+  function waitFor(sel) {
+    return new Promise(resolve => {
+      const el = document.querySelector(sel);
+      if (el) return resolve(el);
+      const t = setInterval(() => { const e2 = document.querySelector(sel); if (e2) { clearInterval(t); resolve(e2); } }, 120);
+      setTimeout(() => { clearInterval(t); resolve(null); }, 15000);
+    });
+  }
+  function dashRow() {
+    return stat('—', 'Movies') + stat('—', 'Series') + stat('—', 'Photos') + stat('—', 'Active sessions');
+  }
+  (async () => {
+    const el = await waitFor('#stats');
+    if (!el) return;
+    el.innerHTML = dashRow();
+    try {
+      const r = await fetch('/api/stats');
+      const d = r.ok ? await r.json() : {};
+      el.innerHTML =
+        stat(d.movies ?? '—', 'Movies') +
+        stat(d.series ?? '—', 'Series') +
+        stat(d.photos ?? '—', 'Photos') +
+        stat(d.sessions ?? '—', 'Active sessions');
+    } catch (e) { /* keep dashes */ }
+  })();
+
+  /* palette button (topbar is built dynamically -> delegated) */
+  document.addEventListener('click', (e) => {
+    if (e.target && e.target.id === 'pal-open') { e.preventDefault(); window.mspPalette.open(); }
+  });
+})();
+</script>
+</body></html>
