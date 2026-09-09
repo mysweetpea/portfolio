@@ -113,7 +113,7 @@ h3{font-family:Fraunces,Georgia,serif;font-size:1.05rem;font-weight:600;margin-b
 .svc-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:12px}
 .svc{display:flex;flex-direction:column;gap:6px;background:var(--card);backdrop-filter:blur(16px);border:1px solid rgba(143,175,181,.09);border-radius:var(--radius-sm);padding:14px;text-decoration:none;color:var(--text);transition:.35s cubic-bezier(.4,0,.2,1)}
 .svc:hover{transform:translateY(-2px);border-color:rgba(143,175,181,.4)}
-.svc-ico{width:34px;height:34px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:.95rem;flex:none}
+.svc-ico{width:34px;height:34px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:.95rem;flex:none}img.svc-ico{object-fit:contain;padding:3px}
 .svc-name{font-size:.92rem;font-weight:600}
 .svc-blurb{font-size:.78rem;color:var(--text-dim)}
 /* ---- phase 5: media rows ---- */
@@ -375,17 +375,15 @@ function ceremony(flowSlug, label) {
 
   // ===== SERVICES LAUNCHER =====
   const SERVICES = [
-    { name: 'Jellyfin',    url: 'https://media.mysweetpea.cc',   blurb: 'Movies & TV' },
-    { name: 'Jellyseerr',  url: 'https://request.mysweetpea.cc', blurb: 'Request media' },
-    { name: 'Nextcloud',   url: 'https://cloud.mysweetpea.cc',   blurb: 'Files & calendar' },
-    { name: 'Immich',      url: 'https://photos.mysweetpea.cc',  blurb: 'Photo library' },
-    { name: 'Vaultwarden', url: 'https://vault.mysweetpea.cc',   blurb: 'Passwords' },
-    { name: 'Element',     url: 'https://chat.mysweetpea.cc',    blurb: 'Matrix chat' },
-    { name: 'Open WebUI',  url: 'https://ai.mysweetpea.cc',      blurb: 'AI assistants' },
+    { name: 'Jellyfin',    url: 'https://media.mysweetpea.cc',   blurb: 'Movies & TV', icon: '/icons/jellyfin.svg' },
+    { name: 'Jellyseerr',  url: 'https://request.mysweetpea.cc', blurb: 'Request media', icon: '/icons/seerr.svg' },
+    { name: 'Nextcloud',   url: 'https://cloud.mysweetpea.cc',   blurb: 'Files & calendar', icon: '/icons/nextcloud.svg' },
+    { name: 'Immich',      url: 'https://photos.mysweetpea.cc',  blurb: 'Photo library', icon: '/icons/immich.svg' },
+    { name: 'Vaultwarden', url: 'https://vault.mysweetpea.cc',   blurb: 'Passwords', icon: '/icons/vaultwarden.svg' },
+    { name: 'Element',     url: 'https://chat.mysweetpea.cc',    blurb: 'Matrix chat', icon: '/icons/matrix.svg' },
+    { name: 'Open WebUI',  url: 'https://ai.mysweetpea.cc',      blurb: 'AI assistants', icon: '/icons/openwebui.svg' },
     { name: 'n8n',         url: 'https://n8n.mysweetpea.cc',     blurb: 'Automation' },
-    { name: 'Gotify',      url: 'https://gotify.mysweetpea.cc',  blurb: 'Notifications' },
-    { name: 'KoalaSync',   url: 'https://sync.mysweetpea.cc',    blurb: 'Jellyfin &harr; AniList sync' },
-    { name: 'Uptime',      url: 'https://status.mysweetpea.cc',  blurb: 'Service status' },
+    { name: 'KoalaSync',   url: 'https://sync.mysweetpea.cc',    blurb: 'Jellyfin &harr; AniList sync', icon: '/icons/koalasync.svg' },
     { name: 'Authentik',   url: 'https://auth.mysweetpea.cc',    blurb: 'SSO & account' },
   ];
   const SVC_COLORS = [
@@ -397,7 +395,7 @@ function ceremony(flowSlug, label) {
   if (svcGrid) svcGrid.innerHTML = SERVICES.map((s, i) => {
     const c = SVC_COLORS[i % SVC_COLORS.length];
     return '<a class="svc" href="' + s.url + '" target="_blank" rel="noopener noreferrer" title="' + esc(s.blurb) + '" aria-label="' + esc(s.name + ' — ' + s.blurb) + '">' +
-      '<span class="svc-ico" style="color:' + c.fg + ';background:' + c.bg + '">' + esc(s.name[0].toUpperCase()) + '</span>' +
+      (s.icon ? '<img class="svc-ico" src="' + s.icon + '" alt="" width="34" height="34" loading="lazy">' : '<span class="svc-ico" style="color:' + c.fg + ';background:' + c.bg + '">' + esc(s.name[0].toUpperCase()) + '</span>') +
       '<span class="svc-name">' + esc(s.name) + '</span>' +
       '<span class="svc-blurb">' + esc(s.blurb) + '</span></a>';
   }).join('');
