@@ -6133,15 +6133,6 @@ body {
     .service-shot img { transition: none; transform: none; }
 }
 /* Explicit external "Open <service>" link on each card (does not trigger the lightbox) */
-.service-card .card-open {
-    display: inline-flex; align-items: center; gap: 6px;
-    margin: 2px 0 6px;
-    padding: 6px 14px; border-radius: 999px;
-    background: var(--primary-glow); border: 1px solid var(--border-primary);
-    color: var(--text-dim); font-size: 0.78rem; font-weight: 600;
-    text-decoration: none; transition: var(--transition);
-}
-.service-card .card-open:hover { color: var(--text); border-color: var(--sage); background: rgba(163,201,182,0.12); }
 
 /* Screenshot lightbox: full-screen scrim + centered figure */
 
@@ -6195,17 +6186,6 @@ body {
 }
 .lightbox-text strong { display: block; font-size: 1.05rem; color: var(--text); }
 .lightbox-text span { display: block; font-size: 0.85rem; color: var(--text-dim); margin-top: 2px; }
-.lightbox-open {
-    display: inline-flex; align-items: center; justify-content: center;
-    min-height: 44px; padding: 11px 22px;
-    border: 1px solid var(--sage); border-radius: var(--radius-sm);
-    background: linear-gradient(135deg, var(--sage), var(--primary));
-    color: #10201D; font-weight: 700; font-size: 0.9rem;
-    text-decoration: none; white-space: nowrap;
-    transition: var(--transition);
-}
-.lightbox-open:hover { filter: brightness(1.08); transform: translateY(-1px); }
-.lightbox-open:focus-visible { outline: 3px solid var(--primary-bright); outline-offset: 4px; }
 
 /* Fix text cutoff: allow modal body to scroll, don't clip desc */
 .modal-body {

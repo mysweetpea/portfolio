@@ -92,12 +92,14 @@ function navAccountMarkup(nonce) {
     'if(!s||!s.logged_in)return;' +
     'var first=String(s.name||"").trim().split(/\\s+/)[0];' +
     'label.textContent=first||"Account";' +
+    'var av=document.getElementById("nav-account-avatar");var svg=chip.querySelector("svg");' +
+    'if(av){av.onload=function(){av.style.display="inline-block";av.hidden=false;if(svg)svg.style.display="none";};av.onerror=function(){av.style.display="none";};av.src="/api/avatar?v="+Date.now();}' +
     'pop.innerHTML=\'<a class="nap-primary" href="\'+dash+\'">Open dashboard</a>\';' +
     '}).catch(function(){});' +
     '})();</' + 'script>';
   return '<div class="nav-account" id="nav-account">' +
     '<button type="button" class="nav-btn nav-signin nav-account-chip" id="nav-account-chip" aria-expanded="false" aria-controls="nav-account-pop" aria-haspopup="true">' +
-    person + '<span id="nav-account-label">Sign in</span></button>' +
+    person + '<img id="nav-account-avatar" alt="" hidden style="width:22px;height:22px;border-radius:50%;object-fit:cover;display:none" />' + '<span id="nav-account-label">Sign in</span></button>' +
     '<div class="nav-account-pop" id="nav-account-pop" hidden>' + popOut + '</div></div>' +
     css + js;
 }
@@ -232,6 +234,29 @@ export default {
       return new Response(body, {
         status: upstream.status,
         headers: { 'Content-Type': 'application/json', 'Cache-Control': 'no-store' }
+      });
+    }
+
+    // --- Avatar proxy (signed-in chip): forwards session cookie to the dashboard ---
+    if (url.pathname === '/api/avatar') {
+      const fwd = {};
+      const cookie = request.headers.get('Cookie');
+      if (cookie) fwd['Cookie'] = cookie;
+      fwd['User-Agent'] = request.headers.get('User-Agent') || '';
+      let upstream;
+      try {
+        upstream = await fetch('https://dashboard.mysweetpea.cc/api/avatar', { headers: fwd, redirect: 'manual' });
+      } catch (e) {
+        return new Response('upstream_unreachable', { status: 502 });
+      }
+      if (!upstream.ok) return new Response('no avatar', { status: upstream.status });
+      const buf = await upstream.arrayBuffer();
+      return new Response(buf, {
+        status: 200,
+        headers: {
+          'Content-Type': upstream.headers.get('Content-Type') || 'image/png',
+          'Cache-Control': 'private, max-age=300'
+        }
       });
     }
 

@@ -224,7 +224,7 @@ async function fetchPublicKuma(env: Env): Promise<{ monitors: KumaMonitor[] } | 
     try { return JSON.parse(cached) as { monitors: KumaMonitor[] }; } catch { /* refetch */ }
   }
   const base = kumaOrigin(env);
-  const opt: RequestInit = { headers: { 'user-agent': 'Mozilla/5.0' } };
+  const opt: RequestInit = { headers: { 'user-agent': 'Mozilla/5.0', 'x-msp-internal': env.MSP_INTERNAL_HEADER } };
   let page: any = null;
   let hb: any = null;
   try {

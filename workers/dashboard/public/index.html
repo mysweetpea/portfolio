@@ -166,6 +166,7 @@ img.svc-ico{object-fit:contain;padding:3px}
 .acct-pop-head .nav-avatar{width:34px;height:34px}
 .acct-pop-head b{display:block;font-size:.9rem}
 .acct-pop-head .dim{font-size:.75rem;display:block;max-width:160px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.acct-pop-head .tier-pill{display:inline-flex;margin-top:5px}
 .acct-pop a{display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:9px;color:var(--text);text-decoration:none;font-size:.88rem;transition:background var(--t-fast)}
 .acct-pop a:hover{background:rgba(143,175,181,.1)}
 .acct-pop a svg{width:16px;height:16px;color:var(--text-dim);flex:none}
@@ -458,6 +459,22 @@ input:focus-visible,select:focus-visible,textarea:focus-visible{border-radius:va
 @media (prefers-reduced-motion: reduce){
   *,*::before,*::after{animation-duration:.01ms !important;animation-iteration-count:1 !important;transition-duration:.01ms !important;scroll-behavior:auto !important}
 }
+
+/* ---- footer (site-parity) ---- */
+.dash-footer{grid-column:1/-1;margin-top:28px;text-align:left;padding:36px 24px 28px;font-size:.85rem;color:var(--text-dim);border-top:1px solid var(--border)}
+.dash-footer a{color:var(--primary);text-decoration:none;transition:color .16s ease}
+.dash-footer a:hover{color:var(--primary-bright)}
+.dash-footer .footer-grid{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:32px;max-width:1100px;margin:0 auto 26px}
+.dash-footer .footer-brand p{margin:12px 0 14px;max-width:34ch;line-height:1.6;color:var(--text-dim)}
+.dash-footer .footer-brand .nav-logo{display:inline-flex;align-items:center;gap:8px;font-weight:700;color:var(--text);font-size:1.02rem}
+.dash-footer .footer-status{display:inline-flex;align-items:center;gap:8px;color:var(--text-dim);font-size:.8rem}
+.dash-footer .footer-status .status-dot{width:9px;height:9px;border-radius:50%;background:#58d68d;box-shadow:0 0 8px rgba(88,214,141,.7);display:inline-block}
+.dash-footer .footer-status.down .status-dot{background:var(--error);box-shadow:0 0 8px rgba(217,140,140,.7)}
+.dash-footer .footer-col{display:flex;flex-direction:column;gap:9px}
+.dash-footer .footer-col h4{margin:0 0 4px;font-size:.78rem;letter-spacing:.12em;text-transform:uppercase;color:var(--text-faint);font-family:var(--font-head,inherit)}
+.dash-footer .footer-bottom{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;max-width:1100px;margin:0 auto;padding-top:20px;border-top:1px solid var(--border);color:var(--text-faint)}
+.dash-footer .footer-bottom p{margin:0}
+@media(max-width:760px){.dash-footer .footer-grid{grid-template-columns:1fr 1fr}.dash-footer .footer-bottom{flex-direction:column;align-items:center;text-align:center}}
 </style></head><body>
 <div class="aurora" aria-hidden="true"></div>
 <div class="grain-overlay" aria-hidden="true"></div>
@@ -628,6 +645,18 @@ function setTab(name, opts) {
   if (name === 'stats' && typeof window.loadStats === 'function') window.loadStats();
 }
 window.setTab = setTab;
+  // footer status live
+  (function () {
+    const el = document.getElementById('footerStatusText'), box = document.getElementById('footerStatus');
+    if (!el) return;
+    fetch('/api/status').then((r) => (r.ok ? r.json() : null)).then((s) => {
+      const ms = (s && s.monitors) || [];
+      const down = ms.filter((m) => !m.current).length;
+      if (!ms.length) { el.textContent = 'Status unavailable'; box && box.classList.add('down'); return; }
+      el.textContent = down ? (down + ' service' + (down > 1 ? 's' : '') + ' degraded') : 'All systems operational';
+      if (down) box && box.classList.add('down');
+    }).catch(() => { el.textContent = 'Status unavailable'; box && box.classList.add('down'); });
+  })();
 function goSection(id) {
   const map = { 'sec-media': 'media', 'sec-media-m': 'media', 'sec-library': 'media', 'sec-services': 'services', 'sec-uptime': 'services', 'sec-security': 'security', 'sec-sessions': 'security', 'sec-apps': 'security', 'sec-account': 'account', 'sec-status': 'home', 'stats': 'stats', 'sec-spirit': 'account' };
   if (map[id]) setTab(map[id]);
@@ -960,6 +989,7 @@ function guideDetailHtml(key) {
     const ae = document.getElementById('pop-email'); if (ae) ae.textContent = me.email || '';
     const nn = document.getElementById('acct-name-nav'); if (nn) nn.textContent = (me.name || me.username).split(' ')[0];
     const at = document.getElementById('acct-tier'); if (at) at.innerHTML = tierBadge(me.tier, false);
+    const pt = document.getElementById('pop-tier'); if (pt) { pt.innerHTML = tierBadge(me.tier, false); pt.hidden = false; }
     window.setAvatars && window.setAvatars();
   };
   
@@ -993,7 +1023,7 @@ function guideDetailHtml(key) {
         '<svg class="acct-caret" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>' +
       '</button>' +
       '<div class="acct-pop" id="acct-pop" role="menu" aria-label="Account menu" hidden>' +
-        '<div class="acct-pop-head"><span class="nav-avatar sm" id="pop-avatar">' + avatarInner() + '</span><div><b id="pop-name"></b><span class="dim" id="pop-email"></span></div></div>' +
+        '<div class="acct-pop-head"><span class="nav-avatar sm" id="pop-avatar">' + avatarInner() + '</span><div><b id="pop-name"></b><span class="dim" id="pop-email"></span><span class="tier-pill" id="pop-tier" hidden></span></div></div>' +
         '<a role="menuitem" href="#security" data-goto="security"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M12 2 4 5v6c0 5 3.4 9.7 8 11 4.6-1.3 8-6 8-11V5l-8-3Z"/></svg>Security settings</a>' +
         '<a role="menuitem" href="#account" data-goto="account"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 3.6-6 8-6s8 2 8 6"/></svg>Account profile</a>' +
         '<a role="menuitem" href="https://mysweetpea.cc/contact.html" target="_blank" rel="noopener noreferrer"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><rect x="2" y="4" width="20" height="16" rx="3"/><path d="m2 7 10 6L22 7"/></svg>Contact us</a>' +
@@ -1092,7 +1122,7 @@ function guideDetailHtml(key) {
     '<div class="portal-embed"><figure class="portal-frame"><video id="spirit-video" autoplay muted loop playsinline preload="metadata" aria-label="The MySweetPea garden spirit, a small animated drawing"><source src="/videos/hermes-girl-orb.webm" type="video/webm"><source src="/videos/hermes-girl-orb.mp4" type="video/mp4"></video></figure></div></section>' +
     '<pre class="ripple-strip" id="ripple-strip" aria-hidden="true"></pre>' +
     '</div>' +
-    '</main><footer class="foot"><img src="https://mysweetpea.cc/logo.svg" alt=""/> <a href="https://mysweetpea.cc">mysweetpea.cc</a> &middot; homelab dashboard</footer></div>';
+    '</main><footer class="page-footer dash-footer"><div class="footer-grid"><div class="footer-brand"><a href="https://mysweetpea.cc" class="nav-logo"><img src="/icons/logo.svg" alt="" width="28" height="28"><span>MySweetPea</span></a><p>Private alternatives to the services you use every day. No ads, no tracking, no subscriptions &mdash; just community-funded, self-hosted software.</p><span class="footer-status" id="footerStatus"><span class="status-dot" aria-hidden="true"></span><span id="footerStatusText">&hellip;</span></span></div><div class="footer-col"><h4>Explore</h4><a href="https://mysweetpea.cc/services.html">Services</a><a href="https://mysweetpea.cc/pricing.html">How It Works</a><a href="https://status.mysweetpea.cc">Status</a><a href="https://mysweetpea.cc/changelog.html">Changelog</a></div><div class="footer-col"><h4>Community</h4><a href="https://mysweetpea.cc/form.html">Get Access</a><a href="https://mysweetpea.cc/support.html">Donate</a><a href="https://mysweetpea.cc/suggest.html">Suggest a Service</a><a href="https://mysweetpea.cc/about.html">About</a></div><div class="footer-col"><h4>Support</h4><a data-goto="contact" href="#contact">Contact Us</a><a href="mailto:support@mysweetpea.cc">support@mysweetpea.cc</a><a href="https://github.com/mysweetpea" target="_blank" rel="noopener noreferrer">GitHub</a></div></div><div class="footer-bottom"><p>&copy; 2026 MySweetPea. Privacy-first, self-hosted, community funded.</p><p class="footer-help">Need help? <a href="mailto:support@mysweetpea.cc">support@mysweetpea.cc</a></p></div></footer></div>';
 
   // tier badges everywhere (hero, topbar, services/guides echoes) — initial render
   window.applyProfile();
