@@ -734,6 +734,33 @@ input:focus-visible,select:focus-visible,textarea:focus-visible{border-radius:va
 .gp-count{display:inline-flex;align-items:center;justify-content:center;min-width:17px;height:17px;padding:0 5px;border-radius:999px;background:rgba(151,146,255,.16);color:var(--primary-bright);font-size:.62rem;font-weight:700;font-variant-numeric:tabular-nums;flex:none}
 .gp-steps{min-width:0}
 @media (max-width:760px){.gp-row{gap:6px}.gp-pill{padding:5px 11px;font-size:.78rem}}
+/* ---- aurora mobile 3: adopt the main site's mobile grammar (rails stack, type up, 44px targets) ---- */
+@media (max-width:760px){
+.hm-rail,.sv-orbs,.media-row{display:grid;grid-template-columns:1fr;overflow:visible}
+.hm-rail>*,.sv-orbs>*,.media-row>*{width:100%!important}
+.hm-rail:has(.hm-pcard),.media-row:has(.mposter){grid-template-columns:repeat(2,1fr)}
+.hm-pcard,.mitem,.mposter{width:auto}
+.hm-sec::after,.media-sec .card::after,.mb2-orbwrap::after{display:none}
+.card h3,.hm-h2{font-size:1.35rem}
+.hm-hero-title{font-size:clamp(1.5rem,7vw,1.9rem)}
+.sv-spot-name{font-size:clamp(1.3rem,6vw,1.6rem)}
+.st2-hero .st2-num{font-size:clamp(2rem,9vw,2.8rem)}
+.hm-greet{font-size:clamp(1.25rem,6.5vw,1.5rem)}
+.tabpanel{gap:26px}
+.hm-sec{margin-bottom:6px}
+.shell{padding-top:76px}
+.tab{min-height:44px;display:flex;align-items:center}
+.hm-btn,.ob-btn,.btn,.sv-fchip,.acct-trigger,.nav-search{min-height:44px;min-width:44px}
+.sv-dot{position:relative}
+.sv-dot::before{content:'';position:absolute;inset:-19px}
+.sv-refresh::before{content:'';position:absolute;inset:-7px}
+.sv-pin{width:36px;height:36px}
+.gp-pill,.guide-variant{min-height:40px;padding:10px 16px}
+.sv-grid{grid-template-columns:1fr}
+.sv-spot{padding:22px 18px}
+.stat{padding:18px}
+.hm-tile,.hm-req,.hm-wide,.hm-un{width:auto}
+}
 </style></head><body>
 <div class="aurora" aria-hidden="true"></div>
 <div class="grain-overlay" aria-hidden="true"></div>
