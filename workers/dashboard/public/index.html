@@ -267,7 +267,7 @@ img.svc-guide-ico{object-fit:contain;padding:2px}
 .svc-guide-body p{margin:0;font-size:.88rem;line-height:1.55}
 .svc-guide-btn{display:inline-block;margin-top:9px;background:transparent;border:1px solid rgba(151,146,255,.4);color:var(--primary-bright);text-decoration:none;font-size:.8rem;font-weight:600;padding:5px 14px;border-radius:99px;transition:.35s cubic-bezier(.4,0,.2,1)}
 .svc-guide-btn:hover{border-color:var(--gold);color:var(--gold)}
-@media(max-width:760px){.svc-guide{grid-template-columns:1fr}.svc-guide-nav{flex-direction:row;overflow-x:auto;scrollbar-width:none;padding-bottom:4px}.svc-guide-nav::-webkit-scrollbar{display:none}.svc-guide-chip{width:auto;flex:none;white-space:nowrap}}
+@media(max-width:760px){.svc-guide{grid-template-columns:1fr}.svc-guide-nav{flex-direction:row;flex-wrap:wrap;overflow-x:auto;scrollbar-width:none;padding-bottom:4px}.svc-guide-nav::-webkit-scrollbar{display:none}.svc-guide-chip{width:auto;flex:none;white-space:nowrap}}
 /* ---- phase 12: get-started onboarding + suggest a service ---- */
 .ob-card{border-color:rgba(217,168,108,.22)}
 .ob-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px}
@@ -384,12 +384,12 @@ main section{opacity:0;animation:msp-in .5s ease-out forwards;animation-delay:ca
 /* ---- phase 11: mobile optimization (additive only — desktop styles untouched) ---- */
 @media(max-width:760px){
 body{-webkit-tap-highlight-color:transparent}
-.shell{padding-top:80px}
-.top-nav{padding:12px 16px}
-.top-nav.nav-scrolled{padding:10px 16px}
+.shell{padding-top:80px;width:auto;margin:0 10px}
+.top-nav{padding:9px 16px}
+.top-nav.nav-scrolled{padding:8px 16px}
 .brand{font-size:1.1rem;min-width:0}
 .back-label{overflow:hidden;text-overflow:ellipsis}
-.nav-id{gap:8px;flex:none}
+.nav-id{gap:6px;flex:none}
 #who-tier{display:none}
 .out{display:none}
 #pal-open{display:none}
@@ -408,6 +408,11 @@ a.btn{min-height:40px;display:inline-flex;align-items:center;justify-content:cen
 .hero .avatar{width:64px;height:64px}
 .stat{padding:12px 14px}
 .stat .n{font-size:1.4rem}
+.card{padding:20px 16px}
+.acct-pop{right:0;left:auto;max-width:calc(100vw - 24px)}
+.hm-sec{position:relative}
+.hm-sec::after,.media-sec .card::after,.mb2-orbwrap::after{content:'';position:absolute;right:0;top:0;bottom:0;width:28px;background:linear-gradient(90deg,transparent,var(--bg));pointer-events:none}
+.media-sec .card,.mb2-orbwrap{position:relative}
 .svc-grid{grid-template-columns:repeat(auto-fill,minmax(132px,1fr))}
 .svc-ico{width:28px;height:28px}
 .svc-blurb{font-size:.72rem}
@@ -644,12 +649,12 @@ input:focus-visible,select:focus-visible,textarea:focus-visible{border-radius:va
 .hm-hero{height:230px}
 .hm-hero-inner{left:16px;right:16px;bottom:18px}
 .hm-hero-title{font-size:clamp(1.15rem,6vw,1.45rem)}
-.hm-req{width:250px}
-.hm-wide{width:240px}
-.hm-un{width:210px}
-.hm-orb{width:132px}
-.hm-tile{width:270px}
-.hm-pcard{width:118px}
+.hm-req{width:220px}
+.hm-wide{width:200px}
+.hm-un{width:180px}
+.hm-orb{width:120px}
+.hm-tile{width:230px}
+.hm-pcard{width:112px}
 }
 
 /* ---- aurora services (sv*) — spotlight + pinned + recent + dock ---- */
@@ -1517,7 +1522,7 @@ function guideDetailHtml(key) {
     '<section class="card" id="sec-services"><p class="eyebrow">Services</p><h3>Services<span class="tier-echo" id="tier-echo-services"></span></h3>' +
     '<div class="sv-spot" id="sv-spot"></div>' +
     '<div class="sv-row-h"><p class="eyebrow" style="margin:0">Pinned</p></div>' +
-    '<div class="sv-orbs" id="sv-orbs"></div>' +
+    '<div class="mb2-orbwrap"><div class="sv-orbs" id="sv-orbs"></div></div>' +
     '<div class="sv-row-h"><p class="eyebrow" style="margin:0">Recently opened</p></div>' +
     '<div class="sv-chiprow" id="sv-recent"></div>' +
     '<div class="sv-toolbar" id="sv-toolbar"></div>' +
