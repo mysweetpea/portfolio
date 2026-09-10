@@ -74,7 +74,7 @@ function navAccountMarkup(nonce) {
   const css =
     '<style>.nav-account{position:relative;display:inline-flex;align-items:center}' +
     '.nav-account-chip{display:inline-flex;align-items:center;gap:7px}' +
-    '.nav-account-pop{position:absolute;top:calc(100% + 10px);right:0;min-width:216px;max-width:calc(100vw - 24px);background:rgba(12,19,22,.94);backdrop-filter:blur(20px) saturate(1.4);-webkit-backdrop-filter:blur(20px) saturate(1.4);border:1px solid rgba(143,175,181,.18);border-radius:14px;padding:8px;display:flex;flex-direction:column;gap:2px;box-shadow:0 12px 40px rgba(0,0,0,.45);z-index:80}' +
+    '.nav-account-pop[hidden]{display:none!important}.nav-account-pop{position:absolute;top:calc(100% + 10px);right:0;min-width:216px;max-width:calc(100vw - 24px);background:rgba(12,19,22,.94);backdrop-filter:blur(20px) saturate(1.4);-webkit-backdrop-filter:blur(20px) saturate(1.4);border:1px solid rgba(143,175,181,.18);border-radius:14px;padding:8px;display:flex;flex-direction:column;gap:2px;box-shadow:0 12px 40px rgba(0,0,0,.45);z-index:80}' +
     '.nav-account-pop a{display:block;padding:9px 12px;border-radius:10px;color:#A9BEC2;font-size:.88rem;text-decoration:none;transition:background .2s,color .2s}' +
     '.nav-account-pop a:hover{background:rgba(143,175,181,.12);color:#C5D5D8}' +
     '.nav-account-pop a.nap-primary{background:linear-gradient(135deg,#8FAFB5,#6B9AA6);color:#0C1316;font-weight:600;text-align:center;margin-bottom:4px}' +
@@ -95,10 +95,7 @@ function navAccountMarkup(nonce) {
     'if(!s||!s.logged_in)return;' +
     'var first=String(s.name||"").trim().split(/\\s+/)[0];' +
     'label.textContent=first||"Account";' +
-    'pop.innerHTML=\'<a class="nap-primary" href="\'+dash+\'">Open dashboard</a>\'' +
-    '+\'<a href="\'+dash+\'/#account">My account</a>\'' +
-    '+\'<a href="/contact.html">Contact</a>\'' +
-    '+\'<a href="\'+dash+\'/auth/logout">Sign out</a>\';' +
+    'pop.innerHTML=\'<a class="nap-primary" href="\'+dash+\'">Open dashboard</a>\';' +
     '}).catch(function(){});' +
     '})();</' + 'script>';
   return '<div class="nav-account" id="nav-account">' +
