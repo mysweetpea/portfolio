@@ -703,6 +703,18 @@ input:focus-visible,select:focus-visible,textarea:focus-visible{border-radius:va
 .st2-pill:hover{color:var(--text-dim)}
 .st2-pill.on{color:var(--bg);background:linear-gradient(135deg,var(--primary),var(--sage))}
 @media (max-width:760px){.st2-pill{padding:6px 12px}}
+/* ===== PHASE 3b-3: GUIDES PLATFORM PICKER (gp-) ===== */
+.gp-picker{margin:2px 0 14px}
+.gp-cap{margin:0 0 8px;font-size:.68rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--text-faint)}
+.gp-row{display:flex;flex-wrap:wrap;gap:8px}
+.gp-pill{display:inline-flex;align-items:center;gap:7px;padding:6px 14px;border-radius:999px;border:1px solid var(--border-primary);background:transparent;color:var(--text-dim);font:inherit;font-size:.82rem;cursor:pointer;transition:all .16s ease}
+.gp-pill:hover{color:var(--text);background:rgba(151,146,255,.08)}
+.gp-pill.active{background:linear-gradient(135deg,var(--primary),var(--primary-dim,var(--primary)));color:#0C1316;border-color:transparent;font-weight:600}
+.gp-glyph{display:inline-flex;flex:none}
+.gp-glyph svg{width:13px;height:13px}
+.gp-count{display:inline-flex;align-items:center;justify-content:center;min-width:17px;height:17px;padding:0 5px;border-radius:999px;background:rgba(151,146,255,.16);color:var(--primary-bright);font-size:.62rem;font-weight:700;font-variant-numeric:tabular-nums;flex:none}
+.gp-steps{min-width:0}
+@media (max-width:760px){.gp-row{gap:6px}.gp-pill{padding:5px 11px;font-size:.78rem}}
 </style></head><body>
 <div class="aurora" aria-hidden="true"></div>
 <div class="grain-overlay" aria-hidden="true"></div>
@@ -966,7 +978,7 @@ const GUIDE_COLORS = [
   { fg: 'var(--gold)',           bg: 'rgba(217,168,108,.15)' },
 ];
 let guideSel = 'jellyfin';
-// ---- phase 14: platform download chips (per-guide) ----
+// ---- phase 14: platform download chips (per-guide; renamed DL_ in phase 3b-3 to free the PLATFORMS name for the guides platform picker) ----
 const PLAT_ICONS = {
   apple: '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M16.7 12.9c0-2.4 2-3.6 2.1-3.7-1.1-1.7-2.9-1.9-3.5-1.9-1.5-.2-2.9.9-3.7.9-.8 0-1.9-.9-3.2-.8-1.6 0-3.1 1-4 2.4-1.7 3-0.4 7.4 1.2 9.8.8 1.2 1.8 2.5 3.1 2.4 1.2 0 1.7-.8 3.2-.8s1.9.8 3.2.8c1.3 0 2.2-1.2 3-2.4.9-1.4 1.3-2.7 1.3-2.8-.1 0-2.6-1-2.7-3.9zM14.4 5.6c.7-.8 1.1-1.9 1-3.1-1 0-2.2.7-2.9 1.5-.6.7-1.2 1.9-1 3 1.1.1 2.2-.6 2.9-1.4z"/></svg>',
   android: '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M17.6 9.5l1.3-2.2c.1-.2 0-.4-.1-.5-.2-.1-.4-.1-.5.1l-1.3 2.3c-1.5-.7-3.2-1-5-1s-3.5.4-5 1L5.7 6.9c-.1-.2-.3-.2-.5-.1-.2.1-.2.3-.1.5l1.3 2.2C3.9 10.9 2.1 13.5 2 16.5h20c-.1-3-1.9-5.6-4.4-7zM7.5 14.2c-.5 0-.9-.4-.9-.9s.4-.9.9-.9.9.4.9.9-.4.9-.9.9zm9 0c-.5 0-.9-.4-.9-.9s.4-.9.9-.9.9.4.9.9-.4.9-.9.9z"/></svg>',
@@ -990,7 +1002,7 @@ const PLAT = {
   desktop: { name: 'Desktop (Windows / macOS / Linux)', icon: 'windows' },
   extension: { name: 'Browser extension', icon: 'globe' }
 };
-const PLATFORMS = {
+const DL_PLATFORMS = {
   jellyfin: [
     { p: 'ios', url: 'https://jellyfin.org/downloads' },
     { p: 'android', url: 'https://jellyfin.org/downloads' },
@@ -1140,6 +1152,139 @@ const GUIDES = {
     ],
   },
 };
+// ===== PHASE 3b-3: GUIDES PLATFORM LAYER — picker model. Steps live here, never in GUIDES. =====
+// Entry: { p: id, label, glyph, platformSteps?: [step,...] } — no platformSteps = fall back to the guide's generic steps.
+// jellyfin + web reuses the existing variants picker (Moonfin / Jellyfin Web) instead of platformSteps.
+const GP_GLYPHS = {
+  web: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3 12h18"/><path d="M12 3c2.5 2.6 4 5.6 4 9s-1.5 6.4-4 9c-2.5-2.6-4-5.6-4-9s1.5-6.4 4-9Z"/></svg>',
+  phone: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><rect x="7" y="2.5" width="10" height="19" rx="2.5"/><path d="M11 18.5h2"/></svg>',
+  tv: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><rect x="3" y="5" width="18" height="12" rx="2"/><path d="M9 21h6"/></svg>',
+  desktop: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><rect x="4" y="4" width="16" height="11" rx="2"/><path d="M2 19h20"/></svg>',
+  plug: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M9 7V3M15 7V3"/><path d="M7 7h10v4a5 5 0 0 1-10 0V7Z"/><path d="M12 16v5"/></svg>',
+  moon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" aria-hidden="true"><path d="M20 14.5A8.5 8.5 0 0 1 9.5 4a8.5 8.5 0 1 0 10.5 10.5Z"/></svg>'
+};
+const guidePlatSel = {};
+const PLATFORMS = {
+  jellyfin: [
+    { p: 'web', label: 'Web browser', glyph: 'web' },
+    { p: 'iphone', label: 'iPhone', glyph: 'phone', platformSteps: [
+      { title: 'Get Moonfin for iPhone', text: 'Install Moonfin — our recommended iOS client — from the App Store.', url: 'https://moonfin.io/#clients', btn: 'Get Moonfin' },
+      { title: 'Point it at your server', text: 'In Moonfin, set the server address to media.mysweetpea.cc.', url: '', btn: '' },
+      { title: 'Sign in and watch', text: 'Use your MySweetPea account. Downloads work for offline viewing.', url: '', btn: '' },
+    ] },
+    { p: 'android', label: 'Android', glyph: 'phone', platformSteps: [
+      { title: 'Get Moonfin for Android', text: 'Install Moonfin on your Android phone or tablet.', url: 'https://moonfin.io/#clients', btn: 'Get Moonfin' },
+      { title: 'Point it at your server', text: 'Set the server address to media.mysweetpea.cc.', url: '', btn: '' },
+      { title: 'Sign in and watch', text: 'Use your MySweetPea account — resume points and favorites stay in sync.', url: '', btn: '' },
+    ] },
+    { p: 'androidtv', label: 'Android TV', glyph: 'tv', platformSteps: [
+      { title: 'Install Moonfin on your TV', text: 'Find Moonfin in the Play Store on your Android TV or Google TV.', url: 'https://moonfin.io/#clients', btn: 'Get Moonfin' },
+      { title: 'Sign in', text: 'Enter media.mysweetpea.cc and sign in with your MySweetPea account.', url: '', btn: '' },
+      { title: 'Pick your favorites', text: 'On first launch choose the libraries you watch — the home screen fills with rows you actually use.', url: '', btn: '' },
+    ] },
+    { p: 'appletv', label: 'Apple TV', glyph: 'tv', platformSteps: [
+      { title: 'Get Moonfin on Apple TV', text: 'Install Moonfin from the tvOS App Store.', url: 'https://moonfin.io/#clients', btn: 'Get Moonfin' },
+      { title: 'Sign in', text: 'Server: media.mysweetpea.cc — then sign in with your MySweetPea account.', url: '', btn: '' },
+    ] },
+    { p: 'roku', label: 'Roku', glyph: 'tv', platformSteps: [
+      { title: 'Add the Moonfin channel', text: 'Search for Moonfin in the Roku Channel Store and add it.', url: 'https://moonfin.io/#clients', btn: 'Get Moonfin' },
+      { title: 'Sign in', text: 'Server: media.mysweetpea.cc — then sign in with your MySweetPea account.', url: '', btn: '' },
+    ] },
+    { p: 'desktop', label: 'Desktop', glyph: 'desktop', platformSteps: [
+      { title: 'Get a desktop app', text: 'Moonfin has desktop apps for Windows, macOS and Linux; the classic Jellyfin desktop app is on the same page.', url: 'https://moonfin.io/#clients', btn: 'Get Moonfin' },
+      { title: 'Sign in', text: 'Server: media.mysweetpea.cc — then sign in with your MySweetPea account.', url: '', btn: '' },
+    ] },
+  ],
+  seerr: [
+    { p: 'web', label: 'Web browser', glyph: 'web' },
+    { p: 'moonfin', label: 'Moonfin app', glyph: 'moon', platformSteps: [
+      { title: 'Requests live inside Moonfin', text: 'There is no separate Seerr app to install — open Moonfin and tap the Requests tab. No app needed.', url: 'https://media.mysweetpea.cc/Moonfin/Web/', btn: 'Open Moonfin' },
+      { title: 'Request something', text: 'Sign in with your MySweetPea account, find a movie or show and request it — it appears in Jellyfin automatically.', url: '', btn: '' },
+    ] },
+  ],
+  nextcloud: [
+    { p: 'web', label: 'Web browser', glyph: 'web' },
+    { p: 'desktop', label: 'Desktop', glyph: 'desktop', platformSteps: [
+      { title: 'Get the desktop app', text: 'The official Nextcloud client keeps a folder on your computer in sync automatically.', url: 'https://nextcloud.com/install/', btn: 'Download' },
+      { title: 'Add your account', text: 'Server: cloud.mysweetpea.cc — sign in with your MySweetPea account.', url: '', btn: '' },
+    ] },
+    { p: 'iphone', label: 'iPhone', glyph: 'phone', platformSteps: [
+      { title: 'Get the Nextcloud app', text: 'Install Nextcloud from the App Store.', url: 'https://nextcloud.com/install/', btn: 'Get the app' },
+      { title: 'Add your account', text: 'Server: cloud.mysweetpea.cc — files sync automatically; Calendar and Contacts sync over CalDAV.', url: '', btn: '' },
+    ] },
+    { p: 'android', label: 'Android', glyph: 'phone', platformSteps: [
+      { title: 'Get the Nextcloud app', text: 'Install Nextcloud from the Play Store.', url: 'https://nextcloud.com/install/', btn: 'Get the app' },
+      { title: 'Add your account', text: 'Server: cloud.mysweetpea.cc — turn on auto-upload for your camera roll in Settings.', url: '', btn: '' },
+    ] },
+  ],
+  immich: [
+    { p: 'web', label: 'Web browser', glyph: 'web' },
+    { p: 'iphone', label: 'iPhone', glyph: 'phone', platformSteps: [
+      { title: 'Get the Immich app', text: 'Install Immich from the App Store.', url: 'https://immich.app/', btn: 'Get the app' },
+      { title: 'Point it at your server', text: 'Server: photos.mysweetpea.cc — sign in with your MySweetPea account.', url: '', btn: '' },
+      { title: 'Turn on backup', text: 'Enable background backup so every photo lands safely at home, automatically.', url: '', btn: '' },
+    ] },
+    { p: 'android', label: 'Android', glyph: 'phone', platformSteps: [
+      { title: 'Get the Immich app', text: 'Install Immich from the Play Store.', url: 'https://immich.app/', btn: 'Get the app' },
+      { title: 'Point it at your server', text: 'Server: photos.mysweetpea.cc — sign in with your MySweetPea account.', url: '', btn: '' },
+      { title: 'Turn on backup', text: 'Enable backup for your camera folder — done.', url: '', btn: '' },
+    ] },
+  ],
+  vaultwarden: [
+    { p: 'browser', label: 'Browser extension', glyph: 'plug', platformSteps: [
+      { title: 'Get the Bitwarden extension', text: 'Works with Chrome, Firefox, Edge and Safari.', url: 'https://bitwarden.com/download', btn: 'Get the extension' },
+      { title: 'Point it at our server', text: 'In the extension settings choose self-hosted and enter https://vault.mysweetpea.cc.', url: '', btn: '' },
+      { title: 'Sign in and save a login', text: 'Use single sign-on with your MySweetPea account — the extension offers to save passwords as you browse.', url: '', btn: '' },
+    ] },
+    { p: 'iphone', label: 'iPhone', glyph: 'phone', platformSteps: [
+      { title: 'Get Bitwarden', text: 'Install the Bitwarden app from the App Store.', url: 'https://bitwarden.com/download', btn: 'Get the app' },
+      { title: 'Point to our server', text: 'When asked for the server URL, enter https://vault.mysweetpea.cc, then sign in with single sign-on.', url: '', btn: '' },
+      { title: 'Enable autofill', text: 'iOS Settings → Passwords → AutoFill → allow Bitwarden and logins fill themselves.', url: '', btn: '' },
+    ] },
+    { p: 'android', label: 'Android', glyph: 'phone', platformSteps: [
+      { title: 'Get Bitwarden', text: 'Install the Bitwarden app from the Play Store.', url: 'https://bitwarden.com/download', btn: 'Get the app' },
+      { title: 'Point to our server', text: 'When asked for the server URL, enter https://vault.mysweetpea.cc, then sign in with single sign-on.', url: '', btn: '' },
+      { title: 'Enable autofill', text: 'Android offers Bitwarden as your autofill provider — accept it.', url: '', btn: '' },
+    ] },
+    { p: 'desktop', label: 'Desktop', glyph: 'desktop', platformSteps: [
+      { title: 'Get the desktop app', text: 'Bitwarden has apps for Windows, macOS and Linux.', url: 'https://bitwarden.com/download', btn: 'Download' },
+      { title: 'Point to our server', text: 'When asked for the server URL, enter https://vault.mysweetpea.cc, then sign in with single sign-on.', url: '', btn: '' },
+    ] },
+  ],
+  matrix: [
+    { p: 'web', label: 'Web browser', glyph: 'web' },
+    { p: 'iphone', label: 'iPhone', glyph: 'phone', platformSteps: [
+      { title: 'Get Element X', text: 'Install Element X — the fast, modern Element client — from the App Store.', url: 'https://element.io/download', btn: 'Get the app' },
+      { title: 'Choose your homeserver', text: 'Pick Other and enter mysweetpea.cc, then sign in with your MySweetPea account.', url: '', btn: '' },
+    ] },
+    { p: 'android', label: 'Android', glyph: 'phone', platformSteps: [
+      { title: 'Get Element X', text: 'Install Element X from the Play Store.', url: 'https://element.io/download', btn: 'Get the app' },
+      { title: 'Choose your homeserver', text: 'Homeserver: mysweetpea.cc — then sign in with your MySweetPea account.', url: '', btn: '' },
+    ] },
+    { p: 'desktop', label: 'Desktop', glyph: 'desktop', platformSteps: [
+      { title: 'Get Element Desktop', text: 'Element has desktop apps for Windows, macOS and Linux.', url: 'https://element.io/download', btn: 'Download' },
+      { title: 'Choose your homeserver', text: 'Homeserver: mysweetpea.cc — then sign in with your MySweetPea account.', url: '', btn: '' },
+    ] },
+  ],
+  affine: [
+    { p: 'web', label: 'Web browser', glyph: 'web' },
+    { p: 'desktop', label: 'Desktop', glyph: 'desktop', platformSteps: [
+      { title: 'Get the AFFiNE app', text: 'Desktop apps for Windows, macOS and Linux.', url: 'https://affine.pro/download', btn: 'Download' },
+      { title: 'Sign in', text: 'Use Continue with OIDC and pick your MySweetPea account.', url: '', btn: '' },
+    ] },
+  ],
+  openwebui: [
+    { p: 'web', label: 'Web browser', glyph: 'web' },
+  ],
+  koalasync: [
+    { p: 'web', label: 'Web browser', glyph: 'web' },
+    { p: 'extension', label: 'Browser extension', glyph: 'plug', platformSteps: [
+      { title: 'Add the extension', text: 'KoalaSync is a browser extension for Chrome (and Chromium browsers) — it lets the room see your player tab.', url: 'https://chromewebstore.google.com/detail/koalasync/obbnmkmlaaddodakcbdljknjpagklifc', btn: 'Add to Chrome' },
+      { title: 'On Firefox?', text: 'Get KoalaSync from Firefox Add-ons instead.', url: 'https://addons.mozilla.org/de/firefox/addon/koalasync/', btn: 'Add to Firefox' },
+      { title: 'Sync a room', text: 'Open the KoalaSync popup, create or join a room, and select the tab playing your video — everyone watches in sync.', url: '', btn: '' },
+    ] },
+  ],
+};
 function guideChipHtml(key, sel) {
   const g = GUIDES[key];
   if (!g) return '';
@@ -1148,7 +1293,8 @@ function guideChipHtml(key, sel) {
   const inner = icon
     ? '<img class="svc-guide-ico" src="' + esc(icon) + '" alt="" width="28" height="28" loading="lazy">'
     : '<span class="svc-guide-ico" style="color:' + c.fg + ';background:' + c.bg + '">' + esc(g.name[0].toUpperCase()) + '</span>';
-  return '<button type="button" class="svc-guide-chip" data-guide="' + esc(key) + '" aria-pressed="' + (key === sel ? 'true' : 'false') + '">' + inner + '<span>' + esc(g.name) + '</span></button>';
+  const gpCount = (key === 'jellyfin' && PLATFORMS.jellyfin) ? '<span class="gp-count" title="' + PLATFORMS.jellyfin.length + ' platforms">' + PLATFORMS.jellyfin.length + '</span>' : '';
+  return '<button type="button" class="svc-guide-chip" data-guide="' + esc(key) + '" aria-pressed="' + (key === sel ? 'true' : 'false') + '">' + inner + '<span>' + esc(g.name) + '</span>' + gpCount + '</button>';
 }
 function platChipHtml(entry) {
   const p = PLAT[entry.p];
@@ -1159,30 +1305,49 @@ function platChipHtml(entry) {
   return '<a class="plat-chip" href="' + esc(entry.url) + '" target="_blank" rel="noopener noreferrer" aria-label="' + esc(p.name) + ' download">' + ico + esc(p.name) + '</a>';
 }
 function platformsHtml(key) {
-  const list = PLATFORMS[key];
+  const list = DL_PLATFORMS[key];
   if (!list || !list.length) return '';
   return '<p class="plat-cap">Get the app on</p><div class="plat-grid">' + list.map(platChipHtml).join('') + '</div>';
+}
+function guideStepHtml(s, i) {
+  return '<div class="svc-guide-step"><span class="svc-guide-num">' + (i + 1) + '</span><div class="svc-guide-body"><h4>' + esc(s.title) + '</h4><p>' + esc(s.text) + '</p>' +
+    (s.url && s.btn ? '<a class="svc-guide-btn" href="' + esc(s.url) + '" target="_blank" rel="noopener noreferrer">' + esc(s.btn) + '</a>' : '') +
+    '</div></div>';
+}
+function guideVariantsHtml(g) {
+  return '<div class="guide-variants" role="tablist" aria-label="Choose an app">' +
+    g.variants.map((v, vi) => '<button type="button" class="guide-variant' + (vi === 0 ? ' active' : '') + '" data-variant="' + vi + '" role="tab" aria-selected="' + (vi === 0 ? 'true' : 'false') + '">' + esc(v.label) + '</button>').join('') +
+    '</div>' +
+    g.variants.map((v, vi) => '<div class="guide-variant-panel" data-variant-panel="' + vi + '"' + (vi === 0 ? '' : ' hidden') + '>' +
+      v.steps.map(guideStepHtml).join('') + '</div>').join('');
+}
+function gpPillHtml(pl, on) {
+  const glyph = GP_GLYPHS[pl.glyph];
+  return '<button type="button" class="gp-pill' + (on ? ' active' : '') + '" data-gp="' + esc(pl.p) + '" role="tab" aria-selected="' + (on ? 'true' : 'false') + '">' +
+    (glyph ? '<span class="gp-glyph" aria-hidden="true">' + glyph + '</span>' : '') + esc(pl.label) + '</button>';
 }
 function guideDetailHtml(key) {
   const g = GUIDES[key];
   if (!g) return '';
   let h = '<div class="svc-guide-title">' + esc(g.name) + '</div><p class="svc-guide-intro">' + esc(g.plain) + '</p>';
-  if (Array.isArray(g.variants) && g.variants.length) {
-    h += '<div class="guide-variants" role="tablist" aria-label="Choose an app">' +
-      g.variants.map((v, vi) => '<button type="button" class="guide-variant' + (vi === 0 ? ' active' : '') + '" data-variant="' + vi + '" role="tab" aria-selected="' + (vi === 0 ? 'true' : 'false') + '">' + esc(v.label) + '</button>').join('') +
-      '</div>';
-    h += g.variants.map((v, vi) => '<div class="guide-variant-panel" data-variant-panel="' + vi + '"' + (vi === 0 ? '' : ' hidden') + '>' +
-      v.steps.map((s, i) =>
-        '<div class="svc-guide-step"><span class="svc-guide-num">' + (i + 1) + '</span><div class="svc-guide-body"><h4>' + esc(s.title) + '</h4><p>' + esc(s.text) + '</p>' +
-        (s.url && s.btn ? '<a class="svc-guide-btn" href="' + esc(s.url) + '" target="_blank" rel="noopener noreferrer">' + esc(s.btn) + '</a>' : '') +
-        '</div></div>'
-      ).join('') + '</div>').join('');
+  const plats = PLATFORMS[key];
+  if (plats && plats.length) {
+    if (!plats.some((x) => x.p === guidePlatSel[key])) guidePlatSel[key] = plats[0].p;
+    const sel = plats.find((x) => x.p === guidePlatSel[key]);
+    h += '<div class="gp-picker"><p class="gp-cap">Where will you use it?</p><div class="gp-row" role="tablist" aria-label="Choose your platform">' +
+      plats.map((pl) => gpPillHtml(pl, pl.p === guidePlatSel[key])).join('') + '</div></div>';
+    h += '<div class="gp-steps">';
+    if (key === 'jellyfin' && sel && sel.p === 'web' && Array.isArray(g.variants) && g.variants.length) {
+      h += guideVariantsHtml(g);
+    } else {
+      const steps = (sel && Array.isArray(sel.platformSteps) && sel.platformSteps.length) ? sel.platformSteps : (g.steps || []);
+      h += steps.map(guideStepHtml).join('');
+    }
+    h += '</div>';
+  } else if (Array.isArray(g.variants) && g.variants.length) {
+    h += guideVariantsHtml(g);
   } else {
-    (g.steps || []).forEach((s, i) => {
-    h += '<div class="svc-guide-step"><span class="svc-guide-num">' + (i + 1) + '</span><div class="svc-guide-body"><h4>' + esc(s.title) + '</h4><p>' + esc(s.text) + '</p>' +
-      (s.url && s.btn ? '<a class="svc-guide-btn" href="' + esc(s.url) + '" target="_blank" rel="noopener noreferrer">' + esc(s.btn) + '</a>' : '') +
-      '</div></div>';
-    });
+    (g.steps || []).forEach((s, i) => { h += guideStepHtml(s, i); });
   }
   h += platformsHtml(key);
   return h;
@@ -2129,6 +2294,15 @@ function guideDetailHtml(key) {
       if (!chip) return;
       guideSel = chip.dataset.guide;
       guideNav.querySelectorAll('.svc-guide-chip').forEach((b) => b.setAttribute('aria-pressed', b.dataset.guide === guideSel ? 'true' : 'false'));
+      guideBody.innerHTML = guideDetailHtml(guideSel);
+    });
+    // phase 3b-3: platform pill switching — re-render the steps for the chosen platform
+    guideBody.addEventListener('click', (e) => {
+      const pill = e.target && e.target.closest ? e.target.closest('.gp-pill') : null;
+      if (!pill) return;
+      const id = pill.getAttribute('data-gp');
+      if (!id || id === guidePlatSel[guideSel]) return;
+      guidePlatSel[guideSel] = id;
       guideBody.innerHTML = guideDetailHtml(guideSel);
     });
   }
