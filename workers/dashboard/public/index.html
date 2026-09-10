@@ -773,10 +773,10 @@ const GUIDES = {
     url: 'https://vault.mysweetpea.cc',
     plain: 'A safe place to store all your passwords — like a locked drawer for your digital life.',
     steps: [
-      { title: 'Open Vaultwarden', text: 'Go to vault.mysweetpea.cc and enter your email address.', url: 'https://vault.mysweetpea.cc', btn: 'Go to Vaultwarden' },
-      { title: 'Use single sign-on', text: 'Click "Use single sign-on" — you will be taken to Authentik. Log in with your MySweetPea account.', url: 'https://auth.mysweetpea.cc', btn: 'Go to sign-in' },
-      { title: 'Set your master password', text: 'You will be redirected back to Vaultwarden. Choose a strong master password — this unlocks your vault and cannot be reset by us.', url: '', btn: '' },
-      { title: 'Add the app (optional)', text: 'Install the Bitwarden app and enter your Vaultwarden address to use it on your phone.', url: 'https://bitwarden.com/download/', btn: 'Get the app' },
+      { title: 'Download the app', text: 'Install the official Bitwarden app for your device (iPhone, Android, Mac, Windows). Open it and enter your email address, then select self-hosted at the bottom of the login screen.', url: 'https://bitwarden.com/download/', btn: 'Get the app' },
+      { title: 'Point to our server', text: 'When asked for the server URL, enter https://vault.mysweetpea.cc and tap Save.', url: 'https://vault.mysweetpea.cc', btn: 'Open Vaultwarden' },
+      { title: 'Log in with your MySweetPea account', text: 'On the web vault, click Use single sign-on and sign in with your MySweetPea account. Your master password unlocks the vault after sign-in and cannot be reset by us — make it strong and memorable.', url: '', btn: '' },
+      { title: 'Two quick upgrades (recommended)', text: 'Turn on 2FA in Settings → Security, and switch your KDF algorithm to Argon2id (Settings → Security → Keys). Both take under a minute and make your vault much harder to crack.', url: '', btn: '' },
     ],
   },
   matrix: {
@@ -805,10 +805,10 @@ const GUIDES = {
     url: 'https://sync.mysweetpea.cc',
     plain: 'Watch movies and shows together with friends in real-time — everyone sees the same scene.',
     steps: [
-      { title: 'Open KoalaSync', text: 'Go to sync.mysweetpea.cc — you will be taken to Authentik automatically.', url: 'https://sync.mysweetpea.cc', btn: 'Open watch party' },
-      { title: 'Sign in with Authentik', text: 'Log in with your MySweetPea account.', url: 'https://auth.mysweetpea.cc', btn: 'Go to sign-in' },
-      { title: 'You are in', text: 'You will see a page confirming KoalaSync is online and running.', url: '', btn: '' },
-      { title: 'Create a room', text: 'Share the room link with friends so you can all watch together.', url: '', btn: '' },
+      { title: 'Install the extension', text: 'KoalaSync is a browser extension. Add it to Chrome (or any Chromium browser) or Firefox. Firefox users: https://addons.mozilla.org/de/firefox/addon/koalasync/', url: 'https://chromewebstore.google.com/detail/koalasync/obbnmkmlaaddodakcbdljknjpagklifc', btn: 'Add to Chrome' },
+      { title: 'Create & share a room', text: 'Open the KoalaSync popup and click + Create New Room, then share the invite link with friends. They click it and join instantly — no accounts, no IPs to exchange.', url: '', btn: '' },
+      { title: 'Select your video tab', text: 'In the popup, switch to the Sync section and select the tab playing your video. KoalaSync links everyone\'s playhead automatically. Works with Netflix, YouTube, Disney+, Prime Video, Twitch, Jellyfin and almost any site with HTML5 video.', url: '', btn: '' },
+      { title: 'Press play together', text: 'Hit play. Pauses, seeks and playback changes are shared with everyone in the room. Tip: enable the audio compressor under Settings → Audio Processing to level quiet dialogue and loud explosions.', url: '', btn: '' },
     ],
   },
   jellyfin: {

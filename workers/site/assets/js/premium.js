@@ -198,7 +198,7 @@
     };
     var cards = document.querySelectorAll('.service-card[data-service]');
     if (cards.length) {
-        fetch('https://status.mysweetpea.cc/api/status-page/heartbeat/homelab')
+        fetch('https://status.mysweetpea.cc/api/status-page/heartbeat/public')
             .then(function (r) { return r.ok ? r.json() : Promise.reject(); })
             .then(function (data) {
                 var hb = data && data.heartbeatList;
@@ -230,14 +230,16 @@
     var footerStatus = document.getElementById('footerStatus');
     var footerStatusText = document.getElementById('footerStatusText');
     if (footerStatus && footerStatusText) {
-        fetch('https://status.mysweetpea.cc/api/status-page/heartbeat/homelab')
+        fetch('https://status.mysweetpea.cc/api/status-page/heartbeat/public')
             .then(function (r) { return r.ok ? r.json() : Promise.reject(); })
             .then(function (data) {
                 var hb = data && data.heartbeatList;
                 if (!hb) throw new Error('no data');
                 var down = 0, total = 0;
-                Object.keys(hb).forEach(function (id) {
-                    var list = hb[id];
+                // Count only our 9 known service monitors — the public page
+                // also includes the mysweetpea.cc website itself.
+                Object.keys(SERVICE_MONITORS).forEach(function (key) {
+                    var list = hb[SERVICE_MONITORS[key]];
                     if (!list || !list.length) return;
                     total++;
                     if (list[list.length - 1].status !== 1) down++;

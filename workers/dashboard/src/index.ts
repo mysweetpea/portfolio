@@ -192,6 +192,82 @@ async function resolveUpk(env: Env, sess: SessionData): Promise<number> {
   return upk || 0;
 }
 
+// ---------- Uptime Kuma: PUBLIC status page only ----------
+// End-user surfaces (Services tab uptime bars, Home status card) must show
+// ONLY the `public` visitor set ("Visitor Services" group), never the admin
+// `homelab` page with all ~48 monitors. KUMA_STATUS_URL may point at any
+// slug — derive just the origin here and request the `public` slug so the
+// secret's value can never leak admin monitors to members.
+const KUMA_PUBLIC_SLUG = 'public';
+
+function kumaOrigin(env: Env): string {
+  const raw = (env.KUMA_STATUS_URL || '').trim();
+  const m = raw.match(/^https?:\/\/[^/]+/i);
+  return m ? m[0] : 'https://status.mysweetpea.cc';
+}
+
+interface KumaMonitor {
+  id: number;
+  name: string;
+  group: string;
+  current: boolean;
+  up24: number | null;
+  beats: boolean[];
+}
+
+// Fetch + shape the public status page (page config for names/groups,
+// heartbeat endpoint for beats/uptime). Cached 30s in KV under a
+// public-specific key (`cache:kuma-pub`) so switching slugs later stays trivial.
+async function fetchPublicKuma(env: Env): Promise<{ monitors: KumaMonitor[] } | null> {
+  const cached = await env.SESSIONS.get('cache:kuma-pub');
+  if (cached) {
+    try { return JSON.parse(cached) as { monitors: KumaMonitor[] }; } catch { /* refetch */ }
+  }
+  const base = kumaOrigin(env);
+  const opt: RequestInit = { headers: { 'user-agent': 'Mozilla/5.0' } };
+  let page: any = null;
+  let hb: any = null;
+  try {
+    const [pageR, hbR] = await Promise.all([
+      fetch(`${base}/api/status-page/${KUMA_PUBLIC_SLUG}`, opt),
+      fetch(`${base}/api/status-page/heartbeat/${KUMA_PUBLIC_SLUG}`, opt),
+    ]);
+    if (!hbR.ok) return null;
+    hb = await hbR.json();
+    if (pageR.ok) page = await pageR.json();
+  } catch {
+    return null;
+  }
+  const heartbeatList = (hb && hb.heartbeatList) || {};
+  const uptimeList = (hb && hb.uptimeList) || {};
+  const groups: any[] = (page && Array.isArray(page.publicGroupList) && page.publicGroupList.length)
+    ? page.publicGroupList
+    : [{ name: '', monitorList: Object.keys(heartbeatList).map((id) => ({ id: parseInt(id, 10) || 0, name: '' })) }];
+  const monitors: KumaMonitor[] = [];
+  for (const g of groups) {
+    const groupName = typeof g?.name === 'string' ? g.name : '';
+    for (const m of (Array.isArray(g?.monitorList) ? g.monitorList : [])) {
+      const id = Number(m?.id);
+      if (!id) continue;
+      const beats: boolean[] = ((heartbeatList[String(id)] || []) as { status?: number }[])
+        .slice(-40)
+        .map((h) => h?.status === 1);
+      const up = uptimeList[`${id}_24`];
+      monitors.push({
+        id,
+        name: typeof m?.name === 'string' ? m.name : `Monitor ${id}`,
+        group: groupName,
+        current: beats.length ? beats[beats.length - 1] : false,
+        up24: typeof up === 'number' ? Math.round(up * 1000) / 10 : null,
+        beats,
+      });
+    }
+  }
+  const payload = JSON.stringify({ monitors });
+  await env.SESSIONS.put('cache:kuma-pub', payload, { expirationTtl: 30 });
+  return { monitors };
+}
+
 export default {
   async fetch(request: Request, env: Env): Promise<Response> {
     const res = await this.handle(request, env);
@@ -688,11 +764,15 @@ export default {
         }
       }
       if (path === '/api/status') {
-        const cache = await env.SESSIONS.get('cache:kuma');
-        if (cache) return json(JSON.parse(cache));
-        const r = await fetch(env.KUMA_STATUS_URL, { headers: { 'user-agent': 'Mozilla/5.0' } });
-        const d = await r.json();
-        await env.SESSIONS.put('cache:kuma', JSON.stringify(d), { expirationTtl: 30 });
+        // Home "Service status" card — public slug only, shaped for the SPA.
+        const d = await fetchPublicKuma(env);
+        if (!d) return json({ monitors: [] });
+        return json({ monitors: d.monitors.map((m) => ({ name: m.name, uptime24h: m.up24 })) });
+      }
+      if (path === '/api/status/extended') {
+        // Services tab uptime bars — public slug only, beats for the strip.
+        const d = await fetchPublicKuma(env);
+        if (!d) return json({ monitors: [] });
         return json(d);
       }
       if (path === '/api/audit') {

@@ -656,13 +656,15 @@
             1: 'Vaultwarden', 2: 'Matrix', 3: 'AFFiNE', 4: 'KoalaSync',
             5: 'Jellyfin', 6: 'Seerr', 7: 'Nextcloud', 8: 'Immich', 9: 'Open WebUI'
         };
-        fetch('https://status.mysweetpea.cc/api/status-page/heartbeat/homelab')
+        fetch('https://status.mysweetpea.cc/api/status-page/heartbeat/public')
             .then(function (r) { return r.ok ? r.json() : Promise.reject(); })
             .then(function (data) {
                 var hb = data && data.heartbeatList;
                 if (!hb) throw new Error('no data');
                 var down = [];
-                Object.keys(hb).forEach(function (id) {
+                // Count only our 9 known service monitors — the public page
+                // also includes the mysweetpea.cc website itself.
+                Object.keys(STATUS_NAMES).forEach(function (id) {
                     var list = hb[id];
                     if (!list || !list.length) return;
                     var last = list[list.length - 1];

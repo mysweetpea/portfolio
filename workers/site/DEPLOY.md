@@ -40,7 +40,7 @@ These live features are wired to real backends:
 
 | Feature | Endpoint | Status |
 |---------|----------|--------|
-| Live status pill (home) | `https://status.mysweetpea.cc/api/status-page/heartbeat/homelab` | Live (Uptime Kuma) |
+| Live status pill (home) | `https://status.mysweetpea.cc/api/status-page/heartbeat/public` | Live (Uptime Kuma) |
 | Notify-me buttons (services) | `https://subscribe.mysweetpea.cc/webhook/suggest` | Live (n8n) |
 | Invite-code check (redeem) | `https://subscribe.mysweetpea.cc/webhook/check-code` | Live (n8n) |
 | Incidents (status) | `https://subscribe.mysweetpea.cc/webhook/incidents` | Live (n8n + Telegram `/incident`) |

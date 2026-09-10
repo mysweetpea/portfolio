@@ -3381,7 +3381,7 @@ body[data-page='status'] .hero.status-hero h1 { font-size: 2rem; font-weight: 70
         rgba(250, 253, 250, 0.95);
 }
 /* v61: Kill remaining dark islands — hero steps, inputs, crypto options,
-   status boxes, redeem/verify fields, modal mockup, welcome modal, etc. */
+   status boxes, redeem/verify fields, welcome modal, etc. */
 [data-theme="light"] .hero-steps li,
 [data-theme="light"] .form-input, [data-theme="light"] .form-select,
 [data-theme="light"] .form-textarea, [data-theme="light"] .p404-search .form-input,
@@ -3390,7 +3390,7 @@ body[data-page='status'] .hero.status-hero h1 { font-size: 2rem; font-weight: 70
 [data-theme="light"] .redeem-code-group .redeem-code-input,
 [data-theme="light"] .vc-box, [data-theme="light"] .status-resources,
 [data-theme="light"] .status-report, [data-theme="light"] .changelog-github,
-[data-theme="light"] .modal-mockup, [data-theme="light"] .welcome-modal,
+[data-theme="light"] .welcome-modal,
 [data-theme="light"] .modal-overlay, [data-theme="light"] .cmdk-backdrop {
     background:
         linear-gradient(160deg, rgba(255,255,255,0.6), transparent 40%),
@@ -3431,9 +3431,6 @@ body[data-page='status'] .hero.status-hero h1 { font-size: 2rem; font-weight: 70
 }
 [data-theme="light"] .cb-cell {
     background: rgba(250, 253, 250, 0.9);
-}
-[data-theme="light"] .modal-mockup {
-    background: #E8EFEA;
 }
 [data-theme="light"] .toast {
     background: rgba(250, 253, 250, 0.97);
@@ -4151,8 +4148,8 @@ body[data-page='home'] .hero .hero-buttons { margin-top: 8px; }
 
 
 /* v21 accessibility: preserve service-card appearance as semantic buttons */
-button.service-card { width: 100%; text-align: left; font: inherit; color: inherit; appearance: none; -webkit-appearance: none; }
-button.service-card:focus-visible, .faq-question:focus-visible { outline: 3px solid var(--primary-bright); outline-offset: 4px; }
+.service-card { width: 100%; text-align: left; font: inherit; color: inherit; appearance: none; -webkit-appearance: none; }
+.service-card:focus-visible, .faq-question:focus-visible { outline: 3px solid var(--primary-bright); outline-offset: 4px; }
 button.faq-question { width: 100%; border: 0; background: transparent; font-family: inherit; text-align: left; }
 .modal-close:focus-visible, .modal a:focus-visible { outline: 3px solid var(--primary-bright); outline-offset: 3px; }
 
@@ -6128,17 +6125,99 @@ body {
 }
 
 /* ==========================================================================
-   v47: Service modal mockup + text-cutoff fix
+   v47: Service card screenshots + screenshot lightbox (replaces the modal)
    ========================================================================== */
-.modal-mockup {
-    margin: 0 0 18px; border-radius: 12px; overflow: hidden;
-    border: 1px solid var(--hairline);
+/* Card media strip: screenshot between header and description */
+.service-shot {
+    display: block;
+    aspect-ratio: 16 / 10;
+    overflow: hidden;
+    margin: 0 0 12px;
+    border-radius: var(--radius) var(--radius) 0 0;
+    border-bottom: 1px solid var(--border);
     background: #0F1A1E;
 }
-.modal-mockup img {
-    display: block; width: 100%; height: auto;
-    border-radius: 12px;
+.service-shot img {
+    display: block; width: 100%; height: 100%;
+    object-fit: cover;
+    transition: transform 0.35s ease;
 }
+.service-card:hover .service-shot img,
+.service-card:focus-visible .service-shot img { transform: scale(1.02); }
+@media (prefers-reduced-motion: reduce) {
+    .service-shot img { transition: none; transform: none; }
+}
+/* Explicit external "Open <service>" link on each card (does not trigger the lightbox) */
+.service-card .card-open {
+    display: inline-flex; align-items: center; gap: 6px;
+    margin: 2px 0 6px;
+    padding: 6px 14px; border-radius: 999px;
+    background: var(--primary-glow); border: 1px solid var(--border-primary);
+    color: var(--text-dim); font-size: 0.78rem; font-weight: 600;
+    text-decoration: none; transition: var(--transition);
+}
+.service-card .card-open:hover { color: var(--text); border-color: var(--sage); background: rgba(163,201,182,0.12); }
+
+/* Screenshot lightbox: full-screen scrim + centered figure */
+.lightbox {
+    position: fixed; inset: 0; z-index: 100;
+    display: none;
+    align-items: center; justify-content: center;
+    padding: 24px;
+    background: rgba(4, 8, 10, 0.82);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+}
+.lightbox.active { display: flex; }
+.lightbox-figure {
+    position: relative;
+    margin: 0;
+    max-width: min(1100px, 92vw);
+    padding: 14px;
+    background: var(--card-bg);
+    border: 1px solid var(--border-primary);
+    border-radius: var(--radius-sm);
+    box-shadow: 0 24px 80px rgba(4, 8, 10, 0.6), 0 0 0 1px rgba(143, 175, 181, 0.05);
+}
+.lightbox-figure img#lightboxShot {
+    display: block;
+    max-width: 100%;
+    max-height: 78vh;
+    object-fit: contain;
+    margin: 0 auto;
+    border-radius: var(--radius-sm);
+    background: #0F1A1E;
+}
+.lightbox-close {
+    position: absolute; top: 10px; right: 10px; z-index: 1;
+    width: 34px; height: 34px; border-radius: 50%;
+    display: grid; place-items: center;
+    background: var(--primary-glow); border: 1px solid var(--border-primary);
+    color: var(--text); font-size: 1.1rem; line-height: 1;
+    cursor: pointer; transition: var(--transition);
+}
+.lightbox-close:hover { color: var(--primary-bright); border-color: var(--sage); }
+.lightbox-close:focus-visible { outline: 3px solid var(--primary-bright); outline-offset: 4px; }
+.lightbox-caption {
+    display: flex; align-items: center; justify-content: space-between;
+    gap: 16px; flex-wrap: wrap;
+    margin-top: 14px; padding-top: 12px;
+    border-top: 1px solid var(--border);
+}
+.lightbox-text strong { display: block; font-size: 1.05rem; color: var(--text); }
+.lightbox-text span { display: block; font-size: 0.85rem; color: var(--text-dim); margin-top: 2px; }
+.lightbox-open {
+    display: inline-flex; align-items: center; justify-content: center;
+    min-height: 44px; padding: 11px 22px;
+    border: 1px solid var(--sage); border-radius: var(--radius-sm);
+    background: linear-gradient(135deg, var(--sage), var(--primary));
+    color: #10201D; font-weight: 700; font-size: 0.9rem;
+    text-decoration: none; white-space: nowrap;
+    transition: var(--transition);
+}
+.lightbox-open:hover { filter: brightness(1.08); transform: translateY(-1px); }
+.lightbox-open:focus-visible { outline: 3px solid var(--primary-bright); outline-offset: 4px; }
+
 /* Fix text cutoff: allow modal body to scroll, don't clip desc */
 .modal-body {
     padding-right: 4px;
@@ -6165,9 +6244,6 @@ body {
 }
 .modal-github:hover { color: var(--text); border-color: var(--sage); background: rgba(163,201,182,0.12); }
 .modal-github img { width: 16px; height: 16px; }
-@media (prefers-reduced-motion: reduce) {
-    .modal-mockup img { animation: none; }
-}
 
 
 /* ==========================================================================
@@ -6233,15 +6309,12 @@ body {
 }
 
 
-/* --- Modal: give top room so the X button doesn't overlap the mockup image --- */
+/* --- Modal: give the X button top room --- */
 body[data-page='services'] .modal {
     padding-top: 56px;
 }
 /* Grab handle: mobile bottom-sheet affordance, hidden on desktop */
 .modal-handle { display: none; }
-body[data-page='services'] .modal-mockup {
-    margin-top: 0;
-}
 /* Title row: service name + github link on the same line */
 .modal-title-row {
     display: flex; align-items: center; gap: 12px;
@@ -6408,8 +6481,6 @@ body[data-page='services'] .service-card .acct-pill {
         background: var(--primary-glow); border: 1px solid var(--border-primary);
         font-size: 1.1rem;
     }
-    .modal-mockup { margin-bottom: 14px; }
-    .modal-mockup img { border-radius: 0; }
     body[data-page='services'] .modal-header { gap: 12px; margin-bottom: 16px; }
     body[data-page='services'] .modal-icon { width: 48px; height: 48px; border-radius: 10px; }
     body[data-page='services'] .modal-icon img,

@@ -2,7 +2,7 @@
    Stale-while-revalidate caching for static assets, network-first for HTML.
    Bumped to v9 — updates propagate automatically without hard-refresh. */
 
-const CACHE = 'mysweetpea-v27';
+const CACHE = 'mysweetpea-v28';
 const CORE = [
   '/',
   '/index.html',
@@ -13,6 +13,15 @@ const CORE = [
   '/assets/js/premium.js',
   '/assets/fonts/inter-var.woff2',
   '/assets/fonts/fraunces-var.woff2',
+  '/assets/screenshots/vaultwarden.webp',
+  '/assets/screenshots/element.webp',
+  '/assets/screenshots/affine.webp',
+  '/assets/screenshots/koalasync.webp',
+  '/assets/screenshots/jellyfin.webp',
+  '/assets/screenshots/seerr.webp',
+  '/assets/screenshots/nextcloud.webp',
+  '/assets/screenshots/immich.webp',
+  '/assets/screenshots/openwebui.webp',
   '/logo.svg',
   '/logo-favicon.svg',
   '/og-card.png',
