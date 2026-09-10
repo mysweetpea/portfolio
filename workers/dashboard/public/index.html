@@ -1775,20 +1775,21 @@ function guideDetailHtml(key) {
   // ===== aurora services engine (sv*) =====
   const SV_CATS = { 'Jellyfin': 'media', 'Jellyseerr': 'media', 'KoalaSync': 'media', 'Nextcloud': 'cloud', 'Immich': 'cloud', 'Vaultwarden': 'cloud', 'Element': 'tools', 'AFFiNE': 'tools', 'Open WebUI': 'ai' };
   const SV_CAT_LABELS = [['all','All'],['media','Media'],['cloud','Cloud & Files'],['tools','Tools'],['ai','AI']];
-  const svState = { filter: 'all', sort: 'default', featured: 0, upmap: {}, monmap: {} };
+  window.svState = { filter: 'all', sort: 'default', featured: 0, upmap: {}, monmap: {} };
+  const svState = window.svState;
   const svLS = (k, d) => { try { const v = localStorage.getItem(k); return v ? JSON.parse(v) : d; } catch (e) { return d; } };
   const svLSset = (k, v) => { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} };
   let svPinned = svLS('msp-pinned-svcs', ['Jellyfin', 'Vaultwarden']);
   let svRecent = svLS('msp-recent-svcs', []);
   const svIsUp = (name) => svState.monmap[name] !== false;
   const svUp24 = (name) => (typeof svState.upmap[name] === 'number' ? svState.upmap[name].toFixed(1) + '%' : '');
-  const svStar = (pinned) => '<button type="button" class="sv-pin' + (pinned ? ' pinned' : '') + '" title="' + (pinned ? 'Unpin' : 'Pin to Pinned') + '" aria-label="' + (pinned ? 'Unpin service' : 'Pin service') + '">★</button>';
+  const svStar = (name, pinned) => '<button type="button" class="sv-pin' + (pinned ? ' pinned' : '') + '" title="' + (pinned ? 'Unpin' : 'Pin to Pinned') + '" aria-label="' + (pinned ? 'Unpin service' : 'Pin service') + '" onclick="window.svTrackPin(\'' + esc(name) + '\', event)">★</button>';
   window.svTrack = function (name) {
     svRecent = [name].concat(svRecent.filter((n) => n !== name)).slice(0, 5);
     svLSset('msp-recent-svcs', svRecent);
     svRenderRecent();
   };
-  window.svTogglePin = function (name) {
+  window.svTogglePin = function (name, ev) { if (ev) { ev.preventDefault(); ev.stopPropagation(); }
     if (svPinned.indexOf(name) >= 0) { svPinned = svPinned.filter((n) => n !== name); toast(name + ' unpinned'); }
     else { svPinned = [name].concat(svPinned).slice(0, 8); toast(name + ' pinned'); }
     svLSset('msp-pinned-svcs', svPinned);
@@ -1802,7 +1803,7 @@ function guideDetailHtml(key) {
       const s = SERVICES.find((x) => x.name === name); if (!s) return '';
       return '<a class="sv-orb" href="' + s.url + '" target="_blank" rel="noopener noreferrer" title="' + esc(s.name) + '" onclick="window.svTrack(\'' + esc(s.name) + '\')">' + svIcon(s, 'orbico') +
         '<span class="sdot' + (svIsUp(s.name) ? '' : ' down') + '"></span>' +
-        '<button type="button" class="unpin" aria-label="Unpin ' + esc(s.name) + '" onclick="window.svTogglePin(\'' + esc(s.name) + '\')">✕</button></a>';
+        '<button type="button" class="unpin" aria-label="Unpin ' + esc(s.name) + '" onclick="window.svTogglePin(\'' + esc(s.name) + '\', event)">✕</button></a>';
     }).join('') || '<span class="sv-chip">Hover a service below and hit ★ to pin it here</span>';
   };
   window.svRenderRecent = function () {
@@ -1819,7 +1820,7 @@ function guideDetailHtml(key) {
     host.innerHTML = list.map((s) => {
       const pinned = svPinned.indexOf(s.name) >= 0;
       return '<a class="sv-card" href="' + s.url + '" target="_blank" rel="noopener noreferrer" onclick="window.svTrack(\'' + esc(s.name) + '\')">' +
-        svStar(pinned) +
+        svStar(s.name, pinned) +
         '<div class="top">' + svIcon(s, 'svc-ico') + '<div><div class="nm">' + esc(s.name) + '</div><div class="bl">' + esc(s.blurb) + '</div></div></div>' +
         '<div class="meta"><span class="sdot' + (svIsUp(s.name) ? '' : ' down') + '"></span><span>' + (svIsUp(s.name) ? 'Operational' : 'Degraded') + (svUp24(s.name) ? ' · ' + svUp24(s.name) + ' uptime' : '') + '</span><span style="margin-left:auto" class="sv-cat">' + esc((SV_CAT_LABELS.find((c) => c[0] === SV_CATS[s.name]) || ['',''])[1] || '') + '</span></div></a>';
     }).join('');
@@ -1853,16 +1854,16 @@ function guideDetailHtml(key) {
     host.innerHTML = SV_CAT_LABELS.map((c, ci) => '<button type="button" class="sv-fchip' + (ci === 0 ? ' on' : '') + '" data-f="' + c[0] + '" onclick="window.svSetFilter(\'' + c[0] + '\')">' + c[1] + '</button>').join('') +
       '<button type="button" class="sv-fchip sv-sort" id="sv-sortbtn" onclick="window.svToggleSort()">Default</button>';
   })();
-  setInterval(() => { svState.featured++; window.svRenderSpot(); }, 8000);
-  fetch('/api/status').then((r) => (r.ok ? r.json() : null)).then((d) => {
-    const ms = (d && d.monitors) || [];
-    ms.forEach((m) => { svState.monmap[m.name] = !!m.current; });
-    window.svRenderSpot(); window.svRenderOrbs(); window.svRenderGrid();
-  }).catch(() => {});
+  // OPT: rotate the spotlight only while the Services tab is visible
+  setInterval(() => {
+    const p = document.getElementById('panel-services');
+    if (p && !p.hidden) { svState.featured++; window.svRenderSpot(); }
+  }, 8000);
+  // OPT: one fetch instead of two — extended carries current + up24 + beats
   fetch('/api/status/extended').then((r) => (r.ok ? r.json() : null)).then((d) => {
     const ms = (d && d.monitors) || [];
-    ms.forEach((m) => { svState.upmap[m.name] = m.up24; });
-    window.svRenderSpot(); window.svRenderGrid();
+    ms.forEach((m) => { svState.monmap[m.name] = !!m.current; svState.upmap[m.name] = m.up24; });
+    window.svRenderSpot(); window.svRenderOrbs(); window.svRenderGrid();
   }).catch(() => {});
 
   // ===== AURORA HOME (hm*) — Home tab rebuild (Home-11 "Everything", .oc-tmp/mockups/home.html) =====
