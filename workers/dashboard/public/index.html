@@ -685,6 +685,24 @@ input:focus-visible,select:focus-visible,textarea:focus-visible{border-radius:va
 .sv-pin.pinned{color:var(--gold)}
 .sv-cat{font-size:.68rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--text-faint)}
 @media (max-width:760px){.sv-spot{flex-direction:column;align-items:flex-start;padding:20px}.sv-grid{grid-template-columns:repeat(auto-fill,minmax(150px,1fr))}}
+/* ---- aurora contact (ct2) ---- */
+.ct2-human{font-style:italic;color:var(--gold)}
+.ct2-sub{margin:-14px 0 0;font-style:italic}
+.contact-pill.ct2-mail{font-size:1.6rem;letter-spacing:-.01em;padding:16px 36px;background-image:linear-gradient(120deg,var(--primary),var(--sage));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+.contact-pill.ct2-mail:hover{box-shadow:0 10px 30px var(--v-soft)}
+/* ---- aurora p3b2: stats wrapped hero (st2) ---- */
+.st2-hero .st2-eyebrow{margin-bottom:14px}
+.st2-num{font-family:'Fraunces','Inter',Georgia,serif;font-weight:500;font-size:clamp(2.2rem,5vw,3.4rem);line-height:1.08;letter-spacing:-.02em;background-image:linear-gradient(120deg,var(--primary),var(--sage));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;font-variant-numeric:tabular-nums}
+.st2-num small{font-size:.55em;font-weight:500;-webkit-text-fill-color:var(--text-dim)}
+.st2-empty{font-family:'Fraunces','Inter',Georgia,serif;font-style:italic;font-weight:500;font-size:clamp(1.25rem,3vw,1.6rem);color:var(--text-dim);margin:0}
+.st2-sub{margin:12px 0 0;max-width:58ch}
+.st2-sub b{color:var(--text);font-weight:600}
+.st2-sub .st2-top{color:var(--gold);font-weight:600}
+.st2-pills{display:inline-flex;gap:2px;margin-top:18px;padding:4px;border:1px solid var(--border);border-radius:99px;background:rgba(255,255,255,.03)}
+.st2-pill{border:0;background:transparent;color:var(--text-faint);font:600 .78rem/1 'Inter',sans-serif;padding:7px 16px;border-radius:99px;cursor:pointer;transition:var(--t-fast)}
+.st2-pill:hover{color:var(--text-dim)}
+.st2-pill.on{color:var(--bg);background:linear-gradient(135deg,var(--primary),var(--sage))}
+@media (max-width:760px){.st2-pill{padding:6px 12px}}
 </style></head><body>
 <div class="aurora" aria-hidden="true"></div>
 <div class="grain-overlay" aria-hidden="true"></div>
@@ -1301,6 +1319,13 @@ function guideDetailHtml(key) {
     '<section class="card" id="sec-status" hidden><p class="eyebrow">Service status</p><h3>Service status</h3><div class="skel"></div></section>' +
     '</div>' +
     '<div class="tabpanel" id="panel-stats" role="tabpanel" aria-labelledby="tab-stats">' +
+    '<section class="card st2-hero" id="st2-hero" aria-label="This week on MySweetPea">' +
+    '<p class="eyebrow st2-eyebrow">This week</p>' +
+    '<div class="st2-num" id="st2-num" hidden></div>' +
+    '<p class="st2-empty" id="st2-empty" hidden>Your week starts with your first play.</p>' +
+    '<p class="st2-sub" id="st2-sub"></p>' +
+    '<div class="st2-pills" id="st2-pills" role="group" aria-label="Stats period"><button type="button" class="st2-pill on" data-p="week">Week</button><button type="button" class="st2-pill" data-p="month">Month</button><button type="button" class="st2-pill" data-p="all">All time</button></div>' +
+    '</section>' +
     '<section class="card" id="sec-stats"><p class="eyebrow">Statistics</p><h3>The garden in numbers<button type="button" class="mini icon-btn" id="stats-refresh" aria-label="Refresh statistics" title="Refresh statistics"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12a9 9 0 1 1-2.64-6.36"/><path d="M21 3v6h-6"/></svg></button></h3>' +
     '<div class="stats" id="stats-kpi" aria-live="polite"></div>' +
     '<div id="stats-services" aria-live="polite"></div></section>' +
@@ -1337,9 +1362,10 @@ function guideDetailHtml(key) {
     '<div class="svc-guide"><div class="svc-guide-nav" id="guide-nav" role="group" aria-label="Choose a service"></div><div class="svc-guide-detail" id="guide-body" aria-live="polite"></div></div></section>' +
     '</div>' +
     '<div class="tabpanel" id="panel-contact" role="tabpanel" aria-labelledby="tab-contact">' +
-    '<section class="card"><p class="eyebrow">Contact</p><h3>Email us anytime</h3>' +
+    '<section class="card"><p class="eyebrow">Contact</p><h3>Talk to a <em class="ct2-human">human</em>.</h3>' +
     '<p class="dim">The fastest way to reach us is by email. Whether you are stuck creating an account, curious about a service, or just want to say hello &mdash; we are happy to help.</p>' +
-    '<div class="contact-mail"><a class="contact-pill" href="mailto:support@mysweetpea.cc">support@mysweetpea.cc</a></div>' +
+    '<p class="dim ct2-sub">No tickets, no bots pretending &mdash; a real person reads every email.</p>' +
+    '<div class="contact-mail"><a class="contact-pill ct2-mail" href="mailto:support@mysweetpea.cc">support@mysweetpea.cc</a></div>' +
     '<div class="contact-actions"><button type="button" class="ob-btn" id="ct-copy">Copy email address</button></div>' +
     '<p class="dim contact-note"><span class="dot ok" style="margin-right:8px"></span>We usually reply within 24&ndash;48 hours.</p></section>' +
     '<section class="card"><p class="eyebrow">Before you write</p><h3>Before you write</h3>' +
@@ -1553,6 +1579,39 @@ function guideDetailHtml(key) {
     h += statSection('Accounts', [['Members', s.users], ['Active sessions', s.sessions]]);
     svc.innerHTML = h;
   }
+  // ===== AURORA P3B2: stats wrapped hero (reads the same /api/stats payload as renderStats) =====
+  function st2Render(s) {
+    const num = document.getElementById('st2-num');
+    const sub = document.getElementById('st2-sub');
+    const empty = document.getElementById('st2-empty');
+    if (!num || !sub || !empty) return;
+    const hours = (s && typeof s.jf_watch_hours === 'number' && isFinite(s.jf_watch_hours) && s.jf_watch_hours > 0) ? s.jf_watch_hours : null;
+    if (hours == null) {
+      num.hidden = true;
+      empty.hidden = false;
+      sub.hidden = true;
+      return;
+    }
+    const h = Math.floor(hours);
+    const m = Math.round((hours - h) * 60);
+    num.innerHTML = h + '<small> hrs </small>' + m + '<small> min</small>';
+    num.hidden = false;
+    empty.hidden = true;
+    const titles = (s.jf_resume_titles != null && s.jf_resume_titles > 0) ? Number(s.jf_resume_titles).toLocaleString() : '&mdash;';
+    const devices = (s.jf_devices != null && s.jf_devices > 0) ? Number(s.jf_devices).toLocaleString() : '&mdash;';
+    const top = (typeof s.jf_top_title === 'string' && s.jf_top_title) ? '<span class="st2-top">' + esc(s.jf_top_title) + '</span>' : '&mdash;';
+    sub.innerHTML = 'across <b>' + titles + '</b> titles on <b>' + devices + '</b> devices &mdash; ' + top + ' claimed your biggest sitting';
+    sub.hidden = false;
+  }
+  // period pills: visual only (delegated — the stats shell is injected post-login)
+  document.addEventListener('click', (e) => {
+    const pills = document.getElementById('st2-pills');
+    if (!pills) return;
+    const b = e.target && e.target.closest ? e.target.closest('.st2-pill') : null;
+    if (!b || !pills.contains(b)) return;
+    pills.querySelectorAll('.st2-pill').forEach((x) => x.classList.remove('on'));
+    b.classList.add('on');
+  });
   async function loadStats(force) {
     if (statsLoading || (statsLoaded && !force)) return;
     statsLoading = true;
@@ -1563,6 +1622,7 @@ function guideDetailHtml(key) {
     let d = {};
     try { const r = await fetch('/api/stats'); if (r.ok) d = await r.json(); } catch (e) {}
     renderStats(mergeStats(d));
+    st2Render(d);
     statsLoaded = true;
     statsLoading = false;
   }

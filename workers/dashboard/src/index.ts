@@ -636,8 +636,9 @@ export default {
         const cache = await env.SESSIONS.get('cache:stats');
         if (cache) return json(JSON.parse(cache));
         const stat = async (): Promise<string> => {
-          const out: Record<string, number | null> = {
+          const out: Record<string, number | string | null> = {
             movies: null, series: null, episodes: null, songs: null, boxsets: null, jf_resume: null,
+            jf_watch_hours: null, jf_resume_titles: null, jf_top_title: null,
             photos: null, videos: null, usage_mb: null,
             users: null, sessions: null,
             seerr_total: null, seerr_pending: null, seerr_approved: null, seerr_available: null, seerr_media: null,
@@ -665,6 +666,23 @@ export default {
                 if (r.ok) {
                   const d = await r.json() as any;
                   out.jf_resume = typeof d.TotalRecordCount === 'number' ? d.TotalRecordCount : null;
+                }
+              } catch {}
+            })(),
+            (async () => {
+              // wrapped hero: sum playback positions of resumable items -> watch hours
+              try {
+                const r = await fetch(env.JELLYFIN_URL + '/Items?userId=' + env.JELLYFIN_USER_ID +
+                  '&Recursive=true&Filters=IsResumable&Fields=UserData,PlaybackPositionTicks&Limit=50',
+                  { headers: { 'x-emby-token': env.JELLYFIN_API_KEY } });
+                if (r.ok) {
+                  const d = await r.json() as any;
+                  const items = (Array.isArray(d.Items) ? d.Items : []) as any[];
+                  let hours = 0;
+                  for (const it of items) hours += (it && it.UserData && typeof it.UserData.PlaybackPositionTicks === 'number' ? it.UserData.PlaybackPositionTicks : 0) / 3.6e9;
+                  out.jf_watch_hours = Math.round(hours * 10) / 10;
+                  out.jf_resume_titles = items.length;
+                  out.jf_top_title = (items[0] && typeof items[0].Name === 'string' && items[0].Name) || null;
                 }
               } catch {}
             })(),
