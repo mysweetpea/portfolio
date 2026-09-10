@@ -67,10 +67,6 @@
 
 
 
-
-
-
-
 <main id="main-content" class="content-wrapper">
         <div class="hero">
             <img src="/logo.svg" alt="" class="hero-watermark" aria-hidden="true" loading="lazy" decoding="async"><img src="/logo.svg" alt="MySweetPea logo" class="logo" width="160" height="160"><h1 class="glass-text">Suggest a Service</h1><p class="hero-sub pop-text">Have an idea for a service we should self-host? Let us know!</p></div>
@@ -80,6 +76,13 @@
                 <button type="button" class="view-tab active" role="tab" aria-selected="true" data-view="suggest">Suggest</button>
                 <button type="button" class="view-tab" role="tab" aria-selected="false" data-view="guidelines">Guidelines</button>
             </div>
+
+            <div id="suggestLocked" style="display:none;max-width:560px;margin:48px auto;padding:32px 28px;text-align:center;background:var(--card-bg,rgba(255,255,255,.04));border:1px solid var(--border,rgba(255,255,255,.12));border-radius:18px">
+    <svg viewBox="0 0 24 24" width="34" height="34" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" style="color:var(--primary,#8FAFB5)" aria-hidden="true"><rect x="4" y="10" width="16" height="10" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg>
+    <h2 style="margin:14px 0 8px;font-size:1.25rem">Members only</h2>
+    <p id="lockMsg" style="color:var(--dim,#A9BEC2);margin:0 0 20px;line-height:1.55">Suggesting a service is reserved for MySweetPea members. Sign in with your account to submit a suggestion.</p>
+    <a href="https://dashboard.mysweetpea.cc/auth/login" style="display:inline-block;padding:12px 26px;border-radius:999px;background:linear-gradient(135deg,var(--primary,#8FAFB5),var(--primary-dim,#7A9AA0));color:#0C1316;font-weight:600;text-decoration:none">Sign in to continue</a>
+</div>
 
             <div class="view-panel active" data-view="suggest" role="tabpanel">
                 <div class="container reveal">
@@ -185,10 +188,6 @@
         <p class="footer-help">Need help? <a href="mailto:support@mysweetpea.cc">support@mysweetpea.cc</a></p>
     </div>
 </footer>
-
-
-
-
 
 
 
@@ -306,12 +305,7 @@ function validateField(id, type) {
     }).catch(function () { lockForm(); });
 })();
 </script>
-<div id="suggestLocked" style="display:none;max-width:560px;margin:48px auto;padding:32px 28px;text-align:center;background:var(--card-bg,rgba(255,255,255,.04));border:1px solid var(--border,rgba(255,255,255,.12));border-radius:18px">
-    <svg viewBox="0 0 24 24" width="34" height="34" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" style="color:var(--primary,#8FAFB5)" aria-hidden="true"><rect x="4" y="10" width="16" height="10" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg>
-    <h2 style="margin:14px 0 8px;font-size:1.25rem">Members only</h2>
-    <p id="lockMsg" style="color:var(--dim,#A9BEC2);margin:0 0 20px;line-height:1.55">Suggesting a service is reserved for MySweetPea members. Sign in with your account to submit a suggestion.</p>
-    <a href="https://dashboard.mysweetpea.cc/auth/login" style="display:inline-block;padding:12px 26px;border-radius:999px;background:linear-gradient(135deg,var(--primary,#8FAFB5),var(--primary-dim,#7A9AA0));color:#0C1316;font-weight:600;text-decoration:none">Sign in to continue</a>
-</div>
+
 
 </body>
 </html>

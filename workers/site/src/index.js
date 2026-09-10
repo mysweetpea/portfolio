@@ -67,10 +67,7 @@ function navAccountMarkup(nonce) {
   const person =
     '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 3.6-6.5 8-6.5s8 2.5 8 6.5"/></svg>';
   const popOut =
-    '<a class="nap-primary" href="https://dashboard.mysweetpea.cc/auth/login">Dashboard</a>' +
-    '<a href="https://dashboard.mysweetpea.cc/#account">My account</a>' +
-    '<a href="/status.html">Status</a>' +
-    '<a href="/contact.html">Contact</a>';
+    '<a class="nap-primary" href="https://dashboard.mysweetpea.cc/auth/login">Open dashboard</a>';
   const css =
     '<style>.nav-account{position:relative;display:inline-flex;align-items:center}' +
     '.nav-account-chip{display:inline-flex;align-items:center;gap:7px}' +

@@ -616,7 +616,7 @@ function setTab(name, opts) {
   const EXTRA_TABS = ['security', 'account']; // reachable from the account dropdown
   if (TABS.indexOf(name) < 0 && EXTRA_TABS.indexOf(name) < 0) name = 'home';
   currentTab = name;
-  TABS.forEach((t) => {
+  TABS.concat(EXTRA_TABS).forEach((t) => {
     const b = document.getElementById('tab-' + t);
     const p = document.getElementById('panel-' + t);
     if (b) { b.classList.toggle('active', t === name); b.setAttribute('aria-selected', t === name ? 'true' : 'false'); }
@@ -627,6 +627,7 @@ function setTab(name, opts) {
   window.scrollTo(0, 0);
   if (name === 'stats' && typeof window.loadStats === 'function') window.loadStats();
 }
+window.setTab = setTab;
 function goSection(id) {
   const map = { 'sec-media': 'media', 'sec-media-m': 'media', 'sec-library': 'media', 'sec-services': 'services', 'sec-uptime': 'services', 'sec-security': 'security', 'sec-sessions': 'security', 'sec-apps': 'security', 'sec-account': 'account', 'sec-status': 'home', 'stats': 'stats', 'sec-spirit': 'account' };
   if (map[id]) setTab(map[id]);
@@ -697,7 +698,7 @@ function beatStrip(beats) {
 }
 
 // ===== PHASE 10: SETUP GUIDES — data from main site services.html + pure render helpers =====
-const GUIDE_ICONS = { jellyfin: '/icons/jellyfin.svg', seerr: '/icons/seerr.svg', nextcloud: '/icons/nextcloud.svg', immich: '/icons/immich.svg', vaultwarden: '/icons/vaultwarden.svg', matrix: '/icons/matrix.svg', koalasync: '/icons/koalasync.svg', openwebui: '/icons/openwebui.svg' };
+const GUIDE_ICONS = { jellyfin: '/icons/jellyfin.svg', seerr: '/icons/seerr.svg', nextcloud: '/icons/nextcloud.svg', immich: '/icons/immich.svg', vaultwarden: '/icons/vaultwarden.svg', matrix: '/icons/matrix.svg', koalasync: '/icons/koalasync.svg', openwebui: '/icons/openwebui.svg', affine: '/icons/affine.svg' };
 const GUIDE_ORDER = ['jellyfin', 'seerr', 'nextcloud', 'immich', 'vaultwarden', 'matrix', 'affine', 'openwebui', 'koalasync'];
 const GUIDE_COLORS = [
   { fg: 'var(--primary-bright)', bg: 'rgba(143,175,181,.14)' },
@@ -1922,6 +1923,15 @@ function guideDetailHtml(key) {
       if (pop && !pop.hidden && !(e.target.closest && e.target.closest('#acct-pop'))) close();
     });
     document.addEventListener('keydown', (e) => { if (e.key === 'Escape') close(); });
+    // menu items: switch tab directly (deterministic — no reliance on hash events)
+    document.addEventListener('click', (e) => {
+      const item = e.target && e.target.closest ? e.target.closest('#acct-pop [data-goto]') : null;
+      if (!item) return;
+      e.preventDefault();
+      const t = item.getAttribute('data-goto');
+      if (typeof window.setTab === 'function') window.setTab(t); else location.hash = t;
+      close();
+    });
     // tab switches should also close it
     window.addEventListener('hashchange', close);
   })();

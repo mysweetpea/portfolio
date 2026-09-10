@@ -6144,6 +6144,10 @@ body {
 .service-card .card-open:hover { color: var(--text); border-color: var(--sage); background: rgba(163,201,182,0.12); }
 
 /* Screenshot lightbox: full-screen scrim + centered figure */
+
+/* Tile stays compact: screenshot hidden until the card is clicked (lightbox shows it) */
+.service-shot { display: none; }
+
 .lightbox {
     position: fixed; inset: 0; z-index: 100;
     display: none;
