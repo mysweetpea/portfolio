@@ -170,7 +170,7 @@ async function requireSession(request: Request, env: Env): Promise<{ sess: Sessi
   if (Date.now() - sess.created > 10 * 60 * 1000) {
     const fresh = await refreshSession(env, sess);
     if (fresh) {
-      await env.SESSIONS.put(`sess:${sid}`, JSON.stringify(fresh), { expirationTtl: 86400 });
+      await kvPutBestEffort(env, `sess:${sid}`, JSON.stringify(fresh), 86400);
       return { sess: fresh, sid };
     }
   }
@@ -216,8 +216,17 @@ interface KumaMonitor {
 }
 
 // Fetch + shape the public status page (page config for names/groups,
-// heartbeat endpoint for beats/uptime). Cached 30s in KV under a
+// heartbeat endpoint for beats/uptime). Cached 60s in KV under a
 // public-specific key (`cache:kuma-pub`) so switching slugs later stays trivial.
+// Best-effort KV write: a KV failure (60s TTL minimum, quota, transient
+// errors) must never 500 a route — caches are droppable and session
+// refreshes can safely retry on the next request.
+async function kvPutBestEffort(env: Env, key: string, value: string, ttl: number): Promise<void> {
+  try {
+    await env.SESSIONS.put(key, value, { expirationTtl: Math.max(ttl, 60) });
+  } catch { /* best-effort */ }
+}
+
 async function fetchPublicKuma(env: Env): Promise<{ monitors: KumaMonitor[] } | null> {
   const cached = await env.SESSIONS.get('cache:kuma-pub');
   if (cached) {
@@ -264,7 +273,7 @@ async function fetchPublicKuma(env: Env): Promise<{ monitors: KumaMonitor[] } | 
     }
   }
   const payload = JSON.stringify({ monitors });
-  await env.SESSIONS.put('cache:kuma-pub', payload, { expirationTtl: 30 });
+  await kvPutBestEffort(env, 'cache:kuma-pub', payload, 60);
   return { monitors };
 }
 
@@ -713,7 +722,7 @@ export default {
           return JSON.stringify(out);
         };
         const payload = await stat();
-        await env.SESSIONS.put('cache:stats', payload, { expirationTtl: 300 });
+        await kvPutBestEffort(env, 'cache:stats', payload, 300);
         return new Response(payload, { headers: { 'content-type': 'application/json', 'cache-control': 'no-store' } });
       }
       if (path === '/api/media/continue') {
@@ -735,7 +744,7 @@ export default {
             img: env.JELLYFIN_URL + '/Items/' + it.Id + '/Images/Primary?fillHeight=420&fillWidth=280&quality=75',
           }));
           const payload = JSON.stringify({ items });
-          await env.SESSIONS.put('cache:media-cont', payload, { expirationTtl: 120 });
+          await kvPutBestEffort(env, 'cache:media-cont', payload, 120);
           return json({ items });
         } catch {
           return json({ items: [] });
@@ -757,7 +766,7 @@ export default {
             img: env.JELLYFIN_URL + '/Items/' + it.Id + '/Images/Primary?fillHeight=420&fillWidth=280&quality=75',
           }));
           const payload = JSON.stringify({ items });
-          await env.SESSIONS.put('cache:media-latest', payload, { expirationTtl: 300 });
+          await kvPutBestEffort(env, 'cache:media-latest', payload, 300);
           return json({ items });
         } catch {
           return json({ items: [] });
