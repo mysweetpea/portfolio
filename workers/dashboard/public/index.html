@@ -490,6 +490,153 @@ input:focus-visible,select:focus-visible,textarea:focus-visible{border-radius:va
 .guide-variant{padding:7px 16px;border-radius:999px;border:1px solid var(--border-primary);background:transparent;color:var(--text-dim);font:inherit;font-size:.85rem;cursor:pointer;transition:all .16s ease}
 .guide-variant:hover{color:var(--text);background:rgba(151,146,255,.08)}
 .guide-variant.active{background:linear-gradient(135deg,var(--primary),var(--primary-dim,var(--primary)));color:#0C1316;border-color:transparent;font-weight:600}
+
+/* ---- aurora home ---- */
+[hidden]{display:none!important}
+.hm-banner{position:relative;overflow:hidden;border:1px solid var(--border);border-radius:var(--radius);background:linear-gradient(120deg,var(--v-soft) 0%,var(--c-soft) 45%,transparent 75%),var(--card);backdrop-filter:blur(16px);box-shadow:var(--e1)}
+.hm-banner::before{content:'';position:absolute;inset:0 0 auto 0;height:1px;background:var(--card-edge);pointer-events:none}
+.hm-banner-row{display:flex;align-items:center;gap:22px;padding:24px 28px;flex-wrap:wrap;position:relative}
+.hm-avatar{position:relative;width:76px;height:76px;border-radius:50%;background:linear-gradient(135deg,var(--v-soft),rgba(69,214,200,.2));display:flex;align-items:center;justify-content:center;font-family:'Fraunces','Inter',Georgia,serif;font-size:1.7rem;font-weight:600;color:var(--primary-bright);box-shadow:0 8px 26px rgba(139,126,246,.28),inset 0 0 0 1px var(--border-primary);flex:none;cursor:pointer;overflow:visible}
+.hm-avatar img{width:100%;height:100%;object-fit:cover;border-radius:50%;display:block}
+.hm-id{min-width:210px}
+.hm-greet{font-family:'Fraunces','Inter',Georgia,serif;font-weight:500;font-size:1.65rem;letter-spacing:-.01em;line-height:1.15;margin:0}
+.hm-sub{color:var(--text-dim);font-size:.84rem;margin-top:3px}
+.hm-date{color:var(--text-faint);font-size:.72rem;margin-top:2px;font-variant-numeric:tabular-nums}
+.hm-id .tier-line{margin:8px 0 0}
+.hm-stats{display:flex;margin-left:auto;flex-wrap:wrap}
+.hm-stat{padding:4px 24px;border-left:1px solid var(--border)}
+.hm-stat:first-child{border-left:0}
+.hm-stat .n{font-size:1.45rem;font-weight:600;letter-spacing:-.02em;font-variant-numeric:tabular-nums;color:var(--text)}
+.hm-stat .l{color:var(--text-faint);font-size:.6rem;letter-spacing:.12em;text-transform:uppercase;margin-top:2px}
+.hm-actions{display:flex;gap:9px;flex-wrap:wrap}
+.hm-btn{display:inline-flex;align-items:center;gap:8px;padding:8px 14px;border-radius:11px;border:1px solid var(--border);background:rgba(151,146,255,.08);color:var(--text-dim);font:inherit;font-size:.78rem;font-weight:600;cursor:pointer;transition:var(--t-fast)}
+.hm-btn:hover{border-color:var(--border-primary);color:var(--text);transform:translateY(-1px)}
+.hm-btn svg{width:13px;height:13px}
+.hm-btn.primary{background:linear-gradient(135deg,var(--v),var(--primary-dim));border-color:transparent;color:var(--bg);box-shadow:0 3px 12px rgba(139,126,246,.3)}
+.hm-btn.primary:hover{color:var(--bg)}
+.hm-sec{display:block}
+.hm-head{display:flex;align-items:baseline;justify-content:space-between;gap:12px;padding:0 2px;margin-bottom:2px}
+.hm-h2{font-family:'Fraunces','Inter',Georgia,serif;font-weight:500;font-size:1.15rem;letter-spacing:-.01em;display:flex;align-items:center;gap:10px;margin:0}
+.hm-accent{width:22px;height:3px;border-radius:99px;background:linear-gradient(90deg,var(--v),var(--c));flex:none}
+.hm-more{font-size:.76rem;font-weight:600;color:var(--text-faint);background:none;border:0;padding:0;font-family:inherit;cursor:pointer;text-decoration:none;transition:color var(--t-fast)}
+.hm-more:hover{color:var(--c)}
+.hm-rail{display:flex;gap:12px;overflow-x:auto;scroll-snap-type:x mandatory;padding:6px 2px 12px;scrollbar-width:thin}
+.hm-rail>*{scroll-snap-align:start;flex:none}
+.hm-rail::-webkit-scrollbar{height:6px}
+.hm-rail::-webkit-scrollbar-thumb{background:rgba(151,146,255,.18);border-radius:3px}
+.hm-rail::-webkit-scrollbar-track{background:transparent}
+.hm-card{transition:transform var(--t-fast),border-color var(--t-fast),box-shadow var(--t-fast)}
+.hm-card:hover{transform:translateY(-4px)}
+.hm-g0{background:linear-gradient(160deg,rgba(139,126,246,.45),rgba(19,21,36,.92))}
+.hm-g1{background:linear-gradient(160deg,rgba(69,214,200,.35),rgba(19,21,36,.92))}
+.hm-g2{background:linear-gradient(160deg,rgba(217,168,108,.35),rgba(19,21,36,.92))}
+/* continue hero */
+.hm-hero{display:block;position:relative;overflow:hidden;height:280px;border-radius:var(--radius);border:1px solid var(--border);box-shadow:var(--e2);background:linear-gradient(135deg,var(--v-soft),transparent 60%),var(--card);text-decoration:none;color:var(--text)}
+.hm-hero-art{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.hm-hero-scrim{position:absolute;inset:0;background:linear-gradient(90deg,rgba(8,9,15,.92) 0%,rgba(8,9,15,.5) 48%,rgba(8,9,15,0) 80%),linear-gradient(0deg,rgba(8,9,15,.8),rgba(8,9,15,0) 40%)}
+.hm-hero-inner{position:absolute;left:30px;right:30px;bottom:24px;display:flex;align-items:flex-end;justify-content:space-between;gap:20px;flex-wrap:wrap}
+.hm-hero-copy{min-width:0}
+.hm-kicker{display:block;font-size:.64rem;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--c);margin-bottom:8px}
+.hm-hero-title{display:block;font-family:'Fraunces','Inter',Georgia,serif;font-weight:500;font-size:2rem;line-height:1.05;letter-spacing:-.01em}
+.hm-hero-meta{display:block;color:var(--text-dim);font-size:.8rem;margin-top:8px;font-variant-numeric:tabular-nums}
+.hm-hero-side{display:flex;flex-direction:column;align-items:flex-end;gap:10px;flex:none}
+.hm-play{display:inline-flex;align-items:center;gap:9px;background:linear-gradient(135deg,var(--v),var(--primary-dim));color:var(--bg);font-weight:600;font-size:.82rem;padding:10px 20px;border-radius:12px;box-shadow:0 6px 24px rgba(139,126,246,.4);transition:var(--t-fast)}
+.hm-hero:hover .hm-play{transform:translateY(-1px) scale(1.02)}
+.hm-play svg{width:14px;height:14px}
+.hm-pl{font-size:.72rem;font-weight:600;color:var(--text-dim);font-variant-numeric:tabular-nums}
+.hm-prog{position:absolute;left:0;right:0;bottom:0;height:4px;background:rgba(151,146,255,.14)}
+.hm-prog i{display:block;height:100%;background:linear-gradient(90deg,var(--v),var(--c));box-shadow:0 0 12px rgba(139,126,246,.8)}
+/* request journey cards */
+.hm-req{width:290px;display:flex;flex-direction:column;gap:12px;border-radius:var(--radius-sm);border:1px solid var(--border);background:linear-gradient(160deg,var(--v-soft),transparent 55%),var(--card);backdrop-filter:blur(16px);padding:16px;box-shadow:var(--e1)}
+.hm-req-top{display:flex;align-items:center;gap:12px;min-width:0}
+.hm-req-ic{width:44px;height:64px;border-radius:8px;display:grid;place-items:center;font-family:'Fraunces','Inter',Georgia,serif;font-size:1.3rem;font-weight:600;color:var(--primary-bright);flex:none;box-shadow:var(--e1)}
+.hm-req-main{min-width:0;flex:1}
+.hm-req-t{display:block;font-weight:600;font-size:.9rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.hm-req-m{display:block;color:var(--text-faint);font-size:.72rem;margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-variant-numeric:tabular-nums}
+.hm-req-foot{display:flex;align-items:center;gap:12px;margin-top:auto}
+.hm-chip{display:inline-flex;align-items:center;gap:6px;font-size:.58rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;padding:3px 9px;border-radius:99px;flex:none}
+.hm-chip.req{background:var(--v-soft);color:var(--primary-bright);border:1px solid var(--border-primary)}
+.hm-chip.appr{background:rgba(217,168,108,.13);color:var(--gold);border:1px solid rgba(217,168,108,.4)}
+.hm-chip.ready{background:var(--c-soft);color:var(--c);border:1px solid rgba(69,214,200,.4)}
+.hm-journey{display:flex;align-items:center;flex:1;min-width:0}
+.hm-jd{width:9px;height:9px;border-radius:50%;background:rgba(151,146,255,.18);flex:none}
+.hm-jd.done{background:var(--v)}
+.hm-jd.now{background:var(--bg);border:2px solid var(--c);box-shadow:0 0 0 2px rgba(69,214,200,.18);animation:hm-pulse 2s ease infinite}
+@keyframes hm-pulse{50%{box-shadow:0 0 0 5px rgba(69,214,200,.07)}}
+.hm-jl{flex:1;height:2px;background:rgba(151,146,255,.14);min-width:8px}
+.hm-jl.on{background:linear-gradient(90deg,var(--v),var(--c))}
+/* service orbs */
+.hm-orb{width:150px;display:flex;flex-direction:column;align-items:center;gap:9px;padding:18px 10px 14px;border-radius:18px;background:linear-gradient(180deg,rgba(151,146,255,.07),transparent),var(--card);backdrop-filter:blur(16px);border:1px solid var(--border);box-shadow:var(--e1),inset 0 1px 0 rgba(197,213,216,.06);text-align:center;text-decoration:none;color:var(--text)}
+.hm-orb:hover{border-color:var(--border-primary)}
+.hm-orb-plate{width:58px;height:58px;border-radius:17px;display:grid;place-items:center;background:rgba(8,9,15,.55);border:1px solid var(--border);box-shadow:0 7px 18px rgba(0,0,0,.4),inset 0 1px 0 rgba(197,213,216,.08);transition:transform var(--t-fast)}
+.hm-orb:hover .hm-orb-plate{transform:translateY(-3px) scale(1.06)}
+.hm-orb-plate img{width:32px;height:32px;object-fit:contain}
+.hm-orb-nm{font-size:.82rem;font-weight:600;display:flex;align-items:center;gap:7px}
+.hm-orb-dot{width:6px;height:6px;border-radius:50%;flex:none}
+.hm-orb-dot.unknown{background:rgba(151,146,255,.35)}
+.hm-orb-dot.ok{background:var(--up);box-shadow:0 0 7px rgba(74,222,156,.7)}
+.hm-orb-dot.down{background:var(--error);box-shadow:0 0 7px rgba(217,140,140,.7)}
+.hm-orb-bl{color:var(--text-faint);font-size:.7rem;line-height:1.4;min-height:2.6em}
+.hm-orb-open{font-size:.7rem;font-weight:600;color:var(--c);opacity:0;transform:translateY(3px);transition:all var(--t-fast)}
+.hm-orb:hover .hm-orb-open{opacity:1;transform:none}
+/* keep watching + up next wide cards */
+.hm-wide{width:300px;display:block;position:relative;overflow:hidden;aspect-ratio:16/9;border-radius:var(--radius-sm);border:1px solid var(--border);background:linear-gradient(135deg,var(--v-soft),transparent 60%),var(--card);box-shadow:var(--e1);text-decoration:none;color:var(--text)}
+.hm-wide:hover{box-shadow:var(--e2)}
+.hm-un{width:240px}
+.hm-wide-art{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.hm-wide-glow{position:absolute;inset:0;background:linear-gradient(180deg,rgba(8,9,15,0) 30%,rgba(8,9,15,.9))}
+.hm-glyph{position:absolute;top:12px;right:12px;width:32px;height:32px;border-radius:10px;display:grid;place-items:center;background:rgba(8,9,15,.55);backdrop-filter:blur(6px);opacity:0;transition:opacity var(--t-fast);color:var(--text)}
+.hm-glyph svg{width:14px;height:14px}
+.hm-wide:hover .hm-glyph{opacity:1}
+.hm-wide-meta{position:absolute;left:14px;right:14px;bottom:12px}
+.hm-wide-t{display:block;font-weight:600;font-size:.9rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.hm-wide-e{display:block;color:var(--text-dim);font-size:.72rem;margin:2px 0 8px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.hm-bar{display:block;height:4px;border-radius:99px;background:rgba(151,146,255,.16);overflow:hidden}
+.hm-bar i{display:block;height:100%;border-radius:99px;background:linear-gradient(90deg,var(--v),var(--c))}
+.hm-un-type{position:absolute;top:10px;right:10px;font-size:.6rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;padding:2px 8px;border-radius:99px;background:rgba(8,9,15,.72);color:var(--primary-bright);border:1px solid rgba(151,146,255,.25)}
+.hm-un-why{display:block;color:var(--text-faint);font-size:.7rem;margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+/* account tiles */
+.hm-tile{width:300px;text-align:left;background:var(--card);backdrop-filter:blur(16px);border:1px solid var(--border);border-radius:var(--radius-sm);padding:16px;cursor:pointer;color:var(--text);font:inherit;box-shadow:var(--e1);position:relative;overflow:hidden}
+.hm-tile::before{content:'';position:absolute;inset:0 0 auto 0;height:1px;background:var(--card-edge)}
+.hm-tile:hover{border-color:var(--border-primary)}
+.hm-tile-th{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:12px}
+.hm-tile-tt{font-size:.64rem;font-weight:600;letter-spacing:.13em;text-transform:uppercase;color:var(--text-faint)}
+.hm-tile-go{width:15px;height:15px;color:var(--text-faint);flex:none;transition:transform var(--t-fast),color var(--t-fast)}
+.hm-tile:hover .hm-tile-go{color:var(--c);transform:translateX(3px)}
+.hm-tile-row{display:flex;align-items:center;gap:11px}
+.hm-tile-ic{width:28px;height:28px;border-radius:8px;display:grid;place-items:center;background:rgba(151,146,255,.1);color:var(--primary-bright);flex:none}
+.hm-tile-ic svg{width:14px;height:14px}
+.hm-tile-txt{min-width:0}
+.hm-tile-lbl{display:block;font-size:.85rem;font-weight:600}
+.hm-tile-sub{display:block;color:var(--text-faint);font-size:.7rem;margin-top:1px}
+/* recently added poster cards */
+.hm-pcard{width:128px;display:block;text-decoration:none;color:var(--text)}
+.hm-poster{position:relative;aspect-ratio:2/3;border-radius:12px;display:grid;place-items:center;overflow:hidden;box-shadow:var(--e1);border:1px solid var(--border)}
+.hm-poster::after{content:'';position:absolute;inset:0;background:linear-gradient(180deg,rgba(197,213,216,.14),transparent 40%)}
+.hm-poster img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.hm-poster-init{font-family:'Fraunces','Inter',Georgia,serif;font-size:1.7rem;font-weight:600;color:var(--primary-bright)}
+.hm-pbadge{position:absolute;top:8px;left:8px;z-index:2;font-size:.55rem;font-weight:700;letter-spacing:.08em;color:var(--bg);background:linear-gradient(135deg,var(--primary-bright),var(--c));padding:2px 7px;border-radius:5px}
+.hm-pcard .mtitle{margin-top:8px}
+.hm-pcard .mtitle,.hm-pcard .msub{display:block}
+@media(max-width:760px){
+.hm-banner-row{padding:18px 16px;gap:14px}
+.hm-avatar{width:60px;height:60px;font-size:1.35rem}
+.hm-id{min-width:0;flex:1}
+.hm-greet{font-size:1.3rem}
+.hm-stats{width:100%;margin-left:0;justify-content:space-between}
+.hm-stat{padding:4px 10px}
+.hm-stat:first-child{padding-left:0}
+.hm-actions{width:100%}
+.hm-hero{height:230px}
+.hm-hero-inner{left:16px;right:16px;bottom:18px}
+.hm-hero-title{font-size:1.45rem}
+.hm-req{width:250px}
+.hm-wide{width:240px}
+.hm-un{width:210px}
+.hm-orb{width:132px}
+.hm-tile{width:270px}
+.hm-pcard{width:118px}
+}
 </style></head><body>
 <div class="aurora" aria-hidden="true"></div>
 <div class="grain-overlay" aria-hidden="true"></div>
@@ -1080,15 +1227,30 @@ function guideDetailHtml(key) {
     '<button class="nav-toggle" id="nav-toggle" aria-expanded="false" aria-controls="tabs" aria-label="Toggle navigation menu"><span class="nav-toggle-bar"></span><span class="nav-toggle-bar"></span><span class="nav-toggle-bar"></span></button>' +
     '</div></nav>' +
     '<main class="grid">' +
-    '<div class="tabpanel" id="panel-home" role="tabpanel" aria-labelledby="tab-home">' + obHtml +
-    '<section class="card hero" style="--i:0"><div class="avatar" id="hero-avatar" onclick="openAvatarModal()" title="Change profile picture">' + avatarInner() + CAM + '</div><div>' +
-    '<h2 id="hero-name">' + esc(me.name || me.username) + '</h2><div class="tier-line" id="hero-tier"></div><p class="dim" id="hero-sub">' + esc(me.email) + ' &middot; @' + esc(me.username) + '</p>' +
-    '<span class="pill ok">Account active</span></div></section>' +
-    '<p class="eyebrow">At a glance</p>' +
-    '<div class="stats" id="stats" style="--i:1"></div>' +
-    '<div class="vine-divider" aria-hidden="true"></div>' +
-    '<section id="sec-media" class="media-sec" style="--i:2"></section>' +
-    '<section class="card" id="sec-status" style="--i:3"><p class="eyebrow">Service status</p><h3>Service status</h3><div class="skel"></div></section>' +
+    '<div class="tabpanel" id="panel-home" role="tabpanel" aria-labelledby="tab-home">' +
+    '<div class="hm-banner" style="--i:0"><div class="hm-banner-row">' +
+    '<div class="hm-avatar" id="hero-avatar" onclick="openAvatarModal()" title="Change profile picture">' + avatarInner() + CAM + '</div>' +
+    '<div class="hm-id"><h2 class="hm-greet"><span id="hm-greet-word"></span><span id="hero-name">' + esc(me.name || me.username) + '</span></h2>' +
+    '<div class="hm-sub" id="hero-sub">' + esc(me.email) + ' &middot; @' + esc(me.username) + '</div>' +
+    '<div class="hm-date" id="hm-date"></div>' +
+    '<div class="tier-line" id="hero-tier"></div></div>' +
+    '<div class="hm-stats" aria-label="Your week at a glance">' +
+    '<div class="hm-stat"><div class="n" id="hm-stat-hours">&mdash;</div><div class="l">watch hours this week</div></div>' +
+    '<div class="hm-stat"><div class="n" id="hm-stat-reqs">&mdash;</div><div class="l">requests on the way</div></div>' +
+    '<div class="hm-stat"><div class="n" id="hm-stat-devs">&mdash;</div><div class="l">devices signed in</div></div></div>' +
+    '<div class="hm-actions">' +
+    '<button type="button" class="hm-btn primary" onclick="setTab(\'security\')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2 4 5v6c0 5 3.4 9.7 8 11 4.6-1.3 8-6 8-11V5l-8-3Z"/></svg>Security</button>' +
+    '<button type="button" class="hm-btn" onclick="setTab(\'account\')">Your account</button></div>' +
+    '</div></div>' +
+    '<a class="hm-hero" id="hm-hero" hidden href="https://media.mysweetpea.cc" target="_blank" rel="noopener noreferrer" aria-label="Continue watching"></a>' +
+    '<section class="hm-sec" id="hm-requests" hidden><div class="hm-head"><h2 class="hm-h2"><span class="hm-accent"></span>Your requests</h2><a class="hm-more" href="https://request.mysweetpea.cc" target="_blank" rel="noopener noreferrer">Open Jellyseerr &rarr;</a></div><div class="hm-rail" id="hm-req-rail"></div></section>' +
+    '<section class="hm-sec" id="hm-services-sec"><div class="hm-head"><h2 class="hm-h2"><span class="hm-accent"></span>Your services</h2><button type="button" class="hm-more" onclick="setTab(\'services\')">All services &rarr;</button></div><div class="hm-rail" id="hm-svc-rail"></div></section>' +
+    '<section class="hm-sec" id="hm-keepwatch" hidden><div class="hm-head"><h2 class="hm-h2"><span class="hm-accent"></span>Keep watching</h2><a class="hm-more" href="https://media.mysweetpea.cc" target="_blank" rel="noopener noreferrer">History &rarr;</a></div><div class="hm-rail" id="hm-kw-rail"></div></section>' +
+    '<section class="hm-sec" id="hm-upnext" hidden><div class="hm-head"><h2 class="hm-h2"><span class="hm-accent"></span>Up next for you</h2><button type="button" class="hm-more" onclick="setTab(\'media\')">Browse more &rarr;</button></div><div class="hm-rail" id="hm-un-rail"></div></section>' +
+    '<section class="hm-sec" id="hm-acct"><div class="hm-head"><h2 class="hm-h2"><span class="hm-accent"></span>Your account</h2><button type="button" class="hm-more" onclick="setTab(\'account\')">Manage account &rarr;</button></div><div class="hm-rail" id="hm-acct-rail"></div></section>' +
+    '<section class="hm-sec" id="hm-recent" hidden><div class="hm-head"><h2 class="hm-h2"><span class="hm-accent"></span>Recently added</h2><button type="button" class="hm-more" onclick="setTab(\'media\')">Browse all &rarr;</button></div><div class="hm-rail" id="hm-rec-rail"></div></section>' + obHtml +
+    '<div id="stats" hidden></div>' +
+    '<section class="card" id="sec-status" hidden><p class="eyebrow">Service status</p><h3>Service status</h3><div class="skel"></div></section>' +
     '</div>' +
     '<div class="tabpanel" id="panel-stats" role="tabpanel" aria-labelledby="tab-stats">' +
     '<section class="card" id="sec-stats"><p class="eyebrow">Statistics</p><h3>The garden in numbers<button type="button" class="mini icon-btn" id="stats-refresh" aria-label="Refresh statistics" title="Refresh statistics"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12a9 9 0 1 1-2.64-6.36"/><path d="M21 3v6h-6"/></svg></button></h3>' +
@@ -1562,6 +1724,198 @@ function guideDetailHtml(key) {
       '<span class="svc-name">' + esc(s.name) + '</span>' +
       '<span class="svc-blurb">' + esc(s.blurb) + '</span></a>';
   }).join('');
+
+  // ===== AURORA HOME (hm*) — Home tab rebuild (Home-11 "Everything", .oc-tmp/mockups/home.html) =====
+  const hmJF = 'https://media.mysweetpea.cc';
+  const hmJF_ITEM = hmJF + '/web/index.html#!/item?id=';
+  const hmBackdrop = (id, w) => hmJF + '/Items/' + encodeURIComponent(String(id == null ? '' : id)) + '/Images/Backdrop?fillWidth=' + (w || 400) + '&quality=70';
+  const hmGreetingWord = () => { const h = new Date().getHours(); return (h < 5 ? 'Good night,' : h < 12 ? 'Good morning,' : h < 18 ? 'Good afternoon,' : 'Good evening,'); };
+  function hmJourney(level) {
+    let h = '';
+    for (let i = 1; i <= 4; i++) {
+      if (i > 1) h += '<span class="hm-jl' + (i <= level ? ' on' : '') + '"></span>';
+      h += '<span class="hm-jd' + (i < level ? ' done' : (i === level ? ' now' : '')) + '"></span>';
+    }
+    return '<span class="hm-journey" aria-hidden="true">' + h + '</span>';
+  }
+  function hmStage(r) {
+    if (r && r.availability != null && r.availability >= 4) return { label: 'Ready to watch', cls: 'ready', level: 4 };
+    if (r && r.status === 2) return { label: 'Approved', cls: 'appr', level: 2 };
+    return { label: 'Requested', cls: 'req', level: 1 };
+  }
+  function hmReqCard(r, i) {
+    const st = hmStage(r);
+    const title = String((r && r.title) || 'Untitled request');
+    const initial = esc(title.trim().charAt(0).toUpperCase() || '?');
+    const when = relTime(r && r.createdAt);
+    const type = (r && r.mediaType === 'tv') ? 'Series' : 'Movie';
+    return '<div class="hm-card hm-req"><div class="hm-req-top">' +
+      '<span class="hm-req-ic hm-g' + (i % 3) + '">' + initial + '</span>' +
+      '<span class="hm-req-main"><span class="hm-req-t">' + esc(title) + '</span>' +
+      '<span class="hm-req-m">' + esc(type) + (when ? ' &middot; requested ' + esc(when) : '') + '</span></span></div>' +
+      '<span class="hm-req-foot">' + hmJourney(st.level) + '<span class="hm-chip ' + st.cls + '">' + st.label + '</span></span></div>';
+  }
+  function hmSvcOrb(s) {
+    return '<a class="hm-card hm-orb" href="' + esc(s.url) + '" target="_blank" rel="noopener noreferrer" aria-label="' + esc(s.name + ' — ' + s.blurb) + '">' +
+      '<span class="hm-orb-plate"><img src="' + esc(s.icon) + '" alt="" width="32" height="32" loading="lazy"></span>' +
+      '<span class="hm-orb-nm">' + esc(s.name) + '<span class="hm-orb-dot unknown" data-hm-dot="' + esc(s.name) + '"></span></span>' +
+      '<span class="hm-orb-bl">' + esc(s.blurb) + '</span><span class="hm-orb-open">Open &rarr;</span></a>';
+  }
+  const HM_DOT_MATCH = {
+    'Jellyfin': ['jellyfin', 'moonfin', 'media'],
+    'Jellyseerr': ['seerr', 'request'],
+    'Nextcloud': ['nextcloud', 'cloud'],
+    'Immich': ['immich', 'photos'],
+    'Vaultwarden': ['vaultwarden', 'vault'],
+    'Element': ['element', 'matrix', 'chat'],
+    'AFFiNE': ['affine', 'notes'],
+    'Open WebUI': ['webui', 'open web', 'ai'],
+    'KoalaSync': ['koala', 'sync']
+  };
+  function hmApplyDots(monitors) {
+    Object.keys(HM_DOT_MATCH).forEach((svc) => {
+      const el = document.querySelector('.hm-orb-dot[data-hm-dot="' + svc.replace(/"/g, '&quot;') + '"]');
+      if (!el) return;
+      const keys = HM_DOT_MATCH[svc];
+      const m = (monitors || []).find((mo) => { const n = String((mo && mo.name) || '').toLowerCase(); return keys.some((k) => n.indexOf(k) >= 0); });
+      el.className = 'hm-orb-dot ' + (m ? ((m.current || (m.uptime24h != null && m.uptime24h > 50)) ? 'ok' : 'down') : 'unknown');
+    });
+  }
+  function hmWideCard(it) {
+    const pct = Math.max(0, Math.min(100, Number(it && it.progressPct) || 0));
+    const sub = (it && it.seriesName) ? it.seriesName : String((it && it.type) || '');
+    return '<a class="hm-card hm-wide" href="' + hmJF_ITEM + encodeURIComponent(String((it && it.id) == null ? '' : it.id)) + '" target="_blank" rel="noopener noreferrer">' +
+      '<img class="hm-wide-art" loading="lazy" alt="" src="' + esc(hmBackdrop(it && it.id, 480)) + '" onerror="this.style.display=\'none\'">' +
+      '<span class="hm-wide-glow"></span>' +
+      '<span class="hm-glyph" aria-hidden="true"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5.5v13l11-6.5-11-6.5Z"/></svg></span>' +
+      '<span class="hm-wide-meta"><span class="hm-wide-t">' + esc((it && it.name) || '') + '</span>' +
+      (sub ? '<span class="hm-wide-e">' + esc(sub) + '</span>' : '') +
+      '<span class="hm-bar"><i style="width:' + pct + '%"></i></span></span></a>';
+  }
+  function hmUnCard(it) {
+    const sub = (it && it.seriesName) ? it.seriesName : '';
+    return '<a class="hm-card hm-un" href="' + hmJF_ITEM + encodeURIComponent(String((it && it.id) == null ? '' : it.id)) + '" target="_blank" rel="noopener noreferrer">' +
+      '<img class="hm-wide-art" loading="lazy" alt="" src="' + esc(hmBackdrop(it && it.id, 480)) + '" onerror="this.style.display=\'none\'">' +
+      '<span class="hm-wide-glow"></span>' +
+      '<span class="hm-un-type">' + esc(String((it && it.type) || '')) + '</span>' +
+      '<span class="hm-wide-meta"><span class="hm-wide-t">' + esc((it && it.name) || '') + '</span>' +
+      (sub ? '<span class="hm-un-why">' + esc(sub) + '</span>' : '') + '</span></a>';
+  }
+  function hmPosterCard(it, i) {
+    const initial = esc(String((it && it.name) || '?').trim().charAt(0).toUpperCase() || '?');
+    const sub = (it && it.seriesName) ? it.seriesName : String((it && it.type) || '');
+    return '<a class="hm-card hm-pcard" href="' + hmJF_ITEM + encodeURIComponent(String((it && it.id) == null ? '' : it.id)) + '" target="_blank" rel="noopener noreferrer">' +
+      '<span class="hm-poster hm-g' + (i % 3) + '"><span class="hm-poster-init">' + initial + '</span>' +
+      ((it && it.img) ? '<img loading="lazy" alt="" src="' + esc(String(it.img)) + '" onerror="this.remove()">' : '') +
+      '<span class="hm-pbadge">NEW</span></span>' +
+      '<span class="mtitle">' + esc((it && it.name) || '') + '</span>' +
+      (sub ? '<span class="msub">' + esc(sub) + '</span>' : '') + '</a>';
+  }
+  function hmAcctTiles() {
+    const go = '<svg class="hm-tile-go" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="m13 6 6 6-6 6"/></svg>';
+    const tile = (tab, tt, ico, lbl, sub) => '<button type="button" class="hm-card hm-tile" onclick="setTab(\'' + tab + '\')">' +
+      '<span class="hm-tile-th"><span class="hm-tile-tt">' + tt + '</span>' + go + '</span>' +
+      '<span class="hm-tile-row"><span class="hm-tile-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' + ico + '</svg></span>' +
+      '<span class="hm-tile-txt"><span class="hm-tile-lbl">' + lbl + '</span><span class="hm-tile-sub">' + sub + '</span></span></span></button>';
+    return tile('security', 'Security', '<path d="M12 2 4 5v6c0 5 3.4 9.7 8 11 4.6-1.3 8-6 8-11V5l-8-3Z"/>', 'Security checklist', 'MFA, passkeys &amp; recovery codes') +
+      tile('account', 'Your devices', '<rect x="7" y="2.5" width="10" height="19" rx="2.5"/><path d="M11 18.5h2"/>', 'Devices &amp; sessions', 'See where you are signed in') +
+      tile('security', 'Recent activity', '<circle cx="12" cy="12" r="9"/><path d="M12 8v4l3 3"/>', 'Recent activity', 'Your latest account events') +
+      tile('guides', 'Watch anywhere', '<rect x="2" y="4" width="20" height="13" rx="2"/><path d="M8 21h8"/><path d="M12 17v4"/>', 'Setup guides', 'Phone, TV &amp; browser how-tos');
+  }
+  async function hmLoadBanner() {
+    const gw = document.getElementById('hm-greet-word');
+    if (gw) gw.textContent = hmGreetingWord() + ' ';
+    const de = document.getElementById('hm-date');
+    if (de) { try { de.textContent = new Date().toLocaleDateString(undefined, { weekday: 'long', month: 'long', day: 'numeric' }); } catch (e) {} }
+    let stats = {}, reqs = [], devCount = null;
+    const jobs = [
+      fetch('/api/stats').then((r) => (r.ok ? r.json() : {})).then((d) => { stats = d || {}; }).catch(() => {}),
+      fetch('/api/requests').then((r) => (r.ok ? r.json() : {})).then((d) => { reqs = (d && d.requests) || []; }).catch(() => {}),
+      fetch('/api/sessions').then((r) => (r.ok ? r.json() : {})).then((d) => { devCount = ((d && d.results) || []).length; }).catch(() => {})
+    ];
+    try { await Promise.all(jobs); } catch (e) {}
+    const wh = (stats && stats.watch_hours != null) ? stats.watch_hours : ((stats && stats.watchHoursThisWeek != null) ? stats.watchHoursThisWeek : null);
+    const elH = document.getElementById('hm-stat-hours');
+    if (elH) elH.textContent = (wh == null) ? '\u2014' : (Number(wh) >= 10 ? String(Math.round(wh)) : Number(wh).toFixed(1));
+    const elR = document.getElementById('hm-stat-reqs');
+    if (elR) elR.textContent = String(reqs.filter((r) => r && r.status !== 3 && !(r.availability >= 4)).length);
+    const elD = document.getElementById('hm-stat-devs');
+    if (elD) elD.textContent = (devCount == null) ? '\u2014' : String(devCount);
+  }
+  async function hmLoadHero() {
+    const host = document.getElementById('hm-hero');
+    if (!host) return;
+    let items = [];
+    try { const r = await fetch('/api/media/continue'); if (r.ok) { const d = await r.json(); items = (d && d.items) || []; } } catch (e) {}
+    const it = items[0];
+    if (!it || !it.id) { host.hidden = true; return; }
+    const pct = Math.max(0, Math.min(100, Number(it.progressPct) || 0));
+    const title = it.seriesName ? it.seriesName : (it.name || 'Continue watching');
+    const subBits = [];
+    if (it.seriesName) subBits.push(it.name);
+    if (it.type) subBits.push(it.type);
+    host.innerHTML =
+      '<img class="hm-hero-art" alt="" src="' + esc(hmBackdrop(it.id, 1600)) + '" onerror="this.style.display=\'none\'">' +
+      '<span class="hm-hero-scrim"></span>' +
+      '<span class="hm-hero-inner"><span class="hm-hero-copy">' +
+      '<span class="hm-kicker">Continue watching</span>' +
+      '<span class="hm-hero-title">' + esc(title) + '</span>' +
+      (subBits.length ? '<span class="hm-hero-meta">' + esc(subBits.filter(Boolean).join(' · ')) + (pct ? ' — ' + pct + '% watched' : '') + '</span>' : '') +
+      '</span><span class="hm-hero-side"><span class="hm-play"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5.5v13l11-6.5-11-6.5Z"/></svg>Resume</span>' +
+      (pct ? '<span class="hm-pl">' + pct + '% watched</span>' : '') + '</span></span>' +
+      '<span class="hm-prog"><i style="width:' + pct + '%"></i></span>';
+    host.href = hmJF_ITEM + encodeURIComponent(String(it.id));
+    host.hidden = false;
+  }
+  async function hmLoadRequests() {
+    const sec = document.getElementById('hm-requests');
+    const rail = document.getElementById('hm-req-rail');
+    if (!sec || !rail) return;
+    let reqs = [];
+    try { const r = await fetch('/api/requests'); if (r.ok) { const d = await r.json(); reqs = (d && d.requests) || []; } } catch (e) {}
+    if (!reqs.length) { sec.hidden = true; return; }
+    rail.innerHTML = reqs.slice(0, 10).map(hmReqCard).join('');
+    sec.hidden = false;
+  }
+  function hmLoadServices() {
+    const rail = document.getElementById('hm-svc-rail');
+    if (rail) rail.innerHTML = SERVICES.map(hmSvcOrb).join('');
+    try {
+      fetch('/api/status').then((r) => (r.ok ? r.json() : { monitors: [] })).then((d) => hmApplyDots((d && d.monitors) || [])).catch(() => {});
+    } catch (e) {}
+  }
+  async function hmLoadMedia() {
+    let cont = [], latest = [];
+    try { const r = await fetch('/api/media/continue'); if (r.ok) { const d = await r.json(); cont = (d && d.items) || []; } } catch (e) {}
+    try { const r = await fetch('/api/media/latest'); if (r.ok) { const d = await r.json(); latest = (d && d.items) || []; } } catch (e) {}
+    const kwSec = document.getElementById('hm-keepwatch'), kwRail = document.getElementById('hm-kw-rail');
+    if (kwSec && kwRail) {
+      if (cont.length) { kwRail.innerHTML = cont.slice(0, 10).map(hmWideCard).join(''); kwSec.hidden = false; }
+      else kwSec.hidden = true;
+    }
+    const UP_NEXT_N = 6;
+    const un = latest.slice(0, UP_NEXT_N), rec = latest.slice(UP_NEXT_N);
+    const unSec = document.getElementById('hm-upnext'), unRail = document.getElementById('hm-un-rail');
+    if (unSec && unRail) {
+      if (un.length) { unRail.innerHTML = un.map(hmUnCard).join(''); unSec.hidden = false; }
+      else unSec.hidden = true;
+    }
+    const recSec = document.getElementById('hm-recent'), recRail = document.getElementById('hm-rec-rail');
+    if (recSec && recRail) {
+      if (rec.length) { recRail.innerHTML = rec.map(hmPosterCard).join(''); recSec.hidden = false; }
+      else recSec.hidden = true;
+    }
+  }
+  function hmInit() {
+    const acctRail = document.getElementById('hm-acct-rail');
+    if (acctRail) acctRail.innerHTML = hmAcctTiles();
+    try { hmLoadBanner(); } catch (e) {}
+    try { hmLoadHero(); } catch (e) {}
+    try { hmLoadRequests(); } catch (e) {}
+    try { hmLoadServices(); } catch (e) {}
+    try { hmLoadMedia(); } catch (e) {}
+  }
+  hmInit();
 
   // ===== PHASE 10: SETUP GUIDES (selector chips + live detail pane) =====
   const guideNav = document.getElementById('guide-nav');

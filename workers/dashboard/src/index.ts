@@ -772,6 +772,52 @@ export default {
           return json({ items: [] });
         }
       }
+      if (path === '/api/requests') {
+        // Home "Your requests" journeys — this user's recent Seerr requests.
+        // Seerr matches by ITS numeric user id (resolved once via email),
+        // cached per-user for 120s. Unmatched users (never opened Seerr)
+        // get an empty list — the UI hides the section.
+        const cacheKey = 'cache:requests:' + sess.sub;
+        const cache = await env.SESSIONS.get(cacheKey);
+        if (cache) return json(JSON.parse(cache));
+        const out: any[] = [];
+        try {
+          const sessMe = await authentikFetch(env, sess.at, '/api/v3/core/users/me/');
+          const me = await sessMe.json() as any;
+          const meEmail = ((me && me.user ? me.user : me).email || '').toLowerCase();
+          // resolve the Seerr user id for this email (admin API, id cached 24h)
+          let seerrUid = parseInt((await env.SESSIONS.get('seerruid:' + sess.sub)) || '', 10);
+          if (!seerrUid) {
+            const ur = await fetch(env.SEERR_URL + '/api/v1/user?take=100', { headers: { 'X-Api-Key': env.SEERR_API_KEY } });
+            if (ur.ok) {
+              const ud = await ur.json() as any;
+              const hit = (ud.results ?? []).find((u: any) => (u.email || '').toLowerCase() === meEmail);
+              if (hit?.id) { seerrUid = hit.id; await kvPutBestEffort(env, 'seerruid:' + sess.sub, String(seerrUid), 86400); }
+            }
+          }
+          if (seerrUid) {
+            const r = await fetch(env.SEERR_URL + '/api/v1/request?take=12&sort=added&requestedBy=' + seerrUid,
+              { headers: { 'X-Api-Key': env.SEERR_API_KEY } });
+            if (r.ok) {
+              const d = await r.json() as any;
+              for (const rq of (d.results ?? [])) {
+                const m = rq?.media ?? {};
+                out.push({
+                  tmdbId: m.tmdbId ?? null,
+                  mediaType: rq.type === 'tv' ? 'tv' : 'movie',
+                  status: rq.status ?? null,            // 1 pending, 2 approved, 3 declined
+                  availability: m.status ?? null,        // 3 partly, 4/5 available
+                  title: (rq as any).title ?? null,
+                  createdAt: rq.createdAt ?? null,
+                });
+              }
+            }
+          }
+        } catch {}
+        const payload = JSON.stringify({ requests: out });
+        await kvPutBestEffort(env, cacheKey, payload, 120);
+        return json({ requests: out });
+      }
       if (path === '/api/status') {
         // Home "Service status" card — public slug only, shaped for the SPA.
         const d = await fetchPublicKuma(env);
