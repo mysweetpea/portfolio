@@ -767,7 +767,7 @@ export default {
         // Home "Service status" card — public slug only, shaped for the SPA.
         const d = await fetchPublicKuma(env);
         if (!d) return json({ monitors: [] });
-        return json({ monitors: d.monitors.map((m) => ({ name: m.name, uptime24h: m.up24 })) });
+        return json({ monitors: d.monitors.map((m) => ({ name: m.name, current: m.current, uptime24h: m.up24 })) });
       }
       if (path === '/api/status/extended') {
         // Services tab uptime bars — public slug only, beats for the strip.

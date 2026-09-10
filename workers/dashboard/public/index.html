@@ -475,6 +475,12 @@ input:focus-visible,select:focus-visible,textarea:focus-visible{border-radius:va
 .dash-footer .footer-bottom{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;max-width:1100px;margin:0 auto;padding-top:20px;border-top:1px solid var(--border);color:var(--text-faint)}
 .dash-footer .footer-bottom p{margin:0}
 @media(max-width:760px){.dash-footer .footer-grid{grid-template-columns:1fr 1fr}.dash-footer .footer-bottom{flex-direction:column;align-items:center;text-align:center}}
+
+/* guide variant picker (Moonfin / Jellyfin Web) */
+.guide-variants{display:flex;gap:8px;flex-wrap:wrap;margin:4px 0 14px}
+.guide-variant{padding:7px 16px;border-radius:999px;border:1px solid var(--border-primary);background:transparent;color:var(--text-dim);font:inherit;font-size:.85rem;cursor:pointer;transition:all .16s ease}
+.guide-variant:hover{color:var(--text);background:rgba(143,175,181,.08)}
+.guide-variant.active{background:linear-gradient(135deg,var(--primary),var(--primary-dim,var(--primary)));color:#0C1316;border-color:transparent;font-weight:600}
 </style></head><body>
 <div class="aurora" aria-hidden="true"></div>
 <div class="grain-overlay" aria-hidden="true"></div>
@@ -845,6 +851,20 @@ const GUIDES = {
     name: 'Jellyfin / Moonfin',
     url: 'https://media.mysweetpea.cc/Moonfin/Web/',
     plain: 'Your own private movie and TV library — stream it on any device.',
+    variants: [
+      { key: 'moonfin', label: 'Moonfin (recommended)', steps: [
+        { title: 'Open Moonfin', text: 'Go to media.mysweetpea.cc and sign in with your Authentik account.', url: 'https://media.mysweetpea.cc/Moonfin/Web/', btn: 'Open Moonfin' },
+        { title: 'Sign in with Authentik', text: 'Log in with your MySweetPea account — you will be redirected back to Moonfin.', url: 'https://auth.mysweetpea.cc', btn: 'Go to sign-in' },
+        { title: 'Start watching', text: 'Your library is ready. Browse and stream on any device.', url: '', btn: '' },
+        { title: 'Add the Moonfin app (optional)', text: 'Install the Moonfin app on your TV or phone and enter your media server address.', url: 'https://moonfin.io/#clients', btn: 'Get Moonfin' },
+      ] },
+      { key: 'web', label: 'Jellyfin Web', steps: [
+        { title: 'Open Jellyfin Web', text: 'Go to media.mysweetpea.cc/web — the classic Jellyfin interface, great as a fallback.', url: 'https://media.mysweetpea.cc/web/', btn: 'Open Jellyfin Web' },
+        { title: 'Sign in with Authentik', text: 'Log in with your MySweetPea account — you will be redirected back to Jellyfin.', url: 'https://auth.mysweetpea.cc', btn: 'Go to sign-in' },
+        { title: 'Start watching', text: 'Your library is ready. Browse and stream in the browser.', url: '', btn: '' },
+        { title: 'Prefer Moonfin?', text: 'Moonfin is our recommended app — a more premium experience on every device. Switch back anytime with the picker above.', url: 'https://media.mysweetpea.cc/Moonfin/Web/', btn: 'Open Moonfin' },
+      ] },
+    ],
     steps: [
       { title: 'Open Moonfin', text: 'Go to media.mysweetpea.cc and sign in with your Authentik account.', url: 'https://media.mysweetpea.cc/Moonfin/Web/', btn: 'Open Moonfin' },
       { title: 'Sign in with Authentik', text: 'Log in with your MySweetPea account — you will be redirected back to Moonfin.', url: 'https://auth.mysweetpea.cc', btn: 'Go to sign-in' },
@@ -922,11 +942,23 @@ function guideDetailHtml(key) {
   const g = GUIDES[key];
   if (!g) return '';
   let h = '<div class="svc-guide-title">' + esc(g.name) + '</div><p class="svc-guide-intro">' + esc(g.plain) + '</p>';
-  (g.steps || []).forEach((s, i) => {
+  if (Array.isArray(g.variants) && g.variants.length) {
+    h += '<div class="guide-variants" role="tablist" aria-label="Choose an app">' +
+      g.variants.map((v, vi) => '<button type="button" class="guide-variant' + (vi === 0 ? ' active' : '') + '" data-variant="' + vi + '" role="tab" aria-selected="' + (vi === 0 ? 'true' : 'false') + '">' + esc(v.label) + '</button>').join('') +
+      '</div>';
+    h += g.variants.map((v, vi) => '<div class="guide-variant-panel" data-variant-panel="' + vi + '"' + (vi === 0 ? '' : ' hidden') + '>' +
+      v.steps.map((s, i) =>
+        '<div class="svc-guide-step"><span class="svc-guide-num">' + (i + 1) + '</span><div class="svc-guide-body"><h4>' + esc(s.title) + '</h4><p>' + esc(s.text) + '</p>' +
+        (s.url && s.btn ? '<a class="svc-guide-btn" href="' + esc(s.url) + '" target="_blank" rel="noopener noreferrer">' + esc(s.btn) + '</a>' : '') +
+        '</div></div>'
+      ).join('') + '</div>').join('');
+  } else {
+    (g.steps || []).forEach((s, i) => {
     h += '<div class="svc-guide-step"><span class="svc-guide-num">' + (i + 1) + '</span><div class="svc-guide-body"><h4>' + esc(s.title) + '</h4><p>' + esc(s.text) + '</p>' +
       (s.url && s.btn ? '<a class="svc-guide-btn" href="' + esc(s.url) + '" target="_blank" rel="noopener noreferrer">' + esc(s.btn) + '</a>' : '') +
       '</div></div>';
-  });
+    });
+  }
   h += platformsHtml(key);
   return h;
 }
@@ -1026,7 +1058,7 @@ function guideDetailHtml(key) {
         '<div class="acct-pop-head"><span class="nav-avatar sm" id="pop-avatar">' + avatarInner() + '</span><div><b id="pop-name"></b><span class="dim" id="pop-email"></span><span class="tier-pill" id="pop-tier" hidden></span></div></div>' +
         '<a role="menuitem" href="#security" data-goto="security"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M12 2 4 5v6c0 5 3.4 9.7 8 11 4.6-1.3 8-6 8-11V5l-8-3Z"/></svg>Security settings</a>' +
         '<a role="menuitem" href="#account" data-goto="account"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 3.6-6 8-6s8 2 8 6"/></svg>Account profile</a>' +
-        '<a role="menuitem" href="https://mysweetpea.cc/contact.html" target="_blank" rel="noopener noreferrer"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><rect x="2" y="4" width="20" height="16" rx="3"/><path d="m2 7 10 6L22 7"/></svg>Contact us</a>' +
+        '<a role="menuitem" href="#contact" data-goto="contact"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><rect x="2" y="4" width="20" height="16" rx="3"/><path d="m2 7 10 6L22 7"/></svg>Contact us</a>' +
         '<a role="menuitem" href="https://mysweetpea.cc" ><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M3 11l9-8 9 8"/><path d="M5 10v10h14V10"/></svg>Back to site</a>' +
         '<hr/>' +
         '<a role="menuitem" href="/auth/logout" class="danger"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="m16 17 5-5-5-5"/><path d="M21 12H9"/></svg>Sign out</a>' +
@@ -1953,6 +1985,16 @@ function guideDetailHtml(key) {
       if (pop && !pop.hidden && !(e.target.closest && e.target.closest('#acct-pop'))) close();
     });
     document.addEventListener('keydown', (e) => { if (e.key === 'Escape') close(); });
+    // guide variant picker (Moonfin / Jellyfin Web)
+    document.addEventListener('click', (e) => {
+      const btn = e.target && e.target.closest ? e.target.closest('.guide-variant') : null;
+      if (!btn) return;
+      const wrap = btn.closest('.svc-guide-detail');
+      if (!wrap) return;
+      const idx = btn.getAttribute('data-variant');
+      wrap.querySelectorAll('.guide-variant').forEach((b) => { const on = b === btn; b.classList.toggle('active', on); b.setAttribute('aria-selected', on ? 'true' : 'false'); });
+      wrap.querySelectorAll('.guide-variant-panel').forEach((p) => { p.hidden = p.getAttribute('data-variant-panel') !== idx; });
+    });
     // menu items: switch tab directly (deterministic — no reliance on hash events)
     document.addEventListener('click', (e) => {
       const item = e.target && e.target.closest ? e.target.closest('#acct-pop [data-goto]') : null;
