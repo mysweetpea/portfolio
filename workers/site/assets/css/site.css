@@ -1222,11 +1222,6 @@ border: 1px solid rgba(163, 201, 182, 0.2) }
 body[data-page='pricing'] .tier-tag.sweetpea { background: var(--primary-glow);
 color: var(--primary);
 border: 1px solid var(--border-primary) }
-body[data-page='pricing'] .service-card .learn-more { font-size: 0.75rem;
-color: var(--text-faint);
-margin-top: 8px;
-transition: var(--transition) }
-body[data-page='pricing'] .service-card:hover .learn-more { color: var(--primary) }
 /* Coming Soon */
 body[data-page='pricing'] .coming-soon-section { max-width: 1000px;
 margin: 0 auto 60px;
@@ -2627,11 +2622,6 @@ border: 1px solid rgba(163, 201, 182, 0.2) }
 body[data-page='services'] .tier-tag.sweetpea { background: var(--primary-glow);
 color: var(--primary);
 border: 1px solid var(--border-primary) }
-body[data-page='services'] .service-card .learn-more { font-size: 0.75rem;
-color: var(--text-faint);
-margin-top: 8px;
-transition: var(--transition) }
-body[data-page='services'] .service-card:hover .learn-more { color: var(--primary) }
 body[data-page='services'] .coming-soon-section { max-width: 1000px;
 margin: 0 auto 60px;
 padding: 20px }
@@ -3086,11 +3076,6 @@ border: 1px solid rgba(163, 201, 182, 0.2) }
 body[data-page='services'] .tier-tag.sweetpea { background: var(--primary-glow);
 color: var(--primary);
 border: 1px solid var(--border-primary) }
-body[data-page='services'] .service-card .learn-more { font-size: 0.75rem;
-color: var(--text-faint);
-margin-top: 8px;
-transition: var(--transition) }
-body[data-page='services'] .service-card:hover .learn-more { color: var(--primary) }
 body[data-page='services'] .coming-soon-section { max-width: 1000px;
 margin: 0 auto 60px;
 padding: 20px }
@@ -6418,9 +6403,6 @@ body[data-page='services'] .service-card .tier-tag {
     font-size: 0.62rem; padding: 3px 8px; margin-right: 6px;
 }
 /* Learn more: more space above */
-body[data-page='services'] .service-card .learn-more {
-    margin-top: 14px; font-size: 0.8rem;
-}
 /* Account required pill: inline next to the service name */
 body[data-page='services'] .service-card .acct-pill {
     font-size: 0.6rem; padding: 2px 7px; margin-left: 8px;

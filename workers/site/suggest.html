@@ -239,7 +239,7 @@ function validateField(id, type) {
                 your_name: document.getElementById('s-yourname').value.trim() || '',
                 your_email: document.getElementById('s-youremail') ? document.getElementById('s-youremail').value.trim() : ''
             };
-            fetch('https://subscribe.mysweetpea.cc/webhook/suggest', {
+            fetch('/api/suggest', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(payload)
@@ -250,6 +250,8 @@ function validateField(id, type) {
                     document.getElementById('successMsg').classList.add('show');
                     document.querySelector('.card').style.display = 'none';
                     window.scrollTo({ top: 0, behavior: 'smooth' });
+                } else if (data.error === 'sign_in_required') {
+                    lockForm('Your session expired. Sign in again to submit.');
                 } else {
                     btn.textContent = data.msg || 'Submission failed';
                     btn.classList.remove('loading'); btn.disabled = false;
@@ -285,5 +287,31 @@ function validateField(id, type) {
         });
     }
     </script>
+
+<script>
+(function () {
+    function lockForm(msg) {
+        var card = document.querySelector('.card');
+        var lock = document.getElementById('suggestLocked');
+        if (card) card.style.display = 'none';
+        if (lock) {
+            lock.style.display = 'block';
+            var m = document.getElementById('lockMsg');
+            if (m && msg) m.textContent = msg;
+        }
+    }
+    window.lockForm = lockForm;
+    fetch('/api/auth/state').then(function (r) { return r.json(); }).then(function (st) {
+        if (!st.logged_in) lockForm();
+    }).catch(function () { lockForm(); });
+})();
+</script>
+<div id="suggestLocked" style="display:none;max-width:560px;margin:48px auto;padding:32px 28px;text-align:center;background:var(--card-bg,rgba(255,255,255,.04));border:1px solid var(--border,rgba(255,255,255,.12));border-radius:18px">
+    <svg viewBox="0 0 24 24" width="34" height="34" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" style="color:var(--primary,#8FAFB5)" aria-hidden="true"><rect x="4" y="10" width="16" height="10" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg>
+    <h2 style="margin:14px 0 8px;font-size:1.25rem">Members only</h2>
+    <p id="lockMsg" style="color:var(--dim,#A9BEC2);margin:0 0 20px;line-height:1.55">Suggesting a service is reserved for MySweetPea members. Sign in with your account to submit a suggestion.</p>
+    <a href="https://dashboard.mysweetpea.cc/auth/login" style="display:inline-block;padding:12px 26px;border-radius:999px;background:linear-gradient(135deg,var(--primary,#8FAFB5),var(--primary-dim,#7A9AA0));color:#0C1316;font-weight:600;text-decoration:none">Sign in to continue</a>
+</div>
+
 </body>
 </html>

@@ -173,6 +173,45 @@ export default {
     // Forwards the incoming Cookie header verbatim so the dashboard can
     // resolve the session; Set-Cookie is intentionally not passed through.
     // Browser headers ride along so the dashboard's WAF lets the fetch through.
+    
+    // --- Suggest-a-Service: authenticated proxy to the n8n webhook ---
+    // Only signed-in members may submit; anonymous traffic is rejected here so the
+    // upstream webhook is never exposed to the public.
+    if (url.pathname === '/api/suggest') {
+      if (request.method !== 'POST') return new Response(JSON.stringify({ error: 'method_not_allowed' }), { status: 405, headers: { 'Content-Type': 'application/json' } });
+      const state = await (async () => {
+        const fwd = {};
+        const cookie = request.headers.get('Cookie');
+        const ua = request.headers.get('User-Agent');
+        if (cookie) fwd['Cookie'] = cookie;
+        if (ua) fwd['User-Agent'] = ua;
+        try { return await (await fetch('https://dashboard.mysweetpea.cc/api/auth/state', { headers: fwd })).json(); }
+        catch { return { logged_in: false }; }
+      })();
+      if (!state.logged_in) return new Response(JSON.stringify({ error: 'sign_in_required' }), { status: 401, headers: { 'Content-Type': 'application/json', 'Cache-Control': 'no-store' } });
+      let payload;
+      try { payload = await request.json(); } catch { return new Response(JSON.stringify({ error: 'bad_json' }), { status: 400, headers: { 'Content-Type': 'application/json' } }); }
+      // Sanitize: only known fields, bounded lengths
+      const clean = {
+        service_name: String(payload.service_name || '').slice(0, 120),
+        project_url: String(payload.project_url || '').slice(0, 300),
+        category: String(payload.category || '').slice(0, 60),
+        reason: String(payload.reason || '').slice(0, 2000),
+        your_name: state.name || String(payload.your_name || '').slice(0, 120),
+        your_email: String(payload.your_email || '').slice(0, 200)
+      };
+      if (!clean.service_name || !clean.category || !clean.reason) return new Response(JSON.stringify({ error: 'missing_fields' }), { status: 400, headers: { 'Content-Type': 'application/json' } });
+      const upstream = await fetch('https://subscribe.mysweetpea.cc/webhook/suggest', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(clean)
+      });
+      return new Response(JSON.stringify({ ok: upstream.ok }), {
+        status: upstream.ok ? 200 : 502,
+        headers: { 'Content-Type': 'application/json', 'Cache-Control': 'no-store' }
+      });
+    }
+
     if (url.pathname === '/api/auth/state') {
       const fwd = {};
       const cookie = request.headers.get('Cookie');

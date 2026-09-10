@@ -160,7 +160,7 @@ img.svc-ico{object-fit:contain;padding:3px}
 .acct-name{color:var(--text);font-size:.88rem;font-weight:600;max-width:12ch;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .acct-caret{width:14px;height:14px;color:var(--text-dim);transition:transform var(--t-fast)}
 .acct-trigger[aria-expanded="true"] .acct-caret{transform:rotate(180deg)}
-.acct-pop{position:absolute;right:0;top:calc(100% + 10px);min-width:230px;background:var(--card-bg);backdrop-filter:blur(24px) saturate(1.3);border:1px solid var(--border-primary);border-radius:14px;box-shadow:var(--e4);padding:6px;z-index:100}
+.acct-pop{position:absolute;right:0;top:calc(100% + 10px);min-width:230px;background:var(--bg,#0C1316);background:linear-gradient(180deg, rgba(18,26,30,.985), rgba(14,20,24,.985));border:1px solid var(--border-primary);border-radius:14px;box-shadow:var(--e4);padding:6px;z-index:100}
 .acct-pop[hidden]{display:none}
 .acct-pop-head{display:flex;gap:10px;align-items:center;padding:10px 12px;border-bottom:1px solid var(--border);margin-bottom:6px}
 .acct-pop-head .nav-avatar{width:34px;height:34px}
@@ -1300,7 +1300,7 @@ function guideDetailHtml(key) {
   setTab(initialTab, { fromHash: true });
   window.addEventListener('hashchange', () => {
     const h = (location.hash || '').replace(/^#/, '');
-    if (TABS.indexOf(h) >= 0 && h !== currentTab) setTab(h, { fromHash: true });
+    if ((TABS.concat(EXTRA_TABS)).indexOf(h) >= 0 && h !== currentTab) setTab(h, { fromHash: true });
   });
 
   // ===== PHASE 8: AVATAR MODAL (upload / remove / preview) =====
