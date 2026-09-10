@@ -761,6 +761,15 @@ input:focus-visible,select:focus-visible,textarea:focus-visible{border-radius:va
 .stat{padding:18px}
 .hm-tile,.hm-req,.hm-wide,.hm-un{width:auto}
 }
+
+/* ---- aurora mobile 4: iOS horizontal-pan hardening ---- */
+@supports (overflow-x: clip) { html, body { overflow-x: clip; } }
+body { overscroll-behavior-x: none; }
+.card, .tabpanel, .shell { overflow-x: clip; }
+.ripple-strip { max-width: 100%; overflow-x: clip; }
+@media (max-width:760px){
+  .ripple-strip { font-size: 8px; }
+}
 </style></head><body>
 <div class="aurora" aria-hidden="true"></div>
 <div class="grain-overlay" aria-hidden="true"></div>
@@ -2798,5 +2807,10 @@ function guideDetailHtml(key) {
     // tab switches should also close it
     window.addEventListener('hashchange', close);
   })();
+
+  // aurora mobile 4: iOS Safari horizontal-pan guard — snap back to vertical if panned
+  window.addEventListener('scroll', function () {
+    if (window.scrollX !== 0) { try { window.scrollTo(0, window.scrollY); } catch (e) {} }
+  }, { passive: true });
 </script>
 </body></html>
