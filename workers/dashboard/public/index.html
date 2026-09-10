@@ -651,18 +651,21 @@ function setTab(name, opts) {
   if (name === 'stats' && typeof window.loadStats === 'function') window.loadStats();
 }
 window.setTab = setTab;
-  // footer status live
-  (function () {
+  // footer status live (re-invoked after the post-login shell renders — the
+  // footer only exists in the DOM once app.innerHTML injects it)
+  window.updateFooterStatus = function () {
     const el = document.getElementById('footerStatusText'), box = document.getElementById('footerStatus');
-    if (!el) return;
+    if (!el) return; // footer not mounted yet (pre-login)
     fetch('/api/status').then((r) => (r.ok ? r.json() : null)).then((s) => {
       const ms = (s && s.monitors) || [];
       const down = ms.filter((m) => !m.current).length;
       if (!ms.length) { el.textContent = 'Status unavailable'; box && box.classList.add('down'); return; }
       el.textContent = down ? (down + ' service' + (down > 1 ? 's' : '') + ' degraded') : 'All systems operational';
       if (down) box && box.classList.add('down');
+      else box && box.classList.remove('down');
     }).catch(() => { el.textContent = 'Status unavailable'; box && box.classList.add('down'); });
-  })();
+  };
+  window.updateFooterStatus();
 function goSection(id) {
   const map = { 'sec-media': 'media', 'sec-media-m': 'media', 'sec-library': 'media', 'sec-services': 'services', 'sec-uptime': 'services', 'sec-security': 'security', 'sec-sessions': 'security', 'sec-apps': 'security', 'sec-account': 'account', 'sec-status': 'home', 'stats': 'stats', 'sec-spirit': 'account' };
   if (map[id]) setTab(map[id]);
@@ -1158,6 +1161,9 @@ function guideDetailHtml(key) {
 
   // tier badges everywhere (hero, topbar, services/guides echoes) — initial render
   window.applyProfile();
+
+  // footer status: the footer was just injected by the shell — fetch + fill
+  if (typeof window.updateFooterStatus === 'function') window.updateFooterStatus();
 
   // ===== PHASE 13: vine dividers (site v37 SVG, verbatim) =====
   (function injectVines() {
