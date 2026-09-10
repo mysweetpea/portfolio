@@ -637,6 +637,54 @@ input:focus-visible,select:focus-visible,textarea:focus-visible{border-radius:va
 .hm-tile{width:270px}
 .hm-pcard{width:118px}
 }
+
+/* ---- aurora services (sv*) — spotlight + pinned + recent + dock ---- */
+.sv-spot{position:relative;overflow:hidden;border-radius:var(--radius);border:1px solid var(--border);background:var(--card);backdrop-filter:blur(16px);padding:26px 30px;display:flex;gap:22px;align-items:center;box-shadow:var(--e1);min-height:150px}
+.sv-spot::before{content:'';position:absolute;inset:-40% -20% auto auto;width:420px;height:420px;background:radial-gradient(circle,var(--v-soft),transparent 65%);pointer-events:none}
+.sv-spot-ico{width:74px;height:74px;border-radius:22px;background:rgba(255,255,255,.05);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;flex:none;box-shadow:var(--e2)}
+.sv-spot-ico img{width:48px;height:48px;object-fit:contain}
+.sv-spot-main{flex:1;min-width:0}
+.sv-spot-name{font-family:'Fraunces',Georgia,serif;font-size:1.5rem;color:var(--text)}
+.sv-spot-blurb{color:var(--text-dim);font-size:.92rem;margin-top:4px}
+.sv-spot-meta{display:flex;gap:10px;align-items:center;margin-top:10px;font-size:.75rem;color:var(--text-faint)}
+.sv-dots{display:flex;gap:6px;margin-top:12px}
+.sv-dot{width:7px;height:7px;border-radius:99px;background:var(--text-faint);opacity:.4;cursor:pointer;transition:all .2s;border:0;padding:0}
+.sv-dot.on{background:var(--primary);opacity:1;width:20px}
+.sv-refresh{position:absolute;top:14px;right:14px;width:30px;height:30px;border-radius:99px;border:1px solid var(--border);background:rgba(255,255,255,.04);color:var(--text-dim);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s}
+.sv-refresh:hover{color:var(--text);border-color:var(--border-primary);transform:rotate(90deg)}
+.sv-row-h{display:flex;align-items:center;gap:10px;margin:20px 0 10px}
+.sv-orbs{display:flex;gap:14px;overflow-x:auto;scroll-snap-type:x mandatory;padding:4px 2px 8px}
+.sv-orb{position:relative;flex:none;width:64px;height:64px;border-radius:20px;background:var(--card);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;scroll-snap-align:start;transition:transform .2s cubic-bezier(.4,0,.2,1),border-color .2s,box-shadow .2s;box-shadow:var(--e1)}
+.sv-orb:hover{transform:translateY(-4px);border-color:var(--border-primary);box-shadow:var(--e2)}
+.sv-orb img{width:38px;height:38px;object-fit:contain}
+.sv-orb .sdot{position:absolute;bottom:6px;right:6px;width:9px;height:9px;border-radius:99px;background:var(--up);border:2px solid var(--bg)}
+.sv-orb .sdot.down{background:var(--down)}
+.sv-orb .unpin{position:absolute;top:-6px;right:-6px;width:20px;height:20px;border-radius:99px;background:var(--bg);border:1px solid var(--down);color:var(--down);font-size:11px;line-height:1;cursor:pointer;display:none;align-items:center;justify-content:center}
+.sv-orb:hover .unpin{display:flex}
+.sv-chiprow{display:flex;gap:8px;flex-wrap:wrap;margin:6px 0 4px;min-height:26px}
+.sv-chip{font-size:.72rem;color:var(--text-dim);border:1px solid var(--border);background:rgba(255,255,255,.03);border-radius:99px;padding:4px 10px;display:inline-flex;gap:6px;align-items:center}
+.sv-chip img{width:14px;height:14px;object-fit:contain}
+.sv-toolbar{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:18px 0 12px}
+.sv-fchip{font:inherit;font-size:.78rem;font-weight:600;color:var(--text-faint);background:transparent;border:1px solid var(--border);border-radius:99px;padding:6px 14px;cursor:pointer;transition:all .2s}
+.sv-fchip:hover{color:var(--text-dim)}
+.sv-fchip.on{color:var(--text);background:linear-gradient(135deg,var(--v-soft),rgba(69,214,200,.12));border-color:var(--border-primary)}
+.sv-sort{margin-left:auto}
+.sv-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(215px,1fr));gap:14px}
+.sv-card{position:relative;display:flex;flex-direction:column;gap:8px;background:var(--card);backdrop-filter:blur(16px);border:1px solid var(--border);border-radius:var(--radius-sm);padding:18px;text-decoration:none;color:var(--text);transition:transform .2s cubic-bezier(.4,0,.2,1),border-color .2s,box-shadow .2s;box-shadow:var(--e1)}
+.sv-card:hover{transform:translateY(-3px);border-color:var(--border-primary);box-shadow:var(--e2)}
+.sv-card .top{display:flex;align-items:center;gap:12px}
+.sv-card img.svc-ico{width:38px;height:38px;object-fit:contain}
+.sv-card .nm{font-weight:700;font-size:.98rem}
+.sv-card .bl{font-size:.8rem;color:var(--text-dim)}
+.sv-card .meta{display:flex;align-items:center;gap:6px;font-size:.72rem;color:var(--text-faint)}
+.sv-card .sdot{width:8px;height:8px;border-radius:99px;background:var(--up)}
+.sv-card .sdot.down{background:var(--down)}
+.sv-pin{position:absolute;top:10px;right:10px;width:28px;height:28px;border-radius:99px;border:1px solid transparent;background:transparent;color:var(--text-faint);cursor:pointer;display:flex;align-items:center;justify-content:center;opacity:0;transition:all .15s;font-size:15px}
+.sv-card:hover .sv-pin,.sv-pin.pinned{opacity:1}
+.sv-pin:hover{border-color:var(--gold);color:var(--gold)}
+.sv-pin.pinned{color:var(--gold)}
+.sv-cat{font-size:.68rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--text-faint)}
+@media (max-width:760px){.sv-spot{flex-direction:column;align-items:flex-start;padding:20px}.sv-grid{grid-template-columns:repeat(auto-fill,minmax(150px,1fr))}}
 </style></head><body>
 <div class="aurora" aria-hidden="true"></div>
 <div class="grain-overlay" aria-hidden="true"></div>
@@ -1262,7 +1310,14 @@ function guideDetailHtml(key) {
     '<section class="card" id="sec-library"><p class="eyebrow">Your library</p><h3>Library</h3><div id="lib-body"><div class="skel"></div></div><p class="dim lib-cap">Library totals — live from Jellyfin</p></section>' +
     '</div>' +
     '<div class="tabpanel" id="panel-services" role="tabpanel" aria-labelledby="tab-services">' +
-    '<section class="card" id="sec-services"><p class="eyebrow">Services</p><h3>Services<span class="tier-echo" id="tier-echo-services"></span></h3><div class="svc-grid" id="svc-grid"></div></section>' +
+    '<section class="card" id="sec-services"><p class="eyebrow">Services</p><h3>Services<span class="tier-echo" id="tier-echo-services"></span></h3>' +
+    '<div class="sv-spot" id="sv-spot"></div>' +
+    '<div class="sv-row-h"><p class="eyebrow" style="margin:0">Pinned</p></div>' +
+    '<div class="sv-orbs" id="sv-orbs"></div>' +
+    '<div class="sv-row-h"><p class="eyebrow" style="margin:0">Recently opened</p></div>' +
+    '<div class="sv-chiprow" id="sv-recent"></div>' +
+    '<div class="sv-toolbar" id="sv-toolbar"></div>' +
+    '<div class="sv-grid" id="svc-grid"></div></section>' +
     '<section class="card" id="sec-uptime"><p class="eyebrow">Uptime</p><h3>Uptime — last 24h</h3><div class="skel"></div></section>' +
     '<div class="vine-divider" aria-hidden="true"></div>' +
     '<section class="card" id="sec-suggest"><p class="eyebrow">Shape the garden</p><h3>Missing something?</h3>' +
@@ -1717,13 +1772,98 @@ function guideDetailHtml(key) {
     { fg: 'var(--gold)',           bg: 'rgba(217,168,108,.15)' },
   ];
   const svcGrid = $('#svc-grid');
-  if (svcGrid) svcGrid.innerHTML = SERVICES.map((s, i) => {
-    const c = SVC_COLORS[i % SVC_COLORS.length];
-    return '<a class="svc" href="' + s.url + '" target="_blank" rel="noopener noreferrer" title="' + esc(s.blurb) + '" aria-label="' + esc(s.name + ' — ' + s.blurb) + '">' +
-      (s.icon ? '<img class="svc-ico" src="' + s.icon + '" alt="" width="34" height="34" loading="lazy">' : '<span class="svc-ico" style="color:' + c.fg + ';background:' + c.bg + '">' + esc(s.name[0].toUpperCase()) + '</span>') +
-      '<span class="svc-name">' + esc(s.name) + '</span>' +
-      '<span class="svc-blurb">' + esc(s.blurb) + '</span></a>';
-  }).join('');
+  // ===== aurora services engine (sv*) =====
+  const SV_CATS = { 'Jellyfin': 'media', 'Jellyseerr': 'media', 'KoalaSync': 'media', 'Nextcloud': 'cloud', 'Immich': 'cloud', 'Vaultwarden': 'cloud', 'Element': 'tools', 'AFFiNE': 'tools', 'Open WebUI': 'ai' };
+  const SV_CAT_LABELS = [['all','All'],['media','Media'],['cloud','Cloud & Files'],['tools','Tools'],['ai','AI']];
+  const svState = { filter: 'all', sort: 'default', featured: 0, upmap: {}, monmap: {} };
+  const svLS = (k, d) => { try { const v = localStorage.getItem(k); return v ? JSON.parse(v) : d; } catch (e) { return d; } };
+  const svLSset = (k, v) => { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} };
+  let svPinned = svLS('msp-pinned-svcs', ['Jellyfin', 'Vaultwarden']);
+  let svRecent = svLS('msp-recent-svcs', []);
+  const svIsUp = (name) => svState.monmap[name] !== false;
+  const svUp24 = (name) => (typeof svState.upmap[name] === 'number' ? svState.upmap[name].toFixed(1) + '%' : '');
+  const svStar = (pinned) => '<button type="button" class="sv-pin' + (pinned ? ' pinned' : '') + '" title="' + (pinned ? 'Unpin' : 'Pin to Pinned') + '" aria-label="' + (pinned ? 'Unpin service' : 'Pin service') + '">★</button>';
+  window.svTrack = function (name) {
+    svRecent = [name].concat(svRecent.filter((n) => n !== name)).slice(0, 5);
+    svLSset('msp-recent-svcs', svRecent);
+    svRenderRecent();
+  };
+  window.svTogglePin = function (name) {
+    if (svPinned.indexOf(name) >= 0) { svPinned = svPinned.filter((n) => n !== name); toast(name + ' unpinned'); }
+    else { svPinned = [name].concat(svPinned).slice(0, 8); toast(name + ' pinned'); }
+    svLSset('msp-pinned-svcs', svPinned);
+    svRenderOrbs(); svRenderGrid();
+  };
+  window.svTrackPin = function (name, ev) { if (ev) { ev.preventDefault(); ev.stopPropagation(); } svTogglePin(name); };
+  const svIcon = (s, cls) => s.icon ? '<img class="' + cls + '" src="' + s.icon + '" alt="" loading="lazy">' : '<span class="' + cls + '">' + esc(s.name[0].toUpperCase()) + '</span>';
+  window.svRenderOrbs = function () {
+    const host = document.getElementById('sv-orbs'); if (!host) return;
+    host.innerHTML = svPinned.map((name) => {
+      const s = SERVICES.find((x) => x.name === name); if (!s) return '';
+      return '<a class="sv-orb" href="' + s.url + '" target="_blank" rel="noopener noreferrer" title="' + esc(s.name) + '" onclick="window.svTrack(\'' + esc(s.name) + '\')">' + svIcon(s, 'orbico') +
+        '<span class="sdot' + (svIsUp(s.name) ? '' : ' down') + '"></span>' +
+        '<button type="button" class="unpin" aria-label="Unpin ' + esc(s.name) + '" onclick="window.svTogglePin(\'' + esc(s.name) + '\')">✕</button></a>';
+    }).join('') || '<span class="sv-chip">Hover a service below and hit ★ to pin it here</span>';
+  };
+  window.svRenderRecent = function () {
+    const host = document.getElementById('sv-recent'); if (!host) return;
+    host.innerHTML = svRecent.map((name) => {
+      const s = SERVICES.find((x) => x.name === name); if (!s) return '';
+      return '<a class="sv-chip" href="' + s.url + '" target="_blank" rel="noopener noreferrer" onclick="window.svTrack(\'' + esc(s.name) + '\')">' + (s.icon ? '<img src="' + s.icon + '" alt="">' : '') + esc(s.name) + '</a>';
+    }).join('') || '<span class="sv-chip">Open something and it shows up here</span>';
+  };
+  window.svRenderGrid = function () {
+    const host = svcGrid; if (!host) return;
+    let list = SERVICES.filter((s) => svState.filter === 'all' || SV_CATS[s.name] === svState.filter);
+    if (svState.sort === 'az') list = list.slice().sort((a, b) => a.name.localeCompare(b.name));
+    host.innerHTML = list.map((s) => {
+      const pinned = svPinned.indexOf(s.name) >= 0;
+      return '<a class="sv-card" href="' + s.url + '" target="_blank" rel="noopener noreferrer" onclick="window.svTrack(\'' + esc(s.name) + '\')">' +
+        svStar(pinned) +
+        '<div class="top">' + svIcon(s, 'svc-ico') + '<div><div class="nm">' + esc(s.name) + '</div><div class="bl">' + esc(s.blurb) + '</div></div></div>' +
+        '<div class="meta"><span class="sdot' + (svIsUp(s.name) ? '' : ' down') + '"></span><span>' + (svIsUp(s.name) ? 'Operational' : 'Degraded') + (svUp24(s.name) ? ' · ' + svUp24(s.name) + ' uptime' : '') + '</span><span style="margin-left:auto" class="sv-cat">' + esc((SV_CAT_LABELS.find((c) => c[0] === SV_CATS[s.name]) || ['',''])[1] || '') + '</span></div></a>';
+    }).join('');
+  };
+  window.svSetFilter = function (f, ev) {
+    svState.filter = f;
+    document.querySelectorAll('.sv-fchip').forEach((b) => b.classList.toggle('on', b.dataset.f === f));
+    svRenderGrid();
+  };
+  window.svToggleSort = function () {
+    svState.sort = svState.sort === 'default' ? 'az' : 'default';
+    const b = document.getElementById('sv-sortbtn'); if (b) b.textContent = svState.sort === 'az' ? 'A–Z' : 'Default';
+    svRenderGrid();
+  };
+  const SV_FEATURED = ['Jellyfin', 'Immich', 'Open WebUI'];
+  window.svRenderSpot = function () {
+    const host = document.getElementById('sv-spot'); if (!host) return;
+    const s = SERVICES.find((x) => x.name === SV_FEATURED[svState.featured % SV_FEATURED.length]) || SERVICES[0];
+    host.innerHTML = '<div class="sv-spot-ico">' + svIcon(s, 'spotimg') + '</div>' +
+      '<div class="sv-spot-main"><div class="sv-cat">Featured</div><div class="sv-spot-name">' + esc(s.name) + '</div>' +
+      '<div class="sv-spot-blurb">' + esc(s.blurb) + '</div>' +
+      '<div class="sv-spot-meta"><span class="sdot' + (svIsUp(s.name) ? '' : ' down') + '" style="width:8px;height:8px;border-radius:99px;display:inline-block;background:' + (svIsUp(s.name) ? 'var(--up)' : 'var(--down)') + '"></span><span>' + (svIsUp(s.name) ? 'Operational' : 'Degraded') + (svUp24(s.name) ? ' · ' + svUp24(s.name) + ' uptime (30d)' : '') + '</span></div>' +
+      '<div class="sv-dots">' + SV_FEATURED.map((n, di) => '<button type="button" class="sv-dot' + (di === svState.featured % SV_FEATURED.length ? ' on' : '') + '" aria-label="Show ' + esc(n) + '" onclick="svState.featured=' + di + ';window.svRenderSpot()"></button>').join('') + '</div></div>' +
+      '<a class="btn" href="' + s.url + '" target="_blank" rel="noopener noreferrer" onclick="window.svTrack(\'' + esc(s.name) + '\')">Open ' + esc(s.name) + '</a>' +
+      '<button type="button" class="sv-refresh" title="Next featured" aria-label="Next featured service" onclick="svState.featured++;window.svRenderSpot()"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-2.64-6.36"/><path d="M21 3v6h-6"/></svg></button>';
+  };
+  window.svRenderSpot(); window.svRenderOrbs(); window.svRenderRecent();
+  if (svcGrid) svcGrid.innerHTML = SERVICES.map((s) => '<div class="sv-card" style="opacity:.5"><div class="top">' + svIcon(s, 'svc-ico') + '<div><div class="nm">' + esc(s.name) + '</div><div class="bl">' + esc(s.blurb) + '</div></div></div></div>').join('');
+  (function svToolbar() {
+    const host = document.getElementById('sv-toolbar'); if (!host) return;
+    host.innerHTML = SV_CAT_LABELS.map((c, ci) => '<button type="button" class="sv-fchip' + (ci === 0 ? ' on' : '') + '" data-f="' + c[0] + '" onclick="window.svSetFilter(\'' + c[0] + '\')">' + c[1] + '</button>').join('') +
+      '<button type="button" class="sv-fchip sv-sort" id="sv-sortbtn" onclick="window.svToggleSort()">Default</button>';
+  })();
+  setInterval(() => { svState.featured++; window.svRenderSpot(); }, 8000);
+  fetch('/api/status').then((r) => (r.ok ? r.json() : null)).then((d) => {
+    const ms = (d && d.monitors) || [];
+    ms.forEach((m) => { svState.monmap[m.name] = !!m.current; });
+    window.svRenderSpot(); window.svRenderOrbs(); window.svRenderGrid();
+  }).catch(() => {});
+  fetch('/api/status/extended').then((r) => (r.ok ? r.json() : null)).then((d) => {
+    const ms = (d && d.monitors) || [];
+    ms.forEach((m) => { svState.upmap[m.name] = m.up24; });
+    window.svRenderSpot(); window.svRenderGrid();
+  }).catch(() => {});
 
   // ===== AURORA HOME (hm*) — Home tab rebuild (Home-11 "Everything", .oc-tmp/mockups/home.html) =====
   const hmJF = 'https://media.mysweetpea.cc';
