@@ -981,6 +981,27 @@ body { overscroll-behavior-x: none; }
 }
 /* hero art fallback gradient */
 .hm-hero{background:linear-gradient(135deg,var(--v-soft),rgba(69,214,200,.10) 60%),var(--card)}
+/* ---- mobile tap-target pass: every interactive element >= 40px hit height (Apple HIG 44 / MD 48; 40 = pragmatic floor).
+   Uses min-height + centered content, never layout-breaking. Only applies <=760px. ---- */
+@media (max-width:760px){
+  .hm-more{min-height:40px;display:inline-flex;align-items:center}
+  .gp-pill{min-height:40px;padding:9px 12px}
+  .jbrand-pill{min-height:40px;padding:10px 14px}
+  .plat-chip{min-height:40px;padding:10px 14px}
+  .st2-pill{min-height:40px;padding:10px 14px}
+  .ob-x{width:40px;height:40px;min-height:40px}
+  .ob-link{min-height:40px;display:inline-flex;align-items:center}
+  .pwf-adv{min-height:40px;display:inline-flex;align-items:center}
+  .svc-guide-btn{min-height:40px;display:inline-flex;align-items:center;padding:8px 16px}
+  .sv-refresh{width:40px;height:40px}
+  .sv-pin{width:40px;height:40px}
+  .hm-btn,.btn,.mini,.icon-btn{min-height:44px}
+  .acct-trigger{min-height:40px}
+  .nav-search{width:40px;height:40px}
+  .gp-pill,.guide-variant{min-height:40px}
+  .footer-col a{display:inline-block;min-height:40px;line-height:40px}
+  .footer-help a{display:inline-block;min-height:40px;line-height:40px}
+}
 </style></head><body>
 <div class="aurora" aria-hidden="true"></div>
 <div class="grain-overlay" aria-hidden="true"></div>
