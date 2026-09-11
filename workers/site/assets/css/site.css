@@ -2021,7 +2021,18 @@ body[data-page='support'] .faq-item.open .faq-question .arrow {
         display: none;
         flex-direction: column; align-items: stretch;
         width: 100%; padding-top: 10px; gap: 6px;
+        /* Scrollable hamburger menu: cap to the viewport (below the fixed bar)
+           so every item is reachable on short screens; thin themed scrollbar. */
+        max-height: calc(100vh - 88px);
+        max-height: calc(100dvh - 88px);
+        overflow-y: auto;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: thin;
+        scrollbar-color: rgba(143, 175, 181, 0.45) transparent;
+        overscroll-behavior: contain;
     }
+    .nav-links::-webkit-scrollbar { width: 6px; }
+    .nav-links::-webkit-scrollbar-thumb { background: rgba(143, 175, 181, 0.45); border-radius: 3px; }
     .nav-links.nav-open { display: flex; }
     .nav-btn {
         display: block; text-align: center;
