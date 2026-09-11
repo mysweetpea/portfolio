@@ -2473,9 +2473,9 @@ function guideDetailHtml(key) {
   }
   function hmUnCard(it) {
     const sub = (it && it.seriesName) ? it.seriesName : '';
-    return '<a class="hm-card hm-un" style="aspect-ratio:16/9" href="' + hmJF_ITEM + encodeURIComponent(String((it && it.id) == null ? '' : it.id)) + '" target="_blank" rel="noopener noreferrer">' +
+    return '<a class="hm-card hm-wide hm-un" style="aspect-ratio:16/9" href="' + hmJF_ITEM + encodeURIComponent(String((it && it.id) == null ? '' : it.id)) + '" target="_blank" rel="noopener noreferrer">' +
       // aurora polish 4 (fix1): prefer the API's Primary image (it.img); Backdrop 404s for most /Items/Latest entries
-      '<img class="hm-wide-art" loading="lazy" alt="" src="' + esc((it && it.img) || hmBackdrop(it && it.id, 480)) + '" onerror="\'none\'">' +
+      '<img class="hm-wide-art" loading="lazy" alt="" src="' + esc((it && it.img) || hmBackdrop(it && it.id, 480)) + '" onerror="this.style.display=\'none\'">' +
       '<span class="hm-wide-glow"></span>' +
       '<span class="hm-un-type">' + esc(String((it && it.type) || '')) + '</span>' +
       '<span class="hm-wide-meta"><span class="hm-wide-t">' + esc((it && it.name) || '') + '</span>' +
