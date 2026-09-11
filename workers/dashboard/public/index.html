@@ -229,6 +229,15 @@ section h3::before{content:"";display:inline-block;width:3px;height:18px;border-
 .tab{flex:none;position:relative;padding:8px 18px;border-radius:999px;cursor:pointer;background:transparent;border:1px solid transparent;color:var(--text-faint);font:inherit;font-size:.88rem;font-weight:500;transition:all .2s cubic-bezier(.4,0,.2,1)}
 .tab:hover{color:var(--text-dim);background:rgba(151,146,255,.08)}
 .tab.active{color:var(--text);background:linear-gradient(135deg,var(--v-soft),rgba(69,214,200,.12));border-color:var(--border-primary);box-shadow:inset 0 0 0 0 transparent;font-weight:600}
+/* T1a: shared sliding tab pill (desktop inline tabs only — mobile dropdown keeps per-tab bg) */
+.tab-pill{position:absolute;top:0;left:0;height:100%;border-radius:999px;background:linear-gradient(135deg,var(--v-soft),rgba(69,214,200,.12));border:1px solid var(--border-primary);pointer-events:none;opacity:0;transition:transform .42s cubic-bezier(.34,1.35,.5,1),width .42s cubic-bezier(.34,1.35,.5,1),opacity .2s ease;z-index:0;will-change:transform,width}
+.tab-pill.on{opacity:1}
+.nav-tabs .tab{z-index:1}
+@media(max-width:760px){.tab-pill{display:none}}
+/* T1b: choreographed tab swap — outgoing fades/sinks, incoming children cascade */
+.tabpanel.tp-enter>*{animation:tpIn .38s cubic-bezier(.22,1,.36,1) both;animation-delay:calc(var(--tp-i,0)*36ms)}
+@keyframes tpIn{from{opacity:0;transform:translateY(9px)}to{opacity:1;transform:none}}
+@media (prefers-reduced-motion:reduce){.tabpanel.tp-enter>*{animation:none}.tab-pill{transition:none}}
 .tab-dot{position:absolute;top:6px;right:8px;width:7px;height:7px;border-radius:50%;background:var(--gold);display:none}
 .tab.has-dot .tab-dot{display:block}
 .tab-dot{position:absolute;top:5px;right:3px;width:7px;height:7px;border-radius:50%;background:var(--gold);display:none}
@@ -1156,10 +1165,47 @@ function ceremony(flowSlug, label) {
 const TABS = ['home', 'media', 'services', 'stats', 'guides', 'contact'];
 const TAB_LABELS = { home: 'Home', stats: 'Statistics', media: 'Media', services: 'Services', guides: 'Guides', contact: 'Contact', security: 'Security', account: 'Account' };
 let currentTab = 'home';
+// T1a: shared tab pill — glides under the active tab (desktop inline row only)
+function moveTabPill(animate) {
+  const pill = document.getElementById('tab-pill');
+  const btn = document.getElementById('tab-' + currentTab);
+  if (!pill || !btn) return;
+  const row = pill.parentElement;
+  // mobile renders tabs as a dropdown column — pill is display:none there
+  if (getComputedStyle(pill).display === 'none' || row.getBoundingClientRect().width === 0) return;
+  const pr = row.getBoundingClientRect(), br = btn.getBoundingClientRect();
+  if (!animate) pill.style.transition = 'none';
+  pill.classList.add('on');
+  pill.style.width = br.width + 'px';
+  pill.style.transform = 'translateX(' + (br.left - pr.left) + 'px)';
+  if (!animate) { void pill.getBoundingClientRect(); pill.style.transition = ''; }
+}
+// T1c: count-up numerals (transform/opacity-safe, respects reduced motion)
+function animateCount(el) {
+  if (!el || el.dataset.counted === '1') return;
+  el.dataset.counted = '1';
+  const raw = el.textContent.trim();
+  const m = raw.match(/^([\d,]+)(.*)$/);
+  if (!m) return;
+  const target = parseInt(m[1].replace(/,/g, ''), 10);
+  if (!isFinite(target) || target < 2) return;
+  let reduce = false;
+  try { reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (e) {}
+  if (reduce) return;
+  const suffix = m[2] || '';
+  const dur = 900, start = performance.now();
+  (function frame(now) {
+    const t = Math.min(1, (now - start) / dur);
+    const e = 1 - Math.pow(1 - t, 4);
+    el.textContent = Math.round(target * e).toLocaleString() + suffix;
+    if (t < 1) requestAnimationFrame(frame);
+  })(start);
+}
 function setTab(name, opts) {
   opts = opts || {};
   const EXTRA_TABS = ['security', 'account']; // reachable from the account dropdown
   if (TABS.indexOf(name) < 0 && EXTRA_TABS.indexOf(name) < 0) name = 'home';
+  const prev = currentTab;
   currentTab = name;
   TABS.concat(EXTRA_TABS).forEach((t) => {
     const b = document.getElementById('tab-' + t);
@@ -1167,6 +1213,18 @@ function setTab(name, opts) {
     if (b) { b.classList.toggle('active', t === name); b.setAttribute('aria-selected', t === name ? 'true' : 'false'); }
     if (p) p.hidden = t !== name;
   });
+  if (prev !== name) {
+    const panel = document.getElementById('panel-' + name);
+    if (panel) {
+      panel.classList.remove('tp-enter');
+      void panel.getBoundingClientRect(); // restart the cascade
+      panel.querySelectorAll(':scope > *').forEach((c, i) => c.style.setProperty('--tp-i', Math.min(i, 8)));
+      panel.classList.add('tp-enter');
+      if (panel._tpTimer) clearTimeout(panel._tpTimer);
+      panel._tpTimer = setTimeout(() => panel.classList.remove('tp-enter'), 750);
+    }
+  }
+  moveTabPill(prev !== name);
   if (!opts.fromHash) { try { history.replaceState(null, '', '#' + name); } catch (e) {} }
   try { localStorage.setItem('msp-tab', name); } catch (e) {}
   window.scrollTo(0, 0);
@@ -1777,7 +1835,7 @@ function guideDetailHtml(key) {
     '<nav class="top-nav" id="top-nav" aria-label="Primary navigation">' +
     '<a class="brand" href="#" data-goto="home" title="MySweetPea" onclick="event.preventDefault();setTab(\'home\')"><img src="/icons/logo.svg" alt=""/> <span class="back-label">MySweetPea</span></a>' +
     '<div class="nav-tabs" id="tabs" role="tablist" aria-label="Dashboard sections">' +
-    TABS.map((t) => '<button type="button" class="tab" id="tab-' + t + '" data-tab="' + t + '" role="tab" aria-controls="panel-' + t + '" aria-selected="false">' + TAB_LABELS[t] + (t === 'security' ? '<span class="tab-dot" aria-hidden="true"></span>' : '') + '</button>').join('') +
+    '<div class="tab-pill" id="tab-pill" aria-hidden="true"></div>' + TABS.map((t) => '<button type="button" class="tab" id="tab-' + t + '" data-tab="' + t + '" role="tab" aria-controls="panel-' + t + '" aria-selected="false">' + TAB_LABELS[t] + (t === 'security' ? '<span class="tab-dot" aria-hidden="true"></span>' : '') + '</button>').join('') +
     '</div>' +
     '<div class="nav-id">' +
     '<a class="site-back" href="https://mysweetpea.cc" title="Return to mysweetpea.cc"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 4h6v6"/><path d="M20 4 10 14"/><path d="M18 13v6H5V6h6"/></svg><span class="sb-txt">Return to Website</span></a>' +
@@ -2072,11 +2130,14 @@ function guideDetailHtml(key) {
     const kpi = document.getElementById('stats-kpi');
     const svc = document.getElementById('stats-services');
     const pvTotal = (s.photos == null && s.videos == null) ? null : ((s.photos || 0) + (s.videos || 0));
-    if (kpi) kpi.innerHTML =
+    if (kpi) {
+      kpi.innerHTML =
       kpiTile('Movies', s.movies, KPI_ICONS.film) +
       kpiTile('Episodes', s.episodes, KPI_ICONS.tv) +
       kpiTile('Photos &amp; videos', pvTotal, KPI_ICONS.image) +
       kpiTile('Members', s.users, KPI_ICONS.users);
+      kpi.querySelectorAll('.stat .n').forEach(animateCount);
+    }
     renderStatsCharts(s);
     if (!svc) return;
     let h = '';
@@ -2143,8 +2204,9 @@ function guideDetailHtml(key) {
     }
     const h = Math.floor(hours);
     const m = Math.round((hours - h) * 60);
-    num.innerHTML = h + '<small> hrs </small>' + m + '<small> min</small>';
+    num.innerHTML = '<span class="st2v">' + h + '</span><small> hrs </small><span class="st2v">' + m + '</span><small> min</small>';
     num.hidden = false;
+    num.querySelectorAll('.st2v').forEach((v) => { const t = parseInt(v.textContent, 10) || 0; if (t > 1) { v.textContent = '0'; animateCount(v); } });
     empty.hidden = true;
     const titles = (s.jf_resume_titles != null && s.jf_resume_titles > 0) ? Number(s.jf_resume_titles).toLocaleString() : '&mdash;';
     const devices = (s.jf_devices != null && s.jf_devices > 0) ? Number(s.jf_devices).toLocaleString() : '&mdash;';
@@ -2207,6 +2269,10 @@ function guideDetailHtml(key) {
     const h = (location.hash || '').replace(/^#/, '');
     if ((TABS.concat(EXTRA_TABS)).indexOf(h) >= 0 && h !== currentTab) setTab(h, { fromHash: true });
   });
+  // T1a: keep the pill glued to the active tab across relayouts
+  window.addEventListener('resize', () => moveTabPill(false));
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => moveTabPill(false)).catch(() => {});
+  [50, 220, 600].forEach((ms) => setTimeout(() => moveTabPill(false), ms));
 
   // ===== PHASE 8: AVATAR MODAL (upload / remove / preview) =====
   window.openAvatarModal = async () => {
@@ -2619,6 +2685,7 @@ function guideDetailHtml(key) {
     if (elR) elR.textContent = String(reqs.filter((r) => r && r.status !== 3 && !(r.availability >= 4)).length);
     const elD = document.getElementById('hm-stat-devs');
     if (elD) elD.textContent = (devCount == null) ? '\u2014' : String(devCount);
+    ['hm-stat-hours', 'hm-stat-reqs', 'hm-stat-devs'].forEach((id) => { const n = document.getElementById(id); if (n) { n.dataset.counted = ''; animateCount(n); } });
   }
   async function hmLoadHero() {
     const host = document.getElementById('hm-hero');
