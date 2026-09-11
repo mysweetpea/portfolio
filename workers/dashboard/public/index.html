@@ -267,7 +267,7 @@ img.svc-guide-ico{object-fit:contain;padding:2px}
 .svc-guide-body p{margin:0;font-size:.88rem;line-height:1.55}
 .svc-guide-btn{display:inline-block;margin-top:9px;background:transparent;border:1px solid rgba(151,146,255,.4);color:var(--primary-bright);text-decoration:none;font-size:.8rem;font-weight:600;padding:5px 14px;border-radius:99px;transition:.35s cubic-bezier(.4,0,.2,1)}
 .svc-guide-btn:hover{border-color:var(--gold);color:var(--gold)}
-@media(max-width:760px){.svc-guide{grid-template-columns:1fr}.svc-guide-nav{flex-direction:row;flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;padding-bottom:4px;-webkit-overflow-scrolling:touch;scroll-snap-type:x proximity}.svc-guide-nav::-webkit-scrollbar{display:none}.svc-guide-chip{width:auto;flex:none;white-space:nowrap;padding:7px 10px;font-size:.8rem;scroll-snap-align:start}.svc-guide-chip .svc-guide-ico{width:20px;height:20px}.svc-guide-chip .gp-count{font-size:.6rem;padding:0 5px}}
+@media(max-width:760px){.svc-guide{grid-template-columns:1fr}.svc-guide-nav{flex-direction:row;flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;padding-bottom:4px;-webkit-overflow-scrolling:touch;scroll-snap-type:x proximity;max-width:100%}.svc-guide-nav::-webkit-scrollbar{display:none}.svc-guide-chip{width:auto;flex:none;white-space:nowrap;padding:7px 10px;font-size:.8rem;scroll-snap-align:start}.svc-guide-chip .svc-guide-ico{width:20px;height:20px}.svc-guide-chip .gp-count{font-size:.6rem;padding:0 5px}.svc-guide-detail,.svc-guide>*{min-width:0;max-width:100%}.svc-guide{grid-template-columns:minmax(0,1fr)}.svc-guide .card,.svc-guide #guide-body,.svc-guide .gp-steps,.svc-guide .jbrand{min-width:0;max-width:100%}.svc-guide pre,.svc-guide .ripple-strip{max-width:100%;overflow-x:clip}}
 /* ---- phase 12: get-started onboarding + suggest a service ---- */
 .ob-card{border-color:rgba(217,168,108,.22)}
 .ob-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px}
@@ -745,6 +745,14 @@ input:focus-visible,select:focus-visible,textarea:focus-visible{border-radius:va
 .gp-glyph svg{width:13px;height:13px}
 .gp-count{display:inline-flex;align-items:center;justify-content:center;min-width:17px;height:17px;padding:0 5px;border-radius:999px;background:rgba(151,146,255,.16);color:var(--primary-bright);font-size:.62rem;font-weight:700;font-variant-numeric:tabular-nums;flex:none}
 .gp-steps{min-width:0}
+/* ---- Jellyfin brand toggle (Moonfin vs official Jellyfin) ---- */
+.jbrand{margin:2px 0 14px}
+.jbrand-row{display:inline-flex;gap:0;border:1px solid var(--border);border-radius:999px;padding:3px;background:rgba(255,255,255,.03)}
+.jbrand-pill{border:0;background:transparent;color:var(--text-dim);font:inherit;font-size:.82rem;font-weight:600;padding:7px 16px;border-radius:999px;cursor:pointer;transition:all .16s ease;min-height:0}
+.jbrand-pill:hover{color:var(--text)}
+.jbrand-pill.active{background:linear-gradient(135deg,var(--primary),var(--primary-dim,var(--primary)));color:#0C1316}
+.jbrand-note{margin:8px 0 0;font-size:.78rem;color:var(--text-faint)}
+@media (max-width:760px){.jbrand-row{display:grid;grid-template-columns:1fr 1fr;width:100%}.jbrand-pill{width:100%;padding:9px 8px}}
 @media (max-width:760px){.gp-picker{margin:0 0 10px}.gp-row{gap:6px;display:grid;grid-template-columns:repeat(2,minmax(0,1fr))}.gp-pill{padding:8px 11px;font-size:.78rem;min-height:0;justify-content:center;width:100%}}
 /* ---- aurora mobile 3: adopt the main site's mobile grammar (rails stack, type up, 44px targets) ---- */
 @media (max-width:760px){
@@ -1409,55 +1417,84 @@ const GP_GLYPHS = {
   moon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" aria-hidden="true"><path d="M20 14.5A8.5 8.5 0 0 1 9.5 4a8.5 8.5 0 1 0 10.5 10.5Z"/></svg>'
 };
 const guidePlatSel = {};
+const guideBrandSel = {};
+// ---- Jellyfin guide: brand toggle (Moonfin = premium curated client, Jellyfin = free official apps) ----
+// Each brand has its own platform list with complete per-platform steps.
+const PLATFORMS_JF_MOONFIN = [
+  { p: 'web', label: 'Web browser', glyph: 'web', platformSteps: [
+    { title: 'Open Moonfin', text: 'Go to media.mysweetpea.cc — Moonfin is our custom-tuned web app, with the Netflix-style home, request integration and watch-party built in.', url: 'https://media.mysweetpea.cc', btn: 'Open Moonfin' },
+    { title: 'Sign in', text: 'Use your MySweetPea account — your resume points, favorites and requests stay in sync everywhere.', url: '', btn: '' },
+  ] },
+  { p: 'iphone', label: 'iPhone', glyph: 'phone', platformSteps: [
+    { title: 'Get Moonfin from the App Store', text: 'Install Moonfin — our recommended iOS client with downloads for offline viewing.', url: 'https://apps.apple.com/us/app/moonfin/id6761283970', btn: 'Get Moonfin' },
+    { title: 'Point it at your server', text: 'Server address: media.mysweetpea.cc — then sign in with your MySweetPea account.', url: '', btn: '' },
+  ] },
+  { p: 'android', label: 'Android', glyph: 'phone', platformSteps: [
+    { title: 'Get Moonfin from the Play Store', text: 'Install Moonfin on your Android phone or tablet.', url: 'https://play.google.com/store/apps/details?id=org.moonfin.android', btn: 'Get Moonfin' },
+    { title: 'Point it at your server', text: 'Server address: media.mysweetpea.cc — then sign in with your MySweetPea account.', url: '', btn: '' },
+  ] },
+  { p: 'androidtv', label: 'Android TV', glyph: 'tv', platformSteps: [
+    { title: 'Install Moonfin on your TV', text: 'Find Moonfin in the Play Store on your Android TV or Google TV. One install covers both.', url: 'https://play.google.com/store/apps/details?id=org.moonfin.androidtv', btn: 'Get Moonfin' },
+    { title: 'Sign in', text: 'Enter media.mysweetpea.cc and sign in with your MySweetPea account.', url: '', btn: '' },
+    { title: 'Pick your favorites', text: 'On first launch choose the libraries you watch — the home screen fills with rows you actually use.', url: '', btn: '' },
+  ] },
+  { p: 'appletv', label: 'Apple TV', glyph: 'tv', platformSteps: [
+    { title: 'Get Moonfin on Apple TV', text: 'Install Moonfin from the tvOS App Store (requires tvOS 17+).', url: 'https://apps.apple.com/us/app/moonfin/id6761283970', btn: 'Get Moonfin' },
+    { title: 'Sign in', text: 'Server: media.mysweetpea.cc — then sign in with your MySweetPea account.', url: '', btn: '' },
+  ] },
+  { p: 'roku', label: 'Roku', glyph: 'tv', platformSteps: [
+    { title: 'Side-load Moonfin', text: 'Moonfin for Roku is a developer install for now: grab the package from the releases page and install it from roku.com/developer — it is not in the Roku Channel Store yet.', url: 'https://github.com/Moonfin-Client/Roku/releases/latest', btn: 'Get Moonfin' },
+    { title: 'Sign in', text: 'Server: media.mysweetpea.cc — then sign in with your MySweetPea account.', url: '', btn: '' },
+  ] },
+  { p: 'smarttv', label: 'Samsung / LG TV', glyph: 'tv', platformSteps: [
+    { title: 'Get Moonfin for Smart TV', text: 'Moonfin runs on Samsung TVs (Tizen 2016+) and LG TVs (webOS 3.0+). Install the package from the releases page onto your TV.', url: 'https://github.com/Moonfin-Client/Smart-TV/releases/latest', btn: 'Get Moonfin' },
+    { title: 'Sign in', text: 'Server: media.mysweetpea.cc — then sign in with your MySweetPea account.', url: '', btn: '' },
+  ] },
+  { p: 'desktop', label: 'Desktop', glyph: 'desktop', platformSteps: [
+    { title: 'Get the Moonfin desktop app', text: 'Native apps for Windows (x64 & ARM64), macOS and Linux (Wayland).', url: 'https://moonfin.io/#clients', btn: 'Get Moonfin' },
+    { title: 'Sign in', text: 'Server: media.mysweetpea.cc — then sign in with your MySweetPea account.', url: '', btn: '' },
+  ] },
+];
+const PLATFORMS_JF_OFFICIAL = [
+  { p: 'web', label: 'Web browser', glyph: 'web', platformSteps: [
+    { title: 'Open Jellyfin Web', text: 'Go to media.mysweetpea.cc/web — the classic Jellyfin interface, in any browser, nothing to install.', url: 'https://media.mysweetpea.cc/web/', btn: 'Open Jellyfin Web' },
+    { title: 'Sign in', text: 'Use your MySweetPea account.', url: '', btn: '' },
+  ] },
+  { p: 'iphone', label: 'iPhone', glyph: 'phone', platformSteps: [
+    { title: 'Get the official Jellyfin app', text: 'Install Jellyfin from the App Store — the free, official iOS client.', url: 'https://apps.apple.com/us/app/jellyfin/id1486644166', btn: 'Get Jellyfin' },
+    { title: 'Point it at your server', text: 'Server address: media.mysweetpea.cc — then sign in with your MySweetPea account.', url: '', btn: '' },
+  ] },
+  { p: 'android', label: 'Android', glyph: 'phone', platformSteps: [
+    { title: 'Get the official Jellyfin app', text: 'Install Jellyfin from the Play Store — also on F-Droid and the Amazon Appstore.', url: 'https://play.google.com/store/apps/details?id=org.jellyfin.mobile', btn: 'Get Jellyfin' },
+    { title: 'Point it at your server', text: 'Server address: media.mysweetpea.cc — then sign in with your MySweetPea account.', url: '', btn: '' },
+  ] },
+  { p: 'androidtv', label: 'Android TV', glyph: 'tv', platformSteps: [
+    { title: 'Get Jellyfin for Android TV', text: 'The official app is in the Play Store — one install covers Android TV and Google TV.', url: 'https://play.google.com/store/apps/details?id=org.jellyfin.androidtv', btn: 'Get Jellyfin' },
+    { title: 'Sign in', text: 'Enter media.mysweetpea.cc and sign in with your MySweetPea account.', url: '', btn: '' },
+  ] },
+  { p: 'firetv', label: 'Fire TV', glyph: 'tv', platformSteps: [
+    { title: 'Get it from the Amazon Appstore', text: 'Jellyfin for Android TV also runs on Fire TV — install it from the Amazon Appstore on your device.', url: 'https://www.amazon.com/gp/product/B08KH15LVN', btn: 'Get Jellyfin' },
+    { title: 'Sign in', text: 'Enter media.mysweetpea.cc and sign in with your MySweetPea account.', url: '', btn: '' },
+  ] },
+  { p: 'roku', label: 'Roku', glyph: 'tv', platformSteps: [
+    { title: 'Add the official Jellyfin channel', text: 'Jellyfin for Roku IS in the Roku Channel Store — search "Jellyfin" on your device and add the channel.', url: 'https://channelstore.roku.com/search/jellyfin', btn: 'Open Channel Store' },
+    { title: 'Sign in', text: 'Server: media.mysweetpea.cc — then sign in with your MySweetPea account.', url: '', btn: '' },
+  ] },
+  { p: 'smarttv', label: 'Samsung TV', glyph: 'tv', platformSteps: [
+    { title: 'Get the official Jellyfin app', text: 'The official Jellyfin app is in the Samsung TV app catalog (Tizen TVs). Search "Jellyfin" and install.', url: 'https://jellyfin.org/downloads/', btn: 'Get Jellyfin' },
+    { title: 'Sign in', text: 'Server: media.mysweetpea.cc — then sign in with your MySweetPea account.', url: '', btn: '' },
+  ] },
+  { p: 'desktop', label: 'Desktop', glyph: 'desktop', platformSteps: [
+    { title: 'Get Jellyfin Media Player', text: 'The official desktop client for Windows, macOS and Linux.', url: 'https://github.com/jellyfin/jellyfin-media-player/releases/latest', btn: 'Get Jellyfin' },
+    { title: 'Sign in', text: 'Server: media.mysweetpea.cc — then sign in with your MySweetPea account.', url: '', btn: '' },
+  ] },
+  { p: 'kodi', label: 'Kodi', glyph: 'tv', platformSteps: [
+    { title: 'Add the Jellyfin Kodi add-on', text: 'Two official options: Jellyfin for Kodi (full library sync into Kodi) or JellyCon (lightweight browse-and-play). Both from the official Jellyfin repository.', url: 'https://jellyfin.org/docs/general/clients/kodi/', btn: 'Setup guide' },
+    { title: 'Sign in', text: 'Server: media.mysweetpea.cc — then sign in with your MySweetPea account.', url: '', btn: '' },
+  ] },
+];
 const PLATFORMS = {
-  jellyfin: [
-    { p: 'web', label: 'Web browser', glyph: 'web', platformSteps: [
-      { title: 'Open the web app', text: 'Go to media.mysweetpea.cc in any browser and sign in with your MySweetPea account — nothing to install.', url: 'https://media.mysweetpea.cc', btn: 'Open Jellyfin' },
-      { title: 'Prefer the classic interface?', text: 'Jellyfin Web (the classic layout) is also available — same account, same library.', url: 'https://media.mysweetpea.cc/web/', btn: 'Open Jellyfin Web' },
-    ] },
-    { p: 'iphone', label: 'iPhone', glyph: 'phone', platformSteps: [
-      { title: 'Choose an app', text: 'Moonfin (recommended) is our premium, custom-tuned client. Jellyfin is the free official app. Both connect to the same server.', url: 'https://apps.apple.com/us/app/moonfin/id6761283970', btn: 'Get Moonfin' },
-      { title: 'Get the official Jellyfin app', text: 'Prefer the official client? Install Jellyfin from the App Store instead.', url: 'https://apps.apple.com/us/app/jellyfin/id1486644166', btn: 'Get Jellyfin' },
-      { title: 'Point it at your server', text: 'Server address: media.mysweetpea.cc — then sign in with your MySweetPea account.', url: '', btn: '' },
-    ] },
-    { p: 'android', label: 'Android', glyph: 'phone', platformSteps: [
-      { title: 'Choose an app', text: 'Moonfin (recommended) is our premium, custom-tuned client. Jellyfin is the free official app. Both connect to the same server.', url: 'https://play.google.com/store/apps/details?id=org.moonfin.android', btn: 'Get Moonfin' },
-      { title: 'Get the official Jellyfin app', text: 'Prefer the official client? Install Jellyfin from the Play Store instead (also on F-Droid and Amazon Appstore).', url: 'https://play.google.com/store/apps/details?id=org.jellyfin.mobile', btn: 'Get Jellyfin' },
-      { title: 'Point it at your server', text: 'Server address: media.mysweetpea.cc — then sign in with your MySweetPea account.', url: '', btn: '' },
-    ] },
-    { p: 'androidtv', label: 'Android TV', glyph: 'tv', platformSteps: [
-      { title: 'Choose an app', text: 'Moonfin (recommended) from the Play Store on your TV, or the official Jellyfin for Android TV app. One install covers Android TV and Google TV.', url: 'https://play.google.com/store/apps/details?id=org.moonfin.androidtv', btn: 'Get Moonfin' },
-      { title: 'Get the official Jellyfin app', text: 'The official Jellyfin for Android TV is also in the Play Store (plus Fire TV via the Amazon Appstore).', url: 'https://play.google.com/store/apps/details?id=org.jellyfin.androidtv', btn: 'Get Jellyfin' },
-      { title: 'Sign in', text: 'Enter media.mysweetpea.cc and sign in with your MySweetPea account.', url: '', btn: '' },
-    ] },
-    { p: 'firetv', label: 'Fire TV', glyph: 'tv', platformSteps: [
-      { title: 'Get the official app', text: 'Jellyfin for Android TV also runs on Fire TV — install it from the Amazon Appstore on your device.', url: 'https://www.amazon.com/gp/product/B08KH15LVN', btn: 'Get Jellyfin' },
-      { title: 'Sign in', text: 'Enter media.mysweetpea.cc and sign in with your MySweetPea account.', url: '', btn: '' },
-    ] },
-    { p: 'appletv', label: 'Apple TV', glyph: 'tv', platformSteps: [
-      { title: 'Get Moonfin on Apple TV', text: 'Install Moonfin from the tvOS App Store (requires tvOS 17+).', url: 'https://apps.apple.com/us/app/moonfin/id6761283970', btn: 'Get Moonfin' },
-      { title: 'Sign in', text: 'Server: media.mysweetpea.cc — then sign in with your MySweetPea account.', url: '', btn: '' },
-    ] },
-    { p: 'roku', label: 'Roku', glyph: 'tv', platformSteps: [
-      { title: 'Install Moonfin on Roku', text: 'Moonfin for Roku is a side-load: grab the package from the releases page and install it with the Roku developer tool — it is not in the Roku Channel Store yet.', url: 'https://github.com/Moonfin-Client/Roku/releases/latest', btn: 'Get Moonfin' },
-      { title: 'Or use the official Jellyfin channel', text: 'Jellyfin for Roku is in the official Roku Channel Store — search "Jellyfin" on your device.', url: 'https://channelstore.roku.com/search/jellyfin', btn: 'Open Channel Store' },
-      { title: 'Sign in', text: 'Server: media.mysweetpea.cc — then sign in with your MySweetPea account.', url: '', btn: '' },
-    ] },
-    { p: 'smarttv', label: 'Samsung / LG TV', glyph: 'tv', platformSteps: [
-      { title: 'Choose an app', text: 'Moonfin runs on Samsung TVs (Tizen 2016+) and LG TVs (webOS 3.0+). The official Jellyfin app covers Samsung Tizen too.', url: 'https://github.com/Moonfin-Client/Smart-TV/releases/latest', btn: 'Get Moonfin' },
-      { title: 'Official Jellyfin for Samsung', text: 'Samsung TV owners can also get the official Jellyfin app from the TV app catalog.', url: 'https://jellyfin.org/downloads/', btn: 'Get Jellyfin' },
-      { title: 'Sign in', text: 'Server: media.mysweetpea.cc — then sign in with your MySweetPea account.', url: '', btn: '' },
-    ] },
-    { p: 'desktop', label: 'Desktop', glyph: 'desktop', platformSteps: [
-      { title: 'Choose an app', text: 'Moonfin has desktop apps for Windows (x64 & ARM64), macOS and Linux. Jellyfin Media Player is the official desktop client — also Windows, macOS and Linux.', url: 'https://moonfin.io/#clients', btn: 'Get Moonfin' },
-      { title: 'Get Jellyfin Media Player', text: 'The official desktop client, from the Jellyfin releases page.', url: 'https://github.com/jellyfin/jellyfin-media-player/releases/latest', btn: 'Get Jellyfin' },
-      { title: 'Or just use the browser', text: 'The web app at media.mysweetpea.cc works on any computer — no install needed.', url: 'https://media.mysweetpea.cc', btn: 'Open Jellyfin' },
-    ] },
-    { p: 'kodi', label: 'Kodi', glyph: 'tv', platformSteps: [
-      { title: 'Add the Jellyfin Kodi add-on', text: 'Two official options: Jellyfin for Kodi (full library sync into Kodi) or JellyCon (lightweight browse-and-play). Both from the official Jellyfin repository.', url: 'https://jellyfin.org/docs/general/clients/kodi/', btn: 'Setup guide' },
-      { title: 'Sign in', text: 'Server: media.mysweetpea.cc — then sign in with your MySweetPea account.', url: '', btn: '' },
-    ] },
-  ],
+  jellyfin: PLATFORMS_JF_MOONFIN,
   seerr: [
     { p: 'web', label: 'Web browser', glyph: 'web' },
     { p: 'moonfin', label: 'Moonfin app', glyph: 'moon', platformSteps: [
@@ -1606,19 +1643,27 @@ function guideDetailHtml(key) {
   const g = GUIDES[key];
   if (!g) return '';
   let h = '<div class="svc-guide-title">' + esc(g.name) + '</div><p class="svc-guide-intro">' + esc(g.plain) + '</p>';
-  const plats = PLATFORMS[key];
+  // Jellyfin brand toggle: Moonfin (premium client) vs Jellyfin (free official apps)
+  if (key === 'jellyfin') {
+    if (!guideBrandSel[key]) guideBrandSel[key] = 'moonfin';
+    const brands = [
+      { id: 'moonfin', label: 'Moonfin', note: 'Our premium, custom-tuned client — recommended on every device.' },
+      { id: 'jellyfin', label: 'Official Jellyfin', note: 'The free, official apps from the Jellyfin project.' },
+    ];
+    const b = brands.find((x) => x.id === guideBrandSel[key]) || brands[0];
+    h += '<div class="jbrand"><div class="jbrand-row" role="tablist" aria-label="Choose an app">' +
+      brands.map((x) => '<button type="button" class="jbrand-pill' + (x.id === b.id ? ' active' : '') + '" data-jbrand="' + x.id + '" role="tab" aria-selected="' + (x.id === b.id ? 'true' : 'false') + '">' + esc(x.label) + '</button>').join('') +
+      '</div><p class="jbrand-note">' + esc(b.note) + '</p></div>';
+  }
+  const plats = (key === 'jellyfin') ? (guideBrandSel[key] === 'jellyfin' ? PLATFORMS_JF_OFFICIAL : PLATFORMS_JF_MOONFIN) : PLATFORMS[key];
   if (plats && plats.length) {
     if (!plats.some((x) => x.p === guidePlatSel[key])) guidePlatSel[key] = plats[0].p;
     const sel = plats.find((x) => x.p === guidePlatSel[key]);
     h += '<div class="gp-picker"><p class="gp-cap">Where will you use it?</p><div class="gp-row" role="tablist" aria-label="Choose your platform">' +
       plats.map((pl) => gpPillHtml(pl, pl.p === guidePlatSel[key])).join('') + '</div></div>';
     h += '<div class="gp-steps">';
-    if (key === 'jellyfin' && sel && sel.p === 'web' && Array.isArray(g.variants) && g.variants.length) {
-      h += guideVariantsHtml(g);
-    } else {
-      const steps = (sel && Array.isArray(sel.platformSteps) && sel.platformSteps.length) ? sel.platformSteps : (g.steps || []);
-      h += steps.map(guideStepHtml).join('');
-    }
+    const steps = (sel && Array.isArray(sel.platformSteps) && sel.platformSteps.length) ? sel.platformSteps : (g.steps || []);
+    h += steps.map(guideStepHtml).join('');
     h += '</div>';
   } else if (Array.isArray(g.variants) && g.variants.length) {
     h += guideVariantsHtml(g);
@@ -2644,6 +2689,15 @@ function guideDetailHtml(key) {
     });
     // phase 3b-3: platform pill switching — re-render the steps for the chosen platform
     guideBody.addEventListener('click', (e) => {
+      const brand = e.target && e.target.closest ? e.target.closest('.jbrand-pill') : null;
+      if (brand) {
+        const bid = brand.getAttribute('data-jbrand');
+        if (!bid || bid === guideBrandSel[guideSel]) return;
+        guideBrandSel[guideSel] = bid;
+        guidePlatSel[guideSel] = null; // reset platform when switching brands
+        guideBody.innerHTML = guideDetailHtml(guideSel);
+        return;
+      }
       const pill = e.target && e.target.closest ? e.target.closest('.gp-pill') : null;
       if (!pill) return;
       const id = pill.getAttribute('data-gp');
