@@ -738,7 +738,7 @@ input:focus-visible,select:focus-visible,textarea:focus-visible{border-radius:va
 @media (max-width:760px){
 .hm-rail,.sv-orbs,.media-row{display:grid;grid-template-columns:1fr;overflow:visible}
 .hm-rail>*,.sv-orbs>*,.media-row>*{width:100%!important}
-.hm-rail:has(.hm-pcard),.media-row:has(.mposter){grid-template-columns:repeat(2,1fr)}
+.hm-rail:has(.hm-pcard),.media-row:has(.mposter){grid-template-columns:repeat(2,minmax(0,1fr))}
 .hm-pcard,.mitem,.mposter{width:auto}
 .hm-sec::after,.media-sec .card::after,.mb2-orbwrap::after{display:none}
 .card h3,.hm-h2{font-size:1.35rem}
@@ -788,7 +788,7 @@ body { overscroll-behavior-x: none; }
 /* ---- aurora mobile 6: home fit ---- */
 @media (max-width:760px){
 .hm-greet,.hm-id{overflow-wrap:anywhere;min-width:0}
-.hm-stats{display:grid;grid-template-columns:repeat(3,auto);justify-content:space-between;gap:4px}
+.hm-stats{display:grid;grid-template-columns:repeat(3,minmax(0,auto));justify-content:space-between;gap:4px}
 .hm-stat{padding:4px 6px;font-size:.62rem}
 .hm-stat .n{font-size:1.05rem}
 .hm-actions{width:100%}
@@ -798,7 +798,7 @@ body { overscroll-behavior-x: none; }
 .hm-sec,.grid{min-width:0}
 .hm-hero-inner{flex-direction:column;align-items:stretch;gap:10px}
 .hm-hero-side{min-width:0;flex-wrap:wrap}
-.hm-rail{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;overflow:visible}
+.hm-rail{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;overflow:visible}
 .hm-rail>*{width:auto!important}
 .hm-pcard .mtitle{font-size:.86rem;margin-top:8px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
 }
@@ -813,6 +813,13 @@ body { overscroll-behavior-x: none; }
 /* ---- aurora mobile 8: iOS focus auto-zoom guard ---- */
 @media (max-width:760px){
   input, select, textarea { font-size: 16px !important; }
+}
+
+/* ---- aurora mobile 9: iOS grid-track shrink guard ---- */
+@media (max-width:760px){
+  .hm-rail > *, .media-row > *, .sv-orbs > *, .hm-stats, .hm-actions, .hm-banner-row, .hm-hero-inner, .hm-hero-side { min-width: 0; }
+  .hm-rail, .media-row, .sv-orbs { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .media-row { grid-template-columns: repeat(auto-fill, minmax(0, 130px)); }
 }
 </style></head><body>
 <div class="aurora" aria-hidden="true"></div>
