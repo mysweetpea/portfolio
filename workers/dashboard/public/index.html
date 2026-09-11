@@ -885,6 +885,45 @@ body { overscroll-behavior-x: none; }
   .sv-orbs,.hm-rail:has(.hm-orb){grid-template-columns:repeat(auto-fill,minmax(0,96px));justify-content:center}
   .hm-orb{justify-items:center;text-align:center}
 }
+
+/* ---- aurora polish 3 (fix1): hm-un cards keep real height on iOS — static meta fallback ---- */
+.hm-un-meta-static{display:none}
+@media (max-width:760px){
+  .hm-rail>.hm-un{min-height:99px}
+  .hm-rail>.hm-un .hm-wide-art{position:static;width:100%;height:auto;aspect-ratio:16/9;object-fit:cover}
+  .hm-rail>.hm-un .hm-wide-glow{display:none}
+  .hm-rail>.hm-un .hm-wide-meta{display:none}
+  .hm-un-meta-static{display:block;padding:8px 2px 0}
+  .hm-un-static-t{display:block;font-weight:600;font-size:.86rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+}
+/* ---- aurora polish 3 (fix2): requests + ETA visible on mobile, 2 cards side by side ---- */
+@media (max-width:760px){
+  #hm-req-rail{display:flex;overflow-x:auto}
+  .hm-rail>.hm-req{width:calc(50% - 7px)!important;min-width:0}
+  .hm-req{padding:12px}
+  .hm-req-t{font-size:.84rem}
+  .hm-req-foot{flex-wrap:wrap;row-gap:6px}
+}
+/* ---- aurora polish 3 (fix3): spotlight next arrow (matches sv-refresh) ---- */
+.sv-next{position:absolute;top:14px;right:52px;width:30px;height:30px;border-radius:99px;border:1px solid var(--border);background:rgba(255,255,255,.04);color:var(--text-dim);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s}
+.sv-next:hover{color:var(--text);border-color:var(--border-primary)}
+.sv-next::before{content:'';position:absolute;inset:-7px}
+/* ---- aurora polish 3 (fix4): hint chip wraps inside its bubble ---- */
+.sv-hint{white-space:normal;line-height:1.45;padding:8px 14px;max-width:100%;display:inline-block;width:auto}
+/* ---- aurora polish 3 (fix5): sessions rows as reference cards ---- */
+.sess-row{border:1px solid var(--border);border-radius:12px;padding:12px;margin-top:10px;background:rgba(255,255,255,.02)}
+.sess-row:last-of-type{border-bottom:1px solid var(--border)}
+.sess-dev{display:flex;align-items:center;gap:10px;min-width:0}
+.sess-dev svg{flex:none;width:34px;height:34px;padding:7px;box-sizing:border-box;border-radius:10px;background:rgba(151,146,255,.10);border:1px solid var(--border)}
+.sess-dev b{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.sess-row .pill.ok{margin-top:0;background:transparent;border:1px solid rgba(163,201,182,.55);color:var(--sage)}
+@media (max-width:760px){
+  .sess-row{display:flex;flex-wrap:wrap;align-items:center;gap:6px 8px}
+  .sess-dev{flex:0 0 100%}
+  .sess-seen,.sess-ip{font-size:.75rem}
+  .sess-ip::before{content:' · '}
+  .sess-act{margin-left:auto}
+}
 </style></head><body>
 <div class="aurora" aria-hidden="true"></div>
 <div class="grain-overlay" aria-hidden="true"></div>
@@ -2201,7 +2240,7 @@ function guideDetailHtml(key) {
       return '<a class="sv-orb" href="' + s.url + '" target="_blank" rel="noopener noreferrer" title="' + esc(s.name) + '" onclick="window.svTrack(\'' + esc(s.name) + '\')">' + svIcon(s, 'orbico') +
         '<span class="sdot' + (svIsUp(s.name) ? '' : ' down') + '"></span>' +
         '<button type="button" class="unpin" aria-label="Unpin ' + esc(s.name) + '" onclick="window.svTogglePin(\'' + esc(s.name) + '\', event)">✕</button></a>';
-    }).join('') || '<span class="sv-chip">Hover a service below and hit ★ to pin it here</span>';
+    }).join('') || '<span class="sv-chip sv-hint">Hover a service below and hit ★ to pin it here</span>';
   };
   window.svRenderRecent = function () {
     const host = document.getElementById('sv-recent'); if (!host) return;
@@ -2242,7 +2281,8 @@ function guideDetailHtml(key) {
       '<div class="sv-spot-meta"><span class="sdot' + (svIsUp(s.name) ? '' : ' down') + '" style="width:8px;height:8px;border-radius:99px;display:inline-block;background:' + (svIsUp(s.name) ? 'var(--up)' : 'var(--down)') + '"></span><span>' + (svIsUp(s.name) ? 'Operational' : 'Degraded') + (svUp24(s.name) ? ' · ' + svUp24(s.name) + ' uptime (30d)' : '') + '</span></div>' +
       '<div class="sv-dots">' + SV_FEATURED.map((n, di) => '<button type="button" class="sv-dot' + (di === svState.featured % SV_FEATURED.length ? ' on' : '') + '" aria-label="Show ' + esc(n) + '" onclick="svState.featured=' + di + ';window.svRenderSpot()"></button>').join('') + '</div></div>' +
       '<a class="btn" href="' + s.url + '" target="_blank" rel="noopener noreferrer" onclick="window.svTrack(\'' + esc(s.name) + '\')">Open ' + esc(s.name) + '</a>' +
-      '<button type="button" class="sv-refresh" title="Next featured" aria-label="Next featured service" onclick="svState.featured++;window.svRenderSpot()"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-2.64-6.36"/><path d="M21 3v6h-6"/></svg></button>';
+      '<button type="button" class="sv-refresh" title="Next featured" aria-label="Next featured service" onclick="svState.featured++;window.svRenderSpot();window.svSpotTimerReset()"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-2.64-6.36"/><path d="M21 3v6h-6"/></svg></button>' +
+      '<button type="button" class="sv-next" title="Next featured" aria-label="Next featured service" onclick="svState.featured++;window.svRenderSpot();window.svSpotTimerReset()"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m13 6 6 6-6 6"/></svg></button>';
   };
   window.svRenderSpot(); window.svRenderOrbs(); window.svRenderRecent();
   if (svcGrid) svcGrid.innerHTML = SERVICES.map((s) => '<div class="sv-card" style="opacity:.5"><div class="top">' + svIcon(s, 'svc-ico') + '<div><div class="nm">' + esc(s.name) + '</div><div class="bl">' + esc(s.blurb) + '</div></div></div></div>').join('');
@@ -2251,11 +2291,17 @@ function guideDetailHtml(key) {
     host.innerHTML = SV_CAT_LABELS.map((c, ci) => '<button type="button" class="sv-fchip' + (ci === 0 ? ' on' : '') + '" data-f="' + c[0] + '" onclick="window.svSetFilter(\'' + c[0] + '\')">' + c[1] + '</button>').join('') +
       '<button type="button" class="sv-fchip sv-sort" id="sv-sortbtn" onclick="window.svToggleSort()">Default</button>';
   })();
-  // OPT: rotate the spotlight only while the Services tab is visible
-  setInterval(() => {
-    const p = document.getElementById('panel-services');
-    if (p && !p.hidden) { svState.featured++; window.svRenderSpot(); }
-  }, 8000);
+  // OPT: rotate the spotlight only while the Services tab is visible (resettable; paused for reduced motion)
+  let svSpotTimer = null;
+  window.svSpotTimerReset = function () {
+    if (svSpotTimer) { clearInterval(svSpotTimer); svSpotTimer = null; }
+    if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    svSpotTimer = setInterval(() => {
+      const p = document.getElementById('panel-services');
+      if (p && p.hidden === false && !document.hidden) { svState.featured++; window.svRenderSpot(); }
+    }, 8000);
+  };
+  window.svSpotTimerReset();
   // OPT: one fetch instead of two — extended carries current + up24 + beats
   fetch('/api/status/extended').then((r) => (r.ok ? r.json() : null)).then((d) => {
     const ms = (d && d.monitors) || [];
@@ -2333,11 +2379,13 @@ function guideDetailHtml(key) {
   }
   function hmUnCard(it) {
     const sub = (it && it.seriesName) ? it.seriesName : '';
-    return '<a class="hm-card hm-un" href="' + hmJF_ITEM + encodeURIComponent(String((it && it.id) == null ? '' : it.id)) + '" target="_blank" rel="noopener noreferrer">' +
+    return '<a class="hm-card hm-un" style="aspect-ratio:16/9" href="' + hmJF_ITEM + encodeURIComponent(String((it && it.id) == null ? '' : it.id)) + '" target="_blank" rel="noopener noreferrer">' +
       '<img class="hm-wide-art" loading="lazy" alt="" src="' + esc(hmBackdrop(it && it.id, 480)) + '" onerror="this.style.display=\'none\'">' +
       '<span class="hm-wide-glow"></span>' +
       '<span class="hm-un-type">' + esc(String((it && it.type) || '')) + '</span>' +
       '<span class="hm-wide-meta"><span class="hm-wide-t">' + esc((it && it.name) || '') + '</span>' +
+      (sub ? '<span class="hm-un-why">' + esc(sub) + '</span>' : '') + '</span>' +
+      '<span class="hm-un-meta-static"><span class="hm-un-static-t">' + esc((it && it.name) || '') + '</span>' +
       (sub ? '<span class="hm-un-why">' + esc(sub) + '</span>' : '') + '</span></a>';
   }
   function hmPosterCard(it, i) {
@@ -2741,22 +2789,24 @@ function guideDetailHtml(key) {
   fetch('/api/sessions').then(r => r.json()).then(d => {
     const el = $('#sec-sessions'); const list = (d && d.results) || [];
     if (!list.length) { el.innerHTML = '<p class="eyebrow">Sessions</p><h3>Your sessions</h3><p class="dim">No sessions found.</p>'; return; }
+    const sorted = list.slice().sort((a, b) => (new Date(b.last_seen || 0)) - (new Date(a.last_seen || 0)));
     el.innerHTML = '<p class="eyebrow">Sessions</p><h3>Your sessions</h3>' +
+      '<p class="dim">These devices are currently signed in as you. Don\'t recognize one? Sign it out.</p>' +
       '<div class="sess-head"><span>Device</span><span>Last seen</span><span>Location / IP</span><span>Action</span></div>' +
-      list.slice(0, 6).map(s => {
+      sorted.slice(0, 6).map(s => {
         const ua = uaString(s);
         const type = devType(ua);
         const label = s.current_session ? (devLabel(ua, type) + ' (this device)') : devLabel(ua, type);
-        return '<div class="sess-row">' +
+        return '<div class="sess-row' + (s.current_session ? ' current' : '') + '">' +
           '<span class="sess-dev">' + DEV_ICONS[type] + '<b>' + esc(devLabel(ua, type)) + '</b>' + (s.current_session ? '<span class="pill ok">This device</span>' : '') + '</span>' +
-          '<span class="dim">' + esc(relTime(s.last_seen) || '—') + '</span>' +
-          '<span class="dim">' + esc(s.last_ip || '—') + '</span>' +
-          '<span class="sess-act">' + (s.current_session ? '' : '<button class="mini" data-sid="' + esc(s.uuid) + '" aria-label="Revoke session on ' + esc(label) + '">Revoke</button>') + '</span></div>';
-      }).join('') + '<div class="row"><div class="left"><b>Sign out everywhere</b><span class="dim">End all other sessions</span></div><button class="mini" id="revoke-all">Revoke all</button></div>';
+          '<span class="sess-seen dim">' + esc(relTime(s.last_seen) || '—') + '</span>' +
+          '<span class="sess-ip dim">' + esc(s.last_ip || '—') + '</span>' +
+          '<span class="sess-act">' + (s.current_session ? '' : '<button class="mini" data-sid="' + esc(s.uuid) + '" aria-label="Sign out session on ' + esc(label) + '">Sign out</button>') + '</span></div>';
+      }).join('') + '<div class="row"><div class="left"><span class="dim">Ends all other sessions</span></div><button class="mini" id="revoke-all">Sign out everywhere</button></div>';
     el.querySelectorAll('button.mini[data-sid]').forEach(b => b.onclick = async () => {
       b.disabled = true; b.textContent = '…';
       await fetch('/api/sessions/' + b.dataset.sid, { method: 'DELETE' });
-      const row = b.closest('.row'); row.style.opacity = .35; b.textContent = 'Revoked';
+      const row = b.closest('.sess-row'); if (row) row.style.opacity = .35; b.textContent = 'Signed out';
       toast('Session signed out', { action: () => location.reload(), label: 'Reload' });
     });
     const all = el.querySelector('#revoke-all');
