@@ -946,6 +946,19 @@ body { overscroll-behavior-x: none; }
 .sess-geo{grid-column:1/-1;font-size:.72rem;color:var(--text-faint)}
 .sess-exp{color:var(--text-faint)}
 @media (max-width:760px){.sess-geo{flex:0 0 100%}}
+/* ---- aurora polish 5: up-next placeholders + hint styling ---- */
+@media (max-width:760px){
+  /* static meta title styling (was default blue underline link leak) */
+  .hm-un-static-t{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;font-weight:600;font-size:.86rem;color:var(--text);text-decoration:none;line-height:1.3}
+  .hm-un-meta-static .hm-un-why{font-size:.72rem}
+  /* artless fallback: show gradient placeholder box instead of empty void */
+  .hm-rail>.hm-un{background:linear-gradient(160deg,var(--v-soft),transparent 60%),var(--card)}
+  .hm-rail>.hm-un .hm-wide-art{background:var(--card)}
+  /* badge clearance under section header */
+  .hm-rail{padding-top:12px}
+}
+/* hero art fallback gradient */
+.hm-hero{background:linear-gradient(135deg,var(--v-soft),rgba(69,214,200,.10) 60%),var(--card)}
 </style></head><body>
 <div class="aurora" aria-hidden="true"></div>
 <div class="grain-overlay" aria-hidden="true"></div>
@@ -2461,7 +2474,2392 @@ function guideDetailHtml(key) {
     const sub = (it && it.seriesName) ? it.seriesName : '';
     return '<a class="hm-card hm-un" style="aspect-ratio:16/9" href="' + hmJF_ITEM + encodeURIComponent(String((it && it.id) == null ? '' : it.id)) + '" target="_blank" rel="noopener noreferrer">' +
       // aurora polish 4 (fix1): prefer the API's Primary image (it.img); Backdrop 404s for most /Items/Latest entries
-      '<img class="hm-wide-art" loading="lazy" alt="" src="' + esc((it && it.img) || hmBackdrop(it && it.id, 480)) + '" onerror="if(!this.dataset.f){this.dataset.f=1;this.src=\'' + hmBackdrop(it && it.id, 480) + '\'}else{this.style.display=\'none\'}">' +
+      '<img class="hm-wide-art" loading="lazy" alt="" src="' + esc((it && it.img) || hmBackdrop(it && it.id, 480)) + '" onerror="\'none\'">' +
+      '<span class="hm-wide-glow"></span>' +
+      '<span class="hm-un-type">' + esc(String((it && it.type) || '')) + '</span>' +
+      '<span class="hm-wide-meta"><span class="hm-wide-t">' + esc((it && it.name) || '') + '</span>' +
+      (sub ? '<span class="hm-un-why">' + esc(sub) + '</span>' : '') + '</span>' +
+      '<span class="hm-un-meta-static"><span class="hm-un-static-t">' + esc((it && it.name) || '') + '</span>' +
+      (sub ? '<span class="hm-un-why">' + esc(sub) + '</span>' : '') + '</span></a>';
+  }
+  function hmPosterCard(it, i) {
+    const initial = esc(String((it && it.name) || '?').trim().charAt(0).toUpperCase() || '?');
+    const sub = (it && it.seriesName) ? it.seriesName : String((it && it.type) || '');
+    return '<a class="hm-card hm-pcard" href="' + hmJF_ITEM + encodeURIComponent(String((it && it.id) == null ? '' : it.id)) + '" target="_blank" rel="noopener noreferrer">' +
+      '<span class="hm-poster hm-g' + (i % 3) + '"><span class="hm-poster-init">' + initial + '</span>' +
+      ((it && it.img) ? '<img loading="lazy" alt="" src="' + esc(String(it.img)) + '" onerror="this.remove()">' : '') +
+      '<span class="hm-pbadge">NEW</span></span>' +
+      '<span class="mtitle">' + esc((it && it.name) || '') + '</span>' +
+      (sub ? '<span class="msub">' + esc(sub) + '</span>' : '') + '</a>';
+  }
+  function hmAcctTiles() {
+    const go = '<svg class="hm-tile-go" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="m13 6 6 6-6 6"/></svg>';
+    const tile = (tab, tt, ico, lbl, sub) => '<button type="button" class="hm-card hm-tile" onclick="setTab(\'' + tab + '\')">' +
+      '<span class="hm-tile-th"><span class="hm-tile-tt">' + tt + '</span>' + go + '</span>' +
+      '<span class="hm-tile-row"><span class="hm-tile-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' + ico + '</svg></span>' +
+      '<span class="hm-tile-txt"><span class="hm-tile-lbl">' + lbl + '</span><span class="hm-tile-sub">' + sub + '</span></span></span></button>';
+    return tile('security', 'Security', '<path d="M12 2 4 5v6c0 5 3.4 9.7 8 11 4.6-1.3 8-6 8-11V5l-8-3Z"/>', 'Security checklist', 'MFA, passkeys &amp; recovery codes') +
+      tile('account', 'Your devices', '<rect x="7" y="2.5" width="10" height="19" rx="2.5"/><path d="M11 18.5h2"/>', 'Devices &amp; sessions', 'See where you are signed in') +
+      tile('security', 'Recent activity', '<circle cx="12" cy="12" r="9"/><path d="M12 8v4l3 3"/>', 'Recent activity', 'Your latest account events') +
+      tile('guides', 'Watch anywhere', '<rect x="2" y="4" width="20" height="13" rx="2"/><path d="M8 21h8"/><path d="M12 17v4"/>', 'Setup guides', 'Phone, TV &amp; browser how-tos');
+  }
+  async function hmLoadBanner() {
+    const gw = document.getElementById('hm-greet-word');
+    if (gw) gw.textContent = hmGreetingWord() + ' ';
+    const de = document.getElementById('hm-date');
+    if (de) { try { de.textContent = new Date().toLocaleDateString(undefined, { weekday: 'long', month: 'long', day: 'numeric' }); } catch (e) {} }
+    let stats = {}, reqs = [], devCount = null;
+    const jobs = [
+      fetch('/api/stats').then((r) => (r.ok ? r.json() : {})).then((d) => { stats = d || {}; }).catch(() => {}),
+      fetch('/api/requests').then((r) => (r.ok ? r.json() : {})).then((d) => { reqs = (d && d.requests) || []; }).catch(() => {}),
+      fetch('/api/sessions').then((r) => (r.ok ? r.json() : {})).then((d) => { devCount = ((d && d.results) || []).length; }).catch(() => {})
+    ];
+    try { await Promise.all(jobs); } catch (e) {}
+    const wh = (stats && stats.watch_hours != null) ? stats.watch_hours : ((stats && stats.watchHoursThisWeek != null) ? stats.watchHoursThisWeek : null);
+    const elH = document.getElementById('hm-stat-hours');
+    if (elH) elH.textContent = (wh == null) ? '\u2014' : (Number(wh) >= 10 ? String(Math.round(wh)) : Number(wh).toFixed(1));
+    const elR = document.getElementById('hm-stat-reqs');
+    if (elR) elR.textContent = String(reqs.filter((r) => r && r.status !== 3 && !(r.availability >= 4)).length);
+    const elD = document.getElementById('hm-stat-devs');
+    if (elD) elD.textContent = (devCount == null) ? '\u2014' : String(devCount);
+  }
+  async function hmLoadHero() {
+    const host = document.getElementById('hm-hero');
+    if (!host) return;
+    let items = [];
+    try { const r = await fetch('/api/media/continue'); if (r.ok) { const d = await r.json(); items = (d && d.items) || []; } } catch (e) {}
+    const it = items[0];
+    if (!it || !it.id) { host.hidden = true; return; }
+    const pct = Math.max(0, Math.min(100, Number(it.progressPct) || 0));
+    const title = it.seriesName ? it.seriesName : (it.name || 'Continue watching');
+    const subBits = [];
+    if (it.seriesName) subBits.push(it.name);
+    if (it.type) subBits.push(it.type);
+    host.innerHTML =
+      '<img class="hm-hero-art" alt="" src="' + esc(hmBackdrop(it.id, 1600)) + '" onerror="this.style.display=\'none\'">' +
+      '<span class="hm-hero-scrim"></span>' +
+      '<span class="hm-hero-inner"><span class="hm-hero-copy">' +
+      '<span class="hm-kicker">Continue watching</span>' +
+      '<span class="hm-hero-title">' + esc(title) + '</span>' +
+      (subBits.length ? '<span class="hm-hero-meta">' + esc(subBits.filter(Boolean).join(' · ')) + (pct ? ' — ' + pct + '% watched' : '') + '</span>' : '') +
+      '</span><span class="hm-hero-side"><span class="hm-play"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5.5v13l11-6.5-11-6.5Z"/></svg>Resume</span>' +
+      (pct ? '<span class="hm-pl">' + pct + '% watched</span>' : '') + '</span></span>' +
+      '<span class="hm-prog"><i style="width:' + pct + '%"></i></span>';
+    host.href = hmJF_ITEM + encodeURIComponent(String(it.id));
+    host.hidden = false;
+  }
+  async function hmLoadRequests() {
+    const sec = document.getElementById('hm-requests');
+    const rail = document.getElementById('hm-req-rail');
+    if (!sec || !rail) return;
+    let reqs = [];
+    try { const r = await fetch('/api/requests'); if (r.ok) { const d = await r.json(); reqs = (d && d.requests) || []; } } catch (e) {}
+    if (!reqs.length) { sec.hidden = true; return; }
+    rail.innerHTML = reqs.slice(0, 10).map(hmReqCard).join('');
+    sec.hidden = false;
+  }
+  function hmLoadServices() {
+    const rail = document.getElementById('hm-svc-rail');
+    if (rail) rail.innerHTML = SERVICES.map(hmSvcOrb).join('');
+    try {
+      fetch('/api/status').then((r) => (r.ok ? r.json() : { monitors: [] })).then((d) => hmApplyDots((d && d.monitors) || [])).catch(() => {});
+    } catch (e) {}
+  }
+  async function hmLoadMedia() {
+    let cont = [], latest = [];
+    try { const r = await fetch('/api/media/continue'); if (r.ok) { const d = await r.json(); cont = (d && d.items) || []; } } catch (e) {}
+    try { const r = await fetch('/api/media/latest'); if (r.ok) { const d = await r.json(); latest = (d && d.items) || []; } } catch (e) {}
+    const kwSec = document.getElementById('hm-keepwatch'), kwRail = document.getElementById('hm-kw-rail');
+    if (kwSec && kwRail) {
+      if (cont.length) { kwRail.innerHTML = cont.slice(0, 10).map(hmWideCard).join(''); kwSec.hidden = false; }
+      else kwSec.hidden = true;
+    }
+    const UP_NEXT_N = 6;
+    const un = latest.slice(0, UP_NEXT_N), rec = latest.slice(UP_NEXT_N);
+    const unSec = document.getElementById('hm-upnext'), unRail = document.getElementById('hm-un-rail');
+    if (unSec && unRail) {
+      if (un.length) { unRail.innerHTML = un.map(hmUnCard).join(''); unSec.hidden = false; }
+      else unSec.hidden = true;
+    }
+    const recSec = document.getElementById('hm-recent'), recRail = document.getElementById('hm-rec-rail');
+    if (recSec && recRail) {
+      if (rec.length) { recRail.innerHTML = rec.map(hmPosterCard).join(''); recSec.hidden = false; }
+      else recSec.hidden = true;
+    }
+  }
+  function hmInit() {
+    const acctRail = document.getElementById('hm-acct-rail');
+    if (acctRail) acctRail.innerHTML = hmAcctTiles();
+    try { hmLoadBanner(); } catch (e) {}
+    try { hmLoadHero(); } catch (e) {}
+    try { hmLoadRequests(); } catch (e) {}
+    try { hmLoadServices(); } catch (e) {}
+    try { hmLoadMedia(); } catch (e) {}
+  }
+  hmInit();
+
+  // ===== PHASE 10: SETUP GUIDES (selector chips + live detail pane) =====
+  const guideNav = document.getElementById('guide-nav');
+  const guideBody = document.getElementById('guide-body');
+  if (guideNav && guideBody) {
+    guideNav.innerHTML = GUIDE_ORDER.map((k) => guideChipHtml(k, guideSel)).join('');
+    guideBody.innerHTML = guideDetailHtml(guideSel);
+    guideNav.addEventListener('click', (e) => {
+      const chip = e.target && e.target.closest ? e.target.closest('.svc-guide-chip') : null;
+      if (!chip) return;
+      guideSel = chip.dataset.guide;
+      guideNav.querySelectorAll('.svc-guide-chip').forEach((b) => b.setAttribute('aria-pressed', b.dataset.guide === guideSel ? 'true' : 'false'));
+      guideBody.innerHTML = guideDetailHtml(guideSel);
+    });
+    // phase 3b-3: platform pill switching — re-render the steps for the chosen platform
+    guideBody.addEventListener('click', (e) => {
+      const pill = e.target && e.target.closest ? e.target.closest('.gp-pill') : null;
+      if (!pill) return;
+      const id = pill.getAttribute('data-gp');
+      if (!id || id === guidePlatSel[guideSel]) return;
+      guidePlatSel[guideSel] = id;
+      guideBody.innerHTML = guideDetailHtml(guideSel);
+    });
+  }
+
+  // ===== PHASE 12 + 14: ONBOARDING wiring (dismiss + guide/contact jumps) + contact copy =====
+  const obCard = document.getElementById('ob-card');
+  if (obCard) {
+    const obDismiss = () => { try { localStorage.setItem('msp_onboarded', '1'); } catch (e) {} obCard.remove(); };
+    const obX = document.getElementById('ob-dismiss');
+    if (obX) obX.addEventListener('click', obDismiss);
+    const obVault = document.getElementById('ob-vault');
+    if (obVault) obVault.addEventListener('click', () => {
+      setTab('guides');
+      const chip = document.querySelector('.svc-guide-chip[data-guide="vaultwarden"]');
+      if (chip) chip.click();
+    });
+  }
+  const obContact = document.getElementById('ob-contact');
+  if (obContact) obContact.addEventListener('click', () => setTab('contact'));
+  const obHuman = document.getElementById('ob-human');
+  if (obHuman) obHuman.addEventListener('click', () => setTab('contact'));
+  const ctCopy = document.getElementById('ct-copy');
+  if (ctCopy) ctCopy.addEventListener('click', async () => {
+    const email = 'support@mysweetpea.cc';
+    try {
+      await navigator.clipboard.writeText(email);
+      toast('Copied', { ok: true });
+    } catch (e) {
+      const ta = document.createElement('textarea');
+      ta.value = email;
+      ta.style.position = 'fixed';
+      ta.style.opacity = '0';
+      document.body.appendChild(ta);
+      ta.select();
+      let ok = false;
+      try { ok = document.execCommand('copy'); } catch (e2) {}
+      ta.remove();
+      if (ok) toast('Copied', { ok: true });
+      else toast('Could not copy — the address is ' + email, { err: true });
+    }
+  });
+
+  // ===== PHASE 12: SUGGEST A SERVICE (same webhook + payload as site suggest.html) =====
+  (function initSuggest() {
+    const form = document.getElementById('sgf');
+    if (!form) return;
+    const SUGGEST_URL = 'https://subscribe.mysweetpea.cc/webhook/suggest';
+    const submit = document.getElementById('sg-submit');
+    const fields = [
+      { el: document.getElementById('sg-name'), type: 'name' },
+      { el: document.getElementById('sg-url'), type: 'url' },
+      { el: document.getElementById('sg-category'), type: 'category', okText: 'Category selected.', badText: 'Please select a category.' },
+      { el: document.getElementById('sg-reason'), type: 'reason' },
+    ];
+    const validate = (f) => {
+      const val = String(f.el.value || '').trim();
+      const hint = document.getElementById(f.el.id + '-hint');
+      let valid = false;
+      if (f.type === 'name') valid = val.length >= 2;
+      else if (f.type === 'url') valid = val === '' || /^https?:\/\/.+\..+/.test(val);
+      else if (f.type === 'category') valid = val !== '';
+      else if (f.type === 'reason') valid = val.length >= 10;
+      f.el.classList.remove('valid', 'invalid');
+      if (val.length > 0 || f.type === 'category') {
+        f.el.classList.add(valid ? 'valid' : 'invalid');
+        if (hint) {
+          hint.classList.toggle('error', !valid);
+          hint.classList.toggle('success', valid);
+          if (f.okText) hint.textContent = valid ? f.okText : (f.badText || f.okText);
+        }
+      } else if (hint) hint.classList.remove('error', 'success');
+      return valid;
+    };
+    const checkSubmit = () => { submit.disabled = !fields.every(validate); };
+    fields.forEach((f) => ['input', 'change', 'blur'].forEach((ev) => f.el.addEventListener(ev, () => checkSubmit())));
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      if (!fields.every(validate)) { toast('Please fix the highlighted fields', { err: true }); return; }
+      submit.disabled = true;
+      submit.textContent = 'Sending…';
+      const payload = {
+        service_name: fields[0].el.value.trim(),
+        project_url: fields[1].el.value.trim() || '',
+        category: fields[2].el.value.trim(),
+        reason: fields[3].el.value.trim(),
+        your_name: String(document.getElementById('sg-yourname').value || '').trim() || '',
+        your_email: String(document.getElementById('sg-youremail').value || '').trim() || ''
+      };
+      fetch(SUGGEST_URL, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) })
+        .then((r) => r.text().then((t) => { let d = { ok: r.ok }; if (t) { try { d = JSON.parse(t); } catch (e2) {} } return d; }))
+        .then((d) => {
+          if (d && d.ok) {
+            toast('Thanks — suggestion sent!', { ok: true });
+            form.reset();
+          } else {
+            toast((d && d.msg) || 'Submission failed — please try again', { err: true });
+          }
+        })
+        .catch(() => { toast('Network error. Try again.', { err: true }); })
+        .then(() => {
+          submit.textContent = 'Send suggestion';
+          fields.forEach((f) => { f.el.classList.remove('valid', 'invalid'); const h = document.getElementById(f.el.id + '-hint'); if (h) { h.classList.remove('error', 'success'); if (f.okText) h.textContent = f.badText; } });
+          checkSubmit();
+        });
+    });
+  })();
+
+  // ===== PHASE 9: PER-SERVICE UPTIME BARS (/api/status/extended) =====
+  const upHost = document.getElementById('sec-uptime');
+  const renderUptime = (d) => {
+    if (!upHost) return;
+    const rows = uptimeRows(((d && d.monitors) || []).filter((m) => m && Array.isArray(m.beats) && m.beats.length));
+    if (!rows.length) { upHost.innerHTML = '<p class="eyebrow">Uptime</p><h3>Uptime — last 24h</h3><p class="dim">No uptime data right now.</p>'; return; }
+    const shown = rows.slice(0, 20);
+    let html = '<p class="eyebrow">Uptime</p><h3>Uptime — last 24h</h3>';
+    let lastGroup = null;
+    shown.forEach((r) => {
+      if (r.group && r.group !== lastGroup) { html += '<div class="up-group">' + esc(r.group) + '</div>'; lastGroup = r.group; }
+      html += '<div class="row up-row"><div class="left"><span><span class="dot ' + (r.m.current ? 'ok' : 'down') + '"></span>' + esc(r.m.name || 'Monitor') + '</span><span class="strip">' + beatStrip(r.m.beats) + '</span></div><span class="dim">' + (r.m.up24 == null ? '—' : Math.round(r.m.up24) + '%') + '</span></div>';
+    });
+    if (rows.length > shown.length) html += '<p class="dim up-more">+' + (rows.length - shown.length) + ' more</p>';
+    upHost.innerHTML = html;
+  };
+  fetch('/api/status/extended').then(r => r.json()).then(renderUptime).catch(() => { if (upHost) upHost.innerHTML = '<p class="eyebrow">Uptime</p><h3>Uptime — last 24h</h3><p class="dim">Unavailable.</p>'; });
+
+  // ===== SECURITY CENTER (checklist + actions) =====
+  let devices = { totp: [], webauthn: [], static: [] };
+  try { const r = await fetch('/api/devices'); if (r.ok) devices = await r.json(); } catch (e) {}
+  const hasTotp = (devices.totp || []).length > 0;
+  const hasWebauthn = (devices.webauthn || []).length > 0;
+  const hasStatic = (devices.static || []).length > 0;
+  const items = [
+    { done: true,  label: 'Account created & active', d: 'You made it in — this one is already ticked off.' },
+    { done: hasTotp,    label: 'Authenticator app (TOTP)', d: 'Fresh codes every 30 seconds — a stolen password alone gets nobody in.', act: hasTotp ? null : ['Set up', "ceremony('mfa','TOTP setup')"] },
+    { done: hasWebauthn,label: 'Passkey / security key', d: 'Sign in with your face or fingerprint. Phishing-proof.', act: hasWebauthn ? null : ['Add passkey', "ceremony('mfa','Passkey setup')"] },
+    { done: hasStatic,  label: 'Recovery codes saved', d: 'One-time codes that get you back in if you ever lose every device.', act: hasStatic ? ['View info', "toast('Recovery codes were shown once at setup — regenerate via passkey/TOTP settings if lost')"] : ['Generate', "ceremony('mfa','Recovery codes')"] },
+  ];
+  const doneCount = items.filter(i => i.done).length;
+  const pct = Math.round(doneCount / items.length * 100);
+  const C = 2 * Math.PI * 24;
+  const sec = await (async () => { for (let n = 0; n < 40; n++) { const e = $('#sec-security'); if (e) return e; await new Promise(r => setTimeout(r, 100)); } return $('#sec-security'); })();
+  if (!sec) { console.warn('sec-security never mounted'); }
+  sec.innerHTML = '<p class="eyebrow">Security</p>' +
+    '<h3 class="sec2-h">Your account&rsquo;s protective circle</h3>' +
+    '<p class="sec2-sub">A few quick steps and your account is locked down tight.</p>' +
+    '<div class="sec2-head">' +
+    '<svg class="ring sec2-ring" viewBox="0 0 54 54" role="img" aria-label="Protection progress: ' + pct + '%"><circle class="bg" cx="27" cy="27" r="24"/><circle class="fg" cx="27" cy="27" r="24" stroke-dasharray="' + C + '" stroke-dashoffset="' + (C * (1 - pct / 100)) + '"/><text x="27" y="31">' + pct + '%</text></svg>' +
+    '<div class="sec2-meta"><b>' + doneCount + ' of ' + items.length + ' complete</b><span>' + (pct === 100 ? 'Everything is in place.' : 'Every step makes you safer.') + '</span></div>' +
+    '</div>' +
+    (pct === 100 ? '<div class="sec2-banner">&#127793; Your circle is complete &mdash; your account is fully protected.</div>' : '') +
+    '<div class="sec2-list">' +
+    items.map((i, ix) => '<div class="sec2-row' + (i.done ? ' done' : '') + '">' +
+      '<span class="sec2-ico" aria-hidden="true">' + (i.done ? '&#10003;' : (ix + 1)) + '</span>' +
+      '<span class="sec2-main"><b>' + esc(i.label) + '</b><span class="sec2-why">' + esc(i.d || '') + '</span></span>' +
+      (i.act ? '<button type="button" class="ob-btn" onclick="' + i.act[1] + '">' + esc(i.act[0]) + '</button>' : '') + '</div>').join('') +
+    '<div class="sec2-row"><span class="sec2-ico" aria-hidden="true">&#9998;</span>' +
+    '<span class="sec2-main"><b>Change password</b><span class="sec2-why">A strong, unique password is the foundation the rest of the circle stands on.</span></span>' +
+    '<button type="button" class="ob-btn" onclick="setTab(\'account\')">Change</button></div>' +
+    '</div>' +
+    ((hasTotp || hasWebauthn) ? '<div style="margin-top:10px"><div class="row"><div class="left"><b>MFA devices</b><span class="dim">' + (devices.totp.length + devices.webauthn.length) + ' enrolled</span></div>' +
+      '<button class="mini" onclick="manageDevices()">Manage</button></div></div>' : '');
+  if (doneCount < items.length) {
+    const secTab = document.getElementById('tab-security');
+    if (secTab) secTab.classList.add('has-dot');
+  }
+
+  // device management modal
+  window.manageDevices = async () => {
+    const rows = []
+      .concat(devices.totp.map(d => ({ kind: 'Authenticator app', name: d.name || 'TOTP', id: 'totp/' + d.pk })))
+      .concat(devices.webauthn.map(d => ({ kind: 'Passkey', name: d.name || d.device_type?.name || 'key', id: 'webauthn/' + d.pk })));
+    modal('<h3>MFA devices</h3><p class="sub">Remove devices you no longer use. Removing your last MFA device disables MFA.</p>' +
+      rows.map(r => '<div class="row"><div class="left"><b>' + esc(r.name) + '</b><span class="dim">' + esc(r.kind) + '</span></div><button class="mini" onclick="delDevice(\'' + r.id + '\')">Remove</button></div>').join('') +
+      '<div class="mrow"><button class="b-cancel" onclick="closeModal()">Close</button></div>');
+  };
+  window.delDevice = async (id) => {
+    const r = await fetch('/api/devices/' + id, { method: 'DELETE' });
+    if (r.ok) { toast('Device removed'); location.reload(); } else toast('Failed to remove');
+  };
+
+  // ===== STATUS =====
+  fetch('/api/status').then(r => r.json()).then(d => {
+    const el = $('#sec-status'); const mons = (d && d.monitors) || [];
+    if (!mons.length) { el.innerHTML = '<p class="eyebrow">Service status</p><h3>Service status</h3><p class="dim">No status data.</p>'; return; }
+    el.innerHTML = '<p class="eyebrow">Service status</p><h3>Service status</h3>' + mons.slice(0, 8).map(m => {
+      const up = (m.uptime24h == null ? 100 : m.uptime24h) > 50;
+      return '<div class="row"><div class="left"><span><span class="dot ' + (up ? 'ok' : 'down') + '"></span>' + esc(m.name) + '</span></div><span class="dim">' + Math.round(m.uptime24h || 0) + '%</span></div>';
+    }).join('');
+  }).catch(() => { $('#sec-status').innerHTML = '<p class="eyebrow">Service status</p><h3>Service status</h3><p class="dim">Unavailable.</p>'; });
+
+  // ===== RECENT ACTIVITY (audit feed — icons + verbs + relative time) =====
+  const ACT_SVG =
+    '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">';
+  const ACT_ICONS = {
+    login: ACT_SVG + '<path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><path d="m10 17 5-5-5-5"/><path d="M15 12H3"/></svg>',
+    logout: ACT_SVG + '<path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="m16 17 5-5-5-5"/><path d="M21 12H9"/></svg>',
+    session_revoked: ACT_SVG + '<path d="M12 22s8-3.6 8-10V5l-8-3-8 3v7c0 6.4 8 10 8 10z"/><path d="m9.5 9.5 5 5"/><path d="m14.5 9.5-5 5"/></svg>',
+    totp_removed: ACT_SVG + '<circle cx="7.5" cy="15.5" r="4.5"/><path d="m11 12 9-9"/><path d="m17 5 3 3"/><path d="m4 4 16 16"/></svg>',
+    passkey_removed: ACT_SVG + '<path d="M12 10a4 4 0 0 0-4 4c0 2.2-.5 3.6-1.3 5"/><path d="M12 10a4 4 0 0 1 4 4c0 2.2.4 3.5 1 4.7"/><path d="M8.6 7.6A6 6 0 0 1 18 11c0 1 .1 1.9.3 2.7"/><path d="M6.2 11c-.1.3-.2.7-.2 1"/><path d="m16.5 15.5 5 5"/><path d="m21.5 15.5-5 5"/></svg>',
+    consent_revoked: ACT_SVG + '<path d="M18 11V6a2 2 0 0 0-4 0v5"/><path d="M14 10V4a2 2 0 0 0-4 0v6"/><path d="M10 10.5V6a2 2 0 0 0-4 0v8"/><path d="M18 8a2 2 0 0 1 4 0v6a8 8 0 0 1-8 8h-2c-2.8 0-4.5-.86-5.99-2.34l-3.6-3.6a2 2 0 0 1 2.83-2.82L7 15"/><path d="m16 16 5 5"/><path d="m21 16-5 5"/></svg>',
+    profile_updated: ACT_SVG + '<path d="M17 3a2.83 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/><path d="m15 5 4 4"/></svg>',
+    avatar_set: ACT_SVG + '<path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>',
+    avatar_delete: ACT_SVG + '<path d="M1 5v14a2 2 0 0 0 2 2h13a2 2 0 0 0 1.4-.6"/><path d="M10.7 5H11l2-3h6l2 3h1a2 2 0 0 1 2 2v8.7"/><path d="M9.3 9.3A4 4 0 0 0 12 17a4 4 0 0 0 3.7-2.3"/><path d="m2 2 20 20"/></svg>',
+    avatar_removed: ACT_SVG + '<path d="M1 5v14a2 2 0 0 0 2 2h13a2 2 0 0 0 1.4-.6"/><path d="M10.7 5H11l2-3h6l2 3h1a2 2 0 0 1 2 2v8.7"/><path d="M9.3 9.3A4 4 0 0 0 12 17a4 4 0 0 0 3.7-2.3"/><path d="m2 2 20 20"/></svg>',
+    device_removed: ACT_SVG + '<rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8"/><path d="m2 2 20 20"/></svg>'
+  };
+  const ACT_LABEL = { login: 'Signed in', logout: 'Signed out', session_revoked: 'Signed out a device',
+    totp_removed: 'Removed 2FA app', passkey_removed: 'Removed a passkey', device_removed: 'Device removed',
+    consent_revoked: 'Revoked app access', profile_updated: 'Updated profile',
+    avatar_set: 'Updated profile photo', avatar_delete: 'Removed profile photo', avatar_removed: 'Removed profile photo' };
+  fetch('/api/audit').then(r => r.ok ? r.json() : []).then(list => {
+    const el = $('#sec-activity');
+    if (!el) return;
+    if (!Array.isArray(list) || !list.length) { el.innerHTML = '<p class="eyebrow">Recent activity</p><h3>Recent activity</h3><p class="dim">No activity yet &mdash; it will appear here as you use your account.</p>'; return; }
+    el.innerHTML = '<p class="eyebrow">Recent activity</p><h3>Recent activity</h3>' + list.slice(0, 10).map(a => {
+      const when = relTime(a.t || a.ts);
+      const label = ACT_LABEL[a.event] || a.event;
+      const ico = ACT_ICONS[a.event] || ACT_ICONS.login;
+      const detail = a.ip ? ' &middot; ' + esc(a.ip) : '';
+      return '<div class="act-row"><span class="act-ico">' + ico + '</span><div class="left"><b>' + esc(label) + '</b><span class="dim">' + esc(when) + detail + '</span></div></div>';
+    }).join('');
+  }).catch(() => { const el = $('#sec-activity'); if (el) el.innerHTML = '<p class="eyebrow">Recent activity</p><h3>Recent activity</h3><p class="dim">Unavailable.</p>'; });
+
+  // ===== SESSIONS (device icons + friendly labels + last seen) =====
+  const DEV_SVG =
+    '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">';
+  const DEV_ICONS = {
+    desktop: DEV_SVG + '<rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8"/><path d="M12 17v4"/></svg>',
+    laptop: DEV_SVG + '<rect x="4" y="4" width="16" height="11" rx="2"/><path d="M2 19h20"/></svg>',
+    mobile: DEV_SVG + '<rect x="7" y="2" width="10" height="20" rx="2"/><path d="M11 18h2"/></svg>',
+    tablet: DEV_SVG + '<rect x="4" y="2" width="16" height="20" rx="2"/><path d="M11 18h2"/></svg>',
+    tv: DEV_SVG + '<rect x="2" y="4" width="20" height="13" rx="2"/><path d="M8 21h8"/><path d="M12 17v4"/></svg>'
+  };
+  function uaString(s) {
+    // aurora polish 4 (fix4): authentik 2026.8 parsed user_agent dict (.string) → raw last_user_agent → legacy shape
+    if (s.user_agent && typeof s.user_agent === 'object' && s.user_agent.string) return String(s.user_agent.string);
+    if (typeof s.user_agent === 'string' && s.user_agent) return s.user_agent;
+    if (s.last_user_agent) return String(s.last_user_agent);
+    if (s.agent && typeof s.agent === 'object') return String(s.agent.raw || s.agent.device || s.agent.os || '');
+    return '';
+  }
+  function devType(ua) {
+    if (/TV|Tizen|WebOS|webOS|SmartTV|AppleTV|GoogleTV|CrKey/i.test(ua)) return 'tv';
+    if (/iPad|Tablet|Kindle|Nook|PlayBook|Silk/i.test(ua)) return 'tablet';
+    if (/iPhone|iPod|Android.*Mobile|Windows Phone|BlackBerry|Opera Mini/i.test(ua)) return 'mobile';
+    if (/Android/i.test(ua)) return 'mobile';
+    if (/Windows|Macintosh|Mac OS|X11|CrOS|Ubuntu|Linux/i.test(ua)) return 'desktop';
+    return 'laptop';
+  }
+  function devLabel(ua, type) {
+    if (type === 'tv') return 'TV device';
+    if (type === 'tablet') return /iPad/i.test(ua) ? 'iPad' : 'Tablet';
+    if (type === 'mobile') {
+      if (/iPhone/i.test(ua)) return 'iPhone';
+      if (/Android/i.test(ua)) return 'Android device';
+      if (/Windows Phone/i.test(ua)) return 'Windows phone';
+      return 'Mobile device';
+    }
+    if (/Windows/i.test(ua)) return 'Windows desktop';
+    if (/Macintosh|Mac OS/i.test(ua)) return 'Mac desktop';
+    if (/Ubuntu/i.test(ua)) return 'Ubuntu desktop';
+    if (/Linux|X11/i.test(ua)) return 'Linux desktop';
+    if (/CrOS/i.test(ua)) return 'Chromebook';
+    return 'Device';
+  }
+  // aurora polish 4 (fix4): friendly label from the parsed user_agent dict → "Safari on iOS"
+  function uaDeviceLabel(s, ua, type) {
+    const p = (s.user_agent && typeof s.user_agent === 'object') ? s.user_agent : null;
+    if (p && p.user_agent && p.user_agent.family && p.user_agent.family !== 'Other') {
+      const os = (p.os && p.os.family && p.os.family !== 'Other') ? String(p.os.family) : '';
+      return String(p.user_agent.family) + (os ? ' on ' + os : '');
+    }
+    if (ua && /python|urllib|requests|curl|java|okhttp|go-http/i.test(ua)) return 'App or script';
+    const fallback = devLabel(ua, type);
+    return (fallback === 'Device') ? 'Unknown device' : fallback;
+  }
+  // aurora polish 4 (fix4): future-facing relative time for session expiry hints
+  function normIp(v) {
+    const s = String(v || '');
+    const m = s.match(/^::ffff:(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})$/i);
+    return m ? m[1] : s;
+  }
+function relFuture(v) {
+    const t = (typeof v === 'number') ? v : Date.parse(String(v || ''));
+    if (!isFinite(t) || !t) return '';
+    const sec = (t - Date.now()) / 1000;
+    if (sec <= 0) return 'expired';
+    if (sec < 3600) return 'in ' + Math.max(1, Math.floor(sec / 60)) + 'm';
+    if (sec < 86400) return 'in ' + Math.floor(sec / 3600) + 'h';
+    return 'in ' + Math.floor(sec / 86400) + 'd';
+  }
+  fetch('/api/sessions').then(r => r.json()).then(d => {
+    const el = $('#sec-sessions'); const list = (d && d.results) || [];
+    if (!list.length) { el.innerHTML = '<p class="eyebrow">Sessions</p><h3>Your sessions</h3><p class="dim">No sessions found.</p>'; return; }
+    const sorted = list.slice().sort((a, b) => (new Date(b.last_used || 0)) - (new Date(a.last_used || 0)));
+    el.innerHTML = '<p class="eyebrow">Sessions</p><h3>Your sessions</h3>' +
+      '<p class="dim">These devices are currently signed in as you. Don\'t recognize one? Sign it out.</p>' +
+      '<div class="sess-head"><span>Device</span><span>Last used</span><span>Location / IP</span><span>Action</span></div>' +
+      sorted.slice(0, 6).map(s => {
+        const ua = uaString(s);
+        const type = devType(ua);
+        const label = s.current ? (uaDeviceLabel(s, ua, type) + ' (this device)') : uaDeviceLabel(s, ua, type);
+        const seen = relTime(s.last_used) || s.last_used || '—';
+        const exp = s.expires ? relFuture(s.expires) : '';
+        const g = (s.geo_ip && typeof s.geo_ip === 'object') ? s.geo_ip : null;
+        const geoTxt = g ? [g.city, g.country || g.country_name].filter(Boolean).join(', ') : '';
+        const asn = (s.asn && typeof s.asn === 'object') ? String(s.asn.name || s.asn.asn || '') : ((typeof s.asn === 'string' && s.asn) ? s.asn : '');
+        const geoLine = [geoTxt, asn].filter(Boolean).join(' · ');
+        return '<div class="sess-row' + (s.current ? ' current' : '') + '">' +
+          '<span class="sess-dev">' + DEV_ICONS[type] + '<b>' + esc(uaDeviceLabel(s, ua, type)) + '</b>' + (s.current ? '<span class="pill ok">This device</span>' : '') + '</span>' +
+          '<span class="sess-seen dim">' + esc(seen) + '</span>' +
+          '<span class="sess-ip dim">' + esc(normIp(s.last_ip) || '—') + (exp ? '<span class="sess-exp"> · expires ' + esc(exp) + '</span>' : '') + '</span>' +
+          (geoLine ? '<span class="sess-geo dim">' + esc(geoLine) + '</span>' : '') +
+          '<span class="sess-act">' + (s.current ? '' : '<button class="mini" data-sid="' + esc(s.uuid) + '" aria-label="Sign out session on ' + esc(label) + '">Sign out</button>') + '</span></div>';
+      }).join('') + '<div class="row"><div class="left"><span class="dim">Ends all other sessions</span></div><button class="mini" id="revoke-all">Sign out everywhere</button></div>';
+    el.querySelectorAll('button.mini[data-sid]').forEach(b => b.onclick = async () => {
+      b.disabled = true; b.textContent = '…';
+      await fetch('/api/sessions/' + b.dataset.sid, { method: 'DELETE' });
+      const row = b.closest('.sess-row'); if (row) row.style.opacity = .35; b.textContent = 'Signed out';
+      toast('Session signed out', { action: () => location.reload(), label: 'Reload' });
+    });
+    const all = el.querySelector('#revoke-all');
+    if (all) all.onclick = async () => {
+      modal('<h3>Sign out everywhere?</h3><p class="sub">This ends every session except the one you are using now.</p><div class="mrow"><button class="b-cancel" onclick="closeModal()">Cancel</button><button class="b-go" id="confirm-all">Sign them out</button></div>');
+      $('#confirm-all').onclick = async () => {
+        closeModal();
+        const others = list.filter(s => !s.current);
+        for (const s of others) await fetch('/api/sessions/' + s.uuid, { method: 'DELETE' });
+        toast('Signed out ' + others.length + ' session' + (others.length === 1 ? '' : 's'));
+        setTimeout(() => location.reload(), 900);
+      };
+    };
+  }).catch(() => { $('#sec-sessions').innerHTML = '<p class="eyebrow">Sessions</p><h3>Your sessions</h3><p class="dim">Unavailable.</p>'; });
+
+  // ===== CONNECTED APPS =====
+  fetch('/api/consents').then(r => r.json()).then(d => {
+    const el = $('#sec-apps'); const list = (d && d.results) || [];
+    if (!list.length) { el.innerHTML = '<p class="eyebrow">Connected apps</p><h3>Connected apps</h3><p class="dim">No app consents yet.</p>'; return; }
+    el.innerHTML = '<p class="eyebrow">Connected apps</p><h3>Connected apps</h3>' + list.map(c => '<div class="row"><div class="left"><b>' + esc((c.application && c.application.name) || 'Application') + '</b></div><span class="dim">' + new Date(c.expires || Date.now()).toLocaleDateString() + '</span></div>').join('');
+  }).catch(() => { $('#sec-apps').innerHTML = '<p class="eyebrow">Connected apps</p><h3>Connected apps</h3><p class="dim">Unavailable.</p>'; });
+})();
+</script>
+<script>
+'use strict';
+/* ================= PHASE 3+9: command palette + stat cards + library chart ================= */
+(function () {
+  const COMMANDS = [
+    { t: 'Go to Home',                 d: 'Dashboard tab',             run: () => setTab('home') },
+    { t: 'Go to Statistics',           d: 'Library, photos & members', run: () => setTab('stats') },
+    { t: 'Go to Media',                d: 'Watch & library stats',     run: () => setTab('media') },
+    { t: 'Go to Services',             d: 'Launchers & uptime',        run: () => setTab('services') },
+    { t: 'Go to Guides',               d: 'Setup how-tos per service', run: () => setTab('guides') },
+    { t: 'Go to Contact',              d: 'Email us anytime',          run: () => setTab('contact') },
+    { t: 'Go to Security',             d: 'Checklist, MFA, sessions',  run: () => setTab('security') },
+    { t: 'Go to Account',              d: 'Profile & avatar',          run: () => setTab('account') },
+    { t: 'Change password',            d: 'Account tab · inline form',  run: () => { setTab('account'); const el = document.getElementById('pw-current'); if (el) el.focus(); } },
+    { t: 'Set up TOTP',                d: 'Authentik · MFA',           run: () => ceremony('mfa', 'TOTP setup') },
+    { t: 'Add a passkey',              d: 'Authentik · MFA',           run: () => ceremony('mfa', 'Passkey setup') },
+    { t: 'Recovery codes',             d: 'Authentik · MFA',           run: () => ceremony('mfa', 'Recovery codes') },
+    { t: 'Manage sessions',            d: 'Authentik · sessions',      run: () => { goSection('sec-sessions'); ceremony('sessions', 'Sessions'); } },
+    { t: 'Sign out everywhere',        d: 'Revoke all other sessions', run: () => { goSection('sec-sessions'); revokeAll(); } },
+    { t: 'Open Jellyfin',              d: 'media.mysweetpea.cc',       run: () => location.assign('https://media.mysweetpea.cc') },
+    { t: 'Open Vaultwarden',           d: 'vault.mysweetpea.cc',       run: () => location.assign('https://vault.mysweetpea.cc') },
+    { t: 'Open Nextcloud',             d: 'cloud.mysweetpea.cc',       run: () => location.assign('https://cloud.mysweetpea.cc') },
+    { t: 'Open Photos (Immich)',       d: 'photos.mysweetpea.cc',      run: () => location.assign('https://photos.mysweetpea.cc') },
+    { t: 'Open Notes (AFFiNE)',        d: 'notes.mysweetpea.cc',       run: () => location.assign('https://notes.mysweetpea.cc') },
+      ];
+  let sel = 0, filtered = COMMANDS.slice();
+
+  const pal = $('#pal'), input = $('#pal-q'), list = $('#pal-list');
+
+  function render() {
+    if (!filtered.length) { list.innerHTML = '<div class="pal-empty">No matching commands</div>'; return; }
+    list.innerHTML = filtered.map((c, i) =>
+      '<div class="pal-item' + (i === sel ? ' sel' : '') + '" data-i="' + i + '">' +
+      '<b>' + esc(c.t) + '</b><span class="dim">' + esc(c.d) + '</span></div>').join('');
+    list.querySelectorAll('.pal-item').forEach(el => {
+      el.onclick = () => { close(); filtered[+el.dataset.i].run(); };
+      el.onmouseenter = () => { sel = +el.dataset.i; render(); };
+    });
+    const s = list.querySelector('.sel'); if (s) s.scrollIntoView({ block: 'nearest' });
+  }
+  function open()  { pal.classList.add('open'); input.value = ''; filtered = COMMANDS.slice(); sel = 0; render(); setTimeout(() => input.focus(), 0); }
+  function close() { pal.classList.remove('open'); input.blur(); }
+
+  window.mspPalette = { open, close };
+
+  input.addEventListener('input', () => {
+    const q = input.value.trim().toLowerCase();
+    filtered = !q ? COMMANDS.slice() : COMMANDS.filter(c => (c.t + ' ' + c.d).toLowerCase().includes(q));
+    sel = 0; render();
+  });
+  input.addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowDown') { e.preventDefault(); sel = Math.min(sel + 1, filtered.length - 1); render(); }
+    else if (e.key === 'ArrowUp') { e.preventDefault(); sel = Math.max(sel - 1, 0); render(); }
+    else if (e.key === 'Enter')  { e.preventDefault(); if (filtered[sel]) { close(); filtered[sel].run(); } }
+    else if (e.key === 'Escape') { close(); }
+  });
+  pal.addEventListener('mousedown', (e) => { if (e.target === pal) close(); });
+
+  document.addEventListener('keydown', (e) => {
+    if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') { e.preventDefault(); pal.classList.contains('open') ? close() : open(); }
+  });
+
+  /* ---- stat tiles (count-up) + library bar chart ---- */
+  function waitFor(sel) {
+    return new Promise(resolve => {
+      const el = document.querySelector(sel);
+      if (el) return resolve(el);
+      const t = setInterval(() => { const e2 = document.querySelector(sel); if (e2) { clearInterval(t); resolve(e2); } }, 120);
+      setTimeout(() => { clearInterval(t); resolve(null); }, 15000);
+    });
+  }
+  function dashRow() {
+    return '<div class="stat"><div class="n">—</div><div class="l">Movies</div></div>' +
+      '<div class="stat"><div class="n">—</div><div class="l">Series</div></div>' +
+      '<div class="stat"><div class="n">—</div><div class="l">Photos</div></div>' +
+      '<div class="stat"><div class="n">—</div><div class="l">Active sessions</div></div>';
+  }
+  function statTmpl() {
+    const mk = (k, l) => '<div class="stat"><div class="n" data-k="' + k + '">0</div><div class="l">' + esc(l) + '</div></div>';
+    return mk('movies', 'Movies') + mk('series', 'Series') + mk('photos', 'Photos') + mk('sessions', 'Active sessions');
+  }
+  function libHtml(s) {
+    const rows = [['Movies', s.movies], ['Episodes', s.episodes], ['Series', s.series], ['Songs', s.songs], ['Boxsets', s.boxsets]].filter((x) => x[1] != null);
+    if (!rows.length) return '<p class="dim">No library data yet.</p>';
+    const max = Math.max.apply(null, rows.map((x) => x[1]).concat([1]));
+    return rows.map((x) => '<div class="lib-row"><span class="lib-l">' + esc(x[0]) + '</span><span class="lib-bar"><i style="width:' + Math.max(2, Math.round(x[1] / max * 100)) + '%"></i></span><span class="lib-n">' + x[1].toLocaleString() + '</span></div>').join('');
+  }
+  (async () => {
+    const el = await waitFor('#stats');
+    if (!el) return;
+    el.innerHTML = dashRow();
+    let d = {};
+    try {
+      const r = await fetch('/api/stats');
+      if (r.ok) d = await r.json();
+    } catch (e) { /* keep dashes */ }
+    const s = mergeStats(d);
+    el.innerHTML = statTmpl();
+    el.querySelectorAll('.stat .n').forEach((n) => countUp(n, s[n.dataset.k]));
+    const lib = document.getElementById('lib-body');
+    if (lib) lib.innerHTML = libHtml(s);
+  })();
+
+  /* palette button (topbar is built dynamically -> delegated) */
+  document.addEventListener('click', (e) => {
+    if (e.target && e.target.id === 'pal-open') { e.preventDefault(); window.mspPalette.open(); }
+  });
+})();
+
+  // ===== account dropdown: delegated handlers (work regardless of render timing) =====
+  (function () {
+    'use strict';
+    const getTrig = () => document.getElementById('acct-trigger');
+    const getPop  = () => document.getElementById('acct-pop');
+    function close() {
+      const pop = getPop(), trig = getTrig();
+      if (pop && !pop.hidden) { pop.hidden = true; }
+      if (trig) trig.setAttribute('aria-expanded', 'false');
+    }
+    document.addEventListener('click', (e) => {
+      const trig = e.target.closest ? e.target.closest('#acct-trigger') : null;
+      const pop = getPop();
+      if (trig) {
+        e.preventDefault(); e.stopPropagation();
+        if (!pop) return;
+        const open = pop.hidden;
+        pop.hidden = !open;
+        trig.setAttribute('aria-expanded', String(open));
+        return;
+      }
+      // outside click or any menu item click closes
+      if (pop && !pop.hidden && !(e.target.closest && e.target.closest('#acct-pop'))) close();
+    });
+    document.addEventListener('keydown', (e) => { if (e.key === 'Escape') close(); });
+    // guide variant picker (Moonfin / Jellyfin Web)
+    document.addEventListener('click', (e) => {
+      const btn = e.target && e.target.closest ? e.target.closest('.guide-variant') : null;
+      if (!btn) return;
+      const wrap = btn.closest('.svc-guide-detail');
+      if (!wrap) return;
+      const idx = btn.getAttribute('data-variant');
+      wrap.querySelectorAll('.guide-variant').forEach((b) => { const on = b === btn; b.classList.toggle('active', on); b.setAttribute('aria-selected', on ? 'true' : 'false'); });
+      wrap.querySelectorAll('.guide-variant-panel').forEach((p) => { p.hidden = p.getAttribute('data-variant-panel') !== idx; });
+    });
+    // menu items: switch tab directly (deterministic — no reliance on hash events)
+    document.addEventListener('click', (e) => {
+      const item = e.target && e.target.closest ? e.target.closest('#acct-pop [data-goto]') : null;
+      if (!item) return;
+      e.preventDefault();
+      const t = item.getAttribute('data-goto');
+      if (typeof window.setTab === 'function') window.setTab(t); else location.hash = t;
+      close();
+    });
+    // tab switches should also close it
+    window.addEventListener('hashchange', close);
+  })();
+
+  // aurora mobile 4: iOS Safari horizontal-pan guard — snap back to vertical if panned
+  window.addEventListener('scroll', function () {
+    if (window.scrollX !== 0) { try { window.scrollTo(0, window.scrollY); } catch (e) {} }
+  }, { passive: true });
+</script>
+</body></html><img class="hm-hero-art" alt="" src="' + esc((it && it.img) || hmBackdrop((it && it.id) || '', 1600)) + '" onerror="\'none\'">*,.sv-orbs>*,.media-row>*{width:100%!important}
+.hm-rail:has(.hm-pcard),.media-row:has(.mposter){grid-template-columns:repeat(2,minmax(0,1fr))}
+.hm-pcard,.mitem,.mposter{width:auto}
+.hm-sec::after,.media-sec .card::after,.mb2-orbwrap::after{display:none}
+.card h3,.hm-h2{font-size:1.35rem}
+.hm-hero-title{font-size:clamp(1.5rem,7vw,1.9rem)}
+.sv-spot-name{font-size:clamp(1.3rem,6vw,1.6rem)}
+.st2-hero .st2-num{font-size:clamp(2rem,9vw,2.8rem)}
+.hm-greet{font-size:clamp(1.25rem,6.5vw,1.5rem)}
+.tabpanel{gap:26px}
+.hm-sec{margin-bottom:6px}
+.shell{padding-top:76px}
+.tab{min-height:44px;display:flex;align-items:center}
+.hm-btn,.ob-btn,.btn,.sv-fchip,.acct-trigger,.nav-search{min-height:44px;min-width:44px}
+.sv-dot{position:relative}
+.sv-dot::before{content:'';position:absolute;inset:-19px}
+.sv-refresh::before{content:'';position:absolute;inset:-7px}
+.sv-pin{width:36px;height:36px}
+.gp-pill,.guide-variant{min-height:40px;padding:10px 16px}
+.sv-grid{grid-template-columns:1fr}
+.sv-spot{padding:22px 18px}
+.stat{padding:18px}
+.hm-tile,.hm-req,.hm-wide,.hm-un{width:auto}
+}
+
+/* ---- aurora mobile 4: iOS horizontal-pan hardening ---- */
+@supports (overflow-x: clip) { html, body { overflow-x: clip; } }
+body { overscroll-behavior-x: none; }
+.card, .tabpanel, .shell { overflow-x: clip; }
+.ripple-strip { max-width: 100%; overflow-x: clip; }
+@media (max-width:760px){
+  .ripple-strip { font-size: 8px; }
+}
+
+/* ---- aurora mobile 5: media rails fit phones (no :has dependency) ---- */
+@media (max-width:760px){
+  .media-row{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:14px}
+  .media-row .mitem{width:auto!important}
+  .media-row .mposter{width:100%;height:auto;aspect-ratio:2/3;max-height:260px;object-position:center top}
+  .media-row .mtitle{font-size:.86rem;margin-top:8px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+  .media-row .msub{font-size:.74rem}
+  .media-row .mprog{height:4px;margin-top:6px}
+  .nav-id{gap:6px}
+  .site-back{height:38px;min-width:38px}
+  .acct-trigger{padding:4px}
+  .nav-search{width:38px;height:38px}
+}
+
+/* ---- aurora mobile 6: home fit ---- */
+@media (max-width:760px){
+.hm-greet,.hm-id{overflow-wrap:anywhere;min-width:0}
+.hm-stats{display:grid;grid-template-columns:repeat(3,minmax(0,auto));justify-content:space-between;gap:4px}
+.hm-stat{padding:4px 6px;font-size:.62rem}
+.hm-stat .n{font-size:1.05rem}
+.hm-actions{width:100%}
+.hm-actions .hm-btn{flex:1 1 auto;min-width:0}
+.hm-btn{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.hm-banner-row{flex-wrap:wrap}
+.hm-sec,.grid{min-width:0}
+.hm-hero-inner{flex-direction:column;align-items:stretch;gap:10px}
+.hm-hero-side{min-width:0;flex-wrap:wrap}
+.hm-rail{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;overflow:visible}
+.hm-rail>*{width:auto!important}
+.hm-pcard .mtitle{font-size:.86rem;margin-top:8px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+}
+
+/* ---- aurora mobile 7: up-next width ---- */
+@media (max-width:760px){
+.hm-rail>.hm-wide,.hm-rail>.hm-un{width:100%!important;aspect-ratio:16/9;min-width:0}
+.hm-un .hm-wide-t{font-size:.86rem}
+.hm-wide .hm-wide-t{font-size:.86rem}
+}
+
+/* ---- aurora mobile 8: iOS focus auto-zoom guard ---- */
+@media (max-width:760px){
+  input, select, textarea { font-size: 16px !important; }
+}
+
+/* ---- aurora mobile 9: iOS grid-track shrink guard ---- */
+@media (max-width:760px){
+  .hm-rail > *, .media-row > *, .sv-orbs > *, .hm-stats, .hm-actions, .hm-banner-row, .hm-hero-inner, .hm-hero-side { min-width: 0; }
+  .hm-rail, .media-row, .sv-orbs { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .media-row { grid-template-columns: repeat(auto-fill, minmax(0, 130px)); }
+}
+
+/* ---- aurora brand: wordmark label (brand now goes Home) ---- */
+.back-label{font-family:'Fraunces','Inter',Georgia,serif;font-size:.95rem;font-weight:600;letter-spacing:.01em}
+@media (max-width:760px){.back-label{font-size:.95rem}}
+
+/* ---- aurora sec2: protective circle (security tab redesign) ---- */
+.sec2-h{margin-bottom:2px}
+.sec2-sub{margin:-6px 0 16px;color:var(--text-dim);font-size:.92rem}
+.sec2-head{display:flex;align-items:center;gap:14px;margin:0 0 14px}
+.sec2-ring{width:64px;height:64px}
+.sec2-ring text{font-family:'Fraunces','Inter',Georgia,serif;font-weight:600;font-size:12px}
+.sec2-meta{display:flex;flex-direction:column;gap:2px;font-size:.82rem;color:var(--text-dim)}
+.sec2-meta b{color:var(--text);font-size:.95rem;font-weight:600}
+.sec2-banner{margin:0 0 14px;padding:10px 14px;border-radius:12px;background:rgba(163,201,182,.12);border:1px solid rgba(163,201,182,.28);color:var(--sage);font-weight:600;font-size:.88rem}
+.sec2-list{display:flex;flex-direction:column;gap:8px}
+.sec2-row{display:flex;align-items:center;gap:12px;padding:12px 14px;border-radius:14px;border:1px solid var(--border);background:rgba(255,255,255,.02);transition:var(--t-fast)}
+.sec2-row.done{background:rgba(163,201,182,.07);border-color:rgba(163,201,182,.2)}
+.sec2-ico{width:34px;height:34px;border-radius:50%;display:grid;place-items:center;font-size:.95rem;font-weight:700;flex:none}
+.sec2-row.done .sec2-ico{background:rgba(163,201,182,.16);color:var(--sage)}
+.sec2-row:not(.done) .sec2-ico{background:rgba(151,146,255,.14);color:var(--primary-bright);font-family:'Fraunces','Inter',Georgia,serif}
+.sec2-main{flex:1;min-width:0;display:flex;flex-direction:column;gap:2px}
+.sec2-main b{font-size:.92rem;font-weight:600}
+.sec2-why{font-size:.8rem;color:var(--text-dim);line-height:1.45}
+.sec2-row .ob-btn{flex:none;align-self:center}
+
+/* ---- aurora mobile 10: compact services ---- */
+@media (max-width:760px){
+  #hm-svc-rail{display:grid;grid-template-columns:repeat(auto-fill,minmax(0,96px));gap:10px;overflow:visible;padding:2px 0 4px}
+  #hm-svc-rail .hm-orb{width:auto;min-width:0;min-height:44px;flex-direction:column;align-items:center;justify-content:flex-start;gap:6px;padding:10px 8px;text-align:center;position:relative;border-radius:14px}
+  #hm-svc-rail .hm-orb-plate{width:40px;height:40px;border-radius:12px}
+  #hm-svc-rail .hm-orb-plate img{width:26px;height:26px}
+  #hm-svc-rail .hm-orb-nm{font-size:11px;line-height:1.3}
+  #hm-svc-rail .hm-orb-dot{position:absolute;width:7px;height:7px;top:11px;left:calc(50% + 13px)}
+  #hm-svc-rail .hm-orb-bl{display:none}
+  #hm-svc-rail .hm-orb-open{display:none}
+}
+
+/* ---- aurora mobile 11: prettier hamburger + open menu ---- */
+.nav-toggle{width:42px;height:42px;border-radius:12px;background:rgba(151,146,255,.10);border:1px solid rgba(151,146,255,.32);gap:5px}
+.nav-toggle-bar{width:18px;height:2px}
+.top-nav.nav-open .nav-toggle-bar:nth-child(1){transform:translateY(7px) rotate(45deg)}
+.top-nav.nav-open .nav-toggle-bar:nth-child(2){opacity:0;transform:scaleX(.3)}
+.top-nav.nav-open .nav-toggle-bar:nth-child(3){transform:translateY(-7px) rotate(-45deg)}
+@media (max-width:760px){
+  .nav-tabs{border-radius:16px;box-shadow:0 18px 48px rgba(0,0,0,.5),0 4px 12px rgba(0,0,0,.3)}
+  .nav-tabs .tab{padding-left:30px}
+  .nav-tabs .tab::before{content:'';position:absolute;left:14px;top:50%;margin-top:-3px;width:6px;height:6px;border-radius:50%;background:rgba(151,146,255,.55);transition:background .2s}
+  .nav-tabs .tab.active::before{background:linear-gradient(135deg,var(--v),var(--ice))}
+}
+@media (max-width:760px) and (prefers-reduced-motion: no-preference){
+  .top-nav.nav-open .nav-tabs{animation:msp-nav-pop .28s cubic-bezier(.4,0,.2,1)}
+}
+@keyframes msp-nav-pop{from{opacity:0;transform:translateY(-8px)}to{opacity:1;transform:translateY(0)}}
+/* ---- aurora mobile 11: request ETA chip ---- */
+.hm-eta{margin-left:auto;font-size:.68rem;font-weight:600;letter-spacing:.02em;color:var(--text-dim);background:var(--v-soft);border:1px solid var(--border-primary);border-radius:99px;padding:2px 8px;white-space:nowrap}
+/* ---- aurora mobile 10: hm-un cards get real 16/9 geometry (all viewports) ---- */
+.hm-un{aspect-ratio:16/9;height:auto}
+@media (max-width:760px){
+  .hm-rail>.hm-un{width:100%!important}
+  /* center compact service chips */
+  .hm-rail:has(.hm-orb), .sv-orbs { justify-content:center; }
+  .sv-orbs,.hm-rail:has(.hm-orb){grid-template-columns:repeat(auto-fill,minmax(0,96px));justify-content:center}
+  .hm-orb{justify-items:center;text-align:center}
+}
+
+/* ---- aurora polish 3 (fix1): hm-un cards keep real height on iOS — static meta fallback ---- */
+.hm-un-meta-static{display:none}
+@media (max-width:760px){
+  .hm-rail>.hm-un{min-height:99px}
+  .hm-rail>.hm-un .hm-wide-art{position:static;width:100%;height:auto;aspect-ratio:16/9;object-fit:cover}
+  .hm-rail>.hm-un .hm-wide-glow{display:none}
+  .hm-rail>.hm-un .hm-wide-meta{display:none}
+  .hm-un-meta-static{display:block;padding:8px 2px 0}
+  .hm-un-static-t{display:block;font-weight:600;font-size:.86rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+}
+/* ---- aurora polish 3 (fix2): requests + ETA visible on mobile, 2 cards side by side ---- */
+@media (max-width:760px){
+  #hm-req-rail{display:flex;overflow-x:auto}
+  .hm-rail>.hm-req{width:calc(50% - 7px)!important;min-width:0}
+  .hm-req{padding:12px}
+  .hm-req-t{font-size:.84rem}
+  .hm-req-foot{flex-wrap:wrap;row-gap:6px}
+}
+/* ---- aurora polish 3 (fix4): hint chip wraps inside its bubble ---- */
+.sv-hint{white-space:normal;line-height:1.45;padding:8px 14px;max-width:100%;display:inline-block;width:auto}
+/* ---- aurora polish 3 (fix5): sessions rows as reference cards ---- */
+.sess-row{border:1px solid var(--border);border-radius:12px;padding:12px;margin-top:10px;background:rgba(255,255,255,.02)}
+.sess-row:last-of-type{border-bottom:1px solid var(--border)}
+.sess-dev{display:flex;align-items:center;gap:10px;min-width:0}
+.sess-dev svg{flex:none;width:34px;height:34px;padding:7px;box-sizing:border-box;border-radius:10px;background:rgba(151,146,255,.10);border:1px solid var(--border)}
+.sess-dev b{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.sess-row .pill.ok{margin-top:0;background:transparent;border:1px solid rgba(163,201,182,.55);color:var(--sage)}
+@media (max-width:760px){
+  .sess-row{display:flex;flex-wrap:wrap;align-items:center;gap:6px 8px}
+  .sess-dev{flex:0 0 100%}
+  .sess-seen,.sess-ip{font-size:.75rem}
+  .sess-ip::before{content:' · '}
+  .sess-act{margin-left:auto}
+}
+/* ---- aurora polish 4 (fix2): spotlight progress-slider timer bar ---- */
+.sv-spot-timer{position:absolute;left:0;right:0;bottom:0;height:3px;background:rgba(255,255,255,.06);overflow:hidden;border-radius:0 0 var(--radius) var(--radius);pointer-events:none}
+.sv-spot-timer i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--v),var(--c))}
+/* ---- aurora polish 4 (fix3): stats charts ---- */
+#sec-stats-charts{margin-top:24px}
+.sc-bar{display:flex;height:10px;border-radius:99px;overflow:hidden;background:rgba(255,255,255,.05);margin:8px 0 10px}
+.sc-bar i{min-width:3px}
+.sc-legend{display:flex;flex-wrap:wrap;gap:6px 16px;font-size:.75rem;color:var(--text-dim)}
+.sc-legend i{display:inline-block;width:9px;height:9px;border-radius:99px;margin-right:6px}
+.sc-charts{display:grid;grid-template-columns:auto 1fr;gap:16px 28px;align-items:center;margin-top:18px}
+.sc-donut{position:relative;width:132px;height:132px}
+.sc-donut svg{width:100%;height:100%;display:block}
+.sc-donut-c{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;pointer-events:none}
+.sc-donut-n{font-family:'Fraunces',Georgia,serif;font-size:1.3rem;color:var(--text)}
+.sc-donut-l{font-size:.62rem;letter-spacing:.12em;text-transform:uppercase;color:var(--text-faint)}
+.sc-donut-leg{margin-top:10px}
+.sc-nums{display:flex;flex-direction:column;gap:9px}
+.sc-num{display:grid;grid-template-columns:64px 52px 1fr;gap:10px;align-items:center;font-size:.8rem;color:var(--text-dim)}
+.sc-num .sc-nv{color:var(--text);text-align:right;font-variant-numeric:tabular-nums}
+.sc-num .sc-nb{display:block;height:8px;border-radius:99px;background:rgba(255,255,255,.05);overflow:hidden}
+.sc-num .sc-nb i{display:block;height:100%;border-radius:99px}
+@media (max-width:760px){.sc-charts{grid-template-columns:1fr}}
+/* ---- aurora polish 4 (fix4): sessions parsed-UA + geo third line ---- */
+.sess-geo{grid-column:1/-1;font-size:.72rem;color:var(--text-faint)}
+.sess-exp{color:var(--text-faint)}
+@media (max-width:760px){.sess-geo{flex:0 0 100%}}
+/* ---- aurora polish 5: up-next placeholders + hint styling ---- */
+@media (max-width:760px){
+  /* static meta title styling (was default blue underline link leak) */
+  .hm-un-static-t{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;font-weight:600;font-size:.86rem;color:var(--text);text-decoration:none;line-height:1.3}
+  .hm-un-meta-static .hm-un-why{font-size:.72rem}
+  /* artless fallback: show gradient placeholder box instead of empty void */
+  .hm-rail>.hm-un{background:linear-gradient(160deg,var(--v-soft),transparent 60%),var(--card)}
+  .hm-rail>.hm-un .hm-wide-art{background:var(--card)}
+  /* badge clearance under section header */
+  .hm-rail{padding-top:12px}
+}
+/* hero art fallback gradient */
+.hm-hero{background:linear-gradient(135deg,var(--v-soft),rgba(69,214,200,.10) 60%),var(--card)}
+</style></head><body>
+<div class="aurora" aria-hidden="true"></div>
+<div class="grain-overlay" aria-hidden="true"></div>
+<canvas id="petalCanvas" aria-hidden="true"></canvas>
+<div id="app"><div class="card" id="gate"><a href="https://mysweetpea.cc" style="display:block;color:inherit;text-decoration:none"><img class="gate-logo" src="https://mysweetpea.cc/logo.svg" alt="MySweetPea logo"/></a><h1>MySweetPea</h1><p>Checking your session…</p></div></div>
+<div id="modal"><div class="mcard" id="mbody"></div></div>
+<div id="toasts" aria-live="polite"></div>
+
+<div class="pal-backdrop" id="pal">
+  <div class="palette">
+    <input id="pal-q" type="text" placeholder="Type a command…  (Esc to close)" autocomplete="off" spellcheck="false"/>
+    <div class="pal-list" id="pal-list"></div>
+  </div>
+</div>
+
+
+<script>
+
+'use strict';
+const $ = (s) => document.querySelector(s);
+const esc = (x) => String(x == null ? '' : x).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+function toast(msg, opts) {
+  // opts: { action: fn, label: 'Undo' } -> action button inside the toast
+  const t = document.createElement('div'); t.className = 'toast' + (opts && opts.ok ? ' ok' : '') + (opts && opts.err ? ' err' : '');
+  t.innerHTML = '<span class="msg">' + esc(msg) + '</span>' + (opts && opts.action ? '<span class="undo">' + esc((opts && opts.label) || 'Undo') + '</span>' : '');
+  if (opts && opts.action) t.querySelector('.undo').onclick = () => { t.remove(); opts.action(); };
+  $('#toasts').appendChild(t);
+  setTimeout(() => { t.classList.add('t-out'); setTimeout(() => t.remove(), 260); }, 6500);
+}
+function modal(html) { $('#mbody').innerHTML = html; $('#modal').classList.add('open'); }
+function closeModal() { $('#modal').classList.remove('open'); }
+$('#modal').addEventListener('click', e => { if (e.target.id === 'modal') closeModal(); });
+
+// ===== PHASE 14: falling petals (site ground truth port — canvas, 22 petals) =====
+(function fallingPetals() {
+  const canvas = document.getElementById('petalCanvas');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  if (!ctx) return;
+  let reduce = false;
+  try { reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (e) {}
+  if (reduce) return; // static/hidden under reduced motion
+  let petals = [];
+  let width = 0, height = 0, dpr = 1, rafId = null, resizeTimer = null, lastViewportWidth = 0;
+  const PETAL_COUNT = 22;
+  function resize(force) {
+    const nextWidth = window.innerWidth, nextHeight = window.innerHeight;
+    if (!force && nextWidth === lastViewportWidth) return;
+    width = nextWidth; height = nextHeight; lastViewportWidth = nextWidth;
+    dpr = Math.min(window.devicePixelRatio || 1, 2);
+    canvas.width = Math.round(width * dpr);
+    canvas.height = Math.round(height * dpr);
+    canvas.style.width = width + 'px';
+    canvas.style.height = height + 'px';
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  }
+  function createPetal() {
+    return {
+      x: Math.random() * width,
+      y: -20,
+      size: 3 + Math.random() * 6,
+      speedY: 0.35 + Math.random() * 0.9,
+      speedX: -0.3 + Math.random() * 0.6,
+      rotation: Math.random() * Math.PI * 2,
+      rotSpeed: -0.012 + Math.random() * 0.024,
+      opacity: 0.08 + Math.random() * 0.16,
+      sway: Math.random() * Math.PI * 2,
+      swaySpeed: 0.008 + Math.random() * 0.014,
+      tone: Math.random() // 0 = frost/ice, 1 = sage/green
+    };
+  }
+  function drawPetal(petal) {
+    ctx.save();
+    ctx.translate(petal.x, petal.y);
+    ctx.rotate(petal.rotation);
+    ctx.globalAlpha = petal.opacity;
+    const gradient = ctx.createRadialGradient(0, 0, 0, 0, 0, petal.size);
+    if (petal.tone > 0.5) {
+      gradient.addColorStop(0, '#C4E1CC');
+      gradient.addColorStop(0.5, '#A3C9B6');
+      gradient.addColorStop(1, 'rgba(93, 122, 110, 0.28)');
+    } else {
+      gradient.addColorStop(0, '#DDE6E8');
+      gradient.addColorStop(0.5, '#B8CDD2');
+      gradient.addColorStop(1, 'rgba(143, 175, 181, 0.26)');
+    }
+    ctx.fillStyle = gradient;
+    ctx.beginPath();
+    ctx.moveTo(0, -petal.size);
+    ctx.bezierCurveTo(petal.size * 0.6, -petal.size * 0.5, petal.size * 0.6, petal.size * 0.5, 0, petal.size);
+    ctx.bezierCurveTo(-petal.size * 0.6, petal.size * 0.5, -petal.size * 0.6, -petal.size * 0.5, 0, -petal.size);
+    ctx.fill();
+    ctx.restore();
+  }
+  function animate() {
+    ctx.clearRect(0, 0, width, height);
+    for (let i = 0; i < petals.length; i++) {
+      const petal = petals[i];
+      petal.sway += petal.swaySpeed;
+      petal.x += petal.speedX + Math.sin(petal.sway) * 0.4;
+      petal.y += petal.speedY;
+      petal.rotation += petal.rotSpeed;
+      if (petal.y > height + 20) petals[i] = createPetal();
+      if (petal.x < -20) petal.x = width + 20;
+      if (petal.x > width + 20) petal.x = -20;
+      drawPetal(petals[i]);
+    }
+    rafId = requestAnimationFrame(animate);
+  }
+  function start() {
+    if (rafId !== null || document.hidden) return;
+    resize(true);
+    petals = [];
+    for (let i = 0; i < PETAL_COUNT; i++) {
+      const petal = createPetal();
+      petal.y = Math.random() * height;
+      petals.push(petal);
+    }
+    animate();
+  }
+  function stop() {
+    if (rafId !== null) { cancelAnimationFrame(rafId); rafId = null; }
+    petals = [];
+    ctx.clearRect(0, 0, width, height);
+  }
+  window.addEventListener('resize', function () {
+    window.clearTimeout(resizeTimer);
+    resizeTimer = window.setTimeout(function () { if (window.innerWidth !== lastViewportWidth) resize(false); }, 150);
+  }, { passive: true });
+  document.addEventListener('visibilitychange', function () { document.hidden ? stop() : start(); });
+  start();
+})();
+
+// Popup ceremony helper (authentik-hosted, branded, deep-links back)
+async function revokeAll() {
+  const d = await (await fetch('/api/sessions')).json();
+  const others = ((d && d.results) || []).filter(s => !s.current);
+  if (!others.length) { toast('No other sessions to sign out'); return; }
+  for (const s of others) await fetch('/api/sessions/' + s.uuid, { method: 'DELETE' });
+  toast('Signed out ' + others.length + ' session' + (others.length === 1 ? '' : 's'), { action: () => location.reload(), label: 'Reload' });
+}
+function ceremony(flowSlug, label) {
+  const url = '/auth/ceremony?f=' + encodeURIComponent(flowSlug);
+  const w = window.open(url, 'msp-ceremony', 'width=480,height=680');
+  const timer = setInterval(() => {
+    if (w.closed) { clearInterval(timer); location.reload(); }
+  }, 700);
+  toast(label + ' opened — complete it in the popup');
+}
+
+// ===== PHASE 9: TABS + shared pure helpers (top-level: palette block reuses them) =====
+const TABS = ['home', 'media', 'services', 'stats', 'guides', 'contact'];
+const TAB_LABELS = { home: 'Home', stats: 'Statistics', media: 'Media', services: 'Services', guides: 'Guides', contact: 'Contact', security: 'Security', account: 'Account' };
+let currentTab = 'home';
+function setTab(name, opts) {
+  opts = opts || {};
+  const EXTRA_TABS = ['security', 'account']; // reachable from the account dropdown
+  if (TABS.indexOf(name) < 0 && EXTRA_TABS.indexOf(name) < 0) name = 'home';
+  currentTab = name;
+  TABS.concat(EXTRA_TABS).forEach((t) => {
+    const b = document.getElementById('tab-' + t);
+    const p = document.getElementById('panel-' + t);
+    if (b) { b.classList.toggle('active', t === name); b.setAttribute('aria-selected', t === name ? 'true' : 'false'); }
+    if (p) p.hidden = t !== name;
+  });
+  if (!opts.fromHash) { try { history.replaceState(null, '', '#' + name); } catch (e) {} }
+  try { localStorage.setItem('msp-tab', name); } catch (e) {}
+  window.scrollTo(0, 0);
+  if (name === 'stats' && typeof window.loadStats === 'function') window.loadStats();
+}
+window.setTab = setTab;
+  // footer status live (re-invoked after the post-login shell renders — the
+  // footer only exists in the DOM once app.innerHTML injects it)
+  window.updateFooterStatus = function () {
+    const el = document.getElementById('footerStatusText'), box = document.getElementById('footerStatus');
+    if (!el) return; // footer not mounted yet (pre-login)
+    fetch('/api/status').then((r) => (r.ok ? r.json() : null)).then((s) => {
+      const ms = (s && s.monitors) || [];
+      const down = ms.filter((m) => !m.current).length;
+      if (!ms.length) { el.textContent = 'Status unavailable'; box && box.classList.add('down'); return; }
+      el.textContent = down ? (down + ' service' + (down > 1 ? 's' : '') + ' degraded') : 'All systems operational';
+      if (down) box && box.classList.add('down');
+      else box && box.classList.remove('down');
+    }).catch(() => { el.textContent = 'Status unavailable'; box && box.classList.add('down'); });
+  };
+  window.updateFooterStatus();
+function goSection(id) {
+  const map = { 'sec-media': 'media', 'sec-media-m': 'media', 'sec-library': 'media', 'sec-services': 'services', 'sec-uptime': 'services', 'sec-security': 'security', 'sec-sessions': 'security', 'sec-apps': 'security', 'sec-account': 'account', 'sec-status': 'home', 'stats': 'stats', 'sec-spirit': 'account' };
+  if (map[id]) setTab(map[id]);
+  const el = document.getElementById(id);
+  if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+function mergeStats(d) {
+  const s = (d && typeof d === 'object') ? d : {};
+  const num = (v) => (typeof v === 'number' && isFinite(v) ? v : null);
+  return { movies: num(s.movies), series: num(s.series), photos: num(s.photos), sessions: num(s.sessions),
+    episodes: num(s.episodes), songs: num(s.songs), boxsets: num(s.boxsets), users: num(s.users),
+    videos: num(s.videos), usage_mb: num(s.usage_mb), jf_resume: num(s.jf_resume),
+    seerr_total: num(s.seerr_total), seerr_pending: num(s.seerr_pending),
+    seerr_approved: num(s.seerr_approved), seerr_available: num(s.seerr_available), seerr_media: num(s.seerr_media) };
+}
+function relTime(v) {
+  const t = (typeof v === 'number') ? v : Date.parse(String(v || ''));
+  if (!isFinite(t) || !t) return '';
+  const sec = Math.max(0, (Date.now() - t) / 1000);
+  if (sec < 60) return 'Just now';
+  if (sec < 3600) return Math.floor(sec / 60) + 'm ago';
+  if (sec < 86400) return Math.floor(sec / 3600) + 'h ago';
+  return new Date(t).toLocaleDateString(undefined, { month: 'short', day: 'numeric' });
+}
+function countUp(el, target, dur) {
+  if (!el) return;
+  if (target == null) { el.textContent = '—'; return; }
+  let reduce = false;
+  try { reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (e) {}
+  if (reduce || dur === 0) { el.textContent = String(target); return; }
+  const t0 = performance.now();
+  const span = dur || 900;
+  const step = (t) => {
+    const p = Math.min(1, (t - t0) / span);
+    el.textContent = String(Math.round(target * (1 - Math.pow(1 - p, 3))));
+    if (p < 1) requestAnimationFrame(step);
+  };
+  requestAnimationFrame(step);
+}
+function sortMonitors(mons) {
+  return (mons || []).slice().sort((a, b) =>
+    ((a && a.current ? 0 : 1) - (b && b.current ? 0 : 1)) ||
+    String((a && a.name) || '').localeCompare(String((b && b.name) || '')));
+}
+function groupMonitors(mons) {
+  const out = [];
+  const idx = Object.create(null);
+  (mons || []).forEach((m) => {
+    const g = m && typeof m.group === 'string' && m.group ? m.group : '';
+    if (!g) return;
+    if (!(g in idx)) { idx[g] = out.length; out.push({ name: g, mons: [] }); }
+    out[idx[g]].mons.push(m);
+  });
+  return out;
+}
+function uptimeRows(mons) {
+  const rows = [];
+  groupMonitors(mons).forEach((g) => { sortMonitors(g.mons).forEach((m) => rows.push({ group: g.name, m: m })); });
+  sortMonitors((mons || []).filter((m) => !(m && typeof m.group === 'string' && m.group))).forEach((m) => rows.push({ group: '', m: m }));
+  return rows;
+}
+function beatStrip(beats) {
+  const arr = (Array.isArray(beats) ? beats : []).map((b) => (b ? 1 : 0)).slice(-40);
+  let out = '';
+  for (let i = 0; i < 40 - arr.length; i++) out += '<i class="b pad"></i>';
+  for (let i = 0; i < arr.length; i++) out += '<i class="b ' + (arr[i] ? 'up' : 'down') + '"></i>';
+  return out;
+}
+
+// ===== PHASE 10: SETUP GUIDES — data from main site services.html + pure render helpers =====
+const GUIDE_ICONS = { jellyfin: '/icons/jellyfin.svg', seerr: '/icons/seerr.svg', nextcloud: '/icons/nextcloud.svg', immich: '/icons/immich.svg', vaultwarden: '/icons/vaultwarden.svg', matrix: '/icons/matrix.svg', koalasync: '/icons/koalasync.svg', openwebui: '/icons/openwebui.svg', affine: '/icons/affine.svg' };
+const GUIDE_ORDER = ['jellyfin', 'seerr', 'nextcloud', 'immich', 'vaultwarden', 'matrix', 'affine', 'openwebui', 'koalasync'];
+const GUIDE_COLORS = [
+  { fg: 'var(--primary-bright)', bg: 'var(--v-soft)' },
+  { fg: 'var(--sage)',           bg: 'rgba(163,201,182,.15)' },
+  { fg: 'var(--gold)',           bg: 'rgba(217,168,108,.15)' },
+];
+let guideSel = 'jellyfin';
+// ---- phase 14: platform download chips (per-guide; renamed DL_ in phase 3b-3 to free the PLATFORMS name for the guides platform picker) ----
+const PLAT_ICONS = {
+  apple: '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M16.7 12.9c0-2.4 2-3.6 2.1-3.7-1.1-1.7-2.9-1.9-3.5-1.9-1.5-.2-2.9.9-3.7.9-.8 0-1.9-.9-3.2-.8-1.6 0-3.1 1-4 2.4-1.7 3-0.4 7.4 1.2 9.8.8 1.2 1.8 2.5 3.1 2.4 1.2 0 1.7-.8 3.2-.8s1.9.8 3.2.8c1.3 0 2.2-1.2 3-2.4.9-1.4 1.3-2.7 1.3-2.8-.1 0-2.6-1-2.7-3.9zM14.4 5.6c.7-.8 1.1-1.9 1-3.1-1 0-2.2.7-2.9 1.5-.6.7-1.2 1.9-1 3 1.1.1 2.2-.6 2.9-1.4z"/></svg>',
+  android: '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M17.6 9.5l1.3-2.2c.1-.2 0-.4-.1-.5-.2-.1-.4-.1-.5.1l-1.3 2.3c-1.5-.7-3.2-1-5-1s-3.5.4-5 1L5.7 6.9c-.1-.2-.3-.2-.5-.1-.2.1-.2.3-.1.5l1.3 2.2C3.9 10.9 2.1 13.5 2 16.5h20c-.1-3-1.9-5.6-4.4-7zM7.5 14.2c-.5 0-.9-.4-.9-.9s.4-.9.9-.9.9.4.9.9-.4.9-.9.9zm9 0c-.5 0-.9-.4-.9-.9s.4-.9.9-.9.9.4.9.9-.4.9-.9.9z"/></svg>',
+  windows: '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M3 5.5L10.5 4.4V11.2H3V5.5zM3 12.8H10.5V19.6L3 18.5V12.8zM11.5 4.2L21 3V11.2H11.5V4.2zM11.5 12.8H21V21L11.5 19.8V12.8z"/></svg>',
+  globe: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18"/></svg>',
+  cast: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 8V6a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2h-6"/><path d="M2 12a9 9 0 0 1 8 8M2 16a5 5 0 0 1 4 4M2 20h.01"/></svg>'
+};
+const PLAT = {
+  ios: { name: 'iOS', icon: 'apple' },
+  android: { name: 'Android', icon: 'android' },
+  windows: { name: 'Windows', icon: 'windows' },
+  macos: { name: 'macOS', icon: 'apple' },
+  linux: { name: 'Linux', icon: 'L' },
+  firetv: { name: 'Fire TV', icon: 'F' },
+  roku: { name: 'Roku', icon: 'R' },
+  androidtv: { name: 'Android TV / Google TV', icon: 'android' },
+  appletv: { name: 'Apple TV', icon: 'apple' },
+  kodi: { name: 'Kodi', icon: 'K' },
+  web: { name: 'Web browser', icon: 'globe' },
+  cast: { name: 'AnyCast / Cast', icon: 'cast' },
+  desktop: { name: 'Desktop (Windows / macOS / Linux)', icon: 'windows' },
+  extension: { name: 'Browser extension', icon: 'globe' }
+};
+const DL_PLATFORMS = {
+  jellyfin: [
+    { p: 'ios', url: 'https://jellyfin.org/downloads' },
+    { p: 'android', url: 'https://jellyfin.org/downloads' },
+    { p: 'windows', url: 'https://jellyfin.org/downloads' },
+    { p: 'macos', url: 'https://jellyfin.org/downloads' },
+    { p: 'linux', url: 'https://jellyfin.org/downloads' },
+    { p: 'firetv', url: 'https://moonfin.io/#clients' },
+    { p: 'roku', url: 'https://moonfin.io/#clients' },
+    { p: 'androidtv', url: 'https://moonfin.io/#clients' },
+    { p: 'appletv', url: 'https://moonfin.io/#clients' },
+    { p: 'kodi', url: 'https://jellyfin.org/downloads' },
+    { p: 'web', url: 'https://media.mysweetpea.cc/Moonfin/Web/' },
+    { p: 'cast', url: 'https://jellyfin.org/downloads' },
+  ],
+  nextcloud: [
+    { p: 'ios', url: 'https://nextcloud.com/install/' },
+    { p: 'android', url: 'https://nextcloud.com/install/' },
+    { p: 'desktop', url: 'https://nextcloud.com/install/' },
+  ],
+  immich: [
+    { p: 'ios', url: 'https://immich.app/' },
+    { p: 'android', url: 'https://immich.app/' },
+    { p: 'web', url: 'https://immich.app/' },
+  ],
+  matrix: [
+    { p: 'ios', url: 'https://element.io/download' },
+    { p: 'android', url: 'https://element.io/download' },
+    { p: 'desktop', url: 'https://element.io/download' },
+    { p: 'web', url: 'https://element.io/download' },
+  ],
+  vaultwarden: [
+    { p: 'ios', url: 'https://bitwarden.com/download' },
+    { p: 'android', url: 'https://bitwarden.com/download' },
+    { p: 'extension', url: 'https://bitwarden.com/download' },
+    { p: 'desktop', url: 'https://bitwarden.com/download' },
+  ],
+};
+const GUIDES = {
+  vaultwarden: {
+    name: 'Vaultwarden',
+    url: 'https://vault.mysweetpea.cc',
+    plain: 'A safe place to store all your passwords — like a locked drawer for your digital life.',
+    steps: [
+      { title: 'Download the app', text: 'Install the official Bitwarden app for your device (iPhone, Android, Mac, Windows). Open it and enter your email address, then select self-hosted at the bottom of the login screen.', url: 'https://bitwarden.com/download/', btn: 'Get the app' },
+      { title: 'Point to our server', text: 'When asked for the server URL, enter https://vault.mysweetpea.cc and tap Save.', url: 'https://vault.mysweetpea.cc', btn: 'Open Vaultwarden' },
+      { title: 'Log in with your MySweetPea account', text: 'On the web vault, click Use single sign-on and sign in with your MySweetPea account. Your master password unlocks the vault after sign-in and cannot be reset by us — make it strong and memorable.', url: '', btn: '' },
+      { title: 'Two quick upgrades (recommended)', text: 'Turn on 2FA in Settings → Security, and switch your KDF algorithm to Argon2id (Settings → Security → Keys). Both take under a minute and make your vault much harder to crack.', url: '', btn: '' },
+    ],
+  },
+  matrix: {
+    name: 'Matrix / Element',
+    url: 'https://chat.mysweetpea.cc',
+    plain: 'A private chat app for messaging friends — nobody else can read your messages.',
+    steps: [
+      { title: 'Open Element', text: 'Go to chat.mysweetpea.cc and click "Continue with Authentik".', url: 'https://chat.mysweetpea.cc', btn: 'Open chat' },
+      { title: 'Sign in with Authentik', text: 'Log in with your MySweetPea account — you will be redirected back to Element.', url: 'https://auth.mysweetpea.cc', btn: 'Go to sign-in' },
+      { title: 'Click Continue', text: 'Element will ask you to confirm — click "Continue" and you are in.', url: '', btn: '' },
+      { title: 'Add the app (optional)', text: 'Install the Element app and enter your chat server address to chat on your phone.', url: 'https://element.io/download', btn: 'Get the app' },
+    ],
+  },
+  affine: {
+    name: 'AFFiNE',
+    url: 'https://notes.mysweetpea.cc',
+    plain: 'A place to write notes, build wikis, and sketch ideas — all kept private.',
+    steps: [
+      { title: 'Open AFFiNE', text: 'Go to notes.mysweetpea.cc and click "Continue with OIDC" (the sign-in button) — do not click "Sign In".', url: 'https://notes.mysweetpea.cc', btn: 'Open notes' },
+      { title: 'Sign in with Authentik', text: 'Log in with your MySweetPea account — you will be redirected back to AFFiNE.', url: 'https://auth.mysweetpea.cc', btn: 'Go to sign-in' },
+      { title: 'Start writing', text: 'Your workspace is ready. Create a document or whiteboard and go.', url: '', btn: '' },
+    ],
+  },
+  koalasync: {
+    name: 'KoalaSync',
+    url: 'https://sync.mysweetpea.cc',
+    plain: 'Watch movies and shows together with friends in real-time — everyone sees the same scene.',
+    steps: [
+      { title: 'Install the extension', text: 'KoalaSync is a browser extension. Add it to Chrome (or any Chromium browser) or Firefox. Firefox users: https://addons.mozilla.org/de/firefox/addon/koalasync/', url: 'https://chromewebstore.google.com/detail/koalasync/obbnmkmlaaddodakcbdljknjpagklifc', btn: 'Add to Chrome' },
+      { title: 'Create & share a room', text: 'Open the KoalaSync popup and click + Create New Room, then share the invite link with friends. They click it and join instantly — no accounts, no IPs to exchange.', url: '', btn: '' },
+      { title: 'Select your video tab', text: 'In the popup, switch to the Sync section and select the tab playing your video. KoalaSync links everyone\'s playhead automatically. Works with Netflix, YouTube, Disney+, Prime Video, Twitch, Jellyfin and almost any site with HTML5 video.', url: '', btn: '' },
+      { title: 'Press play together', text: 'Hit play. Pauses, seeks and playback changes are shared with everyone in the room. Tip: enable the audio compressor under Settings → Audio Processing to level quiet dialogue and loud explosions.', url: '', btn: '' },
+    ],
+  },
+  jellyfin: {
+    name: 'Jellyfin / Moonfin',
+    url: 'https://media.mysweetpea.cc/Moonfin/Web/',
+    plain: 'Your own private movie and TV library — stream it on any device.',
+    variants: [
+      { key: 'moonfin', label: 'Moonfin (recommended)', steps: [
+        { title: 'Open Moonfin', text: 'Go to media.mysweetpea.cc and sign in with your Authentik account.', url: 'https://media.mysweetpea.cc/Moonfin/Web/', btn: 'Open Moonfin' },
+        { title: 'Sign in with Authentik', text: 'Log in with your MySweetPea account — you will be redirected back to Moonfin.', url: 'https://auth.mysweetpea.cc', btn: 'Go to sign-in' },
+        { title: 'Start watching', text: 'Your library is ready. Browse and stream on any device.', url: '', btn: '' },
+        { title: 'Add the Moonfin app (optional)', text: 'Install the Moonfin app on your TV or phone and enter your media server address.', url: 'https://moonfin.io/#clients', btn: 'Get Moonfin' },
+      ] },
+      { key: 'web', label: 'Jellyfin Web', steps: [
+        { title: 'Open Jellyfin Web', text: 'Go to media.mysweetpea.cc/web — the classic Jellyfin interface, great as a fallback.', url: 'https://media.mysweetpea.cc/web/', btn: 'Open Jellyfin Web' },
+        { title: 'Sign in with Authentik', text: 'Log in with your MySweetPea account — you will be redirected back to Jellyfin.', url: 'https://auth.mysweetpea.cc', btn: 'Go to sign-in' },
+        { title: 'Start watching', text: 'Your library is ready. Browse and stream in the browser.', url: '', btn: '' },
+        { title: 'Prefer Moonfin?', text: 'Moonfin is our recommended app — a more premium experience on every device. Switch back anytime with the picker above.', url: 'https://media.mysweetpea.cc/Moonfin/Web/', btn: 'Open Moonfin' },
+      ] },
+    ],
+    steps: [
+      { title: 'Open Moonfin', text: 'Go to media.mysweetpea.cc and sign in with your Authentik account.', url: 'https://media.mysweetpea.cc/Moonfin/Web/', btn: 'Open Moonfin' },
+      { title: 'Sign in with Authentik', text: 'Log in with your MySweetPea account — you will be redirected back to Moonfin.', url: 'https://auth.mysweetpea.cc', btn: 'Go to sign-in' },
+      { title: 'Start watching', text: 'Your library is ready. Browse and stream on any device.', url: '', btn: '' },
+      { title: 'Add the Moonfin app (optional)', text: 'Install the Moonfin app on your TV or phone and enter your media server address.', url: 'https://moonfin.io/#clients', btn: 'Get Moonfin' },
+    ],
+  },
+  seerr: {
+    name: 'Seerr',
+    url: 'https://request.mysweetpea.cc',
+    plain: 'A wish list for movies and shows — request anything you want to watch.',
+    steps: [
+      { title: 'Open Seerr', text: 'Go to request.mysweetpea.cc and sign in with your Jellyfin login.', url: 'https://request.mysweetpea.cc', btn: 'Open requests' },
+      { title: 'Sign in with Jellyfin', text: 'Use the same Jellyfin account you use for Moonfin.', url: 'https://media.mysweetpea.cc', btn: 'Go to media' },
+      { title: 'Request something', text: 'Find a movie or show and click "Request" — it appears in Jellyfin automatically.', url: '', btn: '' },
+    ],
+  },
+  nextcloud: {
+    name: 'Nextcloud',
+    url: 'https://cloud.mysweetpea.cc',
+    plain: 'Your private place for files, calendar, and contacts — like a personal Google Workspace.',
+    steps: [
+      { title: 'Open Nextcloud', text: 'Go to cloud.mysweetpea.cc and click "Continue with Authentik".', url: 'https://cloud.mysweetpea.cc', btn: 'Open files' },
+      { title: 'Sign in with Authentik', text: 'Log in with your MySweetPea account — you will be redirected back to Nextcloud.', url: 'https://auth.mysweetpea.cc', btn: 'Go to sign-in' },
+      { title: 'Start using it', text: 'Your files, calendar, and contacts are ready.', url: '', btn: '' },
+      { title: 'Add the app (optional)', text: 'Install the Nextcloud app and enter your address to sync files on your phone.', url: 'https://nextcloud.com/install/', btn: 'Get the app' },
+    ],
+  },
+  immich: {
+    name: 'Immich',
+    url: 'https://photos.mysweetpea.cc',
+    plain: 'Back up your photos and videos privately — search them and keep them safe.',
+    steps: [
+      { title: 'Open Immich', text: 'Go to photos.mysweetpea.cc and click "Continue with OAuth".', url: 'https://photos.mysweetpea.cc', btn: 'Open photos' },
+      { title: 'Sign in with Authentik', text: 'Log in with your MySweetPea account — you will be redirected back to Immich.', url: 'https://auth.mysweetpea.cc', btn: 'Go to sign-in' },
+      { title: 'Start backing up', text: 'Your photo library is ready.', url: '', btn: '' },
+      { title: 'Add the app', text: 'Install the Immich app, point it at your address, and turn on auto-backup.', url: 'https://immich.app/', btn: 'Get the app' },
+    ],
+  },
+  openwebui: {
+    name: 'Open WebUI',
+    url: 'https://ai.mysweetpea.cc',
+    plain: 'A private AI chat assistant — your conversations stay on our servers.',
+    steps: [
+      { title: 'Open Open WebUI', text: 'Go to ai.mysweetpea.cc and click "Continue with OIDC".', url: 'https://ai.mysweetpea.cc', btn: 'Open chat' },
+      { title: 'Sign in with Authentik', text: 'Log in with your MySweetPea account — you will be redirected back to Open WebUI.', url: 'https://auth.mysweetpea.cc', btn: 'Go to sign-in' },
+      { title: 'Start chatting', text: 'Your conversations are private and stay on our servers.', url: '', btn: '' },
+    ],
+  },
+};
+// ===== PHASE 3b-3: GUIDES PLATFORM LAYER — picker model. Steps live here, never in GUIDES. =====
+// Entry: { p: id, label, glyph, platformSteps?: [step,...] } — no platformSteps = fall back to the guide's generic steps.
+// jellyfin + web reuses the existing variants picker (Moonfin / Jellyfin Web) instead of platformSteps.
+const GP_GLYPHS = {
+  web: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3 12h18"/><path d="M12 3c2.5 2.6 4 5.6 4 9s-1.5 6.4-4 9c-2.5-2.6-4-5.6-4-9s1.5-6.4 4-9Z"/></svg>',
+  phone: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><rect x="7" y="2.5" width="10" height="19" rx="2.5"/><path d="M11 18.5h2"/></svg>',
+  tv: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><rect x="3" y="5" width="18" height="12" rx="2"/><path d="M9 21h6"/></svg>',
+  desktop: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><rect x="4" y="4" width="16" height="11" rx="2"/><path d="M2 19h20"/></svg>',
+  plug: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M9 7V3M15 7V3"/><path d="M7 7h10v4a5 5 0 0 1-10 0V7Z"/><path d="M12 16v5"/></svg>',
+  moon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" aria-hidden="true"><path d="M20 14.5A8.5 8.5 0 0 1 9.5 4a8.5 8.5 0 1 0 10.5 10.5Z"/></svg>'
+};
+const guidePlatSel = {};
+const PLATFORMS = {
+  jellyfin: [
+    { p: 'web', label: 'Web browser', glyph: 'web' },
+    { p: 'iphone', label: 'iPhone', glyph: 'phone', platformSteps: [
+      { title: 'Get Moonfin for iPhone', text: 'Install Moonfin — our recommended iOS client — from the App Store.', url: 'https://moonfin.io/#clients', btn: 'Get Moonfin' },
+      { title: 'Point it at your server', text: 'In Moonfin, set the server address to media.mysweetpea.cc.', url: '', btn: '' },
+      { title: 'Sign in and watch', text: 'Use your MySweetPea account. Downloads work for offline viewing.', url: '', btn: '' },
+    ] },
+    { p: 'android', label: 'Android', glyph: 'phone', platformSteps: [
+      { title: 'Get Moonfin for Android', text: 'Install Moonfin on your Android phone or tablet.', url: 'https://moonfin.io/#clients', btn: 'Get Moonfin' },
+      { title: 'Point it at your server', text: 'Set the server address to media.mysweetpea.cc.', url: '', btn: '' },
+      { title: 'Sign in and watch', text: 'Use your MySweetPea account — resume points and favorites stay in sync.', url: '', btn: '' },
+    ] },
+    { p: 'androidtv', label: 'Android TV', glyph: 'tv', platformSteps: [
+      { title: 'Install Moonfin on your TV', text: 'Find Moonfin in the Play Store on your Android TV or Google TV.', url: 'https://moonfin.io/#clients', btn: 'Get Moonfin' },
+      { title: 'Sign in', text: 'Enter media.mysweetpea.cc and sign in with your MySweetPea account.', url: '', btn: '' },
+      { title: 'Pick your favorites', text: 'On first launch choose the libraries you watch — the home screen fills with rows you actually use.', url: '', btn: '' },
+    ] },
+    { p: 'appletv', label: 'Apple TV', glyph: 'tv', platformSteps: [
+      { title: 'Get Moonfin on Apple TV', text: 'Install Moonfin from the tvOS App Store.', url: 'https://moonfin.io/#clients', btn: 'Get Moonfin' },
+      { title: 'Sign in', text: 'Server: media.mysweetpea.cc — then sign in with your MySweetPea account.', url: '', btn: '' },
+    ] },
+    { p: 'roku', label: 'Roku', glyph: 'tv', platformSteps: [
+      { title: 'Add the Moonfin channel', text: 'Search for Moonfin in the Roku Channel Store and add it.', url: 'https://moonfin.io/#clients', btn: 'Get Moonfin' },
+      { title: 'Sign in', text: 'Server: media.mysweetpea.cc — then sign in with your MySweetPea account.', url: '', btn: '' },
+    ] },
+    { p: 'desktop', label: 'Desktop', glyph: 'desktop', platformSteps: [
+      { title: 'Get a desktop app', text: 'Moonfin has desktop apps for Windows, macOS and Linux; the classic Jellyfin desktop app is on the same page.', url: 'https://moonfin.io/#clients', btn: 'Get Moonfin' },
+      { title: 'Sign in', text: 'Server: media.mysweetpea.cc — then sign in with your MySweetPea account.', url: '', btn: '' },
+    ] },
+  ],
+  seerr: [
+    { p: 'web', label: 'Web browser', glyph: 'web' },
+    { p: 'moonfin', label: 'Moonfin app', glyph: 'moon', platformSteps: [
+      { title: 'Requests live inside Moonfin', text: 'There is no separate Seerr app to install — open Moonfin and tap the Requests tab. No app needed.', url: 'https://media.mysweetpea.cc/Moonfin/Web/', btn: 'Open Moonfin' },
+      { title: 'Request something', text: 'Sign in with your MySweetPea account, find a movie or show and request it — it appears in Jellyfin automatically.', url: '', btn: '' },
+    ] },
+  ],
+  nextcloud: [
+    { p: 'web', label: 'Web browser', glyph: 'web' },
+    { p: 'desktop', label: 'Desktop', glyph: 'desktop', platformSteps: [
+      { title: 'Get the desktop app', text: 'The official Nextcloud client keeps a folder on your computer in sync automatically.', url: 'https://nextcloud.com/install/', btn: 'Download' },
+      { title: 'Add your account', text: 'Server: cloud.mysweetpea.cc — sign in with your MySweetPea account.', url: '', btn: '' },
+    ] },
+    { p: 'iphone', label: 'iPhone', glyph: 'phone', platformSteps: [
+      { title: 'Get the Nextcloud app', text: 'Install Nextcloud from the App Store.', url: 'https://nextcloud.com/install/', btn: 'Get the app' },
+      { title: 'Add your account', text: 'Server: cloud.mysweetpea.cc — files sync automatically; Calendar and Contacts sync over CalDAV.', url: '', btn: '' },
+    ] },
+    { p: 'android', label: 'Android', glyph: 'phone', platformSteps: [
+      { title: 'Get the Nextcloud app', text: 'Install Nextcloud from the Play Store.', url: 'https://nextcloud.com/install/', btn: 'Get the app' },
+      { title: 'Add your account', text: 'Server: cloud.mysweetpea.cc — turn on auto-upload for your camera roll in Settings.', url: '', btn: '' },
+    ] },
+  ],
+  immich: [
+    { p: 'web', label: 'Web browser', glyph: 'web' },
+    { p: 'iphone', label: 'iPhone', glyph: 'phone', platformSteps: [
+      { title: 'Get the Immich app', text: 'Install Immich from the App Store.', url: 'https://immich.app/', btn: 'Get the app' },
+      { title: 'Point it at your server', text: 'Server: photos.mysweetpea.cc — sign in with your MySweetPea account.', url: '', btn: '' },
+      { title: 'Turn on backup', text: 'Enable background backup so every photo lands safely at home, automatically.', url: '', btn: '' },
+    ] },
+    { p: 'android', label: 'Android', glyph: 'phone', platformSteps: [
+      { title: 'Get the Immich app', text: 'Install Immich from the Play Store.', url: 'https://immich.app/', btn: 'Get the app' },
+      { title: 'Point it at your server', text: 'Server: photos.mysweetpea.cc — sign in with your MySweetPea account.', url: '', btn: '' },
+      { title: 'Turn on backup', text: 'Enable backup for your camera folder — done.', url: '', btn: '' },
+    ] },
+  ],
+  vaultwarden: [
+    { p: 'browser', label: 'Browser extension', glyph: 'plug', platformSteps: [
+      { title: 'Get the Bitwarden extension', text: 'Works with Chrome, Firefox, Edge and Safari.', url: 'https://bitwarden.com/download', btn: 'Get the extension' },
+      { title: 'Point it at our server', text: 'In the extension settings choose self-hosted and enter https://vault.mysweetpea.cc.', url: '', btn: '' },
+      { title: 'Sign in and save a login', text: 'Use single sign-on with your MySweetPea account — the extension offers to save passwords as you browse.', url: '', btn: '' },
+    ] },
+    { p: 'iphone', label: 'iPhone', glyph: 'phone', platformSteps: [
+      { title: 'Get Bitwarden', text: 'Install the Bitwarden app from the App Store.', url: 'https://bitwarden.com/download', btn: 'Get the app' },
+      { title: 'Point to our server', text: 'When asked for the server URL, enter https://vault.mysweetpea.cc, then sign in with single sign-on.', url: '', btn: '' },
+      { title: 'Enable autofill', text: 'iOS Settings → Passwords → AutoFill → allow Bitwarden and logins fill themselves.', url: '', btn: '' },
+    ] },
+    { p: 'android', label: 'Android', glyph: 'phone', platformSteps: [
+      { title: 'Get Bitwarden', text: 'Install the Bitwarden app from the Play Store.', url: 'https://bitwarden.com/download', btn: 'Get the app' },
+      { title: 'Point to our server', text: 'When asked for the server URL, enter https://vault.mysweetpea.cc, then sign in with single sign-on.', url: '', btn: '' },
+      { title: 'Enable autofill', text: 'Android offers Bitwarden as your autofill provider — accept it.', url: '', btn: '' },
+    ] },
+    { p: 'desktop', label: 'Desktop', glyph: 'desktop', platformSteps: [
+      { title: 'Get the desktop app', text: 'Bitwarden has apps for Windows, macOS and Linux.', url: 'https://bitwarden.com/download', btn: 'Download' },
+      { title: 'Point to our server', text: 'When asked for the server URL, enter https://vault.mysweetpea.cc, then sign in with single sign-on.', url: '', btn: '' },
+    ] },
+  ],
+  matrix: [
+    { p: 'web', label: 'Web browser', glyph: 'web' },
+    { p: 'iphone', label: 'iPhone', glyph: 'phone', platformSteps: [
+      { title: 'Get Element X', text: 'Install Element X — the fast, modern Element client — from the App Store.', url: 'https://element.io/download', btn: 'Get the app' },
+      { title: 'Choose your homeserver', text: 'Pick Other and enter mysweetpea.cc, then sign in with your MySweetPea account.', url: '', btn: '' },
+    ] },
+    { p: 'android', label: 'Android', glyph: 'phone', platformSteps: [
+      { title: 'Get Element X', text: 'Install Element X from the Play Store.', url: 'https://element.io/download', btn: 'Get the app' },
+      { title: 'Choose your homeserver', text: 'Homeserver: mysweetpea.cc — then sign in with your MySweetPea account.', url: '', btn: '' },
+    ] },
+    { p: 'desktop', label: 'Desktop', glyph: 'desktop', platformSteps: [
+      { title: 'Get Element Desktop', text: 'Element has desktop apps for Windows, macOS and Linux.', url: 'https://element.io/download', btn: 'Download' },
+      { title: 'Choose your homeserver', text: 'Homeserver: mysweetpea.cc — then sign in with your MySweetPea account.', url: '', btn: '' },
+    ] },
+  ],
+  affine: [
+    { p: 'web', label: 'Web browser', glyph: 'web' },
+    { p: 'desktop', label: 'Desktop', glyph: 'desktop', platformSteps: [
+      { title: 'Get the AFFiNE app', text: 'Desktop apps for Windows, macOS and Linux.', url: 'https://affine.pro/download', btn: 'Download' },
+      { title: 'Sign in', text: 'Use Continue with OIDC and pick your MySweetPea account.', url: '', btn: '' },
+    ] },
+  ],
+  openwebui: [
+    { p: 'web', label: 'Web browser', glyph: 'web' },
+  ],
+  koalasync: [
+    { p: 'web', label: 'Web browser', glyph: 'web' },
+    { p: 'extension', label: 'Browser extension', glyph: 'plug', platformSteps: [
+      { title: 'Add the extension', text: 'KoalaSync is a browser extension for Chrome (and Chromium browsers) — it lets the room see your player tab.', url: 'https://chromewebstore.google.com/detail/koalasync/obbnmkmlaaddodakcbdljknjpagklifc', btn: 'Add to Chrome' },
+      { title: 'On Firefox?', text: 'Get KoalaSync from Firefox Add-ons instead.', url: 'https://addons.mozilla.org/de/firefox/addon/koalasync/', btn: 'Add to Firefox' },
+      { title: 'Sync a room', text: 'Open the KoalaSync popup, create or join a room, and select the tab playing your video — everyone watches in sync.', url: '', btn: '' },
+    ] },
+  ],
+};
+function guideChipHtml(key, sel) {
+  const g = GUIDES[key];
+  if (!g) return '';
+  const c = GUIDE_COLORS[Math.max(0, GUIDE_ORDER.indexOf(key)) % GUIDE_COLORS.length];
+  const icon = GUIDE_ICONS[key];
+  const inner = icon
+    ? '<img class="svc-guide-ico" src="' + esc(icon) + '" alt="" width="28" height="28" loading="lazy">'
+    : '<span class="svc-guide-ico" style="color:' + c.fg + ';background:' + c.bg + '">' + esc(g.name[0].toUpperCase()) + '</span>';
+  const gpCount = (key === 'jellyfin' && PLATFORMS.jellyfin) ? '<span class="gp-count" title="' + PLATFORMS.jellyfin.length + ' platforms">' + PLATFORMS.jellyfin.length + '</span>' : '';
+  return '<button type="button" class="svc-guide-chip" data-guide="' + esc(key) + '" aria-pressed="' + (key === sel ? 'true' : 'false') + '">' + inner + '<span>' + esc(g.name) + '</span>' + gpCount + '</button>';
+}
+function platChipHtml(entry) {
+  const p = PLAT[entry.p];
+  if (!p) return '';
+  const ico = PLAT_ICONS[p.icon]
+    ? '<span class="plat-ico" aria-hidden="true">' + PLAT_ICONS[p.icon] + '</span>'
+    : '<span class="plat-mono" aria-hidden="true">' + esc(String(p.icon).slice(0, 1)) + '</span>';
+  return '<a class="plat-chip" href="' + esc(entry.url) + '" target="_blank" rel="noopener noreferrer" aria-label="' + esc(p.name) + ' download">' + ico + esc(p.name) + '</a>';
+}
+function platformsHtml(key) {
+  const list = DL_PLATFORMS[key];
+  if (!list || !list.length) return '';
+  return '<p class="plat-cap">Get the app on</p><div class="plat-grid">' + list.map(platChipHtml).join('') + '</div>';
+}
+function guideStepHtml(s, i) {
+  return '<div class="svc-guide-step"><span class="svc-guide-num">' + (i + 1) + '</span><div class="svc-guide-body"><h4>' + esc(s.title) + '</h4><p>' + esc(s.text) + '</p>' +
+    (s.url && s.btn ? '<a class="svc-guide-btn" href="' + esc(s.url) + '" target="_blank" rel="noopener noreferrer">' + esc(s.btn) + '</a>' : '') +
+    '</div></div>';
+}
+function guideVariantsHtml(g) {
+  return '<div class="guide-variants" role="tablist" aria-label="Choose an app">' +
+    g.variants.map((v, vi) => '<button type="button" class="guide-variant' + (vi === 0 ? ' active' : '') + '" data-variant="' + vi + '" role="tab" aria-selected="' + (vi === 0 ? 'true' : 'false') + '">' + esc(v.label) + '</button>').join('') +
+    '</div>' +
+    g.variants.map((v, vi) => '<div class="guide-variant-panel" data-variant-panel="' + vi + '"' + (vi === 0 ? '' : ' hidden') + '>' +
+      v.steps.map(guideStepHtml).join('') + '</div>').join('');
+}
+function gpPillHtml(pl, on) {
+  const glyph = GP_GLYPHS[pl.glyph];
+  return '<button type="button" class="gp-pill' + (on ? ' active' : '') + '" data-gp="' + esc(pl.p) + '" role="tab" aria-selected="' + (on ? 'true' : 'false') + '">' +
+    (glyph ? '<span class="gp-glyph" aria-hidden="true">' + glyph + '</span>' : '') + esc(pl.label) + '</button>';
+}
+function guideDetailHtml(key) {
+  const g = GUIDES[key];
+  if (!g) return '';
+  let h = '<div class="svc-guide-title">' + esc(g.name) + '</div><p class="svc-guide-intro">' + esc(g.plain) + '</p>';
+  const plats = PLATFORMS[key];
+  if (plats && plats.length) {
+    if (!plats.some((x) => x.p === guidePlatSel[key])) guidePlatSel[key] = plats[0].p;
+    const sel = plats.find((x) => x.p === guidePlatSel[key]);
+    h += '<div class="gp-picker"><p class="gp-cap">Where will you use it?</p><div class="gp-row" role="tablist" aria-label="Choose your platform">' +
+      plats.map((pl) => gpPillHtml(pl, pl.p === guidePlatSel[key])).join('') + '</div></div>';
+    h += '<div class="gp-steps">';
+    if (key === 'jellyfin' && sel && sel.p === 'web' && Array.isArray(g.variants) && g.variants.length) {
+      h += guideVariantsHtml(g);
+    } else {
+      const steps = (sel && Array.isArray(sel.platformSteps) && sel.platformSteps.length) ? sel.platformSteps : (g.steps || []);
+      h += steps.map(guideStepHtml).join('');
+    }
+    h += '</div>';
+  } else if (Array.isArray(g.variants) && g.variants.length) {
+    h += guideVariantsHtml(g);
+  } else {
+    (g.steps || []).forEach((s, i) => { h += guideStepHtml(s, i); });
+  }
+  h += platformsHtml(key);
+  return h;
+}
+
+(async () => {
+  const app = $('#app'); const gate = $('#gate');
+  let me = null;
+  try { const r = await fetch('/api/me'); if (r.ok) me = await r.json(); } catch (e) {}
+  if (!me) {
+    gate.innerHTML = '<a href="https://mysweetpea.cc" style="display:block;color:inherit;text-decoration:none"><img class="gate-logo" src="https://mysweetpea.cc/logo.svg" alt="MySweetPea logo"/></a><h1>MySweetPea</h1><p>Sign in with your MySweetPea account to manage everything in one place.</p><a class="btn" href="/auth/login">Sign in with MySweetPea</a>';
+    return;
+  }
+  const initialsOf = (n, u) => (n || u || '?').trim().split(/\s+/).map(w => w[0]).slice(0, 2).join('').toUpperCase();
+  const CAM = '<span class="av-badge"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg></span>';
+  const avatarInner = () => (me.has_avatar && me.avatar_ts ? '<img src="/api/avatar?v=' + me.avatar_ts + '" alt="Profile picture"/>' : esc(initialsOf(me.name, me.username)));
+  window.setAvatars = () => {
+    ['hero-avatar', 'acct-avatar'].forEach(id => {
+      const el = document.getElementById(id);
+      if (el) el.innerHTML = avatarInner() + CAM;
+    });
+    const nav = document.getElementById('nav-avatar');
+    if (nav) nav.innerHTML = avatarInner();
+  };
+
+  const TIER_COPY = {
+    sweetpea: 'Full garden access — every service, all features.',
+    seedling: 'Seedling access — core services included. Sweet Pea unlocks media & more.'
+  };
+  const tierBadge = (t, prominent) => {
+    const tier = (t === 'sweetpea') ? 'sweetpea' : 'seedling';
+    const ico = tier === 'sweetpea'
+      ? '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M6.05 8.05c-2.73 2.73-2.73 7.15-.02 9.88 1.47-3.4 4.09-6.24 7.36-7.93-2.77 2.34-4.71 5.61-5.39 9.32 2.6 1.23 5.8.78 7.95-1.37C19.43 14.47 20 4 20 4S9.53 4.57 6.05 8.05z"/></svg>'
+      : '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2v10m0 0c0 4-3 7-7 7 0-4 3-7 7-7zm0 0c0 4 3 7 7 7 0-4-3-7-7-7z"/></svg>';
+    const label = tier === 'sweetpea' ? 'Sweet Pea' : 'Seedling';
+    return '<span class="tier-badge tier-' + tier + (prominent ? ' lg' : '') + '" title="There is more in the garden…">' + ico + label + '</span>';
+  };
+  window.tierBadge = tierBadge;
+
+  window.applyTierRing = () => {
+    const trig = document.getElementById('acct-trigger');
+    if (trig) trig.classList.toggle('tier-sweetpea', me.tier === 'sweetpea');
+  };
+
+  window.applyProfile = () => {
+    const hn = $('#hero-name'); if (hn) hn.textContent = me.name || me.username;
+    const ht = document.getElementById('hero-tier');
+    if (ht) ht.innerHTML = tierBadge(me.tier, true) + '<span class="tier-copy">' + esc(TIER_COPY[(me.tier === 'sweetpea') ? 'sweetpea' : 'seedling']) + '</span>';
+    const hs = $('#hero-sub'); if (hs) hs.innerHTML = esc(me.email) + ' &middot; @' + esc(me.username);
+    const wt = document.getElementById('who-tier'); if (wt) wt.remove(); if (wt) wt.innerHTML = tierBadge(me.tier);
+    const es = document.getElementById('tier-echo-services'); if (es) es.innerHTML = tierBadge(me.tier);
+    const eg = document.getElementById('tier-echo-guides'); if (eg) eg.innerHTML = tierBadge(me.tier);
+    const an = $('#acct-name'); if (an) an.textContent = me.name || me.username;
+    const ae = $('#acct-email'); if (ae) ae.textContent = me.email;
+    window.setAvatars(); if (window.applyAcctMenu) window.applyAcctMenu(); if (window.applyTierRing) window.applyTierRing();
+  };
+
+  // ===== account dropdown (nav) + tier-pill wrap (P15) =====
+  window.applyAcctMenu = () => {
+    const an = document.getElementById('pop-name'); if (an) an.textContent = me.name || me.username;
+    const ae = document.getElementById('pop-email'); if (ae) ae.textContent = me.email || '';
+    const nn = document.getElementById('acct-name-nav'); if (nn) nn.textContent = (me.name || me.username).split(' ')[0];
+    const at = document.getElementById('acct-tier'); if (at) at.innerHTML = tierBadge(me.tier, false);
+    const pt = document.getElementById('pop-tier'); if (pt) { pt.innerHTML = tierBadge(me.tier, false); pt.hidden = false; }
+    window.setAvatars && window.setAvatars();
+  };
+  
+  // ===== PHASE 12: GET STARTED onboarding (dismissible, localStorage msp_onboarded) =====
+  let obHtml = '';
+  try {
+    if (localStorage.getItem('msp_onboarded') !== '1') obHtml =
+      '<section class="card ob-card" id="ob-card" style="--i:0">' +
+      '<div class="ob-head"><div><h3 style="margin-bottom:2px">Get started</h3><p class="dim" style="margin:0">Three quick steps to make yourself at home.</p></div>' +
+      '<button type="button" class="ob-x" id="ob-dismiss" aria-label="Dismiss getting started">&#10005;</button></div>' +
+      '<div class="ob-steps">' +
+      '<div class="ob-step"><span class="ob-num">1</span><b>Sign in</b><p>You&rsquo;re already in (this dashboard). Your account unlocks everything.</p></div>' +
+      '<div class="ob-step"><span class="ob-num">2</span><b>Set up your vault</b><p>Vaultwarden stores your passwords. Open Guides &rarr; Vaultwarden.</p><button type="button" class="ob-btn" id="ob-vault">Open the guide</button></div>' +
+      '<div class="ob-step"><span class="ob-num">3</span><b>Questions?</b><p>Email us or use the Contact tab — we reply within 24&ndash;48h.</p><button type="button" class="ob-btn" id="ob-contact">Open Contact</button></div>' +
+      '</div>' +
+      '<p class="ob-human">Need a human? <button type="button" class="ob-link" id="ob-human">Open the Contact tab</button> &mdash; we reply within 24-48h.</p>' +
+      '</section>';
+  } catch (e) {}
+  app.innerHTML =
+    '<div class="shell">' +
+    '<nav class="top-nav" id="top-nav" aria-label="Primary navigation">' +
+    '<a class="brand" href="#" data-goto="home" title="MySweetPea" onclick="event.preventDefault();setTab(\'home\')"><img src="/icons/logo.svg" alt=""/> <span class="back-label">MySweetPea</span></a>' +
+    '<div class="nav-tabs" id="tabs" role="tablist" aria-label="Dashboard sections">' +
+    TABS.map((t) => '<button type="button" class="tab" id="tab-' + t + '" data-tab="' + t + '" role="tab" aria-controls="panel-' + t + '" aria-selected="false">' + TAB_LABELS[t] + (t === 'security' ? '<span class="tab-dot" aria-hidden="true"></span>' : '') + '</button>').join('') +
+    '</div>' +
+    '<div class="nav-id">' +
+    '<a class="site-back" href="https://mysweetpea.cc" title="Return to mysweetpea.cc"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 4h6v6"/><path d="M20 4 10 14"/><path d="M18 13v6H5V6h6"/></svg><span class="sb-txt">Return to Website</span></a>' +
+    '<button class="nav-search" id="pal-open" title="Search (Ctrl+K)" aria-label="Search (Ctrl+K)"><svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg></button>' +
+    '<div class="acct-menu" id="acct-menu">' +
+      '<button type="button" class="acct-trigger" id="acct-trigger" aria-haspopup="true" aria-expanded="false" title="Account menu">' +
+        '<span class="nav-avatar" id="nav-avatar">' + avatarInner() + '</span><span class="acct-name" id="acct-name-nav"></span>' +
+        '<svg class="acct-caret" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>' +
+      '</button>' +
+      '<div class="acct-pop" id="acct-pop" role="menu" aria-label="Account menu" hidden>' +
+        '<div class="acct-pop-head"><span class="nav-avatar sm" id="pop-avatar">' + avatarInner() + '</span><div><b id="pop-name"></b><span class="dim" id="pop-email"></span><span class="tier-pill" id="pop-tier" hidden></span></div></div>' +
+        '<a role="menuitem" href="#security" data-goto="security"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M12 2 4 5v6c0 5 3.4 9.7 8 11 4.6-1.3 8-6 8-11V5l-8-3Z"/></svg>Security settings</a>' +
+        '<a role="menuitem" href="#account" data-goto="account"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 3.6-6 8-6s8 2 8 6"/></svg>Account profile</a>' +
+        '<a role="menuitem" href="#contact" data-goto="contact"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><rect x="2" y="4" width="20" height="16" rx="3"/><path d="m2 7 10 6L22 7"/></svg>Contact us</a>' +
+        '<a role="menuitem" href="https://mysweetpea.cc" ><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M3 11l9-8 9 8"/><path d="M5 10v10h14V10"/></svg>Back to site</a>' +
+        '<hr/>' +
+        '<a role="menuitem" href="/auth/logout" class="danger"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="m16 17 5-5-5-5"/><path d="M21 12H9"/></svg>Sign out</a>' +
+      '</div>' +
+    '</div>' +
+    '<button class="nav-toggle" id="nav-toggle" aria-expanded="false" aria-controls="tabs" aria-label="Toggle navigation menu"><span class="nav-toggle-bar"></span><span class="nav-toggle-bar"></span><span class="nav-toggle-bar"></span></button>' +
+    '</div></nav>' +
+    '<main class="grid">' +
+    '<div class="tabpanel" id="panel-home" role="tabpanel" aria-labelledby="tab-home">' +
+    '<div class="hm-banner" style="--i:0"><div class="hm-banner-row">' +
+    '<div class="hm-avatar" id="hero-avatar" onclick="openAvatarModal()" title="Change profile picture">' + avatarInner() + CAM + '</div>' +
+    '<div class="hm-id"><h2 class="hm-greet"><span id="hm-greet-word"></span><span id="hero-name">' + esc(me.name || me.username) + '</span></h2>' +
+    '<div class="hm-sub" id="hero-sub">' + esc(me.email) + ' &middot; @' + esc(me.username) + '</div>' +
+    '<div class="hm-date" id="hm-date"></div>' +
+    '<div class="tier-line" id="hero-tier"></div></div>' +
+    '<div class="hm-stats" aria-label="Your week at a glance">' +
+    '<div class="hm-stat"><div class="n" id="hm-stat-hours">&mdash;</div><div class="l">watch hours this week</div></div>' +
+    '<div class="hm-stat"><div class="n" id="hm-stat-reqs">&mdash;</div><div class="l">requests on the way</div></div>' +
+    '<div class="hm-stat"><div class="n" id="hm-stat-devs">&mdash;</div><div class="l">devices signed in</div></div></div>' +
+    '<div class="hm-actions">' +
+    '<button type="button" class="hm-btn primary" onclick="setTab(\'security\')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2 4 5v6c0 5 3.4 9.7 8 11 4.6-1.3 8-6 8-11V5l-8-3Z"/></svg>Security</button>' +
+    '<button type="button" class="hm-btn" onclick="setTab(\'account\')">Your account</button></div>' +
+    '</div></div>' +
+    '<a class="hm-hero" id="hm-hero" hidden href="https://media.mysweetpea.cc" target="_blank" rel="noopener noreferrer" aria-label="Continue watching"></a>' +
+    '<section class="hm-sec" id="hm-requests" hidden><div class="hm-head"><h2 class="hm-h2"><span class="hm-accent"></span>Your requests</h2><a class="hm-more" href="https://request.mysweetpea.cc" target="_blank" rel="noopener noreferrer">Open Jellyseerr &rarr;</a></div><div class="hm-rail" id="hm-req-rail"></div></section>' +
+    '<section class="hm-sec" id="hm-services-sec"><div class="hm-head"><h2 class="hm-h2"><span class="hm-accent"></span>Your services</h2><button type="button" class="hm-more" onclick="setTab(\'services\')">All services &rarr;</button></div><div class="hm-rail" id="hm-svc-rail"></div></section>' +
+    '<section class="hm-sec" id="hm-keepwatch" hidden><div class="hm-head"><h2 class="hm-h2"><span class="hm-accent"></span>Keep watching</h2><a class="hm-more" href="https://media.mysweetpea.cc" target="_blank" rel="noopener noreferrer">History &rarr;</a></div><div class="hm-rail" id="hm-kw-rail"></div></section>' +
+    '<section class="hm-sec" id="hm-upnext" hidden><div class="hm-head"><h2 class="hm-h2"><span class="hm-accent"></span>Up next for you</h2><button type="button" class="hm-more" onclick="setTab(\'media\')">Browse more &rarr;</button></div><div class="hm-rail" id="hm-un-rail"></div></section>' +
+    '<section class="hm-sec" id="hm-acct"><div class="hm-head"><h2 class="hm-h2"><span class="hm-accent"></span>Your account</h2><button type="button" class="hm-more" onclick="setTab(\'account\')">Manage account &rarr;</button></div><div class="hm-rail" id="hm-acct-rail"></div></section>' +
+    '<section class="hm-sec" id="hm-recent" hidden><div class="hm-head"><h2 class="hm-h2"><span class="hm-accent"></span>Recently added</h2><button type="button" class="hm-more" onclick="setTab(\'media\')">Browse all &rarr;</button></div><div class="hm-rail" id="hm-rec-rail"></div></section>' + obHtml +
+    '<div id="stats" hidden></div>' +
+    '<section class="card" id="sec-status" hidden><p class="eyebrow">Service status</p><h3>Service status</h3><div class="skel"></div></section>' +
+    '</div>' +
+    '<div class="tabpanel" id="panel-stats" role="tabpanel" aria-labelledby="tab-stats">' +
+    '<section class="card st2-hero" id="st2-hero" aria-label="This week on MySweetPea">' +
+    '<p class="eyebrow st2-eyebrow">This week</p>' +
+    '<div class="st2-num" id="st2-num" hidden></div>' +
+    '<p class="st2-empty" id="st2-empty" hidden>Your week starts with your first play.</p>' +
+    '<p class="st2-sub" id="st2-sub"></p>' +
+    '<div class="st2-pills" id="st2-pills" role="group" aria-label="Stats period"><button type="button" class="st2-pill on" data-p="week">Week</button><button type="button" class="st2-pill" data-p="month">Month</button><button type="button" class="st2-pill" data-p="all">All time</button></div>' +
+    '</section>' +
+    '<section class="card" id="sec-stats"><p class="eyebrow">Statistics</p><h3>The garden in numbers<button type="button" class="mini icon-btn" id="stats-refresh" aria-label="Refresh statistics" title="Refresh statistics"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12a9 9 0 1 1-2.64-6.36"/><path d="M21 3v6h-6"/></svg></button></h3>' +
+    '<div class="stats" id="stats-kpi" aria-live="polite"></div>' +
+    '<section id="sec-stats-charts" hidden aria-label="Library charts"><p class="eyebrow">By the numbers</p><div id="stats-charts" aria-live="polite"></div><noscript><p class="dim">Charts need JavaScript — the totals above still show.</p></noscript></section>' +
+    '<div id="stats-services" aria-live="polite"></div></section>' +
+    '</div>' +
+    '<div class="tabpanel" id="panel-media" role="tabpanel" aria-labelledby="tab-media">' +
+    '<section id="sec-media-m" class="media-sec"></section>' +
+    '<section class="card" id="sec-library"><p class="eyebrow">Your library</p><h3>Library</h3><div id="lib-body"><div class="skel"></div></div><p class="dim lib-cap">Library totals — live from Jellyfin</p></section>' +
+    '</div>' +
+    '<div class="tabpanel" id="panel-services" role="tabpanel" aria-labelledby="tab-services">' +
+    '<section class="card" id="sec-services"><p class="eyebrow">Services</p><h3>Services<span class="tier-echo" id="tier-echo-services"></span></h3>' +
+    '<div class="sv-spot" id="sv-spot"></div>' +
+    '<div class="sv-row-h"><p class="eyebrow" style="margin:0">Pinned</p></div>' +
+    '<div class="mb2-orbwrap"><div class="sv-orbs" id="sv-orbs"></div></div>' +
+    '<div class="sv-row-h"><p class="eyebrow" style="margin:0">Recently opened</p></div>' +
+    '<div class="sv-chiprow" id="sv-recent"></div>' +
+    '<div class="sv-toolbar" id="sv-toolbar"></div>' +
+    '<div class="sv-grid" id="svc-grid"></div></section>' +
+    '<section class="card" id="sec-uptime"><p class="eyebrow">Uptime</p><h3>Uptime — last 24h</h3><div class="skel"></div></section>' +
+    '<div class="vine-divider" aria-hidden="true"></div>' +
+    '<section class="card" id="sec-suggest"><p class="eyebrow">Shape the garden</p><h3>Missing something?</h3>' +
+    '<p class="dim sgf-note"><b>Before you suggest:</b> we look for open source, self-hostable, privacy-focused, community-driven services — and we only add ones we don&rsquo;t already provide.</p>' +
+    '<form id="sgf" class="sgf" novalidate>' +
+    '<div><label for="sg-name">Service name<span class="req">required</span></label><input type="text" id="sg-name" maxlength="60" placeholder="e.g., Mastodon, Gitea" autocomplete="off"/><div class="hint" id="sg-name-hint">Please enter a service name (min 2 characters).</div></div>' +
+    '<div><label for="sg-url">Link<span class="opt">optional</span></label><input type="url" id="sg-url" maxlength="200" placeholder="https://github.com/..."/><div class="hint" id="sg-url-hint">Project website or GitHub repo, so we can evaluate it.</div></div>' +
+    '<div class="full"><label for="sg-category">Category<span class="req">required</span></label><select id="sg-category"><option value="">Select a category...</option><option value="media">Media &amp; Entertainment</option><option value="productivity">Productivity</option><option value="communication">Communication</option><option value="security">Security &amp; Privacy</option><option value="development">Development</option><option value="monitoring">Monitoring &amp; Analytics</option><option value="storage">File Storage &amp; Sync</option><option value="other">Other</option></select><div class="hint" id="sg-category-hint">Please select a category.</div></div>' +
+    '<div class="full"><label for="sg-reason">Why<span class="req">required</span></label><textarea id="sg-reason" maxlength="500" placeholder="Explain why this service would be valuable..."></textarea><div class="hint" id="sg-reason-hint">Please provide an explanation (min 10 characters).</div></div>' +
+    '<div><label for="sg-yourname">Your name<span class="opt">optional</span></label><input type="text" id="sg-yourname" maxlength="60" placeholder="Leave blank to submit anonymously." autocomplete="off"/></div>' +
+    '<div><label for="sg-youremail">Your email<span class="opt">optional</span></label><input type="email" id="sg-youremail" maxlength="120" placeholder="Only if you want us to follow up with you." autocomplete="off"/></div>' +
+    '<div class="full sgf-actions"><button type="submit" class="sgf-submit" id="sg-submit" disabled>Send suggestion</button></div>' +
+    '</form></section>' +
+    '</div>' +
+    '<div class="tabpanel" id="panel-guides" role="tabpanel" aria-labelledby="tab-guides">' +
+    '<section class="card" id="sec-guides"><p class="eyebrow">Setup guides</p><h3>Setup guides<span class="tier-echo" id="tier-echo-guides"></span></h3><pre class="ripple-strip" id="ripple-strip-guides" aria-hidden="true"></pre><p class="dim" style="margin:10px 0 16px">How to get started with each MySweetPea service — step by step.</p>' +
+    '<div class="svc-guide"><div class="svc-guide-nav" id="guide-nav" role="group" aria-label="Choose a service"></div><div class="svc-guide-detail" id="guide-body" aria-live="polite"></div></div></section>' +
+    '</div>' +
+    '<div class="tabpanel" id="panel-contact" role="tabpanel" aria-labelledby="tab-contact">' +
+    '<section class="card"><p class="eyebrow">Contact</p><h3>Talk to a <em class="ct2-human">human</em>.</h3>' +
+    '<p class="dim">The fastest way to reach us is by email. Whether you are stuck creating an account, curious about a service, or just want to say hello &mdash; we are happy to help.</p>' +
+    '<p class="dim ct2-sub">No tickets, no bots pretending &mdash; a real person reads every email.</p>' +
+    '<div class="contact-mail"><a class="contact-pill ct2-mail" href="mailto:support@mysweetpea.cc">support@mysweetpea.cc</a></div>' +
+    '<div class="contact-actions"><button type="button" class="ob-btn" id="ct-copy">Copy email address</button></div>' +
+    '<p class="dim contact-note"><span class="dot ok" style="margin-right:8px"></span>We usually reply within 24&ndash;48 hours.</p></section>' +
+    '<section class="card"><p class="eyebrow">Before you write</p><h3>Before you write</h3>' +
+    '<p class="dim">A few things that help us reply faster.</p>' +
+    '<ul class="ct-list">' +
+    '<li><span>Many questions are answered on the <a href="https://mysweetpea.cc/pricing.html" target="_blank" rel="noopener noreferrer">How It Works</a> page &mdash; how to get access, what the $5 donation covers, and how your sign-in works.</span></li>' +
+    '<li><span><b>Your name</b> &mdash; so we know who you are.</span></li>' +
+    '<li><span><b>What you need help with</b> &mdash; account, service, or donation.</span></li>' +
+    '<li><span><b>Your username</b> &mdash; if you already have one.</span></li>' +
+    '</ul>' +
+    '<p class="dim ct-detail">Include as much detail as you can &mdash; it helps us help you faster.</p></section>' +
+    '</div>' +
+    '<div class="tabpanel" id="panel-security" role="tabpanel" aria-labelledby="tab-security">' +
+    '<section class="card" id="sec-security"><p class="eyebrow">Security</p><h3>Security</h3><div class="skel"></div></section>' +
+    '<section class="card" id="sec-sessions"><p class="eyebrow">Sessions</p><h3>Your sessions</h3><div class="skel"></div></section>' +
+    '<section class="card" id="sec-activity" style="--i:5" aria-live="polite"><p class="eyebrow">Recent activity</p><h3>Recent activity</h3><div class="skel"></div></section>' +
+    '<section class="card" id="sec-apps"><p class="eyebrow">Connected apps</p><h3>Connected apps</h3><div class="skel"></div></section>' +
+    '</div>' +
+    '<div class="tabpanel" id="panel-account" role="tabpanel" aria-labelledby="tab-account">' +
+    '<section class="card" id="sec-account"><p class="eyebrow">Your account</p><h3>Account</h3>' +
+    '<div style="display:flex;gap:20px;align-items:center;flex-wrap:wrap">' +
+    '<div class="avatar" id="acct-avatar" onclick="openAvatarModal()" title="Change profile picture">' + avatarInner() + CAM + '</div>' +
+    '<div style="flex:1;min-width:220px">' +
+    '<div class="row"><div class="left"><b>Display name</b><span id="acct-name">' + esc(me.name || me.username) + '</span></div></div>' +
+    '<div class="row"><div class="left"><b>Email</b><span id="acct-email">' + esc(me.email) + '</span></div></div>' +
+    '<div class="row"><div class="left"><b>Username</b><span class="dim">@' + esc(me.username) + ' &middot; Usernames cannot be changed.</span></div></div>' +
+    '</div>' +
+    '<button class="mini primary" onclick="openProfileModal()">Edit profile</button>' +
+    '</div></section>' +
+    '<section class="card" id="sec-password" style="--i:1"><p class="eyebrow">Password</p><h3>Change password</h3>' +
+    '<p class="dim" style="margin-bottom:14px">At least 12 characters. This updates your sign-in password for every MySweetPea service.</p>' +
+    '<form id="pwf" class="pwf" novalidate>' +
+    '<div><label for="pw-current">Current password</label><input type="password" id="pw-current" autocomplete="current-password"/></div>' +
+    '<div><label for="pw-new">New password</label><input type="password" id="pw-new" autocomplete="new-password" minlength="12"/></div>' +
+    '<div><label for="pw-confirm">Confirm new password</label><input type="password" id="pw-confirm" autocomplete="new-password"/></div>' +
+    '</form>' +
+    '<div class="merr" id="pw-err" aria-live="polite" style="margin-top:8px"></div>' +
+    '<div class="pwf-actions"><a class="pwf-adv" href="#" onclick="ceremony(\'password\',\'Password change\');return false">Advanced options</a>' +
+    '<button type="button" class="sgf-submit" id="pw-save" disabled>Update password</button></div></section>' +
+    '<section class="card" id="sec-spirit" style="--i:2"><p class="eyebrow">Behind the garden</p><h3>The spirit of MySweetPea</h3>' +
+    '<p class="dim">The little spirit tending the garden &mdash; drawn by us, for you.</p>' +
+    '<div class="portal-embed"><figure class="portal-frame"><video id="spirit-video" autoplay muted loop playsinline preload="metadata" aria-label="The MySweetPea garden spirit, a small animated drawing"><source src="/videos/hermes-girl-orb.webm" type="video/webm"><source src="/videos/hermes-girl-orb.mp4" type="video/mp4"></video></figure></div></section>' +
+    '<pre class="ripple-strip" id="ripple-strip" aria-hidden="true"></pre>' +
+    '</div>' +
+    '</main><footer class="page-footer dash-footer"><div class="footer-grid"><div class="footer-brand"><a href="https://mysweetpea.cc" class="nav-logo"><img src="/icons/logo.svg" alt="" width="28" height="28"><span>MySweetPea</span></a><p>Private alternatives to the services you use every day. No ads, no tracking, no subscriptions &mdash; just community-funded, self-hosted software.</p><span class="footer-status" id="footerStatus"><span class="status-dot" aria-hidden="true"></span><span id="footerStatusText">&hellip;</span></span></div><div class="footer-col"><h4>Explore</h4><a href="https://mysweetpea.cc/services.html">Services</a><a href="https://mysweetpea.cc/pricing.html">How It Works</a><a href="https://status.mysweetpea.cc">Status</a><a href="https://mysweetpea.cc/changelog.html">Changelog</a></div><div class="footer-col"><h4>Community</h4><a href="https://mysweetpea.cc/form.html">Get Access</a><a href="https://mysweetpea.cc/support.html">Donate</a><a href="https://mysweetpea.cc/suggest.html">Suggest a Service</a><a href="https://mysweetpea.cc/about.html">About</a></div><div class="footer-col"><h4>Support</h4><a data-goto="contact" href="#contact">Contact Us</a><a href="mailto:support@mysweetpea.cc">support@mysweetpea.cc</a><a href="https://github.com/mysweetpea" target="_blank" rel="noopener noreferrer">GitHub</a></div></div><div class="footer-bottom"><p>&copy; 2026 MySweetPea. Privacy-first, self-hosted, community funded.</p><p class="footer-help">Need help? <a href="mailto:support@mysweetpea.cc">support@mysweetpea.cc</a></p></div></footer></div>';
+
+  // tier badges everywhere (hero, topbar, services/guides echoes) — initial render
+  window.applyProfile();
+
+  // footer status: the footer was just injected by the shell — fetch + fill
+  if (typeof window.updateFooterStatus === 'function') window.updateFooterStatus();
+
+  // ===== PHASE 13: vine dividers (site v37 SVG, verbatim) =====
+  (function injectVines() {
+    const vineSvg = '<svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">' +
+      '<path d="M32 6C22 10 16 20 18 32c2 12 12 20 14 26" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>' +
+      '<path d="M32 6c10 4 16 14 14 26-2 12-12 20-14 26" stroke="currentColor" stroke-width="2" stroke-linecap="round" opacity=".5"/>' +
+      '<path d="M20 18c-4-1-7-5-6-9 4 0 7 4 6 9Z" fill="currentColor" opacity=".6"/>' +
+      '<path d="M19 26c-4-1-7-5-6-9 4 0 7 4 6 9Z" fill="currentColor" opacity=".5"/>' +
+      '<path d="M19 34c-4-1-7-5-6-9 4 0 7 4 6 9Z" fill="currentColor" opacity=".4"/>' +
+      '<path d="M44 18c4-1 7-5 6-9-4 0-7 4-6 9Z" fill="currentColor" opacity=".6"/>' +
+      '<path d="M45 26c4-1 7-5 6-9-4 0-7 4-6 9Z" fill="currentColor" opacity=".5"/>' +
+      '<path d="M45 34c4-1 7-5 6-9-4 0-7 4-6 9Z" fill="currentColor" opacity=".4"/>' +
+      '<path d="M18 32c-5-1-8-5-7-9" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" opacity=".6"/>' +
+      '<path d="M46 32c5-1 8-5 7-9" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" opacity=".6"/>' +
+      '<circle cx="32" cy="32" r="3" fill="currentColor" opacity=".8"/>' +
+      '<circle cx="32" cy="32" r="5.5" fill="none" stroke="currentColor" stroke-width="1" opacity=".4"/>' +
+      '</svg>';
+    document.querySelectorAll('.vine-divider').forEach((el) => { el.innerHTML = vineSvg; });
+  })();
+
+  // ===== PHASE 13: asciiRipple — garden ASCII wave strip (Bayer-dithered, rAF @100ms) =====
+  (function initAsciiRipple() {
+    const strips = Array.prototype.slice.call(document.querySelectorAll('.ripple-strip'));
+    if (!strips.length) return;
+    const RAMP = ' .:-=+xX#8@';
+    const BAYER = [[0, 8, 2, 10], [12, 4, 14, 6], [3, 11, 1, 9], [15, 7, 13, 5]];
+    const ROWS = 6;
+    let reduce = false;
+    try { reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (e) {}
+    const state = strips.map((el) => ({ el: el, cols: 0, visible: true }));
+    function wave(t, cols) {
+      const cx = (cols - 1) / 2, cy = (ROWS - 1) / 2;
+      const maxD = Math.sqrt(cx * cx + cy * cy * 4.84) || 1;
+      const lines = [];
+      for (let y = 0; y < ROWS; y++) {
+        let line = '';
+        for (let x = 0; x < cols; x++) {
+          const dx = x - cx, dy = (y - cy) * 2.2;
+          const dist = Math.sqrt(dx * dx + dy * dy);
+          const env = Math.max(0, 1 - dist / maxD);
+          const v = Math.pow(0.5 + 0.5 * Math.sin(dist * 0.3 - t * 0.35), 3.5) * env;
+          const b = BAYER[y & 3][x & 3] / 16;
+          const lv = Math.min(RAMP.length - 1, Math.max(0, Math.floor(v * (RAMP.length - 1) + b)));
+          line += RAMP[lv];
+        }
+        lines.push(line);
+      }
+      return lines.join('\n');
+    }
+    function rebuild() {
+      state.forEach((s) => {
+        const w = Math.max(240, (s.el.clientWidth || 760) - 40);
+        s.cols = Math.max(40, Math.min(120, Math.floor(w / 6)));
+      });
+    }
+    function paint(t) {
+      state.forEach((s) => { if (s.cols) s.el.textContent = wave(t, s.cols); });
+    }
+    rebuild();
+    paint(0);
+    if (reduce) return; // one static frame only
+    let raf = 0, last = -1000, rt = 0;
+    const anyVisible = () => state.some((s) => s.visible);
+    function tick(now) {
+      raf = 0;
+      if (document.hidden || !anyVisible()) return;
+      if (now - last >= 100) { last = now; paint(now / 1000); }
+      raf = requestAnimationFrame(tick);
+    }
+    function start() { if (!raf && !document.hidden && anyVisible()) raf = requestAnimationFrame(tick); }
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach((en) => {
+        const s = state.find((x) => x.el === en.target);
+        if (s) { s.visible = en.isIntersecting; if (en.isIntersecting) start(); }
+      });
+    }, { threshold: 0 });
+    state.forEach((s) => io.observe(s.el));
+    document.addEventListener('visibilitychange', () => { if (!document.hidden) start(); });
+    window.addEventListener('resize', () => {
+      clearTimeout(rt);
+      rt = setTimeout(() => { rebuild(); }, 200);
+    });
+    start();
+  })();
+
+  // ===== PHASE 14: moon-girl as Account-tab resident (no easter-egg arming) =====
+  (function initSpirit() {
+    const v = document.getElementById('spirit-video');
+    if (!v) return;
+    let reduce = false;
+    try { reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (e) {}
+    if (reduce) { v.removeAttribute('autoplay'); v.pause(); return; } // paused, first frame as poster
+    const tryPlay = () => { const p = v.play(); if (p && p.catch) p.catch(function () {}); };
+    tryPlay();
+    const panel = document.getElementById('panel-account');
+    if (panel && 'MutationObserver' in window) {
+      new MutationObserver(() => { if (panel.hidden) v.pause(); else tryPlay(); })
+        .observe(panel, { attributes: true, attributeFilter: ['hidden'] });
+    }
+  })();
+
+  // ===== PHASE 14: site-style nav — condensed on scroll + mobile hamburger =====
+  (function initNavShell() {
+    const nav = document.getElementById('top-nav');
+    if (nav) {
+      let queued = false;
+      const update = () => { queued = false; nav.classList.toggle('nav-scrolled', window.scrollY > 40); };
+      update();
+      window.addEventListener('scroll', () => { if (!queued) { queued = true; requestAnimationFrame(update); } }, { passive: true });
+    }
+    const tg = document.getElementById('nav-toggle');
+    const links = document.getElementById('tabs');
+    if (!nav || !tg || !links) return;
+    const close = () => { nav.classList.remove('nav-open'); tg.setAttribute('aria-expanded', 'false'); };
+    tg.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const open = nav.classList.toggle('nav-open');
+      tg.setAttribute('aria-expanded', open ? 'true' : 'false');
+    });
+    document.addEventListener('click', (e) => {
+      if (nav.classList.contains('nav-open') && !links.contains(e.target) && !tg.contains(e.target)) close();
+    });
+    document.addEventListener('keydown', (e) => { if (e.key === 'Escape') close(); });
+    links.addEventListener('click', (e) => { if (e.target && e.target.closest && e.target.closest('.tab')) close(); });
+    window.addEventListener('resize', () => { if (window.innerWidth > 760) close(); });
+  })();
+
+  // ===== PHASE 14: STATISTICS TAB (poll once per open + manual refresh) =====
+  let statsLoaded = false, statsLoading = false;
+  const KPI_ICONS = {
+    film: '<rect x="2" y="4" width="20" height="16" rx="2"/><path d="M7 4v16M17 4v16M2 9h5M2 15h5M17 9h5M17 15h5"/>',
+    tv: '<rect x="2" y="7" width="20" height="14" rx="2"/><path d="m17 2-5 5-5-5"/>',
+    image: '<rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-4.5-4.5L6 21"/>',
+    users: '<path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/>'
+  };
+  const fmtStorage = (mb) => (mb == null ? '—' : (mb >= 1024 ? (mb / 1024).toFixed(1) + ' GB' : Math.round(mb) + ' MB'));
+  const statTile = (label, value) => '<div class="stat"><div class="n">' + (typeof value === 'number' ? Number(value).toLocaleString() : esc(String(value))) + '</div><div class="l">' + esc(label) + '</div></div>';
+  const kpiTile = (label, value, icon) => '<div class="stat"><svg class="kpi-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' + icon + '</svg><div class="n">' + (value == null ? '—' : Number(value).toLocaleString()) + '</div><div class="l">' + esc(label) + '</div></div>';
+  const statSection = (label, tiles) => {
+    const inner = tiles.filter((t) => t[1] != null).map((t) => statTile(t[0], t[1])).join('');
+    if (!inner) return '';
+    return '<p class="eyebrow" style="margin-top:20px">' + esc(label) + '</p><div class="svc-stats">' + inner + '</div>';
+  };
+  function renderStats(s) {
+    const kpi = document.getElementById('stats-kpi');
+    const svc = document.getElementById('stats-services');
+    const pvTotal = (s.photos == null && s.videos == null) ? null : ((s.photos || 0) + (s.videos || 0));
+    if (kpi) kpi.innerHTML =
+      kpiTile('Movies', s.movies, KPI_ICONS.film) +
+      kpiTile('Episodes', s.episodes, KPI_ICONS.tv) +
+      kpiTile('Photos &amp; videos', pvTotal, KPI_ICONS.image) +
+      kpiTile('Members', s.users, KPI_ICONS.users);
+    renderStatsCharts(s);
+    if (!svc) return;
+    let h = '';
+    h += statSection('Jellyfin', [['Movies', s.movies], ['Series', s.series], ['Episodes', s.episodes], ['Boxsets', s.boxsets], ['Songs', s.songs], ['Resume queue', s.jf_resume]]);
+    h += statSection('Immich', [['Photos', s.photos], ['Videos', s.videos], ['Storage', s.usage_mb == null ? null : fmtStorage(s.usage_mb)]]);
+    const seerrTiles = [['Requests', s.seerr_total], ['Pending', s.seerr_pending], ['Approved', s.seerr_approved], ['Available', s.seerr_available]];
+    if (s.seerr_media != null) seerrTiles.push(['Titles tracked', s.seerr_media]);
+    h += statSection('Jellyseerr', seerrTiles);
+    h += statSection('Accounts', [['Members', s.users], ['Active sessions', s.sessions]]);
+    svc.innerHTML = h;
+  }
+  // ===== aurora polish 4 (fix3): hand-rolled stats charts — same payload/refresh flow as renderStats =====
+  function renderStatsCharts(s) {
+    const sec = document.getElementById('sec-stats-charts');
+    const host = document.getElementById('stats-charts');
+    if (!sec || !host) return;
+    const pos = (v) => (typeof v === 'number' && isFinite(v) && v > 0 ? v : null);
+    const movies = pos(s && s.movies), episodes = pos(s && s.episodes), photos = pos(s && s.photos);
+    const series = pos(s && s.series), boxsets = pos(s && s.boxsets);
+    if (movies == null && episodes == null && photos == null && series == null && boxsets == null) { sec.hidden = true; host.innerHTML = ''; return; }
+    sec.hidden = false;
+    // 1. library composition — stacked bar (Movies / Series episodes / Photos)
+    const comp = [['Movies', movies, 'var(--v)'], ['Series episodes', episodes, 'var(--c)'], ['Photos', photos, 'var(--sage)']].filter((x) => x[1] != null);
+    const compHtml = comp.length ?
+      '<div class="sc-bar" role="img" aria-label="Library composition">' + comp.map((x) => '<i style="flex:' + x[1] + ' 1 0;background:' + x[2] + '" title="' + esc(x[0]) + ': ' + x[1].toLocaleString() + '"></i>').join('') + '</div>' +
+      '<div class="sc-legend">' + comp.map((x) => '<span><i style="background:' + x[2] + '"></i>' + esc(x[0]) + ' &middot; ' + x[1].toLocaleString() + '</span>').join('') + '</div>' : '';
+    // 2. donut — Movies vs Series vs Boxsets counts (SVG stroke-dasharray, hides null segments)
+    const don = [['Movies', movies, 'var(--v)'], ['Series', series, 'var(--gold)'], ['Boxsets', boxsets, 'var(--sage)']].filter((x) => x[1] != null);
+    let donHtml = '';
+    if (don.length) {
+      const donTotal = don.reduce((a, x) => a + x[1], 0);
+      let acc = 0;
+      const circles = don.map((x) => {
+        const pct = (x[1] / donTotal) * 100;
+        const off = 25 - acc; acc += pct;
+        return '<circle cx="21" cy="21" r="15.9155" fill="none" stroke="' + x[2] + '" stroke-width="5.5" stroke-dasharray="' + pct.toFixed(3) + ' ' + (100 - pct).toFixed(3) + '" stroke-dashoffset="' + off.toFixed(3) + '"></circle>';
+      }).join('');
+      donHtml = '<div class="sc-donut"><svg viewBox="0 0 42 42" role="img" aria-label="Movies, series and boxsets">' + circles + '</svg>' +
+        '<div class="sc-donut-c"><span class="sc-donut-n">' + donTotal.toLocaleString() + '</span><span class="sc-donut-l">titles</span></div></div>' +
+        '<div class="sc-legend sc-donut-leg">' + don.map((x) => '<span><i style="background:' + x[2] + '"></i>' + esc(x[0]) + ' &middot; ' + x[1].toLocaleString() + '</span>').join('') + '</div>';
+    }
+    // 3. "by the numbers" — rows normalized to the max value (pure CSS bars)
+    const rows = [['Movies', movies, 'var(--v)'], ['Series', series, 'var(--gold)'], ['Episodes', episodes, 'var(--c)'], ['Boxsets', boxsets, 'var(--sage)'], ['Photos', photos, 'var(--sage)']].filter((x) => x[1] != null);
+    const max = rows.reduce((a, x) => Math.max(a, x[1]), 0);
+    const numsHtml = rows.length ?
+      '<div class="sc-nums">' + rows.map((x) => '<div class="sc-num"><span class="sc-nl">' + esc(x[0]) + '</span><span class="sc-nv">' + x[1].toLocaleString() + '</span><span class="sc-nb"><i style="width:' + Math.max(3, Math.round((x[1] / max) * 100)) + '%;background:' + x[2] + '"></i></span></div>').join('') + '</div>' : '';
+    host.innerHTML = '<div class="sc-wrap">' +
+      (compHtml ? '<div class="sc-comp">' + compHtml + '</div>' : '') +
+      (donHtml || numsHtml ? '<div class="sc-charts">' + (donHtml ? '<div class="sc-donut-cell">' + donHtml + '</div>' : '') + (numsHtml ? '<div class="sc-nums-cell">' + numsHtml + '</div>' : '') + '</div>' : '') +
+      '</div>';
+  }
+  // ===== AURORA P3B2: stats wrapped hero (reads the same /api/stats payload as renderStats) =====
+  function st2Render(s) {
+    const num = document.getElementById('st2-num');
+    const sub = document.getElementById('st2-sub');
+    const empty = document.getElementById('st2-empty');
+    if (!num || !sub || !empty) return;
+    const hours = (s && typeof s.jf_watch_hours === 'number' && isFinite(s.jf_watch_hours) && s.jf_watch_hours > 0) ? s.jf_watch_hours : null;
+    if (hours == null) {
+      num.hidden = true;
+      empty.hidden = false;
+      sub.hidden = true;
+      return;
+    }
+    const h = Math.floor(hours);
+    const m = Math.round((hours - h) * 60);
+    num.innerHTML = h + '<small> hrs </small>' + m + '<small> min</small>';
+    num.hidden = false;
+    empty.hidden = true;
+    const titles = (s.jf_resume_titles != null && s.jf_resume_titles > 0) ? Number(s.jf_resume_titles).toLocaleString() : '&mdash;';
+    const devices = (s.jf_devices != null && s.jf_devices > 0) ? Number(s.jf_devices).toLocaleString() : '&mdash;';
+    const top = (typeof s.jf_top_title === 'string' && s.jf_top_title) ? '<span class="st2-top">' + esc(s.jf_top_title) + '</span>' : '&mdash;';
+    sub.innerHTML = 'across <b>' + titles + '</b> titles on <b>' + devices + '</b> devices &mdash; ' + top + ' claimed your biggest sitting';
+    sub.hidden = false;
+  }
+  // period pills: visual only (delegated — the stats shell is injected post-login)
+  document.addEventListener('click', (e) => {
+    const pills = document.getElementById('st2-pills');
+    if (!pills) return;
+    const b = e.target && e.target.closest ? e.target.closest('.st2-pill') : null;
+    if (!b || !pills.contains(b)) return;
+    pills.querySelectorAll('.st2-pill').forEach((x) => x.classList.remove('on'));
+    b.classList.add('on');
+  });
+  async function loadStats(force) {
+    if (statsLoading || (statsLoaded && !force)) return;
+    statsLoading = true;
+    const kpi = document.getElementById('stats-kpi');
+    const svc = document.getElementById('stats-services');
+    if (kpi) kpi.innerHTML = '<div class="skel" style="grid-column:1/-1"></div>';
+    if (svc) svc.innerHTML = '<div class="skel" style="margin-top:6px"></div>';
+    let d = {};
+    try { const r = await fetch('/api/stats'); if (r.ok) d = await r.json(); } catch (e) {}
+    renderStats(mergeStats(d));
+    st2Render(d);
+    statsLoaded = true;
+    statsLoading = false;
+  }
+  window.loadStats = loadStats;
+  const refreshBtn = document.getElementById('stats-refresh');
+  if (refreshBtn) refreshBtn.addEventListener('click', () => loadStats(true));
+
+  // ===== PHASE 9: TAB WIRING (click, arrows, deep-link, remember) =====
+  TABS.forEach((t) => {
+    const b = document.getElementById('tab-' + t);
+    if (b) b.addEventListener('click', () => setTab(t));
+  });
+  $('#tabs').addEventListener('keydown', (e) => {
+    if (e.key !== 'ArrowLeft' && e.key !== 'ArrowRight') return;
+    e.preventDefault();
+    const dir = e.key === 'ArrowRight' ? 1 : TABS.length - 1;
+    const next = TABS[(TABS.indexOf(currentTab) + dir) % TABS.length];
+    const b = document.getElementById('tab-' + next);
+    if (b) b.focus();
+    setTab(next);
+  });
+  let initialTab = 'home';
+  try {
+    const h = (location.hash || '').replace(/^#/, '');
+    if (TABS.indexOf(h) >= 0) initialTab = h;
+    else {
+      const saved = localStorage.getItem('msp-tab');
+      if (saved && TABS.indexOf(saved) >= 0) initialTab = saved;
+    }
+  } catch (e) {}
+  setTab(initialTab, { fromHash: true });
+  window.addEventListener('hashchange', () => {
+    const h = (location.hash || '').replace(/^#/, '');
+    if ((TABS.concat(EXTRA_TABS)).indexOf(h) >= 0 && h !== currentTab) setTab(h, { fromHash: true });
+  });
+
+  // ===== PHASE 8: AVATAR MODAL (upload / remove / preview) =====
+  window.openAvatarModal = async () => {
+    let meta = { has: false, mime: '', bytes: 0, updated: 0 };
+    try { const r = await fetch('/api/avatar/meta'); if (r.ok) meta = await r.json(); } catch (e) {}
+    let b64 = '';
+    modal('<h3>Profile picture</h3>' +
+      '<p class="sub">PNG, JPEG or WebP &middot; up to 512KB. Shown next to your name across MySweetPea.</p>' +
+      '<div style="display:flex;justify-content:center;margin-bottom:14px"><div class="avatar noact" style="width:96px;height:96px;font-size:1.9rem" id="av-prev">' + (meta.has && meta.updated ? '<img src="/api/avatar?v=' + meta.updated + '" alt=""/>' : esc(initialsOf(me.name, me.username))) + '</div></div>' +
+      '<input type="file" id="av-file" accept="image/png,image/jpeg,image/webp,image/*" style="padding:9px 0"/>' +
+      '<div class="merr" id="av-err"></div>' +
+      '<div class="mrow">' + (meta.has ? '<button class="b-cancel" id="av-remove">Remove avatar</button>' : '') + '<button class="b-go" id="av-upload" disabled>Upload</button></div>');
+    const prev = $('#av-prev'), file = $('#av-file'), up = $('#av-upload'), err = $('#av-err');
+    file.onchange = () => {
+      err.textContent = '';
+      const f = file.files && file.files[0];
+      if (!f) { b64 = ''; up.disabled = true; return; }
+      if (f.size > 512 * 1024) { err.textContent = 'Image is too large (max 512KB).'; b64 = ''; up.disabled = true; return; }
+      const rd = new FileReader();
+      rd.onload = () => {
+        const url = String(rd.result || '');
+        b64 = url.split(',')[1] || '';
+        prev.innerHTML = '<img src="' + url + '" alt=""/>';
+        up.disabled = !b64;
+      };
+      rd.onerror = () => { err.textContent = 'Could not read that file.'; b64 = ''; up.disabled = true; };
+      rd.readAsDataURL(f);
+    };
+    up.onclick = async () => {
+      if (!b64) return;
+      up.disabled = true;
+      try {
+        const r = await fetch('/api/avatar', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ data: b64 }) });
+        const d = await r.json().catch(() => ({}));
+        if (r.ok && d.ok) {
+          me.has_avatar = true; me.avatar_ts = Date.now();
+          window.setAvatars(); closeModal(); toast('Profile picture updated');
+        } else {
+          up.disabled = false;
+          err.textContent = d.error || 'Upload failed.';
+        }
+      } catch (e) { up.disabled = false; err.textContent = 'Upload failed.'; }
+    };
+    const rm = $('#av-remove');
+    if (rm) rm.onclick = async () => {
+      rm.disabled = true;
+      try {
+        const r = await fetch('/api/avatar', { method: 'DELETE' });
+        const d = await r.json().catch(() => ({}));
+        if (r.ok && d.ok) {
+          me.has_avatar = false; me.avatar_ts = 0;
+          window.setAvatars(); closeModal(); toast('Profile picture removed');
+        } else {
+          rm.disabled = false;
+          err.textContent = d.error || 'Could not remove avatar.';
+        }
+      } catch (e) { rm.disabled = false; err.textContent = 'Could not remove avatar.'; }
+    };
+  };
+
+  // ===== PHASE 8: PROFILE EDIT MODAL (name + email, password step-up) =====
+  window.openProfileModal = () => {
+    modal('<h3>Edit profile</h3>' +
+      '<p class="sub">Your name and email are used by every MySweetPea service. Changing them here updates your account everywhere (media, files, photos, sign-in). Your password is required.</p>' +
+      '<label for="pf-name" style="display:none">Display name</label><input id="pf-name" type="text" maxlength="80" placeholder="Display name" value="' + esc(me.name || '') + '"/>' +
+      '<label for="pf-email" style="display:none">Email address</label><input id="pf-email" type="email" maxlength="254" placeholder="Email address" value="' + esc(me.email || '') + '"/>' +
+      '<label for="pf-pass" style="display:none">Current password</label><input id="pf-pass" type="password" placeholder="Current password" autocomplete="current-password"/>' +
+      '<p class="sub" style="margin:-2px 0 10px">Want a new password instead? <a href="#" onclick="closeModal();ceremony(\'password\',\'Password change\');return false" style="color:var(--gold)">Change password instead</a></p>' +
+      '<div class="merr" id="pf-err"></div>' +
+      '<div class="mrow"><button class="b-cancel" onclick="closeModal()">Cancel</button><button class="b-go" id="pf-save">Save changes</button></div>');
+    const err = $('#pf-err');
+    $('#pf-save').onclick = async () => {
+      const btn = $('#pf-save');
+      const name = $('#pf-name').value.trim();
+      const email = $('#pf-email').value.trim();
+      const password = $('#pf-pass').value;
+      err.textContent = '';
+      if (!password) { err.textContent = 'Your password is required to save changes.'; return; }
+      if (name.length < 1 || name.length > 80) { err.textContent = 'Name must be 1-80 characters.'; return; }
+      if (email.length > 254 || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { err.textContent = 'Enter a valid email address.'; return; }
+      btn.disabled = true;
+      try {
+        const r = await fetch('/api/profile/update', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ name: name, email: email, password: password }) });
+        const d = await r.json().catch(() => ({}));
+        if (r.ok && d.ok) {
+          me.name = d.name || name;
+          me.email = d.email || email;
+          window.applyProfile();
+          closeModal();
+          toast('Profile updated — your account is changed everywhere');
+        } else {
+          btn.disabled = false;
+          err.textContent = d.error || 'Update failed.';
+        }
+      } catch (e) { btn.disabled = false; err.textContent = 'Update failed.'; }
+    };
+  };
+
+  // ===== PHASE 14: INLINE PASSWORD CHANGE (writes through to authentik) =====
+  (function initPasswordForm() {
+    const cur = document.getElementById('pw-current');
+    const nw = document.getElementById('pw-new');
+    const cf = document.getElementById('pw-confirm');
+    const btn = document.getElementById('pw-save');
+    const err = document.getElementById('pw-err');
+    if (!cur || !nw || !cf || !btn) return;
+    const validate = () => {
+      const okLen = nw.value.length >= 12;
+      const okMatch = cf.value.length > 0 && cf.value === nw.value;
+      btn.disabled = !(cur.value.length > 0 && okLen && okMatch);
+      return okLen && okMatch;
+    };
+    [cur, nw, cf].forEach((el) => el.addEventListener('input', validate));
+    btn.addEventListener('click', async () => {
+      err.textContent = '';
+      if (!validate()) {
+        err.textContent = nw.value.length < 12 ? 'New password must be at least 12 characters.' : 'Passwords do not match.';
+        return;
+      }
+      btn.disabled = true;
+      try {
+        const r = await fetch('/api/password/change', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ currentPassword: cur.value, newPassword: nw.value }) });
+        const d = await r.json().catch(() => ({}));
+        if (r.ok && d.ok) {
+          cur.value = ''; nw.value = ''; cf.value = '';
+          validate();
+          toast('Password updated — use it everywhere you sign in.', { ok: true });
+        } else {
+          err.textContent = d.error || 'Password change failed.';
+          btn.disabled = false;
+        }
+      } catch (e) { err.textContent = 'Password change failed.'; btn.disabled = false; }
+    });
+  })();
+
+  // ===== PHASE 5: MEDIA ROWS (rendered into every .media-sec slot: Home + Media tabs) =====
+  (async () => {
+    const JF_ITEM = 'https://media.mysweetpea.cc/web/index.html#!/item?id=';
+    const grab = (u) => fetch(u).then(r => (r.ok ? r.json() : { items: [] })).catch(() => ({ items: [] }));
+    let cont = { items: [] }, latest = { items: [] };
+  try { const r = await Promise.all([grab('/api/media/continue'), grab('/api/media/latest')]); cont = r[0] || cont; latest = r[1] || latest; } catch (e) {}
+    const posterCard = (it, o) => {
+      const pct = Math.max(0, Math.min(100, Number(it.progressPct) || 0));
+      let h = '<a class="mitem" href="' + JF_ITEM + encodeURIComponent(String(it.id ?? '')) + '" target="_blank" rel="noopener">';
+      if (o.badge && it.type) h += '<span class="mtype">' + esc(it.type) + '</span>';
+      h += '<img class="mposter" loading="lazy" alt="" src="' + esc(it.img) + '"/>';
+      h += '<div class="mtitle">' + esc(it.name || '') + '</div>';
+      if (it.seriesName) h += '<div class="msub">' + esc(it.seriesName) + '</div>';
+      if (o.progress) h += '<div class="mprog"><i style="width:' + pct + '%"></i></div>';
+      return h + '</a>';
+    };
+    let html = '';
+    if ((cont.items || []).length) html += '<section class="card"><p class="eyebrow">Your library</p><h3>Continue Watching</h3><div class="media-row">' + cont.items.map(it => posterCard(it, { progress: true })).join('') + '</div></section>';
+    if ((latest.items || []).length) html += '<section class="card"><p class="eyebrow">Your library</p><h3>Recently Added</h3><div class="media-row">' + latest.items.map(it => posterCard(it, { badge: true })).join('') + '</div></section>';
+    document.querySelectorAll('.media-sec').forEach((s) => { s.innerHTML = html; });
+  })();
+
+  // ===== SERVICES LAUNCHER =====
+  const SERVICES = [
+    { name: 'Jellyfin',    url: 'https://media.mysweetpea.cc',   blurb: 'Movies & TV', icon: '/icons/jellyfin.svg' },
+    { name: 'Jellyseerr',  url: 'https://request.mysweetpea.cc', blurb: 'Request media', icon: '/icons/seerr.svg' },
+    { name: 'Nextcloud',   url: 'https://cloud.mysweetpea.cc',   blurb: 'Files & calendar', icon: '/icons/nextcloud.svg' },
+    { name: 'Immich',      url: 'https://photos.mysweetpea.cc',  blurb: 'Photo library', icon: '/icons/immich.svg' },
+    { name: 'Vaultwarden', url: 'https://vault.mysweetpea.cc',   blurb: 'Passwords', icon: '/icons/vaultwarden.svg' },
+    { name: 'Element',     url: 'https://chat.mysweetpea.cc',    blurb: 'Matrix chat', icon: '/icons/matrix.svg' },
+    { name: 'AFFiNE',      url: 'https://notes.mysweetpea.cc',   blurb: 'Docs, wikis & whiteboards', icon: '/icons/affine.svg' },
+    { name: 'Open WebUI',  url: 'https://ai.mysweetpea.cc',      blurb: 'AI assistants', icon: '/icons/openwebui.svg' },
+    { name: 'KoalaSync',   url: 'https://sync.mysweetpea.cc',    blurb: 'Jellyfin &harr; AniList sync', icon: '/icons/koalasync.svg' },
+  ];
+  const SVC_COLORS = [
+    { fg: 'var(--primary-bright)', bg: 'var(--v-soft)' },
+    { fg: 'var(--sage)',           bg: 'rgba(163,201,182,.15)' },
+    { fg: 'var(--gold)',           bg: 'rgba(217,168,108,.15)' },
+  ];
+  const svcGrid = $('#svc-grid');
+  // ===== aurora services engine (sv*) =====
+  const SV_CATS = { 'Jellyfin': 'media', 'Jellyseerr': 'media', 'KoalaSync': 'media', 'Nextcloud': 'cloud', 'Immich': 'cloud', 'Vaultwarden': 'cloud', 'Element': 'tools', 'AFFiNE': 'tools', 'Open WebUI': 'ai' };
+  const SV_CAT_LABELS = [['all','All'],['media','Media'],['cloud','Cloud & Files'],['tools','Tools'],['ai','AI']];
+  window.svState = { filter: 'all', sort: 'default', featured: 0, upmap: {}, monmap: {} };
+  const svState = window.svState;
+  const svLS = (k, d) => { try { const v = localStorage.getItem(k); return v ? JSON.parse(v) : d; } catch (e) { return d; } };
+  const svLSset = (k, v) => { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} };
+  let svPinned = svLS('msp-pinned-svcs', ['Jellyfin', 'Vaultwarden']);
+  let svRecent = svLS('msp-recent-svcs', []);
+  const svIsUp = (name) => svState.monmap[name] !== false;
+  const svUp24 = (name) => (typeof svState.upmap[name] === 'number' ? svState.upmap[name].toFixed(1) + '%' : '');
+  const svStar = (name, pinned) => '<button type="button" class="sv-pin' + (pinned ? ' pinned' : '') + '" title="' + (pinned ? 'Unpin' : 'Pin to Pinned') + '" aria-label="' + (pinned ? 'Unpin service' : 'Pin service') + '" onclick="window.svTrackPin(\'' + esc(name) + '\', event)">★</button>';
+  window.svTrack = function (name) {
+    svRecent = [name].concat(svRecent.filter((n) => n !== name)).slice(0, 5);
+    svLSset('msp-recent-svcs', svRecent);
+    svRenderRecent();
+  };
+  window.svTogglePin = function (name, ev) { if (ev) { ev.preventDefault(); ev.stopPropagation(); }
+    if (svPinned.indexOf(name) >= 0) { svPinned = svPinned.filter((n) => n !== name); toast(name + ' unpinned'); }
+    else { svPinned = [name].concat(svPinned).slice(0, 8); toast(name + ' pinned'); }
+    svLSset('msp-pinned-svcs', svPinned);
+    svRenderOrbs(); svRenderGrid();
+  };
+  window.svTrackPin = function (name, ev) { if (ev) { ev.preventDefault(); ev.stopPropagation(); } svTogglePin(name); };
+  const svIcon = (s, cls) => s.icon ? '<img class="' + cls + '" src="' + s.icon + '" alt="" loading="lazy">' : '<span class="' + cls + '">' + esc(s.name[0].toUpperCase()) + '</span>';
+  window.svRenderOrbs = function () {
+    const host = document.getElementById('sv-orbs'); if (!host) return;
+    host.innerHTML = svPinned.map((name) => {
+      const s = SERVICES.find((x) => x.name === name); if (!s) return '';
+      return '<a class="sv-orb" href="' + s.url + '" target="_blank" rel="noopener noreferrer" title="' + esc(s.name) + '" onclick="window.svTrack(\'' + esc(s.name) + '\')">' + svIcon(s, 'orbico') +
+        '<span class="sdot' + (svIsUp(s.name) ? '' : ' down') + '"></span>' +
+        '<button type="button" class="unpin" aria-label="Unpin ' + esc(s.name) + '" onclick="window.svTogglePin(\'' + esc(s.name) + '\', event)">✕</button></a>';
+    }).join('') || '<span class="sv-chip sv-hint">Hover a service below and hit ★ to pin it here</span>';
+  };
+  window.svRenderRecent = function () {
+    const host = document.getElementById('sv-recent'); if (!host) return;
+    host.innerHTML = svRecent.map((name) => {
+      const s = SERVICES.find((x) => x.name === name); if (!s) return '';
+      return '<a class="sv-chip" href="' + s.url + '" target="_blank" rel="noopener noreferrer" onclick="window.svTrack(\'' + esc(s.name) + '\')">' + (s.icon ? '<img src="' + s.icon + '" alt="">' : '') + esc(s.name) + '</a>';
+    }).join('') || '<span class="sv-chip">Open something and it shows up here</span>';
+  };
+  window.svRenderGrid = function () {
+    const host = svcGrid; if (!host) return;
+    let list = SERVICES.filter((s) => svState.filter === 'all' || SV_CATS[s.name] === svState.filter);
+    if (svState.sort === 'az') list = list.slice().sort((a, b) => a.name.localeCompare(b.name));
+    host.innerHTML = list.map((s) => {
+      const pinned = svPinned.indexOf(s.name) >= 0;
+      return '<a class="sv-card" href="' + s.url + '" target="_blank" rel="noopener noreferrer" onclick="window.svTrack(\'' + esc(s.name) + '\')">' +
+        svStar(s.name, pinned) +
+        '<div class="top">' + svIcon(s, 'svc-ico') + '<div><div class="nm">' + esc(s.name) + '</div><div class="bl">' + esc(s.blurb) + '</div></div></div>' +
+        '<div class="meta"><span class="sdot' + (svIsUp(s.name) ? '' : ' down') + '"></span><span>' + (svIsUp(s.name) ? 'Operational' : 'Degraded') + (svUp24(s.name) ? ' · ' + svUp24(s.name) + ' uptime' : '') + '</span><span style="margin-left:auto" class="sv-cat">' + esc((SV_CAT_LABELS.find((c) => c[0] === SV_CATS[s.name]) || ['',''])[1] || '') + '</span></div></a>';
+    }).join('');
+  };
+  window.svSetFilter = function (f, ev) {
+    svState.filter = f;
+    document.querySelectorAll('.sv-fchip').forEach((b) => b.classList.toggle('on', b.dataset.f === f));
+    svRenderGrid();
+  };
+  window.svToggleSort = function () {
+    svState.sort = svState.sort === 'default' ? 'az' : 'default';
+    const b = document.getElementById('sv-sortbtn'); if (b) b.textContent = svState.sort === 'az' ? 'A–Z' : 'Default';
+    svRenderGrid();
+  };
+  // aurora polish 4 (fix2): feature ALL services (SERVICES order), not a hand-picked subset
+  let SV_FEATURED = SERVICES.map((s) => s.name);
+  window.svRenderSpot = function () {
+    const host = document.getElementById('sv-spot'); if (!host) return;
+    const s = SERVICES.find((x) => x.name === SV_FEATURED[svState.featured % SV_FEATURED.length]) || SERVICES[0];
+    host.innerHTML = '<div class="sv-spot-ico">' + svIcon(s, 'spotimg') + '</div>' +
+      '<div class="sv-spot-main"><div class="sv-cat">Featured</div><div class="sv-spot-name">' + esc(s.name) + '</div>' +
+      '<div class="sv-spot-blurb">' + esc(s.blurb) + '</div>' +
+      '<div class="sv-spot-meta"><span class="sdot' + (svIsUp(s.name) ? '' : ' down') + '" style="width:8px;height:8px;border-radius:99px;display:inline-block;background:' + (svIsUp(s.name) ? 'var(--up)' : 'var(--down)') + '"></span><span>' + (svIsUp(s.name) ? 'Operational' : 'Degraded') + (svUp24(s.name) ? ' · ' + svUp24(s.name) + ' uptime (30d)' : '') + '</span></div>' +
+      '<div class="sv-dots">' + SV_FEATURED.map((n, di) => '<button type="button" class="sv-dot' + (di === svState.featured % SV_FEATURED.length ? ' on' : '') + '" aria-label="Show ' + esc(n) + '" onclick="svState.featured=' + di + ';window.svRenderSpot();window.svSpotTimerReset()"></button>').join('') + '</div></div>' +
+      '<a class="btn" href="' + s.url + '" target="_blank" rel="noopener noreferrer" onclick="window.svTrack(\'' + esc(s.name) + '\')">Open ' + esc(s.name) + '</a>' +
+      '<button type="button" class="sv-refresh" title="Next featured" aria-label="Next featured service" onclick="svState.featured++;window.svRenderSpot();window.svSpotTimerReset()"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-2.64-6.36"/><path d="M21 3v6h-6"/></svg></button>' +
+      '<span class="sv-spot-timer" aria-hidden="true"><i></i></span>';
+  };
+  window.svRenderSpot(); window.svRenderOrbs(); window.svRenderRecent();
+  if (svcGrid) svcGrid.innerHTML = SERVICES.map((s) => '<div class="sv-card" style="opacity:.5"><div class="top">' + svIcon(s, 'svc-ico') + '<div><div class="nm">' + esc(s.name) + '</div><div class="bl">' + esc(s.blurb) + '</div></div></div></div>').join('');
+  (function svToolbar() {
+    const host = document.getElementById('sv-toolbar'); if (!host) return;
+    host.innerHTML = SV_CAT_LABELS.map((c, ci) => '<button type="button" class="sv-fchip' + (ci === 0 ? ' on' : '') + '" data-f="' + c[0] + '" onclick="window.svSetFilter(\'' + c[0] + '\')">' + c[1] + '</button>').join('') +
+      '<button type="button" class="sv-fchip sv-sort" id="sv-sortbtn" onclick="window.svToggleSort()">Default</button>';
+  })();
+  // OPT: rotate the spotlight only while the Services tab is visible (resettable; paused for reduced motion)
+  // aurora polish 4 (fix2): progress-slider timer — rAF drives the bar width via performance.now() deltas
+  let svSpotTimer = null;
+  const SV_SPOT_MS = 8000;
+  window.svSpotTimerReset = function () {
+    if (svSpotTimer) { cancelAnimationFrame(svSpotTimer); svSpotTimer = null; }
+    if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    const bar0 = document.querySelector('#sv-spot .sv-spot-timer i');
+    if (bar0) bar0.style.width = '0%';
+    let t0 = performance.now();
+    let last = t0;
+    const step = (now) => {
+      const p = document.getElementById('panel-services');
+      if (document.hidden || (p && p.hidden)) { t0 += now - last; } // frozen while hidden
+      else {
+        const el = Math.min(SV_SPOT_MS, now - t0);
+        const bar = document.querySelector('#sv-spot .sv-spot-timer i');
+        if (bar) bar.style.width = (el / SV_SPOT_MS) * 100 + '%';
+        if (el >= SV_SPOT_MS) { svState.featured++; window.svRenderSpot(); window.svSpotTimerReset(); return; }
+      }
+      last = now;
+      svSpotTimer = requestAnimationFrame(step);
+    };
+    svSpotTimer = requestAnimationFrame(step);
+  };
+  window.svSpotTimerReset();
+  // OPT: one fetch instead of two — extended carries current + up24 + beats
+  fetch('/api/status/extended').then((r) => (r.ok ? r.json() : null)).then((d) => {
+    const ms = (d && d.monitors) || [];
+    ms.forEach((m) => { svState.monmap[m.name] = !!m.current; svState.upmap[m.name] = m.up24; });
+    window.svRenderSpot(); window.svRenderOrbs(); window.svRenderGrid();
+  }).catch(() => {});
+
+  // ===== AURORA HOME (hm*) — Home tab rebuild (Home-11 "Everything", .oc-tmp/mockups/home.html) =====
+  const hmJF = 'https://media.mysweetpea.cc';
+  const hmJF_ITEM = hmJF + '/web/index.html#!/item?id=';
+  const hmBackdrop = (id, w) => hmJF + '/Items/' + encodeURIComponent(String(id == null ? '' : id)) + '/Images/Backdrop?fillWidth=' + (w || 400) + '&quality=70';
+  const hmGreetingWord = () => { const h = new Date().getHours(); return (h < 5 ? 'Good night,' : h < 12 ? 'Good morning,' : h < 18 ? 'Good afternoon,' : 'Good evening,'); };
+  function hmJourney(level) {
+    let h = '';
+    for (let i = 1; i <= 4; i++) {
+      if (i > 1) h += '<span class="hm-jl' + (i <= level ? ' on' : '') + '"></span>';
+      h += '<span class="hm-jd' + (i < level ? ' done' : (i === level ? ' now' : '')) + '"></span>';
+    }
+    return '<span class="hm-journey" aria-hidden="true">' + h + '</span>';
+  }
+  function hmStage(r) {
+    if (r && r.availability != null && r.availability >= 4) return { label: 'Ready to watch', cls: 'ready', level: 4 };
+    if (r && r.status === 2) return { label: 'Approved', cls: 'appr', level: 2 };
+    return { label: 'Requested', cls: 'req', level: 1 };
+  }
+  function hmReqCard(r, i) {
+    const st = hmStage(r);
+    const title = String((r && r.title) || 'Untitled request');
+    const initial = esc(title.trim().charAt(0).toUpperCase() || '?');
+    const when = relTime(r && r.createdAt);
+    const type = (r && r.mediaType === 'tv') ? 'Series' : 'Movie';
+    return '<div class="hm-card hm-req"><div class="hm-req-top">' +
+      '<span class="hm-req-ic hm-g' + (i % 3) + '">' + initial + '</span>' +
+      '<span class="hm-req-main"><span class="hm-req-t">' + esc(title) + '</span>' +
+      '<span class="hm-req-m">' + esc(type) + (when ? ' &middot; requested ' + esc(when) : '') + '</span></span></div>' +
+      '<span class="hm-req-foot">' + hmJourney(st.level) + '<span class="hm-chip ' + st.cls + '">' + st.label + '</span>' +
+      '<span class="hm-eta">' + (st.level >= 4 ? 'Ready now' : (st.level >= 2 ? 'ETA &sim;2&ndash;3 days' : 'Awaiting approval')) + '</span></span></div>';
+  }
+  function hmSvcOrb(s) {
+    return '<a class="hm-card hm-orb" href="' + esc(s.url) + '" target="_blank" rel="noopener noreferrer" aria-label="' + esc(s.name + ' — ' + s.blurb) + '">' +
+      '<span class="hm-orb-plate"><img src="' + esc(s.icon) + '" alt="" width="32" height="32" loading="lazy"></span>' +
+      '<span class="hm-orb-nm">' + esc(s.name) + '<span class="hm-orb-dot unknown" data-hm-dot="' + esc(s.name) + '"></span></span>' +
+      '<span class="hm-orb-bl">' + esc(s.blurb) + '</span><span class="hm-orb-open">Open &rarr;</span></a>';
+  }
+  const HM_DOT_MATCH = {
+    'Jellyfin': ['jellyfin', 'moonfin', 'media'],
+    'Jellyseerr': ['seerr', 'request'],
+    'Nextcloud': ['nextcloud', 'cloud'],
+    'Immich': ['immich', 'photos'],
+    'Vaultwarden': ['vaultwarden', 'vault'],
+    'Element': ['element', 'matrix', 'chat'],
+    'AFFiNE': ['affine', 'notes'],
+    'Open WebUI': ['webui', 'open web', 'ai'],
+    'KoalaSync': ['koala', 'sync']
+  };
+  function hmApplyDots(monitors) {
+    Object.keys(HM_DOT_MATCH).forEach((svc) => {
+      const el = document.querySelector('.hm-orb-dot[data-hm-dot="' + svc.replace(/"/g, '&quot;') + '"]');
+      if (!el) return;
+      const keys = HM_DOT_MATCH[svc];
+      const m = (monitors || []).find((mo) => { const n = String((mo && mo.name) || '').toLowerCase(); return keys.some((k) => n.indexOf(k) >= 0); });
+      el.className = 'hm-orb-dot ' + (m ? ((m.current || (m.uptime24h != null && m.uptime24h > 50)) ? 'ok' : 'down') : 'unknown');
+    });
+  }
+  function hmWideCard(it) {
+    const pct = Math.max(0, Math.min(100, Number(it && it.progressPct) || 0));
+    const sub = (it && it.seriesName) ? it.seriesName : String((it && it.type) || '');
+    return '<a class="hm-card hm-wide" href="' + hmJF_ITEM + encodeURIComponent(String((it && it.id) == null ? '' : it.id)) + '" target="_blank" rel="noopener noreferrer">' +
+      '<img class="hm-wide-art" loading="lazy" alt="" src="' + esc(hmBackdrop(it && it.id, 480)) + '" onerror="this.style.display=\'none\'">' +
+      '<span class="hm-wide-glow"></span>' +
+      '<span class="hm-glyph" aria-hidden="true"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5.5v13l11-6.5-11-6.5Z"/></svg></span>' +
+      '<span class="hm-wide-meta"><span class="hm-wide-t">' + esc((it && it.name) || '') + '</span>' +
+      (sub ? '<span class="hm-wide-e">' + esc(sub) + '</span>' : '') +
+      '<span class="hm-bar"><i style="width:' + pct + '%"></i></span></span></a>';
+  }
+  function hmUnCard(it) {
+    const sub = (it && it.seriesName) ? it.seriesName : '';
+    return '<a class="hm-card hm-un" style="aspect-ratio:16/9" href="' + hmJF_ITEM + encodeURIComponent(String((it && it.id) == null ? '' : it.id)) + '" target="_blank" rel="noopener noreferrer">' +
+      // aurora polish 4 (fix1): prefer the API's Primary image (it.img); Backdrop 404s for most /Items/Latest entries
+      '<img class="hm-wide-art" loading="lazy" alt="" src="' + esc((it && it.img) || hmBackdrop(it && it.id, 480)) + '" onerror="\'none\'">' +
       '<span class="hm-wide-glow"></span>' +
       '<span class="hm-un-type">' + esc(String((it && it.type) || '')) + '</span>' +
       '<span class="hm-wide-meta"><span class="hm-wide-t">' + esc((it && it.name) || '') + '</span>' +
