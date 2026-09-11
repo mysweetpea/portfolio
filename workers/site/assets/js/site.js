@@ -133,17 +133,6 @@
             }
         });
 
-        /* v33: iOS stale-paint nudge - when <details> toggles inside the open menu,
-           force a compositing layer update so the expanded submenu paints immediately
-           (iOS WebKit misses the invalidation inside the fixed backdrop-filtered bar;
-           without this the submenu renders stale until the user scrolls). */
-        navLinks.addEventListener('toggle', function (event) {
-            if (!event.target.matches('.nav-more')) return;
-            var el = navLinks;
-            el.style.transform = 'translateZ(0)';
-            requestAnimationFrame(function () { requestAnimationFrame(function () { el.style.transform = ''; }); });
-        }, true);
-
         /* Close on Escape and return focus to the toggle */
         document.addEventListener('keydown', function (event) {
             if (event.key === 'Escape' && navLinks.classList.contains('nav-open')) {

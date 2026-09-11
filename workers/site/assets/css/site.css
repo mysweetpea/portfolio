@@ -2015,21 +2015,17 @@ body[data-page='support'] .faq-item.open .faq-question .arrow {
 .nav-toggle[aria-expanded="true"] .nav-toggle-bar:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
 
 @media (max-width: 768px) {
-    .top-nav { flex-direction: row; flex-wrap: wrap; }
+    /* Sticky header (was fixed): the expanded menu grows in normal page flow
+       and the PAGE scrolls it — no nested scroll container, no iOS
+       composited-layer stale-paint. Content clears it via existing hero padding. */
+    .top-nav { position: sticky; top: 0; flex-direction: row; flex-wrap: wrap; }
     .nav-toggle { display: flex; }
     .nav-links {
         display: none;
         flex-direction: column; align-items: stretch;
         width: 100%; padding-top: 10px; gap: 6px;
-        /* Scrollable hamburger menu: cap to the viewport (below the fixed bar)
-           so every item is reachable on short screens; thin themed scrollbar. */
-        max-height: calc(100vh - 88px);
-        max-height: calc(100dvh - 88px);
-        overflow-y: auto;
-        -webkit-overflow-scrolling: touch;
-        scrollbar-width: thin;
-        scrollbar-color: rgba(143, 175, 181, 0.45) transparent;
-        overscroll-behavior: contain;
+        /* No max-height / no overflow here: menu expands to natural height and
+           the page itself scrolls (user directive — remove scrollable menu). */
     }
     .nav-links::-webkit-scrollbar { width: 6px; }
     .nav-links::-webkit-scrollbar-thumb { background: rgba(143, 175, 181, 0.45); border-radius: 3px; }
@@ -7659,32 +7655,4 @@ body[data-page='form'] .vc-text {
     .nav-more-menu a:hover { color: var(--primary-bright); }
 }
 
-/* ==========================================================================
-   v33: iOS STALE-PAINT FIX for the mobile hamburger 'More' expansion.
-   Symptom: tapping More renders wrong/black/overlapping; scrolling the page
-   fixes it. Root cause: .top-nav is position:fixed + backdrop-filter:blur ->
-   iOS promotes it to a composited layer; when <details> expands inside the
-   scrollable .nav-links child, WebKit fails to invalidate the layer, so the
-   new submenu pixels never paint until a scroll forces a re-composite.
-   Fix: isolate the open menu into its OWN freshly-promoted compositing layer
-   (translateZ(0) + will-change + isolation) so its content repaints
-   independently of the fixed backdrop layer.
-   ========================================================================== */
-@media (max-width: 760px) {
-    .nav-links.nav-open {
-        isolation: isolate;
-        transform: translateZ(0);
-        will-change: transform;
-        -webkit-overflow-scrolling: touch;
-    }
-    .nav-links.nav-open .nav-more-menu,
-    .nav-links.nav-open .nav-more[open] .nav-more-menu {
-        transform: translateZ(0);
-        will-change: transform;
-        contain: layout paint;
-    }
-    /* the details element itself gets a stable composite too */
-    .nav-links.nav-open .nav-more {
-        transform: translateZ(0);
-    }
-}
+/* v33 stale-paint hacks REMOVED (superseded): the sticky-nav redesign (menu grows in page flow, no nested scroll) eliminates the root cause; transforms here would interfere with sticky. */
