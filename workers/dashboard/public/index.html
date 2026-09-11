@@ -1269,7 +1269,7 @@ const DL_PLATFORMS = {
     { p: 'macos', url: 'https://jellyfin.org/downloads' },
     { p: 'linux', url: 'https://jellyfin.org/downloads' },
     { p: 'firetv', url: 'https://moonfin.io/#clients' },
-    { p: 'roku', url: 'https://moonfin.io/#clients' },
+    { p: 'roku', url: 'https://github.com/Moonfin-Client/Roku/releases/latest' },
     { p: 'androidtv', url: 'https://moonfin.io/#clients' },
     { p: 'appletv', url: 'https://moonfin.io/#clients' },
     { p: 'smarttv', url: 'https://github.com/Moonfin-Client/Smart-TV/releases/latest' },
@@ -1338,7 +1338,7 @@ const GUIDES = {
     url: 'https://sync.mysweetpea.cc',
     plain: 'Watch movies and shows together with friends in real-time — everyone sees the same scene.',
     steps: [
-      { title: 'Install the extension', text: 'KoalaSync is a browser extension. Add it to Chrome (or any Chromium browser) or Firefox. Firefox users: https://addons.mozilla.org/de/firefox/addon/koalasync/', url: 'https://chromewebstore.google.com/detail/koalasync/obbnmkmlaaddodakcbdljknjpagklifc', btn: 'Add to Chrome' },
+      { title: 'Install the extension', text: 'KoalaSync is a browser extension. Add it to Chrome (or any Chromium browser) or Firefox. Firefox users: https://addons.mozilla.org/en-US/firefox/addon/koalasync/', url: 'https://chromewebstore.google.com/detail/koalasync/obbnmkmlaaddodakcbdljknjpagklifc', btn: 'Add to Chrome' },
       { title: 'Create & share a room', text: 'Open the KoalaSync popup and click + Create New Room, then share the invite link with friends. They click it and join instantly — no accounts, no IPs to exchange.', url: '', btn: '' },
       { title: 'Select your video tab', text: 'In the popup, switch to the Sync section and select the tab playing your video. KoalaSync links everyone\'s playhead automatically. Works with Netflix, YouTube, Disney+, Prime Video, Twitch, Jellyfin and almost any site with HTML5 video.', url: '', btn: '' },
       { title: 'Press play together', text: 'Hit play. Pauses, seeks and playback changes are shared with everyone in the room. Tip: enable the audio compressor under Settings → Audio Processing to level quiet dialogue and loud explosions.', url: '', btn: '' },
@@ -1447,7 +1447,7 @@ const PLATFORMS = {
       { title: 'Sign in', text: 'Server: media.mysweetpea.cc — then sign in with your MySweetPea account.', url: '', btn: '' },
     ] },
     { p: 'roku', label: 'Roku', glyph: 'tv', platformSteps: [
-      { title: 'Add the Moonfin channel', text: 'Search for Moonfin in the Roku Channel Store and add it.', url: 'https://moonfin.io/#clients', btn: 'Get Moonfin' },
+      { title: 'Install Moonfin on Roku', text: 'Moonfin for Roku is a side-load: grab the package from the releases page and install it with the Roku developer tool — it is not in the Roku Channel Store yet.', url: 'https://github.com/Moonfin-Client/Roku/releases/latest', btn: 'Get Moonfin' },
       { title: 'Sign in', text: 'Server: media.mysweetpea.cc — then sign in with your MySweetPea account.', url: '', btn: '' },
     ] },
     { p: 'smarttv', label: 'Samsung / LG TV', glyph: 'tv', platformSteps: [
@@ -1479,6 +1479,7 @@ const PLATFORMS = {
     { p: 'android', label: 'Android', glyph: 'phone', platformSteps: [
       { title: 'Get the Nextcloud app', text: 'Install Nextcloud from the Play Store.', url: 'https://nextcloud.com/install/', btn: 'Get the app' },
       { title: 'Add your account', text: 'Server: cloud.mysweetpea.cc — turn on auto-upload for your camera roll in Settings.', url: '', btn: '' },
+      { title: 'Calendar & contacts (optional)', text: 'Android has no built-in CalDAV: install the DAVx⁵ app and tap "Sync calendars & contacts" inside the Nextcloud app to set it up.', url: 'https://f-droid.org/packages/at.bitfire.davdroid/', btn: 'Get DAVx⁵' },
     ] },
   ],
   immich: [
@@ -1547,12 +1548,16 @@ const PLATFORMS = {
   ],
   openwebui: [
     { p: 'web', label: 'Web browser', glyph: 'web' },
+    { p: 'desktop', label: 'Desktop', glyph: 'desktop', platformSteps: [
+      { title: 'Get the desktop app', text: 'Open WebUI now has an official desktop app for Windows, macOS and Linux — it wraps your ai.mysweetpea.cc account in a native window. Prefer the browser? The site also installs as a PWA from your address bar.', url: 'https://github.com/open-webui/desktop', btn: 'Get the app' },
+      { title: 'Point it at your server', text: 'Server: ai.mysweetpea.cc — sign in with Continue with OIDC and your MySweetPea account.', url: '', btn: '' },
+    ] },
   ],
   koalasync: [
     { p: 'web', label: 'Web browser', glyph: 'web' },
     { p: 'extension', label: 'Browser extension', glyph: 'plug', platformSteps: [
       { title: 'Add the extension', text: 'KoalaSync is a browser extension for Chrome (and Chromium browsers) — it lets the room see your player tab.', url: 'https://chromewebstore.google.com/detail/koalasync/obbnmkmlaaddodakcbdljknjpagklifc', btn: 'Add to Chrome' },
-      { title: 'On Firefox?', text: 'Get KoalaSync from Firefox Add-ons instead.', url: 'https://addons.mozilla.org/de/firefox/addon/koalasync/', btn: 'Add to Firefox' },
+      { title: 'On Firefox?', text: 'Get KoalaSync from Firefox Add-ons instead.', url: 'https://addons.mozilla.org/en-US/firefox/addon/koalasync/', btn: 'Add to Firefox' },
       { title: 'Sync a room', text: 'Open the KoalaSync popup, create or join a room, and select the tab playing your video — everyone watches in sync.', url: '', btn: '' },
     ] },
   ],
