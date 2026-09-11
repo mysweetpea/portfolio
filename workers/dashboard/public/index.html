@@ -1254,6 +1254,7 @@ const PLAT = {
   roku: { name: 'Roku', icon: 'R' },
   androidtv: { name: 'Android TV / Google TV', icon: 'android' },
   appletv: { name: 'Apple TV', icon: 'apple' },
+  smarttv: { name: 'Samsung / LG Smart TV', icon: 'T' },
   kodi: { name: 'Kodi', icon: 'K' },
   web: { name: 'Web browser', icon: 'globe' },
   cast: { name: 'AnyCast / Cast', icon: 'cast' },
@@ -1271,6 +1272,7 @@ const DL_PLATFORMS = {
     { p: 'roku', url: 'https://moonfin.io/#clients' },
     { p: 'androidtv', url: 'https://moonfin.io/#clients' },
     { p: 'appletv', url: 'https://moonfin.io/#clients' },
+    { p: 'smarttv', url: 'https://github.com/Moonfin-Client/Smart-TV/releases/latest' },
     { p: 'kodi', url: 'https://jellyfin.org/downloads' },
     { p: 'web', url: 'https://media.mysweetpea.cc/Moonfin/Web/' },
     { p: 'cast', url: 'https://jellyfin.org/downloads' },
@@ -1448,8 +1450,12 @@ const PLATFORMS = {
       { title: 'Add the Moonfin channel', text: 'Search for Moonfin in the Roku Channel Store and add it.', url: 'https://moonfin.io/#clients', btn: 'Get Moonfin' },
       { title: 'Sign in', text: 'Server: media.mysweetpea.cc — then sign in with your MySweetPea account.', url: '', btn: '' },
     ] },
+    { p: 'smarttv', label: 'Samsung / LG TV', glyph: 'tv', platformSteps: [
+      { title: 'Get Moonfin for your Smart TV', text: 'Moonfin runs on Samsung TVs (Tizen 2016+) and LG TVs (webOS 3.0+) — grab it from the TV app catalog or the releases page.', url: 'https://github.com/Moonfin-Client/Smart-TV/releases/latest', btn: 'Get Moonfin' },
+      { title: 'Sign in', text: 'Server: media.mysweetpea.cc — then sign in with your MySweetPea account.', url: '', btn: '' },
+    ] },
     { p: 'desktop', label: 'Desktop', glyph: 'desktop', platformSteps: [
-      { title: 'Get a desktop app', text: 'Moonfin has desktop apps for Windows, macOS and Linux; the classic Jellyfin desktop app is on the same page.', url: 'https://moonfin.io/#clients', btn: 'Get Moonfin' },
+      { title: 'Get a desktop app', text: 'Moonfin has desktop apps for Windows (x64 & ARM64), macOS and Linux (Wayland); the classic Jellyfin desktop app is on the same page.', url: 'https://moonfin.io/#clients', btn: 'Get Moonfin' },
       { title: 'Sign in', text: 'Server: media.mysweetpea.cc — then sign in with your MySweetPea account.', url: '', btn: '' },
     ] },
   ],
@@ -1527,8 +1533,16 @@ const PLATFORMS = {
   affine: [
     { p: 'web', label: 'Web browser', glyph: 'web' },
     { p: 'desktop', label: 'Desktop', glyph: 'desktop', platformSteps: [
-      { title: 'Get the AFFiNE app', text: 'Desktop apps for Windows, macOS and Linux.', url: 'https://affine.pro/download', btn: 'Download' },
+      { title: 'Get the AFFiNE app', text: 'Desktop apps for Windows, macOS and Linux. After installing, add your server: workspace panel (top left) → add server → notes.mysweetpea.cc, then sign in.', url: 'https://affine.pro/download', btn: 'Download' },
       { title: 'Sign in', text: 'Use Continue with OIDC and pick your MySweetPea account.', url: '', btn: '' },
+    ] },
+    { p: 'iphone', label: 'iPhone', glyph: 'phone', platformSteps: [
+      { title: 'Get AFFiNE for iOS', text: 'Install AFFiNE from the App Store — capture and review notes on the go.', url: 'https://apps.apple.com/app/notes-whiteboard-ai-affine/id6736937980', btn: 'Get the app' },
+      { title: 'Use the web app for our server', text: 'The mobile apps sync through AFFiNE Cloud. To use our self-hosted notes.mysweetpea.cc on your phone, open it in Safari and add it to your Home Screen — full features, your data stays home.', url: 'https://notes.mysweetpea.cc', btn: 'Open notes' },
+    ] },
+    { p: 'android', label: 'Android', glyph: 'phone', platformSteps: [
+      { title: 'Get AFFiNE for Android', text: 'Install AFFiNE from the Play Store — capture and review notes on the go.', url: 'https://play.google.com/store/apps/details?id=app.affine.pro', btn: 'Get the app' },
+      { title: 'Use the web app for our server', text: 'The mobile apps sync through AFFiNE Cloud. To use our self-hosted notes.mysweetpea.cc on your phone, open it in Chrome and choose Add to Home Screen — full features, your data stays home.', url: 'https://notes.mysweetpea.cc', btn: 'Open notes' },
     ] },
   ],
   openwebui: [
@@ -2290,7 +2304,7 @@ function guideDetailHtml(key) {
     { name: 'Element',     url: 'https://chat.mysweetpea.cc',    blurb: 'Matrix chat', icon: '/icons/matrix.svg' },
     { name: 'AFFiNE',      url: 'https://notes.mysweetpea.cc',   blurb: 'Docs, wikis & whiteboards', icon: '/icons/affine.svg' },
     { name: 'Open WebUI',  url: 'https://ai.mysweetpea.cc',      blurb: 'AI assistants', icon: '/icons/openwebui.svg' },
-    { name: 'KoalaSync',   url: 'https://sync.mysweetpea.cc',    blurb: 'Jellyfin &harr; AniList sync', icon: '/icons/koalasync.svg' },
+    { name: 'KoalaSync',   url: 'https://sync.mysweetpea.cc',    blurb: 'Watch parties, in sync', icon: '/icons/koalasync.svg' },
   ];
   const SVC_COLORS = [
     { fg: 'var(--primary-bright)', bg: 'var(--v-soft)' },
