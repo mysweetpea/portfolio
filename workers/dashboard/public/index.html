@@ -1011,6 +1011,83 @@ body { overscroll-behavior-x: none; }
   .footer-col a{display:inline-block;min-height:40px;line-height:40px}
   .footer-help a{display:inline-block;min-height:40px;line-height:40px}
 }
+
+/* ===== TIER 2/3 premium animations ===== */
+/* T2a cursor-tracked border glow on interactive glass cards (sv-card, hm-tile) */
+.sv-card, .hm-tile { position: relative; }
+.sv-card::after, .hm-tile::after {
+  content: ''; position: absolute; inset: 0; border-radius: inherit; padding: 1px;
+  background: radial-gradient(240px circle at var(--mx, 50%) var(--my, 50%), rgba(139,126,246,.75), rgba(69,214,200,.16) 45%, transparent 70%);
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor; mask-composite: exclude;
+  opacity: 0; transition: opacity .3s ease; pointer-events: none;
+}
+.sv-card::before, .hm-tile::before {
+  content: ''; position: absolute; inset: 0; border-radius: inherit; pointer-events: none;
+  background: radial-gradient(320px circle at var(--mx, 50%) var(--my, 50%), rgba(139,126,246,.08), transparent 60%);
+  opacity: 0; transition: opacity .3s ease;
+}
+.sv-card:hover::after, .sv-card:hover::before, .hm-tile:hover::after, .hm-tile:hover::before { opacity: 1; }
+@media (hover: none) { .sv-card::after, .sv-card::before, .hm-tile::after, .hm-tile::before { display: none; } }
+/* T2b skeleton shimmer = violet sweep (upgrade of existing shimmer) */
+@keyframes shimmer { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
+/* T2c toast choreography: spring-in + progress bar + drawn check */
+.toast { position: relative; overflow: hidden; animation: tSpring .34s cubic-bezier(.34,1.45,.5,1) both; }
+@keyframes tSpring { from { opacity: 0; transform: translateY(14px) scale(.96); } to { opacity: 1; transform: none; } }
+.toast.t-out { transition: opacity .24s ease, transform .24s ease; opacity: 0; transform: translateY(8px); }
+.toast::after {
+  content: ''; position: absolute; left: 14px; right: 14px; bottom: 4px; height: 2px; border-radius: 2px;
+  background: linear-gradient(90deg, var(--violet, #8B7EF6), rgba(69,214,200,.9));
+  transform-origin: left; animation: toastBar 6.5s linear forwards; pointer-events: none;
+}
+@keyframes toastBar { from { transform: scaleX(1); } to { transform: scaleX(0); } }
+.toast.ok::before {
+  content: ''; width: 15px; height: 15px; flex: none; align-self: center;
+  background: no-repeat center / contain url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2345D6C8' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M20 6 9 17l-5-5'/%3E%3C/svg%3E");
+  animation: checkPop .4s cubic-bezier(.34,1.56,.64,1) .1s both;
+}
+@keyframes checkPop { from { transform: scale(0); } to { transform: scale(1); } }
+/* T3a status radar ping on operational dots (footer + service cards) */
+@keyframes dotPing { 0% { transform: scale(.55); opacity: .8; } 75%, 100% { transform: scale(2.6); opacity: 0; } }
+.dash-footer .footer-status .status-dot::after,
+.sv-card .sdot:not(.down)::after,
+.sv-spot-meta .sdot:not(.down)::after {
+  content: ''; position: absolute; inset: -3px; border-radius: 50%;
+  border: 1.5px solid var(--up, #58d68d); animation: dotPing 2.6s cubic-bezier(.22,1,.36,1) infinite;
+}
+.dash-footer .footer-status .status-dot, .sv-card .sdot, .sv-spot-meta .sdot { position: relative; }
+/* T3b greeting shimmer sweep (one-shot on load) */
+.hm-greet.greet-run {
+  background: linear-gradient(100deg, var(--text) 40%, var(--violet, #8B7EF6) 50%, rgba(69,214,200,.9) 57%, var(--text) 66%);
+  background-size: 240% 100%; -webkit-background-clip: text; background-clip: text;
+  -webkit-text-fill-color: transparent; color: transparent;
+  animation: greetSweep 2.2s cubic-bezier(.22,1,.36,1) .2s both;
+}
+@keyframes greetSweep { from { background-position: 120% 0; } to { background-position: -60% 0; } }
+/* T3c security ring draw-in + complete pulse */
+.sec2-ring .fg { transition: stroke-dashoffset 1s cubic-bezier(.22,1,.36,1); }
+.sec2-ring.draw .fg { animation: ringGlow 1.2s ease .2s; }
+@keyframes ringGlow { 30% { filter: drop-shadow(0 0 6px rgba(139,126,246,.65)); } }
+.sec2-ring.pulse { animation: ringPulse .5s cubic-bezier(.34,1.56,.64,1); }
+@keyframes ringPulse { 40% { transform: scale(1.12); } }
+/* T2d magnetic primary buttons (desktop pointer only) */
+@media (hover: hover) and (pointer: fine) {
+  .hm-btn.primary, .ob-btn { will-change: transform; transition: transform .18s cubic-bezier(.22,1,.36,1); }
+}
+/* T2e rail hover focus: hovered card lifts, siblings dim (hm-rail + media-row) */
+@media (hover: hover) and (pointer: fine) {
+  .hm-rail:hover > *:not(:hover) { opacity: .55; transform: scale(.975); }
+  .hm-rail > * { transition: opacity .25s ease, transform .25s cubic-bezier(.22,1,.36,1); }
+  .hm-rail > *:hover { transform: translateY(-4px) scale(1.03); z-index: 2; }
+}
+/* reduced motion: kill everything new */
+@media (prefers-reduced-motion: reduce) {
+  .sv-card::after, .sv-card::before, .hm-tile::after, .hm-tile::before { display: none; }
+  .toast { animation: none; } .toast::after { display: none; } .toast.ok::before { animation: none; }
+  .dash-footer .footer-status .status-dot::after, .sv-card .sdot::after, .sv-spot-meta .sdot::after { display: none; }
+  .hm-greet.greet-run { animation: none; background: none; -webkit-text-fill-color: currentColor; color: inherit; }
+  .sec2-ring.draw .fg, .sec2-ring.pulse { animation: none; }
+}
 </style></head><body>
 <div class="aurora" aria-hidden="true"></div>
 <div class="grain-overlay" aria-hidden="true"></div>
@@ -1043,6 +1120,38 @@ function toast(msg, opts) {
 function modal(html) { $('#mbody').innerHTML = html; $('#modal').classList.add('open'); }
 function closeModal() { $('#modal').classList.remove('open'); }
 $('#modal').addEventListener('click', e => { if (e.target.id === 'modal') closeModal(); });
+
+// T2a: cursor-tracked border glow on service cards / home tiles (pointer only)
+(function cursorGlow() {
+  if (!window.matchMedia || !window.matchMedia('(hover: hover) and (pointer: fine)').matches) return;
+  let raf = false, lastEvt = null;
+  document.addEventListener('pointermove', (e) => {
+    lastEvt = e;
+    if (raf) return;
+    raf = true;
+    requestAnimationFrame(() => {
+      raf = false;
+      const card = lastEvt.target && lastEvt.target.closest ? lastEvt.target.closest('.sv-card, .hm-tile') : null;
+      if (card) {
+        const r = card.getBoundingClientRect();
+        card.style.setProperty('--mx', (lastEvt.clientX - r.left) + 'px');
+        card.style.setProperty('--my', (lastEvt.clientY - r.top) + 'px');
+      }
+      // T2d magnetic primary buttons: drift up to 2px toward the cursor while hovered
+      const btn = lastEvt.target && lastEvt.target.closest ? lastEvt.target.closest('.hm-btn.primary, .ob-btn') : null;
+      document.querySelectorAll('.hm-btn.primary, .ob-btn').forEach((b) => {
+        if (b !== btn) { b.style.transform = ''; return; }
+        const r = b.getBoundingClientRect();
+        const dx = (lastEvt.clientX - (r.left + r.width / 2)) / (r.width / 2);
+        const dy = (lastEvt.clientY - (r.top + r.height / 2)) / (r.height / 2);
+        b.style.transform = 'translate(' + (dx * 2).toFixed(1) + 'px,' + ((dy * 2) - 1).toFixed(1) + 'px)';
+      });
+    });
+  }, { passive: true });
+  document.addEventListener('pointerleave', () => {
+    document.querySelectorAll('.hm-btn.primary, .ob-btn').forEach((b) => { b.style.transform = ''; });
+  });
+})();
 
 // ===== PHASE 14: falling petals (site ground truth port — canvas, 22 petals) =====
 (function fallingPetals() {
@@ -2669,6 +2778,10 @@ function guideDetailHtml(key) {
   async function hmLoadBanner() {
     const gw = document.getElementById('hm-greet-word');
     if (gw) gw.textContent = hmGreetingWord() + ' ';
+    const greetEl = gw && gw.closest('.hm-greet');
+    if (greetEl && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      greetEl.classList.remove('greet-run'); void greetEl.offsetWidth; greetEl.classList.add('greet-run');
+    }
     const de = document.getElementById('hm-date');
     if (de) { try { de.textContent = new Date().toLocaleDateString(undefined, { weekday: 'long', month: 'long', day: 'numeric' }); } catch (e) {} }
     let stats = {}, reqs = [], devCount = null;
@@ -2937,7 +3050,7 @@ function guideDetailHtml(key) {
     '<h3 class="sec2-h">Your account&rsquo;s protective circle</h3>' +
     '<p class="sec2-sub">A few quick steps and your account is locked down tight.</p>' +
     '<div class="sec2-head">' +
-    '<svg class="ring sec2-ring" viewBox="0 0 54 54" role="img" aria-label="Protection progress: ' + pct + '%"><circle class="bg" cx="27" cy="27" r="24"/><circle class="fg" cx="27" cy="27" r="24" stroke-dasharray="' + C + '" stroke-dashoffset="' + (C * (1 - pct / 100)) + '"/><text x="27" y="31">' + pct + '%</text></svg>' +
+    '<svg class="ring sec2-ring draw" viewBox="0 0 54 54" role="img" aria-label="Protection progress: ' + pct + '%"><circle class="bg" cx="27" cy="27" r="24"/><circle class="fg" cx="27" cy="27" r="24" stroke-dasharray="' + C + '" stroke-dashoffset="' + C + '" data-target="' + (C * (1 - pct / 100)) + '"/><text x="27" y="31">' + pct + '%</text></svg>' +
     '<div class="sec2-meta"><b>' + doneCount + ' of ' + items.length + ' complete</b><span>' + (pct === 100 ? 'Everything is in place.' : 'Every step makes you safer.') + '</span></div>' +
     '</div>' +
     (pct === 100 ? '<div class="sec2-banner">&#127793; Your circle is complete &mdash; your account is fully protected.</div>' : '') +
@@ -2956,6 +3069,12 @@ function guideDetailHtml(key) {
     const secTab = document.getElementById('tab-security');
     if (secTab) secTab.classList.add('has-dot');
   }
+
+  // T3c: draw the protective-circle ring in from 0 after mount (double-rAF = transition fires)
+  requestAnimationFrame(() => requestAnimationFrame(() => {
+    const fgEl = sec.querySelector('.sec2-ring .fg');
+    if (fgEl && fgEl.dataset.target) fgEl.style.strokeDashoffset = fgEl.dataset.target;
+  }));
 
   // device management modal
   window.manageDevices = async () => {
