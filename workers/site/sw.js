@@ -2,7 +2,7 @@
    Stale-while-revalidate caching for static assets, network-first for HTML.
    Bumped to v9 — updates propagate automatically without hard-refresh. */
 
-const CACHE = 'mysweetpea-v28';
+const CACHE = 'mysweetpea-v29';
 const CORE = [
   '/',
   '/index.html',
@@ -49,7 +49,9 @@ self.addEventListener('fetch', (event) => {
   // Network-first for HTML (so nav/footer/content stay fresh), cache fallback.
   if (req.mode === 'navigate' || (req.headers.get('accept') && req.headers.get('accept').includes('text/html'))) {
     event.respondWith(
-      fetch(req).then((res) => {
+      fetch(req).then((res) => res.clone().text()).then((body) => {
+        if (!body.includes('mysweetpea')) return new Response(body, { headers: { 'content-type': 'text/html; charset=utf-8' } });
+        const res = new Response(body, { headers: { 'content-type': 'text/html; charset=utf-8' } });
         const copy = res.clone();
         caches.open(CACHE).then((c) => c.put(req, copy));
         return res;
