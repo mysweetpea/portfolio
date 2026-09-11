@@ -1,5 +1,5 @@
 <!doctype html><html><head><meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
 <title>MySweetPea Dashboard</title>
 <link rel="icon" type="image/svg+xml" href="https://mysweetpea.cc/logo-favicon.svg">
 <link rel="apple-touch-icon" href="https://mysweetpea.cc/apple-touch-icon.png">
@@ -808,6 +808,11 @@ body { overscroll-behavior-x: none; }
 .hm-rail>.hm-wide,.hm-rail>.hm-un{width:100%!important;aspect-ratio:16/9;min-width:0}
 .hm-un .hm-wide-t{font-size:.86rem}
 .hm-wide .hm-wide-t{font-size:.86rem}
+}
+
+/* ---- aurora mobile 8: iOS focus auto-zoom guard ---- */
+@media (max-width:760px){
+  input, select, textarea { font-size: 16px !important; }
 }
 </style></head><body>
 <div class="aurora" aria-hidden="true"></div>
