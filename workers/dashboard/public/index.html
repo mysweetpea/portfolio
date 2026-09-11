@@ -821,6 +821,59 @@ body { overscroll-behavior-x: none; }
   .hm-rail, .media-row, .sv-orbs { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .media-row { grid-template-columns: repeat(auto-fill, minmax(0, 130px)); }
 }
+
+/* ---- aurora brand: wordmark label (brand now goes Home) ---- */
+.back-label{font-family:'Fraunces','Inter',Georgia,serif;font-size:.95rem;font-weight:600;letter-spacing:.01em}
+@media (max-width:760px){.back-label{font-size:.95rem}}
+
+/* ---- aurora sec2: protective circle (security tab redesign) ---- */
+.sec2-h{margin-bottom:2px}
+.sec2-sub{margin:-6px 0 16px;color:var(--text-dim);font-size:.92rem}
+.sec2-head{display:flex;align-items:center;gap:14px;margin:0 0 14px}
+.sec2-ring{width:64px;height:64px}
+.sec2-ring text{font-family:'Fraunces','Inter',Georgia,serif;font-weight:600;font-size:12px}
+.sec2-meta{display:flex;flex-direction:column;gap:2px;font-size:.82rem;color:var(--text-dim)}
+.sec2-meta b{color:var(--text);font-size:.95rem;font-weight:600}
+.sec2-banner{margin:0 0 14px;padding:10px 14px;border-radius:12px;background:rgba(163,201,182,.12);border:1px solid rgba(163,201,182,.28);color:var(--sage);font-weight:600;font-size:.88rem}
+.sec2-list{display:flex;flex-direction:column;gap:8px}
+.sec2-row{display:flex;align-items:center;gap:12px;padding:12px 14px;border-radius:14px;border:1px solid var(--border);background:rgba(255,255,255,.02);transition:var(--t-fast)}
+.sec2-row.done{background:rgba(163,201,182,.07);border-color:rgba(163,201,182,.2)}
+.sec2-ico{width:34px;height:34px;border-radius:50%;display:grid;place-items:center;font-size:.95rem;font-weight:700;flex:none}
+.sec2-row.done .sec2-ico{background:rgba(163,201,182,.16);color:var(--sage)}
+.sec2-row:not(.done) .sec2-ico{background:rgba(151,146,255,.14);color:var(--primary-bright);font-family:'Fraunces','Inter',Georgia,serif}
+.sec2-main{flex:1;min-width:0;display:flex;flex-direction:column;gap:2px}
+.sec2-main b{font-size:.92rem;font-weight:600}
+.sec2-why{font-size:.8rem;color:var(--text-dim);line-height:1.45}
+.sec2-row .ob-btn{flex:none;align-self:center}
+
+/* ---- aurora mobile 10: compact services ---- */
+@media (max-width:760px){
+  #hm-svc-rail{display:grid;grid-template-columns:repeat(auto-fill,minmax(0,96px));gap:10px;overflow:visible;padding:2px 0 4px}
+  #hm-svc-rail .hm-orb{width:auto;min-width:0;min-height:44px;flex-direction:column;align-items:center;justify-content:flex-start;gap:6px;padding:10px 8px;text-align:center;position:relative;border-radius:14px}
+  #hm-svc-rail .hm-orb-plate{width:40px;height:40px;border-radius:12px}
+  #hm-svc-rail .hm-orb-plate img{width:26px;height:26px}
+  #hm-svc-rail .hm-orb-nm{font-size:11px;line-height:1.3}
+  #hm-svc-rail .hm-orb-dot{position:absolute;width:7px;height:7px;top:11px;left:calc(50% + 13px)}
+  #hm-svc-rail .hm-orb-bl{display:none}
+  #hm-svc-rail .hm-orb-open{display:none}
+}
+
+/* ---- aurora mobile 11: prettier hamburger + open menu ---- */
+.nav-toggle{width:42px;height:42px;border-radius:12px;background:rgba(151,146,255,.10);border:1px solid rgba(151,146,255,.32);gap:5px}
+.nav-toggle-bar{width:18px;height:2px}
+.top-nav.nav-open .nav-toggle-bar:nth-child(1){transform:translateY(7px) rotate(45deg)}
+.top-nav.nav-open .nav-toggle-bar:nth-child(2){opacity:0;transform:scaleX(.3)}
+.top-nav.nav-open .nav-toggle-bar:nth-child(3){transform:translateY(-7px) rotate(-45deg)}
+@media (max-width:760px){
+  .nav-tabs{border-radius:16px;box-shadow:0 18px 48px rgba(0,0,0,.5),0 4px 12px rgba(0,0,0,.3)}
+  .nav-tabs .tab{padding-left:30px}
+  .nav-tabs .tab::before{content:'';position:absolute;left:14px;top:50%;margin-top:-3px;width:6px;height:6px;border-radius:50%;background:rgba(151,146,255,.55);transition:background .2s}
+  .nav-tabs .tab.active::before{background:linear-gradient(135deg,var(--v),var(--ice))}
+}
+@media (max-width:760px) and (prefers-reduced-motion: no-preference){
+  .top-nav.nav-open .nav-tabs{animation:msp-nav-pop .28s cubic-bezier(.4,0,.2,1)}
+}
+@keyframes msp-nav-pop{from{opacity:0;transform:translateY(-8px)}to{opacity:1;transform:translateY(0)}}
 </style></head><body>
 <div class="aurora" aria-hidden="true"></div>
 <div class="grain-overlay" aria-hidden="true"></div>
@@ -838,6 +891,7 @@ body { overscroll-behavior-x: none; }
 
 
 <script>
+
 'use strict';
 const $ = (s) => document.querySelector(s);
 const esc = (x) => String(x == null ? '' : x).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -1539,7 +1593,7 @@ function guideDetailHtml(key) {
   app.innerHTML =
     '<div class="shell">' +
     '<nav class="top-nav" id="top-nav" aria-label="Primary navigation">' +
-    '<a class="brand" href="https://mysweetpea.cc" title="Back to mysweetpea.cc"><img src="/icons/logo.svg" alt=""/> <span class="back-label">&larr; Back to site</span></a>' +
+    '<a class="brand" href="#" data-goto="home" title="MySweetPea" onclick="event.preventDefault();setTab(\'home\')"><img src="/icons/logo.svg" alt=""/> <span class="back-label">MySweetPea</span></a>' +
     '<div class="nav-tabs" id="tabs" role="tablist" aria-label="Dashboard sections">' +
     TABS.map((t) => '<button type="button" class="tab" id="tab-' + t + '" data-tab="' + t + '" role="tab" aria-controls="panel-' + t + '" aria-selected="false">' + TAB_LABELS[t] + (t === 'security' ? '<span class="tab-dot" aria-hidden="true"></span>' : '') + '</button>').join('') +
     '</div>' +
@@ -2068,7 +2122,8 @@ function guideDetailHtml(key) {
   (async () => {
     const JF_ITEM = 'https://media.mysweetpea.cc/web/index.html#!/item?id=';
     const grab = (u) => fetch(u).then(r => (r.ok ? r.json() : { items: [] })).catch(() => ({ items: [] }));
-    const [cont, latest] = await Promise.all([grab('/api/media/continue'), grab('/api/media/latest')]);
+    let cont = { items: [] }, latest = { items: [] };
+  try { const r = await Promise.all([grab('/api/media/continue'), grab('/api/media/latest')]); cont = r[0] || cont; latest = r[1] || latest; } catch (e) {}
     const posterCard = (it, o) => {
       const pct = Math.max(0, Math.min(100, Number(it.progressPct) || 0));
       let h = '<a class="mitem" href="' + JF_ITEM + encodeURIComponent(String(it.id ?? '')) + '" target="_blank" rel="noopener">';
@@ -2541,22 +2596,33 @@ function guideDetailHtml(key) {
   const hasWebauthn = (devices.webauthn || []).length > 0;
   const hasStatic = (devices.static || []).length > 0;
   const items = [
-    { done: true,  label: 'Account created & active' },
-    { done: hasTotp,    label: 'Authenticator app (TOTP)', act: hasTotp ? null : ['Set up', "ceremony('mfa','TOTP setup')"] },
-    { done: hasWebauthn,label: 'Passkey / security key', act: hasWebauthn ? null : ['Add passkey', "ceremony('mfa','Passkey setup')"] },
-    { done: hasStatic,  label: 'Recovery codes saved', act: hasStatic ? ['View info', "toast('Recovery codes were shown once at setup — regenerate via passkey/TOTP settings if lost')"] : ['Generate', "ceremony('mfa','Recovery codes')"] },
+    { done: true,  label: 'Account created & active', d: 'You made it in — this one is already ticked off.' },
+    { done: hasTotp,    label: 'Authenticator app (TOTP)', d: 'Fresh codes every 30 seconds — a stolen password alone gets nobody in.', act: hasTotp ? null : ['Set up', "ceremony('mfa','TOTP setup')"] },
+    { done: hasWebauthn,label: 'Passkey / security key', d: 'Sign in with your face or fingerprint. Phishing-proof.', act: hasWebauthn ? null : ['Add passkey', "ceremony('mfa','Passkey setup')"] },
+    { done: hasStatic,  label: 'Recovery codes saved', d: 'One-time codes that get you back in if you ever lose every device.', act: hasStatic ? ['View info', "toast('Recovery codes were shown once at setup — regenerate via passkey/TOTP settings if lost')"] : ['Generate', "ceremony('mfa','Recovery codes')"] },
   ];
   const doneCount = items.filter(i => i.done).length;
   const pct = Math.round(doneCount / items.length * 100);
   const C = 2 * Math.PI * 24;
-  const sec = $('#sec-security');
-  sec.innerHTML = '<p class="eyebrow">Security</p><h3>Security</h3><div style="display:flex;gap:20px;align-items:center">' +
-    '<svg class="ring" viewBox="0 0 54 54"><circle class="bg" cx="27" cy="27" r="24"/><circle class="fg" cx="27" cy="27" r="24" stroke-dasharray="' + C + '" stroke-dashoffset="' + (C * (1 - pct / 100)) + '"/><text x="27" y="31">' + pct + '%</text></svg>' +
-    '<div class="sec-checklist" style="flex:1">' +
-    items.map(i => '<div class="check ' + (i.done ? 'done' : 'todo') + '"><span class="ico">' + (i.done ? '&#10003;' : '!') + '</span><span class="label">' + esc(i.label) + '</span>' +
-      (i.act ? '<a class="act" onclick="' + i.act[1] + '">' + i.act[0] + '</a>' : '') + '</div>').join('') +
-    '<div class="check todo" style="border:0"><span class="ico">&#9998;</span><span class="label">Change password</span><a class="act" onclick="setTab(\'account\')">Change</a></div>' +
-    '</div></div>' +
+  const sec = await (async () => { for (let n = 0; n < 40; n++) { const e = $('#sec-security'); if (e) return e; await new Promise(r => setTimeout(r, 100)); } return $('#sec-security'); })();
+  if (!sec) { console.warn('sec-security never mounted'); }
+  sec.innerHTML = '<p class="eyebrow">Security</p>' +
+    '<h3 class="sec2-h">Your account&rsquo;s protective circle</h3>' +
+    '<p class="sec2-sub">A few quick steps and your account is locked down tight.</p>' +
+    '<div class="sec2-head">' +
+    '<svg class="ring sec2-ring" viewBox="0 0 54 54" role="img" aria-label="Protection progress: ' + pct + '%"><circle class="bg" cx="27" cy="27" r="24"/><circle class="fg" cx="27" cy="27" r="24" stroke-dasharray="' + C + '" stroke-dashoffset="' + (C * (1 - pct / 100)) + '"/><text x="27" y="31">' + pct + '%</text></svg>' +
+    '<div class="sec2-meta"><b>' + doneCount + ' of ' + items.length + ' complete</b><span>' + (pct === 100 ? 'Everything is in place.' : 'Every step makes you safer.') + '</span></div>' +
+    '</div>' +
+    (pct === 100 ? '<div class="sec2-banner">&#127793; Your circle is complete &mdash; your account is fully protected.</div>' : '') +
+    '<div class="sec2-list">' +
+    items.map((i, ix) => '<div class="sec2-row' + (i.done ? ' done' : '') + '">' +
+      '<span class="sec2-ico" aria-hidden="true">' + (i.done ? '&#10003;' : (ix + 1)) + '</span>' +
+      '<span class="sec2-main"><b>' + esc(i.label) + '</b><span class="sec2-why">' + esc(i.d || '') + '</span></span>' +
+      (i.act ? '<button type="button" class="ob-btn" onclick="' + i.act[1] + '">' + esc(i.act[0]) + '</button>' : '') + '</div>').join('') +
+    '<div class="sec2-row"><span class="sec2-ico" aria-hidden="true">&#9998;</span>' +
+    '<span class="sec2-main"><b>Change password</b><span class="sec2-why">A strong, unique password is the foundation the rest of the circle stands on.</span></span>' +
+    '<button type="button" class="ob-btn" onclick="setTab(\'account\')">Change</button></div>' +
+    '</div>' +
     ((hasTotp || hasWebauthn) ? '<div style="margin-top:10px"><div class="row"><div class="left"><b>MFA devices</b><span class="dim">' + (devices.totp.length + devices.webauthn.length) + ' enrolled</span></div>' +
       '<button class="mini" onclick="manageDevices()">Manage</button></div></div>' : '');
   if (doneCount < items.length) {
