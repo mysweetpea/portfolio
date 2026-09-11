@@ -4241,31 +4241,33 @@ body[data-page='about'] .content-section .card > ul > li:nth-child(even) { anima
         align-items: center; justify-content: center; gap: 5px;
     }
     .nav-toggle:focus-visible { outline: 3px solid var(--primary-bright); outline-offset: 3px; }
+    /* Flush drawer: menu drops down ATTACHED to the header bar (no gap, square top
+       corners, same glass family) — reads as one unit, not a floating card. */
     .nav-links {
         display: none;
-        width: 100%; margin-top: 2px; padding: 12px;
-        gap: 8px; flex-direction: column; align-items: stretch;
-        background: rgba(16,26,30,0.94);
-        border: 1px solid var(--border-primary); border-radius: 16px;
-        box-shadow: 0 16px 34px rgba(0,0,0,0.28);
-        backdrop-filter: blur(18px); -webkit-backdrop-filter: blur(18px);
+        width: 100%; padding: 6px 16px 14px;
+        gap: 2px; flex-direction: column; align-items: stretch;
+        background: rgba(12,19,22,0.92);
+        border: none; border-top: 1px solid var(--border); border-radius: 0;
+        box-shadow: 0 18px 34px rgba(0,0,0,0.35);
+        backdrop-filter: blur(20px) saturate(1.4); -webkit-backdrop-filter: blur(20px) saturate(1.4);
     }
-    .nav-links.nav-open { display: flex; animation: mobileNavOpen 0.32s var(--ease-premium); }
+    .nav-links.nav-open { display: flex; animation: mobileNavOpen 0.28s var(--ease-premium); }
     @keyframes mobileNavOpen {
-        from { opacity: 0; transform: translateY(-10px) scale(0.98); }
-        to { opacity: 1; transform: translateY(0) scale(1); }
+        from { opacity: 0; transform: translateY(-8px); }
+        to { opacity: 1; transform: translateY(0); }
     }
     .nav-btn, .nav-cta {
-        width: 100%; min-height: 50px; padding: 14px 16px;
-        display: flex; align-items: center; justify-content: center;
-        font-size: 0.98rem; font-weight: 650; text-align: center;
-        border-radius: 11px; margin: 0;
+        width: 100%; min-height: 48px; padding: 12px 14px;
+        display: flex; align-items: center; justify-content: flex-start;
+        font-size: 1rem; font-weight: 650; text-align: left;
+        border-radius: 10px; margin: 0;
     }
     .nav-btn {
-        background: rgba(255,255,255,0.045);
-        border: 1px solid rgba(197,213,216,0.12);
+        background: transparent;
+        border: 1px solid transparent;
     }
-    .nav-btn:hover, .nav-btn:focus-visible { background: rgba(143,175,181,0.16); border-color: var(--border-primary); }
+    .nav-btn:hover, .nav-btn:focus-visible { background: rgba(143,175,181,0.14); border-color: transparent; outline: none; }
     .nav-btn.active, .nav-btn[aria-current="page"] { background: rgba(143,175,181,0.20); }
     .nav-btn[aria-current="page"]::after { display: none; }
     .nav-cta { margin-top: 4px; min-height: 52px; }
@@ -4287,15 +4289,29 @@ body[data-page='about'] .content-section .card > ul > li:nth-child(even) { anima
     }
     .nav-more { width: 100%; }
     .nav-more > summary {
-        min-height: 50px; padding: 14px 16px; display: flex; align-items: center; justify-content: center;
-        font-size: 0.98rem; font-weight: 650; background: rgba(255,255,255,0.045); border: 1px solid rgba(197,213,216,0.12);
+        min-height: 48px; padding: 12px 14px; display: flex; align-items: center; justify-content: space-between;
+        font-size: 1rem; font-weight: 650; background: transparent; border: 1px solid transparent; border-radius: 10px;
+        list-style: none; cursor: pointer;
     }
+    .nav-more > summary::-webkit-details-marker { display: none; }
+    .nav-more > summary::after {
+        content: ''; width: 9px; height: 9px; margin-left: auto;
+        border-right: 2px solid var(--text-dim); border-bottom: 2px solid var(--text-dim);
+        transform: rotate(45deg); transition: transform 0.2s var(--ease-premium);
+    }
+    .nav-more[open] > summary::after { transform: rotate(-135deg); }
     .nav-more-menu {
-        width: 100%; margin-top: 8px; padding: 7px; border-radius: 11px;
-        background: rgba(143,175,181,0.08); border-color: var(--border);
+        width: 100%; margin: 0 0 2px; padding: 0 0 0 24px; border-radius: 0;
+        background: transparent; border: none; border-left: 2px solid rgba(143,175,181,0.35);
     }
-    .nav-more-menu a { min-height: 44px; display: flex; align-items: center; justify-content: center; font-size: 0.92rem; }
-    [data-theme="light"] .nav-links { background: rgba(255,255,255,0.94); box-shadow: 0 16px 34px rgba(27,43,49,0.14); }
+    .nav-more-menu a { min-height: 42px; }
+    .nav-more-menu a {
+        min-height: 44px; display: flex; align-items: center; justify-content: flex-start;
+        font-size: 0.94rem; font-weight: 500; color: var(--text-dim); border-radius: 10px; padding: 0 14px;
+    }
+    .nav-more-menu a:hover { color: var(--primary-bright); background: rgba(143,175,181,0.10); }
+    [data-theme="light"] .nav-links { background: rgba(233,239,240,0.94); box-shadow: 0 18px 34px rgba(27,43,49,0.14); }
+    [data-theme="light"] .nav-more-menu { border-left-color: rgba(51,86,95,0.25); }
     [data-theme="light"] .nav-btn, [data-theme="light"] .nav-more > summary { background: rgba(255,255,255,0.72); border-color: rgba(51,86,95,0.15); }
 }
 
@@ -6280,7 +6296,9 @@ body {
    full-width centered layout of the other menu links). */
 @media (max-width: 768px) {
     .nav-more-menu a.nav-github {
-        width: 100%; justify-content: center; margin: 0 auto;
+        width: 100%; justify-content: flex-start; margin: 0;
+        background: transparent; border: 0; border-radius: 10px;
+        font-size: 0.94rem; padding: 11px 14px; gap: 8px;
     }
 }
 
@@ -7638,21 +7656,22 @@ body[data-page='form'] .vc-text {
         opacity: 1 !important; visibility: visible !important;
         display: flex !important; flex-direction: column;
         width: 100% !important; min-width: 0 !important; max-width: 100% !important;
-        padding: 4px 0 0 !important; margin: 4px 0 0 !important;
-        background: transparent !important; border: 0 !important;
+        padding: 0 0 0 24px !important; margin: 0 0 2px !important;
+        background: transparent !important;
+        border: 0 !important; border-left: 2px solid rgba(143,175,181,0.35) !important;
         box-shadow: none !important; backdrop-filter: none !important;
         z-index: auto !important;
     }
     .nav-more-menu a,
     .nav-more[open] .nav-more-menu a {
-        display: flex !important; align-items: center; justify-content: center;
-        width: 100% !important; min-height: 44px; padding: 11px 16px;
-        font-size: 0.9rem; white-space: normal; text-align: center;
+        display: flex !important; align-items: center; justify-content: flex-start;
+        width: 100% !important; min-height: 44px; padding: 11px 14px;
+        font-size: 0.94rem; white-space: normal; text-align: left;
         color: var(--text-dim); text-decoration: none;
-        background: var(--card-bg) !important; border: 1px solid var(--border) !important;
-        border-radius: var(--radius-sm); box-shadow: none !important; opacity: 1 !important; visibility: visible !important;
+        background: transparent !important; border: 0 !important;
+        border-radius: 10px; box-shadow: none !important; opacity: 1 !important; visibility: visible !important;
     }
-    .nav-more-menu a:hover { color: var(--primary-bright); }
+    .nav-more-menu a:hover { color: var(--primary-bright); background: rgba(143,175,181,0.10); }
 }
 
 /* v33 stale-paint hacks REMOVED (superseded): the sticky-nav redesign (menu grows in page flow, no nested scroll) eliminates the root cause; transforms here would interfere with sticky. */
