@@ -874,6 +874,17 @@ body { overscroll-behavior-x: none; }
   .top-nav.nav-open .nav-tabs{animation:msp-nav-pop .28s cubic-bezier(.4,0,.2,1)}
 }
 @keyframes msp-nav-pop{from{opacity:0;transform:translateY(-8px)}to{opacity:1;transform:translateY(0)}}
+/* ---- aurora mobile 11: request ETA chip ---- */
+.hm-eta{margin-left:auto;font-size:.68rem;font-weight:600;letter-spacing:.02em;color:var(--text-dim);background:var(--v-soft);border:1px solid var(--border-primary);border-radius:99px;padding:2px 8px;white-space:nowrap}
+/* ---- aurora mobile 10: hm-un cards get real 16/9 geometry (all viewports) ---- */
+.hm-un{aspect-ratio:16/9;height:auto}
+@media (max-width:760px){
+  .hm-rail>.hm-un{width:100%!important}
+  /* center compact service chips */
+  .hm-rail:has(.hm-orb), .sv-orbs { justify-content:center; }
+  .sv-orbs,.hm-rail:has(.hm-orb){grid-template-columns:repeat(auto-fill,minmax(0,96px));justify-content:center}
+  .hm-orb{justify-items:center;text-align:center}
+}
 </style></head><body>
 <div class="aurora" aria-hidden="true"></div>
 <div class="grain-overlay" aria-hidden="true"></div>
@@ -2280,7 +2291,8 @@ function guideDetailHtml(key) {
       '<span class="hm-req-ic hm-g' + (i % 3) + '">' + initial + '</span>' +
       '<span class="hm-req-main"><span class="hm-req-t">' + esc(title) + '</span>' +
       '<span class="hm-req-m">' + esc(type) + (when ? ' &middot; requested ' + esc(when) : '') + '</span></span></div>' +
-      '<span class="hm-req-foot">' + hmJourney(st.level) + '<span class="hm-chip ' + st.cls + '">' + st.label + '</span></span></div>';
+      '<span class="hm-req-foot">' + hmJourney(st.level) + '<span class="hm-chip ' + st.cls + '">' + st.label + '</span>' +
+      '<span class="hm-eta">' + (st.level >= 4 ? 'Ready now' : (st.level >= 2 ? 'ETA &sim;2&ndash;3 days' : 'Awaiting approval')) + '</span></span></div>';
   }
   function hmSvcOrb(s) {
     return '<a class="hm-card hm-orb" href="' + esc(s.url) + '" target="_blank" rel="noopener noreferrer" aria-label="' + esc(s.name + ' — ' + s.blurb) + '">' +
