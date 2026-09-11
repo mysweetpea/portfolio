@@ -2034,27 +2034,6 @@ body[data-page='support'] .faq-item.open .faq-question .arrow {
     .nav-links::-webkit-scrollbar { width: 6px; }
     .nav-links::-webkit-scrollbar-thumb { background: rgba(143, 175, 181, 0.45); border-radius: 3px; }
     .nav-links.nav-open { display: flex; }
-    /* 'More' submenu expands INLINE (vertical) inside the hamburger flow.
-       The desktop absolute-positioned dropdown clips horizontally on phones. */
-    .nav-more { width: 100%; }
-    .nav-more > summary {
-        display: flex; align-items: center; justify-content: center;
-        width: 100%; min-height: 44px; padding: 12px 16px; font-size: 0.95rem;
-        background: var(--card-bg); border: 1px solid var(--border); border-radius: var(--radius-sm);
-    }
-    .nav-more[open] > summary { color: var(--primary-bright); border-color: var(--border-primary); }
-    .nav-more-menu {
-        position: static; transform: none; opacity: 1; visibility: visible;
-        display: flex; flex-direction: column; width: 100%; min-width: 0;
-        padding: 4px 0 0; background: transparent; border: 0; box-shadow: none; backdrop-filter: none;
-    }
-    .nav-more[open] .nav-more-menu { transform: none; }
-    .nav-more-menu a {
-        display: flex; align-items: center; justify-content: center;
-        width: 100%; min-height: 44px; padding: 11px 16px; font-size: 0.9rem;
-        white-space: normal; text-align: center;
-        background: var(--card-bg); border: 1px solid var(--border); border-radius: var(--radius-sm);
-    }
     .nav-btn {
         display: block; text-align: center;
         padding: 12px 16px; font-size: 0.95rem;
@@ -7637,4 +7616,45 @@ body[data-page='form'] .vc-text {
 [data-theme="light"] body[data-page='support'] .account-help-box a:hover {
     color: var(--primary-bright);
     border-bottom-color: var(--primary-bright);
+}
+
+/* ==========================================================================
+   v32: MOBILE HAMBURGER 'MORE' SUBMENU — inline vertical expansion (FINAL)
+   Placed LAST so it wins the cascade against the desktop absolute dropdown
+   (.nav-more-menu position:absolute/opacity:0/visibility:hidden) AND the
+   earlier mid-file mobile block (display:none/[open]:grid). Zero-width
+   collapse + off-viewport clip both neutralized: explicit width, display,
+   position, transform, opacity, visibility on the exact [open] state.
+   ========================================================================== */
+@media (max-width: 760px) {
+    .nav-more { width: 100%; position: static; }
+    .nav-more > summary {
+        display: flex; align-items: center; justify-content: center;
+        width: 100%; min-height: 44px; padding: 12px 16px; font-size: 0.95rem;
+        background: var(--card-bg); border: 1px solid var(--border); border-radius: var(--radius-sm);
+    }
+    .nav-more[open] > summary { color: var(--primary-bright); border-color: var(--border-primary); }
+    .nav-more-menu,
+    .nav-more[open] .nav-more-menu {
+        position: static !important;
+        top: auto !important; left: auto !important;
+        transform: none !important;
+        opacity: 1 !important; visibility: visible !important;
+        display: flex !important; flex-direction: column;
+        width: 100% !important; min-width: 0 !important; max-width: 100% !important;
+        padding: 4px 0 0 !important; margin: 4px 0 0 !important;
+        background: transparent !important; border: 0 !important;
+        box-shadow: none !important; backdrop-filter: none !important;
+        z-index: auto !important;
+    }
+    .nav-more-menu a,
+    .nav-more[open] .nav-more-menu a {
+        display: flex !important; align-items: center; justify-content: center;
+        width: 100% !important; min-height: 44px; padding: 11px 16px;
+        font-size: 0.9rem; white-space: normal; text-align: center;
+        color: var(--text-dim); text-decoration: none;
+        background: var(--card-bg) !important; border: 1px solid var(--border) !important;
+        border-radius: var(--radius-sm); box-shadow: none !important; opacity: 1 !important; visibility: visible !important;
+    }
+    .nav-more-menu a:hover { color: var(--primary-bright); }
 }
