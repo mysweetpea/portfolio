@@ -2034,6 +2034,27 @@ body[data-page='support'] .faq-item.open .faq-question .arrow {
     .nav-links::-webkit-scrollbar { width: 6px; }
     .nav-links::-webkit-scrollbar-thumb { background: rgba(143, 175, 181, 0.45); border-radius: 3px; }
     .nav-links.nav-open { display: flex; }
+    /* 'More' submenu expands INLINE (vertical) inside the hamburger flow.
+       The desktop absolute-positioned dropdown clips horizontally on phones. */
+    .nav-more { width: 100%; }
+    .nav-more > summary {
+        display: flex; align-items: center; justify-content: center;
+        width: 100%; min-height: 44px; padding: 12px 16px; font-size: 0.95rem;
+        background: var(--card-bg); border: 1px solid var(--border); border-radius: var(--radius-sm);
+    }
+    .nav-more[open] > summary { color: var(--primary-bright); border-color: var(--border-primary); }
+    .nav-more-menu {
+        position: static; transform: none; opacity: 1; visibility: visible;
+        display: flex; flex-direction: column; width: 100%; min-width: 0;
+        padding: 4px 0 0; background: transparent; border: 0; box-shadow: none; backdrop-filter: none;
+    }
+    .nav-more[open] .nav-more-menu { transform: none; }
+    .nav-more-menu a {
+        display: flex; align-items: center; justify-content: center;
+        width: 100%; min-height: 44px; padding: 11px 16px; font-size: 0.9rem;
+        white-space: normal; text-align: center;
+        background: var(--card-bg); border: 1px solid var(--border); border-radius: var(--radius-sm);
+    }
     .nav-btn {
         display: block; text-align: center;
         padding: 12px 16px; font-size: 0.95rem;
