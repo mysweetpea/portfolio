@@ -904,10 +904,6 @@ body { overscroll-behavior-x: none; }
   .hm-req-t{font-size:.84rem}
   .hm-req-foot{flex-wrap:wrap;row-gap:6px}
 }
-/* ---- aurora polish 3 (fix3): spotlight next arrow (matches sv-refresh) ---- */
-.sv-next{position:absolute;top:14px;right:52px;width:30px;height:30px;border-radius:99px;border:1px solid var(--border);background:rgba(255,255,255,.04);color:var(--text-dim);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s}
-.sv-next:hover{color:var(--text);border-color:var(--border-primary)}
-.sv-next::before{content:'';position:absolute;inset:-7px}
 /* ---- aurora polish 3 (fix4): hint chip wraps inside its bubble ---- */
 .sv-hint{white-space:normal;line-height:1.45;padding:8px 14px;max-width:100%;display:inline-block;width:auto}
 /* ---- aurora polish 3 (fix5): sessions rows as reference cards ---- */
@@ -924,6 +920,32 @@ body { overscroll-behavior-x: none; }
   .sess-ip::before{content:' · '}
   .sess-act{margin-left:auto}
 }
+/* ---- aurora polish 4 (fix2): spotlight progress-slider timer bar ---- */
+.sv-spot-timer{position:absolute;left:0;right:0;bottom:0;height:3px;background:rgba(255,255,255,.06);overflow:hidden;border-radius:0 0 var(--radius) var(--radius);pointer-events:none}
+.sv-spot-timer i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--v),var(--c))}
+/* ---- aurora polish 4 (fix3): stats charts ---- */
+#sec-stats-charts{margin-top:24px}
+.sc-bar{display:flex;height:10px;border-radius:99px;overflow:hidden;background:rgba(255,255,255,.05);margin:8px 0 10px}
+.sc-bar i{min-width:3px}
+.sc-legend{display:flex;flex-wrap:wrap;gap:6px 16px;font-size:.75rem;color:var(--text-dim)}
+.sc-legend i{display:inline-block;width:9px;height:9px;border-radius:99px;margin-right:6px}
+.sc-charts{display:grid;grid-template-columns:auto 1fr;gap:16px 28px;align-items:center;margin-top:18px}
+.sc-donut{position:relative;width:132px;height:132px}
+.sc-donut svg{width:100%;height:100%;display:block}
+.sc-donut-c{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;pointer-events:none}
+.sc-donut-n{font-family:'Fraunces',Georgia,serif;font-size:1.3rem;color:var(--text)}
+.sc-donut-l{font-size:.62rem;letter-spacing:.12em;text-transform:uppercase;color:var(--text-faint)}
+.sc-donut-leg{margin-top:10px}
+.sc-nums{display:flex;flex-direction:column;gap:9px}
+.sc-num{display:grid;grid-template-columns:64px 52px 1fr;gap:10px;align-items:center;font-size:.8rem;color:var(--text-dim)}
+.sc-num .sc-nv{color:var(--text);text-align:right;font-variant-numeric:tabular-nums}
+.sc-num .sc-nb{display:block;height:8px;border-radius:99px;background:rgba(255,255,255,.05);overflow:hidden}
+.sc-num .sc-nb i{display:block;height:100%;border-radius:99px}
+@media (max-width:760px){.sc-charts{grid-template-columns:1fr}}
+/* ---- aurora polish 4 (fix4): sessions parsed-UA + geo third line ---- */
+.sess-geo{grid-column:1/-1;font-size:.72rem;color:var(--text-faint)}
+.sess-exp{color:var(--text-faint)}
+@media (max-width:760px){.sess-geo{flex:0 0 100%}}
 </style></head><body>
 <div class="aurora" aria-hidden="true"></div>
 <div class="grain-overlay" aria-hidden="true"></div>
@@ -1060,7 +1082,7 @@ $('#modal').addEventListener('click', e => { if (e.target.id === 'modal') closeM
 // Popup ceremony helper (authentik-hosted, branded, deep-links back)
 async function revokeAll() {
   const d = await (await fetch('/api/sessions')).json();
-  const others = ((d && d.results) || []).filter(s => !s.current_session);
+  const others = ((d && d.results) || []).filter(s => !s.current);
   if (!others.length) { toast('No other sessions to sign out'); return; }
   for (const s of others) await fetch('/api/sessions/' + s.uuid, { method: 'DELETE' });
   toast('Signed out ' + others.length + ' session' + (others.length === 1 ? '' : 's'), { action: () => location.reload(), label: 'Reload' });
@@ -1703,6 +1725,7 @@ function guideDetailHtml(key) {
     '</section>' +
     '<section class="card" id="sec-stats"><p class="eyebrow">Statistics</p><h3>The garden in numbers<button type="button" class="mini icon-btn" id="stats-refresh" aria-label="Refresh statistics" title="Refresh statistics"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12a9 9 0 1 1-2.64-6.36"/><path d="M21 3v6h-6"/></svg></button></h3>' +
     '<div class="stats" id="stats-kpi" aria-live="polite"></div>' +
+    '<section id="sec-stats-charts" hidden aria-label="Library charts"><p class="eyebrow">By the numbers</p><div id="stats-charts" aria-live="polite"></div><noscript><p class="dim">Charts need JavaScript — the totals above still show.</p></noscript></section>' +
     '<div id="stats-services" aria-live="polite"></div></section>' +
     '</div>' +
     '<div class="tabpanel" id="panel-media" role="tabpanel" aria-labelledby="tab-media">' +
@@ -1944,6 +1967,7 @@ function guideDetailHtml(key) {
       kpiTile('Episodes', s.episodes, KPI_ICONS.tv) +
       kpiTile('Photos &amp; videos', pvTotal, KPI_ICONS.image) +
       kpiTile('Members', s.users, KPI_ICONS.users);
+    renderStatsCharts(s);
     if (!svc) return;
     let h = '';
     h += statSection('Jellyfin', [['Movies', s.movies], ['Series', s.series], ['Episodes', s.episodes], ['Boxsets', s.boxsets], ['Songs', s.songs], ['Resume queue', s.jf_resume]]);
@@ -1953,6 +1977,46 @@ function guideDetailHtml(key) {
     h += statSection('Jellyseerr', seerrTiles);
     h += statSection('Accounts', [['Members', s.users], ['Active sessions', s.sessions]]);
     svc.innerHTML = h;
+  }
+  // ===== aurora polish 4 (fix3): hand-rolled stats charts — same payload/refresh flow as renderStats =====
+  function renderStatsCharts(s) {
+    const sec = document.getElementById('sec-stats-charts');
+    const host = document.getElementById('stats-charts');
+    if (!sec || !host) return;
+    const pos = (v) => (typeof v === 'number' && isFinite(v) && v > 0 ? v : null);
+    const movies = pos(s && s.movies), episodes = pos(s && s.episodes), photos = pos(s && s.photos);
+    const series = pos(s && s.series), boxsets = pos(s && s.boxsets);
+    if (movies == null && episodes == null && photos == null && series == null && boxsets == null) { sec.hidden = true; host.innerHTML = ''; return; }
+    sec.hidden = false;
+    // 1. library composition — stacked bar (Movies / Series episodes / Photos)
+    const comp = [['Movies', movies, 'var(--v)'], ['Series episodes', episodes, 'var(--c)'], ['Photos', photos, 'var(--sage)']].filter((x) => x[1] != null);
+    const compHtml = comp.length ?
+      '<div class="sc-bar" role="img" aria-label="Library composition">' + comp.map((x) => '<i style="flex:' + x[1] + ' 1 0;background:' + x[2] + '" title="' + esc(x[0]) + ': ' + x[1].toLocaleString() + '"></i>').join('') + '</div>' +
+      '<div class="sc-legend">' + comp.map((x) => '<span><i style="background:' + x[2] + '"></i>' + esc(x[0]) + ' &middot; ' + x[1].toLocaleString() + '</span>').join('') + '</div>' : '';
+    // 2. donut — Movies vs Series vs Boxsets counts (SVG stroke-dasharray, hides null segments)
+    const don = [['Movies', movies, 'var(--v)'], ['Series', series, 'var(--gold)'], ['Boxsets', boxsets, 'var(--sage)']].filter((x) => x[1] != null);
+    let donHtml = '';
+    if (don.length) {
+      const donTotal = don.reduce((a, x) => a + x[1], 0);
+      let acc = 0;
+      const circles = don.map((x) => {
+        const pct = (x[1] / donTotal) * 100;
+        const off = 25 - acc; acc += pct;
+        return '<circle cx="21" cy="21" r="15.9155" fill="none" stroke="' + x[2] + '" stroke-width="5.5" stroke-dasharray="' + pct.toFixed(3) + ' ' + (100 - pct).toFixed(3) + '" stroke-dashoffset="' + off.toFixed(3) + '"></circle>';
+      }).join('');
+      donHtml = '<div class="sc-donut"><svg viewBox="0 0 42 42" role="img" aria-label="Movies, series and boxsets">' + circles + '</svg>' +
+        '<div class="sc-donut-c"><span class="sc-donut-n">' + donTotal.toLocaleString() + '</span><span class="sc-donut-l">titles</span></div></div>' +
+        '<div class="sc-legend sc-donut-leg">' + don.map((x) => '<span><i style="background:' + x[2] + '"></i>' + esc(x[0]) + ' &middot; ' + x[1].toLocaleString() + '</span>').join('') + '</div>';
+    }
+    // 3. "by the numbers" — rows normalized to the max value (pure CSS bars)
+    const rows = [['Movies', movies, 'var(--v)'], ['Series', series, 'var(--gold)'], ['Episodes', episodes, 'var(--c)'], ['Boxsets', boxsets, 'var(--sage)'], ['Photos', photos, 'var(--sage)']].filter((x) => x[1] != null);
+    const max = rows.reduce((a, x) => Math.max(a, x[1]), 0);
+    const numsHtml = rows.length ?
+      '<div class="sc-nums">' + rows.map((x) => '<div class="sc-num"><span class="sc-nl">' + esc(x[0]) + '</span><span class="sc-nv">' + x[1].toLocaleString() + '</span><span class="sc-nb"><i style="width:' + Math.max(3, Math.round((x[1] / max) * 100)) + '%;background:' + x[2] + '"></i></span></div>').join('') + '</div>' : '';
+    host.innerHTML = '<div class="sc-wrap">' +
+      (compHtml ? '<div class="sc-comp">' + compHtml + '</div>' : '') +
+      (donHtml || numsHtml ? '<div class="sc-charts">' + (donHtml ? '<div class="sc-donut-cell">' + donHtml + '</div>' : '') + (numsHtml ? '<div class="sc-nums-cell">' + numsHtml + '</div>' : '') + '</div>' : '') +
+      '</div>';
   }
   // ===== AURORA P3B2: stats wrapped hero (reads the same /api/stats payload as renderStats) =====
   function st2Render(s) {
@@ -2271,7 +2335,8 @@ function guideDetailHtml(key) {
     const b = document.getElementById('sv-sortbtn'); if (b) b.textContent = svState.sort === 'az' ? 'A–Z' : 'Default';
     svRenderGrid();
   };
-  const SV_FEATURED = ['Jellyfin', 'Immich', 'Open WebUI'];
+  // aurora polish 4 (fix2): feature ALL services (SERVICES order), not a hand-picked subset
+  let SV_FEATURED = SERVICES.map((s) => s.name);
   window.svRenderSpot = function () {
     const host = document.getElementById('sv-spot'); if (!host) return;
     const s = SERVICES.find((x) => x.name === SV_FEATURED[svState.featured % SV_FEATURED.length]) || SERVICES[0];
@@ -2279,10 +2344,10 @@ function guideDetailHtml(key) {
       '<div class="sv-spot-main"><div class="sv-cat">Featured</div><div class="sv-spot-name">' + esc(s.name) + '</div>' +
       '<div class="sv-spot-blurb">' + esc(s.blurb) + '</div>' +
       '<div class="sv-spot-meta"><span class="sdot' + (svIsUp(s.name) ? '' : ' down') + '" style="width:8px;height:8px;border-radius:99px;display:inline-block;background:' + (svIsUp(s.name) ? 'var(--up)' : 'var(--down)') + '"></span><span>' + (svIsUp(s.name) ? 'Operational' : 'Degraded') + (svUp24(s.name) ? ' · ' + svUp24(s.name) + ' uptime (30d)' : '') + '</span></div>' +
-      '<div class="sv-dots">' + SV_FEATURED.map((n, di) => '<button type="button" class="sv-dot' + (di === svState.featured % SV_FEATURED.length ? ' on' : '') + '" aria-label="Show ' + esc(n) + '" onclick="svState.featured=' + di + ';window.svRenderSpot()"></button>').join('') + '</div></div>' +
+      '<div class="sv-dots">' + SV_FEATURED.map((n, di) => '<button type="button" class="sv-dot' + (di === svState.featured % SV_FEATURED.length ? ' on' : '') + '" aria-label="Show ' + esc(n) + '" onclick="svState.featured=' + di + ';window.svRenderSpot();window.svSpotTimerReset()"></button>').join('') + '</div></div>' +
       '<a class="btn" href="' + s.url + '" target="_blank" rel="noopener noreferrer" onclick="window.svTrack(\'' + esc(s.name) + '\')">Open ' + esc(s.name) + '</a>' +
       '<button type="button" class="sv-refresh" title="Next featured" aria-label="Next featured service" onclick="svState.featured++;window.svRenderSpot();window.svSpotTimerReset()"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-2.64-6.36"/><path d="M21 3v6h-6"/></svg></button>' +
-      '<button type="button" class="sv-next" title="Next featured" aria-label="Next featured service" onclick="svState.featured++;window.svRenderSpot();window.svSpotTimerReset()"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m13 6 6 6-6 6"/></svg></button>';
+      '<span class="sv-spot-timer" aria-hidden="true"><i></i></span>';
   };
   window.svRenderSpot(); window.svRenderOrbs(); window.svRenderRecent();
   if (svcGrid) svcGrid.innerHTML = SERVICES.map((s) => '<div class="sv-card" style="opacity:.5"><div class="top">' + svIcon(s, 'svc-ico') + '<div><div class="nm">' + esc(s.name) + '</div><div class="bl">' + esc(s.blurb) + '</div></div></div></div>').join('');
@@ -2292,14 +2357,29 @@ function guideDetailHtml(key) {
       '<button type="button" class="sv-fchip sv-sort" id="sv-sortbtn" onclick="window.svToggleSort()">Default</button>';
   })();
   // OPT: rotate the spotlight only while the Services tab is visible (resettable; paused for reduced motion)
+  // aurora polish 4 (fix2): progress-slider timer — rAF drives the bar width via performance.now() deltas
   let svSpotTimer = null;
+  const SV_SPOT_MS = 8000;
   window.svSpotTimerReset = function () {
-    if (svSpotTimer) { clearInterval(svSpotTimer); svSpotTimer = null; }
+    if (svSpotTimer) { cancelAnimationFrame(svSpotTimer); svSpotTimer = null; }
     if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-    svSpotTimer = setInterval(() => {
+    const bar0 = document.querySelector('#sv-spot .sv-spot-timer i');
+    if (bar0) bar0.style.width = '0%';
+    let t0 = performance.now();
+    let last = t0;
+    const step = (now) => {
       const p = document.getElementById('panel-services');
-      if (p && p.hidden === false && !document.hidden) { svState.featured++; window.svRenderSpot(); }
-    }, 8000);
+      if (document.hidden || (p && p.hidden)) { t0 += now - last; } // frozen while hidden
+      else {
+        const el = Math.min(SV_SPOT_MS, now - t0);
+        const bar = document.querySelector('#sv-spot .sv-spot-timer i');
+        if (bar) bar.style.width = (el / SV_SPOT_MS) * 100 + '%';
+        if (el >= SV_SPOT_MS) { svState.featured++; window.svRenderSpot(); window.svSpotTimerReset(); return; }
+      }
+      last = now;
+      svSpotTimer = requestAnimationFrame(step);
+    };
+    svSpotTimer = requestAnimationFrame(step);
   };
   window.svSpotTimerReset();
   // OPT: one fetch instead of two — extended carries current + up24 + beats
@@ -2380,7 +2460,8 @@ function guideDetailHtml(key) {
   function hmUnCard(it) {
     const sub = (it && it.seriesName) ? it.seriesName : '';
     return '<a class="hm-card hm-un" style="aspect-ratio:16/9" href="' + hmJF_ITEM + encodeURIComponent(String((it && it.id) == null ? '' : it.id)) + '" target="_blank" rel="noopener noreferrer">' +
-      '<img class="hm-wide-art" loading="lazy" alt="" src="' + esc(hmBackdrop(it && it.id, 480)) + '" onerror="this.style.display=\'none\'">' +
+      // aurora polish 4 (fix1): prefer the API's Primary image (it.img); Backdrop 404s for most /Items/Latest entries
+      '<img class="hm-wide-art" loading="lazy" alt="" src="' + esc((it && it.img) || hmBackdrop(it && it.id, 480)) + '" onerror="if(!this.dataset.f){this.dataset.f=1;this.src=\'' + hmBackdrop(it && it.id, 480) + '\'}else{this.style.display=\'none\'}">' +
       '<span class="hm-wide-glow"></span>' +
       '<span class="hm-un-type">' + esc(String((it && it.type) || '')) + '</span>' +
       '<span class="hm-wide-meta"><span class="hm-wide-t">' + esc((it && it.name) || '') + '</span>' +
@@ -2758,7 +2839,10 @@ function guideDetailHtml(key) {
     tv: DEV_SVG + '<rect x="2" y="4" width="20" height="13" rx="2"/><path d="M8 21h8"/><path d="M12 17v4"/></svg>'
   };
   function uaString(s) {
+    // aurora polish 4 (fix4): authentik 2026.8 parsed user_agent dict (.string) → raw last_user_agent → legacy shape
+    if (s.user_agent && typeof s.user_agent === 'object' && s.user_agent.string) return String(s.user_agent.string);
     if (typeof s.user_agent === 'string' && s.user_agent) return s.user_agent;
+    if (s.last_user_agent) return String(s.last_user_agent);
     if (s.agent && typeof s.agent === 'object') return String(s.agent.raw || s.agent.device || s.agent.os || '');
     return '';
   }
@@ -2786,22 +2870,48 @@ function guideDetailHtml(key) {
     if (/CrOS/i.test(ua)) return 'Chromebook';
     return 'Device';
   }
+  // aurora polish 4 (fix4): friendly label from the parsed user_agent dict → "Safari on iOS"
+  function uaDeviceLabel(s, ua, type) {
+    const p = (s.user_agent && typeof s.user_agent === 'object') ? s.user_agent : null;
+    if (p && p.user_agent && p.user_agent.family) {
+      const os = (p.os && p.os.family) ? String(p.os.family) : '';
+      return String(p.user_agent.family) + (os ? ' on ' + os : '');
+    }
+    return devLabel(ua, type);
+  }
+  // aurora polish 4 (fix4): future-facing relative time for session expiry hints
+  function relFuture(v) {
+    const t = (typeof v === 'number') ? v : Date.parse(String(v || ''));
+    if (!isFinite(t) || !t) return '';
+    const sec = (t - Date.now()) / 1000;
+    if (sec <= 0) return 'expired';
+    if (sec < 3600) return 'in ' + Math.max(1, Math.floor(sec / 60)) + 'm';
+    if (sec < 86400) return 'in ' + Math.floor(sec / 3600) + 'h';
+    return 'in ' + Math.floor(sec / 86400) + 'd';
+  }
   fetch('/api/sessions').then(r => r.json()).then(d => {
     const el = $('#sec-sessions'); const list = (d && d.results) || [];
     if (!list.length) { el.innerHTML = '<p class="eyebrow">Sessions</p><h3>Your sessions</h3><p class="dim">No sessions found.</p>'; return; }
-    const sorted = list.slice().sort((a, b) => (new Date(b.last_seen || 0)) - (new Date(a.last_seen || 0)));
+    const sorted = list.slice().sort((a, b) => (new Date(b.last_used || 0)) - (new Date(a.last_used || 0)));
     el.innerHTML = '<p class="eyebrow">Sessions</p><h3>Your sessions</h3>' +
       '<p class="dim">These devices are currently signed in as you. Don\'t recognize one? Sign it out.</p>' +
-      '<div class="sess-head"><span>Device</span><span>Last seen</span><span>Location / IP</span><span>Action</span></div>' +
+      '<div class="sess-head"><span>Device</span><span>Last used</span><span>Location / IP</span><span>Action</span></div>' +
       sorted.slice(0, 6).map(s => {
         const ua = uaString(s);
         const type = devType(ua);
-        const label = s.current_session ? (devLabel(ua, type) + ' (this device)') : devLabel(ua, type);
-        return '<div class="sess-row' + (s.current_session ? ' current' : '') + '">' +
-          '<span class="sess-dev">' + DEV_ICONS[type] + '<b>' + esc(devLabel(ua, type)) + '</b>' + (s.current_session ? '<span class="pill ok">This device</span>' : '') + '</span>' +
-          '<span class="sess-seen dim">' + esc(relTime(s.last_seen) || '—') + '</span>' +
-          '<span class="sess-ip dim">' + esc(s.last_ip || '—') + '</span>' +
-          '<span class="sess-act">' + (s.current_session ? '' : '<button class="mini" data-sid="' + esc(s.uuid) + '" aria-label="Sign out session on ' + esc(label) + '">Sign out</button>') + '</span></div>';
+        const label = s.current ? (uaDeviceLabel(s, ua, type) + ' (this device)') : uaDeviceLabel(s, ua, type);
+        const seen = relTime(s.last_used) || s.last_used || '—';
+        const exp = s.expires ? relFuture(s.expires) : '';
+        const g = (s.geo_ip && typeof s.geo_ip === 'object') ? s.geo_ip : null;
+        const geoTxt = g ? [g.city, g.country || g.country_name].filter(Boolean).join(', ') : '';
+        const asn = (s.asn && typeof s.asn === 'object') ? String(s.asn.name || s.asn.asn || '') : ((typeof s.asn === 'string' && s.asn) ? s.asn : '');
+        const geoLine = [geoTxt, asn].filter(Boolean).join(' · ');
+        return '<div class="sess-row' + (s.current ? ' current' : '') + '">' +
+          '<span class="sess-dev">' + DEV_ICONS[type] + '<b>' + esc(uaDeviceLabel(s, ua, type)) + '</b>' + (s.current ? '<span class="pill ok">This device</span>' : '') + '</span>' +
+          '<span class="sess-seen dim">' + esc(seen) + '</span>' +
+          '<span class="sess-ip dim">' + esc(s.last_ip || '—') + (exp ? '<span class="sess-exp"> · expires ' + esc(exp) + '</span>' : '') + '</span>' +
+          (geoLine ? '<span class="sess-geo dim">' + esc(geoLine) + '</span>' : '') +
+          '<span class="sess-act">' + (s.current ? '' : '<button class="mini" data-sid="' + esc(s.uuid) + '" aria-label="Sign out session on ' + esc(label) + '">Sign out</button>') + '</span></div>';
       }).join('') + '<div class="row"><div class="left"><span class="dim">Ends all other sessions</span></div><button class="mini" id="revoke-all">Sign out everywhere</button></div>';
     el.querySelectorAll('button.mini[data-sid]').forEach(b => b.onclick = async () => {
       b.disabled = true; b.textContent = '…';
@@ -2814,7 +2924,7 @@ function guideDetailHtml(key) {
       modal('<h3>Sign out everywhere?</h3><p class="sub">This ends every session except the one you are using now.</p><div class="mrow"><button class="b-cancel" onclick="closeModal()">Cancel</button><button class="b-go" id="confirm-all">Sign them out</button></div>');
       $('#confirm-all').onclick = async () => {
         closeModal();
-        const others = list.filter(s => !s.current_session);
+        const others = list.filter(s => !s.current);
         for (const s of others) await fetch('/api/sessions/' + s.uuid, { method: 'DELETE' });
         toast('Signed out ' + others.length + ' session' + (others.length === 1 ? '' : 's'));
         setTimeout(() => location.reload(), 900);
