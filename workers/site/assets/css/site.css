@@ -7698,3 +7698,21 @@ body[data-page='form'] .vc-text {
         margin: -8px -2px;
     }
 }
+
+/* =============================================================
+   iPad-audit fix: tap-target pass spans ALL touch devices.
+   The max-width:768px block above misses iPads (768-1180px),
+   which showed 37px nav-search + small pill tabs on touch.
+   Apple HIG minimum: 44px.
+   ============================================================= */
+@media (pointer: coarse) {
+    .nav-search {
+        min-width: 44px; min-height: 44px;
+        justify-content: center;
+    }
+    .view-tab, .value-tab {
+        min-height: 44px !important;
+        display: inline-flex !important;
+        align-items: center !important;
+    }
+}
