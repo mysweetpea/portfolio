@@ -224,7 +224,48 @@ interface KumaMonitor {
 async function kvPutBestEffort(env: Env, key: string, value: string, ttl: number): Promise<void> {
   try {
     await env.SESSIONS.put(key, value, { expirationTtl: Math.max(ttl, 60) });
-  } catch { /* best-effort */ }
+  } catch { /* cache writes are best-effort */ }
+}
+
+// Stale-while-revalidate JSON helper.
+// The dashboard's slow feel = blocking upstream fetches whenever a KV entry
+// expires (media rows, stats). With SWR the client ALWAYS gets an answer in
+// ~10ms when any cached copy exists (fresh OR stale); the refresh happens in
+// the background via ctx.waitUntil. Only the very first request after a cold
+// KV (or brand-new instance) pays upstream latency.
+// Stored shape: {"d": <payload string>, "t": <unix ms>}. Legacy raw payloads
+// are treated as ts=0 (= immediately stale, served instantly + refreshed).
+async function swrJson(ctx: ExecutionContext, env: Env, key: string, freshMs: number, produce: () => Promise<string>): Promise<string> {
+  let payload: string | null = null;
+  let ts = 0;
+  try {
+    const raw = await env.SESSIONS.get(key);
+    if (raw) {
+      try {
+        const p = JSON.parse(raw) as { d?: string; t?: number };
+        if (typeof p?.d === 'string') { payload = p.d; ts = p.t || 0; }
+        else { payload = raw; ts = 0; } // legacy format
+      } catch { payload = raw; ts = 0; } // legacy non-JSON payload
+    }
+  } catch { /* treat as cold */ }
+  const now = Date.now();
+  const refresh = async (): Promise<void> => {
+    try {
+      const d = await produce();
+      await kvPutBestEffort(env, key, JSON.stringify({ d, t: Date.now() }), 86400);
+    } catch { /* keep serving stale copy */ }
+  };
+  if (payload !== null && (now - ts) < freshMs) return payload; // fresh
+  if (payload !== null) {
+    ctx.waitUntil(refresh()); // stale: serve now, refresh behind the scenes
+    return payload;
+  }
+  await refresh(); // cold: must block once
+  try {
+    const raw2 = await env.SESSIONS.get(key);
+    if (raw2) { const p = JSON.parse(raw2) as { d?: string }; if (typeof p?.d === 'string') return p.d; }
+  } catch { /* fall through */ }
+  return '{"items":[]}';
 }
 
 async function fetchPublicKuma(env: Env): Promise<{ monitors: KumaMonitor[] } | null> {
@@ -278,8 +319,8 @@ async function fetchPublicKuma(env: Env): Promise<{ monitors: KumaMonitor[] } | 
 }
 
 export default {
-  async fetch(request: Request, env: Env): Promise<Response> {
-    const res = await this.handle(request, env);
+  async fetch(request: Request, env: Env, ctx: ExecutionContext): Promise<Response> {
+    const res = await this.handle(request, env, ctx);
     // security headers on every response (dashboard is auth-gated, but
     // defense-in-depth costs nothing — mirrors the site worker's posture)
     const h = new Headers(res.headers);
@@ -291,7 +332,7 @@ export default {
     return new Response(res.body, { status: res.status, statusText: res.statusText, headers: h });
   },
 
-  async handle(request: Request, env: Env): Promise<Response> {
+  async handle(request: Request, env: Env, ctx: ExecutionContext): Promise<Response> {
     const url = new URL(request.url);
     const path = url.pathname;
 
@@ -633,9 +674,8 @@ export default {
         return json({ totp: totp.results ?? [], webauthn: webauthn.results ?? [], static: statics.results ?? [] });
       }
       if (path === '/api/stats') {
-        const cache = await env.SESSIONS.get('cache:stats');
-        if (cache) return json(JSON.parse(cache));
-        const stat = async (): Promise<string> => {
+        // SWR: instant from cache (fresh OR stale); refresh in background.
+        const payload = await swrJson(ctx, env, 'cache:stats', 300000, async () => {
           const out: Record<string, number | string | null> = {
             movies: null, series: null, episodes: null, songs: null, boxsets: null, jf_resume: null,
             jf_watch_hours: null, jf_resume_titles: null, jf_top_title: null,
@@ -738,15 +778,12 @@ export default {
             })(),
           ]);
           return JSON.stringify(out);
-        };
-        const payload = await stat();
-        await kvPutBestEffort(env, 'cache:stats', payload, 300);
+        });
         return new Response(payload, { headers: { 'content-type': 'application/json', 'cache-control': 'no-store' } });
       }
       if (path === '/api/media/continue') {
-        const cache = await env.SESSIONS.get('cache:media-cont');
-        if (cache) return json(JSON.parse(cache));
-        try {
+        // SWR: instant from cache (fresh OR stale); refresh in background.
+        const payload = await swrJson(ctx, env, 'cache:media-cont', 120000, async () => {
           const r = await fetch(env.JELLYFIN_URL + '/Items?userId=' + env.JELLYFIN_USER_ID +
             '&Recursive=true&SortBy=DatePlayed&SortOrder=Descending&Filters=IsResumable' +
             '&IncludeItemTypes=Movie,Episode&Limit=12&Fields=ProductionYear,SeriesName&EnableImages=true',
@@ -761,17 +798,13 @@ export default {
             progressPct: Math.round(it.UserData?.PlayedPercentage ?? 0),
             img: env.JELLYFIN_URL + '/Items/' + it.Id + '/Images/Primary?fillHeight=420&fillWidth=280&quality=75',
           }));
-          const payload = JSON.stringify({ items });
-          await kvPutBestEffort(env, 'cache:media-cont', payload, 120);
-          return json({ items });
-        } catch {
-          return json({ items: [] });
-        }
+          return JSON.stringify({ items });
+        });
+        return json(JSON.parse(payload));
       }
       if (path === '/api/media/latest') {
-        const cache = await env.SESSIONS.get('cache:media-latest');
-        if (cache) return json(JSON.parse(cache));
-        try {
+        // SWR: instant from cache (fresh OR stale); refresh in background.
+        const payload = await swrJson(ctx, env, 'cache:media-latest', 300000, async () => {
           const r = await fetch(env.JELLYFIN_URL + '/Items/Latest?userId=' + env.JELLYFIN_USER_ID + '&Limit=12&EnableImages=true',
             { headers: { 'x-emby-token': env.JELLYFIN_API_KEY } });
           if (!r.ok) throw new Error('jellyfin ' + r.status);
@@ -783,12 +816,9 @@ export default {
             type: it.Type,
             img: env.JELLYFIN_URL + '/Items/' + it.Id + '/Images/Primary?fillHeight=420&fillWidth=280&quality=75',
           }));
-          const payload = JSON.stringify({ items });
-          await kvPutBestEffort(env, 'cache:media-latest', payload, 300);
-          return json({ items });
-        } catch {
-          return json({ items: [] });
-        }
+          return JSON.stringify({ items });
+        });
+        return json(JSON.parse(payload));
       }
       if (path === '/api/requests') {
         // Home "Your requests" journeys — this user's recent Seerr requests.
