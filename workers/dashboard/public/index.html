@@ -392,7 +392,7 @@ img.svc-guide-ico{object-fit:contain;padding:2px}
 @media (prefers-reduced-motion: no-preference){
 html{scroll-behavior:smooth}
 @keyframes msp-in{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
-main section{opacity:0;animation:msp-in .5s ease-out forwards;animation-delay:calc(var(--i,0)*60ms)}
+main:not(.msp-ready) section{opacity:0;animation:msp-in .5s ease-out forwards;animation-delay:calc(var(--i,0)*60ms)}
 }
 /* ---- phase 11: mobile optimization (additive only — desktop styles untouched) ---- */
 @media(max-width:760px){
@@ -1350,6 +1350,15 @@ function animateCount(el) {
     if (t < 1) requestAnimationFrame(frame);
   })(start);
 }
+// BLINK FIX (Sep 15): retire the boot entrance animation before any tab-switch
+// can fall back to it. The old world left `animation:msp-in` on sections forever;
+// when setTab() removed the .tp-enter cascade at +750ms, the fallback restarted
+// msp-in from opacity:0 — faking a "reload blink" on every tab change. Adding
+// .msp-ready makes the gated CSS rule stop matching, so the cascade is the LAST
+// animation a section ever runs. See `main:not(.msp-ready) section` in the CSS.
+function retireBootAnim() {
+  try { const m = document.querySelector('main.grid'); if (m) m.classList.add('msp-ready'); } catch (e) {}
+}
 function setTab(name, opts) {
   opts = opts || {};
   if (TABS.indexOf(name) < 0 && EXTRA_TABS.indexOf(name) < 0) name = 'home';
@@ -1363,6 +1372,11 @@ function setTab(name, opts) {
     if (p) p.hidden = t !== name;
   });
   if (prev !== name) {
+    // BLINK FIX (Sep 15): the moment a switch happens, retire the boot entrance
+    // animation so that when .tp-enter is removed 750ms later, control can never
+    // fall back to `main section{animation:msp-in}` — which RESTARTED from
+    // opacity:0 and faked a "reload blink" on every tab change.
+    retireBootAnim();
     const panel = document.getElementById('panel-' + name);
     if (panel) {
       panel.classList.remove('tp-enter');
@@ -1376,7 +1390,12 @@ function setTab(name, opts) {
   moveTabPill(prev !== name);
   if (!opts.fromHash) { try { history.replaceState(null, '', '#' + name); } catch (e) {} }
   try { localStorage.setItem('msp-tab', name); } catch (e) {}
-  window.scrollTo(0, 0);
+  // BLINK FIX 2 (Sep 15): jump to top INSTANTLY on a tab switch. `html{scroll-behavior:smooth}`
+  // made this a ~500ms animated scroll that ran UNDER the new panel's fade-in — smooth-scroll +
+  // fade-in together read as "the page is reloading". Instant reset is the standard tab-UI
+  // behavior (and matches how a real navigation repaint feels). The smooth behavior stays for
+  // in-page anchor jumps elsewhere.
+  try { window.scrollTo({ top: 0, left: 0, behavior: 'instant' }); } catch (e) { window.scrollTo(0, 0); }
   if (name === 'stats' && typeof window.loadStats === 'function') window.loadStats();
 }
 window.setTab = setTab;
