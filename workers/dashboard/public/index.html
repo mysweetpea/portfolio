@@ -844,6 +844,11 @@ body { overscroll-behavior-x: none; }
 @media (max-width:760px){
   input, select, textarea { font-size: 16px !important; }
 }
+/* ---- audit fix: iOS focus-zoom guard spans ALL touch devices (iPads 768px+
+   were exposed because the guard above is viewport-width-limited) ---- */
+@media (pointer: coarse){
+  input, select, textarea { font-size: 16px !important; }
+}
 
 /* ---- aurora mobile 9: iOS grid-track shrink guard ---- */
 @media (max-width:760px){
@@ -1005,11 +1010,30 @@ body { overscroll-behavior-x: none; }
   .sv-refresh{width:40px;height:40px}
   .sv-pin{width:40px;height:40px}
   .hm-btn,.btn,.mini,.icon-btn{min-height:44px}
+  .icon-btn{min-width:44px;width:44px}
   .acct-trigger{min-height:40px}
   .nav-search{width:40px;height:40px}
   .gp-pill,.guide-variant{min-height:40px}
   .footer-col a{display:inline-block;min-height:40px;line-height:40px}
   .footer-help a{display:inline-block;min-height:40px;line-height:40px}
+}
+/* ---- audit fix: same tap-target pass on ALL touch devices (iPads 768px+ had
+   31px pills = below the 44px Apple HIG touch guideline) ---- */
+@media (pointer: coarse){
+  .gp-pill{min-height:44px;padding:10px 13px}
+  .jbrand-pill{min-height:44px;padding:11px 15px}
+  .plat-chip{min-height:44px;padding:11px 15px}
+  .st2-pill{min-height:44px;padding:11px 15px}
+  .sv-fchip{min-height:44px;padding:11px 15px}
+  .sv-pin{width:44px;height:44px}
+  .sv-refresh{width:44px;height:44px}
+  .ob-x{width:44px;height:44px;min-height:44px}
+  .ob-btn{min-height:44px;display:inline-flex;align-items:center}
+  .ob-link{min-height:44px;display:inline-flex;align-items:center}
+  .pwf-adv{min-height:44px;display:inline-flex;align-items:center}
+  .hm-more{min-height:44px;display:inline-flex;align-items:center}
+  .mini,.icon-btn{min-height:44px}
+  .icon-btn{min-width:44px;width:44px}
 }
 
 /* ===== TIER 2/3 premium animations ===== */
