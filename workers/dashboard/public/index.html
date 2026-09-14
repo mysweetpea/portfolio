@@ -818,14 +818,19 @@ body { overscroll-behavior-x: none; }
 /* ---- aurora mobile 6: home fit ---- */
 @media (max-width:760px){
 .hm-greet,.hm-id{overflow-wrap:anywhere;min-width:0}
-.hm-stats{display:grid;grid-template-columns:repeat(3,minmax(0,auto));justify-content:space-between;gap:4px}
-.hm-stat{padding:4px 6px;font-size:.62rem}
-.hm-stat .n{font-size:1.05rem}
+.hm-stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));justify-content:stretch;gap:8px}
+.hm-stat{padding:6px 8px;font-size:.68rem;line-height:1.35}
+.hm-stat .n{font-size:1.15rem}
 .hm-actions{width:100%}
-.hm-actions .hm-btn{flex:1 1 auto;min-width:0}
+.hm-actions .hm-btn{flex:1 1 auto;min-width:0;gap:6px}
 .hm-btn{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .hm-banner-row{flex-wrap:wrap}
 .hm-sec,.grid{min-width:0}
+/* audit fix: <420px, 3 columns of ~100px crush stat labels into 3-line wraps — 2-col reads better */
+@media (max-width:420px){
+.hm-stats{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+.hm-stat:nth-child(3){grid-column:1/-1}
+}
 .hm-hero-inner{flex-direction:column;align-items:stretch;gap:10px}
 .hm-hero-side{min-width:0;flex-wrap:wrap}
 .hm-rail{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;overflow:visible}
