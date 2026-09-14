@@ -505,11 +505,20 @@ export default {
         // SWR-cached: /api/me is called on EVERY dashboard load and does a live
         // authentik round-trip; the profile rarely changes, so cache it per-user
         // (60s fresh, stale-served instantly while refreshing in the background).
+        // ⚠️ MUST NOT cache failures: an expired/momentary authentik error used to
+        // get cached as the "profile" (HTTP 200, body {detail:...}) for 24h, which
+        // crashed the client boot (applyAcctMenu .split of undefined) and left the
+        // tab bar unpainted. Failures now bypass the cache AND return their real
+        // status; stale-but-valid cached profiles are still served instantly.
         const meKey = 'cache:me:' + sess.sub;
-        const payload = await swrJson(ctx, env, meKey, 60000, async () => {
+        const meProduce = async (): Promise<string> => {
           const r = await authentikFetch(env, sess.at, '/api/v3/core/users/me/');
           const d = await r.json() as any;
           const user = d && d.user ? d.user : d;
+          // Auth/permission failure or malformed body -> signal error, do not cache.
+          if (!r.ok || !user || typeof user.username !== 'string' || user.username === '') {
+            throw new Error('me ' + r.status);
+          }
           user.has_avatar = false;
           user.avatar_ts = 0;
           // tier badge: membership of the authentik 'sweetpea' / 'seedling' groups
@@ -526,8 +535,37 @@ export default {
             }
           } catch { /* fall back to initials */ }
           return JSON.stringify(user);
-        });
-        return new Response(payload, { headers: { 'content-type': 'application/json', 'cache-control': 'no-store' } });
+        };
+        // Serve fresh cache directly; serve stale cache instantly + refresh behind;
+        // on cold miss do a blocking fetch but NEVER cache/return an error body.
+        let meRaw: string | null = null;
+        let meFresh = false;
+        try {
+          const raw = await env.SESSIONS.get(meKey);
+          if (raw) {
+            const p = JSON.parse(raw) as { d?: string; t?: number };
+            if (typeof p?.d === 'string' && p.d.indexOf('"detail"') < 0) {
+              meRaw = p.d;
+              meFresh = (Date.now() - (p.t || 0)) < 60000;
+            }
+          }
+        } catch { /* cold */ }
+        if (meRaw && meFresh) {
+          return new Response(meRaw, { headers: { 'content-type': 'application/json', 'cache-control': 'no-store' } });
+        }
+        if (meRaw) {
+          ctx.waitUntil((async () => { try { const d = await meProduce(); await kvPutBestEffort(env, meKey, JSON.stringify({ d, t: Date.now() }), 86400); } catch { /* keep serving stale */ } })());
+          return new Response(meRaw, { headers: { 'content-type': 'application/json', 'cache-control': 'no-store' } });
+        }
+        try {
+          const d = await meProduce();
+          await kvPutBestEffort(env, meKey, JSON.stringify({ d, t: Date.now() }), 86400);
+          return new Response(d, { headers: { 'content-type': 'application/json', 'cache-control': 'no-store' } });
+        } catch {
+          // Real failure (token expired/authentik down): surface it honestly so the
+          // client falls back to the sign-in gate instead of crashing mid-boot.
+          return json({ error: 'unauthorized' }, 401);
+        }
       }
 
       // ---------- avatar (KV-stored profile picture) ----------
