@@ -155,7 +155,9 @@ async function refreshSession(env: Env, sess: SessionData): Promise<SessionData 
   });
   if (!r.ok) return null;
   const t = await r.json() as { access_token: string; refresh_token?: string };
-  return { ...sess, at: t.access_token, rt: t.refresh_token ?? sess.rt };
+  // Reset `created` so the 10-minute refresh window restarts. Without this the
+  // stamp stays old and EVERY request re-runs this token round-trip.
+  return { ...sess, at: t.access_token, rt: t.refresh_token ?? sess.rt, created: Date.now() };
 }
 
 async function requireSession(request: Request, env: Env): Promise<{ sess: SessionData; sid: string } | Response> {
@@ -500,25 +502,32 @@ export default {
       const { sess, sid } = auth;
 
       if (path === '/api/me') {
-        const r = await authentikFetch(env, sess.at, '/api/v3/core/users/me/');
-        const d = await r.json() as any;
-        const user = d && d.user ? d.user : d;
-        user.has_avatar = false;
-        user.avatar_ts = 0;
-        // tier badge: membership of the authentik 'sweetpea' / 'seedling' groups
-        const groupNames = (user.groups || []).map((g: any) => String(g && g.name || '').toLowerCase());
-        user.tier = groupNames.includes('sweetpea') ? 'sweetpea'
-                  : groupNames.includes('seedling') ? 'seedling'
-                  : 'seedling';
-        try {
-          const m = await env.SESSIONS.get(`avm:${sess.sub}`);
-          if (m) {
-            const meta = JSON.parse(m) as { updated?: number };
-            user.has_avatar = true;
-            user.avatar_ts = meta.updated || 0;
-          }
-        } catch { /* fall back to initials */ }
-        return json(user, r.status);
+        // SWR-cached: /api/me is called on EVERY dashboard load and does a live
+        // authentik round-trip; the profile rarely changes, so cache it per-user
+        // (60s fresh, stale-served instantly while refreshing in the background).
+        const meKey = 'cache:me:' + sess.sub;
+        const payload = await swrJson(ctx, env, meKey, 60000, async () => {
+          const r = await authentikFetch(env, sess.at, '/api/v3/core/users/me/');
+          const d = await r.json() as any;
+          const user = d && d.user ? d.user : d;
+          user.has_avatar = false;
+          user.avatar_ts = 0;
+          // tier badge: membership of the authentik 'sweetpea' / 'seedling' groups
+          const groupNames = (user.groups || []).map((g: any) => String(g && g.name || '').toLowerCase());
+          user.tier = groupNames.includes('sweetpea') ? 'sweetpea'
+                    : groupNames.includes('seedling') ? 'seedling'
+                    : 'seedling';
+          try {
+            const m = await env.SESSIONS.get(`avm:${sess.sub}`);
+            if (m) {
+              const meta = JSON.parse(m) as { updated?: number };
+              user.has_avatar = true;
+              user.avatar_ts = meta.updated || 0;
+            }
+          } catch { /* fall back to initials */ }
+          return JSON.stringify(user);
+        });
+        return new Response(payload, { headers: { 'content-type': 'application/json', 'cache-control': 'no-store' } });
       }
 
       // ---------- avatar (KV-stored profile picture) ----------
@@ -623,6 +632,7 @@ export default {
 
         const now = Date.now();
         await env.SESSIONS.put(`audit:${sess.sub}:${now}`, JSON.stringify({ t: now, event: 'profile_updated', fields: Object.keys(updates) }), { expirationTtl: 90 * 86400 });
+        await env.SESSIONS.delete('cache:me:' + sess.sub); // invalidate /api/me cache
         return json({ ok: true, name: updates.name ?? sess.name, email: updates.email ?? sess.email });
       }
 
