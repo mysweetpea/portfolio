@@ -1,6 +1,31 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+<style id="msp-paint-guard">/* Paint guard: prevents the pre-CSS white flash on navigation.
+   Measured: with stylesheets in flight the page painted pure white (255,255,255)
+   because no early background/color-scheme was set. Keep this FIRST in <head>. */
+html{background:#0C1316;color-scheme:dark}
+html[data-theme="light"]{background:#E7EDEA;color-scheme:light}
+</style>
+<script id="msp-theme-early">/* Early paint bootstrap — runs BEFORE the body paints.
+   1) Apply the saved theme so the guard picks the right background.
+   2) Mark html.js NOW so .reveal content starts hidden and only ever fades IN.
+      Previously site.js (defer) added it AFTER first paint, which faded visible
+      content OUT then back IN (~1.5s of background-only = the "static screen").
+   3) Watchdog: if the main script never initialises, drop .js so content can
+      never be left permanently invisible. */
+(function(){
+  try{
+    var t=localStorage.getItem('msp-theme');
+    if(!t&&window.matchMedia&&window.matchMedia('(prefers-color-scheme: light)').matches)t='light';
+    if(t)document.documentElement.setAttribute('data-theme',t);
+  }catch(e){}
+  document.documentElement.classList.add('js');
+  setTimeout(function(){
+    if(!window.__mspRevealInit)document.documentElement.classList.remove('js');
+  },2500);
+})();
+</script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="robots" content="noindex, nofollow, noarchive, nosnippet, noimageindex">
@@ -21,9 +46,9 @@
     <link rel="preload" as="image" href="/logo.svg">
     <link rel="preload" as="font" type="font/woff2" href="/assets/fonts/inter-var.woff2" crossorigin>
     <link rel="preload" as="font" type="font/woff2" href="/assets/fonts/fraunces-var.woff2" crossorigin>
-                    <link rel="stylesheet" href="/assets/css/fonts.css?v=31">
-    <link rel="stylesheet" href="/assets/css/site.css?v=31">
-    <link rel="stylesheet" href="/assets/css/premium.css?v=31">
+                    <link rel="stylesheet" href="/assets/css/fonts.css?v=32">
+    <link rel="stylesheet" href="/assets/css/site.css?v=32">
+    <link rel="stylesheet" href="/assets/css/premium.css?v=32">
 </head>
 <body data-page="form">
     <a href="#main-content" class="skip-link">Skip to content</a>
@@ -82,19 +107,19 @@
         <section class="access-choice-section" aria-labelledby="choose-tier-title">
             <span class="eyebrow">First, choose a tier</span>
             <h2 class="section-title glass-text" id="choose-tier-title">How would you like to get started?</h2>
-            <p class="section-subtitle">Requests are open for the Sweet Pea tier. The Seedling tier opens once crypto donations are live.</p>
+            <p class="section-subtitle">Requests are open for the Sweet Pea tier. A smaller second tier is in the works — we will announce what it includes when it opens.</p>
             <div class="access-choice-grid">
                 <button type="button" class="access-choice-card coming-soon" data-tier="seedling" aria-pressed="false" aria-disabled="true">
                     <span class="access-choice-icon" aria-hidden="true"><img src="/assets/icons/icon-ui-seedling.svg" alt="" width="48" height="48"></span>
-                    <span class="access-choice-title">Seedling</span>
+                    <span class="access-choice-title">Second Tier</span>
                     <span class="access-choice-price">Coming soon</span>
-                    <span class="access-choice-copy">Password manager, chat, notes, and watch parties. Opening once crypto donations are available.</span>
+                    <span class="access-choice-copy">A lighter tier is coming. What it includes will be revealed at launch.</span>
                 </button>
                 <button type="button" class="access-choice-card" data-tier="sweetpea" aria-pressed="false">
                     <span class="access-choice-icon" aria-hidden="true"><img src="/assets/icons/icon-ui-blossom.svg" alt="" width="48" height="48"></span>
                     <span class="access-choice-title">Sweet Pea</span>
                     <span class="access-choice-price">Full access — request review</span>
-                    <span class="access-choice-copy">Everything in Seedling, plus media, files, photos, and more. Send a simple request and we will email you an invite code.</span>
+                    <span class="access-choice-copy">Media, files, photos, AI, passwords, chat and notes — everything MySweetPea offers. Send a simple request and we will email you an invite code.</span>
                 </button>
             </div>
         </section>
@@ -238,9 +263,9 @@
 
 
 
-    <script src="/assets/js/site.js?v=31" defer></script>
-    <script src="/assets/js/premium.js?v=31" defer></script>
-    <script src="/assets/js/qrcode.min.js?v=31" defer></script>
+    <script src="/assets/js/site.js?v=32" defer></script>
+    <script src="/assets/js/premium.js?v=32" defer></script>
+    <script src="/assets/js/qrcode.min.js?v=32" defer></script>
     <script>
 (function () {
     var WEBHOOK_BASE = 'https://subscribe.mysweetpea.cc/webhook';

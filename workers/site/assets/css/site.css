@@ -5333,6 +5333,95 @@ body[data-page='pricing'] .btn-glass-seedling:disabled:hover { transform: none; 
 .compare-table .compare-cta.compare-cta-soon { background: rgba(143, 175, 181, 0.14); border: 1px solid var(--border-primary); color: var(--primary-bright); cursor: not-allowed; }
 .compare-table .compare-cta.compare-cta-soon:hover { transform: none; background: rgba(143, 175, 181, 0.14); }
 /* Services page: filter chip + divider tag. */
+/* === Sweet Pea spotlight + Seedling mystery tier ===
+   Sweet Pea is the sole available tier, so it gets a hero-grade intro block.
+   Seedling is intentionally opaque until launch: one teaser card, no service
+   names, no benefit list, no counts. */
+.sweetpea-spotlight {
+    position: relative; overflow: hidden;
+    margin: 8px 0 30px; padding: 30px 32px;
+    border: 1px solid transparent;
+    border-radius: var(--radius);
+    background:
+        linear-gradient(var(--card-bg, rgba(19,30,34,0.55)), var(--card-bg, rgba(19,30,34,0.55))) padding-box,
+        linear-gradient(120deg, rgba(197,213,216,0.55), rgba(94,184,168,0.35), rgba(197,213,216,0.18)) border-box;
+    box-shadow: 0 18px 48px rgba(0,0,0,0.28), inset 0 1px 0 rgba(255,255,255,0.06);
+}
+.sweetpea-spotlight::after {
+    content: ''; position: absolute; inset: -40% -10% auto auto;
+    width: 340px; height: 340px; border-radius: 50%;
+    background: radial-gradient(circle, rgba(94,184,168,0.16), transparent 65%);
+    pointer-events: none;
+}
+.sp-badge {
+    display: inline-block; margin-bottom: 12px; padding: 4px 12px; border-radius: 999px;
+    background: linear-gradient(135deg, var(--gold, #D9A86C), var(--gold-dim, #b7893f));
+    color: var(--bg, #0C1316);
+    font-size: 0.68rem; font-weight: 800; letter-spacing: 0.09em; text-transform: uppercase;
+}
+.sp-title { font-family: 'Fraunces', serif; font-size: 1.6rem; letter-spacing: -0.01em; margin: 0 0 10px; color: var(--primary-bright); }
+.sp-copy { color: var(--text-dim); line-height: 1.62; max-width: 62ch; margin: 0 0 20px; }
+.sp-actions { display: flex; flex-wrap: wrap; gap: 12px; }
+.sp-btn {
+    display: inline-flex; align-items: center; justify-content: center;
+    min-height: 46px; padding: 0 22px; border-radius: 999px;
+    font-weight: 700; font-size: 0.92rem; text-decoration: none;
+    transition: transform 180ms ease, box-shadow 180ms ease, background-color 180ms ease, border-color 180ms ease;
+}
+.sp-btn-primary { background: linear-gradient(135deg, var(--sage, #A3C9B6), var(--primary, #8FAFB5)); color: var(--bg, #0C1316); box-shadow: 0 10px 26px rgba(94,184,168,0.22); }
+.sp-btn-primary:hover { transform: translateY(-2px); box-shadow: 0 14px 32px rgba(94,184,168,0.3); }
+.sp-btn-ghost { border: 1px solid var(--border-primary); color: var(--primary-bright); background: rgba(143,175,181,0.08); }
+.sp-btn-ghost:hover { transform: translateY(-2px); border-color: var(--primary-bright); }
+
+/* Mystery tier card — no contents revealed until launch. */
+.mystery-tier { margin-top: 60px; }
+.mystery-inner {
+    position: relative; text-align: center;
+    padding: 38px 28px 34px;
+    border: 1px dashed rgba(163,201,182,0.35);
+    border-radius: var(--radius);
+    background:
+        radial-gradient(ellipse 70% 120% at 50% 0%, rgba(163,201,182,0.09), transparent 70%),
+        rgba(19,30,34,0.32);
+}
+.mystery-icon {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 62px; height: 62px; margin-bottom: 14px;
+    border-radius: 50%;
+    background: rgba(163,201,182,0.10);
+    border: 1px solid rgba(163,201,182,0.28);
+    filter: grayscale(0.35);
+    opacity: 0.9;
+}
+.mystery-tag {
+    display: inline-block; margin: 0 0 12px; padding: 3px 11px; border-radius: 999px;
+    background: rgba(143,175,181,0.14); border: 1px solid var(--border-primary);
+    font-size: 0.62rem; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase;
+    color: var(--primary-bright);
+}
+.mystery-title { font-family: 'Fraunces', serif; font-size: 1.35rem; margin: 0 0 10px; color: var(--primary-bright); }
+.mystery-copy { color: var(--text-dim); line-height: 1.6; max-width: 58ch; margin: 0 auto 12px; }
+.mystery-note { color: var(--text-faint); font-size: 0.86rem; margin: 0; }
+.mystery-note a { color: var(--sage); }
+
+/* Light theme */
+[data-theme="light"] .sweetpea-spotlight {
+    background:
+        linear-gradient(#fff, #fff) padding-box,
+        linear-gradient(120deg, rgba(62,124,95,0.5), rgba(94,184,168,0.35), rgba(62,124,95,0.15)) border-box;
+    box-shadow: 0 16px 40px rgba(27,43,49,0.12);
+}
+[data-theme="light"] .mystery-inner { background: rgba(255,255,255,0.72); border-color: rgba(62,124,95,0.35); }
+[data-theme="light"] .sp-btn-ghost { color: #245A40; border-color: rgba(62,124,95,0.4); background: rgba(62,124,95,0.06); }
+
+@media (max-width: 640px) {
+    .sweetpea-spotlight { padding: 24px 20px; }
+    .sp-title { font-size: 1.35rem; }
+    .sp-actions { flex-direction: column; }
+    .sp-btn { width: 100%; }
+    .mystery-inner { padding: 30px 20px 28px; }
+}
+
 .filter-soon { display: inline-block; margin-left: 4px; padding: 1px 6px; border-radius: 999px; background: rgba(143, 175, 181, 0.14); font-size: 0.6rem; font-weight: 800; letter-spacing: 0.05em; text-transform: uppercase; color: var(--primary-bright); vertical-align: middle; }
 .tier-divider-soon { margin-left: 8px; padding: 3px 9px; border-radius: 999px; background: rgba(143, 175, 181, 0.14); border: 1px solid var(--border-primary); font-size: 0.62rem; font-weight: 800; letter-spacing: 0.05em; text-transform: uppercase; color: var(--primary-bright); }
 @media (max-width: 640px) {

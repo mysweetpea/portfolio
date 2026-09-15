@@ -1,6 +1,31 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+<style id="msp-paint-guard">/* Paint guard: prevents the pre-CSS white flash on navigation.
+   Measured: with stylesheets in flight the page painted pure white (255,255,255)
+   because no early background/color-scheme was set. Keep this FIRST in <head>. */
+html{background:#0C1316;color-scheme:dark}
+html[data-theme="light"]{background:#E7EDEA;color-scheme:light}
+</style>
+<script id="msp-theme-early">/* Early paint bootstrap — runs BEFORE the body paints.
+   1) Apply the saved theme so the guard picks the right background.
+   2) Mark html.js NOW so .reveal content starts hidden and only ever fades IN.
+      Previously site.js (defer) added it AFTER first paint, which faded visible
+      content OUT then back IN (~1.5s of background-only = the "static screen").
+   3) Watchdog: if the main script never initialises, drop .js so content can
+      never be left permanently invisible. */
+(function(){
+  try{
+    var t=localStorage.getItem('msp-theme');
+    if(!t&&window.matchMedia&&window.matchMedia('(prefers-color-scheme: light)').matches)t='light';
+    if(t)document.documentElement.setAttribute('data-theme',t);
+  }catch(e){}
+  document.documentElement.classList.add('js');
+  setTimeout(function(){
+    if(!window.__mspRevealInit)document.documentElement.classList.remove('js');
+  },2500);
+})();
+</script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="robots" content="noindex, nofollow, noarchive, nosnippet, noimageindex">
@@ -21,9 +46,9 @@
     <link rel="preload" as="image" href="/logo.svg">
     <link rel="preload" as="font" type="font/woff2" href="/assets/fonts/inter-var.woff2" crossorigin>
     <link rel="preload" as="font" type="font/woff2" href="/assets/fonts/fraunces-var.woff2" crossorigin>
-                    <link rel="stylesheet" href="/assets/css/fonts.css?v=31">
-    <link rel="stylesheet" href="/assets/css/site.css?v=31">
-    <link rel="stylesheet" href="/assets/css/premium.css?v=31">
+                    <link rel="stylesheet" href="/assets/css/fonts.css?v=32">
+    <link rel="stylesheet" href="/assets/css/site.css?v=32">
+    <link rel="stylesheet" href="/assets/css/premium.css?v=32">
 </head>
 <body data-page="services">
     <a href="#main-content" class="skip-link">Skip to content</a>
@@ -85,32 +110,38 @@
                 <button type="button" class="view-tab" role="tab" aria-selected="false" data-view="faq">FAQ</button>
             </div>
 
-            <div class="view-panel active" data-view="services" role="tabpanel">
-                <span class="eyebrow">Included with access</span>
-                <h2 class="section-title glass-text reveal">Available Services</h2>
-                <p class="section-subtitle reveal reveal-delay-1">Click any service to see a screenshot and open it — step-by-step guides live in your dashboard</p>
+                        <div class="view-panel active" data-view="services" role="tabpanel">
+                <span class="eyebrow">One tier, everything included</span>
+                <h2 class="section-title glass-text reveal">The Sweet Pea Tier</h2>
+                <p class="section-subtitle reveal reveal-delay-1">Nine services, one account, running on our own hardware. Private, no ads, no tracking. Click any service to see a screenshot and open it — step-by-step guides live in your dashboard.</p>
+
+                <div class="sweetpea-spotlight reveal reveal-delay-1">
+                    <div class="sp-badge">Full access</div>
+                    <h3 class="sp-title">Everything MySweetPea offers</h3>
+                    <p class="sp-copy">Media, files, photos, AI, passwords, chat and notes — all included the moment you are approved. Requests are reviewed individually and we reply by email.</p>
+                    <div class="sp-actions">
+                        <a class="sp-btn sp-btn-primary" href="/form.html?tier=sweetpea">Request Sweet Pea Access</a>
+                        <a class="sp-btn sp-btn-ghost" href="/pricing.html">Compare what is included</a>
+                    </div>
+                </div>
+
                 <div class="filter-bar reveal reveal-delay-1" role="group" aria-label="Filter services by tier">
                     <button type="button" class="filter-btn active" data-filter="all">All</button>
-                    <button type="button" class="filter-btn" data-filter="seedling">Seedling <span class="filter-soon">soon</span></button>
                     <button type="button" class="filter-btn" data-filter="sweetpea">Sweet Pea</button>
                     <button type="button" class="filter-btn" data-filter="coming-soon">Coming Soon</button>
                 </div>
 
-                <div class="tier-divider reveal" data-tier-divider="seedling"><div class="line"></div><div class="label"><span class="icon"><img src="/assets/icons/icon-ui-seedling.svg" class="" alt="" width="22" height="22" loading="lazy" decoding="async" aria-hidden="true"></span> Seedling Tier <span class="tier-divider-soon">Coming soon</span></div><div class="line"></div></div>
-                <div class="services-grid" data-tier-group="seedling">
-                    <div class="service-card glow-card reveal reveal-delay-1" data-service="vaultwarden" data-tier="seedling" role="button" tabindex="0" aria-haspopup="dialog"><div class="service-header"><div class="service-icon"><img src="/assets/icons/vaultwarden.svg" width="40" height="40" loading="lazy" decoding="async" alt="Vaultwarden"></div><h3 class="glass-text"><span class="status-dot" title="Operational" aria-label="Status: operational"></span><span class="live-badge">LIVE</span>Vaultwarden</h3><span class="acct-pill">Account required</span></div><span class="service-shot"><img src="/assets/screenshots/vaultwarden.webp" alt="Vaultwarden web vault screenshot" loading="lazy" decoding="async"></span><p>A password manager that creates strong, unique passwords and fills them in automatically.</p><span class="tier-tag seedling">Seedling Tier</span><span class="tier-tag sweetpea">Sweet Pea Tier</span></div>
-                    <div class="service-card glow-card reveal reveal-delay-2" data-service="matrix" data-tier="seedling" role="button" tabindex="0" aria-haspopup="dialog"><div class="service-header"><div class="service-icon"><img src="/assets/icons/matrix.svg" width="40" height="40" loading="lazy" decoding="async" alt="Matrix"></div><h3 class="glass-text"><span class="status-dot" title="Operational" aria-label="Status: operational"></span><span class="live-badge">LIVE</span>Matrix / Element</h3><span class="acct-pill">Account required</span></div><span class="service-shot"><img src="/assets/screenshots/element.webp" alt="Element web chat screenshot" loading="lazy" decoding="async"></span><p>A private, encrypted chat app. Message friends and create rooms without anyone watching.</p><span class="tier-tag seedling">Seedling Tier</span><span class="tier-tag sweetpea">Sweet Pea Tier</span></div>
-                    <div class="service-card glow-card reveal reveal-delay-3" data-service="affine" data-tier="seedling" role="button" tabindex="0" aria-haspopup="dialog"><div class="service-header"><div class="service-icon"><img src="/assets/icons/affine.svg" width="40" height="40" loading="lazy" decoding="async" alt="AFFiNE"></div><h3 class="glass-text"><span class="status-dot" title="Operational" aria-label="Status: operational"></span><span class="live-badge">LIVE</span>AFFiNE</h3><span class="acct-pill">Account required</span></div><span class="service-shot"><img src="/assets/screenshots/affine.webp" alt="AFFiNE workspace screenshot" loading="lazy" decoding="async"></span><p>A Notion alternative you own. Documents, wikis, and whiteboards — all private.</p><span class="tier-tag seedling">Seedling Tier</span><span class="tier-tag sweetpea">Sweet Pea Tier</span></div>
-                    <div class="service-card glow-card reveal reveal-delay-1" data-service="koalasync" data-tier="seedling" role="button" tabindex="0" aria-haspopup="dialog"><div class="service-header"><div class="service-icon"><img src="/assets/icons/koalasync.svg" alt="KoalaSync logo" width="40" height="40" loading="lazy" decoding="async"></div><h3 class="glass-text"><span class="status-dot" title="Operational" aria-label="Status: operational"></span><span class="live-badge">LIVE</span>KoalaSync</h3><span class="acct-pill">Account required</span></div><span class="service-shot"><img src="/assets/screenshots/koalasync.webp" alt="KoalaSync watch party screenshot" loading="lazy" decoding="async"></span><p>Watch movies and shows together with friends in real-time.</p><span class="tier-tag seedling">Seedling Tier</span><span class="tier-tag sweetpea">Sweet Pea Tier</span></div>
-                </div>
-
-                <div class="tier-divider reveal" style="margin-top: 60px;" data-tier-divider="sweetpea"><div class="line"></div><div class="label"><span class="icon"><img src="/assets/icons/icon-ui-blossom.svg" class="" alt="" width="22" height="22" loading="lazy" decoding="async" aria-hidden="true"></span> Sweet Pea Tier</div><div class="line"></div></div>
+                <div class="tier-divider reveal" data-tier-divider="sweetpea"><div class="line"></div><div class="label"><span class="icon"><img src="/assets/icons/icon-ui-blossom.svg" class="" alt="" width="22" height="22" loading="lazy" decoding="async" aria-hidden="true"></span> Included with Sweet Pea</div><div class="line"></div></div>
                 <div class="services-grid" data-tier-group="sweetpea">
                     <div class="service-card glow-card reveal reveal-delay-1" data-service="jellyfin" data-tier="sweetpea" role="button" tabindex="0" aria-haspopup="dialog"><div class="service-header"><div class="service-icon"><img src="/assets/icons/jellyfin.svg" width="40" height="40" loading="lazy" decoding="async" alt="Jellyfin"></div><h3 class="glass-text"><span class="status-dot" title="Operational" aria-label="Status: operational"></span><span class="live-badge">LIVE</span>Jellyfin / Moonfin</h3><span class="acct-pill">Account required</span></div><span class="service-shot"><img src="/assets/screenshots/jellyfin.webp" alt="Jellyfin media library screenshot" loading="lazy" decoding="async"></span><p>Your own private Netflix — stream your library on any device.</p><span class="tier-tag sweetpea">Sweet Pea Tier</span></div>
                     <div class="service-card glow-card reveal reveal-delay-2" data-service="seerr" data-tier="sweetpea" role="button" tabindex="0" aria-haspopup="dialog"><div class="service-header"><div class="service-icon"><img src="/assets/icons/seerr.svg" alt="Seerr logo" width="40" height="40" loading="lazy" decoding="async"></div><h3 class="glass-text"><span class="status-dot" title="Operational" aria-label="Status: operational"></span><span class="live-badge">LIVE</span>Seerr</h3><span class="acct-pill">Account required</span></div><span class="service-shot"><img src="/assets/screenshots/seerr.webp" alt="Seerr request dashboard screenshot" loading="lazy" decoding="async"></span><p>Request movies and shows — they appear in Jellyfin automatically.</p><span class="tier-tag sweetpea">Sweet Pea Tier</span></div>
                     <div class="service-card glow-card reveal reveal-delay-3" data-service="nextcloud" data-tier="sweetpea" role="button" tabindex="0" aria-haspopup="dialog"><div class="service-header"><div class="service-icon"><img src="/assets/icons/nextcloud.svg" width="40" height="40" loading="lazy" decoding="async" alt="Nextcloud"></div><h3 class="glass-text"><span class="status-dot" title="Operational" aria-label="Status: operational"></span><span class="live-badge">LIVE</span>Nextcloud</h3><span class="acct-pill">Account required</span></div><span class="service-shot"><img src="/assets/screenshots/nextcloud.webp" alt="Nextcloud files dashboard screenshot" loading="lazy" decoding="async"></span><p>Files, calendar, and contacts — your private Google Workspace.</p><span class="tier-tag sweetpea">Sweet Pea Tier</span></div>
                     <div class="service-card glow-card reveal reveal-delay-1" data-service="immich" data-tier="sweetpea" role="button" tabindex="0" aria-haspopup="dialog"><div class="service-header"><div class="service-icon"><img src="/assets/icons/immich.svg" width="40" height="40" loading="lazy" decoding="async" alt="Immich"></div><h3 class="glass-text"><span class="status-dot" title="Operational" aria-label="Status: operational"></span><span class="live-badge">LIVE</span>Immich</h3><span class="acct-pill">Account required</span></div><span class="service-shot"><img src="/assets/screenshots/immich.webp" alt="Immich photo library screenshot" loading="lazy" decoding="async"></span><p>Photo and video backup, like Google Photos without the tracking.</p><span class="tier-tag sweetpea">Sweet Pea Tier</span></div>
                     <div class="service-card glow-card reveal reveal-delay-2" data-service="openwebui" data-tier="sweetpea" role="button" tabindex="0" aria-haspopup="dialog"><div class="service-header"><div class="service-icon"><img src="/assets/icons/openwebui.svg" width="40" height="40" loading="lazy" decoding="async" alt="Open WebUI"></div><h3 class="glass-text"><span class="status-dot" title="Operational" aria-label="Status: operational"></span><span class="live-badge">LIVE</span>Open WebUI</h3><span class="acct-pill">Account required</span></div><span class="service-shot"><img src="/assets/screenshots/openwebui.webp" alt="Open WebUI chat interface screenshot" loading="lazy" decoding="async"></span><p>A private AI chat interface running on our own hardware.</p><span class="tier-tag sweetpea">Sweet Pea Tier</span></div>
+                    <div class="service-card glow-card reveal reveal-delay-3" data-service="vaultwarden" data-tier="sweetpea" role="button" tabindex="0" aria-haspopup="dialog"><div class="service-header"><div class="service-icon"><img src="/assets/icons/vaultwarden.svg" width="40" height="40" loading="lazy" decoding="async" alt="Vaultwarden"></div><h3 class="glass-text"><span class="status-dot" title="Operational" aria-label="Status: operational"></span><span class="live-badge">LIVE</span>Vaultwarden</h3><span class="acct-pill">Account required</span></div><span class="service-shot"><img src="/assets/screenshots/vaultwarden.webp" alt="Vaultwarden web vault screenshot" loading="lazy" decoding="async"></span><p>A password manager that creates strong, unique passwords and fills them in automatically.</p><span class="tier-tag sweetpea">Sweet Pea Tier</span></div>
+                    <div class="service-card glow-card reveal reveal-delay-1" data-service="matrix" data-tier="sweetpea" role="button" tabindex="0" aria-haspopup="dialog"><div class="service-header"><div class="service-icon"><img src="/assets/icons/matrix.svg" width="40" height="40" loading="lazy" decoding="async" alt="Matrix"></div><h3 class="glass-text"><span class="status-dot" title="Operational" aria-label="Status: operational"></span><span class="live-badge">LIVE</span>Matrix / Element</h3><span class="acct-pill">Account required</span></div><span class="service-shot"><img src="/assets/screenshots/element.webp" alt="Element web chat screenshot" loading="lazy" decoding="async"></span><p>A private, encrypted chat app. Message friends and create rooms without anyone watching.</p><span class="tier-tag sweetpea">Sweet Pea Tier</span></div>
+                    <div class="service-card glow-card reveal reveal-delay-2" data-service="affine" data-tier="sweetpea" role="button" tabindex="0" aria-haspopup="dialog"><div class="service-header"><div class="service-icon"><img src="/assets/icons/affine.svg" width="40" height="40" loading="lazy" decoding="async" alt="AFFiNE"></div><h3 class="glass-text"><span class="status-dot" title="Operational" aria-label="Status: operational"></span><span class="live-badge">LIVE</span>AFFiNE</h3><span class="acct-pill">Account required</span></div><span class="service-shot"><img src="/assets/screenshots/affine.webp" alt="AFFiNE workspace screenshot" loading="lazy" decoding="async"></span><p>A Notion alternative you own. Documents, wikis, and whiteboards — all private.</p><span class="tier-tag sweetpea">Sweet Pea Tier</span></div>
+                    <div class="service-card glow-card reveal reveal-delay-3" data-service="koalasync" data-tier="sweetpea" role="button" tabindex="0" aria-haspopup="dialog"><div class="service-header"><div class="service-icon"><img src="/assets/icons/koalasync.svg" alt="KoalaSync logo" width="40" height="40" loading="lazy" decoding="async"></div><h3 class="glass-text"><span class="status-dot" title="Operational" aria-label="Status: operational"></span><span class="live-badge">LIVE</span>KoalaSync</h3><span class="acct-pill">Account required</span></div><span class="service-shot"><img src="/assets/screenshots/koalasync.webp" alt="KoalaSync watch party screenshot" loading="lazy" decoding="async"></span><p>Watch movies and shows together with friends in real-time.</p><span class="tier-tag sweetpea">Sweet Pea Tier</span></div>
                 </div>
 
                 <div class="tier-divider reveal" style="margin-top: 60px;" data-tier-divider="coming-soon"><div class="line"></div><div class="label"><span class="icon"><img src="/assets/icons/icon-ui-construction.svg" class="" alt="" width="22" height="22" loading="lazy" decoding="async" aria-hidden="true"></span> Coming Soon</div><div class="line"></div></div>
@@ -122,6 +153,16 @@
                     <div class="coming-soon-card reveal reveal-delay-2" data-tier="coming-soon"><div class="service-header"><div class="service-icon"><img src="/assets/icons/neko.svg" width="40" height="40" loading="lazy" decoding="async" alt="Neko"></div><h3>Neko</h3></div><p>Virtual browser in the cloud — watch together.</p></div>
                     <div class="coming-soon-card reveal reveal-delay-3" data-tier="coming-soon"><div class="service-header"><div class="service-icon"><img src="/assets/icons/minecraft.svg" width="40" height="40" loading="lazy" decoding="async" alt="Minecraft"></div><h3>Minecraft</h3></div><p>Self-hosted Minecraft server for friends and family.</p></div>
                 </div>
+
+                <div class="mystery-tier reveal" id="seedling-mystery">
+                    <div class="mystery-inner">
+                        <div class="mystery-icon" aria-hidden="true"><img src="/assets/icons/icon-ui-seedling.svg" alt="" width="34" height="34" loading="lazy" decoding="async"></div>
+                        <span class="mystery-tag">Coming soon</span>
+                        <h3 class="mystery-title">Something lighter is growing</h3>
+                        <p class="mystery-copy">A second, smaller tier is in the works for people who want the everyday essentials without the full library. We are not announcing what it includes yet — details will be revealed when it opens.</p>
+                        <p class="mystery-note">Sweet Pea is open for requests today.</p>
+                    </div>
+                </div>
             </div>
 
             <div class="view-panel" data-view="faq" role="tabpanel">
@@ -129,11 +170,11 @@
                 <h2 class="section-title glass-text reveal">FAQ</h2>
                 <div class="reveal reveal-delay-1">
                     <div class="faq-item">
-<button class="faq-question" type="button" id="services-faq-q-1" aria-expanded="false" aria-controls="services-faq-a-1" data-action="toggle-faq">Why do you require a donation before access? <span class="arrow"><img src="/assets/icons/icon-ui-chevron-down.svg" class="" alt="" width="16" height="16" loading="lazy" decoding="async" aria-hidden="true"></span></button>
-<div class="faq-answer" id="services-faq-a-1" role="region" aria-labelledby="services-faq-q-1"><p>The donation requirement prevents abuse and spam, and ensures members are invested in the community.</p></div></div>
+<button class="faq-question" type="button" id="services-faq-q-1" aria-expanded="false" aria-controls="services-faq-a-1" data-action="toggle-faq">Why do you review requests instead of signing everyone up? <span class="arrow"><img src="/assets/icons/icon-ui-chevron-down.svg" class="" alt="" width="16" height="16" loading="lazy" decoding="async" aria-hidden="true"></span></button>
+<div class="faq-answer" id="services-faq-a-1" role="region" aria-labelledby="services-faq-q-1"><p>Each request is reviewed individually so access stays limited to people we can vouch for. It keeps the community small and the hardware sustainable.</p></div></div>
                     <div class="faq-item">
 <button class="faq-question" type="button" id="services-faq-q-2" aria-expanded="false" aria-controls="services-faq-a-2" data-action="toggle-faq">Is this a subscription? <span class="arrow"><img src="/assets/icons/icon-ui-chevron-down.svg" class="" alt="" width="16" height="16" loading="lazy" decoding="async" aria-hidden="true"></span></button>
-<div class="faq-answer" id="services-faq-a-2" role="region" aria-labelledby="services-faq-q-2"><p>No. A single donation grants lifetime access. There are no recurring fees.</p></div></div>
+<div class="faq-answer" id="services-faq-a-2" role="region" aria-labelledby="services-faq-q-2"><p>No. Access is one-time and lifetime — there are no recurring fees or subscriptions.</p></div></div>
                     <div class="faq-item">
 <button class="faq-question" type="button" id="services-faq-q-3" aria-expanded="false" aria-controls="services-faq-a-3" data-action="toggle-faq">What happens if MySweetPea shuts down? <span class="arrow"><img src="/assets/icons/icon-ui-chevron-down.svg" class="" alt="" width="16" height="16" loading="lazy" decoding="async" aria-hidden="true"></span></button>
 <div class="faq-answer" id="services-faq-a-3" role="region" aria-labelledby="services-faq-q-3"><p>Every service is open source and self-hosted, so your data is never locked in. You can export and self-host the same software yourself.</p></div></div>
@@ -198,18 +239,18 @@
         </figure>
     </div>
 
-    <script src="/assets/js/site.js?v=31" defer></script>
-    <script src="/assets/js/premium.js?v=31" defer></script>
+    <script src="/assets/js/site.js?v=32" defer></script>
+    <script src="/assets/js/premium.js?v=32" defer></script>
     <script>
 // FAQ Toggle
         function toggleFAQ(el) { var item = el.parentElement; var open = item.classList.toggle('open'); el.setAttribute('aria-expanded', String(open)); }
 
         // Screenshot lightbox
         var SERVICES = {
-            vaultwarden: { name:'Vaultwarden', icon:'<img src="/assets/icons/vaultwarden.svg" width="40" height="40" loading="lazy" decoding="async" alt="Vaultwarden">', shot:'/assets/screenshots/vaultwarden.webp', github:'https://github.com/dani-garcia/vaultwarden', tier:'seedling', tierLabel:'Seedling', plain:'A safe place to store all your passwords — like a locked drawer for your digital life.', replaces:'Think of it like LastPass or 1Password.', desc:'Vaultwarden is a password manager that remembers all your passwords so you do not have to. It creates strong, unique passwords for every website and fills them in automatically. Your vault is encrypted end-to-end — even we cannot see your passwords.', url:'https://vault.mysweetpea.cc' },
-            matrix: { name:'Matrix / Element', icon:'<img src="/assets/icons/matrix.svg" width="40" height="40" loading="lazy" decoding="async" alt="Matrix">', shot:'/assets/screenshots/element.webp', github:'https://github.com/element-hq/element-web', tier:'seedling', tierLabel:'Seedling', plain:'A private chat app for messaging friends — nobody else can read your messages.', replaces:'Think of it like Discord or Slack, but private.', desc:'Matrix is a private, encrypted chat system. Element is the app you use to access it. Create rooms, send messages, share files, all encrypted.', url:'https://chat.mysweetpea.cc' },
-            affine: { name:'AFFiNE', icon:'<img src="/assets/icons/affine.svg" width="40" height="40" loading="lazy" decoding="async" alt="AFFiNE">', shot:'/assets/screenshots/affine.webp', github:'https://github.com/toeverything/AFFiNE', tier:'seedling', tierLabel:'Seedling', plain:'A place to write notes, build wikis, and sketch ideas — all kept private.', replaces:'Think of it like Notion and Miro in one.', desc:'AFFiNE is a free alternative to Notion. Create documents, wikis, whiteboards, and knowledge bases. All your notes are stored privately on our server.', url:'https://notes.mysweetpea.cc' },
-            koalasync: { name:'KoalaSync', icon:'<img src="/assets/icons/koalasync.svg" alt="KoalaSync logo" width="40" height="40" loading="lazy" decoding="async">', shot:'/assets/screenshots/koalasync.webp', github:'https://github.com/Shik3i/KoalaSync', tier:'seedling', tierLabel:'Seedling', plain:'Watch movies and shows together with friends in real-time — everyone sees the same scene.', replaces:'Think of it like a shared remote for your watch party.', desc:'KoalaSync lets you watch movies and shows together with friends in real-time. Works with Jellyfin, YouTube, and other video sites.', url:'https://sync.mysweetpea.cc' },
+            vaultwarden: { name:'Vaultwarden', icon:'<img src="/assets/icons/vaultwarden.svg" width="40" height="40" loading="lazy" decoding="async" alt="Vaultwarden">', shot:'/assets/screenshots/vaultwarden.webp', github:'https://github.com/dani-garcia/vaultwarden', tier:'sweetpea', tierLabel:'Sweet Pea', plain:'A safe place to store all your passwords — like a locked drawer for your digital life.', replaces:'Think of it like LastPass or 1Password.', desc:'Vaultwarden is a password manager that remembers all your passwords so you do not have to. It creates strong, unique passwords for every website and fills them in automatically. Your vault is encrypted end-to-end — even we cannot see your passwords.', url:'https://vault.mysweetpea.cc' },
+            matrix: { name:'Matrix / Element', icon:'<img src="/assets/icons/matrix.svg" width="40" height="40" loading="lazy" decoding="async" alt="Matrix">', shot:'/assets/screenshots/element.webp', github:'https://github.com/element-hq/element-web', tier:'sweetpea', tierLabel:'Sweet Pea', plain:'A private chat app for messaging friends — nobody else can read your messages.', replaces:'Think of it like Discord or Slack, but private.', desc:'Matrix is a private, encrypted chat system. Element is the app you use to access it. Create rooms, send messages, share files, all encrypted.', url:'https://chat.mysweetpea.cc' },
+            affine: { name:'AFFiNE', icon:'<img src="/assets/icons/affine.svg" width="40" height="40" loading="lazy" decoding="async" alt="AFFiNE">', shot:'/assets/screenshots/affine.webp', github:'https://github.com/toeverything/AFFiNE', tier:'sweetpea', tierLabel:'Sweet Pea', plain:'A place to write notes, build wikis, and sketch ideas — all kept private.', replaces:'Think of it like Notion and Miro in one.', desc:'AFFiNE is a free alternative to Notion. Create documents, wikis, whiteboards, and knowledge bases. All your notes are stored privately on our server.', url:'https://notes.mysweetpea.cc' },
+            koalasync: { name:'KoalaSync', icon:'<img src="/assets/icons/koalasync.svg" alt="KoalaSync logo" width="40" height="40" loading="lazy" decoding="async">', shot:'/assets/screenshots/koalasync.webp', github:'https://github.com/Shik3i/KoalaSync', tier:'sweetpea', tierLabel:'Sweet Pea', plain:'Watch movies and shows together with friends in real-time — everyone sees the same scene.', replaces:'Think of it like a shared remote for your watch party.', desc:'KoalaSync lets you watch movies and shows together with friends in real-time. Works with Jellyfin, YouTube, and other video sites.', url:'https://sync.mysweetpea.cc' },
             jellyfin: { name:'Jellyfin / Moonfin', icon:'<img src="/assets/icons/jellyfin.svg" width="40" height="40" loading="lazy" decoding="async" alt="Jellyfin">', shot:'/assets/screenshots/jellyfin.webp', github:'https://github.com/jellyfin/jellyfin', tier:'sweetpea', tierLabel:'Sweet Pea', plain:'Your own private movie and TV library — stream it on any device.', replaces:'Think of it like Netflix, but it is your own collection.', desc:'Jellyfin is your own private Netflix — a free, open-source media server that streams your movie and TV collection to any device. Moonfin is a premium web interface that runs on top of Jellyfin.', url:'https://media.mysweetpea.cc/Moonfin/Web/' },
             seerr: { name:'Seerr', icon:'<img src="/assets/icons/seerr.svg" alt="Seerr logo" width="40" height="40" loading="lazy" decoding="async">', shot:'/assets/screenshots/seerr.webp', github:'https://github.com/seerr-team/seerr', tier:'sweetpea', tierLabel:'Sweet Pea', plain:'A wish list for movies and shows — request anything you want to watch.', replaces:'Think of it like a request box for your media library.', desc:'Seerr is like a wish list for movies and shows. Browse what is trending, see what is already available, and request anything you want to watch. Your request is processed automatically and the content appears in Jellyfin.', url:'https://request.mysweetpea.cc' },
             nextcloud: { name:'Nextcloud', icon:'<img src="/assets/icons/nextcloud.svg" width="40" height="40" loading="lazy" decoding="async" alt="Nextcloud">', shot:'/assets/screenshots/nextcloud.webp', github:'https://github.com/nextcloud/server', tier:'sweetpea', tierLabel:'Sweet Pea', plain:'Your private place for files, calendar, and contacts — like a personal Google Workspace.', replaces:'Think of it like Google Drive, but private.', desc:'Nextcloud is your private Google Workspace replacement. Sync files across devices, share documents, manage your calendar and contacts — all stored on our own hardware.', url:'https://cloud.mysweetpea.cc' },

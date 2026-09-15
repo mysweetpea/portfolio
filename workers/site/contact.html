@@ -1,6 +1,31 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+<style id="msp-paint-guard">/* Paint guard: prevents the pre-CSS white flash on navigation.
+   Measured: with stylesheets in flight the page painted pure white (255,255,255)
+   because no early background/color-scheme was set. Keep this FIRST in <head>. */
+html{background:#0C1316;color-scheme:dark}
+html[data-theme="light"]{background:#E7EDEA;color-scheme:light}
+</style>
+<script id="msp-theme-early">/* Early paint bootstrap — runs BEFORE the body paints.
+   1) Apply the saved theme so the guard picks the right background.
+   2) Mark html.js NOW so .reveal content starts hidden and only ever fades IN.
+      Previously site.js (defer) added it AFTER first paint, which faded visible
+      content OUT then back IN (~1.5s of background-only = the "static screen").
+   3) Watchdog: if the main script never initialises, drop .js so content can
+      never be left permanently invisible. */
+(function(){
+  try{
+    var t=localStorage.getItem('msp-theme');
+    if(!t&&window.matchMedia&&window.matchMedia('(prefers-color-scheme: light)').matches)t='light';
+    if(t)document.documentElement.setAttribute('data-theme',t);
+  }catch(e){}
+  document.documentElement.classList.add('js');
+  setTimeout(function(){
+    if(!window.__mspRevealInit)document.documentElement.classList.remove('js');
+  },2500);
+})();
+</script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="robots" content="noindex, nofollow, noarchive, nosnippet, noimageindex">
@@ -20,9 +45,9 @@
     <link rel="preload" as="font" type="font/woff2" href="/assets/fonts/inter-var.woff2" crossorigin>
     <link rel="preload" as="font" type="font/woff2" href="/assets/fonts/fraunces-var.woff2" crossorigin>
     <link rel="manifest" href="/manifest.json">
-                    <link rel="stylesheet" href="/assets/css/fonts.css?v=31">
-    <link rel="stylesheet" href="/assets/css/site.css?v=31">
-    <link rel="stylesheet" href="/assets/css/premium.css?v=31">
+                    <link rel="stylesheet" href="/assets/css/fonts.css?v=32">
+    <link rel="stylesheet" href="/assets/css/site.css?v=32">
+    <link rel="stylesheet" href="/assets/css/premium.css?v=32">
 </head>
 <body data-page="contact">
     <a href="#main-content" class="skip-link">Skip to content</a>
@@ -153,8 +178,8 @@
 
 
 
-    <script src="/assets/js/site.js?v=31" defer></script>
-    <script src="/assets/js/premium.js?v=31" defer></script>
+    <script src="/assets/js/site.js?v=32" defer></script>
+    <script src="/assets/js/premium.js?v=32" defer></script>
     <script>
     if ('serviceWorker' in navigator) {
         window.addEventListener('load', function () {

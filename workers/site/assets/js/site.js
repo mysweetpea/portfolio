@@ -47,6 +47,10 @@
         window.addEventListener('scroll', updateNav, { passive: true });
     }
 
+    /* Signal the early-paint watchdog that the reveal system is live, so it
+       does not drop the html.js class (which would disable reveal styling). */
+    window.__mspRevealInit = true;
+
     /* === Scroll reveal animations === */
     var revealEls = Array.prototype.slice.call(document.querySelectorAll('.reveal'));
 
