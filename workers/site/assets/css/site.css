@@ -5313,6 +5313,28 @@ body[data-page='home'] .hero h1 { font-size: clamp(2.75rem, 6.5vw, 4.5rem); }
 .compare-table .compare-cta-row td { padding-top: 18px; padding-bottom: 18px; }
 .compare-table .compare-cta-row .compare-cta { display: inline-block; font-size: 0.8rem; font-weight: 700; color: var(--bg); background: var(--sage); padding: 9px 16px; border-radius: 9px; text-decoration: none; transition: var(--transition); }
 .compare-table .compare-cta-row .compare-cta:hover { background: var(--primary-bright); transform: translateY(-1px); }
+
+/* === Seedling "Coming Soon" states (donations not yet wired) === */
+/* Access-choice card placeholder — visibly inactive, not clickable. */
+.access-choice-card.coming-soon { position: relative; cursor: not-allowed; opacity: 0.72; }
+.access-choice-card.coming-soon:hover, .access-choice-card.coming-soon:focus-visible { transform: none; border-color: var(--border); box-shadow: none; }
+.access-choice-card.coming-soon .access-choice-icon img { filter: grayscale(0.55); }
+.access-choice-card.coming-soon .access-choice-price { color: var(--text-faint); }
+.access-choice-card.coming-soon::after { content: "Coming soon"; position: absolute; top: 14px; right: 14px; padding: 4px 10px; border-radius: 999px; background: rgba(143, 175, 181, 0.14); border: 1px solid var(--border-primary); color: var(--primary-bright); font-size: 0.64rem; font-weight: 800; letter-spacing: 0.06em; text-transform: uppercase; }
+/* Pricing card badge for the same state. */
+.tier-badge-soon { position: absolute; top: 14px; right: 14px; padding: 4px 12px; border-radius: 999px; background: rgba(143, 175, 181, 0.14); border: 1px solid var(--border-primary); color: var(--primary-bright); font-size: 0.7rem; font-weight: 800; letter-spacing: 0.06em; text-transform: uppercase; }
+.pricing-card.coming-soon { opacity: 0.82; }
+.pricing-card.coming-soon .tier-icon { filter: grayscale(0.5); }
+/* Disabled CTA buttons (pricing card). */
+body[data-page='pricing'] .btn-glass-seedling:disabled { opacity: 0.55; cursor: not-allowed; }
+body[data-page='pricing'] .btn-glass-seedling:disabled:hover { transform: none; background: rgba(163, 201, 182, 0.06); }
+/* Compare-table coming-soon markers. */
+.compare-table .compare-soon-tag { display: block; margin-top: 3px; font-size: 0.62rem; font-weight: 800; letter-spacing: 0.05em; text-transform: uppercase; color: var(--primary-bright); opacity: 0.85; }
+.compare-table .compare-cta.compare-cta-soon { background: rgba(143, 175, 181, 0.14); border: 1px solid var(--border-primary); color: var(--primary-bright); cursor: not-allowed; }
+.compare-table .compare-cta.compare-cta-soon:hover { transform: none; background: rgba(143, 175, 181, 0.14); }
+/* Services page: filter chip + divider tag. */
+.filter-soon { display: inline-block; margin-left: 4px; padding: 1px 6px; border-radius: 999px; background: rgba(143, 175, 181, 0.14); font-size: 0.6rem; font-weight: 800; letter-spacing: 0.05em; text-transform: uppercase; color: var(--primary-bright); vertical-align: middle; }
+.tier-divider-soon { margin-left: 8px; padding: 3px 9px; border-radius: 999px; background: rgba(143, 175, 181, 0.14); border: 1px solid var(--border-primary); font-size: 0.62rem; font-weight: 800; letter-spacing: 0.05em; text-transform: uppercase; color: var(--primary-bright); }
 @media (max-width: 640px) {
     /* Stack the compare table into per-service cards:
        service name on top, two tier boxes (Seedling | Sweet Pea) below */
@@ -7658,6 +7680,22 @@ body[data-page='form'] .vc-text {
     color: #2F6B4E;
     border-bottom-color: #2F6B4E;
 }
+/* === Seedling Coming Soon: light-theme variants === */
+[data-theme="light"] .access-choice-card.coming-soon::after,
+[data-theme="light"] .tier-badge-soon,
+[data-theme="light"] .filter-soon,
+[data-theme="light"] .tier-divider-soon,
+[data-theme="light"] .compare-table .compare-soon-tag {
+    background: rgba(62, 124, 95, 0.12);
+    border-color: rgba(62, 124, 95, 0.3);
+    color: #2F6B4E;
+}
+[data-theme="light"] .compare-table .compare-cta.compare-cta-soon {
+    background: rgba(62, 124, 95, 0.1);
+    border-color: rgba(62, 124, 95, 0.3);
+    color: #2F6B4E;
+}
+[data-theme="light"] .compare-table .compare-cta.compare-cta-soon:hover { background: rgba(62, 124, 95, 0.1); }
 [data-theme="light"] body[data-page='support'] .account-help-box a:hover {
     color: var(--primary-bright);
     border-bottom-color: var(--primary-bright);

@@ -21,9 +21,9 @@
     <link rel="preload" as="image" href="/logo.svg">
     <link rel="preload" as="font" type="font/woff2" href="/assets/fonts/inter-var.woff2" crossorigin>
     <link rel="preload" as="font" type="font/woff2" href="/assets/fonts/fraunces-var.woff2" crossorigin>
-                    <link rel="stylesheet" href="/assets/css/fonts.css?v=30">
-    <link rel="stylesheet" href="/assets/css/site.css?v=30">
-    <link rel="stylesheet" href="/assets/css/premium.css?v=30">
+                    <link rel="stylesheet" href="/assets/css/fonts.css?v=31">
+    <link rel="stylesheet" href="/assets/css/site.css?v=31">
+    <link rel="stylesheet" href="/assets/css/premium.css?v=31">
 </head>
 <body data-page="services">
     <a href="#main-content" class="skip-link">Skip to content</a>
@@ -91,12 +91,12 @@
                 <p class="section-subtitle reveal reveal-delay-1">Click any service to see a screenshot and open it — step-by-step guides live in your dashboard</p>
                 <div class="filter-bar reveal reveal-delay-1" role="group" aria-label="Filter services by tier">
                     <button type="button" class="filter-btn active" data-filter="all">All</button>
-                    <button type="button" class="filter-btn" data-filter="seedling">Seedling</button>
+                    <button type="button" class="filter-btn" data-filter="seedling">Seedling <span class="filter-soon">soon</span></button>
                     <button type="button" class="filter-btn" data-filter="sweetpea">Sweet Pea</button>
                     <button type="button" class="filter-btn" data-filter="coming-soon">Coming Soon</button>
                 </div>
 
-                <div class="tier-divider reveal" data-tier-divider="seedling"><div class="line"></div><div class="label"><span class="icon"><img src="/assets/icons/icon-ui-seedling.svg" class="" alt="" width="22" height="22" loading="lazy" decoding="async" aria-hidden="true"></span> Seedling Tier</div><div class="line"></div></div>
+                <div class="tier-divider reveal" data-tier-divider="seedling"><div class="line"></div><div class="label"><span class="icon"><img src="/assets/icons/icon-ui-seedling.svg" class="" alt="" width="22" height="22" loading="lazy" decoding="async" aria-hidden="true"></span> Seedling Tier <span class="tier-divider-soon">Coming soon</span></div><div class="line"></div></div>
                 <div class="services-grid" data-tier-group="seedling">
                     <div class="service-card glow-card reveal reveal-delay-1" data-service="vaultwarden" data-tier="seedling" role="button" tabindex="0" aria-haspopup="dialog"><div class="service-header"><div class="service-icon"><img src="/assets/icons/vaultwarden.svg" width="40" height="40" loading="lazy" decoding="async" alt="Vaultwarden"></div><h3 class="glass-text"><span class="status-dot" title="Operational" aria-label="Status: operational"></span><span class="live-badge">LIVE</span>Vaultwarden</h3><span class="acct-pill">Account required</span></div><span class="service-shot"><img src="/assets/screenshots/vaultwarden.webp" alt="Vaultwarden web vault screenshot" loading="lazy" decoding="async"></span><p>A password manager that creates strong, unique passwords and fills them in automatically.</p><span class="tier-tag seedling">Seedling Tier</span><span class="tier-tag sweetpea">Sweet Pea Tier</span></div>
                     <div class="service-card glow-card reveal reveal-delay-2" data-service="matrix" data-tier="seedling" role="button" tabindex="0" aria-haspopup="dialog"><div class="service-header"><div class="service-icon"><img src="/assets/icons/matrix.svg" width="40" height="40" loading="lazy" decoding="async" alt="Matrix"></div><h3 class="glass-text"><span class="status-dot" title="Operational" aria-label="Status: operational"></span><span class="live-badge">LIVE</span>Matrix / Element</h3><span class="acct-pill">Account required</span></div><span class="service-shot"><img src="/assets/screenshots/element.webp" alt="Element web chat screenshot" loading="lazy" decoding="async"></span><p>A private, encrypted chat app. Message friends and create rooms without anyone watching.</p><span class="tier-tag seedling">Seedling Tier</span><span class="tier-tag sweetpea">Sweet Pea Tier</span></div>
@@ -198,8 +198,8 @@
         </figure>
     </div>
 
-    <script src="/assets/js/site.js?v=30" defer></script>
-    <script src="/assets/js/premium.js?v=30" defer></script>
+    <script src="/assets/js/site.js?v=31" defer></script>
+    <script src="/assets/js/premium.js?v=31" defer></script>
     <script>
 // FAQ Toggle
         function toggleFAQ(el) { var item = el.parentElement; var open = item.classList.toggle('open'); el.setAttribute('aria-expanded', String(open)); }

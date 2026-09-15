@@ -21,9 +21,9 @@
     <link rel="preload" as="image" href="/logo.svg">
     <link rel="preload" as="font" type="font/woff2" href="/assets/fonts/inter-var.woff2" crossorigin>
     <link rel="preload" as="font" type="font/woff2" href="/assets/fonts/fraunces-var.woff2" crossorigin>
-                    <link rel="stylesheet" href="/assets/css/fonts.css?v=30">
-    <link rel="stylesheet" href="/assets/css/site.css?v=30">
-    <link rel="stylesheet" href="/assets/css/premium.css?v=30">
+                    <link rel="stylesheet" href="/assets/css/fonts.css?v=31">
+    <link rel="stylesheet" href="/assets/css/site.css?v=31">
+    <link rel="stylesheet" href="/assets/css/premium.css?v=31">
 </head>
 <body data-page="form">
     <a href="#main-content" class="skip-link">Skip to content</a>
@@ -82,13 +82,13 @@
         <section class="access-choice-section" aria-labelledby="choose-tier-title">
             <span class="eyebrow">First, choose a tier</span>
             <h2 class="section-title glass-text" id="choose-tier-title">How would you like to get started?</h2>
-            <p class="section-subtitle">Both options give you a MySweetPea account. Select a tier below to open its form.</p>
+            <p class="section-subtitle">Requests are open for the Sweet Pea tier. The Seedling tier opens once crypto donations are live.</p>
             <div class="access-choice-grid">
-                <button type="button" class="access-choice-card" data-tier="seedling" aria-pressed="false">
+                <button type="button" class="access-choice-card coming-soon" data-tier="seedling" aria-pressed="false" aria-disabled="true">
                     <span class="access-choice-icon" aria-hidden="true"><img src="/assets/icons/icon-ui-seedling.svg" alt="" width="48" height="48"></span>
                     <span class="access-choice-title">Seedling</span>
-                    <span class="access-choice-price">$5 minimum donation</span>
-                    <span class="access-choice-copy">Password manager, chat, notes, and watch parties. You make a crypto donation, then submit the transaction hash.</span>
+                    <span class="access-choice-price">Coming soon</span>
+                    <span class="access-choice-copy">Password manager, chat, notes, and watch parties. Opening once crypto donations are available.</span>
                 </button>
                 <button type="button" class="access-choice-card" data-tier="sweetpea" aria-pressed="false">
                     <span class="access-choice-icon" aria-hidden="true"><img src="/assets/icons/icon-ui-blossom.svg" alt="" width="48" height="48"></span>
@@ -238,9 +238,9 @@
 
 
 
-    <script src="/assets/js/site.js?v=30" defer></script>
-    <script src="/assets/js/premium.js?v=30" defer></script>
-    <script src="/assets/js/qrcode.min.js?v=30" defer></script>
+    <script src="/assets/js/site.js?v=31" defer></script>
+    <script src="/assets/js/premium.js?v=31" defer></script>
+    <script src="/assets/js/qrcode.min.js?v=31" defer></script>
     <script>
 (function () {
     var WEBHOOK_BASE = 'https://subscribe.mysweetpea.cc/webhook';
@@ -290,6 +290,9 @@
     document.querySelectorAll('.access-choice-card').forEach(function (card) {
         card.addEventListener('click', function () {
             var tier = card.getAttribute('data-tier');
+            /* Seedling is a "coming soon" placeholder until crypto donations are
+               wired up — clicking it must NOT reveal the dead donation form. */
+            if (card.classList.contains('coming-soon')) { return; }
             document.querySelectorAll('.access-choice-card').forEach(function(c){var picked=c===card;c.classList.toggle('selected',picked);c.setAttribute('aria-pressed',String(picked));});
             // Reveal the panel first so the form exists, then smooth-scroll to it.
             ['seedling','sweetpea'].forEach(function(name){var panel=document.getElementById('panel-'+name),active=name===tier;panel.hidden=!active;panel.classList.toggle('active',active);});
