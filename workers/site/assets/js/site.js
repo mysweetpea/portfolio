@@ -396,6 +396,7 @@
        appear in search automatically, no code changes needed. */
     var CMDK_ITEMS = [];
     var CMDK_SERVICES_LOADED = false;
+    var CMDK_SERVICE_ITEMS = [];   // parsed once, reused on every open
 
     function cmdkBuildIndex() {
         var items = [];
@@ -411,12 +412,20 @@
             items.push({ label: label, url: href, kind: 'page' });
         });
 
-        // 2. Services from the services page (fetched once, cached)
+        // 2. Services parsed from the services page on first call, then reused.
+        //    (Previously the async fetch pushed into this call-local array, so
+        //    every open after the first rebuilt a nav-only index — services
+        //    disappeared from the palette, and the input filter below, which
+        //    reads CMDK_ITEMS, never saw them either.)
+        items = items.concat(CMDK_SERVICE_ITEMS);
+        CMDK_ITEMS = items;
+
         if (!CMDK_SERVICES_LOADED) {
             CMDK_SERVICES_LOADED = true;
             fetch('/services.html')
                 .then(function (r) { return r.ok ? r.text() : Promise.reject(); })
                 .then(function (html) {
+                    var parsed = [];
                     var doc = new DOMParser().parseFromString(html, 'text/html');
                     doc.querySelectorAll('.service-card[data-service]').forEach(function (card) {
                         var h3 = card.querySelector('h3');
@@ -426,7 +435,7 @@
                         var name = nameEl.textContent.trim();
                         var icon = card.querySelector('.service-icon img');
                         var desc = card.querySelector('p');
-                        items.push({
+                        parsed.push({
                             label: name,
                             url: '/services.html',
                             kind: 'service',
@@ -434,12 +443,28 @@
                             desc: desc ? desc.textContent.trim() : ''
                         });
                     });
-                    CMDK_ITEMS = items;
-                    if (backdrop.classList.contains('open')) cmdkRender();
+                    CMDK_SERVICE_ITEMS = parsed;
+                    CMDK_ITEMS = CMDK_ITEMS.concat(parsed);
+                    if (backdrop.classList.contains('open')) {
+                        cmdkFiltered = cmdkApplyFilter(cmdkInput.value);
+                        cmdkActive = 0;
+                        cmdkRender();
+                    }
                 })
                 .catch(function () { /* nav-only index is fine */ });
         }
         return items;
+    }
+
+    /* Shared filter so the live input handler and the async refresh agree. */
+    function cmdkApplyFilter(rawQuery) {
+        var q = (rawQuery || '').trim().toLowerCase();
+        if (!q) return CMDK_ITEMS.slice();
+        return CMDK_ITEMS.filter(function (item) {
+            if (item.label.toLowerCase().indexOf(q) !== -1) return true;
+            if (item.desc && item.desc.toLowerCase().indexOf(q) !== -1) return true;
+            return false;
+        });
     }
 
     var backdrop = document.createElement('div');
@@ -496,12 +521,7 @@
     });
 
     cmdkInput.addEventListener('input', function () {
-        var q = cmdkInput.value.trim().toLowerCase();
-        cmdkFiltered = CMDK_ITEMS.filter(function (item) {
-            if (item.label.toLowerCase().indexOf(q) !== -1) return true;
-            if (item.desc && item.desc.toLowerCase().indexOf(q) !== -1) return true;
-            return false;
-        });
+        cmdkFiltered = cmdkApplyFilter(cmdkInput.value);
         cmdkActive = 0;
         cmdkRender();
     });

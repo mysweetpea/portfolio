@@ -203,6 +203,23 @@ function buildHtmlReply() {
 </html>`;
 }
 
+// Strip CR/LF and any other control characters, then require the RFC 5322
+// msg-id shape. Returns "" when the header cannot be trusted.
+function sanitizeMessageId(raw) {
+  if (typeof raw !== "string") return "";
+  let clean = "";
+  for (let i = 0; i < raw.length; i++) {
+    const c = raw.charCodeAt(i);
+    if (c < 32 || c === 127) continue; // drop all control chars, CR and LF included
+    clean += raw[i];
+  }
+  clean = clean.trim();
+  if (clean.length < 3 || clean.length > 256) return "";
+  if (clean[0] !== "<" || clean[clean.length - 1] !== ">") return "";
+  if (clean.indexOf("<", 1) !== -1) return ""; // no nested angle brackets
+  return clean;
+}
+
 export default {
   async email(message, env, ctx) {
     const sender = message.from;
@@ -219,9 +236,14 @@ export default {
       try {
         const msg = createMimeMessage();
         const messageId = message.headers.get("Message-ID");
-        if (messageId) {
-          msg.setHeader("In-Reply-To", messageId);
-          msg.setHeader("References", messageId);
+        // Header-injection guard: a crafted Message-ID containing CR/LF would
+        // break out of this header and inject arbitrary headers into the reply
+        // (empirically verified against mimetext before adding this check).
+        // Accept only a well-formed <...> msg-id with no control characters.
+        const safeMessageId = sanitizeMessageId(messageId);
+        if (safeMessageId) {
+          msg.setHeader("In-Reply-To", safeMessageId);
+          msg.setHeader("References", safeMessageId);
         }
         msg.setSender({
           name: "MySweetPea",
