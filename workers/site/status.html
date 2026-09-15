@@ -21,9 +21,9 @@
     <link rel="preload" as="image" href="/logo.svg">
     <link rel="preload" as="font" type="font/woff2" href="/assets/fonts/inter-var.woff2" crossorigin>
     <link rel="preload" as="font" type="font/woff2" href="/assets/fonts/fraunces-var.woff2" crossorigin>
-                    <link rel="stylesheet" href="/assets/css/fonts.css?v=28">
-    <link rel="stylesheet" href="/assets/css/site.css?v=28">
-    <link rel="stylesheet" href="/assets/css/premium.css?v=28">
+                    <link rel="stylesheet" href="/assets/css/fonts.css?v=29">
+    <link rel="stylesheet" href="/assets/css/site.css?v=29">
+    <link rel="stylesheet" href="/assets/css/premium.css?v=29">
 </head>
 <body data-page="status">
     <a href="#main-content" class="skip-link">Skip to content</a>
@@ -299,8 +299,8 @@
 
 
 
-    <script src="/assets/js/site.js?v=28" defer></script>
-    <script src="/assets/js/premium.js?v=28" defer></script>
+    <script src="/assets/js/site.js?v=29" defer></script>
+    <script src="/assets/js/premium.js?v=29" defer></script>
     <script>
     /* === Live status from Uptime Kuma === */
     (function () {
@@ -343,7 +343,7 @@
         fetch('https://status.mysweetpea.cc/api/status-page/heartbeat/' + STATUS_SLUG)
             .then(function (r) { return r.ok ? r.json() : Promise.reject(); })
             .then(function (data) {
-                if (!data || !data.heartbeatList) return;
+                if (!data || !data.heartbeatList) return Promise.reject();
                 var hb = data.heartbeatList; // { "<monitorId>": [heartbeats...], ... }
                 // uptimeList keys are "<monitorId>_<durationDays>" (e.g. "1_24"),
                 // values are fractions 0..1 — normalize to a monitorId -> pct map
@@ -387,7 +387,38 @@
                     if (liveBar) liveBar.style.width = (total > 0 ? 100 : 0) + '%';
                 }
             })
-            .catch(function () { /* keep static fallback */ });
+            .catch(function () {
+                // Status feed unreachable (network error, CORS, non-OK, or malformed
+                // payload). The static markup says "9 of 9 operational" — showing that
+                // during a monitoring outage would fabricate an all-green page exactly
+                // when accuracy matters most. Mark every row unknown and say so.
+                if (summaryText) summaryText.textContent = 'Status unavailable';
+                if (summaryTime) summaryTime.textContent = 'Live data unreachable';
+                if (summary) {
+                    summary.classList.remove('status-all-online');
+                    summary.classList.add('status-degraded');
+                }
+                rows.forEach(function (row) {
+                    var dot = row.querySelector('.status-dot');
+                    if (dot) {
+                        dot.classList.add('status-unknown');
+                        dot.style.animation = 'none';
+                    }
+                    var badge = row.querySelector('.status-badge');
+                    if (badge) {
+                        badge.classList.remove('status-online', 'status-down');
+                        badge.classList.add('status-unknown');
+                        var label = badge.childNodes[badge.childNodes.length - 1];
+                        if (label && label.nodeType === 3) label.textContent = 'Unknown';
+                    }
+                    var pctEl = row.querySelector('.uptime-pct');
+                    if (pctEl) pctEl.textContent = '—';
+                    var fill = row.querySelector('.uptime-bar-fill');
+                    if (fill) fill.style.width = '0%';
+                });
+                if (metricUptime) metricUptime.textContent = '—';
+                if (metricLive) metricLive.textContent = '—';
+            });
     })();
 
     /* === Incidents from n8n webhook (Telegram bot /incident command) === */

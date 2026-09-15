@@ -1,3 +1,10 @@
 .wrangler/
 
 .oc-tmp/
+
+# Local dev secrets — never commit (wrangler dev auto-loads .dev.vars; .env holds keys)
+.dev.vars
+*.dev.vars
+.env
+.env.*
+!.env.example

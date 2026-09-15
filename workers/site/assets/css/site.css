@@ -2398,6 +2398,20 @@ body[data-page='pricing'] .pricing-card.tier-seedling { animation-duration: 8s; 
 .status-online { color: var(--sage); }
 .status-down { color: var(--error); }
 .status-down .status-dot { background: var(--error); box-shadow: 0 0 6px var(--error); }
+/* Degraded/unknown: live status feed unreachable — never render as all-green */
+.status-unknown { color: var(--text-faint); }
+.status-badge.status-unknown { color: var(--text-faint); }
+.status-dot.status-unknown {
+    background: var(--text-faint); box-shadow: none; animation: none;
+}
+.status-summary.status-degraded {
+    border-color: rgba(217, 168, 108, 0.4);
+    background: rgba(217, 168, 108, 0.08);
+}
+.status-summary.status-degraded .status-dot {
+    background: var(--gold); box-shadow: 0 0 6px var(--gold); animation: none;
+}
+.status-summary.status-degraded strong { color: var(--gold); }
 .status-updated {
     margin-top: 20px; text-align: center;
     font-size: 0.78rem; color: var(--text-faint);
@@ -2852,6 +2866,20 @@ body[data-page='services'] .modal-tutorial a:hover { text-decoration: underline 
 .status-online { color: var(--sage); }
 .status-down { color: var(--error); }
 .status-down .status-dot { background: var(--error); box-shadow: 0 0 6px var(--error); }
+/* Degraded/unknown: live status feed unreachable — never render as all-green */
+.status-unknown { color: var(--text-faint); }
+.status-badge.status-unknown { color: var(--text-faint); }
+.status-dot.status-unknown {
+    background: var(--text-faint); box-shadow: none; animation: none;
+}
+.status-summary.status-degraded {
+    border-color: rgba(217, 168, 108, 0.4);
+    background: rgba(217, 168, 108, 0.08);
+}
+.status-summary.status-degraded .status-dot {
+    background: var(--gold); box-shadow: 0 0 6px var(--gold); animation: none;
+}
+.status-summary.status-degraded strong { color: var(--gold); }
 .status-updated {
     margin-top: 20px; text-align: center;
     font-size: 0.78rem; color: var(--text-faint);

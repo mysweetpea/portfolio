@@ -1,2 +1,8 @@
 
 .wrangler/
+
+# Local dev secrets — wrangler dev auto-loads .dev.vars
+.dev.vars
+.env
+.env.*
+!.env.example
