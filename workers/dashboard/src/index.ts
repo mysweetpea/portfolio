@@ -168,8 +168,16 @@ async function requireSession(request: Request, env: Env): Promise<{ sess: Sessi
   const raw = await env.SESSIONS.get(`sess:${sid}`);
   if (!raw) return json({ error: 'unauthorized' }, 401);
   const sess = JSON.parse(raw) as SessionData;
-  // opportunistically refresh if older than 10 minutes
-  if (Date.now() - sess.created > 10 * 60 * 1000) {
+  // Refresh when the access token is past half its lifetime (JWT exp/iat),
+  // NOT on a fixed wall-clock timer. Dashboard provider tokens last 24h, so
+  // this is ~1 refresh/day per active session instead of ~144. If the token
+  // cannot be parsed (not a JWT), fall back to a 12h cap so the refresh rate
+  // stays bounded either way.
+  const refreshAt = accessTokenRefreshAt(sess.at);
+  const stale = refreshAt > 0
+    ? Date.now() >= refreshAt
+    : (Date.now() - sess.created > 12 * 60 * 60 * 1000);
+  if (stale) {
     const fresh = await refreshSession(env, sess);
     if (fresh) {
       await kvPutBestEffort(env, `sess:${sid}`, JSON.stringify(fresh), 86400);
@@ -218,43 +226,112 @@ interface KumaMonitor {
 }
 
 // Fetch + shape the public status page (page config for names/groups,
-// heartbeat endpoint for beats/uptime). Cached 60s in KV under a
+// heartbeat endpoint for beats/uptime). Cached 180s in the Cache API under a
 // public-specific key (`cache:kuma-pub`) so switching slugs later stays trivial.
-// Best-effort KV write: a KV failure (60s TTL minimum, quota, transient
-// errors) must never 500 a route — caches are droppable and session
-// refreshes can safely retry on the next request.
+// Best-effort KV write for the small set of durable keys that remain in KV
+// (session docs, the seerr-uid mapping). A KV failure (quota, transient
+// errors) must never 500 a route — session refreshes retry on the next
+// request. Response caches no longer live here (see cachePutJson).
 async function kvPutBestEffort(env: Env, key: string, value: string, ttl: number): Promise<void> {
   try {
     await env.SESSIONS.put(key, value, { expirationTtl: Math.max(ttl, 60) });
   } catch { /* cache writes are best-effort */ }
 }
 
+// ---------- Response caches live in the Cache API, NOT KV ----------
+// Everything under `cache:*` is a cache COPY, never durable state. The Workers
+// KV free tier allows only 1,000 write operations/day (every put() counts,
+// even to the same key) and the response caches were a large share of this
+// account's ~890 writes/day peak. The Cache API is free, unmetered, per-colo,
+// and does not touch the KV quota. KV now holds only durable state: sessions,
+// PKCE verifiers, avatars, audit entries and rate-limit counters.
+const CACHE_ORIGIN = 'https://cache.msp.internal';
+
+function cacheUrl(key: string): string {
+  return CACHE_ORIGIN + '/' + encodeURIComponent(key);
+}
+
+async function cacheGetJson(key: string): Promise<string | null> {
+  try {
+    const hit = await caches.default.match(new Request(cacheUrl(key)));
+    return hit ? await hit.text() : null;
+  } catch {
+    return null;
+  }
+}
+
+async function cachePutJson(key: string, body: string, ttlSeconds: number): Promise<void> {
+  try {
+    await caches.default.put(
+      new Request(cacheUrl(key)),
+      new Response(body, {
+        headers: {
+          'content-type': 'application/json',
+          'cache-control': 'public, max-age=' + Math.max(ttlSeconds, 60),
+        },
+      }),
+    );
+  } catch {
+    /* caches are droppable — never fail a request over a cache write */
+  }
+}
+
+async function cacheDeleteJson(key: string): Promise<void> {
+  try {
+    await caches.default.delete(new Request(cacheUrl(key)));
+  } catch {
+    /* no-op */
+  }
+}
+
+// When should this access token be refreshed? Read the JWT exp/iat claims
+// (the signature is NOT verified here — authentik validates the token
+// server-side on every API call; this is scheduling only). Refresh once half
+// the token's lifetime has elapsed: ~1 refresh per 12h on the 24h tokens the
+// dashboard provider now mints, and any old 15-minute token is re-minted
+// once, immediately. This replaced a fixed "every 10 minutes" timer that
+// cost ~144 KV writes per active session per day.
+function accessTokenRefreshAt(token: string): number {
+  try {
+    const part = token.split('.')[1];
+    if (!part) return 0;
+    const b64 = part.replace(/-/g, '+').replace(/_/g, '/');
+    const padded = b64 + '==='.slice((b64.length + 3) % 4);
+    const claims = JSON.parse(atob(padded)) as { exp?: number; iat?: number };
+    if (!claims.exp) return 0;
+    const iat = claims.iat || (claims.exp - 900);
+    const lifetimeMs = Math.max(claims.exp - iat, 300) * 1000;
+    return claims.exp * 1000 - lifetimeMs / 2;
+  } catch {
+    return 0;
+  }
+}
+
 // Stale-while-revalidate JSON helper.
-// The dashboard's slow feel = blocking upstream fetches whenever a KV entry
-// expires (media rows, stats). With SWR the client ALWAYS gets an answer in
-// ~10ms when any cached copy exists (fresh OR stale); the refresh happens in
-// the background via ctx.waitUntil. Only the very first request after a cold
-// KV (or brand-new instance) pays upstream latency.
+// The dashboard's slow feel = blocking upstream fetches whenever a cache
+// entry expires (media rows, stats). With SWR the client ALWAYS gets an
+// answer in ~10ms when any cached copy exists (fresh OR stale); the refresh
+// happens in the background via ctx.waitUntil. Only the very first request
+// after a cold cache (or brand-new instance) pays upstream latency.
+// Backed by the Cache API (see helpers above) — never KV.
 // Stored shape: {"d": <payload string>, "t": <unix ms>}. Legacy raw payloads
 // are treated as ts=0 (= immediately stale, served instantly + refreshed).
 async function swrJson(ctx: ExecutionContext, env: Env, key: string, freshMs: number, produce: () => Promise<string>): Promise<string> {
   let payload: string | null = null;
   let ts = 0;
-  try {
-    const raw = await env.SESSIONS.get(key);
-    if (raw) {
-      try {
-        const p = JSON.parse(raw) as { d?: string; t?: number };
-        if (typeof p?.d === 'string') { payload = p.d; ts = p.t || 0; }
-        else { payload = raw; ts = 0; } // legacy format
-      } catch { payload = raw; ts = 0; } // legacy non-JSON payload
-    }
-  } catch { /* treat as cold */ }
+  const raw = await cacheGetJson(key);
+  if (raw) {
+    try {
+      const p = JSON.parse(raw) as { d?: string; t?: number };
+      if (typeof p?.d === 'string') { payload = p.d; ts = p.t || 0; }
+      else { payload = raw; ts = 0; } // legacy format
+    } catch { payload = raw; ts = 0; } // legacy non-JSON payload
+  }
   const now = Date.now();
   const refresh = async (): Promise<void> => {
     try {
       const d = await produce();
-      await kvPutBestEffort(env, key, JSON.stringify({ d, t: Date.now() }), 86400);
+      await cachePutJson(key, JSON.stringify({ d, t: Date.now() }), 86400);
     } catch { /* keep serving stale copy */ }
   };
   if (payload !== null && (now - ts) < freshMs) return payload; // fresh
@@ -263,15 +340,13 @@ async function swrJson(ctx: ExecutionContext, env: Env, key: string, freshMs: nu
     return payload;
   }
   await refresh(); // cold: must block once
-  try {
-    const raw2 = await env.SESSIONS.get(key);
-    if (raw2) { const p = JSON.parse(raw2) as { d?: string }; if (typeof p?.d === 'string') return p.d; }
-  } catch { /* fall through */ }
+  const raw2 = await cacheGetJson(key);
+  if (raw2) { try { const p = JSON.parse(raw2) as { d?: string }; if (typeof p?.d === 'string') return p.d; } catch { /* fall through */ } }
   return '{"items":[]}';
 }
 
 async function fetchPublicKuma(env: Env): Promise<{ monitors: KumaMonitor[] } | null> {
-  const cached = await env.SESSIONS.get('cache:kuma-pub');
+  const cached = await cacheGetJson('cache:kuma-pub');
   if (cached) {
     try { return JSON.parse(cached) as { monitors: KumaMonitor[] }; } catch { /* refetch */ }
   }
@@ -316,7 +391,7 @@ async function fetchPublicKuma(env: Env): Promise<{ monitors: KumaMonitor[] } | 
     }
   }
   const payload = JSON.stringify({ monitors });
-  await kvPutBestEffort(env, 'cache:kuma-pub', payload, 60);
+  await cachePutJson('cache:kuma-pub', payload, 180);
   return { monitors };
 }
 
@@ -540,26 +615,26 @@ export default {
         // on cold miss do a blocking fetch but NEVER cache/return an error body.
         let meRaw: string | null = null;
         let meFresh = false;
-        try {
-          const raw = await env.SESSIONS.get(meKey);
-          if (raw) {
+        const raw = await cacheGetJson(meKey);
+        if (raw) {
+          try {
             const p = JSON.parse(raw) as { d?: string; t?: number };
             if (typeof p?.d === 'string' && p.d.indexOf('"detail"') < 0) {
               meRaw = p.d;
               meFresh = (Date.now() - (p.t || 0)) < 60000;
             }
-          }
-        } catch { /* cold */ }
+          } catch { /* cold */ }
+        }
         if (meRaw && meFresh) {
           return new Response(meRaw, { headers: { 'content-type': 'application/json', 'cache-control': 'no-store' } });
         }
         if (meRaw) {
-          ctx.waitUntil((async () => { try { const d = await meProduce(); await kvPutBestEffort(env, meKey, JSON.stringify({ d, t: Date.now() }), 86400); } catch { /* keep serving stale */ } })());
+          ctx.waitUntil((async () => { try { const d = await meProduce(); await cachePutJson(meKey, JSON.stringify({ d, t: Date.now() }), 86400); } catch { /* keep serving stale */ } })());
           return new Response(meRaw, { headers: { 'content-type': 'application/json', 'cache-control': 'no-store' } });
         }
         try {
           const d = await meProduce();
-          await kvPutBestEffort(env, meKey, JSON.stringify({ d, t: Date.now() }), 86400);
+          await cachePutJson(meKey, JSON.stringify({ d, t: Date.now() }), 86400);
           return new Response(d, { headers: { 'content-type': 'application/json', 'cache-control': 'no-store' } });
         } catch {
           // Real failure (token expired/authentik down): surface it honestly so the
@@ -670,7 +745,7 @@ export default {
 
         const now = Date.now();
         await env.SESSIONS.put(`audit:${sess.sub}:${now}`, JSON.stringify({ t: now, event: 'profile_updated', fields: Object.keys(updates) }), { expirationTtl: 90 * 86400 });
-        await env.SESSIONS.delete('cache:me:' + sess.sub); // invalidate /api/me cache
+        await cacheDeleteJson('cache:me:' + sess.sub); // invalidate /api/me cache
         return json({ ok: true, name: updates.name ?? sess.name, email: updates.email ?? sess.email });
       }
 
@@ -874,7 +949,7 @@ export default {
         // cached per-user for 120s. Unmatched users (never opened Seerr)
         // get an empty list — the UI hides the section.
         const cacheKey = 'cache:requests:' + sess.sub;
-        const cache = await env.SESSIONS.get(cacheKey);
+        const cache = await cacheGetJson(cacheKey);
         if (cache) return json(JSON.parse(cache));
         const out: any[] = [];
         try {
@@ -911,7 +986,7 @@ export default {
           }
         } catch {}
         const payload = JSON.stringify({ requests: out });
-        await kvPutBestEffort(env, cacheKey, payload, 120);
+        await cachePutJson(cacheKey, payload, 120);
         return json({ requests: out });
       }
       if (path === '/api/status') {
