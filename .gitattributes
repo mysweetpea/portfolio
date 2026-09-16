@@ -1,0 +1,45 @@
+# Line-ending policy — shell scripts MUST be LF or they break on Linux/macOS.
+#
+# Why this file exists: with core.autocrlf=true (the Git for Windows default),
+# a Windows checkout converts LF->CRLF in the working tree. Bash on Linux then
+# dies with `syntax error near unexpected token `$'do\r''`, and a CRLF shebang
+# (`#!/usr/bin/env bash\r`) fails with "bad interpreter: No such file or
+# directory". Forcing eol=lf here makes the repo immune to contributor config.
+
+# This file itself.
+.gitattributes text eol=lf
+
+# Shell scripts — must run on Linux.
+*.sh    text eol=lf
+*.bash  text eol=lf
+
+# Worker source + config parsed by tooling.
+*.js    text eol=lf
+*.mjs   text eol=lf
+*.ts    text eol=lf
+*.json  text eol=lf
+*.toml  text eol=lf
+*.yaml  text eol=lf
+*.yml   text eol=lf
+
+# Web assets + docs (harmless to normalize; keeps diffs clean cross-platform).
+*.html  text eol=lf
+*.css   text eol=lf
+*.md    text eol=lf
+*.txt   text eol=lf
+*.svg   text eol=lf
+
+# Binary assets — never touch.
+*.png   binary
+*.jpg   binary
+*.jpeg  binary
+*.gif   binary
+*.ico   binary
+*.webp  binary
+*.woff  binary
+*.woff2 binary
+*.ttf   binary
+*.mp4   binary
+*.webm  binary
+*.gz    binary
+*.zip   binary
