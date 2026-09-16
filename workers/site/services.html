@@ -46,9 +46,9 @@ html[data-theme="light"]{background:#E7EDEA;color-scheme:light}
     <link rel="preload" as="image" href="/logo.svg">
     <link rel="preload" as="font" type="font/woff2" href="/assets/fonts/inter-var.woff2" crossorigin>
     <link rel="preload" as="font" type="font/woff2" href="/assets/fonts/fraunces-var.woff2" crossorigin>
-                    <link rel="stylesheet" href="/assets/css/fonts.css?v=32">
-    <link rel="stylesheet" href="/assets/css/site.css?v=32">
-    <link rel="stylesheet" href="/assets/css/premium.css?v=32">
+                    <link rel="stylesheet" href="/assets/css/fonts.css?v=33">
+    <link rel="stylesheet" href="/assets/css/site.css?v=33">
+    <link rel="stylesheet" href="/assets/css/premium.css?v=33">
 </head>
 <body data-page="services">
     <a href="#main-content" class="skip-link">Skip to content</a>
@@ -91,11 +91,6 @@ html[data-theme="light"]{background:#E7EDEA;color-scheme:light}
 </nav>
 
 
-
-
-
-
-
 <main id="main-content" class="content-wrapper">
         <div class="hero" id="services-hero">
             <img src="/logo.svg" alt="" class="hero-watermark" aria-hidden="true" loading="lazy" decoding="async">
@@ -128,6 +123,7 @@ html[data-theme="light"]{background:#E7EDEA;color-scheme:light}
                 <div class="filter-bar reveal reveal-delay-1" role="group" aria-label="Filter services by tier">
                     <button type="button" class="filter-btn active" data-filter="all">All</button>
                     <button type="button" class="filter-btn" data-filter="sweetpea">Sweet Pea</button>
+                    <button type="button" class="filter-btn" data-filter="seedling">Seedling · Coming Soon</button>
                     <button type="button" class="filter-btn" data-filter="coming-soon">Coming Soon</button>
                 </div>
 
@@ -144,6 +140,18 @@ html[data-theme="light"]{background:#E7EDEA;color-scheme:light}
                     <div class="service-card glow-card reveal reveal-delay-3" data-service="koalasync" data-tier="sweetpea" role="button" tabindex="0" aria-haspopup="dialog"><div class="service-header"><div class="service-icon"><img src="/assets/icons/koalasync.svg" alt="KoalaSync logo" width="40" height="40" loading="lazy" decoding="async"></div><h3 class="glass-text"><span class="status-dot" title="Operational" aria-label="Status: operational"></span><span class="live-badge">LIVE</span>KoalaSync</h3><span class="acct-pill">Account required</span></div><span class="service-shot"><img src="/assets/screenshots/koalasync.webp" alt="KoalaSync watch party screenshot" loading="lazy" decoding="async"></span><p>Watch movies and shows together with friends in real-time.</p><span class="tier-tag sweetpea">Sweet Pea Tier</span></div>
                 </div>
 
+                
+                <div class="tier-divider reveal" style="margin-top: 60px;" data-tier-divider="seedling"><div class="line"></div><div class="label"><span class="icon"><img src="/assets/icons/icon-ui-seedling.svg" class="" alt="" width="22" height="22" loading="lazy" decoding="async" aria-hidden="true"></span> Seedling Tier <span class="tier-divider-soon">Coming soon</span></div><div class="line"></div></div>
+<div class="mystery-tier reveal" id="seedling-mystery" data-tier-group="seedling">
+                    <div class="mystery-inner">
+                        <div class="mystery-icon" aria-hidden="true"><img src="/assets/icons/icon-ui-seedling.svg" alt="" width="34" height="34" loading="lazy" decoding="async"></div>
+                        <span class="mystery-tag">Coming soon</span>
+                        <h3 class="mystery-title">Seedling Tier</h3>
+                        <p class="mystery-copy">A smaller, lighter tier for the everyday essentials. It requires a one-time donation — the amount is announced at launch.</p>
+                        <p class="mystery-note">What it includes is revealed when it opens. <a href="/pricing.html">See how the tiers compare</a>.</p>
+                    </div>
+                </div>
+
                 <div class="tier-divider reveal" style="margin-top: 60px;" data-tier-divider="coming-soon"><div class="line"></div><div class="label"><span class="icon"><img src="/assets/icons/icon-ui-construction.svg" class="" alt="" width="22" height="22" loading="lazy" decoding="async" aria-hidden="true"></span> Coming Soon</div><div class="line"></div></div>
                 <div class="coming-soon-grid" data-tier-group="coming-soon">
                     <div class="coming-soon-card reveal reveal-delay-3" data-tier="coming-soon"><div class="service-header"><div class="service-icon"><img src="/assets/icons/syncthing.svg" width="40" height="40" loading="lazy" decoding="async" alt="Syncthing"></div><h3>Syncthing</h3></div><p>Peer-to-peer file sync across devices.</p></div>
@@ -154,15 +162,7 @@ html[data-theme="light"]{background:#E7EDEA;color-scheme:light}
                     <div class="coming-soon-card reveal reveal-delay-3" data-tier="coming-soon"><div class="service-header"><div class="service-icon"><img src="/assets/icons/minecraft.svg" width="40" height="40" loading="lazy" decoding="async" alt="Minecraft"></div><h3>Minecraft</h3></div><p>Self-hosted Minecraft server for friends and family.</p></div>
                 </div>
 
-                <div class="mystery-tier reveal" id="seedling-mystery">
-                    <div class="mystery-inner">
-                        <div class="mystery-icon" aria-hidden="true"><img src="/assets/icons/icon-ui-seedling.svg" alt="" width="34" height="34" loading="lazy" decoding="async"></div>
-                        <span class="mystery-tag">Coming soon</span>
-                        <h3 class="mystery-title">Something lighter is growing</h3>
-                        <p class="mystery-copy">A second, smaller tier is in the works for people who want the everyday essentials without the full library. We are not announcing what it includes yet — details will be revealed when it opens.</p>
-                        <p class="mystery-note">Sweet Pea is open for requests today.</p>
-                    </div>
-                </div>
+                
             </div>
 
             <div class="view-panel" data-view="faq" role="tabpanel">
@@ -219,11 +219,6 @@ html[data-theme="light"]{background:#E7EDEA;color-scheme:light}
 </footer>
 
 
-
-
-
-
-
     <!-- Service screenshot lightbox -->
     <div class="lightbox" id="serviceLightbox" role="dialog" aria-modal="true" aria-hidden="true">
         <figure class="lightbox-figure">
@@ -239,8 +234,8 @@ html[data-theme="light"]{background:#E7EDEA;color-scheme:light}
         </figure>
     </div>
 
-    <script src="/assets/js/site.js?v=32" defer></script>
-    <script src="/assets/js/premium.js?v=32" defer></script>
+    <script src="/assets/js/site.js?v=33" defer></script>
+    <script src="/assets/js/premium.js?v=33" defer></script>
     <script>
 // FAQ Toggle
         function toggleFAQ(el) { var item = el.parentElement; var open = item.classList.toggle('open'); el.setAttribute('aria-expanded', String(open)); }

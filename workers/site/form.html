@@ -46,9 +46,9 @@ html[data-theme="light"]{background:#E7EDEA;color-scheme:light}
     <link rel="preload" as="image" href="/logo.svg">
     <link rel="preload" as="font" type="font/woff2" href="/assets/fonts/inter-var.woff2" crossorigin>
     <link rel="preload" as="font" type="font/woff2" href="/assets/fonts/fraunces-var.woff2" crossorigin>
-                    <link rel="stylesheet" href="/assets/css/fonts.css?v=32">
-    <link rel="stylesheet" href="/assets/css/site.css?v=32">
-    <link rel="stylesheet" href="/assets/css/premium.css?v=32">
+                    <link rel="stylesheet" href="/assets/css/fonts.css?v=33">
+    <link rel="stylesheet" href="/assets/css/site.css?v=33">
+    <link rel="stylesheet" href="/assets/css/premium.css?v=33">
 </head>
 <body data-page="form">
     <a href="#main-content" class="skip-link">Skip to content</a>
@@ -107,13 +107,13 @@ html[data-theme="light"]{background:#E7EDEA;color-scheme:light}
         <section class="access-choice-section" aria-labelledby="choose-tier-title">
             <span class="eyebrow">First, choose a tier</span>
             <h2 class="section-title glass-text" id="choose-tier-title">How would you like to get started?</h2>
-            <p class="section-subtitle">Requests are open for the Sweet Pea tier. A smaller second tier is in the works — we will announce what it includes when it opens.</p>
+            <p class="section-subtitle">Requests are open for the Sweet Pea tier. The Seedling Tier is coming soon — it will require a one-time donation, with the amount and contents announced at launch.</p>
             <div class="access-choice-grid">
                 <button type="button" class="access-choice-card coming-soon" data-tier="seedling" aria-pressed="false" aria-disabled="true">
                     <span class="access-choice-icon" aria-hidden="true"><img src="/assets/icons/icon-ui-seedling.svg" alt="" width="48" height="48"></span>
-                    <span class="access-choice-title">Second Tier</span>
+                    <span class="access-choice-title">Seedling Tier</span>
                     <span class="access-choice-price">Coming soon</span>
-                    <span class="access-choice-copy">A lighter tier is coming. What it includes will be revealed at launch.</span>
+                    <span class="access-choice-copy">A lighter tier for the essentials. It will require a one-time donation — the amount and contents are announced at launch.</span>
                 </button>
                 <button type="button" class="access-choice-card" data-tier="sweetpea" aria-pressed="false">
                     <span class="access-choice-icon" aria-hidden="true"><img src="/assets/icons/icon-ui-blossom.svg" alt="" width="48" height="48"></span>
@@ -190,7 +190,7 @@ html[data-theme="light"]{background:#E7EDEA;color-scheme:light}
                     <span class="form-tier-label sweetpea-label">Sweet Pea tier</span>
                     <h2>Request Sweet Pea access</h2>
                     <div class="verify-banner" role="note"><strong>What happens next:</strong> submit this request and we will review it. If approved, we will email you an invitation code to create your MySweetPea account.</div>
-                    <p class="form-desc">No crypto donation or transaction hash is needed for this request. Tell us a little about yourself and which services you are interested in.</p>
+                    <p class="form-desc">No crypto donation or transaction hash is needed for this request. Tell us a little about yourself and we will email you an invite code if approved.</p>
                     <div class="form-group">
                         <label class="form-label glass-text" for="sp-name">Name <span class="req-tag">required</span></label>
                         <input type="text" class="form-input" id="sp-name" placeholder="Your name" autocomplete="name" maxlength="60" required>
@@ -202,14 +202,8 @@ html[data-theme="light"]{background:#E7EDEA;color-scheme:light}
                         <span class="validation-icon" id="sp-email-icon" aria-hidden="true"></span>
                     </div>
                     <div class="form-group">
-                        <label class="form-label glass-text" for="sp-services">Services you are interested in <span class="req-tag">required</span></label>
-                        <textarea class="form-input" id="sp-services" rows="4" placeholder="For example: Jellyfin, Nextcloud, Immich, Open WebUI…" maxlength="500" required></textarea>
-                        <span class="validation-icon" id="sp-services-icon" aria-hidden="true"></span>
-                        <div class="form-hint">Please list at least one service you would like to use.</div>
-                    </div>
-                    <div class="form-group">
                         <label class="form-label glass-text" for="sp-message">Anything else you would like us to know? <span class="opt-tag">optional</span></label>
-                        <textarea class="form-input" id="sp-message" rows="4" placeholder="A short note is fine." maxlength="500"></textarea>
+                        <textarea class="form-input" id="sp-message" rows="4" placeholder="A short note is fine — tell us what you plan to use, if you like." maxlength="500"></textarea>
                     </div>
                     <label class="verify-check"><input type="checkbox" id="sp-verify" required><span class="vc-box" aria-hidden="true"></span><span class="vc-text">I understand a real person will personally review my request before my invite code is sent.</span></label>
                     <button type="button" class="form-submit" id="sp-submit">Submit Sweet Pea Request</button>
@@ -263,9 +257,9 @@ html[data-theme="light"]{background:#E7EDEA;color-scheme:light}
 
 
 
-    <script src="/assets/js/site.js?v=32" defer></script>
-    <script src="/assets/js/premium.js?v=32" defer></script>
-    <script src="/assets/js/qrcode.min.js?v=32" defer></script>
+    <script src="/assets/js/site.js?v=33" defer></script>
+    <script src="/assets/js/premium.js?v=33" defer></script>
+    <script src="/assets/js/qrcode.min.js?v=33" defer></script>
     <script>
 (function () {
     var WEBHOOK_BASE = 'https://subscribe.mysweetpea.cc/webhook';
@@ -281,7 +275,7 @@ html[data-theme="light"]{background:#E7EDEA;color-scheme:light}
         if (type === 'services') return value.length >= 2;
         return false;
     }
-    var fields = { 'ga-name':'name', 'ga-email':'email', 'ga-username':'username', 'ga-txhash':'tx', 'sp-name':'name', 'sp-email':'email', 'sp-services':'services' };
+    var fields = { 'ga-name':'name', 'ga-email':'email', 'ga-username':'username', 'ga-txhash':'tx', 'sp-name':'name', 'sp-email':'email' };
     function validateField(id) {
         var input = document.getElementById(id), ok = valid(fields[id], input.value);
         input.classList.toggle('valid', ok); input.classList.toggle('invalid', input.value.trim().length > 0 && !ok);
@@ -309,7 +303,7 @@ html[data-theme="light"]{background:#E7EDEA;color-scheme:light}
         var gaVerify = document.getElementById('ga-verify');
         var spVerify = document.getElementById('sp-verify');
         document.getElementById('ga-submit').disabled = !(allValid(['ga-name','ga-email','ga-username','ga-txhash']) && !!chosenCrypto && gaVerify && gaVerify.checked);
-        document.getElementById('sp-submit').disabled = !(allValid(['sp-name','sp-email','sp-services']) && spVerify && spVerify.checked);
+        document.getElementById('sp-submit').disabled = !(allValid(['sp-name','sp-email']) && spVerify && spVerify.checked);
     }
     ['ga-verify','sp-verify'].forEach(function(id){var el=document.getElementById(id);if(el)el.addEventListener('change',updateButtons);});
     document.querySelectorAll('.access-choice-card').forEach(function (card) {
@@ -378,7 +372,7 @@ html[data-theme="light"]{background:#E7EDEA;color-scheme:light}
     document.getElementById('wallet-addr').addEventListener('click',function(){var b=this;navigator.clipboard.writeText(b.textContent).then(function(){var x=b.textContent;b.textContent='Copied!';setTimeout(function(){b.textContent=x;},1600);});});
     function post(endpoint,data,btn,defaultLabel,successUrl,overlayId){btn.disabled=true;btn.classList.add('loading');btn.textContent='Submitting…';var overlay=document.getElementById(overlayId);if(overlay)overlay.classList.add('active');fetch(endpoint,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(data)}).then(function(r){return r.text().then(function(t){if(t){try{return JSON.parse(t);}catch(e){return {ok:r.ok};}}return {ok:r.ok};});}).then(function(result){if(!result.ok)throw new Error(result.msg||'Submission failed');window.location.href=successUrl;}).catch(function(e){btn.disabled=false;btn.classList.remove('loading');btn.textContent=e.message||'Try again';if(overlay)overlay.classList.remove('active');if(typeof showToast==='function')showToast(e.message||'Submission failed — please try again','error');setTimeout(function(){btn.textContent=defaultLabel;updateButtons();},3000);});}
     document.getElementById('ga-submit').addEventListener('click',function(){if(this.disabled)return;post(ENDPOINTS.donationRequest,{name:document.getElementById('ga-name').value.trim(),email:document.getElementById('ga-email').value.trim(),username:document.getElementById('ga-username').value.trim(),crypto_type:chosenCrypto,tx_hash:document.getElementById('ga-txhash').value.trim()},this,'Submit Seedling Request','/success.html?type=seedling','seedling-overlay');});
-    document.getElementById('sp-submit').addEventListener('click',function(){if(this.disabled)return;post(ENDPOINTS.sweetPeaRequest,{name:document.getElementById('sp-name').value.trim(),email:document.getElementById('sp-email').value.trim(),services:document.getElementById('sp-services').value.trim(),message:document.getElementById('sp-message').value.trim(),tier:'sweetpea'},this,'Submit Sweet Pea Request','/success.html?type=sweetpea-request','sweetpea-overlay');});
+    document.getElementById('sp-submit').addEventListener('click',function(){if(this.disabled)return;post(ENDPOINTS.sweetPeaRequest,{name:document.getElementById('sp-name').value.trim(),email:document.getElementById('sp-email').value.trim(),message:document.getElementById('sp-message').value.trim(),tier:'sweetpea'},this,'Submit Sweet Pea Request','/success.html?type=sweetpea-request','sweetpea-overlay');});
     var requested = new URLSearchParams(location.search).get('tier'); if(requested==='sweetpea'){var card=document.querySelector('.access-choice-card[data-tier="sweetpea"]');if(card)card.click();}
     updateButtons();
 })();

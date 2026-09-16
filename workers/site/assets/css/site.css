@@ -5404,6 +5404,23 @@ body[data-page='pricing'] .btn-glass-seedling:disabled:hover { transform: none; 
 .mystery-note { color: var(--text-faint); font-size: 0.86rem; margin: 0; }
 .mystery-note a { color: var(--sage); }
 
+/* Seedling mystery cells in the compare table */
+.compare-table .mystery-cell {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 22px; height: 22px; border-radius: 50%;
+    background: rgba(143, 175, 181, 0.12);
+    border: 1px dashed var(--border-primary);
+    color: var(--primary-bright);
+    font-weight: 800; font-size: 0.78rem; line-height: 1;
+}
+[data-theme="light"] .compare-table .mystery-cell {
+    background: rgba(62, 124, 95, 0.10);
+    border-color: rgba(62, 124, 95, 0.35);
+    color: #2F6B4E;
+}
+/* The Seedling filter chip reads as pending, not available */
+.filter-btn[data-filter="seedling"] { opacity: 0.85; }
+
 /* Light theme */
 [data-theme="light"] .sweetpea-spotlight {
     background:
