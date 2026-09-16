@@ -5418,8 +5418,6 @@ body[data-page='pricing'] .btn-glass-seedling:disabled:hover { transform: none; 
     border-color: rgba(62, 124, 95, 0.35);
     color: #2F6B4E;
 }
-/* The Seedling filter chip reads as pending, not available */
-.filter-btn[data-filter="seedling"] { opacity: 0.85; }
 
 /* Light theme */
 [data-theme="light"] .sweetpea-spotlight {
@@ -5477,6 +5475,7 @@ body[data-page='pricing'] .btn-glass-seedling:disabled:hover { transform: none; 
     [data-theme="light"] .compare-table td.col-seedling::before,
     [data-theme="light"] .compare-table td.col-sweetpea::before { color: #2F5A44; }
     .compare-table .check, .compare-table .dash { width: 30px; height: 30px; }
+    .compare-table .mystery-cell { width: 30px; height: 30px; font-size: 0.9rem; }
     .compare-table .check::after { width: 16px; height: 16px; }
     /* CTA row: gradient band, buttons full-width in each column */
     .compare-table .compare-cta-row {
