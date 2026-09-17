@@ -1183,7 +1183,10 @@ export default {
         // pipeline adds items continuously), so 24 h would freeze it; a
         // refresh is only ~5 Jellyfin calls / ~2 s, <= 24 refreshes/day.
         // Cache API via swrJson — NEVER KV (free-tier write budget).
-        const payload = await swrJson(ctx, env, 'cache:growth', 3600000, () => produceGrowth(env));
+        // Key carries a SCHEMA VERSION: bump it whenever the payload shape
+        // changes so a deploy starts from a clean slot instead of serving the
+        // previous shape for up to an hour (v2 added libraryTotal*).
+        const payload = await swrJson(ctx, env, 'cache:growth:v2', 3600000, () => produceGrowth(env));
         return new Response(payload, { headers: { 'content-type': 'application/json', 'cache-control': 'no-store' } });
       }
 
