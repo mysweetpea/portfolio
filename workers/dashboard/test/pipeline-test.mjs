@@ -35,6 +35,7 @@ const ghCommits = fixture.map((f) => ({
 const nowMs = new Date('2026-09-17T00:00:00Z').getTime();
 const { parsed, deduped, kept, droppedDowngrades } = runPipeline(ghCommits, nowMs);
 
+check('all 53 fixture commits parse', parsed.length === 53, parsed.length);
 check('53 raw -> 45 after dedupe', deduped.length === 45, deduped.length);
 check('45 -> 44 after downgrade filter', kept.length === 44, kept.length);
 check('exactly 1 downgrade dropped', droppedDowngrades.length === 1, JSON.stringify(droppedDowngrades));
@@ -84,9 +85,19 @@ check('malformed-date commits are skipped (no crash, empty date path)', (() => {
   const r = runPipeline(bad, nowMs);
   return r.parsed.length === 0 && r.kept.length === 0;
 })());
-check('prerelease tags parse via numeric prefix (documented semantics)', (() => {
-  const a = parseVer('34.0.0-rc.1'), b = parseVer('34.0.0');
-  return a && b && a.join('.') === b.join('.');
+check('suffixed tags (rc/rev) refuse comparison -> safe non-version path', (() => {
+  // parseVer must return null for 1.2.3-rc.1 / 10.11.11-4: comparing bare numeric
+  // prefixes would equate an RC with its final and hide a final->RC rollback.
+  return parseVer('34.0.0-rc.1') === null
+      && parseVer('10.11.11-4') === null
+      && parseVer('v1.161.0') && parseVer('1.37.3');
+})());
+check('suffixed-tag entry is announced, never downgrade-dropped or suppressed', (() => {
+  const rc = [{ sha: 'aaa1111', commit: { author: { date: '2026-09-10T00:00:00Z' }, message: "build: automatic update of vaultwarden\n\nupdates image vaultwarden/server tag '1.40.0' to '1.37.3-rc.1'" } }];
+  const r = runPipeline(rc, nowMs);
+  if (r.kept.length !== 1) return false;               // not dropped as downgrade
+  const out = reconcile(r.kept, { 'vaultwarden': [1, 41, 0] }); // running ahead
+  return out.length === 1;                             // not suppressed either
 })());
 
 // reconcile expectations from the brief (live runtimes as of research: nc 34.0.4, synapse 1.161.0, immich 3.2.2, vw 1.37.3, seerr 3.4.1, webui 0.11.3)
@@ -97,6 +108,26 @@ check('reconcile keeps nextcloud 34.0.3 -> 34.0.4', announced.some((u) => u.app 
 check('reconcile keeps immich chain fully', announced.filter((u) => u.app === 'immich').length === kept.filter((u) => u.app === 'immich').length);
 check('reconcile keeps element-web (not reconcilable) at synapse runtime', announced.filter((u) => u.app === 'element-web').length === kept.filter((u) => u.app === 'element-web').length);
 console.log('announced after live reconcile:', announced.length, 'of', kept.length);
+
+// --- #12: 90d cutoff branch (fixture's oldest entry is inside the window) ---
+check('out-of-window commit is excluded (90d cutoff branch)', (() => {
+  const oldc = [{ sha: 'feed123', commit: { author: { date: '2026-01-05T00:00:00Z' }, message: "build: automatic update of immich\n\nupdates image ghcr.io/immich-app/immich-server tag 'v1.0.0' to 'v1.0.1'" } }];
+  const r = runPipeline(oldc, nowMs);
+  return r.parsed.length === 0 && r.kept.length === 0 && r.deduped.length === 0;
+})());
+
+// --- #14: the two graceful-degradation reconcile branches ---
+check('reconcile keeps entries when runtime is UNKNOWN (probe failed)', (() => {
+  const nc = kept.filter((x) => x.app === 'nextcloud' && x.to === '35.0.0');
+  if (!nc.length) return false;
+  const out = reconcile(nc, {}); // endpoint down -> empty running map
+  return out.length === nc.length;
+})());
+check('reconcile keeps non-version `to` when runtime IS known', (() => {
+  const vw = [{ app: 'vaultwarden', from: 'testing', to: 'nightly', date: '2026-09-10', sha: 'bbb2222' }];
+  const out = reconcile(vw, { 'vaultwarden': [1, 37, 3] });
+  return out.length === 1;
+})());
 
 if (failures) { console.error(failures + ' FAILURES'); process.exit(1); }
 console.log('ALL CHECKS PASSED');

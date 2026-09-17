@@ -46,6 +46,14 @@ export const APP_RELEASE = {
 // (element-web/affine/koalasync/matrix-mas/matrix-rtc) have no public endpoint
 // -> git evidence only. The test derives its RECONCILABLE set FROM THIS MAP so
 // adding/removing a probe can never desync the test.
+/** Immich /api/server/version returns {major,minor,patch} (older builds: a plain string). */
+function immichVersion(d) {
+  if (!d) return '';
+  if (typeof d === 'string') return d;
+  if (typeof d.major === 'number') return `${d.major}.${d.minor}.${d.patch}`;
+  return '';
+}
+
 export const RUNTIME_PROBES = {
   'vaultwarden': { url: 'https://vault.mysweetpea.cc/api/version', pick: (d) => (typeof d === 'string' ? d : '') },
   'matrix-synapse': { url: 'https://matrix.mysweetpea.cc/_matrix/federation/v1/version', pick: (d) => (d && d.server && d.server.version) || '' },
@@ -53,7 +61,7 @@ export const RUNTIME_PROBES = {
   'nextcloud': { url: 'https://cloud.mysweetpea.cc/status.php', pick: (d) => (d && d.versionstring) || '' },
   'immich': {
     url: 'https://photos.mysweetpea.cc/api/server/version',
-    pick: (d) => (d && typeof d.major === 'number' ? `${d.major}.${d.minor}.${d.patch}` : (typeof d === 'string' ? d : '')),
+    pick: immichVersion,
   },
   'open-webui': { url: 'https://ai.mysweetpea.cc/api/config', pick: (d) => (d && d.version) || '' },
 };
@@ -69,8 +77,15 @@ export const isVersionLike = (t) => /^v?\d+(\.\d+)+/.test(String(t || ''));
 export const isShaLike = (t) => /^[A-Za-z]+-[0-9a-f]{6,}$/.test(String(t || '')) || /^[0-9a-f]{7,40}$/.test(String(t || ''));
 
 export function parseVer(t) {
-  const m = String(t || '').replace(/^v/, '').match(/^\d+(\.\d+)*/);
+  const s = String(t || '').replace(/^v/, '');
+  const m = s.match(/^\d+(\.\d+)*/);
   if (!m) return null;
+  // A suffix after the numeric prefix (1.2.3-rc.1, 10.11.11-4) is NOT treated as
+  // a comparable version: comparing bare numeric prefixes would equate an RC with
+  // its final and misclassify rollbacks. Safe path = non-version route (skips the
+  // downgrade filter AND reconcile suppression): an unusual tag is announced,
+  // never silently hidden. Plain '1.2.3' / 'v1.2.3' are unaffected.
+  if (m[0].length !== s.length) return null;
   const parts = m[0].split('.').map(Number);
   return parts.every((n) => isFinite(n)) ? parts : null;
 }
@@ -146,7 +161,11 @@ export function runPipeline(rawCommits, nowMs) {
     if (f && t && cmpVer(t, f) < 0) { droppedDowngrades.push(e); continue; }
     kept.push(e);
   }
-  kept.sort((a, b) => (a.date < b.date ? 1 : a.date > b.date ? -1 : 0));
+  kept.sort((a, b) => {
+    if (a.date < b.date) return 1;
+    if (a.date > b.date) return -1;
+    return 0;
+  });
   return { parsed, deduped, kept, droppedDowngrades };
 }
 

@@ -3592,9 +3592,10 @@ function relFuture(v) {
     function updRenderPop() {
       var list = document.getElementById('upd-pop-list'), sub = document.getElementById('upd-pop-sub');
       if (!list) return;
-      var items = (updData && updData.updates || []).slice(0, 12);
-      if (sub) sub.textContent = items.length ? items.length + ' in the last 90 days' : '';
-      if (!items.length) { list.innerHTML = '<div class="upd-empty">Nothing updated in the last 90 days.</div>'; return; }
+      var all = (updData && updData.updates || []);
+      var items = all.slice(0, 12);
+      if (sub) sub.textContent = all.length ? (all.length > items.length ? all.length + ' updates \u00b7 showing 12' : all.length + ' in the last 90 days') : '';
+      if (!items.length) { list.innerHTML = '<div class="upd-empty">Nothing updated recently.</div>'; return; }
       list.innerHTML = items.map(function (u) {
         return u.releaseUrl
           ? '<a class="upd-row" href="' + esc(u.releaseUrl) + '" target="_blank" rel="noopener noreferrer">' + updRowInner(u) + '</a>'
@@ -3650,6 +3651,13 @@ function relFuture(v) {
       var origGrid = window.svRenderGrid;
       window.svRenderGrid = function () { origGrid(); updApplyHints(); };
     }
+    // single close path so aria-expanded never desyncs from the visual state
+    function updClosePop() {
+      var pop = document.getElementById('upd-pop');
+      if (pop) pop.hidden = true;
+      var bell = document.getElementById('upd-bell');
+      if (bell) bell.setAttribute('aria-expanded', 'false');
+    }
     // delegated: bell toggle (topbar is dynamic)
     document.addEventListener('click', function (e) {
       var bell = e.target && e.target.closest ? e.target.closest('#upd-bell') : null;
@@ -3668,12 +3676,12 @@ function relFuture(v) {
         }
         return;
       }
-      if (pop && !pop.hidden && !(e.target.closest && e.target.closest('#upd-pop'))) pop.hidden = true;
+      if (pop && !pop.hidden && !(e.target.closest && e.target.closest('#upd-pop'))) updClosePop();
     });
     document.addEventListener('keydown', function (e) {
       if (e.key !== 'Escape') return;
       var pop = document.getElementById('upd-pop');
-      if (pop && !pop.hidden) pop.hidden = true;
+      if (pop && !pop.hidden) updClosePop();
     });
     // delegated: hint links are <span data-href> (an <a> inside .sv-card's <a> would be invalid HTML)
     document.addEventListener('click', function (e) {

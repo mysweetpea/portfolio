@@ -418,19 +418,28 @@ async function fetchPublicKuma(env: Env): Promise<{ monitors: KumaMonitor[] } | 
 // rolled-back nextcloud 35.0.0 chain). Non-version tags skip the comparison.
 const GH_REPO_API = 'https://api.github.com/repos/mysweetpea/homelab-k8s/commits';
 const GH_PAGES = 6; // 600 commits ~ 34 days of history, covers the 30d Services window
+// GitHub commit objects: only .sha, .commit.message and .commit.author.date are
+// consumed (see parseUpdateCommit in the shared pipeline). Raw `any` is deliberate:
+// third-party JSON, defensively parsed — malformed entries are dropped, not trusted.
 async function fetchGithubCommitPages(env: Env): Promise<any[]> {
   const headers: Record<string, string> = {
     'user-agent': 'mysweetpea-dashboard',
     'accept': 'application/vnd.github+json',
   };
   if (env.GITHUB_TOKEN) headers['authorization'] = 'Bearer ' + env.GITHUB_TOKEN;
+  let okCount = 0;
   const pages = await Promise.all(Array.from({ length: GH_PAGES }, async (_, i) => {
     try {
       const r = await fetch(`${GH_REPO_API}?per_page=100&page=${i + 1}`, { headers });
       if (!r.ok) return [];
+      okCount++;
       return (await r.json() as any[]) || [];
     } catch { return []; }
   }));
+  // Fail closed -> THROW when every page failed (GitHub outage / anon rate limit):
+  // swrJson catches producer errors and keeps serving the previous payload, so a
+  // transient GitHub hiccup can never blank the feed with an empty "fresh" copy.
+  if (okCount === 0) throw new Error('github: all commit pages failed');
   return pages.flat();
 }
 
@@ -451,11 +460,14 @@ async function fetchRunningVersions(): Promise<{ running: Record<string, number[
 }
 
 async function produceUpdates(env: Env): Promise<string> {
+  // Runtime probes and the GitHub fetch are independent — start BOTH now so the
+  // cold-cache latency is max(probes, github) instead of their sum.
+  const runningP = fetchRunningVersions();
   const commits = await fetchGithubCommitPages(env);
   // parse -> dedupe (earliest) -> downgrade filter -> 90d window
   const { kept } = runPipeline(commits);
   // reconcile against live runtimes: drop releases that never ran, keep chains
-  const { running, ok } = await fetchRunningVersions();
+  const { running, ok } = await runningP;
   const updates = reconcile(kept, running).map(buildUpdate);
   return JSON.stringify({ updates, generated: Date.now(), reconciled: ok > 0 });
 }
@@ -1086,8 +1098,8 @@ export default {
         return json(out);
       }
       if (path === '/api/updates') {
-        // Service updates feed — SWR cached 30 min; refresh fetches 6 GitHub
-        // pages + 7 runtime probes in parallel on cache-miss only.
+        // Service updates feed — SWR cached 30 min; a refresh fetches 6 GitHub
+        // pages + 6 runtime probes (in parallel) on cache-miss only.
         const payload = await swrJson(ctx, env, 'cache:updates', 1800000, () => produceUpdates(env));
         return new Response(payload, { headers: { 'content-type': 'application/json', 'cache-control': 'no-store' } });
       }
