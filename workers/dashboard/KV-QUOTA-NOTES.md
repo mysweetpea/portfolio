@@ -1,4 +1,13 @@
-# KV free-tier guardrails (why this worker writes so little to KV)
+# Cloudflare free-tier notes — KV writes + Worker invocations
+
+Two separate free-tier budgets bit (or nearly bit) this account:
+
+| Budget | Free limit | This account | Fixed by |
+|---|---|---|---|
+| KV **writes**/day | 1,000 | **890 (Sep 10)** → email from CF | Cache API migration + JWT-lifetime sessions |
+| Worker invocations/day | 100,000 | ~4,000/day | `run_worker_first` array (assets bypass the script) |
+
+## KV rules (the 50% email)
 
 Cloudflare Workers KV **free tier**: 1,000 write ops/day (also 1,000 deletes/day
 and 1,000 lists/day; 100,000 reads/day). **Every `put()` counts** — rewriting
@@ -8,7 +17,7 @@ KV operations fail with 429 (logins would break, since sessions are KV-backed).
 On 2026-09-10 this account hit **890 writes/day** and received Cloudflare's
 "50% of the daily KV limit" email. The dashboard worker was the sole source.
 
-## Rules for future changes
+### Rules
 
 1. **Cache copies never live in KV.** Anything that is a cached *response*
    (stats, media rows, status page, profile) belongs in the **Cache API**
@@ -31,9 +40,41 @@ On 2026-09-10 this account hit **890 writes/day** and received Cloudflare's
    GraphQL `kvOperationsAdaptiveGroups` (dimensions: date, actionType) —
    target is well under 100 writes/day.
 
-## Verified 2026-09-16
+## Invocation rules (assets must not invoke the script)
 
-- Deployed version `ccbcb3e5` live on dashboard.mysweetpea.cc.
-- 18 cache-path requests → **0 KV writes**.
-- `wrangler tail`: 26 events, all `ok`, 0 exceptions, CPU p50 1 ms.
-- Authentik provider change re-GET verified; provider is not blueprint-managed.
+Static-asset requests served directly by the assets layer are **free and
+unlimited and consume no CPU**; only requests that actually invoke the Worker
+script are billed. So `run_worker_first` must always be an **array of the
+dynamic routes**, never `true`:
+
+- dashboard: `["/api/*", "/auth/*"]`
+- site: `["/api/*", "/.well-known/matrix/*"]`
+
+Consequences to remember:
+
+- **`_headers` only applies to asset-layer responses.** Anything set in the
+  Worker's `Response` does not reach assets, and vice versa. Security headers
+  for asset responses live in each worker's `_headers` file; dynamic routes
+  keep setting their own headers in code.
+- The site's HTML is **baked** (account chip + canonical + JSON-LD) by
+  `site/bake_html.py`; its CSP is build-time sha256 hashes in `site/_headers`.
+  If inline JS in any page changes, re-run `python bake_html.py --check` and
+  update the `script-src` hash list. (Deploy-time validation catches malformed
+  `_headers`, but NOT stale hashes — a stale hash silently blocks that script.)
+- `not_found_handling: "404-page"` (site) serves the branded 404 for unknown
+  paths without invoking the worker; dashboard keeps `single-page-application`.
+- Verify changes with `wrangler tail`: send N asset requests and confirm **0**
+  worker events, then N API requests and confirm N events.
+
+## Verified 2026-09-16/17
+
+- KV: deployed `ccbcb3e5`; 18 cache-path requests → **0 KV writes**.
+- Invocations: `site` → `ec65f1ff`, `dashboard` → `1d29dd0d`;
+  10 site asset + 8 dashboard asset requests → **0 worker events** each.
+- Real-browser CSP check (local server replaying `_headers`): **0
+  securitypolicyviolation events** across all 14 pages; chip + early-theme
+  scripts execute.
+- Exposure fix: `/src/index.js`, `/DEPLOY.md`, `/README.md`, `/fetch-icons.sh`,
+  `/wrangler.jsonc` returned **200 before** (publicly served), **404 after**
+  the `.assetsignore`.
+- `wrangler tail`: all events `ok`, 0 exceptions; avatar round-trip byte-identical.
