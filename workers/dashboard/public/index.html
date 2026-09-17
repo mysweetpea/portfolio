@@ -1179,6 +1179,11 @@ a.hm-req{text-decoration:none;color:var(--text)}
 /* Updates bell popover — mobile sheet (must live at EOF: base #upd-pop rule is later in source) */
 @media(max-width:760px){
   #upd-pop{position:fixed;top:70px;left:12px;right:12px;min-width:0;max-width:none;width:auto;max-height:min(430px,60vh)}
+  /* Up-next cards on mobile: the fixed 16/9 + overflow:hidden box CLIPPED the title
+     (title flowed below the 99px box, 0px visible). Let the card grow to fit its
+     content so art + title both show. Desktop keeps the overlay style. */
+  .hm-rail>.hm-un{aspect-ratio:auto!important;height:auto!important;display:flex!important;flex-direction:column!important}
+  .hm-rail>.hm-un .hm-wide-art{position:relative!important;width:100%;height:auto;aspect-ratio:16/9;object-fit:cover}
   .rq-grid{grid-template-columns:1fr}
   .rq-card{flex-direction:column}
   .rq-poster{width:100%}
