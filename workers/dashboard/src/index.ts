@@ -1055,12 +1055,17 @@ export default {
           const ur = await fetch(env.SEERR_URL + '/api/v1/user?take=100', { headers: seerrHeaders })
             .then((r) => (r.ok ? r.json() as any : null))
             .catch(() => null);
+          // Seerr UNREACHABLE (outage/BFM blip) must NOT be cached as "not linked":
+          // throw so swrJson keeps serving the stale copy instead of persisting a
+          // misleading linked:false for the whole TTL.
+          if (ur == null) throw new Error('seerr users fetch failed');
           const users: any[] = Array.isArray(ur) ? ur : ((ur && ur.results) || []);
           const uid = resolveSeerrUser(users, { username: sess.username, email: sess.email });
-          if (!uid) return JSON.stringify({ requests: [], linked: false });
+          if (!uid) return JSON.stringify({ requests: [], linked: false, seerrBase: env.SEERR_URL });
           const lr = await fetch(env.SEERR_URL + '/api/v1/request?take=' + take + '&sort=added&requestedBy=' + uid, { headers: seerrHeaders })
             .then((r) => (r.ok ? r.json() as any : null))
             .catch(() => null);
+          if (lr == null) throw new Error('seerr request list fetch failed');
           const reqs: any[] = (lr && lr.results) || [];
           const details = await Promise.allSettled(reqs.map((rq) => {
             const seg = rq?.type === 'tv' ? 'tv' : 'movie';
@@ -1072,7 +1077,7 @@ export default {
           }));
           const cards = reqs.map((rq, i) =>
             buildCard(rq, details[i].status === 'fulfilled' ? details[i].value : null, env.SEERR_URL));
-          return JSON.stringify({ requests: cards, linked: true });
+          return JSON.stringify({ requests: cards, linked: true, seerrBase: env.SEERR_URL });
         });
         return new Response(payload, { headers: { 'content-type': 'application/json', 'cache-control': 'no-store' } });
       }

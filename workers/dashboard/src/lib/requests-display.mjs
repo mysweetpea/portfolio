@@ -88,9 +88,12 @@ export function stateFor(request, detail) {
 /** "HH:MM:SS.fffffff" (Seerr/sonarr timeLeft) -> total minutes, rounded up. */
 function parseTimeLeftMinutes(t) {
   if (typeof t !== 'string') return null;
-  const m = t.match(/^(\d+):(\d{1,2}):(\d{1,2})(?:\.\d+)?$/);
+  // Accepts both 'hh:mm:ss' and .NET TimeSpan 'd.hh:mm:ss' (Sonarr/Seerr emit
+  // the day segment for downloads running past 24 h).
+  const m = t.match(/^(?:(\d+)\.)?(\d{1,2}):(\d{1,2}):(\d{1,2})(?:\.\d+)?$/);
   if (!m) return null;
-  const sec = (parseInt(m[1], 10) * 3600) + (parseInt(m[2], 10) * 60) + parseInt(m[3], 10);
+  const days = m[1] ? parseInt(m[1], 10) : 0;
+  const sec = (days * 86400) + (parseInt(m[2], 10) * 3600) + (parseInt(m[3], 10) * 60) + parseInt(m[4], 10);
   if (!isFinite(sec) || sec <= 0) return null;
   return Math.ceil(sec / 60);
 }
@@ -101,9 +104,10 @@ function parseTimeLeftMinutes(t) {
  * missing/unparseable -> null. NEVER invent a value.
  */
 export function etaTextFromDownload(dl) {
-  const t = typeof dl === 'string'
-    ? dl
-    : (Array.isArray(dl) ? (dl[0] && dl[0].timeLeft) : (dl && dl.timeLeft));
+  let t = null;
+  if (typeof dl === 'string') t = dl;
+  else if (Array.isArray(dl)) t = (dl[0] && dl[0].timeLeft) || null;
+  else if (dl && typeof dl === 'object') t = dl.timeLeft || null;
   const min = parseTimeLeftMinutes(t);
   if (min == null) return null;
   if (min < 60) return '~' + min + ' min';
@@ -137,13 +141,15 @@ export function buildCard(request, detail, seerrBase) {
   const listMedia = rq.media || {};
   const mi = (detail && detail.mediaInfo) || listMedia;
   const type = rq.type === 'tv' ? 'tv' : 'movie';
-  const tmdbId = (listMedia.tmdbId != null) ? listMedia.tmdbId : (mi.tmdbId != null ? mi.tmdbId : null);
+  let tmdbId = null;
+  if (listMedia.tmdbId != null) tmdbId = listMedia.tmdbId;
+  else if (mi.tmdbId != null) tmdbId = mi.tmdbId;
   const state = stateFor(rq, detail);
   const dl = Array.isArray(mi.downloadStatus) ? mi.downloadStatus : [];
   const downloading = state.key === 'downloading';
-  const seasonsSrc = (detail && detail.mediaInfo && Array.isArray(detail.mediaInfo.seasons))
-    ? detail.mediaInfo.seasons
-    : (Array.isArray(rq.seasons) ? rq.seasons : []);
+  let seasonsSrc = [];
+  if (detail && detail.mediaInfo && Array.isArray(detail.mediaInfo.seasons)) seasonsSrc = detail.mediaInfo.seasons;
+  else if (Array.isArray(rq.seasons)) seasonsSrc = rq.seasons;
   const name = detail ? (type === 'tv' ? detail.name : detail.title) : null;
   const base = String(seerrBase || '').replace(/\/+$/, '');
   return {
@@ -159,8 +165,12 @@ export function buildCard(request, detail, seerrBase) {
     etaText: downloading ? etaTextFromDownload(dl) : null,
     pct: downloading ? pctFromDownload(dl) : null,
     seasonsTotal: type === 'tv' ? seasonsSrc.length : null,
+    // Season.status uses the SAME MediaStatus enum as media (verified in Seerr's
+    // entity/Season.js). "In library" = the season has SOME content: 4=PARTIALLY
+    // and 5=AVAILABLE count; 6=BLOCKLISTED and 7=DELETED must NOT (the old >=4
+    // test reported 24/24 for Family Guy whose seasons were all deleted(7)).
     seasonsAvailable: type === 'tv'
-      ? seasonsSrc.filter((s) => s && Number(s.status) >= 4).length
+      ? seasonsSrc.filter((s) => { const v = Number(s && s.status); return v === 4 || v === 5; }).length
       : null,
     requestedAt: rq.createdAt != null ? rq.createdAt : null,
     updatedAt: rq.updatedAt != null ? rq.updatedAt : null,

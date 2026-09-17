@@ -599,7 +599,7 @@ input:focus-visible,select:focus-visible,textarea:focus-visible{border-radius:va
 .hm-req-m{display:block;color:var(--text-faint);font-size:.72rem;margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-variant-numeric:tabular-nums}
 .hm-req-foot{display:flex;align-items:center;gap:12px;margin-top:auto}
 .hm-chip{display:inline-flex;align-items:center;gap:6px;font-size:.58rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;padding:3px 9px;border-radius:99px;flex:none}
-.hm-chip.req{background:var(--v-soft);color:var(--primary-bright);border:1px solid var(--border-primary)}
+.hm-chip.req,.hm-chip.muted{background:var(--v-soft);color:var(--primary-bright);border:1px solid var(--border-primary)}
 .hm-chip.appr{background:rgba(217,168,108,.13);color:var(--gold);border:1px solid rgba(217,168,108,.4)}
 .hm-chip.ready{background:var(--c-soft);color:var(--c);border:1px solid rgba(69,214,200,.4)}
 .hm-journey{display:flex;align-items:center;flex:1;min-width:0}
@@ -1440,6 +1440,9 @@ function setTab(name, opts) {
     if (p) p.hidden = t !== name;
   });
   if (prev !== name) {
+    // Deferred requests-grid load (review fix): scope=all is fetched on FIRST
+    // Media-tab visit instead of at boot, halving Seerr load for home-only visits.
+    if (name === 'media') { try { if (typeof window.rqLoadFull === 'function') window.rqLoadFull(); } catch (e) {} }
     // BLINK FIX (Sep 15): the moment a switch happens, retire the boot entrance
     // animation so that when .tp-enter is removed 750ms later, control can never
     // fall back to `main section{animation:msp-in}` — which RESTARTED from
@@ -2834,9 +2837,10 @@ function guideDetailHtml(key) {
     const hit = all ? rqDataAll : rqData;
     if (hit) return hit;
     const p = fetch('/api/requests' + (all ? '?scope=all' : ''))
-      .then((r) => (r.ok ? r.json() : { requests: [], linked: false }))
-      .catch(() => ({ requests: [], linked: false }));
-    if (all) rqDataAll = p; else rqData = p;
+      .then((r) => (r.ok ? r.json() : { requests: [], linked: false, failed: true }))
+      .catch(() => ({ requests: [], linked: false, failed: true }));
+    // Only memoize SUCCESS — a transient failure must not stick for the page lifetime.
+    p.then((d) => { if (!d || !d.failed) { if (all) rqDataAll = p; else rqData = p; } });
     return p;
   }
   const RQ_LEVEL = { available: 4, downloading: 2, partial: 2, processing: 2 };
@@ -3019,17 +3023,23 @@ function guideDetailHtml(key) {
     const host = document.getElementById('rq-full');
     if (!host) return;
     const data = d || {};
+    const seeBase = (data.seerrBase && /^https?:/.test(data.seerrBase)) ? data.seerrBase : RQ_SEERR;
+    if (data.failed) {
+      host.innerHTML = '<p class="rq-hint">Could not reach Seerr right now &mdash; <a href="' + seeBase + '" target="_blank" rel="noopener noreferrer">open Seerr</a> or retry shortly.</p>';
+      return;
+    }
     if (!data.linked) {
-      host.innerHTML = '<p class="rq-hint">Seerr account not linked yet &mdash; <a href="' + RQ_SEERR + '" target="_blank" rel="noopener noreferrer">open Seerr</a> once and sign in with your Jellyfin login.</p>';
+      host.innerHTML = '<p class="rq-hint">Seerr account not linked yet &mdash; <a href="' + seeBase + '" target="_blank" rel="noopener noreferrer">open Seerr</a> once and sign in with your Jellyfin login.</p>';
       return;
     }
     const reqs = data.requests || [];
     if (!reqs.length) { host.innerHTML = '<p class="rq-empty">No requests yet &mdash; browse Seerr to request something.</p>'; return; }
     host.innerHTML = '<div class="rq-grid">' + reqs.map(rqCardFull).join('') + '</div>';
   }
-  async function rqLoadFull() {
+  // Exposed on window: setTab (outer scope) calls this on first Media-tab visit.
+  window.rqLoadFull = async function rqLoadFull() {
     rqRenderFull(await rqFetch(true));
-  }
+  };
   function hmLoadServices() {
     const rail = document.getElementById('hm-svc-rail');
     if (rail) rail.innerHTML = SERVICES.map(hmSvcOrb).join('');
@@ -3065,7 +3075,7 @@ function guideDetailHtml(key) {
     try { hmLoadBanner(); } catch (e) {}
     try { hmLoadHero(); } catch (e) {}
     try { hmLoadRequests(); } catch (e) {}
-    try { rqLoadFull(); } catch (e) {}
+    // (scope=all fetch deferred until the Media tab is first opened — wired in setTab)
     try { hmLoadServices(); } catch (e) {}
     try { hmLoadMedia(); } catch (e) {}
   }

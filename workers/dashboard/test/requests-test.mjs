@@ -39,7 +39,7 @@ check('Family Guy state is removed', fg.state.key === 'removed' && fg.state.labe
 check('Family Guy link is seerrBase + /tv/1434', fg.link === BASE + '/tv/1434', fg.link);
 check('Family Guy posterUrl ends /3PFsEuAiyLkWsP4GG6dIV37Q6gu.jpg', fg.posterUrl != null && fg.posterUrl.endsWith('/3PFsEuAiyLkWsP4GG6dIV37Q6gu.jpg'), fg.posterUrl);
 check('Family Guy card basics', fg.id === 2 && fg.tmdbId === 1434 && fg.type === 'tv' && fg.title === 'Family Guy');
-check('Family Guy seasons counted (24 total, status>=4)', fg.seasonsTotal === 24 && fg.seasonsAvailable === 24, fg.seasonsTotal + '/' + fg.seasonsAvailable);
+check('Family Guy seasons: 0 of 24 in library (status 7 = DELETED, never counted)', fg.seasonsTotal === 24 && fg.seasonsAvailable === 0, fg.seasonsTotal + '/' + fg.seasonsAvailable);
 
 // ---------- 5: The Simpsons (media.status 3 PROCESSING) ----------
 const sim = buildCard(fx.reqUid2[1], fx.details['tv-456'], BASE);
@@ -66,6 +66,7 @@ check('available card leaks NO eta/pct from stale download data', (() => {
 // ---------- 7: Bob Hearts Abishola (media.status 4, NO downloadStatus -> partial) ----------
 const bobReq = { id: 8, status: 2, type: 'tv', media: { tmdbId: 92461, mediaType: 'tv', status: 4, downloadStatus: [] } };
 const bob = buildCard(bobReq, fx.details['tv-92461'], BASE);
+check('Bob seasons: 1 of 5 in library (only PARTIAL/AVAILABLE count)', bob.seasonsTotal === 5 && bob.seasonsAvailable === 1, bob.seasonsTotal + '/' + bob.seasonsAvailable);
 check('Bob Hearts Abishola is partial (NOT downloading — boundary guard)', bob.state.key === 'partial' && bob.state.tone === 'info', JSON.stringify(bob.state));
 check('Bob Hearts Abishola seasons 5 total / 1 available', bob.seasonsTotal === 5 && bob.seasonsAvailable === 1, bob.seasonsTotal + '/' + bob.seasonsAvailable);
 
@@ -93,6 +94,7 @@ check('eta missing -> null', etaTextFromDownload({}) === null && etaTextFromDown
 check("eta whole hours omit minutes ('02:00:00' -> '~2 h')", etaTextFromDownload({ timeLeft: '02:00:00' }) === '~2 h');
 check('eta unparseable -> null', etaTextFromDownload({ timeLeft: 'soon' }) === null);
 check("eta accepts a bare timeLeft string", etaTextFromDownload('00:10:44.2433438') === '~11 min');
+check('eta supports multi-day TimeSpan (d.hh:mm:ss)', etaTextFromDownload('1.02:30:00') === '~26 h 30 min', String(etaTextFromDownload('1.02:30:00')));
 check("eta array form uses first entry", etaTextFromDownload([{ timeLeft: '00:45:00' }]) === '~45 min');
 check('pct half downloaded -> 50', pctFromDownload({ size: 100, sizeLeft: 50 }) === 50);
 check('pct missing sizes -> null', pctFromDownload({}) === null && pctFromDownload(null) === null);
