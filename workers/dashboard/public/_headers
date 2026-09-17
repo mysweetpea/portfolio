@@ -1,0 +1,31 @@
+# MySweetPea dashboard — static-asset response headers.
+#
+# These apply ONLY to asset-layer responses (the SPA shell, fonts, icons,
+# videos). Worker-generated responses (/api/*, /auth/*) carry their own
+# security headers from src/index.ts — the _headers file never applies to them
+# (documented Cloudflare behavior).
+#
+# Mirrors the exact header set the Worker used to attach to every response.
+
+/*
+  X-Frame-Options: DENY
+  X-Content-Type-Options: nosniff
+  Referrer-Policy: strict-origin-when-cross-origin
+  Permissions-Policy: camera=(), microphone=(), geolocation=(), payment=(), usb=()
+  Strict-Transport-Security: max-age=63072000; includeSubDomains
+
+# Fingerprinted/static art: long-lived caching (same list the Worker used:
+# woff2|svg|png|webp). Everything else keeps the assets default
+# (public, max-age=0, must-revalidate + ETag).
+/*.woff2
+  Cache-Control: public, max-age=31536000, immutable
+/*.svg
+  Cache-Control: public, max-age=31536000, immutable
+/*.png
+  Cache-Control: public, max-age=31536000, immutable
+/*.webp
+  Cache-Control: public, max-age=31536000, immutable
+
+# workers.dev lane: don't get indexed
+https://:version.:subdomain.workers.dev/*
+  X-Robots-Tag: noindex

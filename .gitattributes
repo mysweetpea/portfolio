@@ -43,3 +43,9 @@
 *.webm  binary
 *.gz    binary
 *.zip   binary
+
+# Cloudflare static-asset config files — parsed strictly at deploy time.
+# CRLF in these can break header/redirect parsing; keep them LF everywhere.
+_headers        text eol=lf
+_redirects      text eol=lf
+.assetsignore   text eol=lf

@@ -1,0 +1,18 @@
+# Files that exist in this directory for development but must NEVER be served.
+# Without this list the whole directory is published as static assets — which is
+# how /src/index.js, /DEPLOY.md, /README.md, /fetch-icons.sh were all publicly
+# readable on the live site (verified 200 OK, Sep 2026).
+#
+# _partials/ : source fragments used to build the <nav>/<footer> markup
+# src/       : the Worker source itself
+# *.md, *.sh : runbooks and dev scripts
+# wrangler.jsonc: build config
+# .wrangler/ : local build state
+_partials/
+src/
+.wrangler/
+DEPLOY.md
+README.md
+fetch-icons.sh
+wrangler.jsonc
+.assetsignore

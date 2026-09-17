@@ -1,8 +1,10 @@
 /* MySweetPea — Service Worker
    Stale-while-revalidate caching for static assets, network-first for HTML.
-   Bumped to v9 — updates propagate automatically without hard-refresh. */
+   v44 — preserves security headers (CSP etc.) on reconstructed HTML responses;
+   without this the SW dropped every response header and pages served through it
+   ran WITHOUT a Content-Security-Policy. */
 
-const CACHE = 'mysweetpea-v43';
+const CACHE = 'mysweetpea-v44';
 const CORE = [
   '/',
   '/index.html',
@@ -27,6 +29,11 @@ const CORE = [
   '/og-card.png',
   '/manifest.json'
 ];
+
+// Headers that describe the wire encoding/body length of the ORIGINAL network
+// response; the reconstructed Response has its own, so these must be dropped to
+// avoid the browser decoding plain text as brotli/gzip.
+const BODY_HEADERS = ['content-encoding', 'content-length', 'transfer-encoding', 'etag', 'last-modified'];
 
 self.addEventListener('install', (event) => {
   event.waitUntil(
@@ -67,10 +74,15 @@ self.addEventListener('fetch', (event) => {
         }
         return res.clone().text().then((body) => {
           if (!body.includes('mysweetpea')) return res; // foreign HTML: pass through untouched
+          // Preserve the network response's headers (CSP, CORP, XFO, HSTS from
+          // the _headers rules) so the security posture survives the SW cache.
+          const headers = new Headers(res.headers);
+          for (const h of BODY_HEADERS) headers.delete(h);
+          headers.set('content-type', 'text/html; charset=utf-8');
           const out = new Response(body, {
             status: res.status,
             statusText: res.statusText,
-            headers: { 'content-type': 'text/html; charset=utf-8' },
+            headers,
           });
           const copy = out.clone();
           caches.open(CACHE).then((c) => c.put(req, copy));
@@ -82,7 +94,7 @@ self.addEventListener('fetch', (event) => {
   }
 
   // Stale-while-revalidate for static assets: serve cache immediately,
-  // fetch fresh in background, update cache. No more stuck v7!
+  // fetch fresh in background, update cache.
   event.respondWith(
     caches.match(req).then((cached) => {
       const fetchPromise = fetch(req).then((res) => {
