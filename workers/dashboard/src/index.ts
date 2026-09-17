@@ -1,6 +1,14 @@
 // MySweetPea Dashboard Worker — session + OIDC PKCE + authentik API proxy
 // Phase 1 skeleton: auth round-trip + /api/me + static SPA serving.
 
+import {
+  RUNTIME_PROBES,
+  parseVer,
+  runPipeline,
+  reconcile,
+  buildUpdate,
+} from './lib/updates-pipeline.mjs';
+
 export interface Env {
   SESSIONS: KVNamespace;
   ASSETS: Fetcher;
@@ -400,107 +408,16 @@ async function fetchPublicKuma(env: Env): Promise<{ monitors: KumaMonitor[] } | 
 // argocd-image-updater commit format (verified 53/53 over 180d, 0 parse fails):
 //   subject: build: automatic update of <app>
 //   body:    updates image <image> tag '<from>' to '<to>'
-// Pipeline: parse -> map app->service -> dedupe (service,from,to; keep earliest)
-//   -> drop downgrades (ONLY when both tags version-like) -> 90d window -> reconcile.
+// Pipeline: parse -> dedupe (app,from,to; keep earliest) -> drop downgrades
+//   (ONLY when both tags version-like) -> 90d window -> reconcile.
+// The pipeline itself lives in ./lib/updates-pipeline.mjs — SHARED with the
+// unit test so tests can never drift from shipped behavior. This file keeps
+// only the fetch (GitHub pages + runtime probes) and the HTTP surface.
 // Reconcile rule: announce when to <= running (LTE, not == — equality would
 // collapse every historical step; LTE keeps the chain and still suppresses the
 // rolled-back nextcloud 35.0.0 chain). Non-version tags skip the comparison.
 const GH_REPO_API = 'https://api.github.com/repos/mysweetpea/homelab-k8s/commits';
 const GH_PAGES = 6; // 600 commits ~ 34 days of history, covers the 30d Services window
-const UPDATES_WINDOW_DAYS = 90;
-
-const APP_SERVICE: Record<string, string> = {
-  'vaultwarden': 'vaultwarden',
-  'matrix-synapse': 'matrix', 'matrix-mas': 'matrix', 'element-web': 'matrix', 'matrix-rtc': 'matrix',
-  'affine': 'affine', 'koalasync': 'koalasync', 'jellyfin': 'jellyfin', 'seerr': 'seerr',
-  'nextcloud': 'nextcloud', 'immich': 'immich', 'open-webui': 'open-webui',
-};
-const SERVICE_NAME: Record<string, string> = {
-  'vaultwarden': 'Vaultwarden', 'matrix': 'Matrix / Element', 'affine': 'AFFiNE', 'koalasync': 'KoalaSync',
-  'jellyfin': 'Jellyfin', 'seerr': 'Seerr', 'nextcloud': 'Nextcloud', 'immich': 'Immich', 'open-webui': 'Open WebUI',
-};
-// Release-notes repos. prefix: 'v' | '' (vaultwarden tags bare) | null (SHA tags
-// are not releases — link the releases list instead). Jellyfin deliberately
-// absent: upstream latest is v12.x while the cluster runs 10.11.11 — never link.
-const APP_RELEASE: Record<string, { repo: string; prefix: string | null }> = {
-  'vaultwarden': { repo: 'dani-garcia/vaultwarden', prefix: '' },
-  'matrix-synapse': { repo: 'element-hq/synapse', prefix: 'v' },
-  'element-web': { repo: 'element-hq/element-web', prefix: 'v' },
-  'matrix-mas': { repo: 'element-hq/matrix-authentication-service', prefix: 'v' },
-  'affine': { repo: 'toeverything/AFFiNE', prefix: null },
-  'koalasync': { repo: 'Shik3i/KoalaSync', prefix: 'v' },
-  'seerr': { repo: 'seerr-team/seerr', prefix: 'v' },
-  'nextcloud': { repo: 'nextcloud/server', prefix: 'v' },
-  'immich': { repo: 'immich-app/immich', prefix: 'v' },
-  'open-webui': { repo: 'open-webui/open-webui', prefix: 'v' },
-};
-
-// Runtime version probes (all verified 200 from a Worker). Keyed by APP — only
-// apps whose image version IS the endpoint's version reconcile (element-web
-// must not be compared against synapse's version). element-web/affine/
-// koalasync/matrix-mas/matrix-rtc have no public endpoint -> git evidence only.
-const RUNTIME_PROBES: Record<string, { url: string; pick: (d: any) => string }> = {
-  'vaultwarden': { url: 'https://vault.mysweetpea.cc/api/version', pick: (d) => (typeof d === 'string' ? d : '') },
-  'matrix-synapse': { url: 'https://matrix.mysweetpea.cc/_matrix/federation/v1/version', pick: (d) => (d && d.server && d.server.version) || '' },
-  'seerr': { url: 'https://request.mysweetpea.cc/api/v1/status', pick: (d) => (d && d.version) || '' },
-  'nextcloud': { url: 'https://cloud.mysweetpea.cc/status.php', pick: (d) => (d && d.versionstring) || '' },
-  'immich': {
-    url: 'https://photos.mysweetpea.cc/api/server/version',
-    pick: (d) => (d && typeof d.major === 'number' ? `${d.major}.${d.minor}.${d.patch}` : (typeof d === 'string' ? d : '')),
-  },
-  'open-webui': { url: 'https://ai.mysweetpea.cc/api/config', pick: (d) => (d && d.version) || '' },
-};
-
-const UPD_SUBJECT_RE = /^build: automatic update of (\S+)/m;
-const UPD_TAGLINE_RE = /updates image (\S+) tag '([^']*)' to '([^']*)'/g;
-const isVersionLike = (t: string): boolean => /^v?\d+(\.\d+)+/.test(String(t || ''));
-const isShaLike = (t: string): boolean => /^[A-Za-z]+-[0-9a-f]{6,}$/.test(String(t || '')) || /^[0-9a-f]{7,40}$/.test(String(t || ''));
-function parseVer(t: string): number[] | null {
-  const m = String(t || '').replace(/^v/, '').match(/^\d+(\.\d+)*/);
-  if (!m) return null;
-  const parts = m[0].split('.').map(Number);
-  return parts.every((n) => isFinite(n)) ? parts : null;
-}
-function cmpVer(a: number[], b: number[]): number {
-  const n = Math.max(a.length, b.length);
-  for (let i = 0; i < n; i++) {
-    const x = a[i] || 0, y = b[i] || 0;
-    if (x !== y) return x < y ? -1 : 1;
-  }
-  return 0;
-}
-
-interface RawUpdate { app: string; from: string; to: string; date: string; sha: string }
-interface UpdItem { service: string; name: string; from: string; to: string; date: string; sha: string; releaseUrl: string | null; kind: string }
-
-function parseUpdateCommit(c: any): RawUpdate | null {
-  const msg = String((c && c.commit && c.commit.message) || '');
-  const sm = msg.match(UPD_SUBJECT_RE);
-  if (!sm) return null;
-  const app = sm[1].split('/').pop() as string;
-  if (!APP_SERVICE[app]) return null;
-  UPD_TAGLINE_RE.lastIndex = 0;
-  const tm = UPD_TAGLINE_RE.exec(msg);
-  if (!tm) return null;
-  const date = String((c.commit.author && c.commit.author.date) || '').slice(0, 10);
-  return { app, from: tm[2], to: tm[3], date, sha: String(c.sha || '').slice(0, 7) };
-}
-
-function buildUpdate(e: RawUpdate): UpdItem {
-  const rel = APP_RELEASE[e.app];
-  let releaseUrl: string | null = null;
-  if (rel && rel.prefix !== null && isVersionLike(e.to)) {
-    const tag = rel.prefix + String(e.to).replace(/^v/, '');
-    releaseUrl = 'https://github.com/' + rel.repo + '/releases/tag/' + tag;
-  } else if (rel && rel.prefix === null) {
-    releaseUrl = 'https://github.com/' + rel.repo + '/releases';
-  }
-  let kind = 'update'; // non-version from tag ("latest"/"testing"/"preview-*")
-  if (isVersionLike(e.from) && isVersionLike(e.to)) kind = 'version';
-  else if (isShaLike(e.from) || isShaLike(e.to)) kind = 'build'; // affine stable-<sha>
-  return { service: APP_SERVICE[e.app], name: SERVICE_NAME[APP_SERVICE[e.app]], from: e.from, to: e.to, date: e.date, sha: e.sha, releaseUrl, kind };
-}
-
 async function fetchGithubCommitPages(env: Env): Promise<any[]> {
   const headers: Record<string, string> = {
     'user-agent': 'mysweetpea-dashboard',
@@ -534,36 +451,12 @@ async function fetchRunningVersions(): Promise<{ running: Record<string, number[
 }
 
 async function produceUpdates(env: Env): Promise<string> {
-  const cutoff = new Date(Date.now() - UPDATES_WINDOW_DAYS * 86400000).toISOString().slice(0, 10);
   const commits = await fetchGithubCommitPages(env);
-  // parse -> dedupe by (service, from, to), keep EARLIEST -> 90d window
-  const best = new Map<string, RawUpdate>();
-  for (const c of commits) {
-    const e = parseUpdateCommit(c);
-    if (!e || e.date < cutoff) continue;
-    const k = APP_SERVICE[e.app] + '|' + e.from + '|' + e.to;
-    const prev = best.get(k);
-    if (!prev || e.date < prev.date) best.set(k, e);
-  }
-  // drop downgrades — compare ONLY when both tags are version-like (AFFiNE's
-  // stable-<sha> tags parse as garbage numbers and must never be compared)
-  const kept: RawUpdate[] = [];
-  for (const e of best.values()) {
-    const f = parseVer(e.from), t = parseVer(e.to);
-    if (f && t && cmpVer(t, f) < 0) continue;
-    kept.push(e);
-  }
-  kept.sort((a, b) => (a.date < b.date ? 1 : a.date > b.date ? -1 : 0));
+  // parse -> dedupe (earliest) -> downgrade filter -> 90d window
+  const { kept } = runPipeline(commits);
+  // reconcile against live runtimes: drop releases that never ran, keep chains
   const { running, ok } = await fetchRunningVersions();
-  const updates = kept
-    .filter((e) => {
-      const run = running[e.app];
-      if (!run) return true; // not reconcilable / endpoint failed -> git evidence alone
-      const to = parseVer(e.to);
-      if (!to) return true; // non-version tag skips the comparison
-      return cmpVer(to, run) <= 0; // LTE: keep the chain, drop never-ran versions
-    })
-    .map(buildUpdate);
+  const updates = reconcile(kept, running).map(buildUpdate);
   return JSON.stringify({ updates, generated: Date.now(), reconciled: ok > 0 });
 }
 
