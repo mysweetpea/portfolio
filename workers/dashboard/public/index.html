@@ -822,7 +822,8 @@ body { overscroll-behavior-x: none; }
 /* ---- aurora mobile 6: home fit ---- */
 @media (max-width:760px){
 .hm-greet,.hm-id{overflow-wrap:anywhere;min-width:0}
-.hm-stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));justify-content:stretch;gap:8px}
+/* growth teaser adds a 4th tile: 2x2 grid instead of 3+1 orphan row */
+.hm-stats{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));justify-content:stretch;gap:8px}
 .hm-stat{padding:6px 8px;font-size:.68rem;line-height:1.35}
 .hm-stat .n{font-size:1.15rem}
 .hm-actions{width:100%}
@@ -987,6 +988,23 @@ body { overscroll-behavior-x: none; }
 .sc-num .sc-nb{display:block;height:8px;border-radius:99px;background:rgba(255,255,255,.05);overflow:hidden}
 .sc-num .sc-nb i{display:block;height:100%;border-radius:99px}
 @media (max-width:760px){.sc-charts{grid-template-columns:1fr}}
+/* ---- library growth (stats card + home teaser 4th tile) ---- */
+.gr-num{margin-top:10px;font-family:'Fraunces','Inter',Georgia,serif;font-weight:500;font-size:clamp(2rem,9vw,2.8rem);line-height:1.08;letter-spacing:-.02em;background-image:linear-gradient(120deg,var(--primary),var(--sage));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;font-variant-numeric:tabular-nums}
+.gr-num small{font-size:.55em;font-weight:500;-webkit-text-fill-color:var(--text-dim)}
+.gr-chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.gr-chip{display:inline-flex;align-items:center;gap:5px;padding:5px 12px;border-radius:99px;border:1px solid var(--border);background:var(--card);font-size:.76rem;color:var(--text-dim);font-variant-numeric:tabular-nums}
+.gr-chip b{color:var(--text);font-weight:600}
+.gr-bars{display:flex;align-items:stretch;gap:3px;height:120px;margin-top:18px}
+.gr-col{position:relative;flex:1;min-width:0;display:flex;flex-direction:column;justify-content:flex-end}
+.gr-bar{position:relative;display:flex;flex-direction:column;width:100%;border-radius:3px 3px 0 0;overflow:hidden}
+.gr-bar i{display:block;width:100%}
+.gr-bar.zero{height:2px;background:rgba(255,255,255,.06);border-radius:0}
+.gr-bar.clamped::after{content:'';position:absolute;inset:0 0 auto 0;height:26%;background:linear-gradient(180deg,rgba(8,9,15,.92),rgba(8,9,15,0))}
+.gr-over{position:absolute;top:3px;left:0;right:0;z-index:1;text-align:center;font-size:.55rem;line-height:1;color:var(--text-faint);font-variant-numeric:tabular-nums;pointer-events:none}
+.gr-area-wrap{margin-top:16px}
+.gr-area{display:block;width:100%;height:64px}
+.gr-area-cap{display:block;margin-top:6px;font-size:.74rem;color:var(--text-faint)}
+.gr-era{margin:10px 0 0;font-size:.76rem;color:var(--text-faint)}
 /* ---- aurora polish 4 (fix4): sessions parsed-UA + geo third line ---- */
 .sess-geo{grid-column:1/-1;font-size:.72rem;color:var(--text-faint)}
 .sess-exp{color:var(--text-faint)}
@@ -2118,7 +2136,8 @@ function guideDetailHtml(key) {
     '<div class="hm-stats" aria-label="Your week at a glance">' +
     '<div class="hm-stat"><div class="n" id="hm-stat-hours">&mdash;</div><div class="l">watch hours this week</div></div>' +
     '<div class="hm-stat"><div class="n" id="hm-stat-reqs">&mdash;</div><div class="l">requests on the way</div></div>' +
-    '<div class="hm-stat"><div class="n" id="hm-stat-devs">&mdash;</div><div class="l">devices signed in</div></div></div>' +
+    '<div class="hm-stat"><div class="n" id="hm-stat-devs">&mdash;</div><div class="l">devices signed in</div></div>' +
+    '<div class="hm-stat"><div class="n"><span id="hm-stat-growth-plus" hidden>+</span><span id="hm-stat-growth">&mdash;</span></div><div class="l">added this week</div></div></div>' +
     '<div class="hm-actions">' +
     '<button type="button" class="hm-btn primary" onclick="setTab(\'security\')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2 4 5v6c0 5 3.4 9.7 8 11 4.6-1.3 8-6 8-11V5l-8-3Z"/></svg>Security</button>' +
     '<button type="button" class="hm-btn" onclick="setTab(\'account\')">Your account</button></div>' +
@@ -2145,6 +2164,7 @@ function guideDetailHtml(key) {
     '<section class="card" id="sec-stats"><p class="eyebrow">Statistics</p><h3>The garden in numbers<button type="button" class="mini icon-btn" id="stats-refresh" aria-label="Refresh statistics" title="Refresh statistics"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12a9 9 0 1 1-2.64-6.36"/><path d="M21 3v6h-6"/></svg></button></h3>' +
     '<div class="stats" id="stats-kpi" aria-live="polite"></div>' +
     '<section id="sec-stats-charts" hidden aria-label="Library charts"><p class="eyebrow">By the numbers</p><div id="stats-charts" aria-live="polite"></div><noscript><p class="dim">Charts need JavaScript — the totals above still show.</p></noscript></section>' +
+    '<section id="sec-growth" hidden aria-label="Library growth"></section>' +
     '<div id="stats-services" aria-live="polite"></div></section>' +
     '</div>' +
     '<div class="tabpanel" id="panel-media" role="tabpanel" aria-labelledby="tab-media">' +
@@ -2440,6 +2460,74 @@ function guideDetailHtml(key) {
       (donHtml || numsHtml ? '<div class="sc-charts">' + (donHtml ? '<div class="sc-donut-cell">' + donHtml + '</div>' : '') + (numsHtml ? '<div class="sc-nums-cell">' + numsHtml + '</div>' : '') + '</div>' : '') +
       '</div>';
   }
+  // ===== library growth — /api/growth, ONE shared fetch (promise cache, same
+  // pattern as rqFetch) so loadStats (stats card) and hmLoadBanner (home
+  // teaser) never double-fetch. Only success with data is memoized.
+  let growthData = null;
+  function growthFetch() {
+    const hit = growthData;
+    if (hit) return hit;
+    const p = fetch('/api/growth')
+      .then((r) => (r.ok ? r.json() : { totals: { all: 0 }, failed: true }))
+      .catch(() => ({ totals: { all: 0 }, failed: true }));
+    p.then((d) => { if (d && !d.failed && d.totals && d.totals.all > 0) growthData = p; });
+    return p;
+  }
+  function renderGrowth(g) {
+    const sec = document.getElementById('sec-growth');
+    if (!sec) return;
+    // hide on fetch failure OR empty totals (degraded payload / zero library)
+    const ok = g && !g.failed && Array.isArray(g.daily) && g.daily.length && g.totals && g.totals.all > 0;
+    if (!ok) { sec.hidden = true; sec.innerHTML = ''; return; }
+    const cap = Math.max(1, Number(g.capValue) || 60);
+    const COLORS = { m: 'var(--v)', s: 'var(--c)', e: 'var(--gold)' };
+    // daily stacked bars — height = min(total, cap)/cap; clamped days get a
+    // faded top (.gr-bar.clamped::after) + their real value in tiny text
+    const bars = g.daily.map((d) => {
+      const m = Number(d.m) || 0, s = Number(d.s) || 0, e = Number(d.e) || 0;
+      const total = Number(d.total) || (m + s + e);
+      const clamped = total > cap;
+      const hPct = Math.max(0, Math.min(100, (total / cap) * 100));
+      const bar = total > 0
+        ? '<div class="gr-bar' + (clamped ? ' clamped' : '') + '" style="height:' + hPct.toFixed(2) + '%">' +
+          [['e', e], ['s', s], ['m', m]].map((x) => (x[1] > 0
+            ? '<i style="height:' + ((x[1] / total) * 100).toFixed(2) + '%;background:' + COLORS[x[0]] + '"></i>'
+            : '')).join('') + '</div>'
+        : '<div class="gr-bar zero"></div>';
+      return '<div class="gr-col" title="' + esc(d.date) + ': ' + total.toLocaleString() + ' added">' +
+        (clamped ? '<span class="gr-over">' + total.toLocaleString() + '</span>' : '') + bar + '</div>';
+    }).join('');
+    // cumulative area line — running total normalized to the window final
+    let run = 0;
+    const n = g.daily.length;
+    const pts = g.daily.map((d, i) => {
+      run += Number(d.total) || 0;
+      const x = n > 1 ? (i / (n - 1)) * 800 : 0;
+      const y = 100 - (run / g.totals.all) * 100;
+      return x.toFixed(1) + ',' + Math.max(0, Math.min(100, y)).toFixed(1);
+    });
+    const line = 'M' + pts.join(' L');
+    const all = Number(g.totals.all).toLocaleString();
+    const footer = g.importVisible
+      ? 'Initial import (up to ' + esc(g.importEnd) + '): +' + Number(g.importTotal).toLocaleString() + ' &middot; Pipeline era: +' + Number(g.pipelineTotal).toLocaleString()
+      : '+' + Number(g.pipelineTotal).toLocaleString() + ' this month';
+    sec.innerHTML = '<p class="eyebrow">Library growth</p>' +
+      '<div class="gr-num">+' + Number(g.addedThisWeek).toLocaleString() + '<small> added this week</small></div>' +
+      '<div class="gr-chips">' +
+      '<span class="gr-chip"><b>+' + Number(g.addedToday).toLocaleString() + '</b> today</span>' +
+      '<span class="gr-chip"><b>' + Number(g.streakDays).toLocaleString() + '</b>-day streak</span>' +
+      '<span class="gr-chip"><b>' + all + '</b> items in library</span></div>' +
+      '<div class="gr-bars" role="img" aria-label="Daily additions over the last 30 days">' + bars + '</div>' +
+      '<div class="gr-area-wrap"><svg class="gr-area" viewBox="0 0 800 100" preserveAspectRatio="none" role="img" aria-label="Cumulative library growth">' +
+      '<defs><linearGradient id="grFill" x1="0" y1="0" x2="0" y2="1">' +
+      '<stop offset="0" style="stop-color:var(--v);stop-opacity:.5"/>' +
+      '<stop offset="1" style="stop-color:var(--v);stop-opacity:0"/></linearGradient></defs>' +
+      '<path d="' + line + ' L800,100 L0,100 Z" fill="url(#grFill)" stroke="none"></path>' +
+      '<path d="' + line + '" fill="none" style="stroke:var(--v)" stroke-width="2" vector-effect="non-scaling-stroke"></path></svg>' +
+      '<span class="gr-area-cap">' + all + ' items, still climbing</span></div>' +
+      '<p class="gr-era">' + footer + '</p>';
+    sec.hidden = false;
+  }
   // ===== AURORA P3B2: stats wrapped hero (reads the same /api/stats payload as renderStats) =====
   function st2Render(s) {
     const num = document.getElementById('st2-num');
@@ -2485,6 +2573,7 @@ function guideDetailHtml(key) {
     try { const r = await fetch('/api/stats'); if (r.ok) d = await r.json(); } catch (e) {}
     renderStats(mergeStats(d));
     st2Render(d);
+    growthFetch().then(renderGrowth).catch(() => renderGrowth(null));
     statsLoaded = true;
     statsLoading = false;
   }
@@ -2946,11 +3035,12 @@ function guideDetailHtml(key) {
     }
     const de = document.getElementById('hm-date');
     if (de) { try { de.textContent = new Date().toLocaleDateString(undefined, { weekday: 'long', month: 'long', day: 'numeric' }); } catch (e) {} }
-    let stats = {}, reqs = [], devCount = null;
+    let stats = {}, reqs = [], devCount = null, growth = null;
     const jobs = [
       fetch('/api/stats').then((r) => (r.ok ? r.json() : {})).then((d) => { stats = d || {}; }).catch(() => {}),
       rqFetch(false).then((d) => { reqs = (d && d.requests) || []; }).catch(() => {}),
-      fetch('/api/sessions').then((r) => (r.ok ? r.json() : {})).then((d) => { devCount = ((d && d.results) || []).length; }).catch(() => {})
+      fetch('/api/sessions').then((r) => (r.ok ? r.json() : {})).then((d) => { devCount = ((d && d.results) || []).length; }).catch(() => {}),
+      growthFetch().then((d) => { growth = d; }).catch(() => {})
     ];
     try { await Promise.all(jobs); } catch (e) {}
     const wh = (stats && stats.watch_hours != null) ? stats.watch_hours : ((stats && stats.watchHoursThisWeek != null) ? stats.watchHoursThisWeek : null);
@@ -2961,7 +3051,14 @@ function guideDetailHtml(key) {
     if (elR) elR.textContent = String(reqs.filter((r) => r && r.state && ON_THE_WAY.indexOf(r.state.key) >= 0).length);
     const elD = document.getElementById('hm-stat-devs');
     if (elD) elD.textContent = (devCount == null) ? '\u2014' : String(devCount);
-    ['hm-stat-hours', 'hm-stat-reqs', 'hm-stat-devs'].forEach((id) => { const n = document.getElementById(id); if (n) { n.dataset.counted = ''; animateCount(n); } });
+    // 4th tile: +addedThisWeek (growth payload; the + sits in its own span so
+    // animateCount's digit-leading regex still runs on the number)
+    const growthOk = !!(growth && growth.totals && growth.totals.all > 0);
+    const elG = document.getElementById('hm-stat-growth');
+    if (elG) elG.textContent = growthOk ? Number(growth.addedThisWeek || 0).toLocaleString() : '\u2014';
+    const elGp = document.getElementById('hm-stat-growth-plus');
+    if (elGp) elGp.hidden = !growthOk;
+    ['hm-stat-hours', 'hm-stat-reqs', 'hm-stat-devs', 'hm-stat-growth'].forEach((id) => { const n = document.getElementById(id); if (n) { n.dataset.counted = ''; animateCount(n); } });
   }
   async function hmLoadHero() {
     const host = document.getElementById('hm-hero');

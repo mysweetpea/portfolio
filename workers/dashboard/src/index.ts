@@ -13,6 +13,13 @@ import {
   resolveSeerrUser,
   buildCard,
 } from './lib/requests-display.mjs';
+import {
+  WINDOW_DAYS,
+  IMPORT_ERA,
+  CAP_FLOOR,
+  bucketByDay,
+  computeGrowth,
+} from './lib/growth.mjs';
 
 export interface Env {
   SESSIONS: KVNamespace;
@@ -475,6 +482,66 @@ async function produceUpdates(env: Env): Promise<string> {
   const { running, ok } = await runningP;
   const updates = reconcile(kept, running).map(buildUpdate);
   return JSON.stringify({ updates, generated: Date.now(), reconciled: ok > 0 });
+}
+
+// ---------- Library growth (Jellyfin DateCreated histogram) ----------
+// The ONLY honest source is DateCreated on items (verified live 2026-09-17,
+// server 10.11.11; MinDateCreated/MinDateLastSaved are dead ends — see
+// ./lib/growth.mjs). Verified paging cost: 4,938 items = 5 calls / 1.77s at
+// Limit=1000. Sort is not strictly reliable WITHIN a page, so paging
+// continues while a page contains ANY in-window item; a partial page
+// (< Limit) is the true end of data. MAX_PAGES guards a pathological sort
+// (12 x 1000 = 12k items) and reports partial:true to the UI.
+const GROWTH_PAGE = 1000;
+const GROWTH_MAX_PAGES = 12;
+
+async function fetchJellyfinGrowthItems(env: Env): Promise<{ items: any[]; partial: boolean }> {
+  const base = String(env.JELLYFIN_URL || '').replace(/\/+$/, '');
+  const windowStart = new Date(Date.now() - (WINDOW_DAYS - 1) * 86400000).toISOString().slice(0, 10);
+  const items: any[] = [];
+  for (let page = 0; page < GROWTH_MAX_PAGES; page++) {
+    const r = await fetch(base + '/Items?Recursive=true&IncludeItemTypes=Movie,Series,Episode' +
+      '&Fields=DateCreated&EnableImages=false&EnableUserData=false' +
+      '&SortBy=DateCreated&SortOrder=Descending' +
+      '&StartIndex=' + (page * GROWTH_PAGE) + '&Limit=' + GROWTH_PAGE,
+      { headers: { 'x-emby-token': env.JELLYFIN_API_KEY } });
+    if (!r.ok) throw new Error('jellyfin ' + r.status);
+    const d = await r.json() as any;
+    const pageItems = (Array.isArray(d && d.Items) ? d.Items : []) as any[];
+    items.push(...pageItems);
+    if (pageItems.length < GROWTH_PAGE) return { items, partial: false }; // partial page = end of data
+    const anyInWindow = pageItems.some((it) => String((it && it.DateCreated) || '').slice(0, 10) >= windowStart);
+    if (!anyInWindow) return { items, partial: false }; // zero in-window here -> older pages are too
+  }
+  return { items, partial: true }; // MAX_PAGES guard hit — return what we have
+}
+
+async function produceGrowth(env: Env): Promise<string> {
+  const today = new Date().toISOString().slice(0, 10);
+  try {
+    const { items, partial } = await fetchJellyfinGrowthItems(env);
+    return JSON.stringify(computeGrowth(bucketByDay(items), today, { partial }));
+  } catch {
+    // Degrade safely: a Jellyfin outage returns a minimal zero payload (the
+    // SPA hides the card), never a 500. Every §4 key stays present.
+    const windowStart = new Date(Date.now() - (WINDOW_DAYS - 1) * 86400000).toISOString().slice(0, 10);
+    return JSON.stringify({
+      generated: Date.now(),
+      windowDays: WINDOW_DAYS,
+      windowStart,
+      partial: true,
+      daily: [],
+      totals: { movies: 0, series: 0, episodes: 0, all: 0 },
+      addedThisWeek: 0,
+      addedToday: 0,
+      streakDays: 0,
+      importTotal: 0,
+      pipelineTotal: 0,
+      importEnd: IMPORT_ERA.end,
+      importVisible: IMPORT_ERA.end >= windowStart,
+      capValue: CAP_FLOOR,
+    });
+  }
 }
 
 export default {
@@ -1106,6 +1173,14 @@ export default {
         // Service updates feed — SWR cached 30 min; a refresh fetches 6 GitHub
         // pages + 6 runtime probes (in parallel) on cache-miss only.
         const payload = await swrJson(ctx, env, 'cache:updates', 1800000, () => produceUpdates(env));
+        return new Response(payload, { headers: { 'content-type': 'application/json', 'cache-control': 'no-store' } });
+      }
+      if (path === '/api/growth') {
+        // Library growth — SWR cached 1 h. addedToday is time-sensitive (the
+        // pipeline adds items continuously), so 24 h would freeze it; a
+        // refresh is only ~5 Jellyfin calls / ~2 s, <= 24 refreshes/day.
+        // Cache API via swrJson — NEVER KV (free-tier write budget).
+        const payload = await swrJson(ctx, env, 'cache:growth', 3600000, () => produceGrowth(env));
         return new Response(payload, { headers: { 'content-type': 'application/json', 'cache-control': 'no-store' } });
       }
 
