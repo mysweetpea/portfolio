@@ -78,3 +78,23 @@ Consequences to remember:
   `/wrangler.jsonc` returned **200 before** (publicly served), **404 after**
   the `.assetsignore`.
 - `wrangler tail`: all events `ok`, 0 exceptions; avatar round-trip byte-identical.
+
+## Service Updates feed (added 2026-09-17, deployment `a6248768`)
+
+`/api/updates` serves the 9 visitor services' update feed (bell + Home row +
+Services hints). When touching it, keep these invariants:
+
+- **The cache is Cache API, not KV** (`swrJson(ctx, env, 'cache:updates', ...)`).
+  The feed refresh does 6 GitHub fetches + 7 runtime probes; if this ever moved
+  to KV it would add ~48 writes/day and re-open the quota risk.
+- **Reconcile is `to <= running` (LTE).** Do not "simplify" to equality: `==`
+  collapses the feed to one entry per service (every historical step is below
+  the running version and would be dropped).
+- **Downgrade detection only compares version-like tags** (`^v?\d+(\.\d+)+`).
+  AFFiNE's `stable-<sha>` tags otherwise parse as numeric garbage.
+- **Release-notes links**: vaultwarden uses BARE tags, everything else `v`-prefixed;
+  AFFiNE links its releases list (SHA tags are not releases); Jellyfin is
+  deliberately unlinked (upstream is v12.x, deployment runs 10.11.11).
+- **Run `npm test` in `workers/dashboard`** after any change to the parse/dedupe/
+  reconcile pipeline — it asserts the exact expected counts (53→45→44, 1 drop,
+  AFFiNE survives, 35.0.0 chain suppressed) against 53 real commits.
