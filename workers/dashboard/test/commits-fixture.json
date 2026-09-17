@@ -1,0 +1,426 @@
+[
+ {
+  "sha": "6c6d05d",
+  "date": "2026-09-17",
+  "app": "nextcloud",
+  "image": "library/nextcloud",
+  "from": "34.0.3",
+  "to": "35.0.0"
+ },
+ {
+  "sha": "7f35b1e",
+  "date": "2026-09-17",
+  "app": "nextcloud",
+  "image": "library/nextcloud",
+  "from": "34.0.3",
+  "to": "35.0.0"
+ },
+ {
+  "sha": "7a66d28",
+  "date": "2026-09-17",
+  "app": "nextcloud",
+  "image": "library/nextcloud",
+  "from": "34.0.3",
+  "to": "35.0.0"
+ },
+ {
+  "sha": "294e365",
+  "date": "2026-09-16",
+  "app": "nextcloud",
+  "image": "library/nextcloud",
+  "from": "34.0.3",
+  "to": "35.0.0"
+ },
+ {
+  "sha": "b728f7b",
+  "date": "2026-09-16",
+  "app": "nextcloud",
+  "image": "library/nextcloud",
+  "from": "34.0.3",
+  "to": "35.0.0"
+ },
+ {
+  "sha": "661e679",
+  "date": "2026-09-16",
+  "app": "element-web",
+  "image": "element-hq/element-web",
+  "from": "v1.12.27",
+  "to": "v1.12.28"
+ },
+ {
+  "sha": "44f1c62",
+  "date": "2026-09-15",
+  "app": "immich",
+  "image": "immich-app/immich-server",
+  "from": "v3.2.1",
+  "to": "v3.2.2"
+ },
+ {
+  "sha": "f5f669a",
+  "date": "2026-09-15",
+  "app": "matrix-synapse",
+  "image": "element-hq/synapse",
+  "from": "v1.160.0",
+  "to": "v1.161.0"
+ },
+ {
+  "sha": "7b76bd6",
+  "date": "2026-09-14",
+  "app": "immich",
+  "image": "immich-app/immich-server",
+  "from": "v3.2.0",
+  "to": "v3.2.1"
+ },
+ {
+  "sha": "3a05a01",
+  "date": "2026-09-13",
+  "app": "vaultwarden",
+  "image": "vaultwarden/server",
+  "from": "1.37.2",
+  "to": "1.37.3"
+ },
+ {
+  "sha": "31249f1",
+  "date": "2026-09-12",
+  "app": "nextcloud",
+  "image": "library/nextcloud",
+  "from": "34.0.3",
+  "to": "34.0.4"
+ },
+ {
+  "sha": "6b58106",
+  "date": "2026-09-10",
+  "app": "immich",
+  "image": "immich-app/immich-server",
+  "from": "v3.1.0",
+  "to": "v3.2.0"
+ },
+ {
+  "sha": "5b6529d",
+  "date": "2026-09-08",
+  "app": "vaultwarden",
+  "image": "vaultwarden/server",
+  "from": "testing",
+  "to": "1.37.2"
+ },
+ {
+  "sha": "4e8ea5d",
+  "date": "2026-09-02",
+  "app": "matrix-synapse",
+  "image": "element-hq/synapse",
+  "from": "v1.159.0",
+  "to": "v1.160.0"
+ },
+ {
+  "sha": "253f1ff",
+  "date": "2026-09-01",
+  "app": "element-web",
+  "image": "element-hq/element-web",
+  "from": "v1.12.26",
+  "to": "v1.12.27"
+ },
+ {
+  "sha": "40fa9f5",
+  "date": "2026-09-01",
+  "app": "koalasync",
+  "image": "shik3i/koalasync",
+  "from": "v3.1.5",
+  "to": "v3.2.0"
+ },
+ {
+  "sha": "cad7d62",
+  "date": "2026-08-31",
+  "app": "open-webui",
+  "image": "open-webui/open-webui",
+  "from": "v0.11.2",
+  "to": "v0.11.3"
+ },
+ {
+  "sha": "289689f",
+  "date": "2026-08-31",
+  "app": "open-webui",
+  "image": "open-webui/open-webui",
+  "from": "v0.11.1",
+  "to": "v0.11.2"
+ },
+ {
+  "sha": "f8d87dd",
+  "date": "2026-08-25",
+  "app": "open-webui",
+  "image": "open-webui/open-webui",
+  "from": "v0.11.0",
+  "to": "v0.11.1"
+ },
+ {
+  "sha": "7b93ecb",
+  "date": "2026-08-25",
+  "app": "koalasync",
+  "image": "shik3i/koalasync",
+  "from": "v3.1.4",
+  "to": "v3.1.5"
+ },
+ {
+  "sha": "a214a45",
+  "date": "2026-08-22",
+  "app": "vaultwarden",
+  "image": "vaultwarden/server",
+  "from": "1.37.1",
+  "to": "1.37.2"
+ },
+ {
+  "sha": "ef89b26",
+  "date": "2026-08-21",
+  "app": "koalasync",
+  "image": "shik3i/koalasync",
+  "from": "v3.1.3",
+  "to": "v3.1.4"
+ },
+ {
+  "sha": "c4785dd",
+  "date": "2026-08-18",
+  "app": "koalasync",
+  "image": "shik3i/koalasync",
+  "from": "v3.1.2",
+  "to": "v3.1.3"
+ },
+ {
+  "sha": "6bf57e4",
+  "date": "2026-08-18",
+  "app": "matrix-synapse",
+  "image": "element-hq/synapse",
+  "from": "v1.158.0",
+  "to": "v1.159.0"
+ },
+ {
+  "sha": "7e0fa79",
+  "date": "2026-08-18",
+  "app": "affine",
+  "image": "toeverything/affine",
+  "from": "stable-174ad9b",
+  "to": "stable-b4c8548"
+ },
+ {
+  "sha": "c96ff4f",
+  "date": "2026-08-18",
+  "app": "element-web",
+  "image": "element-hq/element-web",
+  "from": "v1.12.25",
+  "to": "v1.12.26"
+ },
+ {
+  "sha": "99be460",
+  "date": "2026-08-17",
+  "app": "koalasync",
+  "image": "shik3i/koalasync",
+  "from": "v3.1.1",
+  "to": "v3.1.2"
+ },
+ {
+  "sha": "efd6770",
+  "date": "2026-08-15",
+  "app": "koalasync",
+  "image": "shik3i/koalasync",
+  "from": "v3.1.0",
+  "to": "v3.1.1"
+ },
+ {
+  "sha": "6644414",
+  "date": "2026-08-14",
+  "app": "element-web",
+  "image": "element-hq/element-web",
+  "from": "v1.12.18",
+  "to": "v1.12.25"
+ },
+ {
+  "sha": "c1fa7b4",
+  "date": "2026-08-14",
+  "app": "matrix-synapse",
+  "image": "element-hq/synapse",
+  "from": "v1.155.0",
+  "to": "v1.158.0"
+ },
+ {
+  "sha": "b36b74d",
+  "date": "2026-08-14",
+  "app": "affine",
+  "image": "toeverything/affine",
+  "from": "stable",
+  "to": "stable-174ad9b"
+ },
+ {
+  "sha": "613d3ec",
+  "date": "2026-08-14",
+  "app": "koalasync",
+  "image": "shik3i/koalasync",
+  "from": "v2.5.4",
+  "to": "v3.1.0"
+ },
+ {
+  "sha": "12a2960",
+  "date": "2026-08-14",
+  "app": "nextcloud",
+  "image": "nextcloud",
+  "from": "34.0.2",
+  "to": "34.0.3"
+ },
+ {
+  "sha": "8467d26",
+  "date": "2026-08-14",
+  "app": "seerr",
+  "image": "seerr-team/seerr",
+  "from": "v3.3.0",
+  "to": "v3.4.1"
+ },
+ {
+  "sha": "504ae2f",
+  "date": "2026-07-30",
+  "app": "seerr",
+  "image": "seerr-team/seerr",
+  "from": "latest",
+  "to": "v3.4.1"
+ },
+ {
+  "sha": "97e82a8",
+  "date": "2026-07-29",
+  "app": "immich",
+  "image": "immich-app/immich-server",
+  "from": "v2.7.5",
+  "to": "v3.1.0"
+ },
+ {
+  "sha": "a8879ab",
+  "date": "2026-07-28",
+  "app": "seerr",
+  "image": "seerr-team/seerr",
+  "from": "latest",
+  "to": "v3.4.0"
+ },
+ {
+  "sha": "32ba0ee",
+  "date": "2026-07-27",
+  "app": "open-webui",
+  "image": "open-webui/open-webui",
+  "from": "latest",
+  "to": "v0.11.0"
+ },
+ {
+  "sha": "093a092",
+  "date": "2026-07-24",
+  "app": "nextcloud",
+  "image": "nextcloud",
+  "from": "34.0.0",
+  "to": "34.0.2"
+ },
+ {
+  "sha": "91a4840",
+  "date": "2026-07-16",
+  "app": "seerr",
+  "image": "seerr-team/seerr",
+  "from": "latest",
+  "to": "v3.3.0"
+ },
+ {
+  "sha": "0f1b995",
+  "date": "2026-07-15",
+  "app": "seerr",
+  "image": "seerr-team/seerr",
+  "from": "latest",
+  "to": "v3.3.0"
+ },
+ {
+  "sha": "e4fe4a3",
+  "date": "2026-07-15",
+  "app": "seerr",
+  "image": "seerr-team/seerr",
+  "from": "preview-new-oidc",
+  "to": "v3.3.0"
+ },
+ {
+  "sha": "b9929a7",
+  "date": "2026-07-15",
+  "app": "seerr",
+  "image": "seerr-team/seerr",
+  "from": "preview-new-oidc",
+  "to": "v3.3.0"
+ },
+ {
+  "sha": "79883b4",
+  "date": "2026-07-15",
+  "app": "seerr",
+  "image": "seerr-team/seerr",
+  "from": "latest",
+  "to": "v3.3.0"
+ },
+ {
+  "sha": "fa52d84",
+  "date": "2026-07-15",
+  "app": "immich",
+  "image": "immich-app/immich-server",
+  "from": "v2.7.5",
+  "to": "v3.0.3"
+ },
+ {
+  "sha": "382fc32",
+  "date": "2026-07-09",
+  "app": "immich",
+  "image": "immich-app/immich-server",
+  "from": "v2.7.5",
+  "to": "v3.0.2"
+ },
+ {
+  "sha": "78262b6",
+  "date": "2026-07-02",
+  "app": "immich",
+  "image": "immich-app/immich-server",
+  "from": "v2.7.5",
+  "to": "v3.0.1"
+ },
+ {
+  "sha": "ac8989b",
+  "date": "2026-07-02",
+  "app": "immich",
+  "image": "immich-app/immich-server",
+  "from": "v2.7.5",
+  "to": "v3.0.0"
+ },
+ {
+  "sha": "b84703e",
+  "date": "2026-07-01",
+  "app": "open-webui",
+  "image": "open-webui/open-webui",
+  "from": "latest",
+  "to": "v0.10.2"
+ },
+ {
+  "sha": "3027bcb",
+  "date": "2026-07-01",
+  "app": "nextcloud",
+  "image": "nextcloud",
+  "from": "34.0.0",
+  "to": "34.0.1"
+ },
+ {
+  "sha": "b17fd34",
+  "date": "2026-06-30",
+  "app": "open-webui",
+  "image": "open-webui/open-webui",
+  "from": "latest",
+  "to": "v0.10.1"
+ },
+ {
+  "sha": "48a3e56",
+  "date": "2026-06-30",
+  "app": "seerr",
+  "image": "seerr-team/seerr",
+  "from": "latest",
+  "to": "v3.3.0"
+ },
+ {
+  "sha": "ed50b28",
+  "date": "2026-06-29",
+  "app": "nextcloud",
+  "image": "nextcloud",
+  "from": "34.0.1",
+  "to": "34.0.0"
+ }
+]

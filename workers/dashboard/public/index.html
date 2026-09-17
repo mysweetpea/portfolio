@@ -1121,6 +1121,35 @@ body { overscroll-behavior-x: none; }
   .hm-greet.greet-run { animation: none; background: none; -webkit-text-fill-color: currentColor; color: inherit; }
   .sec2-ring.draw .fg, .sec2-ring.pulse { animation: none; }
 }
+
+/* ===== SERVICE UPDATES FEED (upd*) — bell popover, Home row, Services hints ===== */
+.bell-menu{position:relative}
+.upd-bell{position:relative}
+.upd-bell .bell-dot{position:absolute;top:-5px;right:-5px;min-width:16px;height:16px;padding:0 4px;border-radius:99px;background:var(--gold);color:#0C1316;font-size:.62rem;font-weight:700;line-height:1;display:flex;align-items:center;justify-content:center;border:2px solid #0C1316;font-family:'Inter',system-ui,sans-serif}
+#upd-pop{right:0;left:auto;min-width:290px;max-width:calc(100vw - 24px);max-height:min(430px,72vh);overflow-y:auto;scrollbar-width:thin}
+.upd-pop-head{display:flex;align-items:baseline;justify-content:space-between;gap:10px;padding:10px 12px;border-bottom:1px solid var(--border);margin-bottom:6px}
+.upd-pop-head b{font-family:'Fraunces','Inter',Georgia,serif;font-weight:600;font-size:.95rem}
+.upd-pop-head span{font-size:.72rem;color:var(--text-dim);white-space:nowrap}
+.upd-row{display:flex;align-items:center;gap:9px;padding:8px 12px;border-radius:9px;color:var(--text);text-decoration:none;font-size:.85rem}
+a.upd-row:hover{background:rgba(143,175,181,.12)}
+.upd-row img{width:20px;height:20px;object-fit:contain;flex:none}
+.upd-row .un{font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.upd-row .uv{color:var(--sage);font-weight:600;white-space:nowrap}
+.upd-row .ud{margin-left:auto;font-size:.72rem;color:var(--text-faint);white-space:nowrap}
+.upd-empty{padding:14px 12px;font-size:.82rem;color:var(--text-dim)}
+.upd-card{display:flex;align-items:center;gap:10px;background:var(--card);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border:1px solid var(--border);border-radius:var(--radius-sm);padding:12px 14px;text-decoration:none;color:var(--text);transition:transform var(--t-fast),border-color var(--t-fast),box-shadow var(--t-fast);flex:none;width:230px;box-shadow:var(--e1)}
+.upd-card:hover{transform:translateY(-3px);border-color:var(--border-primary);box-shadow:var(--e2)}
+.upd-card img{width:26px;height:26px;object-fit:contain;flex:none}
+.upd-card .uc-main{min-width:0;display:flex;flex-direction:column;gap:1px}
+.upd-card .uc-nm{font-weight:600;font-size:.86rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.upd-card .uc-ver{font-size:.75rem;color:var(--sage);font-weight:600}
+.upd-card .uc-when{margin-left:auto;font-size:.7rem;color:var(--text-faint);white-space:nowrap}
+.sv-card .upd-hint{display:inline-flex;align-items:center;width:fit-content;max-width:100%;font-size:.72rem;font-weight:600;color:var(--gold);text-decoration:none;cursor:pointer}
+.sv-card .upd-hint:hover{text-decoration:underline}
+@media(max-width:760px){
+  #hm-upd-rail{display:grid;grid-template-columns:1fr;gap:10px;overflow:visible}
+  .upd-card{width:auto}
+}
 </style></head><body>
 <div class="aurora" aria-hidden="true"></div>
 <div class="grain-overlay" aria-hidden="true"></div>
@@ -2017,6 +2046,8 @@ function guideDetailHtml(key) {
     '<div class="nav-id">' +
     '<a class="site-back" href="https://mysweetpea.cc" title="Return to mysweetpea.cc"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 4h6v6"/><path d="M20 4 10 14"/><path d="M18 13v6H5V6h6"/></svg><span class="sb-txt">Return to Website</span></a>' +
     '<button class="nav-search" id="pal-open" title="Search (Ctrl+K)" aria-label="Search (Ctrl+K)"><svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg></button>' +
+    '<button type="button" class="nav-search upd-bell" id="upd-bell" title="Service updates" aria-label="Service updates" aria-haspopup="true" aria-expanded="false"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.7 21a2 2 0 0 1-3.4 0"/></svg><span class="bell-dot" id="bell-dot" hidden></span></button>' +
+    '<div class="bell-menu" id="bell-menu"><div class="acct-pop" id="upd-pop" role="menu" aria-label="Service updates" hidden><div class="upd-pop-head"><b>Service updates</b><span id="upd-pop-sub"></span></div><div id="upd-pop-list"></div></div></div>' +
     '<div class="acct-menu" id="acct-menu">' +
       '<button type="button" class="acct-trigger" id="acct-trigger" aria-haspopup="true" aria-expanded="false" title="Account menu">' +
         '<span class="nav-avatar" id="nav-avatar">' + avatarInner() + '</span><span class="acct-name" id="acct-name-nav"></span>' +
@@ -2051,6 +2082,7 @@ function guideDetailHtml(key) {
     '<button type="button" class="hm-btn" onclick="setTab(\'account\')">Your account</button></div>' +
     '</div></div>' +
     '<a class="hm-hero" id="hm-hero" hidden href="https://media.mysweetpea.cc" target="_blank" rel="noopener noreferrer" aria-label="Continue watching"></a>' +
+    '<section class="hm-sec" id="hm-updates" hidden><div class="hm-head"><h2 class="hm-h2"><span class="hm-accent"></span>Updated</h2><button type="button" class="hm-more" onclick="setTab(\'services\')">All services &rarr;</button></div><div class="hm-rail" id="hm-upd-rail"></div></section>' +
     '<section class="hm-sec" id="hm-requests" hidden><div class="hm-head"><h2 class="hm-h2"><span class="hm-accent"></span>Your requests</h2><a class="hm-more" href="https://request.mysweetpea.cc" target="_blank" rel="noopener noreferrer">Open Seerr &rarr;</a></div><div class="hm-rail" id="hm-req-rail"></div></section>' +
     '<section class="hm-sec" id="hm-services-sec"><div class="hm-head"><h2 class="hm-h2"><span class="hm-accent"></span>Your services</h2><button type="button" class="hm-more" onclick="setTab(\'services\')">All services &rarr;</button></div><div class="hm-rail" id="hm-svc-rail"></div></section>' +
     '<section class="hm-sec" id="hm-keepwatch" hidden><div class="hm-head"><h2 class="hm-h2"><span class="hm-accent"></span>Keep watching</h2><a class="hm-more" href="https://media.mysweetpea.cc" target="_blank" rel="noopener noreferrer">History &rarr;</a></div><div class="hm-rail" id="hm-kw-rail"></div></section>' +
@@ -3507,5 +3539,154 @@ function relFuture(v) {
       moveTabPill(false);
     } catch (e) { /* last resort — never throw from the watchdog */ }
   }, 900);
+
+  // ===== SERVICE UPDATES FEED (upd*) — bell popover + Home row + Services hints =====
+  // Data comes from /api/updates (git commits reconciled against runtime versions).
+  // The topbar is built dynamically -> ALL wiring is delegated (never getElementById
+  // at load time). Runs only when signed in: #upd-bell only exists post-gate.
+  (function () {
+    'use strict';
+    var UPD_ICONS = { 'vaultwarden': '/icons/vaultwarden.svg', 'matrix': '/icons/matrix.svg', 'affine': '/icons/affine.svg', 'koalasync': '/icons/koalasync.svg', 'jellyfin': '/icons/jellyfin.svg', 'seerr': '/icons/seerr.svg', 'nextcloud': '/icons/nextcloud.svg', 'immich': '/icons/immich.svg', 'open-webui': '/icons/openwebui.svg' };
+    var UPD_NAME_KEY = { 'Vaultwarden': 'vaultwarden', 'Element': 'matrix', 'AFFiNE': 'affine', 'KoalaSync': 'koalasync', 'Jellyfin': 'jellyfin', 'Seerr': 'seerr', 'Nextcloud': 'nextcloud', 'Immich': 'immich', 'Open WebUI': 'open-webui' };
+    var updData = null;
+    var updWaitFor = function (sel) {
+      return new Promise(function (resolve) {
+        var el = document.querySelector(sel);
+        if (el) return resolve(el);
+        var t = setInterval(function () { var e2 = document.querySelector(sel); if (e2) { clearInterval(t); resolve(e2); } }, 120);
+        setTimeout(function () { clearInterval(t); resolve(null); }, 15000);
+      });
+    };
+    var updDaysAgo = function (date) {
+      var t = Date.parse(String(date || '') + 'T00:00:00Z');
+      if (!isFinite(t)) return '';
+      var days = Math.floor((Date.now() - t) / 86400000);
+      if (days <= 0) return 'today';
+      if (days === 1) return 'yesterday';
+      return days + 'd ago';
+    };
+    var updVer = function (t) { return t ? 'v' + String(t).replace(/^v/, '') : ''; };
+    var updShort = function (u) { return u.kind === 'build' ? 'new build' : updVer(u.to); };
+    var updSeenGet = function () { try { return localStorage.getItem('msp_updates_seen') || ''; } catch (e) { return ''; } };
+    var updSeenSet = function (v) { try { localStorage.setItem('msp_updates_seen', v); } catch (e) {} };
+    var updMaxDate = function () { return (updData && updData.updates || []).reduce(function (m, u) { return (u.date > m ? u.date : m); }, ''); };
+    function updApplyBell() {
+      var dot = document.getElementById('bell-dot');
+      if (!dot || !updData) return;
+      var seen = updSeenGet();
+      var fresh = (updData.updates || []).filter(function (u) { return u.date > seen; });
+      if (fresh.length) { dot.textContent = fresh.length > 9 ? '9+' : String(fresh.length); dot.hidden = false; }
+      else dot.hidden = true;
+    }
+    function updRowInner(u) {
+      return '<img src="' + esc(UPD_ICONS[u.service] || '') + '" alt="" width="20" height="20" loading="lazy">' +
+        '<span class="un">' + esc(u.name) + '</span><span class="uv">' + esc(updShort(u)) + '</span>' +
+        '<span class="ud">' + esc(updDaysAgo(u.date)) + '</span>';
+    }
+    function updRenderPop() {
+      var list = document.getElementById('upd-pop-list'), sub = document.getElementById('upd-pop-sub');
+      if (!list) return;
+      var items = (updData && updData.updates || []).slice(0, 12);
+      if (sub) sub.textContent = items.length ? items.length + ' in the last 90 days' : '';
+      if (!items.length) { list.innerHTML = '<div class="upd-empty">Nothing updated in the last 90 days.</div>'; return; }
+      list.innerHTML = items.map(function (u) {
+        return u.releaseUrl
+          ? '<a class="upd-row" href="' + esc(u.releaseUrl) + '" target="_blank" rel="noopener noreferrer">' + updRowInner(u) + '</a>'
+          : '<div class="upd-row">' + updRowInner(u) + '</div>';
+      }).join('');
+    }
+    function updApplyHome() {
+      var sec = document.getElementById('hm-updates'), rail = document.getElementById('hm-upd-rail');
+      if (!sec || !rail || !updData) return;
+      var week = (updData.updates || []).filter(function (u) {
+        var t = Date.parse(u.date + 'T00:00:00Z');
+        return isFinite(t) && (Date.now() - t) <= 7 * 86400000;
+      });
+      if (!week.length) { sec.hidden = true; return; }
+      rail.innerHTML = week.map(function (u) {
+        var inner = '<img src="' + esc(UPD_ICONS[u.service] || '') + '" alt="" width="26" height="26" loading="lazy">' +
+          '<span class="uc-main"><span class="uc-nm">' + esc(u.name) + '</span><span class="uc-ver">' + esc(updShort(u)) + '</span></span>' +
+          '<span class="uc-when">' + esc(updDaysAgo(u.date)) + '</span>';
+        return u.releaseUrl
+          ? '<a class="upd-card" href="' + esc(u.releaseUrl) + '" target="_blank" rel="noopener noreferrer">' + inner + '</a>'
+          : '<div class="upd-card">' + inner + '</div>';
+      }).join('');
+      sec.hidden = false;
+    }
+    function updApplyHints() {
+      var grid = document.getElementById('svc-grid');
+      if (!grid || !updData) return;
+      var newest = {};
+      (updData.updates || []).forEach(function (u) {
+        var t = Date.parse(u.date + 'T00:00:00Z');
+        if (!isFinite(t) || (Date.now() - t) > 30 * 86400000) return;
+        if (!newest[u.service] || newest[u.service].date < u.date) newest[u.service] = u;
+      });
+      grid.querySelectorAll('.sv-card').forEach(function (card) {
+        var old = card.querySelector('.upd-hint');
+        if (old) old.remove();
+        var nm = card.querySelector('.nm');
+        if (!nm) return;
+        var key = UPD_NAME_KEY[String(nm.textContent).trim()];
+        var u = key ? newest[key] : null;
+        if (!u) return;
+        var span = document.createElement('span');
+        span.className = 'upd-hint';
+        span.textContent = u.kind === 'build'
+          ? 'Updated ' + updDaysAgo(u.date) + ' (new build)'
+          : 'Updated ' + updDaysAgo(u.date) + ' \u2192 ' + updVer(u.to);
+        if (u.releaseUrl) span.setAttribute('data-href', u.releaseUrl);
+        card.appendChild(span);
+      });
+    }
+    // svRenderGrid rebuilds .sv-card elements (filters/sort/status) — re-apply hints after each render
+    if (typeof window.svRenderGrid === 'function') {
+      var origGrid = window.svRenderGrid;
+      window.svRenderGrid = function () { origGrid(); updApplyHints(); };
+    }
+    // delegated: bell toggle (topbar is dynamic)
+    document.addEventListener('click', function (e) {
+      var bell = e.target && e.target.closest ? e.target.closest('#upd-bell') : null;
+      var pop = document.getElementById('upd-pop');
+      if (bell) {
+        e.preventDefault(); e.stopPropagation();
+        if (!pop) return;
+        var open = pop.hidden;
+        pop.hidden = !open;
+        bell.setAttribute('aria-expanded', String(open));
+        if (open) {
+          updRenderPop();
+          var maxD = updMaxDate();
+          if (maxD) updSeenSet(maxD);
+          updApplyBell();
+        }
+        return;
+      }
+      if (pop && !pop.hidden && !(e.target.closest && e.target.closest('#upd-pop'))) pop.hidden = true;
+    });
+    document.addEventListener('keydown', function (e) {
+      if (e.key !== 'Escape') return;
+      var pop = document.getElementById('upd-pop');
+      if (pop && !pop.hidden) pop.hidden = true;
+    });
+    // delegated: hint links are <span data-href> (an <a> inside .sv-card's <a> would be invalid HTML)
+    document.addEventListener('click', function (e) {
+      var h = e.target && e.target.closest ? e.target.closest('.upd-hint[data-href]') : null;
+      if (!h) return;
+      e.preventDefault(); e.stopPropagation();
+      window.open(h.getAttribute('data-href'), '_blank', 'noopener');
+    });
+    // boot: wait for the signed-in topbar, then fetch once and paint all three surfaces
+    (async function () {
+      var bell = await updWaitFor('#upd-bell');
+      if (!bell) return; // gate screen (not signed in)
+      try {
+        var r = await fetch('/api/updates');
+        if (r.ok) updData = await r.json();
+      } catch (e) { /* feed stays hidden */ }
+      if (!updData || !Array.isArray(updData.updates)) return;
+      updApplyBell(); updApplyHome(); updApplyHints();
+    })();
+  })();
 </script>
 </body></html>
