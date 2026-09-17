@@ -8,6 +8,11 @@ import {
   reconcile,
   buildUpdate,
 } from './lib/updates-pipeline.mjs';
+import {
+  SEERR_UA,
+  resolveSeerrUser,
+  buildCard,
+} from './lib/requests-display.mjs';
 
 export interface Env {
   SESSIONS: KVNamespace;
@@ -966,7 +971,9 @@ export default {
             })(),
             (async () => {
               try {
-                const r = await fetch(env.SEERR_URL + '/api/v3/request/count', { headers: { 'X-Api-Key': env.SEERR_API_KEY } });
+                // /api/v1 ONLY: this Seerr fork 307s /api/v3 to /login. Browser
+                // UA required (Cloudflare BFM 403s server UAs).
+                const r = await fetch(env.SEERR_URL + '/api/v1/request/count', { headers: { 'user-agent': SEERR_UA, 'X-Api-Key': env.SEERR_API_KEY } });
                 if (r.ok) {
                   const d = await r.json() as any;
                   out.seerr_total = typeof d.total === 'number' ? d.total : null;
@@ -978,7 +985,7 @@ export default {
             })(),
             (async () => {
               try {
-                const r = await fetch(env.SEERR_URL + '/api/v3/media?take=1', { headers: { 'X-Api-Key': env.SEERR_API_KEY } });
+                const r = await fetch(env.SEERR_URL + '/api/v1/media?take=1', { headers: { 'user-agent': SEERR_UA, 'X-Api-Key': env.SEERR_API_KEY } });
                 if (r.ok) {
                   const d = await r.json() as any;
                   const total = d && d.pageInfo && (d.pageInfo.results ?? d.pageInfo.resultsTotal);
@@ -1031,50 +1038,43 @@ export default {
         return json(JSON.parse(payload));
       }
       if (path === '/api/requests') {
-        // Home "Your requests" journeys — this user's recent Seerr requests.
-        // Seerr matches by ITS numeric user id (resolved once via email),
-        // cached per-user for 120s. Unmatched users (never opened Seerr)
-        // get an empty list — the UI hides the section.
-        const cacheKey = 'cache:requests:' + sess.sub;
-        const cache = await cacheGetJson(cacheKey);
-        if (cache) return json(JSON.parse(cache));
-        const out: any[] = [];
-        try {
-          const sessMe = await authentikFetch(env, sess.at, '/api/v3/core/users/me/');
-          const me = await sessMe.json() as any;
-          const meEmail = ((me && me.user ? me.user : me).email || '').toLowerCase();
-          // resolve the Seerr user id for this email (admin API, id cached 24h)
-          let seerrUid = parseInt((await env.SESSIONS.get('seerruid:' + sess.sub)) || '', 10);
-          if (!seerrUid) {
-            const ur = await fetch(env.SEERR_URL + '/api/v1/user?take=100', { headers: { 'X-Api-Key': env.SEERR_API_KEY } });
-            if (ur.ok) {
-              const ud = await ur.json() as any;
-              const hit = (ud.results ?? []).find((u: any) => (u.email || '').toLowerCase() === meEmail);
-              if (hit?.id) { seerrUid = hit.id; await kvPutBestEffort(env, 'seerruid:' + sess.sub, String(seerrUid), 86400); }
-            }
-          }
-          if (seerrUid) {
-            const r = await fetch(env.SEERR_URL + '/api/v1/request?take=12&sort=added&requestedBy=' + seerrUid,
-              { headers: { 'X-Api-Key': env.SEERR_API_KEY } });
-            if (r.ok) {
-              const d = await r.json() as any;
-              for (const rq of (d.results ?? [])) {
-                const m = rq?.media ?? {};
-                out.push({
-                  tmdbId: m.tmdbId ?? null,
-                  mediaType: rq.type === 'tv' ? 'tv' : 'movie',
-                  status: rq.status ?? null,            // 1 pending, 2 approved, 3 declined
-                  availability: m.status ?? null,        // 3 partly, 4/5 available
-                  title: (rq as any).title ?? null,
-                  createdAt: rq.createdAt ?? null,
-                });
-              }
-            }
-          }
-        } catch {}
-        const payload = JSON.stringify({ requests: out });
-        await cachePutJson(cacheKey, payload, 120);
-        return json({ requests: out });
+        // Home "Your requests" rail (default take 12) + Media tab full list
+        // (?scope=all, take 24). Seerr user resolved by jellyfinUsername ==
+        // authentik username (email fallback — the admin Seerr account has an
+        // empty email, email-only matching never worked). EVERY Seerr fetch
+        // sends a browser UA (Cloudflare BFM 403s server UAs) and hits
+        // /api/v1/* ONLY (this fork 307s /api/v3/* to /login). SWR-cached per
+        // user+scope for 120s via the Cache API (never KV): stale serves
+        // instantly while one background produce refreshes. Unmatched users
+        // get {requests:[],linked:false} — the SPA shows a link hint, no error.
+        // Subrequest budget: 1 (users) + 1 (list) + <=24 details = <=26 of 32.
+        const scopeAll = url.searchParams.get('scope') === 'all';
+        const payload = await swrJson(ctx, env, 'cache:requests:' + sess.sub + (scopeAll ? ':all' : ''), 120000, async () => {
+          const take = scopeAll ? 24 : 12;
+          const seerrHeaders = { 'user-agent': SEERR_UA, 'X-Api-Key': env.SEERR_API_KEY };
+          const ur = await fetch(env.SEERR_URL + '/api/v1/user?take=100', { headers: seerrHeaders })
+            .then((r) => (r.ok ? r.json() as any : null))
+            .catch(() => null);
+          const users: any[] = Array.isArray(ur) ? ur : ((ur && ur.results) || []);
+          const uid = resolveSeerrUser(users, { username: sess.username, email: sess.email });
+          if (!uid) return JSON.stringify({ requests: [], linked: false });
+          const lr = await fetch(env.SEERR_URL + '/api/v1/request?take=' + take + '&sort=added&requestedBy=' + uid, { headers: seerrHeaders })
+            .then((r) => (r.ok ? r.json() as any : null))
+            .catch(() => null);
+          const reqs: any[] = (lr && lr.results) || [];
+          const details = await Promise.allSettled(reqs.map((rq) => {
+            const seg = rq?.type === 'tv' ? 'tv' : 'movie';
+            const tmdb = rq?.media?.tmdbId;
+            if (tmdb == null) return Promise.resolve(null);
+            return fetch(env.SEERR_URL + '/api/v1/' + seg + '/' + tmdb, { headers: seerrHeaders })
+              .then((r) => (r.ok ? r.json() as any : null))
+              .catch(() => null);
+          }));
+          const cards = reqs.map((rq, i) =>
+            buildCard(rq, details[i].status === 'fulfilled' ? details[i].value : null, env.SEERR_URL));
+          return JSON.stringify({ requests: cards, linked: true });
+        });
+        return new Response(payload, { headers: { 'content-type': 'application/json', 'cache-control': 'no-store' } });
       }
       if (path === '/api/status') {
         // Home "Service status" card — public slug only, shaped for the SPA.

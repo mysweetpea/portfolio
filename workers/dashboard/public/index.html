@@ -1152,9 +1152,37 @@ a.upd-row:hover{background:rgba(143,175,181,.12)}
 }
 
 
+/* ---- Seerr requests (rq*) — home rail chips/ETA + Media tab full list ---- */
+.hm-chip.ok{background:var(--c-soft);color:var(--c);border:1px solid rgba(69,214,200,.4)}
+.hm-chip.info{background:var(--v-soft);color:var(--primary-bright);border:1px solid var(--border-primary)}
+.hm-chip.warn{background:rgba(217,168,108,.13);color:var(--gold);border:1px solid rgba(217,168,108,.4)}
+a.hm-req{text-decoration:none;color:var(--text)}
+.hm-req-ic{position:relative}
+.hm-req-ic img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.rq-prog{width:100%;margin-top:8px}
+#sec-requests{margin-top:18px}
+.rq-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:12px}
+.rq-card{display:flex;gap:12px;min-width:0;border:1px solid var(--border);border-radius:var(--radius-sm);background:var(--card);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);padding:12px;text-decoration:none;color:var(--text);box-shadow:var(--e1);transition:transform var(--t-fast),border-color var(--t-fast),box-shadow var(--t-fast)}
+.rq-card:hover{transform:translateY(-3px);border-color:var(--border-primary);box-shadow:var(--e2)}
+.rq-poster{position:relative;width:60px;aspect-ratio:2/3;border-radius:8px;overflow:hidden;display:grid;place-items:center;flex:none;box-shadow:var(--e1);border:1px solid var(--border)}
+.rq-poster img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.rq-poster-init{font-family:'Fraunces','Inter',Georgia,serif;font-size:1.2rem;font-weight:600;color:var(--primary-bright)}
+.rq-main{min-width:0;flex:1;display:flex;flex-direction:column;gap:4px}
+.rq-title{font-weight:600;font-size:.88rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.rq-meta{color:var(--text-faint);font-size:.72rem;font-variant-numeric:tabular-nums;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.rq-seasons{color:var(--text-dim);font-size:.72rem}
+.rq-foot{margin-top:auto;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.rq-open{margin-left:auto;font-size:.72rem;font-weight:600;color:var(--c);white-space:nowrap}
+.rq-hint,.rq-empty{color:var(--text-dim);font-size:.85rem;margin:10px 0 0}
+.rq-hint a{color:var(--c);font-weight:600;text-decoration:none}
+.rq-hint a:hover{text-decoration:underline}
 /* Updates bell popover — mobile sheet (must live at EOF: base #upd-pop rule is later in source) */
 @media(max-width:760px){
   #upd-pop{position:fixed;top:70px;left:12px;right:12px;min-width:0;max-width:none;width:auto;max-height:min(430px,60vh)}
+  .rq-grid{grid-template-columns:1fr}
+  .rq-card{flex-direction:column}
+  .rq-poster{width:100%}
+  .rq-foot{row-gap:6px}
 }
 </style></head><body>
 <div class="aurora" aria-hidden="true"></div>
@@ -2113,6 +2141,7 @@ function guideDetailHtml(key) {
     '</div>' +
     '<div class="tabpanel" id="panel-media" role="tabpanel" aria-labelledby="tab-media">' +
     '<section id="sec-media-m" class="media-sec"></section>' +
+    '<section class="card" id="sec-requests"><p class="eyebrow">Requests</p><h3>Your requests</h3><div id="rq-full"><div class="skel"></div></div></section>' +
     '<section class="card" id="sec-library"><p class="eyebrow">Your library</p><h3>Library</h3><div id="lib-body"><div class="skel"></div></div><p class="dim lib-cap">Library totals — live from Jellyfin</p></section>' +
     '</div>' +
     '<div class="tabpanel" id="panel-services" role="tabpanel" aria-labelledby="tab-services">' +
@@ -2792,23 +2821,42 @@ function guideDetailHtml(key) {
     }
     return '<span class="hm-journey" aria-hidden="true">' + h + '</span>';
   }
-  function hmStage(r) {
-    if (r && r.availability != null && r.availability >= 4) return { label: 'Ready to watch', cls: 'ready', level: 4 };
-    if (r && r.status === 2) return { label: 'Approved', cls: 'appr', level: 2 };
-    return { label: 'Requested', cls: 'req', level: 1 };
+  // ===== Seerr requests (rq*) — one shared fetch per scope for BOTH surfaces:
+  // Home rail (default) and the Media tab full list (?scope=all). Stored as
+  // promises so hmLoadBanner / hmLoadRequests / rqLoadFull never double-fetch.
+  let rqData = null, rqDataAll = null;
+  function rqFetch(all) {
+    const hit = all ? rqDataAll : rqData;
+    if (hit) return hit;
+    const p = fetch('/api/requests' + (all ? '?scope=all' : ''))
+      .then((r) => (r.ok ? r.json() : { requests: [], linked: false }))
+      .catch(() => ({ requests: [], linked: false }));
+    if (all) rqDataAll = p; else rqData = p;
+    return p;
+  }
+  const RQ_LEVEL = { available: 4, downloading: 2, partial: 2, processing: 2 };
+  const rqJourneyLevel = (key) => RQ_LEVEL[key] || 1;
+  const rqChipClass = (tone) => (tone === 'ok' || tone === 'info' || tone === 'warn') ? 'hm-chip ' + tone : 'hm-chip';
+  function rqPosterArt(url, initial, icClass, initClass) {
+    return '<span class="' + icClass + '"><span class="' + initClass + '">' + initial + '</span>' +
+      (url ? '<img loading="lazy" alt="" src="' + esc(url) + '" onerror="this.remove()">' : '') + '</span>';
   }
   function hmReqCard(r, i) {
-    const st = hmStage(r);
+    const st = (r && r.state) || { key: 'unknown', label: 'Unknown', tone: 'muted' };
     const title = String((r && r.title) || 'Untitled request');
     const initial = esc(title.trim().charAt(0).toUpperCase() || '?');
-    const when = relTime(r && r.createdAt);
-    const type = (r && r.mediaType === 'tv') ? 'Series' : 'Movie';
-    return '<div class="hm-card hm-req"><div class="hm-req-top">' +
-      '<span class="hm-req-ic hm-g' + (i % 3) + '">' + initial + '</span>' +
+    const when = relTime(r && r.requestedAt);
+    const type = (r && r.type === 'tv') ? 'Series' : 'Movie';
+    return '<a class="hm-card hm-req" href="' + esc(r && r.link) + '" target="_blank" rel="noopener noreferrer">' +
+      '<span class="hm-req-top">' +
+      rqPosterArt(r && r.posterUrl, initial, 'hm-req-ic hm-g' + (i % 3), 'hm-poster-init') +
       '<span class="hm-req-main"><span class="hm-req-t">' + esc(title) + '</span>' +
-      '<span class="hm-req-m">' + esc(type) + (when ? ' &middot; requested ' + esc(when) : '') + '</span></span></div>' +
-      '<span class="hm-req-foot">' + hmJourney(st.level) + '<span class="hm-chip ' + st.cls + '">' + st.label + '</span>' +
-      '<span class="hm-eta">' + (st.level >= 4 ? 'Ready now' : (st.level >= 2 ? 'ETA &sim;2&ndash;3 days' : 'Awaiting approval')) + '</span></span></div>';
+      '<span class="hm-req-m">' + esc(type) + (when ? ' &middot; requested ' + esc(when) : '') + '</span></span></span>' +
+      '<span class="hm-req-foot">' + hmJourney(rqJourneyLevel(st.key)) +
+      '<span class="' + rqChipClass(st.tone) + '">' + esc(st.label) + '</span>' +
+      ((r && r.etaText) ? '<span class="hm-eta">ETA ' + esc(r.etaText) + '</span>' : '') + '</span>' +
+      ((r && r.pct != null) ? '<span class="hm-bar rq-prog"><i style="width:' + Math.max(0, Math.min(100, Number(r.pct) || 0)) + '%"></i></span>' : '') +
+      '</a>';
   }
   function hmSvcOrb(s) {
     return '<a class="hm-card hm-orb" href="' + esc(s.url) + '" target="_blank" rel="noopener noreferrer" aria-label="' + esc(s.name + ' — ' + s.blurb) + '">' +
@@ -2892,15 +2940,16 @@ function guideDetailHtml(key) {
     let stats = {}, reqs = [], devCount = null;
     const jobs = [
       fetch('/api/stats').then((r) => (r.ok ? r.json() : {})).then((d) => { stats = d || {}; }).catch(() => {}),
-      fetch('/api/requests').then((r) => (r.ok ? r.json() : {})).then((d) => { reqs = (d && d.requests) || []; }).catch(() => {}),
+      rqFetch(false).then((d) => { reqs = (d && d.requests) || []; }).catch(() => {}),
       fetch('/api/sessions').then((r) => (r.ok ? r.json() : {})).then((d) => { devCount = ((d && d.results) || []).length; }).catch(() => {})
     ];
     try { await Promise.all(jobs); } catch (e) {}
     const wh = (stats && stats.watch_hours != null) ? stats.watch_hours : ((stats && stats.watchHoursThisWeek != null) ? stats.watchHoursThisWeek : null);
     const elH = document.getElementById('hm-stat-hours');
     if (elH) elH.textContent = (wh == null) ? '\u2014' : (Number(wh) >= 10 ? String(Math.round(wh)) : Number(wh).toFixed(1));
+    const ON_THE_WAY = ['pending', 'awaiting', 'processing', 'downloading', 'partial'];
     const elR = document.getElementById('hm-stat-reqs');
-    if (elR) elR.textContent = String(reqs.filter((r) => r && r.status !== 3 && !(r.availability >= 4)).length);
+    if (elR) elR.textContent = String(reqs.filter((r) => r && r.state && ON_THE_WAY.indexOf(r.state.key) >= 0).length);
     const elD = document.getElementById('hm-stat-devs');
     if (elD) elD.textContent = (devCount == null) ? '\u2014' : String(devCount);
     ['hm-stat-hours', 'hm-stat-reqs', 'hm-stat-devs'].forEach((id) => { const n = document.getElementById(id); if (n) { n.dataset.counted = ''; animateCount(n); } });
@@ -2934,11 +2983,47 @@ function guideDetailHtml(key) {
     const sec = document.getElementById('hm-requests');
     const rail = document.getElementById('hm-req-rail');
     if (!sec || !rail) return;
-    let reqs = [];
-    try { const r = await fetch('/api/requests'); if (r.ok) { const d = await r.json(); reqs = (d && d.requests) || []; } } catch (e) {}
+    const d = await rqFetch(false);
+    const reqs = (d && d.requests) || [];
     if (!reqs.length) { sec.hidden = true; return; }
     rail.innerHTML = reqs.slice(0, 10).map(hmReqCard).join('');
     sec.hidden = false;
+  }
+  // ===== Media tab "Requests" section (full list, ?scope=all) =====
+  const RQ_SEERR = 'https://request.mysweetpea.cc';
+  function rqCardFull(r, i) {
+    const st = (r && r.state) || { key: 'unknown', label: 'Unknown', tone: 'muted' };
+    const title = String((r && r.title) || 'Untitled request');
+    const initial = esc(title.trim().charAt(0).toUpperCase() || '?');
+    const when = relTime(r && r.requestedAt);
+    const type = (r && r.type === 'tv') ? 'Series' : 'Movie';
+    const seasonsLine = (r && r.type === 'tv' && st.key === 'partial' && r.seasonsTotal > 0)
+      ? '<span class="rq-seasons">Seasons: ' + esc(r.seasonsAvailable != null ? r.seasonsAvailable : 0) + ' of ' + esc(r.seasonsTotal) + ' in library</span>' : '';
+    return '<a class="rq-card" href="' + esc(r && r.link) + '" target="_blank" rel="noopener noreferrer">' +
+      rqPosterArt(r && r.posterUrl, initial, 'rq-poster hm-g' + (i % 3), 'rq-poster-init') +
+      '<span class="rq-main"><span class="rq-title">' + esc(title) + '</span>' +
+      '<span class="rq-meta">' + esc(type) + (when ? ' &middot; requested ' + esc(when) : '') + '</span>' +
+      seasonsLine +
+      '<span class="rq-foot"><span class="' + rqChipClass(st.tone) + '">' + esc(st.label) + '</span>' +
+      ((r && r.etaText) ? '<span class="hm-eta">ETA ' + esc(r.etaText) + '</span>' : '') +
+      '<span class="rq-open">Open in Seerr &rarr;</span></span>' +
+      ((r && r.pct != null) ? '<span class="hm-bar rq-prog"><i style="width:' + Math.max(0, Math.min(100, Number(r.pct) || 0)) + '%"></i></span>' : '') +
+      '</span></a>';
+  }
+  function rqRenderFull(d) {
+    const host = document.getElementById('rq-full');
+    if (!host) return;
+    const data = d || {};
+    if (!data.linked) {
+      host.innerHTML = '<p class="rq-hint">Seerr account not linked yet &mdash; <a href="' + RQ_SEERR + '" target="_blank" rel="noopener noreferrer">open Seerr</a> once and sign in with your Jellyfin login.</p>';
+      return;
+    }
+    const reqs = data.requests || [];
+    if (!reqs.length) { host.innerHTML = '<p class="rq-empty">No requests yet &mdash; browse Seerr to request something.</p>'; return; }
+    host.innerHTML = '<div class="rq-grid">' + reqs.map(rqCardFull).join('') + '</div>';
+  }
+  async function rqLoadFull() {
+    rqRenderFull(await rqFetch(true));
   }
   function hmLoadServices() {
     const rail = document.getElementById('hm-svc-rail');
@@ -2975,6 +3060,7 @@ function guideDetailHtml(key) {
     try { hmLoadBanner(); } catch (e) {}
     try { hmLoadHero(); } catch (e) {}
     try { hmLoadRequests(); } catch (e) {}
+    try { rqLoadFull(); } catch (e) {}
     try { hmLoadServices(); } catch (e) {}
     try { hmLoadMedia(); } catch (e) {}
   }

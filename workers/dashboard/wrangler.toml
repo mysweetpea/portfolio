@@ -14,6 +14,8 @@ AUTH_ISSUER = "https://auth.mysweetpea.cc/application/o"
 AUTH_BASE = "https://auth.mysweetpea.cc"
 APP_URL = "https://dashboard.mysweetpea.cc"
 JELLYFIN_USER_ID = "3d75456ef9c5438480195d731242133d"
+# Seerr origin (non-secret; the API key is a Worker secret: SEERR_API_KEY)
+SEERR_URL = "https://request.mysweetpea.cc"
 
 # Secrets (set via `npx wrangler secret put ...`):
 #   AUTHENTIK_CLIENT_ID
