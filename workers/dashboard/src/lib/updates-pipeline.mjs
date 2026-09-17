@@ -54,6 +54,11 @@ function immichVersion(d) {
   return '';
 }
 
+// NOTE: probe URLs are deliberately STATIC public hostnames (not env vars): this
+// module is imported by the test runner (no env available), and a Cloudflare
+// Worker can only reach PUBLIC endpoints anyway — internal cluster URLs would
+// never resolve. A probe failure degrades safely (git evidence alone), so a
+// domain change costs reconcile, not correctness.
 export const RUNTIME_PROBES = {
   'vaultwarden': { url: 'https://vault.mysweetpea.cc/api/version', pick: (d) => (typeof d === 'string' ? d : '') },
   'matrix-synapse': { url: 'https://matrix.mysweetpea.cc/_matrix/federation/v1/version', pick: (d) => (d && d.server && d.server.version) || '' },
