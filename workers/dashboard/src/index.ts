@@ -518,30 +518,33 @@ async function fetchJellyfinGrowthItems(env: Env): Promise<{ items: any[]; parti
 
 async function produceGrowth(env: Env): Promise<string> {
   const today = new Date().toISOString().slice(0, 10);
+  // FAIL-CLOSED: on a Jellyfin error, THROW so swrJson keeps serving the last
+  // good payload (its catch keeps the stale copy). Returning a zero payload
+  // here would be cached as "fresh" for a full hour and blank the card even
+  // after Jellyfin recovers — the exact failure mode the updates feed avoids.
+  const { items, partial } = await fetchJellyfinGrowthItems(env);
+  const growth = computeGrowth(bucketByDay(items), today, { partial });
+  // True library size (all-time, NOT window-scoped) — /Items/Counts is a
+  // separate cheap call already used by /api/stats. totals.all counts only
+  // items ADDED in the window, so the card must not label it "in library".
+  growth.libraryTotal = null;
+  growth.libraryMovies = null;
+  growth.librarySeries = null;
+  growth.libraryEpisodes = null;
   try {
-    const { items, partial } = await fetchJellyfinGrowthItems(env);
-    return JSON.stringify(computeGrowth(bucketByDay(items), today, { partial }));
-  } catch {
-    // Degrade safely: a Jellyfin outage returns a minimal zero payload (the
-    // SPA hides the card), never a 500. Every §4 key stays present.
-    const windowStart = new Date(Date.now() - (WINDOW_DAYS - 1) * 86400000).toISOString().slice(0, 10);
-    return JSON.stringify({
-      generated: Date.now(),
-      windowDays: WINDOW_DAYS,
-      windowStart,
-      partial: true,
-      daily: [],
-      totals: { movies: 0, series: 0, episodes: 0, all: 0 },
-      addedThisWeek: 0,
-      addedToday: 0,
-      streakDays: 0,
-      importTotal: 0,
-      pipelineTotal: 0,
-      importEnd: IMPORT_ERA.end,
-      importVisible: IMPORT_ERA.end >= windowStart,
-      capValue: CAP_FLOOR,
-    });
-  }
+    const r = await fetch(String(env.JELLYFIN_URL || '').replace(/\/+$/, '') + '/Items/Counts',
+      { headers: { 'x-emby-token': env.JELLYFIN_API_KEY } });
+    if (r.ok) {
+      const c = await r.json() as any;
+      const sum = ['MovieCount', 'SeriesCount', 'EpisodeCount']
+        .reduce((a, k) => a + (typeof c[k] === 'number' ? c[k] : 0), 0);
+      growth.libraryTotal = sum || null;
+      growth.libraryMovies = typeof c.MovieCount === 'number' ? c.MovieCount : null;
+      growth.librarySeries = typeof c.SeriesCount === 'number' ? c.SeriesCount : null;
+      growth.libraryEpisodes = typeof c.EpisodeCount === 'number' ? c.EpisodeCount : null;
+    }
+  } catch { /* counts are nice-to-have; the card still renders */ }
+  return JSON.stringify(growth);
 }
 
 export default {

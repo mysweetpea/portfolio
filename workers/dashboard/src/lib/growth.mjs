@@ -45,7 +45,10 @@ function addDays(iso, n) {
 export function bucketByDay(items) {
   const days = {};
   for (const it of (Array.isArray(items) ? items : [])) {
-    const k = it && TYPE_KEY[it.Type];
+    // own-property check: a Type like 'constructor'/'__proto__' must NOT slip
+    // through the inherited Object.prototype chain and poison a day bucket.
+    const t = it ? it.Type : null;
+    const k = (t === 'Movie' || t === 'Series' || t === 'Episode') ? TYPE_KEY[t] : null;
     const d = typeof (it && it.DateCreated) === 'string' && DATE_RE.test(it.DateCreated)
       ? it.DateCreated.slice(0, 10)
       : null;
@@ -64,7 +67,12 @@ export function bucketByDay(items) {
  * @param {{partial?:boolean}} [opts] partial=true when the fetcher hit MAX_PAGES
  */
 export function computeGrowth(days, todayStr, opts) {
-  const today = String(todayStr || '').slice(0, 10);
+  const today = String(todayStr == null ? '' : todayStr).slice(0, 10);
+  // Fail with a CLEAR message instead of an opaque RangeError deep in date math
+  // (new Date('T00:00:00Z').toISOString() throws "Invalid time value").
+  if (!DATE_RE.test(today) || Number.isNaN(new Date(today + 'T00:00:00Z').getTime())) {
+    throw new Error('computeGrowth: todayStr must be a valid YYYY-MM-DD date (got ' + JSON.stringify(todayStr) + ')');
+  }
   const windowStart = addDays(today, -(WINDOW_DAYS - 1));
   const weekStart = addDays(today, -6); // last 7 days = today-6 .. today
   // Fill the window ascending INCLUDING zero days so the chart has a

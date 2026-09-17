@@ -71,6 +71,29 @@ check('empty input: totals all 0', zeroDay.totals.all === 0 && zeroDay.totals.mo
 check('empty input: streak 0, week 0, today 0', zeroDay.streakDays === 0 && zeroDay.addedThisWeek === 0 && zeroDay.addedToday === 0);
 check('empty input: still a full 30-day zero axis', zeroDay.daily.length === 30 && zeroDay.daily.every((d) => d.total === 0));
 
+// ---------- fixture.counts is the ground truth (do not duplicate literals) ----------
+const counts = fixture.counts || {};
+check('fixture.counts present (movies/series/episodes)',
+  typeof counts.movies === 'number' && typeof counts.series === 'number' && typeof counts.episodes === 'number',
+  JSON.stringify(counts));
+check('totals match fixture.counts (single source of truth)',
+  g.totals.movies === counts.movies && g.totals.series === counts.series && g.totals.episodes === counts.episodes,
+  JSON.stringify(g.totals) + ' vs ' + JSON.stringify(counts));
+
+// ---------- partial flag propagates (MAX_PAGES contract) ----------
+check('partial defaults false', g.partial === false);
+check('partial:true propagates through computeGrowth', computeGrowth(fixture.days, TODAY, { partial: true }).partial === true);
+
+// ---------- input validation + hostile shapes ----------
+check('non-array input returns an empty bucket (no crash)', Object.keys(bucketByDay(null)).length === 0 && Object.keys(bucketByDay(undefined)).length === 0 && Object.keys(bucketByDay('nope')).length === 0);
+// prototype-key Type must not poison a bucket (own-property guard)
+const protoBucket = bucketByDay([{ Type: 'constructor', DateCreated: '2026-09-17T00:00:00Z' }, { Type: '__proto__', DateCreated: '2026-09-17T00:00:00Z' }, { Type: 'Movie', DateCreated: '2026-09-17T00:00:00Z' }]);
+const protoDay = protoBucket['2026-09-17'] || {};
+check('prototype-key Type values are ignored', protoDay.m === 1 && Object.keys(protoDay).sort().join(',') === 'e,m,s', JSON.stringify(Object.keys(protoDay)));
+let threw = false;
+try { computeGrowth({}, 'not-a-date'); } catch (e) { threw = /YYYY-MM-DD/.test(String(e && e.message)); }
+check('invalid todayStr throws a clear error (not an opaque RangeError)', threw);
+
 // ---------- gap-day streak ----------
 const holed = computeGrowth({
   '2026-09-17': { m: 1, s: 0, e: 0 },

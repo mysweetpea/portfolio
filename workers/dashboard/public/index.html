@@ -2464,9 +2464,9 @@ function guideDetailHtml(key) {
   // pattern as rqFetch) so loadStats (stats card) and hmLoadBanner (home
   // teaser) never double-fetch. Only success with data is memoized.
   let growthData = null;
-  function growthFetch() {
+  function growthFetch(force) {
     const hit = growthData;
-    if (hit) return hit;
+    if (hit && !force) return hit;
     const p = fetch('/api/growth')
       .then((r) => (r.ok ? r.json() : { totals: { all: 0 }, failed: true }))
       .catch(() => ({ totals: { all: 0 }, failed: true }));
@@ -2508,6 +2508,10 @@ function guideDetailHtml(key) {
     });
     const line = 'M' + pts.join(' L');
     const all = Number(g.totals.all).toLocaleString();
+    // true all-time library size (NOT the window sum) with an honest fallback
+    const libAll = (g.libraryTotal != null && isFinite(Number(g.libraryTotal)))
+      ? Number(g.libraryTotal).toLocaleString()
+      : all;
     const footer = g.importVisible
       ? 'Initial import (up to ' + esc(g.importEnd) + '): +' + Number(g.importTotal).toLocaleString() + ' &middot; Pipeline era: +' + Number(g.pipelineTotal).toLocaleString()
       : '+' + Number(g.pipelineTotal).toLocaleString() + ' this month';
@@ -2516,7 +2520,7 @@ function guideDetailHtml(key) {
       '<div class="gr-chips">' +
       '<span class="gr-chip"><b>+' + Number(g.addedToday).toLocaleString() + '</b> today</span>' +
       '<span class="gr-chip"><b>' + Number(g.streakDays).toLocaleString() + '</b>-day streak</span>' +
-      '<span class="gr-chip"><b>' + all + '</b> items in library</span></div>' +
+      '<span class="gr-chip"><b>' + libAll + '</b> items in library</span></div>' +
       '<div class="gr-bars" role="img" aria-label="Daily additions over the last 30 days">' + bars + '</div>' +
       '<div class="gr-area-wrap"><svg class="gr-area" viewBox="0 0 800 100" preserveAspectRatio="none" role="img" aria-label="Cumulative library growth">' +
       '<defs><linearGradient id="grFill" x1="0" y1="0" x2="0" y2="1">' +
@@ -2524,7 +2528,7 @@ function guideDetailHtml(key) {
       '<stop offset="1" style="stop-color:var(--v);stop-opacity:0"/></linearGradient></defs>' +
       '<path d="' + line + ' L800,100 L0,100 Z" fill="url(#grFill)" stroke="none"></path>' +
       '<path d="' + line + '" fill="none" style="stroke:var(--v)" stroke-width="2" vector-effect="non-scaling-stroke"></path></svg>' +
-      '<span class="gr-area-cap">' + all + ' items, still climbing</span></div>' +
+      '<span class="gr-area-cap">' + libAll + ' items' + (g.partial ? ' (partial data)' : '') + ', still climbing</span></div>' +
       '<p class="gr-era">' + footer + '</p>';
     sec.hidden = false;
   }
@@ -2573,7 +2577,7 @@ function guideDetailHtml(key) {
     try { const r = await fetch('/api/stats'); if (r.ok) d = await r.json(); } catch (e) {}
     renderStats(mergeStats(d));
     st2Render(d);
-    growthFetch().then(renderGrowth).catch(() => renderGrowth(null));
+    growthFetch(!!force).then(renderGrowth).catch(() => renderGrowth(null));
     statsLoaded = true;
     statsLoading = false;
   }
