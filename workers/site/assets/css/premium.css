@@ -442,7 +442,7 @@
 }
 .top-nav .nav-cta:hover {
     transform: translateY(-1px);
-    box-shadow: 0 4px 24px rgba(143, 175, 181, 0.32);
+    box-shadow: 0 6px 22px rgba(143, 175, 181, 0.42);
 }
 
 /* The theme toggle's moon/sun are <img> elements, so site.css's blanket
@@ -458,9 +458,22 @@
 .top-nav .theme-toggle .icon-moon img,
 .top-nav .theme-toggle .icon-sun img { width: 18px; height: 18px; filter: none; }
 
-/* Search + theme: icon buttons, no borders, no fill. */
-.top-nav .nav-search { border-radius: 999px; }
-.top-nav .nav-actions { gap: 2px; }
+/* Search + theme: one grammar with the rest of the bar (USER REQUEST).
+   Both get the faint pill AND the same 999px radius. site.css:4305 already
+   gives .nav-search/.theme-toggle an 11px radius, so both are pinned here
+   (0,2,0 beats its 0,1,0 and the pill shape stays consistent). */
+.top-nav .nav-search,
+.top-nav .theme-toggle {
+    border-radius: 999px;
+    background: color-mix(in srgb, var(--primary) 4.5%, transparent);
+    border: 1px solid color-mix(in srgb, var(--primary) 6%, transparent);
+    transition: background 0.18s ease, border-color 0.18s ease, color 0.18s ease;
+}
+.top-nav .nav-search:hover,
+.top-nav .theme-toggle:hover {
+    background: color-mix(in srgb, var(--primary) 12%, transparent);
+    border-color: color-mix(in srgb, var(--primary) 22%, transparent);
+}
 
 /* Scroll state: the bar condenses and firms up (premium = less chrome, more
    glass). Existing rule handles padding + background; add the hairline. */
@@ -595,20 +608,39 @@
     align-items: center;
     gap: 7px;
     padding: 8px 10px;
-    background: transparent;
-    border: 0;
-    border-radius: 8px;
+    /* Faint pill so adjacent items read as separate targets (USER REQUEST
+       2026-09-18: "make each button have a very faint pill or something like
+       that so there is a clear separation between them"). Kept deliberately
+       below button-weight: a 4.5% wash plus a 6% hairline. The hover state
+       lifts it to 12%, so the resting pill still reads as inert.
+       --border-primary is a color-mix() of --primary, so both tones follow
+       the palette in dark AND light themes automatically. */
+    background: color-mix(in srgb, var(--primary) 4.5%, transparent);
+    border: 1px solid color-mix(in srgb, var(--primary) 6%, transparent);
+    border-radius: 999px;
     color: var(--text-dim);
     font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
     font-size: 0.775rem;
     letter-spacing: -0.01em;
     white-space: nowrap;
     cursor: pointer;
+    transition: background 0.18s ease, border-color 0.18s ease, color 0.18s ease;
+}
+.top-nav .nav-btn:hover {
+    background: color-mix(in srgb, var(--primary) 12%, transparent);
+    border-color: color-mix(in srgb, var(--primary) 22%, transparent);
+    color: var(--primary-bright);
+}
+/* Active page keeps the faint pill and gets the sage tint on top. */
+.top-nav .nav-btn[aria-current="page"] {
+    background: color-mix(in srgb, var(--sage) 9%, transparent);
+    border-color: color-mix(in srgb, var(--sage) 18%, transparent);
 }
 .top-nav .nav-btn svg { flex: none; opacity: 0.6; transition: opacity 0.18s; }
 .top-nav .nav-btn:hover {
     color: var(--primary-bright);
-    background: transparent;
+    /* background comes from the faint-pill rule above (12% wash). Deliberately
+       NOT `background: transparent` — that would cancel the pill. */
 }
 /* Retire section 11's teal hover glow. The :not() qualifier is required: the
    rule being retired is .top-nav .nav-btn:not([aria-current="page"]):hover
@@ -617,7 +649,10 @@
 .top-nav .nav-btn:not([aria-current="page"]):hover { text-shadow: none; }
 .top-nav .nav-btn[aria-current="page"]:hover { text-shadow: none; }
 .top-nav .nav-btn:hover svg { opacity: 1; }
-.top-nav .nav-btn[aria-current="page"] { color: var(--sage); background: transparent; border-color: transparent; }
+.top-nav .nav-btn[aria-current="page"] {
+    color: var(--sage);
+    /* pill tone comes from the sage rule above; only text colour here */
+}
 .top-nav .nav-btn[aria-current="page"] svg { opacity: 1; }
 /* The v11 centred hairline is retired by the sage tint + solid glyph. */
 .top-nav .nav-btn[aria-current="page"]::after { content: none; }
@@ -626,33 +661,40 @@
    button (mockup .acct). The person glyph is trimmed 18 -> 15px in CSS only —
    the chip markup is CSP-hashed and must stay byte-identical. */
 .top-nav .nav-signin {
-    margin-left: 9px;
+    margin-left: 4px;
     padding: 8px 11px;
-    border: 0;
-    border-radius: 8px;
-    background: transparent;
+    /* Faint pill, matching the text links and the utility pair — every
+       clickable thing in the bar shares one grammar (USER REQUEST). */
+    border: 1px solid color-mix(in srgb, var(--primary) 6%, transparent);
+    border-radius: 999px;
+    background: color-mix(in srgb, var(--primary) 4.5%, transparent);
     color: var(--text-dim);
     font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
     font-size: 0.775rem;
     letter-spacing: -0.01em;
     white-space: nowrap;
     cursor: pointer;
-    transition: color 0.18s, background 0.18s, box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1), transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    transition: color 0.18s, background 0.18s, border-color 0.18s,
+                box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1), transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 .top-nav .nav-signin:hover {
     color: var(--primary-bright);
-    background: var(--primary-glow);
-    border: 0;
+    background: color-mix(in srgb, var(--primary) 12%, transparent);
+    border-color: color-mix(in srgb, var(--primary) 22%, transparent);
 }
 .top-nav .nav-account-chip svg { width: 15px; height: 15px; }
 
-/* The ONE bold object, signed out: ice pill, mono (mockup .nv4 .cta). */
+/* The ONE bold action. TEAL, matching every other button on the site
+   (.hero-btn-primary / .cta-btn / .form-submit all use this exact gradient).
+   Was a flat ice-white slab — USER REQUEST 2026-09-18: "change the color of
+   the Get Access button to match the color of the other buttons, its that
+   teal color". */
 .top-nav .nav-cta {
     margin-left: 10px;
     padding: 9px 17px;
     border-radius: 6px;
-    background: var(--ice);
-    color: #0C1316;
+    background: linear-gradient(135deg, var(--primary), var(--primary-dim));
+    color: var(--bg);
     font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
     font-size: 0.79rem;
     font-weight: 600;
@@ -664,8 +706,11 @@
     transform: translateY(-1px);
     box-shadow: 0 6px 22px rgba(238, 242, 243, 0.22);
 }
-[data-theme="light"] .top-nav .nav-cta { background: #1B2B31; color: #EDF3F4; }
-[data-theme="light"] .top-nav .nav-cta:hover { box-shadow: 0 6px 22px rgba(27, 43, 49, 0.25); }
+[data-theme="light"] .top-nav .nav-cta {
+    background: linear-gradient(135deg, var(--primary), var(--primary-dim));
+    color: #F4FAF8;
+}
+[data-theme="light"] .top-nav .nav-cta:hover { box-shadow: 0 6px 20px rgba(62, 107, 119, 0.30); }
 
 /* --- SIGNED IN: the chip takes the ice slot; "Get Access" disappears.
    Mockup stage "Signed in" (.nv4 .acct--member). Driven by .nav-signed-in,
@@ -679,8 +724,10 @@
     padding: 6px 14px 6px 7px;
     border: 0;
     border-radius: 999px;
-    background: var(--ice);
-    color: #0C1316;
+    /* Same teal as the signed-out CTA it replaces — the pill occupies that
+       exact slot, so the two must never disagree. */
+    background: linear-gradient(135deg, var(--primary), var(--primary-dim));
+    color: var(--bg);
     font-weight: 600;
 }
 .top-nav.nav-signed-in .nav-account-chip:hover {
