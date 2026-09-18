@@ -406,8 +406,12 @@
         var items = [];
         var seen = {};
 
-        // 1. Pages from nav links (skip external links like GitHub)
-        document.querySelectorAll('.nav-logo[href], .nav-btn, .nav-more-menu a').forEach(function (a) {
+        // 1. Pages from nav links + footer columns (skip external links like
+        //    GitHub and mailto:). The footer is the canonical page index now:
+        //    the nav "More" dropdown was removed in the minimal-nav pass, so
+        //    anything it used to contribute (Changelog, Donate, Suggest,
+        //    Contact, About) must still be reachable from the palette.
+        document.querySelectorAll('.nav-logo[href], .nav-btn, .footer-col a').forEach(function (a) {
             var href = a.getAttribute('href');
             if (!href || href.indexOf('http') === 0 || href.indexOf('mailto:') === 0) return;
             var label = a.textContent.trim();

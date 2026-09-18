@@ -351,7 +351,195 @@
 .faq-item .arrow { transition: transform 0.3s ease; }
 .faq-item.open .arrow { transform: rotate(180deg); }
 
-/* === 10. Light theme polish for new elements === */
+/* === 11. Minimal nav (2026-09-18) — invite-only, premium restraint ========
+   USER DIRECTION: premium, invite-only ("private garden"), minimal/concise,
+   modern. References studied: hermes-agent, openclaw, cline, omarchy — all
+   carry 4-5 quiet items, a bare wordmark, and ONE accent action.
+
+   Removed: the "More" dropdown (its 7 items all live in the footer), and the
+   inline tagline (moved to the hero, where it reads as a statement rather than
+   chrome). Kept: account chip, search, theme toggle, Get Access CTA.
+
+   Design rules applied:
+     - one accent CTA; Sign in recedes to a quiet outline (was gold-filled-ish)
+     - active page = hairline teal underline, not a boxed pill
+     - hover = colour only, no background block (backgrounds read as buttons)
+     - 44px touch targets preserved (site-wide tap-target pass still applies)
+   ========================================================================== */
+
+/* The wordmark: bare, no tagline. Slightly tighter tracking = more modern. */
+.top-nav .nav-logo { gap: 0; }
+.top-nav .nav-brand { letter-spacing: -0.03em; }
+
+/* Quiet, evenly-spaced items. Colour-only hover (no filled pill). */
+.top-nav .nav-btn {
+    position: relative;
+    padding: 9px 14px;
+    border-color: transparent;
+    background: transparent;
+    color: var(--text-dim);
+}
+.top-nav .nav-btn:hover {
+    color: var(--primary-bright);
+    background: transparent;
+}
+.top-nav .nav-btn:not([aria-current="page"]):hover {
+    /* a hairline that grows from the centre — the only motion on hover */
+    text-shadow: 0 0 18px rgba(143, 175, 181, 0.35);
+}
+
+/* Active page: hairline underline. Kills the boxed pill look. */
+.top-nav .nav-btn[aria-current="page"] {
+    color: var(--primary-bright);
+    background: transparent;
+    border-color: transparent;
+}
+.top-nav .nav-btn[aria-current="page"]::after {
+    content: '';
+    position: absolute;
+    left: 14px; right: 14px; bottom: 2px;
+    height: 1.5px;
+    margin: 0;
+    border-radius: 2px;
+    background: linear-gradient(90deg, transparent, var(--primary-bright), transparent);
+    opacity: 0.9;
+}
+
+/* "I Have a Code" — the invite path. Text only.
+
+   I first added a key glyph here; it failed on inspection: icon-ui-key.svg is
+   a large-format gradient (ice #E9F4F5 -> teal #5F8993) that turns to mud at
+   13px, and NONE of the four reference navs (hermes, openclaw, cline, omarchy)
+   use glyphs in top-level items. Text alone is the more confident, premium
+   choice — the label already says what it is. */
+.top-nav .nav-code {
+    color: var(--text-dim);
+}
+
+/* Sign in: quiet text link, not a gold pill. The account chip (post-login)
+   keeps its own styling — only the signed-out state recedes. */
+.top-nav .nav-signin {
+    border-color: transparent;
+    border-radius: var(--radius-sm);
+    padding: 9px 12px;
+    color: var(--text-dim);
+}
+.top-nav .nav-signin:hover {
+    color: var(--primary-bright);
+    background: transparent;
+    border-color: transparent;
+}
+
+/* The one filled action. Soft glow instead of a hard lift. */
+.top-nav .nav-cta {
+    margin-left: 6px;
+    padding: 9px 20px;
+    border-radius: 999px;
+    box-shadow: 0 0 0 0 rgba(143, 175, 181, 0);
+    transition: box-shadow 0.35s cubic-bezier(0.4, 0, 0.2, 1),
+                transform 0.35s cubic-bezier(0.4, 0, 0.2, 1),
+                background 0.35s ease;
+}
+.top-nav .nav-cta:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 24px rgba(143, 175, 181, 0.32);
+}
+
+/* Search + theme: icon buttons, no borders, no fill. */
+.top-nav .nav-search { border-radius: 999px; }
+.top-nav .nav-actions { gap: 2px; }
+
+/* Scroll state: the bar condenses and firms up (premium = less chrome, more
+   glass). Existing rule handles padding + background; add the hairline. */
+.top-nav.nav-scrolled {
+    border-bottom-color: var(--border-primary);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.28);
+}
+
+/* Light theme parity for the new states. */
+[data-theme="light"] .top-nav .nav-signin { color: #2F5A44; border-color: transparent; }
+[data-theme="light"] .top-nav .nav-signin:hover { color: #1B2B31; background: transparent; }
+[data-theme="light"] .top-nav .nav-btn:hover { color: #1B2B31; }
+[data-theme="light"] .top-nav .nav-btn[aria-current="page"] { color: #1B2B31; }
+[data-theme="light"] .top-nav .nav-btn[aria-current="page"]::after {
+    background: linear-gradient(90deg, transparent, #2F5A44, transparent);
+}
+[data-theme="light"] .top-nav.nav-scrolled { box-shadow: 0 8px 28px rgba(27, 43, 49, 0.10); }
+
+/* Mobile: the drawer keeps its existing layout; only touch-safety is added.
+   IMPORTANT — the desktop rules above are UNLAYERED and load after site.css,
+   so they were overriding the mobile drawer's card treatment (items lost their
+   background/border and picked up the desktop's 14px side padding, which made
+   the drawer look ragged). Everything below restores the drawer deliberately. */
+@media (max-width: 768px) {
+    .top-nav .nav-btn {
+        padding: 12px 16px;
+        background: var(--card-bg);
+        border-color: var(--border);
+    }
+    .top-nav .nav-btn:hover { background: var(--card-bg); }
+    /* Active item in the drawer: keep the card, add a left accent bar rather
+       than the desktop's centred underline. */
+    .top-nav .nav-btn[aria-current="page"] {
+        background: var(--card-bg);
+        border-color: var(--border-primary);
+    }
+    .top-nav .nav-btn[aria-current="page"]::after {
+        left: 0; right: auto; top: 8px; bottom: 8px;
+        width: 2px; height: auto;
+        background: linear-gradient(180deg, transparent, var(--primary-bright), transparent);
+    }
+    /* Sign in + Get Access sit in the same card family as the links; left
+       aligned like every other row (it was centred, which broke the rhythm). */
+    .top-nav .nav-signin {
+        display: flex; align-items: center; justify-content: flex-start;
+        width: 100%;
+        padding: 12px 16px;
+        text-align: left;
+        background: var(--card-bg);
+        border-color: var(--border);
+    }
+    .top-nav .nav-signin .chip-label { text-align: left; }
+    .top-nav .nav-cta {
+        display: flex; align-items: center; justify-content: center;
+        width: 100%;
+        padding: 13px 20px;
+        margin-left: 0;
+        text-align: center;
+    }
+    /* The two icon buttons were different shapes (one pill, one rounded
+       square) sitting side by side — unify to the search pill's 999px so the
+       pair reads as a set. */
+    .top-nav .theme-toggle { border-radius: 999px; }
+    .top-nav .nav-actions { justify-content: center; gap: 8px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .top-nav .nav-cta { transition: none; }
+}
+
+/* The invite-only eyebrow above the H1. This phrase used to live in the nav
+   tagline; it reads far better here — as a statement about the place rather
+   than as chrome. Kept deliberately quiet: sage, small, wide tracking. */
+.hero-eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin: 0 0 10px;
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--sage);
+    opacity: 0.92;
+}
+.hero-eyebrow::before {
+    content: '';
+    width: 12px; height: 12px; flex: none;
+    background: url('/assets/icons/icon-ui-leaf.svg') center/contain no-repeat;
+}
+[data-theme="light"] .hero-eyebrow { color: #2F5A44; }
+
 [data-theme="light"] .toast { background: rgba(255, 255, 255, 0.95); color: var(--text); box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15); }
 [data-theme="light"] .ascii-hero { border-color: var(--border-primary); }
 [data-theme="light"] .footer-status { border-color: var(--border-primary); }
