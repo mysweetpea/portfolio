@@ -1,52 +1,53 @@
 ---
-// Sampler.astro — "What you get" (S2): COMPACT INTERACTIVE explorer.
+// Sampler.astro — "What you get" (S2): MINIMAL INTERACTIVE explorer.
 //
-// USER DECISION 2026-09-18 (Option 3 of 4): icon row + expanding detail.
+// USER DECISION 2026-09-18: icon rail + expanding detail. Descriptions stay
+// HIDDEN until a service is clicked. Minimal + premium.
 //
-// ── WHY THIS IS A REAL TABS WIDGET ──────────────────────────────────────────
-// It genuinely IS one: a set of triggers each revealing one associated panel.
-// Using the ARIA tabs pattern (role=tablist/tab/tabpanel + roving tabindex)
-// gives correct semantics and arrow-key support instead of re-inventing them.
+// ── WHY THIS IS A DISCLOSURE, NOT A TABS WIDGET ─────────────────────────────
+// An earlier pass used role="tablist"/"tab"/"tabpanel". That was wrong for this
+// interaction: tabs mean "switch between views, one is always visible", and they
+// demand a tab be SELECTED from the start. What we actually have is
+// click-to-reveal. So this uses the disclosure pattern — <button aria-expanded>
+// controlling a region — which matches the behaviour exactly and needs no
+// default-open state. Screen readers announce "collapsed, button": correct.
 //
-// ── PROGRESSIVE ENHANCEMENT (the important part) ────────────────────────────
-// All nine panels render server-side with NO `hidden` attribute, so with
-// JavaScript disabled the section still reads as a complete, legible list of
-// nine services. The script then collapses it to one-panel-at-a-time. This is
-// how the known objection to this pattern — "it hides information behind
-// interaction" — gets answered rather than just accepted.
+// ── PROGRESSIVE ENHANCEMENT ─────────────────────────────────────────────────
+// Without JS every panel is visible, so the section reads as a plain list of
+// nine services with their descriptions. The script adds [data-enhanced] and
+// only THEN collapses them. Every hiding rule is scoped to [data-enhanced], so
+// a JS failure can never hide content. Asserted in the test suite.
 //
-// The script is an EXTERNAL file, not inline: the CSP in _headers is a sha256
-// allowlist with ~725 chars of headroom, and each new inline script eats into
-// it. External scripts cost nothing.
+// ── THEME INTEGRATION ───────────────────────────────────────────────────────
+// Styling uses the SITE'S OWN tokens (--card-bg, --border, --primary, --text-dim,
+// --radius, --transition) — not a private colour ramp — so this inherits palette
+// changes and matches .service-card / .glow-card. Light mode keys off
+// [data-theme="light"] (a manual toggle), NOT prefers-color-scheme.
 //
-// ⚠️ ICON LEGIBILITY — measured, not guessed (probe_icons.py renders each icon
-// on the real tile colour and reports glyph luminance). Four marks are designed
-// for a LIGHT background and are near-invisible on the dark tile:
-//     vaultwarden  glyph luminance 20   (paths with no fill -> default black)
-//     affine       glyph luminance 24   (paths with no fill -> default black)
-//     openwebui    glyph luminance 41   (black circle + white glyph)
-//     koalasync    fill="#111115"       (explicit near-black)
-// Those four get `plate: true` -> a light tile backing (.ms-ico-plate).
-// Re-run the probe if any artwork is replaced; do not trust this list forever.
+// ⚠️ ICON LEGIBILITY — measured, not guessed (probe_icons.py reports glyph
+// luminance on the real tile colour). Four marks are built for a LIGHT background
+// and are near-invisible on a dark tile: vaultwarden (20), affine (24),
+// openwebui (41), koalasync (#111115). They get `plate: true`. Re-run the probe
+// if any artwork is replaced.
 
 const SERVICES = [
-  { id: "jellyfin",    short: "Jellyfin",    name: "Jellyfin / Moonfin", icon: "jellyfin",
-    blurb: "Your own private Netflix. Stream your film and TV library on any device, with subtitles, resumes and profiles." },
-  { id: "seerr",       short: "Seerr",       name: "Seerr",              icon: "seerr",
-    blurb: "Ask for a film or series and it appears in Jellyfin automatically once it is ready." },
-  { id: "immich",      short: "Immich",      name: "Immich",             icon: "immich",
-    blurb: "Photo and video backup with automatic upload from your phone. Like Google Photos, without the tracking." },
-  { id: "nextcloud",   short: "Nextcloud",   name: "Nextcloud",          icon: "nextcloud",
-    blurb: "Files, calendar and contacts — your private Google Workspace, on hardware we own." },
-  { id: "vaultwarden", short: "Vaultwarden", name: "Vaultwarden",        icon: "vaultwarden", plate: true,
+  { id: "jellyfin",   short: "Jellyfin",   plate: false,
+    blurb: "Your own private Netflix — stream your library on any device you own, with no ads and no account limits." },
+  { id: "seerr",      short: "Seerr",      plate: false,
+    blurb: "Request anything missing and it lands in your library automatically, so you never stop watching." },
+  { id: "immich",     short: "Immich",     plate: false,
+    blurb: "Photo and video backup that works like Google Photos, without the tracking or the upload limits." },
+  { id: "nextcloud",  short: "Nextcloud",  plate: false,
+    blurb: "Files, calendar and contacts — a private Google Workspace, on hardware we own." },
+  { id: "vaultwarden", short: "Vaultwarden", plate: true,
     blurb: "A password manager that generates strong, unique passwords and fills them in for you." },
-  { id: "openwebui",   short: "Open WebUI",  name: "Open WebUI",         icon: "openwebui", plate: true,
-    blurb: "A private AI chat interface running on our own hardware — your conversations stay put." },
-  { id: "matrix",      short: "Element",     name: "Matrix / Element",   icon: "matrix",
+  { id: "openwebui",  short: "Open WebUI", plate: true,
+    blurb: "A private AI chat interface running on our own hardware — your conversations stay yours." },
+  { id: "matrix",     short: "Element",    plate: false,
     blurb: "Encrypted chat and group rooms. Message friends without anyone reading over your shoulder." },
-  { id: "affine",      short: "AFFiNE",      name: "AFFiNE",             icon: "affine", plate: true,
+  { id: "affine",     short: "AFFiNE",     plate: true,
     blurb: "A Notion alternative you own — documents, wikis and whiteboards in one workspace." },
-  { id: "koalasync",   short: "KoalaSync",   name: "KoalaSync",          icon: "koalasync", plate: true,
+  { id: "koalasync",  short: "KoalaSync",  plate: true,
     blurb: "Watch films and shows together with friends, kept perfectly in sync." },
 ];
 ---
@@ -61,21 +62,27 @@ const SERVICES = [
     </p>
 
     <div class="ms-explorer" data-explorer>
-      {/* Trigger rail — a plain row of icon tiles. */}
-      <div class="ms-rail" role="tablist" aria-label="Services included">
-        {SERVICES.map((s, i) => (
+      {/* Hint — the ONLY affordance saying the icons are interactive. The script
+          fades it out after the first reveal, and it is hidden outright once
+          anything is open, so it never competes with the description. */}
+      <p class="ms-hint" data-hint>Select a service to see what it does</p>
+
+      {/* Rail — icon tiles only. Names are sr-only: the rail stays minimal and
+          the name is revealed in the panel instead. aria-label carries the name
+          so the rail is still nine labelled buttons to a screen reader. */}
+      <div class="ms-rail" role="list" aria-label="Services included">
+        {SERVICES.map((s) => (
           <button
             type="button"
-            role="tab"
             class="ms-node"
             id={`svc-tab-${s.id}`}
             aria-controls={`svc-panel-${s.id}`}
-            aria-selected={i === 0 ? "true" : "false"}
-            tabindex={i === 0 ? 0 : -1}
+            aria-expanded="false"
+            aria-label={s.short}
             data-service={s.id}
           >
             <span class:list={["ms-node-ico", s.plate && "ms-ico-plate"]}>
-              <img src={`/assets/icons/${s.icon}.svg`} width="24" height="24"
+              <img src={`/assets/icons/${s.id}.svg`} width="24" height="24"
                    loading="lazy" decoding="async" alt="" aria-hidden="true" />
             </span>
             <span class="ms-node-label">{s.short}</span>
@@ -83,22 +90,23 @@ const SERVICES = [
         ))}
       </div>
 
-      {/* Panels — ALL visible without JS; the script shows one at a time. */}
+      {/* Panels — ALL visible without JS; the script collapses them once enhanced. */}
       <div class="ms-panels">
         {SERVICES.map((s) => (
           <div
-            role="tabpanel"
             class="ms-panel"
             id={`svc-panel-${s.id}`}
+            role="region"
             aria-labelledby={`svc-tab-${s.id}`}
-            tabindex="0"
+            data-panel={s.id}
+            tabindex="-1"
           >
             <span class:list={["ms-panel-ico", s.plate && "ms-ico-plate"]}>
-              <img src={`/assets/icons/${s.icon}.svg`} width="34" height="34"
+              <img src={`/assets/icons/${s.id}.svg`} width="34" height="34"
                    loading="lazy" decoding="async" alt="" aria-hidden="true" />
             </span>
             <div class="ms-panel-body">
-              <h3 class="ms-panel-name">{s.name}</h3>
+              <h3 class="ms-panel-name">{s.short}</h3>
               <p class="ms-panel-blurb">{s.blurb}</p>
             </div>
           </div>
@@ -107,7 +115,7 @@ const SERVICES = [
     </div>
 
     <p class="ms-more">
-      <a class="ms-link" href="/services.html">See what each one does <span aria-hidden="true">→</span></a>
+      <a class="ms-link" href="/services.html">See all nine in detail <span aria-hidden="true">→</span></a>
     </p>
   </div>
 </section>

@@ -1,76 +1,128 @@
 /* ==========================================================================
-   services-explorer.js — the compact interactive services explorer.
-   ==========================================================================
-   Behaviour: one icon node is "current"; its panel shows beneath, the rest are
-   hidden. Click or Enter/Space selects; ArrowLeft/Right/Home/End move between
-   nodes (the standard ARIA tabs keyboard model).
+   services-explorer.js — minimal interactive services explorer.
 
-   ⚠️ PROGRESSIVE ENHANCEMENT — do NOT add `hidden` to the panels in the markup.
-   All nine render server-side so the section is a complete readable list
-   without JavaScript. THIS script is what collapses it. If you hide them in
-   the HTML too, users without JS lose eight of the nine services.
+   BEHAVIOUR: click an icon to reveal that service's description. Click the same
+   icon again to collapse it. One open at a time.
+
+   ── THIS IS A DISCLOSURE, NOT TABS ─────────────────────────────────────────
+   The trigger is a <button aria-expanded> controlling a region, so the
+   accessibility model is "expanded / collapsed" rather than "selected". The
+   consequence is that ZERO panels start open, which is the requirement: the
+   descriptions must not show until something is clicked. A tabs pattern would
+   have demanded one be selected from the start and would have misdescribed the
+   interaction.
+
+   Arrow keys move focus across the rail (a natural expectation for a horizontal
+   control strip). Enter/Space activate — native <button> behaviour, no code.
+
+   ── PROGRESSIVE ENHANCEMENT ────────────────────────────────────────────────
+   Do NOT add `hidden` to the panels in the markup. All nine render server-side
+   so the section is a complete readable list without JavaScript. THIS script is
+   what collapses it, and only after setting [data-enhanced] — which is the sole
+   selector the hiding CSS is scoped to. If JS fails, users get MORE content,
+   never less.
 
    Kept as a small external file because the site's CSP is a sha256 allowlist
    with limited headroom (see _headers) — external scripts cost nothing.
    ========================================================================== */
 (function () {
-  "use strict";
+  'use strict';
 
-  var root = document.querySelector("[data-explorer]");
+  var root = document.querySelector('[data-explorer]');
   if (!root) return;
 
-  var tabs = Array.prototype.slice.call(root.querySelectorAll('[role="tab"]'));
-  var panels = Array.prototype.slice.call(root.querySelectorAll('[role="tabpanel"]'));
-  if (!tabs.length || tabs.length !== panels.length) return;
+  var nodes = Array.prototype.slice.call(root.querySelectorAll('.ms-node'));
+  var panels = Array.prototype.slice.call(root.querySelectorAll('.ms-panel'));
+  if (!nodes.length || nodes.length !== panels.length) return;
 
-  var reduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  var rail = root.querySelector('.ms-rail');
+  var hint = root.querySelector('[data-hint]');
+  var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-  function select(idx, focus) {
-    tabs.forEach(function (t, i) {
-      var on = i === idx;
-      t.setAttribute("aria-selected", on ? "true" : "false");
-      t.tabIndex = on ? 0 : -1;
-      panels[i].hidden = !on;
-    });
-    if (focus) tabs[idx].focus();
+  // Look panels up by the id in aria-controls, so panel order can never drift
+  // out of sync with the rail.
+  var byId = {};
+  panels.forEach(function (p) { byId[p.id] = p; });
+
+  var openId = null;
+
+  function nodeFor(id) { return document.getElementById('svc-tab-' + id); }
+  function panelFor(id) { return byId['svc-panel-' + id]; }
+
+  function setHint(on) {
+    if (hint) hint.classList.toggle('ms-hint-off', !on);
   }
 
-  // Initial state: first node current. This is the only place panels get hidden,
-  // and it happens only now that we know JS is running.
-  select(0, false);
-  root.setAttribute("data-enhanced", "");
+  function collapse(id) {
+    var n = nodeFor(id), p = panelFor(id);
+    if (!n || !p) return;
+    n.setAttribute('aria-expanded', 'false');
+    p.hidden = true;
+    p.classList.remove('ms-panel-in');
+    if (openId === id) openId = null;
+  }
 
-  tabs.forEach(function (t, i) {
-    t.addEventListener("click", function () { select(i, false); });
+  function expand(id) {
+    var n = nodeFor(id), p = panelFor(id);
+    if (!n || !p) return;
+    n.setAttribute('aria-expanded', 'true');
+    p.hidden = false;
+    // Restart the entrance animation. Removing and re-adding a class in the same
+    // frame can be coalesced away, so force a reflow in between.
+    p.classList.remove('ms-panel-in');
+    if (!reduce) {
+      void p.offsetWidth;
+      p.classList.add('ms-panel-in');
+    }
+    openId = id;
+    setHint(false);
+  }
 
-    t.addEventListener("keydown", function (e) {
-      var next = null;
-      if (e.key === "ArrowRight" || e.key === "ArrowDown") next = (i + 1) % tabs.length;
-      else if (e.key === "ArrowLeft" || e.key === "ArrowUp") next = (i - 1 + tabs.length) % tabs.length;
-      else if (e.key === "Home") next = 0;
-      else if (e.key === "End") next = tabs.length - 1;
-      if (next === null) return;
+  function toggle(id) {
+    if (openId === id) { collapse(id); setHint(true); }
+    else {
+      if (openId) collapse(openId);
+      expand(id);
+    }
+  }
+
+  nodes.forEach(function (n) {
+    n.addEventListener('click', function () {
+      toggle(n.getAttribute('data-service'));
+    });
+  });
+
+  // Arrow / Home / End move focus between the rail buttons.
+  if (rail) {
+    rail.addEventListener('keydown', function (e) {
+      var i = nodes.indexOf(document.activeElement);
+      if (i === -1) return;
+      var next = -1;
+      if (e.key === 'ArrowRight' || e.key === 'ArrowDown') next = (i + 1) % nodes.length;
+      else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') next = (i - 1 + nodes.length) % nodes.length;
+      else if (e.key === 'Home') next = 0;
+      else if (e.key === 'End') next = nodes.length - 1;
+      if (next < 0) return;
       e.preventDefault();
-      select(next, true);
-    });
-  });
-
-  // The panel is a real focusable region (tabindex=0); make sure its outline is
-  // never clipped by the rounded container.
-  panels.forEach(function (p) {
-    p.addEventListener("focus", function () { p.classList.add("is-focused"); });
-    p.addEventListener("blur", function () { p.classList.remove("is-focused"); });
-  });
-
-  if (!reduce) {
-    // Fade the incoming panel on change only after enhancement, so no-JS users
-    // never see a transition they didn't ask for.
-    root.addEventListener("click", function () {
-      var active = root.querySelector('[role="tabpanel"]:not([hidden])');
-      if (!active) return;
-      active.classList.remove("ms-panel-in");
-      void active.offsetWidth; // restart the animation
-      active.classList.add("ms-panel-in");
+      nodes[next].focus();
     });
   }
+
+  // Escape collapses the open panel and returns focus to its trigger.
+  root.addEventListener('keydown', function (e) {
+    if (e.key !== 'Escape' || !openId) return;
+    var id = openId;
+    collapse(id);
+    setHint(true);
+    var n = nodeFor(id);
+    if (n) n.focus({ preventScroll: true });
+  });
+
+  // Start fully collapsed. Done explicitly rather than relying on the markup, so
+  // a restored form state or a partial reload can never leave a panel open.
+  panels.forEach(function (p) { p.hidden = true; });
+  setHint(true);
+
+  // Only NOW is it safe for the CSS to hide anything.
+  root.setAttribute('data-enhanced', '');
 })();

@@ -76,17 +76,19 @@
     --font-body: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   }
 
-  /* Light theme: invert SEMANTICS, not values (research §7 note) */
-  @media (prefers-color-scheme: light) {
-    :root {
-      --ms-text-primary: #0F1A1C;
-      --ms-text-body:    #24393D;
-      --ms-text-tertiary:#3D5A5F;
-      --ms-accent:       #35646D;
-      --ms-surface-1:    #F4F8F8;
-      --ms-surface-2:    #EAF1F1;
-      --ms-ring-subtle:  #D3E0E0;
-    }
+  /* ⚠️⚠️ LIGHT THEME — READ THIS ⚠️⚠️
+     The site switches theme with a MANUAL toggle that sets [data-theme="light"]
+     on <html> (see site.css "Light theme" block). It does NOT use
+     prefers-color-scheme. An earlier version of this file keyed off the media
+     query, so in light mode the redesign kept rendering DARK values — the
+     sections looked broken against the light page.
+     Always scope light-mode overrides to the attribute, never the media query.
+     (The prefers-color-scheme block was removed deliberately — do not re-add.) */
+  [data-theme="light"] {
+    --ms-text-primary: #1B2B31;
+    --ms-text-body:    #445A61;
+    --ms-text-tertiary:#66797F;
+    --ms-accent:       #4E7C88;
   }
 
   /* ---------- Section scaffolding ---------- */
@@ -155,137 +157,205 @@
     margin: 0 auto;
   }
 
-  /* ---------- Services (S2) — COMPACT INTERACTIVE explorer ----------
-     USER DECISION 2026-09-18 (Option 3): an icon rail where selecting a node
-     reveals that service's detail beneath. Replaces the two-tier card grid.
+  /* ---------- Services (S2) — MINIMAL INTERACTIVE explorer ----------
+     USER DECISION 2026-09-18: icon rail + expanding detail; minimal + premium.
 
-     PROGRESSIVE ENHANCEMENT: without JS every `.ms-panel` is visible, so the
-     section reads as a plain list of nine services. The script adds
-     `[data-enhanced]` to the root and switches to one-panel-at-a-time. So all
-     panel-hiding rules below are scoped to `[data-enhanced]` — if JS never
-     runs, nothing is hidden. Do not unscope them. */
+     THEME INTEGRATION — this is the important part. The explorer uses the SITE'S
+     OWN tokens (--card-bg, --border, --border-primary, --primary, --text-dim,
+     --radius, --transition) rather than a private colour ramp, so it inherits any
+     future palette change automatically and matches .service-card/.glow-card
+     exactly. The --ms-* tokens remain for typography/rhythm only.
+
+     ⚠️ LIGHT THEME: the site toggles with [data-theme="light"] on <html> — a
+     MANUAL switch, NOT prefers-color-scheme. Overrides below MUST use the
+     attribute selector or they never apply in light mode.
+
+     PROGRESSIVE ENHANCEMENT: without JS every panel is visible; the script adds
+     `[data-enhanced]` before collapsing to one panel at a time. All hiding is
+     scoped to [data-enhanced], so JS failure can never hide content. */
 
   .ms-explorer { margin-top: var(--ms-7); }
 
-  /* ── Icon rail ── */
+  /* ── Icon rail: a quiet horizontal strip, hairline-bounded ─────────────── */
   .ms-rail {
     display: grid;
     grid-template-columns: repeat(9, minmax(0, 1fr));
-    gap: var(--ms-2);
-    padding: var(--ms-3);
-    background: var(--ms-surface-1);
-    border: 1px solid var(--ms-ring-subtle);
-    border-radius: var(--ms-radius-xl, 16px);
+    gap: 2px;
+    padding: 4px;
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    -webkit-backdrop-filter: blur(12px) saturate(1.1);
+    backdrop-filter: blur(12px) saturate(1.1);
   }
   .ms-node {
     appearance: none;
     -webkit-appearance: none;
+    position: relative;
     display: flex;
-    flex-direction: column;
     align-items: center;
-    gap: 7px;
-    padding: var(--ms-3) var(--ms-2);
-    min-height: 84px;              /* comfortable touch target on the rail */
+    justify-content: center;
+    padding: 16px 8px;
+    min-height: 76px;
     background: transparent;
     border: 1px solid transparent;
-    border-radius: var(--ms-radius-lg);
+    border-radius: var(--radius-sm);
     cursor: pointer;
     font: inherit;
-    transition: background var(--ms-dur-hover) var(--ms-ease-out),
-                border-color var(--ms-dur-hover) var(--ms-ease-out);
+    transition: var(--transition);
   }
-  .ms-node:hover { background: var(--ms-surface-2); }
+  .ms-node:hover { background: var(--primary-glow); }
+  .ms-node:focus-visible {
+    outline: 2px solid var(--primary);
+    outline-offset: 2px;
+  }
+  /* Selected = a soft tint plus an accent hairline. No heavy fill: on a minimal
+     rail the *absence* of noise is what reads as premium. */
   .ms-node[aria-selected="true"] {
-    background: var(--ms-surface-2);
-    border-color: var(--ms-accent);
+    background: var(--primary-glow);
+    border-color: var(--border-primary);
   }
-  .ms-node-label {
-    font-size: 0.75rem;
-    font-weight: 600;
-    color: var(--ms-text-tertiary);
-    letter-spacing: 0.01em;
-    line-height: 1.2;
-    text-align: center;
-    /* Long labels must not force the grid track wider than 1/9 of the rail. */
-    max-width: 100%;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
+  /* A 2px accent underline is the only decorative mark on the whole rail. */
+  .ms-node[aria-selected="true"]::after {
+    content: "";
+    position: absolute;
+    left: 50%;
+    bottom: 6px;
+    width: 14px;
+    height: 2px;
+    margin-left: -7px;
+    border-radius: 2px;
+    background: var(--primary);
   }
-  .ms-node[aria-selected="true"] .ms-node-label { color: var(--ms-text-primary); }
 
+  /* ── Icon tiles ────────────────────────────────────────────────────────── */
   .ms-node-ico,
   .ms-panel-ico {
     flex: none;
     display: grid;
     place-items: center;
-    border-radius: var(--ms-radius-md);
-    background: var(--ms-surface-1);
-    border: 1px solid var(--ms-ring-subtle);
+    border-radius: var(--radius-sm);
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    transition: var(--transition);
   }
-  .ms-node-ico { width: 40px; height: 40px; }
-  .ms-node-ico img { width: 22px; height: 22px; display: block; }
-  .ms-panel-ico { width: 56px; height: 56px; }
-  .ms-panel-ico img { width: 32px; height: 32px; display: block; }
-
-  /* ── Detail panel ── */
-  .ms-panels { margin-top: var(--ms-4); }
-  .ms-panel {
-    display: flex;
-    align-items: flex-start;
-    gap: var(--ms-5);
-    padding: var(--ms-6);
-    background: var(--ms-surface-1);
-    border: 1px solid var(--ms-ring-subtle);
-    border-radius: var(--ms-radius-lg);
+  .ms-node-ico { width: 42px; height: 42px; }
+  .ms-node-ico img { width: 24px; height: 24px; display: block; }
+  .ms-node[aria-selected="true"] .ms-node-ico {
+    border-color: var(--border-primary);
+    background: var(--card-bg-hover);
   }
-  /* ⚠️ Panel hiding happens ONLY here, ONLY when JS has run. */
-  [data-enhanced] .ms-panel[hidden] { display: none; }
-  .ms-panel-body { min-width: 0; }
-  .ms-panel-name {
-    margin: 0 0 var(--ms-2);
-    font-family: var(--font-display);
-    font-size: var(--ms-fs-h3);
-    font-weight: 600;
-    color: var(--ms-text-primary);
-    letter-spacing: -0.01em;
-  }
-  .ms-panel-blurb {
-    margin: 0;
-    font-size: var(--ms-fs-body);
-    line-height: 1.6;
-    color: var(--ms-text-tertiary);
-    max-width: 62ch;
-  }
-  .ms-panel.ms-panel-in { animation: msPanelIn var(--ms-dur-reveal) var(--ms-ease-out); }
-  @keyframes msPanelIn {
-    from { opacity: 0; transform: translateY(4px); }
-    to   { opacity: 1; transform: none; }
-  }
+  .ms-panel-ico { width: 60px; height: 60px; border-radius: var(--radius); }
+  .ms-panel-ico img { width: 34px; height: 34px; display: block; }
 
   /* ⚠️ Four marks are designed for a LIGHT background and are near-invisible on
      the dark tile (measured: vaultwarden L20, affine L24, openwebui L41,
      koalasync fill=#111115). They get a light plate so the mark stays legible.
      Re-run probe_icons.py if any artwork is replaced. */
-  .ms-ico-plate {
-    background: #E8EDEE;
-    border-color: transparent;
+  .ms-ico-plate { background: #E8EDEE; border-color: transparent; }
+
+  /* ⚠️ LABEL: hidden until selected. The name is revealed on the panel instead,
+     which is what keeps the rail minimal. Present for AT via aria-label on the
+     tab (set in the component) — do NOT remove that, or the rail becomes
+     nine unlabelled buttons to a screen reader. */
+  .ms-node-label {
+    position: absolute;
+    width: 1px; height: 1px;
+    padding: 0; margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+  }
+
+  /* ── Detail panel: minimal, single line of type ───────────────────────── */
+  .ms-panels { margin-top: var(--ms-4); }
+  .ms-panel {
+    display: flex;
+    align-items: center;
+    gap: var(--ms-5);
+    padding: var(--ms-5) var(--ms-6);
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    -webkit-backdrop-filter: blur(12px) saturate(1.1);
+    backdrop-filter: blur(12px) saturate(1.1);
+    box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.03);
+  }
+  /* ⚠️ Panel hiding happens ONLY here, ONLY when JS has run. */
+  [data-enhanced] .ms-panel[hidden] { display: none; }
+  .ms-panel-body { min-width: 0; }
+  .ms-panel-name {
+    margin: 0 0 4px;
+    font-family: var(--font-display);
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--text);
+    letter-spacing: -0.01em;
+  }
+  .ms-panel-blurb {
+    margin: 0;
+    font-size: 0.9375rem;
+    line-height: 1.6;
+    color: var(--text-dim);
+    max-width: 62ch;
+  }
+
+  /* Entrance: a 6px lift + fade. The site's own --transition curve, so it
+     belongs to the same motion family as the reveal animations. */
+  .ms-panel.ms-panel-in { animation: msPanelIn 380ms cubic-bezier(0.4, 0, 0.2, 1); }
+  @keyframes msPanelIn {
+    from { opacity: 0; transform: translateY(6px); }
+    to   { opacity: 1; transform: none; }
+  }
+
+  /* ── Light theme — MUST use the attribute selector (manual toggle) ─────── */
+  [data-theme="light"] .ms-rail,
+  [data-theme="light"] .ms-panel {
+    box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.8), 0 2px 8px rgba(22, 36, 42, 0.06);
+  }
+  [data-theme="light"] .ms-node-ico,
+  [data-theme="light"] .ms-panel-ico { background: var(--card-bg-hover); }
+  /* The plates exist for dark-mode legibility; in light mode they'd be a light
+     square on a light tile, so soften the edge instead of removing them. */
+  [data-theme="light"] .ms-ico-plate { border-color: rgba(22, 36, 42, 0.08); }
+
+  /* ── Hint: the discoverability affordance ────────────────────────────────
+     A minimal rail of bare icons gives no signal that it is interactive, so
+     this line carries the instruction. It fades out on first reveal so it does
+     not compete with the description once the visitor has understood. */
+  .ms-hint {
+    margin: 0 0 var(--ms-3);
+    font-size: 0.8125rem;
+    color: var(--text-faint);
+    letter-spacing: 0.01em;
+    transition: opacity 250ms var(--ms-ease-out);
+  }
+  .ms-hint-off { opacity: 0; }
+  /* Collapse the space too, so a revealed panel does not sit under a gap where
+     the hint used to be. */
+  [data-enhanced] .ms-hint-off {
+    height: 0;
+    margin: 0;
+    overflow: hidden;
+    pointer-events: none;
   }
 
   .ms-more { margin: 0; }
   .ms-link {
-    color: var(--ms-accent);
+    color: var(--primary);
     font-weight: 600;
     text-decoration: none;
-    border-bottom: 1px solid var(--ms-ring-interactive);
+    border-bottom: 1px solid var(--border-primary);
     padding-bottom: 2px;
-    transition: color var(--ms-dur-hover) var(--ms-ease-out);
+    transition: var(--transition);
     /* 44px minimum hit target on touch (audit D4/D5) */
     display: inline-flex;
     align-items: center;
     min-height: 44px;
   }
-  .ms-link:hover { color: var(--ms-accent-bright); }
+  .ms-link:hover { color: var(--primary-bright); }
+
 
   /* ---------- Proof band (S3) — the unfakeable evidence ---------- */
   .ms-proof {
@@ -500,21 +570,22 @@
     .ms-cost   { grid-template-columns: 1fr; }
   }
   @media (max-width: 560px) {
-    .ms-rail { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--ms-2); }
-    .ms-node { min-height: 78px; }
-    .ms-node-label { font-size: 0.6875rem; }
+    .ms-rail { grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 1px; padding: 3px; }
+    .ms-node { min-height: 62px; padding: 10px 4px; }
+    .ms-node-ico { width: 36px; height: 36px; }
+    .ms-node-ico img { width: 21px; height: 21px; }
     .ms-trust { grid-template-columns: 1fr; }
     .ms-h2 { max-width: none; }
     .ms-proof { gap: var(--ms-4); padding: var(--ms-5); }
     /* Stack icon above text once the panel is narrow. */
-    .ms-panel { flex-direction: column; gap: var(--ms-4); padding: var(--ms-5); }
+    .ms-panel { flex-direction: column; align-items: flex-start; gap: var(--ms-4); padding: var(--ms-5); }
     .ms-panel-ico { width: 48px; height: 48px; }
     .ms-panel-ico img { width: 28px; height: 28px; }
   }
 
   /* ---------- Reduced motion (non-negotiable — research §5.5) ------------- */
   @media (prefers-reduced-motion: reduce) {
-    .ms-tile, .ms-link, .ms-node { transition: none !important; }
+    .ms-tile, .ms-link, .ms-node, .ms-node-ico { transition: none !important; }
     .ms-panel.ms-panel-in { animation: none; }
   }
 }
