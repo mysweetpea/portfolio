@@ -710,23 +710,43 @@
    desktop got the phone drawer. 1024 also hands iPad landscape the crown. */
 @media (min-width: 1024px) {
     .top-nav {
-        display: grid;
-        grid-template-columns: 1fr auto 1fr;
+        display: flex;
+        justify-content: space-between;
         align-items: center;
         padding: 13px 30px;
+        /* Cap the row on ultra-wide screens: without this the two flanks drift
+           apart indefinitely (measured 866px of dead space between the links
+           and the wordmark at 2560px). 1600 keeps the spread generous through
+           every realistic desktop while stopping the drift. Below 1600 the
+           calc() is smaller than 30px, so the max() keeps the normal padding. */
+        padding-left:  max(30px, calc((100vw - 1600px) / 2));
+        padding-right: max(30px, calc((100vw - 1600px) / 2));
     }
-    .top-nav.nav-scrolled { padding: 10px 30px; }
+    .top-nav.nav-scrolled {
+        padding: 10px 30px;
+        padding-left:  max(30px, calc((100vw - 1600px) / 2));
+        padding-right: max(30px, calc((100vw - 1600px) / 2));
+    }
     .nav-toggle { display: none; }
 
-    /* #nav-links dissolves so its two groups become the grid's flanks */
+    /* #nav-links dissolves so its two groups become the bar's two ends */
     .top-nav .nav-links { display: contents; }
     .nav-group { display: flex; align-items: center; gap: 2px; min-width: 0; }
-    .nav-group-l { grid-column: 1; grid-row: 1; justify-content: flex-end; }
-    .nav-group-r { grid-column: 3; grid-row: 1; justify-content: flex-start; }
+    .nav-group-l { flex: 0 0 auto; justify-content: flex-start; }
+    .nav-group-r { flex: 0 0 auto; justify-content: flex-end; }
 
+    /* The brand is taken OUT of flow and centred on the viewport. It used to be
+       the middle column of a 1fr/auto/1fr grid, which sizes BOTH flanks to the
+       wider one — so the surplus empty space all landed on the left, and the
+       links visibly hugged the right edge (measured: 289px dead on the left vs
+       100px on the right at 1198px; 528 vs 301 at 1920). Absolutely centring
+       the brand lets the flanks sit at the true edges and the ink box ends up
+       dead-centre at every width (measured 0px offset, no collision, 1024-2560). */
     .top-nav .nav-logo {
-        grid-column: 2;
-        grid-row: 1;
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
         gap: 9px;
         padding: 0 18px;
         text-decoration: none;
