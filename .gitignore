@@ -8,3 +8,6 @@
 .env
 .env.*
 !.env.example
+
+# OpenCode run logs (noisy, never part of a change)
+.oc-run*.log

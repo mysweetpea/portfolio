@@ -543,3 +543,383 @@
 [data-theme="light"] .toast { background: rgba(255, 255, 255, 0.95); color: var(--text); box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15); }
 [data-theme="light"] .ascii-hero { border-color: var(--border-primary); }
 [data-theme="light"] .footer-status { border-color: var(--border-primary); }
+
+/* ==========================================================================
+   === 12. Nav v3 — "Terminal + Crowned" (2026-09-18) =======================
+   The approved redesign (.oc-tmp/nav-options.html, concept 4 "The hybrid"):
+   terminal voice (monospace links, one 12x12 glyph per item, current page
+   sage) in the crowned structure (Fraunces wordmark dead centre, links split
+   3/2 around it), under an always-on glass bar, with ONE ice-white action.
+
+   >=1100px: grid 1fr auto 1fr. LEFT (right-aligned): Services, How It
+   Works, Status. CENTRE: wordmark. RIGHT (left-aligned): About, I Have a
+   Code, hairline separator, search, theme, account, Get Access.
+   <=1099px: the site's existing hamburger drawer pattern — sticky bar,
+   wordmark back at the brand position beside the toggle, full-width card
+   items, search/theme as a centred pill pair inside the drawer, and NO
+   nested scroll container (the menu grows in page flow; the page scrolls).
+
+   Signed in, the account chip is promoted into the ice slot and "Get Access"
+   disappears (a member already has access — offering it again reads as a
+   bug). `.nav-signed-in` is set by assets/js/site.js (external file, so the
+   CSP sha256 allowlist is untouched) by READING the account chip's own
+   mutations — the chip markup + its inline <style>/<script> were copied
+   VERBATIM from the previous nav and no new inline script/style exists.
+   ========================================================================== */
+
+/* --- The bar: always-on glass (mockup .nv4) --- */
+.top-nav {
+    gap: 14px;
+    background: rgba(12, 19, 22, 0.62);
+    backdrop-filter: blur(18px) saturate(1.4);
+    -webkit-backdrop-filter: blur(18px) saturate(1.4);
+}
+[data-theme="light"] .top-nav { background: rgba(233, 239, 234, 0.76); }
+
+/* --- Terminal voice: mono links, one glyph each (mockup .nv4 .links a) --- */
+.top-nav .nav-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    padding: 8px 10px;
+    background: transparent;
+    border: 0;
+    border-radius: 8px;
+    color: var(--text-dim);
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 0.775rem;
+    letter-spacing: -0.01em;
+    white-space: nowrap;
+    cursor: pointer;
+}
+.top-nav .nav-btn svg { flex: none; opacity: 0.6; transition: opacity 0.18s; }
+.top-nav .nav-btn:hover {
+    color: var(--primary-bright);
+    background: transparent;
+    text-shadow: none;
+}
+.top-nav .nav-btn:hover svg { opacity: 1; }
+.top-nav .nav-btn[aria-current="page"] { color: var(--sage); background: transparent; border-color: transparent; }
+.top-nav .nav-btn[aria-current="page"] svg { opacity: 1; }
+/* The v11 centred hairline is retired by the sage tint + solid glyph. */
+.top-nav .nav-btn[aria-current="page"]::after { content: none; }
+
+/* Sign in (signed OUT): quiet mono text link, deliberately NOT a second
+   button (mockup .acct). The person glyph is trimmed 18 -> 15px in CSS only —
+   the chip markup is CSP-hashed and must stay byte-identical. */
+.top-nav .nav-signin {
+    margin-left: 9px;
+    padding: 8px 11px;
+    border: 0;
+    border-radius: 8px;
+    background: transparent;
+    color: var(--text-dim);
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 0.775rem;
+    letter-spacing: -0.01em;
+    white-space: nowrap;
+    cursor: pointer;
+    transition: color 0.18s, background 0.18s, box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1), transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.top-nav .nav-signin:hover {
+    color: var(--primary-bright);
+    background: var(--primary-glow);
+    border: 0;
+}
+.top-nav .nav-account-chip svg { width: 15px; height: 15px; }
+
+/* The ONE bold object, signed out: ice pill, mono (mockup .nv4 .cta). */
+.top-nav .nav-cta {
+    margin-left: 10px;
+    padding: 9px 17px;
+    border-radius: 6px;
+    background: var(--ice);
+    color: #0C1316;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 0.79rem;
+    font-weight: 600;
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+                box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+                background 0.3s;
+}
+.top-nav .nav-cta:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 6px 22px rgba(238, 242, 243, 0.22);
+}
+[data-theme="light"] .top-nav .nav-cta { background: #1B2B31; color: #EDF3F4; }
+[data-theme="light"] .top-nav .nav-cta:hover { box-shadow: 0 6px 22px rgba(27, 43, 49, 0.25); }
+
+/* --- SIGNED IN: the chip takes the ice slot; "Get Access" disappears.
+   Mockup stage "Signed in" (.nv4 .acct--member). Driven by .nav-signed-in,
+   set by site.js from the chip's own label/avatar mutations. The pill never
+   clips the popup: the popup hangs off .nav-account (position:relative in the
+   chip's own inline style), not off this button, and nothing here sets
+   overflow on the wrapper. --- */
+.top-nav.nav-signed-in .nav-cta { display: none; }
+.top-nav.nav-signed-in .nav-account-chip {
+    margin-left: 9px;
+    padding: 6px 14px 6px 7px;
+    border: 0;
+    border-radius: 999px;
+    background: var(--ice);
+    color: #0C1316;
+    font-weight: 600;
+}
+.top-nav.nav-signed-in .nav-account-chip:hover {
+    background: #fff;
+    color: #0C1316;
+    transform: translateY(-1px);
+    box-shadow: 0 6px 22px rgba(238, 242, 243, 0.22);
+}
+.top-nav.nav-signed-in .nav-account-chip > svg { display: none; }
+.top-nav.nav-signed-in .nav-account-chip #nav-account-avatar { box-shadow: inset 0 0 0 1.5px rgba(12, 19, 22, 0.16); }
+[data-theme="light"] .top-nav.nav-signed-in .nav-account-chip { background: #1B2B31; color: #EDF3F4; }
+[data-theme="light"] .top-nav.nav-signed-in .nav-account-chip:hover {
+    background: #0d1b20;
+    color: #fff;
+    box-shadow: 0 6px 22px rgba(27, 43, 49, 0.25);
+}
+[data-theme="light"] .top-nav.nav-signed-in .nav-account-chip #nav-account-avatar { box-shadow: inset 0 0 0 1.5px rgba(237, 243, 244, 0.25); }
+
+/* --- Desktop crown (mockup .nv4 grid) --- */
+@media (min-width: 1100px) {
+    .top-nav {
+        display: grid;
+        grid-template-columns: 1fr auto 1fr;
+        align-items: center;
+        padding: 13px 30px;
+    }
+    .top-nav.nav-scrolled { padding: 10px 30px; }
+    .nav-toggle { display: none; }
+
+    /* #nav-links dissolves so its two groups become the grid's flanks */
+    .top-nav .nav-links { display: contents; }
+    .nav-group { display: flex; align-items: center; gap: 2px; min-width: 0; }
+    .nav-group-l { grid-column: 1; grid-row: 1; justify-content: flex-end; }
+    .nav-group-r { grid-column: 3; grid-row: 1; justify-content: flex-start; }
+
+    .top-nav .nav-logo {
+        grid-column: 2;
+        grid-row: 1;
+        gap: 9px;
+        padding: 0 18px;
+        text-decoration: none;
+    }
+    .top-nav .nav-logo img { width: 25px; height: 25px; display: block; }
+    .top-nav .nav-brand {
+        font-family: 'Fraunces', Georgia, serif;
+        font-weight: 600;
+        font-size: 1.06rem;
+        letter-spacing: -0.01em;
+        color: var(--text);
+        white-space: nowrap;
+    }
+
+    /* hairline between the last link and the actions cluster (mockup .acct-sep) */
+    .nav-sep {
+        flex: none;
+        width: 1px;
+        height: 19px;
+        margin: 0 3px 0 7px;
+        background: var(--border-primary);
+        opacity: 0.7;
+    }
+}
+
+/* Narrow desktop (just past the drawer breakpoint): the crowned columns get
+   tight, so trim bar/centre padding — proportions of the mockup unchanged. */
+@media (min-width: 1100px) and (max-width: 1279px) {
+    .top-nav { padding: 13px 20px; gap: 8px; }
+    .top-nav.nav-scrolled { padding: 10px 20px; }
+    .top-nav .nav-logo { padding: 0 8px; }
+    .top-nav .nav-btn { padding: 8px 8px; }
+    .top-nav .nav-cta { padding: 9px 13px; }
+}
+
+/* ==========================================================================
+   Mobile / tablet (<=1099px): the site's existing drawer pattern, widened
+   from the old 768px breakpoint. Same rules the live drawer uses (site.css
+   v28 + the section-11 mobile block), restated here so the whole 0-1099px
+   range is one coherent treatment. Sticky bar, wordmark at the brand
+   position, full-width card items, centred search/theme pill pair, and the
+   menu grows in normal page flow (NO max-height / overflow — the page
+   scrolls).
+   ========================================================================== */
+@media (max-width: 1099.98px) {
+    .top-nav {
+        position: sticky;
+        top: 0;
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 10px;
+        padding: 12px 16px;
+    }
+    .top-nav.nav-scrolled { padding: 10px 16px; }
+
+    .nav-toggle {
+        display: flex;
+        margin-left: auto;
+    }
+    .nav-toggle:focus-visible { outline: 3px solid var(--primary-bright); outline-offset: 3px; }
+
+    .top-nav .nav-logo { padding: 0; }
+
+    /* Drawer: glass panel attached under the bar (values match site.css v28).
+       Deliberately no max-height / overflow: the page scrolls, not the menu. */
+    .top-nav .nav-links {
+        display: none;
+        flex-direction: column;
+        align-items: stretch;
+        width: 100%;
+        gap: 2px;
+        padding: 6px 16px 14px;
+        background: rgba(12, 19, 22, 0.92);
+        border: none;
+        border-top: 1px solid var(--border);
+        border-radius: 0;
+        box-shadow: 0 18px 34px rgba(0, 0, 0, 0.35);
+        backdrop-filter: blur(20px) saturate(1.4);
+        -webkit-backdrop-filter: blur(20px) saturate(1.4);
+    }
+    .top-nav .nav-links.nav-open { display: flex; }
+    [data-theme="light"] .top-nav .nav-links {
+        background: rgba(233, 239, 240, 0.94);
+        box-shadow: 0 18px 34px rgba(27, 43, 49, 0.14);
+    }
+
+    /* Full-width cards, left-aligned, 48px tall (>= the 44px minimum) */
+    .top-nav .nav-btn,
+    .top-nav .nav-cta {
+        display: flex;
+        align-items: center;
+        justify-content: flex-start;
+        width: 100%;
+        min-height: 48px;
+        margin: 0;
+        padding: 12px 14px;
+        font-size: 1rem;
+        font-weight: 650;
+        text-align: left;
+        white-space: normal;
+        border-radius: 10px;
+    }
+    .top-nav .nav-btn {
+        background: var(--card-bg);
+        border: 1px solid var(--border);
+    }
+    .top-nav .nav-btn:hover,
+    .top-nav .nav-btn:focus-visible { background: var(--card-bg); border-color: var(--border-primary); }
+    .top-nav .nav-btn svg { opacity: 0.6; }
+    .top-nav .nav-btn[aria-current="page"] {
+        color: var(--sage);
+        background: var(--card-bg);
+        border-color: var(--border-primary);
+    }
+    .top-nav .nav-btn[aria-current="page"] svg { opacity: 1; }
+    /* Drawer active accent: left bar (keeps the v11 drawer treatment), so the
+       section-11 centred underline can never leak into the 769-1099 range. */
+    .top-nav .nav-btn[aria-current="page"]::after {
+        content: '';
+        left: 0;
+        right: auto;
+        top: 8px;
+        bottom: 8px;
+        width: 2px;
+        height: auto;
+        background: linear-gradient(180deg, transparent, var(--primary-bright), transparent);
+    }
+    [data-theme="light"] .top-nav .nav-btn {
+        background: rgba(255, 255, 255, 0.72);
+        border-color: rgba(51, 86, 95, 0.15);
+    }
+    [data-theme="light"] .top-nav .nav-btn:hover,
+    [data-theme="light"] .top-nav .nav-btn:focus-visible { background: rgba(255, 255, 255, 0.72); }
+    [data-theme="light"] .top-nav .nav-btn[aria-current="page"] {
+        background: rgba(255, 255, 255, 0.72);
+        border-color: rgba(51, 86, 95, 0.3);
+    }
+
+    /* Account chip in the drawer: full-width quiet card, 48px.
+       The chip's own (CSP-locked) inline style sets .nav-account to
+       inline-flex, which shrink-wraps the button to ~121px — so the flex
+       parent must be widened here for .nav-signin's width:100% to resolve
+       against the drawer instead of its own content. */
+    .top-nav .nav-account {
+        display: flex;
+        width: 100%;
+    }
+    .top-nav .nav-signin {
+        display: flex;
+        align-items: center;
+        justify-content: flex-start;
+        width: 100%;
+        min-height: 48px;
+        margin: 0;
+        padding: 12px 16px;
+        font-size: 1rem;
+        letter-spacing: 0;
+        text-align: left;
+        background: var(--card-bg);
+        border: 1px solid var(--border);
+        border-radius: 10px;
+    }
+    .top-nav .nav-signin:hover { background: var(--card-bg); border-color: var(--border-primary); }
+    .top-nav .nav-account-chip svg { width: 18px; height: 18px; }
+    [data-theme="light"] .top-nav .nav-signin {
+        background: rgba(255, 255, 255, 0.72);
+        border-color: rgba(51, 86, 95, 0.15);
+    }
+
+    /* Get Access: full-width ice pill */
+    .top-nav .nav-cta {
+        justify-content: center;
+        min-height: 48px;
+        padding: 13px 20px;
+        margin-top: 4px;
+    }
+
+    /* Signed in, the chip IS the primary action: full-width ice pill */
+    .top-nav.nav-signed-in .nav-account-chip {
+        width: 100%;
+        min-height: 48px;
+        margin: 0;
+        padding: 12px 16px;
+        justify-content: flex-start;
+        border-radius: 999px;
+    }
+
+    /* Search + theme move INSIDE the drawer: centred side-by-side pills */
+    .nav-sep { display: none; }
+    .top-nav .nav-actions {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        margin-top: 2px;
+    }
+    .top-nav .nav-search,
+    .top-nav .theme-toggle {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 46px;
+        height: 46px;
+        min-width: 46px;
+        min-height: 46px;
+        margin: 0;
+        border-radius: 999px;
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid var(--border);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .top-nav .nav-btn svg,
+    .top-nav .nav-signin,
+    .top-nav .nav-cta,
+    .top-nav.nav-signed-in .nav-account-chip { transition: none; }
+    .top-nav.nav-signed-in .nav-account-chip:hover { transform: none; }
+    .top-nav .nav-cta:hover { transform: none; }
+}

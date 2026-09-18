@@ -16,3 +16,4 @@ README.md
 fetch-icons.sh
 wrangler.jsonc
 .assetsignore
+.oc-tmp/

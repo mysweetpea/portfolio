@@ -169,9 +169,12 @@
             }
         });
 
-        /* Reset state if resized back to desktop */
+        /* Reset state if resized back to desktop.
+           Threshold tracks the drawer breakpoint (nav v3 = 1100px). Before
+           that the nav switched at 768px; now the drawer owns everything up
+           to 1099px, so resizing 900 -> 1000px must NOT close an open menu. */
         window.addEventListener('resize', function () {
-            if (window.innerWidth > 768) {
+            if (window.innerWidth >= 1100) {
                 navLinks.classList.remove('nav-open');
                 navToggle.setAttribute('aria-expanded', 'false');
             }
@@ -986,4 +989,30 @@
     // Show the first value's cards by default
     var initial = tabs[0].getAttribute('data-value');
     show(initial);
+})();
+
+/* === Nav: reflect the signed-in state (nav v3) ===
+   The account chip's inline script swaps its label to the user's first name and
+   un-hides the avatar once /api/auth/state reports a session. We only READ those
+   two mutations and tag the nav, so the stylesheet can promote the chip to the
+   primary action and hide "Get Access". Pure CSS would need :has(), which the
+   user's iOS Safari does not support reliably; a class set here avoids both that
+   and any new inline script (the CSP is a sha256 allowlist). */
+(function () {
+    'use strict';
+    var nav = document.querySelector('.top-nav');
+    var label = document.getElementById('nav-account-label');
+    var avatar = document.getElementById('nav-account-avatar');
+    if (!nav || !label || !avatar) return;
+
+    function sync() {
+        var signedIn =
+            (label.textContent || '').trim() !== 'Sign in' &&
+            (avatar.style.display === 'inline-block' || !avatar.hidden);
+        nav.classList.toggle('nav-signed-in', signedIn);
+    }
+
+    new MutationObserver(sync).observe(label, { childList: true, characterData: true, subtree: true });
+    new MutationObserver(sync).observe(avatar, { attributes: true, attributeFilter: ['style', 'hidden'] });
+    sync();
 })();
