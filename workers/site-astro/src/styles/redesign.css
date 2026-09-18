@@ -58,6 +58,12 @@
     --ms-surface-2:       #162124;
     --ms-ring-subtle:     #2C3E42;   /* 1.67:1 decorative */
     --ms-ring-interactive:#4F6A70;   /* 3.24:1 PASSES WCAG 1.4.11 */
+    /* ⚠️ Defined because the services grid uses it as the TILE fill (the 1px grid
+       gap shows the ring colour instead). It was referenced but never declared,
+       so it resolved to `transparent` and every tile rendered as the gap colour
+       (#2C3E42, a mid slate ~1.67:1 brighter than the page) — the whole panel
+       floated as a flat grey slab. Keep this in sync with the page background. */
+    --ms-bg:              #0C1316;
 
     /* motion — research §5.3 */
     --ms-dur-hover: 180ms;  --ms-dur-lift: 200ms;
@@ -149,70 +155,121 @@
     margin: 0 auto;
   }
 
-  /* ---------- Services panel (S2) — icon-led ----------
-     DESIGN (user decision 2026-09-18): icons only, no screenshots. The earlier
-     pass showed the 9 webp shots; that made the cards tall and the grid heavy.
-     A compact two-column list reads faster and keeps the pitch scannable.
-     Screenshots remain available on /services.html. */
-  .ms-services {
+  /* ---------- Services (S2) — TWO-TIER editorial layout ----------
+     USER DECISION 2026-09-18 (Option 2): nine equal items had no hierarchy, so
+     the eye had nowhere to land. Six primary cards carry the value; three
+     secondary chips sit below, deliberately quieter.
+     The split is EDITORIAL — all nine are in the same tier. */
+
+  /* ── Tier 1: primary cards ── */
+  .ms-cards {
     list-style: none;
-    margin: var(--ms-7) 0 var(--ms-5);
+    margin: var(--ms-7) 0 0;
     padding: 0;
     display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 1px;                                  /* 1px gap + tinted bg = hairline grid */
-    background: var(--ms-ring-subtle);
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: var(--ms-5);
+  }
+  .ms-card-svc {
+    display: flex;
+    flex-direction: column;
+    gap: var(--ms-3);
+    padding: var(--ms-6) var(--ms-5);
+    /* 1px inset ring, not a blur — the 2026 premium-dark pattern (research §4.2).
+       A blurred shadow on #0C1316 shifts only ~1.05:1, about half the strength
+       of the surface step, so it buys almost nothing here. */
+    background: var(--ms-surface-1);
     border: 1px solid var(--ms-ring-subtle);
     border-radius: var(--ms-radius-lg);
-    overflow: hidden;
+    transition: border-color var(--ms-dur-hover) var(--ms-ease-out),
+                background var(--ms-dur-hover) var(--ms-ease-out);
+  }
+  .ms-card-svc:hover {
+    background: var(--ms-surface-2);
+    border-color: var(--ms-ring-interactive);
+  }
+  .ms-card-svc-name {
+    margin: 0;
+    font-family: var(--font-display);
+    font-size: var(--ms-fs-h3);
+    font-weight: 600;
+    color: var(--ms-text-primary);
+    letter-spacing: -0.01em;
+  }
+  .ms-card-svc-blurb {
+    margin: 0;
+    font-size: var(--ms-fs-small);
+    line-height: 1.55;
+    color: var(--ms-text-tertiary);
   }
 
-  .ms-service {
-    display: flex;
-    align-items: flex-start;
+  /* ── Tier 2: "Also included" chips ── */
+  .ms-also {
+    margin-top: var(--ms-6);
+    padding-top: var(--ms-5);
+    border-top: 1px solid var(--ms-ring-subtle);
+  }
+  .ms-also-label {
+    margin: 0 0 var(--ms-4);
+    font-size: var(--ms-fs-eyebrow, 0.75rem);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--ms-text-tertiary);
+  }
+  .ms-chips {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
     gap: var(--ms-4);
-    padding: var(--ms-5) var(--ms-5);
-    background: var(--ms-bg);
-    /* Uniform row height: without this, 1- vs 2-line blurbs produce 95px vs
-       117px rows and the shared hairline grid reads as misaligned. min-height
-       is set to fit the 2-line case exactly. */
-    min-height: 117px;
-    align-content: center;
-    transition: background var(--ms-dur-hover) var(--ms-ease-out);
   }
-  .ms-service:hover { background: var(--ms-surface-1); }
+  .ms-chip {
+    display: flex;
+    align-items: center;
+    gap: var(--ms-3);
+    padding: var(--ms-3) var(--ms-4);
+    border-radius: var(--ms-radius-md);
+    background: var(--ms-surface-1);
+    border: 1px solid var(--ms-ring-subtle);
+    transition: border-color var(--ms-dur-hover) var(--ms-ease-out);
+  }
+  .ms-chip:hover { border-color: var(--ms-ring-interactive); }
+  .ms-chip-text { display: flex; flex-direction: column; gap: 1px; min-width: 0; }
+  .ms-chip-text strong {
+    font-size: var(--ms-fs-small);
+    font-weight: 600;
+    color: var(--ms-text-body);
+    line-height: 1.3;
+  }
+  .ms-chip-text span {
+    font-size: 0.8125rem;
+    color: var(--ms-text-tertiary);
+    line-height: 1.35;
+  }
 
+  /* ── Icon tiles (shared by both tiers) ── */
   .ms-ico {
     flex: none;
-    width: 44px;
-    height: 44px;
+    width: 46px;
+    height: 46px;
     display: grid;
     place-items: center;
     border-radius: var(--ms-radius-md);
     background: var(--ms-surface-2);
     border: 1px solid var(--ms-ring-subtle);
   }
+  .ms-ico-sm { width: 34px; height: 34px; border-radius: var(--ms-radius-sm, 4px); }
   .ms-ico img { width: 26px; height: 26px; display: block; }
+  .ms-ico-sm img { width: 19px; height: 19px; }
 
-  /* ⚠️ koalasync.svg is fill="#111115" — near-black, invisible on #0C1316.
-     Give its tile a light plate so the mark stays legible. Verified by reading
-     the SVG's fill attributes; re-check if the artwork is ever replaced. */
+  /* ⚠️ Four marks are designed for a LIGHT background and are near-invisible on
+     the dark tile (measured: vaultwarden L20, affine L24, openwebui L41,
+     koalasync fill=#111115). They get a light plate so the mark stays legible.
+     Re-run probe_icons.py if any artwork is replaced. */
   .ms-ico-plate {
     background: #E8EDEE;
     border-color: transparent;
-  }
-
-  .ms-service-text { display: flex; flex-direction: column; gap: 3px; min-width: 0; }
-  .ms-service-text strong {
-    font-size: var(--ms-fs-body);
-    font-weight: 600;
-    color: var(--ms-text-primary);
-    line-height: 1.3;
-  }
-  .ms-service-blurb {
-    font-size: var(--ms-fs-small);
-    line-height: 1.5;
-    color: var(--ms-text-tertiary);
   }
 
   .ms-more { margin: 0; }
@@ -434,23 +491,27 @@
      grid tracks blow out to min-content on WebKit (a bug already hit twice in
      this project's history). */
   @media (max-width: 900px) {
-    .ms-services { grid-template-columns: 1fr; }
+    .ms-cards { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .ms-chips { grid-template-columns: 1fr; }
     .ms-proof  { grid-template-columns: repeat(2, minmax(0, 1fr)); }
     .ms-steps  { grid-template-columns: 1fr; gap: var(--ms-4); }
     .ms-step   { padding-top: var(--ms-6); }
     .ms-cost   { grid-template-columns: 1fr; }
   }
   @media (max-width: 560px) {
+    /* One column: a 2-up card grid on a phone squeezes the blurb to ~3 words
+       per line, which reads worse than a stack. */
+    .ms-cards { grid-template-columns: 1fr; }
     .ms-trust { grid-template-columns: 1fr; }
     .ms-h2 { max-width: none; }
     .ms-proof { gap: var(--ms-4); padding: var(--ms-5); }
-    .ms-service { padding: var(--ms-4); gap: var(--ms-3); }
-    .ms-ico { width: 40px; height: 40px; }
+    .ms-card-svc { padding: var(--ms-5) var(--ms-4); }
+    .ms-ico { width: 42px; height: 42px; }
     .ms-ico img { width: 24px; height: 24px; }
   }
 
   /* ---------- Reduced motion (non-negotiable — research §5.5) ------------- */
   @media (prefers-reduced-motion: reduce) {
-    .ms-tile, .ms-link, .ms-service { transition: none !important; }
+    .ms-tile, .ms-link, .ms-card-svc, .ms-chip { transition: none !important; }
   }
 }

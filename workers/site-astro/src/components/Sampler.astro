@@ -1,14 +1,15 @@
 ---
-// Sampler.astro — "What you get" (S2), icon-led.
+// Sampler.astro — "What you get" (S2), TWO-TIER editorial layout.
 //
-// DESIGN (user decision 2026-09-18): icons only, NO screenshots. Reverses the
-// earlier reversal of `.service-shot{display:none}` — the cards go back to being
-// compact. Screenshots still live on /services.html behind a click.
+// USER DECISION 2026-09-18 (Option 2 of 4): the flat 9-item list had NO
+// HIERARCHY — the eye had nowhere to land, which is what read as "generic".
+// Now:
+//   6 PRIMARY  -> large cards, 3-up, generous spacing
+//   3 SECONDARY -> compact chip row beneath, deliberately quieter
 //
-// All NINE services are listed here (the earlier 6 was an arbitrary subset).
-// Card markup reuses the existing class names (.service-card, .service-header,
-// .service-icon, .glow-card) so the legacy styling and the reveal animation keep
-// working untouched.
+// The split is EDITORIAL, not a tier claim: all nine are in the same Sweet Pea
+// tier. It says "here's the headline value, and yes there's more" — which a
+// flat nine-item list cannot say.
 //
 // ⚠️ ICON LEGIBILITY — measured, not guessed (probe_icons.py renders each icon on
 // the real tile colour and reports glyph luminance). Four marks are designed for
@@ -20,42 +21,63 @@
 // Those four get `plate: true` -> a light tile backing (.ms-ico-plate). If an
 // icon is ever replaced, re-run the probe rather than trusting this list.
 
-const SERVICES = [
-  { id: "jellyfin",    name: "Jellyfin / Moonfin", icon: "jellyfin",    blurb: "Your own private Netflix — stream your library on any device." },
-  { id: "seerr",       name: "Seerr",              icon: "seerr",       blurb: "Request movies and shows — they appear in Jellyfin automatically." },
-  { id: "nextcloud",   name: "Nextcloud",          icon: "nextcloud",   blurb: "Files, calendar and contacts — your private Google Workspace." },
-  { id: "immich",      name: "Immich",             icon: "immich",      blurb: "Photo and video backup, like Google Photos without the tracking." },
-  { id: "openwebui",   name: "Open WebUI",         icon: "openwebui",   plate: true, blurb: "A private AI chat interface running on our own hardware." },
-  { id: "vaultwarden", name: "Vaultwarden",        icon: "vaultwarden", plate: true, blurb: "A password manager that creates strong, unique passwords." },
-  { id: "matrix",      name: "Matrix / Element",   icon: "matrix",      blurb: "Private, encrypted chat and rooms — without anyone watching." },
-  { id: "affine",      name: "AFFiNE",             icon: "affine",      plate: true, blurb: "A Notion alternative you own — docs, wikis and whiteboards." },
-  { id: "koalasync",   name: "KoalaSync",          icon: "koalasync",   plate: true, blurb: "Watch films and shows together with friends, perfectly in sync." },
+const PRIMARY = [
+  { id: "jellyfin",    name: "Jellyfin",    icon: "jellyfin",    blurb: "Your own private Netflix — stream your library on any device, on every screen you own." },
+  { id: "immich",      name: "Immich",      icon: "immich",      blurb: "Photo and video backup that works like Google Photos, without the tracking or the upload limits." },
+  { id: "nextcloud",   name: "Nextcloud",   icon: "nextcloud",   blurb: "Files, calendar and contacts — a private Google Workspace you actually control." },
+  { id: "seerr",       name: "Seerr",       icon: "seerr",       blurb: "Request anything missing. It lands in your library automatically, so you never stop watching." },
+  { id: "vaultwarden", name: "Vaultwarden", icon: "vaultwarden", plate: true, blurb: "A password manager that creates strong, unique passwords and fills them in for you." },
+  { id: "openwebui",   name: "Open WebUI",  icon: "openwebui",   plate: true, blurb: "A private AI chat interface running on hardware we own. Your prompts stay yours." },
+];
+
+const SECONDARY = [
+  { id: "matrix",    name: "Matrix",    icon: "matrix",    blurb: "Private, encrypted chat" },
+  { id: "affine",    name: "AFFiNE",    icon: "affine",    plate: true, blurb: "Docs, wikis and whiteboards" },
+  { id: "koalasync", name: "KoalaSync", icon: "koalasync", plate: true, blurb: "Watch together, in sync" },
 ];
 ---
 
 <section class="ms-section ms-sampler" id="included">
   <div class="ms-inner">
-    <p class="ms-eyebrow">One account, everything included</p>
+    <p class="ms-eyebrow">One tier, everything included</p>
     <h2 class="ms-h2">Nine services, one sign-in</h2>
     <p class="ms-lead">
-      Your private Netflix, Google Photos, Google Workspace, Notion, password manager
-      and AI chat — on hardware we own. No ads, no tracking, no subscriptions.
+      Your private Netflix, Google Photos, Google Workspace, password manager and AI chat —
+      on hardware we own. No ads, no tracking, no subscriptions.
     </p>
 
-    <ul class="ms-services" role="list">
-      {SERVICES.map((s) => (
-        <li class="ms-service">
-          <span class:list={["ms-ico", s.plate && "ms-ico-plate"]}>
+    {/* ── PRIMARY — the headline value ── */}
+    <ul class="ms-cards" role="list">
+      {PRIMARY.map((s) => (
+        <li class="ms-card-svc" data-service={s.id}>
+          <span class:list={["ms-ico", s.plate && "ms-ico-plate"]} aria-hidden="true">
             <img src={`/assets/icons/${s.icon}.svg`} width="26" height="26"
-                 loading="lazy" decoding="async" alt="" aria-hidden="true" />
+                 loading="lazy" decoding="async" alt="" />
           </span>
-          <span class="ms-service-text">
-            <strong>{s.name}</strong>
-            <span class="ms-service-blurb">{s.blurb}</span>
-          </span>
+          <h3 class="ms-card-svc-name">{s.name}</h3>
+          <p class="ms-card-svc-blurb">{s.blurb}</p>
         </li>
       ))}
     </ul>
+
+    {/* ── SECONDARY — "and there's more", deliberately quieter ── */}
+    <div class="ms-also">
+      <p class="ms-also-label">Also included</p>
+      <ul class="ms-chips" role="list">
+        {SECONDARY.map((s) => (
+          <li class="ms-chip">
+            <span class:list={["ms-ico", "ms-ico-sm", s.plate && "ms-ico-plate"]} aria-hidden="true">
+              <img src={`/assets/icons/${s.icon}.svg`} width="20" height="20"
+                   loading="lazy" decoding="async" alt="" />
+            </span>
+            <span class="ms-chip-text">
+              <strong>{s.name}</strong>
+              <span>{s.blurb}</span>
+            </span>
+          </li>
+        ))}
+      </ul>
+    </div>
 
     <p class="ms-more">
       <a class="ms-link" href="/services.html">See what each one does <span aria-hidden="true">→</span></a>

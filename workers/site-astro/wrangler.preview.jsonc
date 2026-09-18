@@ -1,0 +1,22 @@
+{
+  // PREVIEW LANE — deploys the Astro build to workers.dev ONLY.
+  //
+  // ⚠️ This file deliberately has NO "routes" block. The live site's worker
+  // (workers/site/wrangler.jsonc) claims `mysweetpea.cc` + `www.mysweetpea.cc`
+  // as custom domains; adding routes here would fight over those hostnames.
+  // With no routes, this lands on <name>.<subdomain>.workers.dev and the live
+  // site is untouched.
+  //
+  // Deploy from workers/site-astro/ AFTER a build:
+  //     npm run build && npx wrangler deploy --config wrangler.preview.jsonc
+  "name": "site-preview",
+  "compatibility_date": "2026-06-25",
+  "main": "worker/index.js",
+  "assets": {
+    // the Astro build output — NOT the source tree
+    "directory": "./dist",
+    "binding": "ASSETS",
+    "not_found_handling": "404-page",
+    "run_worker_first": ["/api/*", "/.well-known/matrix/*"]
+  }
+}
