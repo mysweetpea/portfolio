@@ -483,8 +483,8 @@
 }
 
 /* Light theme parity for the new states. */
-[data-theme="light"] .top-nav .nav-signin { color: #2F5A44; border-color: transparent; }
-[data-theme="light"] .top-nav .nav-signin:hover { color: #1B2B31; background: transparent; }
+[data-theme="light"] .top-nav .nav-signin { color: #2F5A44; border-color: rgba(62, 124, 95, 0.14); }
+[data-theme="light"] .top-nav .nav-signin:hover { color: #1B2B31; background: rgba(62, 124, 95, 0.10); }
 [data-theme="light"] .top-nav .nav-btn:hover { color: #1B2B31; }
 [data-theme="light"] .top-nav .nav-btn[aria-current="page"] { color: #1B2B31; }
 [data-theme="light"] .top-nav .nav-btn[aria-current="page"]::after {
@@ -692,7 +692,11 @@
 .top-nav .nav-cta {
     margin-left: 10px;
     padding: 9px 17px;
-    border-radius: 6px;
+    /* Full pill — matches every other nav target. Emphasis comes from the
+       TEAL FILL alone, not from a different corner radius (USER REQUEST:
+       pills everywhere for clear separation; a lone 6px rectangle read as a
+       different component rather than the emphasised one). */
+    border-radius: 999px;
     background: linear-gradient(135deg, var(--primary), var(--primary-dim));
     color: var(--bg);
     font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
