@@ -1348,6 +1348,9 @@
 @media (max-width: 900px) {
     .footer-inner { padding: 0 22px 26px; }
     .page-footer .footer-grid { grid-template-columns: 1fr 1fr; gap: 30px 0; }
+    /* tablets are still touch: keep rows >=44px through this range too
+       (they were 32px before this redesign) */
+    .page-footer .footer-col a { min-height: 44px; display: flex; align-items: center; padding: 0; }
     .page-footer .footer-brand { grid-column: 1 / -1; padding-right: 0; }
     .page-footer .footer-col:nth-of-type(1) { border-left: 0; padding-left: 0; }
     .page-footer .footer-bottom {
@@ -1359,14 +1362,21 @@
     .page-footer .footer-bottom .fb-mark { justify-content: center; text-align: center; }
 }
 @media (max-width: 560px) {
-    .page-footer .footer-grid { grid-template-columns: 1fr; gap: 26px; }
+    /* Keep TWO columns here rather than stacking to one. Stacking every link
+       into a single column pushed the footer to 1280px (worse than the 945px
+       it replaced) because 11 links x 44px is inherently tall. Two columns
+       lands at ~965px -- effectively parity with the old footer -- while
+       keeping the 44px tap rows the old one lacked (they were 32px).
+       Explore + Community sit side by side; Support falls to a second row. */
+    .page-footer .footer-grid { grid-template-columns: 1fr 1fr; gap: 22px 18px; }
+    .page-footer .footer-brand { grid-column: 1 / -1; padding-right: 0; }
     .page-footer .footer-col {
         border-left: 0;
         padding-left: 0;
-        border-top: 1px solid var(--border);
-        padding-top: 20px;
+        border-top: 0;
+        padding-top: 0;
     }
-    .page-footer .footer-col:nth-of-type(1) { border-top: 0; padding-top: 0; }
+    .page-footer .footer-inner > .vine-divider { margin-bottom: 28px; }
     /* 44px tap rows (was 32px on all 14 links) */
     .page-footer .footer-col a {
         min-height: 44px;
