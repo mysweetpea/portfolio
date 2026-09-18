@@ -308,13 +308,63 @@
 }
 .footer-col a:hover { color: var(--primary-bright); }
 .footer-status {
-    display: inline-flex; align-items: center; gap: 8px;
-    font-size: 0.88rem; color: var(--text-dim);
-    border: 1px solid var(--border); border-radius: 999px;
-    padding: 6px 14px; margin-top: 4px; text-decoration: none;
+    /* === V3 "readout" (approved 2026-09-18) ===
+       Monospace uppercase capsule, tying the footer to the nav's mono-link
+       grammar. State colour comes from .online/.degraded/.offline, which
+       premium.js has ALWAYS set -- but nothing ever styled them, so the pill
+       looked identical whether all services were up or all of them down. */
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 0.735rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    border-radius: 8px;
+    padding: 7px 13px;
+    margin-top: 16px;
+    text-decoration: none;
     transition: var(--transition);
+    /* base = "checking" state (no class yet) */
+    color: var(--sage);
+    background: color-mix(in srgb, var(--sage) 7%, transparent);
+    border: 1px solid color-mix(in srgb, var(--sage) 22%, transparent);
 }
-.footer-status:hover { border-color: var(--border-primary); color: var(--text); }
+.footer-status:hover {
+    background: color-mix(in srgb, var(--sage) 13%, transparent);
+    color: var(--text);
+}
+/* The V3 mark is a 6px SQUARE. Neutralise site.css's round pulsing dot
+   (.status-dot) -- it carries border-radius 50%, a glow and an infinite
+   statusPulse animation that would fight the readout look. */
+.footer-status .status-dot {
+    width: 6px; height: 6px;
+    border-radius: 0;
+    margin: 0;
+    background: currentColor;
+    box-shadow: none;
+    animation: none;
+}
+/* --- states (classes set by premium.js: online / offline / degraded) --- */
+.footer-status.degraded {
+    color: var(--gold);
+    background: color-mix(in srgb, var(--gold) 7%, transparent);
+    border-color: color-mix(in srgb, var(--gold) 22%, transparent);
+}
+.footer-status.offline {
+    color: var(--error);
+    background: color-mix(in srgb, var(--error) 7%, transparent);
+    border-color: color-mix(in srgb, var(--error) 22%, transparent);
+}
+/* --- light theme: the site defines NO --gold, so var(--gold) falls back to
+   the DARK tone (#D9A86C = 1.84:1 on the light bg = effectively invisible).
+   --error (#B4544E = 4.16:1) also misses the 4.5 AA floor for small text.
+   Both are overridden here, scoped to the pill. --- */
+[data-theme="light"] .footer-status.degraded { color: #7A5A20; }
+[data-theme="light"] .footer-status.offline  { color: #9B3E38; }
+@media (max-width: 480px) {
+    .footer-status { min-height: 44px; }
+}
 .footer-bottom {
     text-align: center; border-top: 1px solid var(--border);
     padding-top: 24px; font-size: 0.82rem; color: var(--text-faint);
@@ -1152,4 +1202,177 @@
     .top-nav.nav-signed-in .nav-account-chip { transition: none; }
     .top-nav.nav-signed-in .nav-account-chip:hover { transform: none; }
     .top-nav .nav-cta:hover { transform: none; }
+}
+
+/* === 12. Footer A+C redesign (approved 2026-09-18) ======================
+   User picked a combination: A (Divided) structure + C (Garden) cues.
+     from A -> vertical hairlines between the link columns; 3-part bottom bar
+     from C -> the real vine divider on top; sage column headings
+   Appended rather than folded into section 7 so the old rules stay readable
+   and the whole change is one reversible block.
+
+   JS CONTRACT (site.js / premium.js depend on these -- do NOT rename):
+     .nav-logo[href]  -> Cmd+K palette page index
+     .footer-col a    -> Cmd+K palette page index
+     #footerStatus / #footerStatusText / .status-dot  -> live status fetch
+     .footer-bottom   -> kept position:relative z-index:50 (portal easter egg)
+     #portalSpacer    -> about.html easter egg (unchanged, still before bottom)
+   ======================================================================= */
+
+/* The portal easter egg needs .page-footer to stay transparent so the girl
+   shows through; the card look therefore lives on an inner wrapper. */
+.footer-inner {
+    max-width: 1180px;
+    margin: 0 auto;
+    padding: 0 34px 30px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    background: linear-gradient(180deg, transparent, rgba(94, 184, 168, 0.03));
+    position: relative;
+}
+
+/* --- C: the real vine divider, straddling the card's top edge.
+   The SVG itself is injected by site.js into every .vine-divider (same
+   mechanism the homepage already uses -- zero new JS). Under
+   prefers-reduced-motion site.js skips injection and the two hairlines
+   remain, which matches how the homepage dividers already behave. --- */
+.page-footer .footer-inner > .vine-divider {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 14px;
+    margin: -1px auto 38px;
+    max-width: none;
+    padding: 0 26px;
+    color: var(--sage);
+    opacity: 0.7;
+}
+.page-footer .footer-inner > .vine-divider::before,
+.page-footer .footer-inner > .vine-divider::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--border-primary), transparent);
+}
+.page-footer .footer-inner > .vine-divider svg { width: 26px; height: 26px; flex: none; }
+
+/* --- grid: A's vertical hairlines --- */
+.page-footer .footer-grid {
+    display: grid;
+    grid-template-columns: 1.55fr 1fr 1fr 1fr;
+    gap: 0;
+    max-width: none;
+    margin: 0 0 34px;
+    align-items: start;
+}
+.page-footer .footer-brand { padding-right: 38px; }
+.page-footer .footer-col {
+    border-left: 1px solid var(--border);
+    padding: 2px 0 2px 30px;
+}
+
+/* --- brand. .nav-logo is required by the palette builder, but it also
+   inherits the nav's shimmer gradient text, which is wrong at footer scale:
+   neutralise the gradient and restore a solid fill. --- */
+.page-footer .footer-brand .nav-logo {
+    display: inline-flex;
+    align-items: center;
+    gap: 9px;
+    margin: 0;
+    padding: 0;
+    text-decoration: none;
+}
+.page-footer .footer-brand .nav-logo img { width: 28px; height: 28px; display: block; }
+.page-footer .footer-brand .nav-logo span {
+    font-family: 'Fraunces', Georgia, 'Times New Roman', serif;
+    font-size: 1.05rem;
+    font-weight: 600;
+    letter-spacing: 0.01em;
+    background: none;
+    -webkit-text-fill-color: currentColor;
+    color: var(--text);
+}
+.page-footer .footer-brand p {
+    margin: 13px 0 0;
+    font-size: 0.87rem;
+    line-height: 1.6;
+    color: var(--text-faint);
+    max-width: 31ch;
+}
+
+/* --- C: sage column headings --- */
+.page-footer .footer-col h4 {
+    margin: 0 0 14px;
+    font-size: 0.76rem;
+    font-weight: 650;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--sage);
+    opacity: 0.92;
+}
+.page-footer .footer-col a {
+    display: block;
+    width: fit-content;
+    padding: 6px 0;
+    font-size: 0.885rem;
+    color: var(--text-dim);
+    text-decoration: none;
+    transition: var(--transition);
+}
+.page-footer .footer-col a:hover { color: var(--primary-bright); transform: translateX(2px); }
+
+/* --- A: the 3-part bottom bar --- */
+.page-footer .footer-bottom {
+    margin-top: 0;
+    padding-top: 22px;
+    border-top: 1px solid var(--border);
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    gap: 18px;
+    align-items: center;
+    text-align: left;
+    font-size: 0.81rem;
+    color: var(--text-faint);
+}
+.page-footer .footer-bottom .fb-copy { text-align: center; white-space: nowrap; }
+.page-footer .footer-bottom .fb-mark {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    justify-content: flex-end;
+    text-align: right;
+}
+.page-footer .footer-bottom .fb-mark svg { width: 15px; height: 15px; flex: none; color: var(--sage); opacity: 0.85; }
+
+/* --- responsive: hairlines become horizontal rules, then vanish --- */
+@media (max-width: 900px) {
+    .footer-inner { padding: 0 22px 26px; }
+    .page-footer .footer-grid { grid-template-columns: 1fr 1fr; gap: 30px 0; }
+    .page-footer .footer-brand { grid-column: 1 / -1; padding-right: 0; }
+    .page-footer .footer-col:nth-of-type(1) { border-left: 0; padding-left: 0; }
+    .page-footer .footer-bottom {
+        grid-template-columns: 1fr;
+        gap: 8px;
+        text-align: center;
+        justify-items: center;
+    }
+    .page-footer .footer-bottom .fb-mark { justify-content: center; text-align: center; }
+}
+@media (max-width: 560px) {
+    .page-footer .footer-grid { grid-template-columns: 1fr; gap: 26px; }
+    .page-footer .footer-col {
+        border-left: 0;
+        padding-left: 0;
+        border-top: 1px solid var(--border);
+        padding-top: 20px;
+    }
+    .page-footer .footer-col:nth-of-type(1) { border-top: 0; padding-top: 0; }
+    /* 44px tap rows (was 32px on all 14 links) */
+    .page-footer .footer-col a {
+        min-height: 44px;
+        display: flex;
+        align-items: center;
+        padding: 0;
+    }
+    .page-footer .footer-bottom { font-size: 0.79rem; }
 }
