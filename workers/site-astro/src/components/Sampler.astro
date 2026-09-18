@@ -1,82 +1,109 @@
 ---
-// Sampler.astro — "What you get" (S2), TWO-TIER editorial layout.
+// Sampler.astro — "What you get" (S2): COMPACT INTERACTIVE explorer.
 //
-// USER DECISION 2026-09-18 (Option 2 of 4): the flat 9-item list had NO
-// HIERARCHY — the eye had nowhere to land, which is what read as "generic".
-// Now:
-//   6 PRIMARY  -> large cards, 3-up, generous spacing
-//   3 SECONDARY -> compact chip row beneath, deliberately quieter
+// USER DECISION 2026-09-18 (Option 3 of 4): icon row + expanding detail.
 //
-// The split is EDITORIAL, not a tier claim: all nine are in the same Sweet Pea
-// tier. It says "here's the headline value, and yes there's more" — which a
-// flat nine-item list cannot say.
+// ── WHY THIS IS A REAL TABS WIDGET ──────────────────────────────────────────
+// It genuinely IS one: a set of triggers each revealing one associated panel.
+// Using the ARIA tabs pattern (role=tablist/tab/tabpanel + roving tabindex)
+// gives correct semantics and arrow-key support instead of re-inventing them.
 //
-// ⚠️ ICON LEGIBILITY — measured, not guessed (probe_icons.py renders each icon on
-// the real tile colour and reports glyph luminance). Four marks are designed for
-// a LIGHT background and are near-invisible on the dark tile:
+// ── PROGRESSIVE ENHANCEMENT (the important part) ────────────────────────────
+// All nine panels render server-side with NO `hidden` attribute, so with
+// JavaScript disabled the section still reads as a complete, legible list of
+// nine services. The script then collapses it to one-panel-at-a-time. This is
+// how the known objection to this pattern — "it hides information behind
+// interaction" — gets answered rather than just accepted.
+//
+// The script is an EXTERNAL file, not inline: the CSP in _headers is a sha256
+// allowlist with ~725 chars of headroom, and each new inline script eats into
+// it. External scripts cost nothing.
+//
+// ⚠️ ICON LEGIBILITY — measured, not guessed (probe_icons.py renders each icon
+// on the real tile colour and reports glyph luminance). Four marks are designed
+// for a LIGHT background and are near-invisible on the dark tile:
 //     vaultwarden  glyph luminance 20   (paths with no fill -> default black)
 //     affine       glyph luminance 24   (paths with no fill -> default black)
 //     openwebui    glyph luminance 41   (black circle + white glyph)
 //     koalasync    fill="#111115"       (explicit near-black)
-// Those four get `plate: true` -> a light tile backing (.ms-ico-plate). If an
-// icon is ever replaced, re-run the probe rather than trusting this list.
+// Those four get `plate: true` -> a light tile backing (.ms-ico-plate).
+// Re-run the probe if any artwork is replaced; do not trust this list forever.
 
-const PRIMARY = [
-  { id: "jellyfin",    name: "Jellyfin",    icon: "jellyfin",    blurb: "Your own private Netflix — stream your library on any device, on every screen you own." },
-  { id: "immich",      name: "Immich",      icon: "immich",      blurb: "Photo and video backup that works like Google Photos, without the tracking or the upload limits." },
-  { id: "nextcloud",   name: "Nextcloud",   icon: "nextcloud",   blurb: "Files, calendar and contacts — a private Google Workspace you actually control." },
-  { id: "seerr",       name: "Seerr",       icon: "seerr",       blurb: "Request anything missing. It lands in your library automatically, so you never stop watching." },
-  { id: "vaultwarden", name: "Vaultwarden", icon: "vaultwarden", plate: true, blurb: "A password manager that creates strong, unique passwords and fills them in for you." },
-  { id: "openwebui",   name: "Open WebUI",  icon: "openwebui",   plate: true, blurb: "A private AI chat interface running on hardware we own. Your prompts stay yours." },
-];
-
-const SECONDARY = [
-  { id: "matrix",    name: "Matrix",    icon: "matrix",    blurb: "Private, encrypted chat" },
-  { id: "affine",    name: "AFFiNE",    icon: "affine",    plate: true, blurb: "Docs, wikis and whiteboards" },
-  { id: "koalasync", name: "KoalaSync", icon: "koalasync", plate: true, blurb: "Watch together, in sync" },
+const SERVICES = [
+  { id: "jellyfin",    short: "Jellyfin",    name: "Jellyfin / Moonfin", icon: "jellyfin",
+    blurb: "Your own private Netflix. Stream your film and TV library on any device, with subtitles, resumes and profiles." },
+  { id: "seerr",       short: "Seerr",       name: "Seerr",              icon: "seerr",
+    blurb: "Ask for a film or series and it appears in Jellyfin automatically once it is ready." },
+  { id: "immich",      short: "Immich",      name: "Immich",             icon: "immich",
+    blurb: "Photo and video backup with automatic upload from your phone. Like Google Photos, without the tracking." },
+  { id: "nextcloud",   short: "Nextcloud",   name: "Nextcloud",          icon: "nextcloud",
+    blurb: "Files, calendar and contacts — your private Google Workspace, on hardware we own." },
+  { id: "vaultwarden", short: "Vaultwarden", name: "Vaultwarden",        icon: "vaultwarden", plate: true,
+    blurb: "A password manager that generates strong, unique passwords and fills them in for you." },
+  { id: "openwebui",   short: "Open WebUI",  name: "Open WebUI",         icon: "openwebui", plate: true,
+    blurb: "A private AI chat interface running on our own hardware — your conversations stay put." },
+  { id: "matrix",      short: "Element",     name: "Matrix / Element",   icon: "matrix",
+    blurb: "Encrypted chat and group rooms. Message friends without anyone reading over your shoulder." },
+  { id: "affine",      short: "AFFiNE",      name: "AFFiNE",             icon: "affine", plate: true,
+    blurb: "A Notion alternative you own — documents, wikis and whiteboards in one workspace." },
+  { id: "koalasync",   short: "KoalaSync",   name: "KoalaSync",          icon: "koalasync", plate: true,
+    blurb: "Watch films and shows together with friends, kept perfectly in sync." },
 ];
 ---
 
 <section class="ms-section ms-sampler" id="included">
   <div class="ms-inner">
-    <p class="ms-eyebrow">One tier, everything included</p>
+    <p class="ms-eyebrow">One account, everything included</p>
     <h2 class="ms-h2">Nine services, one sign-in</h2>
     <p class="ms-lead">
-      Your private Netflix, Google Photos, Google Workspace, password manager and AI chat —
-      on hardware we own. No ads, no tracking, no subscriptions.
+      Your private Netflix, Google Photos, Google Workspace, Notion, password manager
+      and AI chat — on hardware we own. No ads, no tracking, no subscriptions.
     </p>
 
-    {/* ── PRIMARY — the headline value ── */}
-    <ul class="ms-cards" role="list">
-      {PRIMARY.map((s) => (
-        <li class="ms-card-svc" data-service={s.id}>
-          <span class:list={["ms-ico", s.plate && "ms-ico-plate"]} aria-hidden="true">
-            <img src={`/assets/icons/${s.icon}.svg`} width="26" height="26"
-                 loading="lazy" decoding="async" alt="" />
-          </span>
-          <h3 class="ms-card-svc-name">{s.name}</h3>
-          <p class="ms-card-svc-blurb">{s.blurb}</p>
-        </li>
-      ))}
-    </ul>
-
-    {/* ── SECONDARY — "and there's more", deliberately quieter ── */}
-    <div class="ms-also">
-      <p class="ms-also-label">Also included</p>
-      <ul class="ms-chips" role="list">
-        {SECONDARY.map((s) => (
-          <li class="ms-chip">
-            <span class:list={["ms-ico", "ms-ico-sm", s.plate && "ms-ico-plate"]} aria-hidden="true">
-              <img src={`/assets/icons/${s.icon}.svg`} width="20" height="20"
-                   loading="lazy" decoding="async" alt="" />
+    <div class="ms-explorer" data-explorer>
+      {/* Trigger rail — a plain row of icon tiles. */}
+      <div class="ms-rail" role="tablist" aria-label="Services included">
+        {SERVICES.map((s, i) => (
+          <button
+            type="button"
+            role="tab"
+            class="ms-node"
+            id={`svc-tab-${s.id}`}
+            aria-controls={`svc-panel-${s.id}`}
+            aria-selected={i === 0 ? "true" : "false"}
+            tabindex={i === 0 ? 0 : -1}
+            data-service={s.id}
+          >
+            <span class:list={["ms-node-ico", s.plate && "ms-ico-plate"]}>
+              <img src={`/assets/icons/${s.icon}.svg`} width="24" height="24"
+                   loading="lazy" decoding="async" alt="" aria-hidden="true" />
             </span>
-            <span class="ms-chip-text">
-              <strong>{s.name}</strong>
-              <span>{s.blurb}</span>
-            </span>
-          </li>
+            <span class="ms-node-label">{s.short}</span>
+          </button>
         ))}
-      </ul>
+      </div>
+
+      {/* Panels — ALL visible without JS; the script shows one at a time. */}
+      <div class="ms-panels">
+        {SERVICES.map((s) => (
+          <div
+            role="tabpanel"
+            class="ms-panel"
+            id={`svc-panel-${s.id}`}
+            aria-labelledby={`svc-tab-${s.id}`}
+            tabindex="0"
+          >
+            <span class:list={["ms-panel-ico", s.plate && "ms-ico-plate"]}>
+              <img src={`/assets/icons/${s.icon}.svg`} width="34" height="34"
+                   loading="lazy" decoding="async" alt="" aria-hidden="true" />
+            </span>
+            <div class="ms-panel-body">
+              <h3 class="ms-panel-name">{s.name}</h3>
+              <p class="ms-panel-blurb">{s.blurb}</p>
+            </div>
+          </div>
+        ))}
+      </div>
     </div>
 
     <p class="ms-more">
@@ -84,3 +111,5 @@ const SECONDARY = [
     </p>
   </div>
 </section>
+
+<script src="/assets/js/services-explorer.js" defer></script>
