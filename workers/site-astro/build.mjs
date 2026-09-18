@@ -94,4 +94,44 @@ writeFileSync(headersPath, headers, 'utf8');
 
 console.log(`   ${pages} page(s), ${hashes.size} unique inline-script hash(es)`);
 console.log(`   CSP line: ${rebuilt.length} / 2000 chars (was ${cspLine.length})`);
+
+// ── 4. Verify the service worker's CORE precache actually exists ──────────
+// The SW is stale-while-revalidate: if CORE lists a path that is not shipped,
+// `cache.addAll` REJECTS and the whole install fails silently — the SW never
+// activates and users keep an older cache. And if CORE lists a file the pages
+// no longer request (e.g. the pre-Astro site.css), returning visitors precache
+// something useless while the real stylesheet is only fetched lazily.
+// Both are silent failures, so assert instead of hoping.
+const swPath = join(DIST, 'sw.js');
+if (existsSync(swPath)) {
+  const sw = readFileSync(swPath, 'utf8');
+  const cacheName = (sw.match(/const CACHE = '([^']+)'/) || [])[1] || '(none)';
+  const core = ((sw.match(/const CORE = \[([\s\S]*?)\]/) || [])[1] || '')
+    .split(',')
+    .map((s) => s.trim().replace(/^['"]|['"]$/g, ''))
+    .filter(Boolean);
+
+  const missing = core.filter((p) => {
+    if (p === '/') return false;
+    const f = join(DIST, p.replace(/^\//, ''));
+    return !existsSync(f) && !existsSync(f + '.html');
+  });
+
+  console.log(`\n▸ 4/4  Service worker`);
+  console.log(`    cache: ${cacheName} | precache entries: ${core.length}`);
+  if (missing.length) {
+    console.error(`\n✗ FATAL: sw.js CORE lists ${missing.length} path(s) that are NOT in dist/:`);
+    missing.forEach((m) => console.error(`    ${m}`));
+    console.error('  cache.addAll() would reject and the SW would never install.');
+    process.exit(1);
+  }
+  console.log('    all precache paths exist ✓');
+  // Lint the thing that bit us: the old stylesheets must not be precached.
+  const stale = core.filter((p) => /\/assets\/css\/(site|premium|fonts)\.css$/.test(p));
+  if (stale.length) {
+    console.warn(`    ⚠️ CORE precaches pre-Astro stylesheets: ${stale.join(', ')}`);
+    console.warn('       converted pages load bundle.css instead — see sw.js notes.');
+  }
+}
+
 console.log('\n✓ build complete -> dist/');

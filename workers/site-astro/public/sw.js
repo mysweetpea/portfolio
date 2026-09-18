@@ -1,18 +1,28 @@
 /* MySweetPea — Service Worker
    Stale-while-revalidate caching for static assets, network-first for HTML.
-   v44 — preserves security headers (CSP etc.) on reconstructed HTML responses;
-   without this the SW dropped every response header and pages served through it
-   ran WITHOUT a Content-Security-Policy. */
+   v45 — the Astro migration. The cache name MUST be bumped whenever the set of
+   shipped assets changes, or returning visitors keep serving the OLD precache
+   in stale-while-revalidate and never see the new build.
 
-const CACHE = 'mysweetpea-v44';
+   v44 (kept for reference): preserves security headers (CSP etc.) on
+   reconstructed HTML responses; without that the SW dropped every response
+   header and pages served through it ran WITHOUT a Content-Security-Policy.
+
+   ⚠️ v45 ASSET CHANGE: the three legacy stylesheets (fonts.css / site.css /
+   premium.css) no longer load on converted pages — CSS now ships as ONE
+   layer-ordered /assets/css/bundle.css. If CORE still listed the old three, a
+   returning visitor would precache files the page never uses while bundle.css
+   was only picked up lazily. Keep this list in sync with what the pages
+   actually request. */
+
+const CACHE = 'mysweetpea-v45';
 const CORE = [
   '/',
   '/index.html',
-  '/assets/css/fonts.css',
-  '/assets/css/site.css',
-  '/assets/css/premium.css',
+  '/assets/css/bundle.css',
   '/assets/js/site.js',
   '/assets/js/premium.js',
+  '/assets/js/services-explorer.js',
   '/assets/fonts/inter-var.woff2',
   '/assets/fonts/fraunces-var.woff2',
   '/assets/screenshots/vaultwarden.webp',
