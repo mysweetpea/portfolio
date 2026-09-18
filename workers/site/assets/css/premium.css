@@ -596,8 +596,13 @@
 .top-nav .nav-btn:hover {
     color: var(--primary-bright);
     background: transparent;
-    text-shadow: none;
 }
+/* Retire section 11's teal hover glow. The :not() qualifier is required: the
+   rule being retired is .top-nav .nav-btn:not([aria-current="page"]):hover
+   (specificity 0,4,0), which beats a plain .top-nav .nav-btn:hover (0,3,0)
+   regardless of source order. */
+.top-nav .nav-btn:not([aria-current="page"]):hover { text-shadow: none; }
+.top-nav .nav-btn[aria-current="page"]:hover { text-shadow: none; }
 .top-nav .nav-btn:hover svg { opacity: 1; }
 .top-nav .nav-btn[aria-current="page"] { color: var(--sage); background: transparent; border-color: transparent; }
 .top-nav .nav-btn[aria-current="page"] svg { opacity: 1; }
@@ -763,7 +768,21 @@
     }
     .nav-toggle:focus-visible { outline: 3px solid var(--primary-bright); outline-offset: 3px; }
 
-    .top-nav .nav-logo { padding: 0; }
+    .top-nav .nav-logo { padding: 0; gap: 9px; }
+
+    /* The logo mark + wordmark sizing lives in the min-width:1100px grid block,
+       so the drawer must restate it or it falls back to site.css's 32px mark
+       with no gap (the two elements touch). Keep these in sync with the grid
+       block's .nav-logo rules. */
+    .top-nav .nav-logo img { width: 25px; height: 25px; display: block; }
+    .top-nav .nav-brand {
+        font-family: 'Fraunces', Georgia, serif;
+        font-weight: 600;
+        font-size: 1.06rem;
+        letter-spacing: -0.01em;
+        color: var(--text);
+        white-space: nowrap;
+    }
 
     /* Drawer: glass panel attached under the bar (values match site.css v28).
        Deliberately no max-height / overflow: the page scrolls, not the menu. */

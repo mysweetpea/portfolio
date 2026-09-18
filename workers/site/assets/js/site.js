@@ -992,27 +992,30 @@
 })();
 
 /* === Nav: reflect the signed-in state (nav v3) ===
-   The account chip's inline script swaps its label to the user's first name and
-   un-hides the avatar once /api/auth/state reports a session. We only READ those
-   two mutations and tag the nav, so the stylesheet can promote the chip to the
-   primary action and hide "Get Access". Pure CSS would need :has(), which the
-   user's iOS Safari does not support reliably; a class set here avoids both that
-   and any new inline script (the CSP is a sha256 allowlist). */
+   The account chip's inline script swaps its label to the user's first name once
+   /api/auth/state reports a session; we watch for that and tag the nav so the
+   stylesheet can promote the chip to the primary action and hide "Get Access".
+   Pure CSS would need :has(), which the user's iOS Safari does not support
+   reliably; a class set here avoids both that and any new inline script (the
+   CSP is a sha256 allowlist).
+
+   The LABEL alone is the signal, deliberately. The chip rewrites it away from
+   "Sign in" only after auth/state reports logged_in, so it cannot fire for a
+   signed-out visitor. Watching the avatar instead would be wrong: /api/avatar
+   is a proxy and avatars are optional, so a signed-in user without one takes
+   the chip's onerror path (display:none, hidden stays true) and would never be
+   promoted — leaving "Get Access" beside their own name. */
 (function () {
     'use strict';
     var nav = document.querySelector('.top-nav');
     var label = document.getElementById('nav-account-label');
-    var avatar = document.getElementById('nav-account-avatar');
-    if (!nav || !label || !avatar) return;
+    if (!nav || !label) return;
 
     function sync() {
-        var signedIn =
-            (label.textContent || '').trim() !== 'Sign in' &&
-            (avatar.style.display === 'inline-block' || !avatar.hidden);
-        nav.classList.toggle('nav-signed-in', signedIn);
+        var name = (label.textContent || '').trim();
+        nav.classList.toggle('nav-signed-in', name !== '' && name !== 'Sign in');
     }
 
     new MutationObserver(sync).observe(label, { childList: true, characterData: true, subtree: true });
-    new MutationObserver(sync).observe(avatar, { attributes: true, attributeFilter: ['style', 'hidden'] });
     sync();
 })();
