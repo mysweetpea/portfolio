@@ -1,0 +1,191 @@
+---
+// HomeSections.astro — the supporting sections of the redesign home page.
+// Copy is grounded in real, verified sources (about.html, status.html, form.html)
+// — no invented claims, no fake testimonials.
+//
+// ⚠️ The former "What's inside right now" (live-library proof, `#inside`) was
+// REMOVED 2026-09-18 per user decision. The numbers it carried (4,938 titles,
+// 204 films, 171 added this week, 29-day streak) remain available live inside
+// the dashboard. Do not re-add it to the home page without being asked.
+---
+
+{/* ───────────────────────── S4 — How access works ───────────────────────── */}
+<section class="ms-section" id="access">
+  <div class="ms-inner">
+    <p class="ms-eyebrow">No surprises</p>
+    <h2 class="ms-h2">How access works</h2>
+    <p class="ms-lead">Three steps, no hidden requirements. Everything we ask for is listed here.</p>
+
+    <div class="ms-steps">
+      <div class="ms-step">
+        <h3>Request an invitation</h3>
+        <p>Name, email, and a preferred username. That's the whole form.</p>
+      </div>
+      <div class="ms-step">
+        <h3>A person reviews it</h3>
+        <p>Requests are reviewed individually and we reply by email — usually within a few days.</p>
+      </div>
+      <div class="ms-step">
+        <h3>Contribute, then sign in once</h3>
+        <p>A one-time community contribution returns an invite code. One sign-in then covers every service.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="ms-rule" />
+
+{/* ───────────────────────── S5 — Why this is safe to trust ─────────────────
+    Four questions a skeptical visitor actually has, each with an outbound link
+    they can verify. Deliberately NO testimonials: the orphaned
+    .testimonials-section CSS shows the slot existed and was never honestly
+    fillable. Fabricating quotes would be the cheapest possible credibility. */}
+<section class="ms-section" id="trust">
+  <div class="ms-inner">
+    <p class="ms-eyebrow">Check us, don't believe us</p>
+    <h2 class="ms-h2">Why it's safe to trust this</h2>
+
+    <div class="ms-trust">
+      <a class="ms-tile" href="/about.html">
+        <h3>One person, named</h3>
+        <p>Run and maintained by a single named operator — not an anonymous reseller. The reasoning is written down publicly.</p>
+        <span class="ms-go">About MySweetPea →</span>
+      </a>
+
+      <a class="ms-tile" href="https://github.com/mysweetpea" rel="noopener">
+        <h3>Everything is open source</h3>
+        <p>Every service is free and open-source software, and the infrastructure is declared in a public repository you can read.</p>
+        <span class="ms-go">See the repository →</span>
+      </a>
+
+      <a class="ms-tile" href="/status.html">
+        <h3>You can see it's up</h3>
+        <p>Measured uptime, a public incident log — including what broke and what we changed because of it.</p>
+        <span class="ms-go">Live status &amp; incidents →</span>
+      </a>
+
+      <a class="ms-tile" href="#faq">
+        <h3>No lock-in, ever</h3>
+        <p>Open source and self-hostable. If this shut down tomorrow you would still have your data and a way to run it yourself.</p>
+        <span class="ms-go">What happens if it stops →</span>
+      </a>
+    </div>
+  </div>
+</section>
+
+<hr class="ms-rule" />
+
+{/* ───────────────────────── S6 — What it costs ─────────────────────────────
+    ⚠️ PRICING IS DELIBERATELY NON-SPECIFIC (user decision 2026-09-18).
+    The contribution is made in crypto and the wallet address does not exist
+    yet, so no figure can be honoured. This copy therefore mirrors
+    pricing.html's existing "Pricing on request" position exactly — the fix is
+    that home now AGREES with pricing instead of contradicting it.
+
+    Do NOT reintroduce a hard figure here until the wallet is live. When it
+    is, the canonical string to unify across home / pricing / form / support
+    is: "$5 one-time community contribution". */}
+<section class="ms-section" id="cost">
+  <div class="ms-inner">
+    <p class="ms-eyebrow">No surprises</p>
+    <h2 class="ms-h2">What it costs</h2>
+
+    <div class="ms-cost">
+      <div class="ms-cost-main">
+        <h3>Sweet Pea Tier</h3>
+        <p class="ms-price">One-time contribution <small>amount confirmed when we reply</small></p>
+        <p>Not a subscription — there is no recurring fee and no automatic renewal. It covers power, hardware, bandwidth and the domain.</p>
+        <p><a class="ms-link" href="/pricing.html">See how access works →</a></p>
+      </div>
+      <div class="ms-cost-alt">
+        <h3>Seedling Tier</h3>
+        <p><strong>Coming soon.</strong> A lighter tier for the essentials. Amount announced at launch.</p>
+        <p>Every request is reviewed and answered by a person, so the figure is confirmed in that reply rather than posted publicly.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="ms-rule" />
+
+{/* ───────────────────────── S7 — FAQ ─────────────────────────
+    Promoted from a tab on services.html. The pattern (.faq-item /
+    .faq-question / data-action="toggle-faq") is reused verbatim — it is
+    already accessible (aria-expanded + aria-controls) and already wired in
+    site.js; only its location changes. */}
+<section class="ms-section" id="faq">
+  <div class="ms-inner">
+    <h2 class="ms-h2">Questions people actually ask</h2>
+
+    <div class="ms-faq">
+      <div class="faq-item">
+        <button class="faq-question" type="button" aria-expanded="false" data-action="toggle-faq">
+          Why do you review requests instead of letting anyone sign up?
+        </button>
+        <div class="faq-answer">
+          <p>Every account is reviewed individually because this is a small, personal service running on hardware in a home — not a hosting company. That keeps it sustainable for the people already using it, and it means support comes from someone who knows the setup rather than a ticket queue.</p>
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-question" type="button" aria-expanded="false" data-action="toggle-faq">
+          Is this a subscription?
+        </button>
+        <div class="faq-answer">
+          <p>No. There is no recurring fee and no automatic renewal. The contribution is one-time and covers power, hardware, bandwidth and the domain. If you want to support it further later, that's optional and separate.</p>
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-question" type="button" aria-expanded="false" data-action="toggle-faq">
+          What happens if MySweetPea shuts down?
+        </button>
+        <div class="faq-answer">
+          <p>You keep everything. Every service here is open source, your data is exportable in standard formats, and the infrastructure is documented well enough to rebuild. There is no proprietary format and no lock-in — the whole point is that you could leave, or take it over.</p>
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-question" type="button" aria-expanded="false" data-action="toggle-faq">
+          What is this, exactly?
+        </button>
+        <div class="faq-answer">
+          <p>Private media streaming, photo backup, files and calendar, documents, a password manager, encrypted chat, and an AI assistant — all running on hardware we own instead of on someone else's cloud. One account signs you into all of it.</p>
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-question" type="button" aria-expanded="false" data-action="toggle-faq">
+          What do I need to get started?
+        </button>
+        <div class="faq-answer">
+          <p>Any device with a browser — plus the apps you already use, if you want them: Moonfin or Jellyfin for media, Immich for photos, the Nextcloud and Bitwarden apps for files and passwords. Step-by-step guides for each platform live in your dashboard once you're in.</p>
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-question" type="button" aria-expanded="false" data-action="toggle-faq">
+          What if I'm not technical?
+        </button>
+        <div class="faq-answer">
+          <p>You don't need to be. Setup is one sign-in, the guides are written for non-technical people with screenshots, and there's an email address that reaches an actual person if you get stuck.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="ms-rule" />
+
+{/* ───────────────────────── S8 — Member return ─────────────────────────
+    An invite-only site has two audiences: people asking in, and members
+    arriving at the front door. The dashboard is currently reachable only via a
+    popover on the nav account chip. Keep this strictly functional. */}
+<section class="ms-section ms-tight">
+  <div class="ms-inner">
+    <div class="ms-return">
+      <span>Already a member? <a href="https://dashboard.mysweetpea.cc">Open your dashboard</a></span>
+      <span>Have a code? <a href="/redeem.html">Redeem it</a></span>
+    </div>
+  </div>
+</section>

@@ -1,0 +1,21 @@
+{
+  "name": "site",
+  "compatibility_date": "2026-06-25",
+  "main": "src/index.js",
+  "assets": {
+    "directory": "./",
+    "binding": "ASSETS",
+    "not_found_handling": "404-page",
+    "run_worker_first": ["/api/*", "/.well-known/matrix/*"]
+  },
+  "routes": [
+    {
+      "pattern": "mysweetpea.cc",
+      "custom_domain": true
+    },
+    {
+      "pattern": "www.mysweetpea.cc",
+      "custom_domain": true
+    }
+  ]
+}

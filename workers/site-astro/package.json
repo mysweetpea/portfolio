@@ -1,0 +1,19 @@
+{
+  "name": "mysweetpea-site-astro",
+  "private": true,
+  "type": "module",
+  "version": "0.1.0",
+  "description": "Astro migration workspace for the MySweetPea marketing site. Builds the static tree, then runs a post-build pass (CSP hash generation). The OUTPUT is what gets deployed; this directory is not deployed directly.",
+  "scripts": {
+    "build": "node build.mjs",
+    "dev": "astro dev",
+    "preview": "astro preview"
+  },
+  "dependencies": {
+    "astro": "^7.3.3"
+  },
+  "devDependencies": {
+    "esbuild": "^0.28.2",
+    "lightningcss": "^1.30.0"
+  }
+}

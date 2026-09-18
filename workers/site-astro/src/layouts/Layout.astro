@@ -1,0 +1,83 @@
+---
+// Layout.astro — shared page shell. THE place where the chrome requirements live.
+//
+// ⚠️⚠️ READ THIS BEFORE EDITING ⚠️⚠️
+// Five things must be emitted or pages silently render wrong. Each was learned by
+// building a POC that failed, and each failure was invisible in the markup:
+//
+//   1. <body data-page="<slug>">     — the site's page-scoping mechanism.
+//       **961 `data-page` references in site.css** (67 for 'home' alone).
+//       Omit it and the ENTIRE page renders unstyled.
+//   2. <html class="js">             — gates `.js .reveal` (scroll animations).
+//   3. pre-nav atmosphere layers     — skip-link, scroll-progress, bg-gradient,
+//       grain-overlay, AURORA GLOW, petal canvas, floating shapes. 2.4 KB of
+//       markup that sits between <body> and <nav>. Drop it and the hero loses
+//       its glow with no structural symptom.
+//   4. <main id="main-content" class="content-wrapper"> — lives in the PAGE body,
+//       not here (wrapping the slot in a second <main> is invalid + an a11y bug).
+//   5. post-footer scripts           — site.js / premium.js / SW registration.
+//       Omit them and reveal animation never runs, so 4 of 6 cards stay
+//       display:none on the home page.
+//
+// Asset URLs keep the legacy `?v=N` query strings for now so this build is
+// byte-comparable with the live site. That ritual disappears in a later step
+// (content hashes) — see the migration plan.
+
+import Nav from "../components/Nav.astro";
+import Footer from "../components/Footer.astro";
+import preNavRaw from "../components/nav-parts/pre-nav.raw.html?raw";
+import postFooterRaw from "../components/nav-parts/post-footer.raw.html?raw";
+
+const {
+  title,
+  description,
+  canonical,
+  page = "",
+  ogImage = "https://mysweetpea.cc/og-card.png",
+} = Astro.props;
+---
+
+<!DOCTYPE html>
+<html lang="en" class="js">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>{title}</title>
+  <meta name="description" content={description} />
+  <link rel="canonical" href={canonical} />
+
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="MySweetPea" />
+  <meta property="og:title" content={title} />
+  <meta property="og:description" content={description} />
+  <meta property="og:url" content={canonical} />
+  <meta property="og:image" content={ogImage} />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content={title} />
+  <meta name="twitter:description" content={description} />
+  <meta name="twitter:image" content={ogImage} />
+
+  <link rel="icon" href="/logo-favicon.svg" type="image/svg+xml" />
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+  <link rel="manifest" href="/manifest.json" />
+  <meta name="theme-color" content="#0C1316" />
+
+  {/* CSS arrives as ONE pre-built bundle: a single file carrying the cascade
+      layer order (`@layer legacy, redesign`) with the legacy sheets wrapped in
+      `legacy` and the redesign in `redesign`.
+      ⚠️ It is bundled OUTSIDE Astro (see package.json build) because Astro would
+      split/hoist these into per-component <link>s and destroy the layer order —
+      and un-layered styles beat all layered styles, so a single missed sheet
+      silently flips the cascade. */}
+  <link rel="stylesheet" href="/assets/css/bundle.css" />
+  <slot name="head" />
+</head>
+
+<body data-page={page}>
+  <Fragment set:html={preNavRaw} />
+  <Nav current={page} />
+  <slot />
+  <Footer />
+  <Fragment set:html={postFooterRaw} />
+</body>
+</html>

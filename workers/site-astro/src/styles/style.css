@@ -1,0 +1,18 @@
+/* ==========================================================================
+   Entry stylesheet — cascade layer order for the whole site.
+   ==========================================================================
+   ⚠️ UN-LAYERED STYLES BEAT ALL LAYERED STYLES, regardless of layer order or
+   specificity. Every stylesheet the page loads must therefore be inside a layer,
+   in its original order, or the cascade silently flips. (Verified: layering only
+   site.css while premium.css stayed un-layered meant premium.css kept winning.)
+
+   `legacy` holds the untouched 349 KB of existing CSS. `redesign` sits above it,
+   so new rules win by LAYER ORDER — no !important, no selector wars, and the
+   legacy file is never edited. That is the whole migration unlock.
+   ========================================================================== */
+@layer legacy, redesign;
+
+@import url("fonts.css")          layer(legacy);
+@import url("legacy-site.css")    layer(legacy);
+@import url("legacy-premium.css") layer(legacy);
+@import url("redesign.css");   /* self-declares @layer redesign */

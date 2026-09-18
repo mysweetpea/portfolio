@@ -1,0 +1,4 @@
+Contact: mailto:support@mysweetpea.cc
+Expires: 2027-08-05T00:00:00Z
+Preferred-Languages: en
+Canonical: https://mysweetpea.cc/.well-known/security.txt

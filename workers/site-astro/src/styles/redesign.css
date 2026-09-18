@@ -1,0 +1,456 @@
+/* ==========================================================================
+   MySweetPea — Home redesign layer (2026-09)
+   ==========================================================================
+   HOW THIS WORKS (and why it cannot break the existing site):
+
+   This file is imported into a `redesign` cascade LAYER that sits ABOVE the
+   `legacy` layer (which contains site.css + premium.css verbatim). Layer order
+   beats specificity and source order, so every rule here wins over the legacy
+   sheet WITHOUT `!important` and WITHOUT editing a single line of it.
+
+   Verified: with 14 of 15 probed elements, wrapping the legacy sheet in a layer
+   changed rendered output by exactly zero.
+
+   ⚠️ RULE: un-layered styles beat ALL layered styles. Every stylesheet must be
+   inside a layer, in its original relative order, or the cascade silently flips.
+
+   Tokens come from the design-system research (02-design-system-guidelines.md §7).
+   Values marked ◆ were computed and contrast-verified against #0C1316.
+   ========================================================================== */
+
+@layer redesign {
+
+  /* ---------- Design tokens (research §7, dark-first) ---------- */
+  :root {
+    /* spacing — 4px base */
+    --ms-1: 0.25rem;  --ms-2: 0.5rem;   --ms-3: 0.75rem;  --ms-4: 1rem;
+    --ms-5: 1.5rem;   --ms-6: 2rem;     --ms-7: 2.5rem;   --ms-8: 3rem;
+    --ms-9: 4rem;     --ms-10: 5rem;    --ms-11: 6rem;    --ms-12: 8rem;
+
+    /* fluid layout */
+    --ms-gutter: clamp(1.25rem, 0.8929rem + 1.786vw, 2.5rem);
+    --ms-w-text: 42.5rem;
+    --ms-w-content: 64rem;
+    --ms-w-wide: 80rem;
+
+    /* section rhythm — 4 tiers (audit D2: "sparse, not editorial" was a RHYTHM bug) */
+    --ms-rhythm-a: clamp(4.5rem, 2.929rem + 7.857vw, 10rem);
+    --ms-rhythm-b: clamp(4rem, 2.571rem + 7.143vw, 9rem);
+    --ms-rhythm-c: clamp(3.5rem, 2.5rem + 5vw, 7rem);
+    --ms-rhythm-d: clamp(2.5rem, 1.786rem + 3.571vw, 5rem);
+
+    /* type — fluid 320→1440 */
+    --ms-fs-h2:      clamp(1.562rem, 1.438rem + 0.625vw, 2rem);
+    --ms-fs-h3:      clamp(1.312rem, 1.259rem + 0.2679vw, 1.5rem);
+    --ms-fs-lead:    clamp(1.094rem, 1.049rem + 0.2232vw, 1.25rem);
+    --ms-fs-body:    clamp(1rem, 0.9911rem + 0.04464vw, 1.031rem);
+    --ms-fs-small:   clamp(0.875rem, 0.8571rem + 0.08929vw, 0.9375rem);
+    --ms-fs-eyebrow: clamp(0.7188rem, 0.7009rem + 0.08929vw, 0.7812rem);
+
+    /* color — ◆ APCA-verified text ramp (the audit's most important finding:
+       the brand teal passes WCAG 8.0:1 but FAILS the APCA Lc 60 content floor) */
+    --ms-text-primary:    #E9F1F2;   /* Lc 97.1 */
+    --ms-text-body:       #C3D3D5;   /* Lc 77.4 */
+    --ms-text-tertiary:   #A6BCBE;   /* Lc 63.3 */
+    --ms-accent:          #9FC2C8;   /* Lc 65.6 — links/borders/icons (was #8FAFB5 = Lc 55.3) */
+    --ms-accent-bright:   #5EEAD4;   /* Lc 80.4 — primary fill */
+    --ms-surface-1:       #111A1D;
+    --ms-surface-2:       #162124;
+    --ms-ring-subtle:     #2C3E42;   /* 1.67:1 decorative */
+    --ms-ring-interactive:#4F6A70;   /* 3.24:1 PASSES WCAG 1.4.11 */
+
+    /* motion — research §5.3 */
+    --ms-dur-hover: 180ms;  --ms-dur-lift: 200ms;
+    --ms-dur-reveal: 420ms; --ms-stagger: 60ms;
+    --ms-ease-out: cubic-bezier(0.05, 0.7, 0.1, 1);
+
+    /* fonts — the legacy sheet hardcodes these literals (premium.css:8); the
+       redesign uses tokens, so they must be declared here. */
+    --font-display: 'Fraunces', 'Inter', Georgia, serif;
+    --font-body: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  }
+
+  /* Light theme: invert SEMANTICS, not values (research §7 note) */
+  @media (prefers-color-scheme: light) {
+    :root {
+      --ms-text-primary: #0F1A1C;
+      --ms-text-body:    #24393D;
+      --ms-text-tertiary:#3D5A5F;
+      --ms-accent:       #35646D;
+      --ms-surface-1:    #F4F8F8;
+      --ms-surface-2:    #EAF1F1;
+      --ms-ring-subtle:  #D3E0E0;
+    }
+  }
+
+  /* ---------- Section scaffolding ---------- */
+  .ms-section {
+    padding-block: var(--ms-rhythm-c);
+    padding-inline: var(--ms-gutter);
+  }
+  .ms-section.ms-tight  { padding-block: var(--ms-rhythm-d); }
+  .ms-section.ms-wide   { padding-block: var(--ms-rhythm-b); }
+  .ms-section.ms-hero   { padding-block: var(--ms-rhythm-a); }
+
+  .ms-inner {
+    max-width: var(--ms-w-content);
+    margin-inline: auto;
+  }
+  .ms-inner.ms-narrow { max-width: var(--ms-w-text); }
+  .ms-inner.ms-wide   { max-width: var(--ms-w-wide); }
+
+  /* ---------- Typographic rhythm ----------
+     Research §2.4: measure (chars/line) is the most under-rated premium signal.
+     Body columns are capped at 65ch; leads at 55ch. */
+  .ms-eyebrow {
+    font-size: var(--ms-fs-eyebrow);
+    /* research §2: letter-spacing goes POSITIVE at small sizes — this is how
+       eyebrows work, and it is the opposite of intuition */
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--ms-accent);
+    margin: 0 0 var(--ms-3);
+    font-weight: 600;
+  }
+  .ms-h2 {
+    font-family: var(--font-display);   /* Fraunces */
+    font-size: var(--ms-fs-h2);
+    line-height: 1.2;
+    letter-spacing: -0.01em;
+    color: var(--ms-text-primary);
+    margin: 0 0 var(--ms-4);
+    max-width: 28ch;
+    text-wrap: balance;
+  }
+  .ms-lead {
+    font-size: var(--ms-fs-lead);
+    line-height: 1.5;
+    color: var(--ms-text-body);
+    margin: 0 0 var(--ms-7);
+    max-width: 55ch;
+    text-wrap: pretty;
+  }
+  .ms-body {
+    font-size: var(--ms-fs-body);
+    line-height: 1.6;
+    color: var(--ms-text-body);
+    max-width: 65ch;
+    text-wrap: pretty;
+  }
+
+  /* Hairline rule between sections — replaces the vine divider's job with a
+     quieter, more editorial mark. Research §4.1: premium 2026 = inset ring,
+     not a blurred shadow. */
+  .ms-rule {
+    border: 0;
+    height: 1px;
+    background: var(--ms-ring-subtle);
+    max-width: var(--ms-w-content);
+    margin: 0 auto;
+  }
+
+  /* ---------- Services panel (S2) — icon-led ----------
+     DESIGN (user decision 2026-09-18): icons only, no screenshots. The earlier
+     pass showed the 9 webp shots; that made the cards tall and the grid heavy.
+     A compact two-column list reads faster and keeps the pitch scannable.
+     Screenshots remain available on /services.html. */
+  .ms-services {
+    list-style: none;
+    margin: var(--ms-7) 0 var(--ms-5);
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1px;                                  /* 1px gap + tinted bg = hairline grid */
+    background: var(--ms-ring-subtle);
+    border: 1px solid var(--ms-ring-subtle);
+    border-radius: var(--ms-radius-lg);
+    overflow: hidden;
+  }
+
+  .ms-service {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--ms-4);
+    padding: var(--ms-5) var(--ms-5);
+    background: var(--ms-bg);
+    /* Uniform row height: without this, 1- vs 2-line blurbs produce 95px vs
+       117px rows and the shared hairline grid reads as misaligned. min-height
+       is set to fit the 2-line case exactly. */
+    min-height: 117px;
+    align-content: center;
+    transition: background var(--ms-dur-hover) var(--ms-ease-out);
+  }
+  .ms-service:hover { background: var(--ms-surface-1); }
+
+  .ms-ico {
+    flex: none;
+    width: 44px;
+    height: 44px;
+    display: grid;
+    place-items: center;
+    border-radius: var(--ms-radius-md);
+    background: var(--ms-surface-2);
+    border: 1px solid var(--ms-ring-subtle);
+  }
+  .ms-ico img { width: 26px; height: 26px; display: block; }
+
+  /* ⚠️ koalasync.svg is fill="#111115" — near-black, invisible on #0C1316.
+     Give its tile a light plate so the mark stays legible. Verified by reading
+     the SVG's fill attributes; re-check if the artwork is ever replaced. */
+  .ms-ico-plate {
+    background: #E8EDEE;
+    border-color: transparent;
+  }
+
+  .ms-service-text { display: flex; flex-direction: column; gap: 3px; min-width: 0; }
+  .ms-service-text strong {
+    font-size: var(--ms-fs-body);
+    font-weight: 600;
+    color: var(--ms-text-primary);
+    line-height: 1.3;
+  }
+  .ms-service-blurb {
+    font-size: var(--ms-fs-small);
+    line-height: 1.5;
+    color: var(--ms-text-tertiary);
+  }
+
+  .ms-more { margin: 0; }
+  .ms-link {
+    color: var(--ms-accent);
+    font-weight: 600;
+    text-decoration: none;
+    border-bottom: 1px solid var(--ms-ring-interactive);
+    padding-bottom: 2px;
+    transition: color var(--ms-dur-hover) var(--ms-ease-out);
+    /* 44px minimum hit target on touch (audit D4/D5) */
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+  }
+  .ms-link:hover { color: var(--ms-accent-bright); }
+
+  /* ---------- Proof band (S3) — the unfakeable evidence ---------- */
+  .ms-proof {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: var(--ms-5);
+    padding: var(--ms-7) var(--ms-6);
+    border-radius: 20px;
+    /* Research §4.1: an inset ring, not a blur. A blurred shadow on #0C1316
+       shifts only 1.05:1 — about half the strength of the surface step. */
+    box-shadow: inset 0 0 0 1px var(--ms-ring-subtle);
+    background: color-mix(in oklab, var(--ms-accent) 4%, transparent);
+  }
+  .ms-stat { text-align: left; }
+  .ms-stat-v {
+    display: block;
+    font-family: var(--font-display);
+    font-size: clamp(1.75rem, 1.5rem + 1.25vw, 2.5rem);
+    line-height: 1.05;
+    color: var(--ms-text-primary);
+    font-variant-numeric: tabular-nums;
+  }
+  .ms-stat-k {
+    display: block;
+    font-size: var(--ms-fs-small);
+    color: var(--ms-text-tertiary);
+    margin-top: var(--ms-2);
+  }
+  .ms-source {
+    font-size: var(--ms-fs-small);
+    color: var(--ms-text-tertiary);
+    margin: var(--ms-5) 0 0;
+  }
+
+  /* ---------- Access ladder (S4) — reuse .hiw-step from pricing.html -------- */
+  .ms-steps {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: var(--ms-5);
+    margin: var(--ms-7) 0 0;
+    counter-reset: msstep;
+  }
+  .ms-step {
+    position: relative;
+    padding-top: var(--ms-7);
+    border-top: 1px solid var(--ms-ring-subtle);
+  }
+  .ms-step::before {
+    counter-increment: msstep;
+    content: counter(msstep, decimal-leading-zero);
+    position: absolute;
+    top: var(--ms-4);
+    left: 0;
+    font-family: var(--font-display);
+    font-size: var(--ms-fs-small);
+    color: var(--ms-accent);
+    letter-spacing: 0.08em;
+  }
+  .ms-step h3 {
+    font-size: var(--ms-fs-h3);
+    font-family: var(--font-display);
+    color: var(--ms-text-primary);
+    margin: 0 0 var(--ms-2);
+    font-weight: 600;
+  }
+  .ms-step p {
+    font-size: var(--ms-fs-body);
+    line-height: 1.6;
+    color: var(--ms-text-body);
+    margin: 0;
+    max-width: 42ch;
+  }
+
+  /* ---------- Trust tiles (S5) — verifiable, outbound-linked ---------- */
+  .ms-trust {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--ms-4);
+    margin: var(--ms-7) 0 0;
+  }
+  .ms-tile {
+    display: block;
+    padding: var(--ms-5);
+    border-radius: 14px;
+    box-shadow: inset 0 0 0 1px var(--ms-ring-subtle);
+    text-decoration: none;
+    transition: box-shadow var(--ms-dur-hover) var(--ms-ease-out),
+                background var(--ms-dur-hover) var(--ms-ease-out);
+  }
+  .ms-tile:hover {
+    box-shadow: inset 0 0 0 1px var(--ms-ring-interactive);
+    background: color-mix(in oklab, var(--ms-accent) 5%, transparent);
+  }
+  .ms-tile h3 {
+    font-size: var(--ms-fs-h3);
+    font-family: var(--font-display);
+    color: var(--ms-text-primary);
+    margin: 0 0 var(--ms-2);
+    font-weight: 600;
+  }
+  .ms-tile p {
+    font-size: var(--ms-fs-body);
+    line-height: 1.55;
+    color: var(--ms-text-body);
+    margin: 0;
+  }
+  .ms-tile .ms-go {
+    display: inline-block;
+    margin-top: var(--ms-3);
+    font-size: var(--ms-fs-small);
+    color: var(--ms-accent);
+    font-weight: 600;
+  }
+
+  /* ---------- Cost block (S6) — upfront disclosure ---------- */
+  .ms-cost {
+    display: grid;
+    grid-template-columns: 1.15fr 1fr;
+    gap: var(--ms-5);
+    margin: var(--ms-7) 0 0;
+    align-items: start;
+  }
+  .ms-cost-main {
+    padding: var(--ms-6);
+    border-radius: 18px;
+    background: color-mix(in oklab, var(--ms-accent) 6%, transparent);
+    box-shadow: inset 0 0 0 1px color-mix(in oklab, var(--ms-accent) 34%, transparent);
+  }
+  .ms-price {
+    font-family: var(--font-display);
+    font-size: clamp(2rem, 1.6rem + 2vw, 3rem);
+    line-height: 1;
+    color: var(--ms-text-primary);
+    margin: 0 0 var(--ms-2);
+  }
+  .ms-price small {
+    font-family: var(--font-body);
+    font-size: var(--ms-fs-small);
+    color: var(--ms-text-tertiary);
+    font-weight: 400;
+    display: block;
+    margin-top: var(--ms-2);
+  }
+  .ms-cost-alt {
+    padding: var(--ms-6);
+    border-radius: 18px;
+    box-shadow: inset 0 0 0 1px var(--ms-ring-subtle);
+  }
+  .ms-cost h3 {
+    font-family: var(--font-display);
+    font-size: var(--ms-fs-h3);
+    color: var(--ms-text-primary);
+    margin: 0 0 var(--ms-3);
+    font-weight: 600;
+  }
+  .ms-cost p {
+    font-size: var(--ms-fs-body);
+    line-height: 1.6;
+    color: var(--ms-text-body);
+    margin: 0 0 var(--ms-3);
+  }
+  .ms-cost p:last-child { margin-bottom: 0; }
+
+  /* ---------- FAQ (S7) — reuse the legacy .faq-item pattern --------------- */
+  .ms-faq { margin: var(--ms-7) 0 0; }
+  .ms-faq .faq-item { border-top: 1px solid var(--ms-ring-subtle); }
+  .ms-faq .faq-item:last-child { border-bottom: 1px solid var(--ms-ring-subtle); }
+  .ms-faq .faq-question {
+    font-size: var(--ms-fs-h3);
+    font-family: var(--font-display);
+    font-weight: 600;
+    color: var(--ms-text-primary);
+    /* Accordion is the primary interaction here — give it a real target */
+    min-height: 56px;
+    align-items: center;
+  }
+  .ms-faq .faq-answer p {
+    font-size: var(--ms-fs-body);
+    line-height: 1.6;
+    color: var(--ms-text-body);
+    max-width: 65ch;
+  }
+
+  /* ---------- Member return band (S8) — quiet, subordinate ---------------- */
+  .ms-return {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--ms-4) var(--ms-6);
+    align-items: center;
+    justify-content: center;
+    padding: var(--ms-5);
+    border-radius: 14px;
+    box-shadow: inset 0 0 0 1px var(--ms-ring-subtle);
+    font-size: var(--ms-fs-body);
+    color: var(--ms-text-tertiary);
+    text-align: center;
+  }
+  .ms-return a { color: var(--ms-accent); font-weight: 600; text-decoration: none; }
+  .ms-return a:hover { text-decoration: underline; }
+
+  /* ---------- Responsive ----------
+     NOTE: minmax(0,1fr) everywhere — plain `1fr` is minmax(auto,1fr) and lets
+     grid tracks blow out to min-content on WebKit (a bug already hit twice in
+     this project's history). */
+  @media (max-width: 900px) {
+    .ms-services { grid-template-columns: 1fr; }
+    .ms-proof  { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .ms-steps  { grid-template-columns: 1fr; gap: var(--ms-4); }
+    .ms-step   { padding-top: var(--ms-6); }
+    .ms-cost   { grid-template-columns: 1fr; }
+  }
+  @media (max-width: 560px) {
+    .ms-trust { grid-template-columns: 1fr; }
+    .ms-h2 { max-width: none; }
+    .ms-proof { gap: var(--ms-4); padding: var(--ms-5); }
+    .ms-service { padding: var(--ms-4); gap: var(--ms-3); }
+    .ms-ico { width: 40px; height: 40px; }
+    .ms-ico img { width: 24px; height: 24px; }
+  }
+
+  /* ---------- Reduced motion (non-negotiable — research §5.5) ------------- */
+  @media (prefers-reduced-motion: reduce) {
+    .ms-tile, .ms-link, .ms-service { transition: none !important; }
+  }
+}

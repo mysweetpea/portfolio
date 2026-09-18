@@ -1,0 +1,18 @@
+---
+// Footer.astro — single source of truth for the site footer.
+//
+// Body markup is the live footer VERBATIM (extracted from index.html, 1712 chars),
+// injected with set:html so the emitted bytes match what ships today. Only the
+// copyright year is dynamic (it was hardcoded, so it would silently go stale).
+//
+// ⚠️ `#footerStatus` / `#footerStatusText` are live-updated by site.js from the
+// Uptime-Kuma API. Keep those IDs and the `Checking status…` default exactly as
+// they are — the JS looks them up by ID and writes the degraded state itself.
+
+import footerRaw from "./nav-parts/footer.raw.html?raw";
+
+const year = new Date().getFullYear();
+const body = footerRaw.replace(/©\s*\d{4}/, `© ${year}`);
+---
+
+<Fragment set:html={body} />

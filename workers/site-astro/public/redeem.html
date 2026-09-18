@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<style id="msp-paint-guard">/* Paint guard: prevents the pre-CSS white flash on navigation.
+   Measured: with stylesheets in flight the page painted pure white (255,255,255)
+   because no early background/color-scheme was set. Keep this FIRST in <head>. */
+html{background:#0C1316;color-scheme:dark}
+html[data-theme="light"]{background:#E7EDEA;color-scheme:light}
+</style>
+<script id="msp-theme-early">/* Early paint bootstrap — runs BEFORE the body paints.
+   1) Apply the saved theme so the guard picks the right background.
+   2) Mark html.js NOW so .reveal content starts hidden and only ever fades IN.
+      Previously site.js (defer) added it AFTER first paint, which faded visible
+      content OUT then back IN (~1.5s of background-only = the "static screen").
+   3) Watchdog: if the main script never initialises, drop .js so content can
+      never be left permanently invisible. */
+(function(){
+  try{
+    var t=localStorage.getItem('msp-theme');
+    if(!t&&window.matchMedia&&window.matchMedia('(prefers-color-scheme: light)').matches)t='light';
+    if(t)document.documentElement.setAttribute('data-theme',t);
+  }catch(e){}
+  document.documentElement.classList.add('js');
+  setTimeout(function(){
+    if(!window.__mspRevealInit)document.documentElement.classList.remove('js');
+  },2500);
+})();
+</script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex, nofollow, noarchive, nosnippet, noimageindex">
+
+    <title>MySweetPea — Redeem Invite Code</title>
+    <meta name="description" content="Request community access to MySweetPea's private, self-hosted services with a $5 minimum contribution.">
+    <meta name="theme-color" content="#0C1316">
+    <meta property="og:title" content="MySweetPea — Get Access">
+    <meta property="og:description" content="Request community access to MySweetPea's private, self-hosted services with a $5 minimum contribution.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://mysweetpea.cc/">
+    
+    <meta property="og:image" content="https://mysweetpea.cc/og-card.png">
+    <meta name="twitter:card" content="summary_large_image">
+    <link rel="icon" type="image/svg+xml" href="/logo-favicon.svg">
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+    <link rel="manifest" href="/manifest.json">
+    <link rel="preload" as="image" href="/logo.svg">
+    <link rel="preload" as="font" type="font/woff2" href="/assets/fonts/inter-var.woff2" crossorigin>
+    <link rel="preload" as="font" type="font/woff2" href="/assets/fonts/fraunces-var.woff2" crossorigin>
+                    <link rel="stylesheet" href="/assets/css/fonts.css?v=34">
+    <link rel="stylesheet" href="/assets/css/site.css?v=34">
+    <link rel="stylesheet" href="/assets/css/premium.css?v=34">
+<link rel="canonical" href="https://mysweetpea.cc/redeem">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"Organization","name":"MySweetPea","url":"https://mysweetpea.cc","logo":"https://mysweetpea.cc/logo.png","description":"Private, self-hosted alternatives to the services you use every day. No ads, no tracking, no subscriptions — community funded.","email":"support@mysweetpea.cc","sameAs":["https://github.com/mysweetpea"]}</script>
+</head>
+<body data-page="redeem">
+    <a href="#main-content" class="skip-link">Skip to content</a>
+    <div class="scroll-progress" id="scrollProgress" aria-hidden="true"></div>
+    <div class="bg-gradient" aria-hidden="true"></div>
+    <div class="grain-overlay" aria-hidden="true"></div>
+    <div class="aurora" aria-hidden="true"></div>
+    <canvas id="petalCanvas" aria-hidden="true"></canvas>
+    <div class="float-3d f1" aria-hidden="true"><svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M50 10 C35 15, 28 30, 32 48 C36 60, 48 68, 50 70 C52 68, 64 60, 68 48 C72 30, 65 15, 50 10" fill="#8FAFB5" opacity="0.8"/><path d="M50 25 C44 28, 40 38, 44 48 C47 55, 50 58, 50 58 C50 58, 53 55, 56 48 C60 38, 56 28, 50 25" fill="#8FAFB5" opacity="0.5"/><path d="M50 10 C42 12, 38 22, 42 35 C45 42, 50 45, 50 45 C50 45, 55 42, 58 35 C62 22, 58 12, 50 10" fill="#8FAFB5" opacity="0.6"/><path d="M50 45 C45 48, 42 55, 45 62 C48 67, 50 68, 50 68 C50 68, 52 67, 55 62 C58 55, 55 48, 50 45" fill="#8FAFB5" opacity="0.4"/><line x1="50" y1="68" x2="50" y2="88" stroke="#8FAFB5" stroke-width="2"/><path d="M45 80 Q40 76, 37 82" stroke="#8FAFB5" stroke-width="1.5" fill="none"/><path d="M55 80 Q60 76, 63 82" stroke="#8FAFB5" stroke-width="1.5" fill="none"/><circle cx="37" cy="82" r="2" fill="#8FAFB5" opacity="0.6"/><circle cx="63" cy="82" r="2" fill="#8FAFB5" opacity="0.6"/></svg></div>
+    <div class="float-3d f2" aria-hidden="true"><svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M50 10 C35 15, 28 30, 32 48 C36 60, 48 68, 50 70 C52 68, 64 60, 68 48 C72 30, 65 15, 50 10" fill="#8FAFB5" opacity="0.8"/><path d="M50 25 C44 28, 40 38, 44 48 C47 55, 50 58, 50 58 C50 58, 53 55, 56 48 C60 38, 56 28, 50 25" fill="#8FAFB5" opacity="0.5"/><path d="M50 10 C42 12, 38 22, 42 35 C45 42, 50 45, 50 45 C50 45, 55 42, 58 35 C62 22, 58 12, 50 10" fill="#8FAFB5" opacity="0.6"/><path d="M50 45 C45 48, 42 55, 45 62 C48 67, 50 68, 50 68 C50 68, 52 67, 55 62 C58 55, 55 48, 50 45" fill="#8FAFB5" opacity="0.4"/><line x1="50" y1="68" x2="50" y2="88" stroke="#8FAFB5" stroke-width="2"/><path d="M45 80 Q40 76, 37 82" stroke="#8FAFB5" stroke-width="1.5" fill="none"/><path d="M55 80 Q60 76, 63 82" stroke="#8FAFB5" stroke-width="1.5" fill="none"/><circle cx="37" cy="82" r="2" fill="#8FAFB5" opacity="0.6"/><circle cx="63" cy="82" r="2" fill="#8FAFB5" opacity="0.6"/></svg></div>
+<nav class="top-nav" aria-label="Primary navigation">
+    <a href="/index.html" class="nav-logo" aria-current="page">
+        <span class="nav-brand">MySweetPea</span><span class="nav-tagline">Your Private Garden</span>
+    </a>
+    <button class="nav-toggle" aria-expanded="false" aria-controls="nav-links" aria-label="Toggle navigation menu">
+        <span class="nav-toggle-bar"></span>
+        <span class="nav-toggle-bar"></span>
+        <span class="nav-toggle-bar"></span>
+    </button>
+    <div class="nav-links" id="nav-links">
+        <a href="/services.html" class="nav-btn">Services</a>
+        <a href="/pricing.html" class="nav-btn">How It Works</a>
+        <a href="/redeem.html" class="nav-btn" aria-current="page">I Have a Code</a>
+        <details class="nav-more">
+            <summary aria-label="More pages">More</summary>
+            <div class="nav-more-menu">
+                <a href="/support.html">Donate</a>
+                <a href="/suggest.html">Suggest a Service</a>
+                <a href="/contact.html">Contact Us</a>
+                <a href="/status.html">Status</a>
+                <a href="/changelog.html">Changelog</a>
+                <a href="/about.html">About</a>
+                <a href="https://github.com/mysweetpea" target="_blank" rel="noopener noreferrer" class="nav-github"><img src="/assets/icons/github.svg" alt="" width="14" height="14"> GitHub</a>
+            </div>
+        </details>
+        <div class="nav-account" id="nav-account"><button type="button" class="nav-btn nav-signin nav-account-chip" id="nav-account-chip" aria-expanded="false" aria-controls="nav-account-pop" aria-haspopup="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 3.6-6.5 8-6.5s8 2.5 8 6.5"/></svg><img id="nav-account-avatar" alt="" hidden style="width:22px;height:22px;border-radius:50%;object-fit:cover;display:none" /><span id="nav-account-label">Sign in</span></button><div class="nav-account-pop" id="nav-account-pop" hidden><a class="nap-primary" href="https://dashboard.mysweetpea.cc/auth/login">Open dashboard</a></div></div><style>.nav-account{position:relative;display:inline-flex;align-items:center}.nav-account-chip{display:inline-flex;align-items:center;gap:7px}.nav-account-pop[hidden]{display:none!important}.nav-account-pop{position:absolute;top:calc(100% + 10px);right:0;min-width:216px;max-width:calc(100vw - 24px);background:rgba(12,19,22,.94);backdrop-filter:blur(20px) saturate(1.4);-webkit-backdrop-filter:blur(20px) saturate(1.4);border:1px solid rgba(143,175,181,.18);border-radius:14px;padding:8px;display:flex;flex-direction:column;gap:2px;box-shadow:0 12px 40px rgba(0,0,0,.45);z-index:80}.nav-account-pop a{display:block;padding:9px 12px;border-radius:10px;color:#A9BEC2;font-size:.88rem;text-decoration:none;transition:background .2s,color .2s}.nav-account-pop a:hover{background:rgba(143,175,181,.12);color:#C5D5D8}.nav-account-pop a.nap-primary{background:linear-gradient(135deg,#8FAFB5,#6B9AA6);color:#0C1316;font-weight:600;text-align:center;margin-bottom:4px}.nav-account-pop a.nap-primary:hover{background:linear-gradient(135deg,#C5D5D8,#8FAFB5);color:#0C1316}@media (max-width:768px){.nav-account-pop{position:absolute;right:0}}</style><script>(function(){"use strict";var chip=document.getElementById("nav-account-chip"),pop=document.getElementById("nav-account-pop"),label=document.getElementById("nav-account-label");if(!chip||!pop)return;function close(){pop.hidden=true;chip.setAttribute("aria-expanded","false")}function open(){pop.hidden=false;chip.setAttribute("aria-expanded","true")}chip.addEventListener("click",function(e){e.stopPropagation();pop.hidden?open():close()});document.addEventListener("click",function(e){if(!pop.hidden&&e.target!==chip&&!pop.contains(e.target)&&!chip.contains(e.target))close()});document.addEventListener("keydown",function(e){if(e.key==="Escape")close()});var dash="https://dashboard.mysweetpea.cc";fetch("/api/auth/state?name=1",{credentials:"same-origin"}).then(function(r){return r.ok?r.json():null}).then(function(s){if(!s||!s.logged_in)return;var first=String(s.name||"").trim().split(/\s+/)[0];label.textContent=first||"Account";var av=document.getElementById("nav-account-avatar");var svg=chip.querySelector("svg");if(av){av.onload=function(){av.style.display="inline-block";av.hidden=false;if(svg)svg.style.display="none";};av.onerror=function(){av.style.display="none";};av.src="/api/avatar?v="+Date.now();}pop.innerHTML='<a class="nap-primary" href="'+dash+'">Open dashboard</a>';}).catch(function(){});})();</script>
+        <a href="/form.html" class="nav-cta">Get Access</a>
+        <div class="nav-actions"><button class="nav-search" aria-label="Search pages and services" title="Search (Ctrl+K)"><svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg></button><button class="theme-toggle" aria-label="Toggle color theme"><span class="icon-moon" aria-hidden="true"><img src="/assets/icons/icon-ui-moon.svg" class="" alt="" width="18" height="18" loading="lazy" decoding="async" aria-hidden="true"></span><span class="icon-sun" aria-hidden="true"><img src="/assets/icons/icon-ui-sun.svg" class="" alt="" width="18" height="18" loading="lazy" decoding="async" aria-hidden="true"></span></button></div>
+    </div>
+</nav>
+
+
+
+
+
+
+
+<main id="main-content" class="content-wrapper">
+        <div class="hero access-hero redeem-hero">
+            <img src="/logo.svg" alt="" class="hero-watermark" aria-hidden="true" loading="lazy" decoding="async">
+            <img src="/logo.svg" alt="MySweetPea logo" class="logo" width="160" height="160">
+            <span class="eyebrow redeem-eyebrow">Invitation code</span>
+            <h1 class="glass-text">Redeem Your Invite Code</h1>
+            <p class="hero-sub pop-text redeem-subtitle">Enter the invitation code we emailed you to create your MySweetPea account.</p>
+        </div>
+        <section class="tier-form-section redeem-section">
+            <div class="form-card glow-card">
+                <h2 class="glass-text">Create your account</h2>
+                <div class="verify-banner" role="note"><strong>Haven't received a code yet?</strong> Sweet Pea requests are reviewed individually, usually within 24 hours. <a href="/contact.html">Contact support</a></div>
+                <div class="form-group redeem-code-group">
+                    <label class="form-label glass-text" for="rc-code">Invite code</label>
+                    <div class="code-boxes" id="rc-code-boxes" aria-hidden="true">
+                        <span class="cb-cell" data-i="0"></span>
+                        <span class="cb-cell" data-i="1"></span>
+                        <span class="cb-cell" data-i="2"></span>
+                        <span class="cb-sep">-</span>
+                        <span class="cb-cell" data-i="3"></span>
+                        <span class="cb-cell" data-i="4"></span>
+                        <span class="cb-cell" data-i="5"></span>
+                        <span class="cb-cell" data-i="6"></span>
+                        <span class="cb-cell" data-i="7"></span>
+                        <span class="cb-cell" data-i="8"></span>
+                        <span class="cb-cell" data-i="9"></span>
+                        <span class="cb-cell" data-i="10"></span>
+                        <span class="cb-caret" aria-hidden="true"></span>
+                        <input type="text" class="form-input redeem-code-input" id="rc-code" placeholder="" autocomplete="off" autocapitalize="characters" spellcheck="false" maxlength="12" aria-label="Invite code">
+                        <span class="validation-icon" id="rc-code-icon" aria-hidden="true"></span>
+                    </div>
+                    <div class="form-hint" id="rc-code-hint">Enter the code exactly as it appears in your email.</div>
+                </div>
+                <div class="form-group"><label class="form-label glass-text" for="rc-name">Name</label><input type="text" class="form-input" id="rc-name" placeholder="Your name" autocomplete="name" maxlength="60"><span class="validation-icon" id="rc-name-icon" aria-hidden="true"></span></div>
+                <div class="form-group"><label class="form-label glass-text" for="rc-email">Email</label><input type="email" class="form-input" id="rc-email" placeholder="you@example.com" autocomplete="email" maxlength="120"><span class="validation-icon" id="rc-email-icon" aria-hidden="true"></span></div>
+                <div class="form-group"><label class="form-label glass-text" for="rc-username">Username</label><input type="text" class="form-input" id="rc-username" placeholder="Choose a username" autocomplete="username" maxlength="30"><span class="validation-icon" id="rc-username-icon" aria-hidden="true"></span><div class="username-checks" id="rc-username-checks"><span class="uc-item" data-uc="len"><span class="uc-icon">×</span> At least 3 characters</span><span class="uc-item" data-uc="alnum"><span class="uc-icon">×</span> Letters/Numbers</span><span class="uc-item" data-uc="underscore"><span class="uc-icon">×</span> Underscore only</span></div></div>
+                <button type="button" class="form-submit" id="rc-submit" disabled>Create MySweetPea Account</button>
+            </div>
+        </section>
+
+        <aside class="redeem-callout reveal"><div><strong>Need access first?</strong><span>Choose a tier and submit an access request.</span></div><a href="/form.html" class="btn btn-secondary">Get access</a></aside>
+    </main>
+<a href="#" class="back-to-top" aria-label="Back to top" data-action="back-to-top"><img src="/assets/icons/icon-ui-arrow-up.svg" class="" alt="" width="22" height="22" loading="lazy" decoding="async" aria-hidden="true"></a>
+<footer class="page-footer">
+    <div class="footer-grid">
+        <div class="footer-brand">
+            <a href="/index.html" class="nav-logo"><img src="/logo-favicon.svg" alt="" width="28" height="28"><span>MySweetPea</span></a>
+            <p>Private alternatives to the services you use every day. No ads, no tracking, no subscriptions — just community-funded, self-hosted software.</p>
+            <a href="/status.html" class="footer-status" id="footerStatus"><span class="status-dot" aria-hidden="true"></span><span id="footerStatusText">Checking status…</span></a>
+        </div>
+        <div class="footer-col">
+            <h4>Explore</h4>
+            <a href="/services.html">Services</a>
+            <a href="/pricing.html">How It Works</a>
+            <a href="/status.html">Status</a>
+            <a href="/changelog.html">Changelog</a>
+        </div>
+        <div class="footer-col">
+            <h4>Community</h4>
+            <a href="/form.html">Get Access</a>
+            <a href="/support.html">Donate</a>
+            <a href="/suggest.html">Suggest a Service</a>
+            <a href="/about.html">About</a>
+        </div>
+        <div class="footer-col">
+            <h4>Support</h4>
+            <a href="/contact.html">Contact Us</a>
+            <a href="mailto:support@mysweetpea.cc">support@mysweetpea.cc</a>
+            <a href="https://github.com/mysweetpea" target="_blank" rel="noopener noreferrer">GitHub</a>
+        </div>
+    </div>
+    <div class="footer-bottom">
+        <p>&copy; 2026 MySweetPea. Privacy-first, self-hosted, community funded.</p>
+        <p class="footer-help">Need help? <a href="mailto:support@mysweetpea.cc">support@mysweetpea.cc</a></p>
+    </div>
+</footer>
+
+
+
+
+
+
+
+    <script src="/assets/js/site.js?v=34" defer></script>
+    <script src="/assets/js/premium.js?v=34" defer></script>
+    <script>
+(function () {
+ var endpoint='https://subscribe.mysweetpea.cc/webhook/redeem-code',btn=document.getElementById('rc-submit');
+ var fields={'rc-code':'code','rc-name':'name','rc-email':'email','rc-username':'username'};
+ function valid(type,v){v=v.trim();if(type==='code')return /^(PEA|FAM)-[A-Z0-9]{8}$/.test(v.toUpperCase());if(type==='name')return v.length>=2;if(type==='email')return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v);return /^[A-Za-z0-9_]{3,}$/.test(v);}
+ function update(){btn.disabled=!Object.keys(fields).every(function(id){return valid(fields[id],document.getElementById(id).value);});}
+ Object.keys(fields).forEach(function(id){var el=document.getElementById(id);function placeCaret(){if(id!=='rc-code')return;var caret=document.querySelector('.cb-caret');if(!caret)return;var cells=document.querySelectorAll('.code-boxes .cb-cell');var pos=el.selectionStart||0;var v=el.value.replace('-','');var idx=pos;if(pos>3)idx=pos-1;if(idx>11)idx=11;var cell=cells[Math.min(idx,11)];if(cell){var r=cell.getBoundingClientRect();var br=document.querySelector('.code-boxes').getBoundingClientRect();caret.style.left=(r.left-br.left+r.width/2)+'px';}}function updateUsernameChecks(){if(id!=='rc-username')return;var v=el.value;var checks=document.querySelectorAll('#rc-username-checks .uc-item');if(!checks.length)return;var rules={len:v.length>=3,alnum:/[A-Za-z0-9]/.test(v),underscore:/^[A-Za-z0-9_]+$/.test(v)};checks.forEach(function(c){var k=c.getAttribute('data-uc');var ok=rules[k];c.classList.toggle('ok',ok);var icon=c.querySelector('.uc-icon');if(icon)icon.textContent=ok?'✓':'×';});}el.addEventListener('input',function(){if(id==='rc-code'){el.value=el.value.toUpperCase().replace(/\s/g,'');var boxes=document.querySelectorAll('.code-boxes .cb-cell');if(boxes.length){var v=el.value.replace('-','');for(var b=0;b<boxes.length;b++){var ch=v[b]||'';boxes[b].textContent=ch;boxes[b].classList.toggle('filled',!!ch);}}}var ok=valid(fields[id],el.value);el.classList.toggle('valid',ok);el.classList.toggle('invalid',el.value.trim().length>0&&!ok);if(id!=='rc-code'){var icon=document.getElementById(id+'-icon');if(icon){icon.classList.toggle('show',el.value.trim().length>0);icon.classList.toggle('valid',ok);icon.classList.toggle('invalid',el.value.trim().length>0&&!ok);icon.textContent=ok?'✓':'×';}}update();updateUsernameChecks();placeCaret();});el.addEventListener('keyup',placeCaret);el.addEventListener('click',placeCaret);el.addEventListener('select',placeCaret);el.addEventListener('blur',function(){var ok=valid(fields[id],el.value);el.classList.toggle('valid',ok);el.classList.toggle('invalid',el.value.trim().length>0&&!ok);if(id!=='rc-code'){var icon=document.getElementById(id+'-icon');if(icon){icon.classList.toggle('show',el.value.trim().length>0);icon.classList.toggle('valid',ok);icon.classList.toggle('invalid',el.value.trim().length>0&&!ok);icon.textContent=ok?'✓':'×';}}update();updateUsernameChecks();var caret=document.querySelector('.cb-caret');if(caret)caret.style.opacity='0';});});
+ btn.addEventListener('click',function(){if(btn.disabled)return;var data={invite_code:document.getElementById('rc-code').value.trim(),name:document.getElementById('rc-name').value.trim(),email:document.getElementById('rc-email').value.trim(),username:document.getElementById('rc-username').value.trim()};btn.disabled=true;btn.classList.add('loading');btn.textContent='Creating account…';fetch(endpoint,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(data)}).then(function(r){return r.text().then(function(t){if(t){try{return JSON.parse(t);}catch(e){return {ok:r.ok};}}return {ok:r.ok};});}).then(function(result){if(!result.ok)throw new Error(result.msg||'Could not create account');window.location.href='/success.html?type=redeem';}).catch(function(e){btn.disabled=false;btn.classList.remove('loading');btn.textContent=e.message||'Try again';setTimeout(function(){btn.textContent='Request MySweetPea Account';update();},3000);});});update();
+})();
+</script>    <script>
+    if ('serviceWorker' in navigator) {
+        window.addEventListener('load', function () {
+            navigator.serviceWorker.register('/sw.js').catch(function () {});
+        });
+    }
+    </script>
+</body>
+</html>

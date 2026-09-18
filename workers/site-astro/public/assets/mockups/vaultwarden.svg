@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 260">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#132026"/><stop offset="1" stop-color="#0C1316"/></linearGradient>
+    <linearGradient id="card" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#1B2B31"/><stop offset="1" stop-color="#142127"/></linearGradient>
+    <linearGradient id="accent" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#5EB8A8"/><stop offset="1" stop-color="#3E8E86"/></linearGradient>
+  </defs>
+  <rect width="400" height="260" rx="16" fill="url(#bg)"/>
+  <!-- window chrome -->
+  <rect x="20" y="16" width="360" height="228" rx="12" fill="url(#card)" stroke="#2A3B42" stroke-width="1"/>
+  <circle cx="36" cy="30" r="4" fill="#D98C8C"/><circle cx="50" cy="30" r="4" fill="#D9A86C"/><circle cx="64" cy="30" r="4" fill="#5ED39E"/>
+  <rect x="80" y="26" width="120" height="8" rx="4" fill="#2A3B42"/>
+  <!-- sidebar -->
+  <rect x="20" y="44" width="60" height="200" fill="#0F1A1E"/>
+  <rect x="30" y="56" width="40" height="8" rx="4" fill="#3E8E86"/>
+  <rect x="30" y="74" width="40" height="8" rx="4" fill="#2A3B42"/>
+  <rect x="30" y="92" width="40" height="8" rx="4" fill="#2A3B42"/>
+  <rect x="30" y="110" width="40" height="8" rx="4" fill="#2A3B42"/>
+  <!-- main content: password list -->
+  <rect x="92" y="52" width="270" height="14" rx="4" fill="#2A3B42"/>
+  <rect x="92" y="76" width="270" height="40" rx="6" fill="#1B2B31" stroke="#2A3B42"/>
+  <circle cx="108" cy="96" r="8" fill="url(#accent)"/>
+  <rect x="124" y="90" width="80" height="6" rx="3" fill="#5EB8A8"/>
+  <rect x="124" y="100" width="50" height="5" rx="2.5" fill="#2A3B42"/>
+  <rect x="92" y="124" width="270" height="40" rx="6" fill="#1B2B31" stroke="#2A3B42"/>
+  <circle cx="108" cy="144" r="8" fill="url(#accent)"/>
+  <rect x="124" y="138" width="70" height="6" rx="3" fill="#5EB8A8"/>
+  <rect x="124" y="148" width="50" height="5" rx="2.5" fill="#2A3B42"/>
+  <rect x="92" y="172" width="270" height="40" rx="6" fill="#1B2B31" stroke="#2A3B42"/>
+  <circle cx="108" cy="192" r="8" fill="url(#accent)"/>
+  <rect x="124" y="186" width="90" height="6" rx="3" fill="#5EB8A8"/>
+  <rect x="124" y="196" width="50" height="5" rx="2.5" fill="#2A3B42"/>
+  <!-- lock icon -->
+  <g transform="translate(340,60)">
+    <rect x="0" y="8" width="16" height="12" rx="3" fill="#5EB8A8"/>
+    <path d="M4 8V5a4 4 0 0 1 8 0v3" stroke="#5EB8A8" stroke-width="2" fill="none"/>
+  </g>
+</svg>

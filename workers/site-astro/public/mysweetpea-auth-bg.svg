@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1920" height="1080" viewBox="0 0 1920 1080">
+  <defs>
+    <radialGradient id="topGlow" cx="18%" cy="10%" r="75%">
+      <stop offset="0%" stop-color="#294149"/>
+      <stop offset="48%" stop-color="#14252A"/>
+      <stop offset="100%" stop-color="#0C1316"/>
+    </radialGradient>
+    <radialGradient id="sageGlow" cx="83%" cy="85%" r="55%">
+      <stop offset="0%" stop-color="#8FAFB5" stop-opacity=".20"/>
+      <stop offset="100%" stop-color="#0C1316" stop-opacity="0"/>
+    </radialGradient>
+    <filter id="noise">
+      <feTurbulence type="fractalNoise" baseFrequency=".8" numOctaves="3" stitchTiles="stitch"/>
+      <feColorMatrix type="saturate" values="0"/>
+    </filter>
+  </defs>
+
+  <rect width="1920" height="1080" fill="url(#topGlow)"/>
+  <rect width="1920" height="1080" fill="url(#sageGlow)"/>
+  <rect width="1920" height="1080" filter="url(#noise)" opacity=".035"/>
+
+  <g fill="#8FAFB5" opacity=".16">
+    <path d="M160 205 C95 255 115 365 195 385 C275 365 295 255 230 205 C210 190 180 190 160 205Z"/>
+    <path d="M1690 720 C1615 780 1640 900 1735 918 C1830 900 1855 780 1780 720 C1755 700 1715 700 1690 720Z"/>
+    <path d="M1470 140 C1425 175 1440 250 1495 264 C1550 250 1565 175 1520 140 C1505 128 1485 128 1470 140Z"/>
+  </g>
+</svg>

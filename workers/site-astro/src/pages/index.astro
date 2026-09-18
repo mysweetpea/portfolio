@@ -1,0 +1,94 @@
+---
+// index.astro — the home page (first converted page of the migration).
+//
+// ⚠️ How the legacy body is split — this is the part that took a POC to get right.
+// The old page is: hero → <section class="features-section"> → cta-section, and
+// that `<section>` is a LAYOUT TRAP: it carries its own max-width:1040px +
+// padding:90px 24px (via `body[data-page='home'] .features-section`) AND opens
+// with the old "Why MySweetPea?" heading. Dropping new sections inside it
+// inherits those constraints and nests them under an unrelated heading.
+//
+// So we cut FOUR regions and reassemble at the top level:
+//   A. hero + lead            (before <section class="features-section">)
+//   B. the old value-tabs     (the site's voice — kept, promoted to its own section)
+//   C. the old CTA card       (kept last)
+// plus the new sections (S2 sampler, S4–S8) in between.
+//
+// ⚠️ Every removal is done by slicing on an exact marker and is verified after the
+// build by grepping dist/ for the legacy class names (0 hits required). A slice
+// that fails to find its marker fails SILENTLY by keeping everything.
+import Layout from '../layouts/Layout.astro';
+import Sampler from '../components/Sampler.astro';
+import HomeSections from '../components/HomeSections.astro';
+import bodyRaw from '../components/nav-parts/home-body.raw.html?raw';
+
+const SEC_MARK = '<section class="features-section"';
+const secAt = bodyRaw.indexOf(SEC_MARK);
+
+let beforeSec = secAt > -1 ? bodyRaw.slice(0, secAt) : bodyRaw;
+const wrapper = secAt > -1 ? bodyRaw.slice(secAt) : '';
+
+const TABS_MARK = '<div class="value-tabs';
+const tabsAt = wrapper.indexOf(TABS_MARK);
+const ctaAt = wrapper.indexOf('<div class="cta-section');
+
+const oldValueTabs = tabsAt > -1 && ctaAt > tabsAt ? wrapper.slice(tabsAt, ctaAt) : '';
+let oldCta = ctaAt > -1 ? wrapper.slice(ctaAt) : '';
+
+// (1) Drop `.hero-steps` — it DUPLICATES the new "How access works" section.
+const hsStart = beforeSec.indexOf('<ol class="hero-steps"');
+if (hsStart > -1) {
+  const hsEnd = beforeSec.indexOf('</ol>', hsStart);
+  if (hsEnd > -1) beforeSec = beforeSec.slice(0, hsStart) + beforeSec.slice(hsEnd + 5);
+}
+
+// (2) Drop `.hero-proof` — it renders "0 Public services / 0% Uptime target /
+//     0 Ads" in a static build (values are injected at runtime and default to 0
+//     when the status API is unreachable). A row of zeros reads as broken.
+const hpStart = beforeSec.indexOf('<div class="hero-proof"');
+if (hpStart > -1) {
+  const hpEnd = beforeSec.indexOf('</div>', beforeSec.indexOf('</div>', hpStart) + 6);
+  if (hpEnd > -1) beforeSec = beforeSec.slice(0, hpStart) + beforeSec.slice(hpEnd + 6);
+}
+
+// (3) Pricing: no hard figure. The contribution is crypto and no wallet address
+//     exists yet, so any number would be unhonourable. Home now AGREES with
+//     pricing.html's "Pricing on request" instead of contradicting it.
+//     Do NOT hardcode a figure until the wallet is live; the canonical string to
+//     unify across home/pricing/form/support at that point is:
+//     "$5 one-time community contribution".
+oldCta = oldCta.replace(
+  'A $5 minimum community contribution helps protect capacity and supports the infrastructure. Not a subscription.',
+  'A one-time community contribution helps protect capacity and supports the infrastructure. Not a subscription.'
+);
+---
+
+<Layout
+  title="MySweetPea — Private, Self-Hosted Services"
+  description="Nine private, self-hosted services — your own Netflix, Google Photos, files, password manager and AI chat. One account, no ads, no tracking, community funded."
+  canonical="https://mysweetpea.cc/"
+  page="home"
+>
+  {/* A — hero + lead, verbatim */}
+  <Fragment set:html={beforeSec} />
+
+  {/* S2 — show the product */}
+  <Sampler />
+
+  {/* Values — the site's own voice, PROMOTED above the logistics sections */}
+  <section class="ms-section ms-tight" id="why">
+    <div class="ms-inner">
+      <p class="ms-eyebrow">What we believe</p>
+      <h2 class="ms-h2">Why MySweetPea</h2>
+      <Fragment set:html={oldValueTabs} />
+    </div>
+  </section>
+
+  {/* Access, trust, cost, FAQ, member return */}
+  <HomeSections />
+
+  <hr class="ms-rule" />
+
+  {/* C — the existing CTA card, kept last */}
+  <Fragment set:html={oldCta} />
+</Layout>

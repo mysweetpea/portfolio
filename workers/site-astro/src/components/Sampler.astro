@@ -1,0 +1,64 @@
+---
+// Sampler.astro — "What you get" (S2), icon-led.
+//
+// DESIGN (user decision 2026-09-18): icons only, NO screenshots. Reverses the
+// earlier reversal of `.service-shot{display:none}` — the cards go back to being
+// compact. Screenshots still live on /services.html behind a click.
+//
+// All NINE services are listed here (the earlier 6 was an arbitrary subset).
+// Card markup reuses the existing class names (.service-card, .service-header,
+// .service-icon, .glow-card) so the legacy styling and the reveal animation keep
+// working untouched.
+//
+// ⚠️ ICON LEGIBILITY — measured, not guessed (probe_icons.py renders each icon on
+// the real tile colour and reports glyph luminance). Four marks are designed for
+// a LIGHT background and are near-invisible on the dark tile:
+//     vaultwarden  glyph luminance 20   (paths with no fill -> default black)
+//     affine       glyph luminance 24   (paths with no fill -> default black)
+//     openwebui    glyph luminance 41   (black circle + white glyph)
+//     koalasync    fill="#111115"       (explicit near-black)
+// Those four get `plate: true` -> a light tile backing (.ms-ico-plate). If an
+// icon is ever replaced, re-run the probe rather than trusting this list.
+
+const SERVICES = [
+  { id: "jellyfin",    name: "Jellyfin / Moonfin", icon: "jellyfin",    blurb: "Your own private Netflix — stream your library on any device." },
+  { id: "seerr",       name: "Seerr",              icon: "seerr",       blurb: "Request movies and shows — they appear in Jellyfin automatically." },
+  { id: "nextcloud",   name: "Nextcloud",          icon: "nextcloud",   blurb: "Files, calendar and contacts — your private Google Workspace." },
+  { id: "immich",      name: "Immich",             icon: "immich",      blurb: "Photo and video backup, like Google Photos without the tracking." },
+  { id: "openwebui",   name: "Open WebUI",         icon: "openwebui",   plate: true, blurb: "A private AI chat interface running on our own hardware." },
+  { id: "vaultwarden", name: "Vaultwarden",        icon: "vaultwarden", plate: true, blurb: "A password manager that creates strong, unique passwords." },
+  { id: "matrix",      name: "Matrix / Element",   icon: "matrix",      blurb: "Private, encrypted chat and rooms — without anyone watching." },
+  { id: "affine",      name: "AFFiNE",             icon: "affine",      plate: true, blurb: "A Notion alternative you own — docs, wikis and whiteboards." },
+  { id: "koalasync",   name: "KoalaSync",          icon: "koalasync",   plate: true, blurb: "Watch films and shows together with friends, perfectly in sync." },
+];
+---
+
+<section class="ms-section ms-sampler" id="included">
+  <div class="ms-inner">
+    <p class="ms-eyebrow">One account, everything included</p>
+    <h2 class="ms-h2">Nine services, one sign-in</h2>
+    <p class="ms-lead">
+      Your private Netflix, Google Photos, Google Workspace, Notion, password manager
+      and AI chat — on hardware we own. No ads, no tracking, no subscriptions.
+    </p>
+
+    <ul class="ms-services" role="list">
+      {SERVICES.map((s) => (
+        <li class="ms-service">
+          <span class:list={["ms-ico", s.plate && "ms-ico-plate"]}>
+            <img src={`/assets/icons/${s.icon}.svg`} width="26" height="26"
+                 loading="lazy" decoding="async" alt="" aria-hidden="true" />
+          </span>
+          <span class="ms-service-text">
+            <strong>{s.name}</strong>
+            <span class="ms-service-blurb">{s.blurb}</span>
+          </span>
+        </li>
+      ))}
+    </ul>
+
+    <p class="ms-more">
+      <a class="ms-link" href="/services.html">See what each one does <span aria-hidden="true">→</span></a>
+    </p>
+  </div>
+</section>
