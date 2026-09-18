@@ -711,41 +711,55 @@
 @media (min-width: 1024px) {
     .top-nav {
         display: flex;
-        /* NOT space-between: with three flex children (logo, group-l, group-r)
-           space-between spreads all three evenly and the bar reads as three
-           floating clumps. The reference sites (openclaw, hermes) put the brand
-           at one edge and ONE link group at the other, so the links stay packed
-           together and a single deliberate gap opens between brand and links. */
-        justify-content: flex-start;
         align-items: center;
+        /* The wordmark is CENTRED (user-locked) and the two flanks sit at the
+           bar's edges. This is the "crowned" arrangement approved in the design
+           pass -- do NOT un-centre it again: two prior attempts replaced the
+           arrangement rather than fixing the imbalance and were rejected.
+
+           The flanks are balanced by CONTENT, not by CSS: the left carries three
+           links, the right two links + the actions cluster + chip + CTA. See the
+           .nav-group-l/right notes for the measured widths. */
+        justify-content: space-between;
         padding: 13px 30px;
     }
     .top-nav.nav-scrolled { padding: 10px 30px; }
     .nav-toggle { display: none; }
 
-    /* #nav-links dissolves so its two groups become the bar's two ends */
+    /* #nav-links dissolves so its two groups become the bar's two flanks */
     .top-nav .nav-links { display: contents; }
     .nav-group { display: flex; align-items: center; gap: 2px; min-width: 0; }
-    .nav-group-l { flex: 0 0 auto; justify-content: flex-start; margin-left: auto; }
-    .nav-group-r { flex: 0 0 auto; justify-content: flex-end; }
+    /* THE BALANCE FIX: each flank claims an equal share (flex:1 1 0) and packs
+       its content toward the CENTRE. Equal shares mean the wordmark stays
+       optically centred no matter how the content differs, and packing inward
+       keeps the gap between the links and the brand tight and even on both
+       sides -- the surplus width lands at the OUTER edges, which reads as
+       intentional margin rather than a hole in the middle of the bar.
+       Measured before: left flank natural 295px vs right 522px under a
+       1fr/auto/1fr grid, which stranded 289px of dead space on the left at
+       1198px and made the bar read as "not centered". */
+    .nav-group-l {
+        flex: 1 1 0;
+        justify-content: flex-end;
+        order: 1;
+    }
+    .nav-group-r {
+        flex: 1 1 0;
+        justify-content: flex-start;
+        order: 3;
+    }
 
-    /* The brand is taken OUT of flow and centred on the viewport. It used to be
-       the middle column of a 1fr/auto/1fr grid, which sizes BOTH flanks to the
-       wider one — so the surplus empty space all landed on the left, and the
-       links visibly hugged the right edge (measured: 289px dead on the left vs
-       100px on the right at 1198px; 528 vs 301 at 1920). Absolutely centring
-       the brand lets the flanks sit at the true edges and the ink box ends up
-       dead-centre at every width (measured 0px offset, no collision, 1024-2560). */
-    /* Brand back IN flow, at the LEFT edge — this is how both reference sites
-       actually do it (measured: openclaw brand at x=32, hermes at x=175 with a
-       centred 1240px rail; BOTH use justify-content:space-between and NEITHER
-       centres the wordmark). The centred-brand version I shipped first made the
-       bar look spread and odd, which is what the user reported. */
+    /* DOM order in the markup is [logo, toggle, links], so space-between would
+       park the brand at the LEFT edge. `order: 2` moves it between the two
+       flanks, which is what actually centres it -- no absolute positioning, so
+       nothing can overlap the links at any width. The toggle is display:none
+       here; give it order 0 so it never occupies a slot. */
+    .top-nav .nav-toggle { order: 0; }
     .top-nav .nav-logo {
+        order: 2;
         flex: 0 0 auto;
         gap: 9px;
-        padding: 0;
-        margin-right: 18px;
+        padding: 0 18px;
         text-decoration: none;
     }
     .top-nav .nav-logo img { width: 25px; height: 25px; display: block; }
@@ -759,13 +773,16 @@
     }
 
     /* The CTA must never be squashed. Flex items default to flex-shrink:1, and
-       "Get Access" is white-space:nowrap, so as the crowned row gets tight the
-       button collapses and clips its own label (measured: 28px wide / 96px of
-       text at 1000px, 53px at 1097px). Pin it — the nav should lose breathing
-       room, never the primary action. */
+       "Get Access" is white-space:nowrap, so as the row gets tight the button
+       collapses and clips its own label (measured: 28px wide / 96px of text at
+       1000px, 53px at 1097px). Pin it -- the nav should lose breathing room,
+       never the primary action. */
     .top-nav .nav-cta { flex: none; }
     /* Same reasoning for the account chip: the label inside is nowrap too. */
     .top-nav .nav-account { flex: none; }
+    /* Link labels are also nowrap; let the FLANKS absorb the squeeze instead so
+       the row shrinks by tightening gaps rather than clipping text. */
+    .nav-group .nav-btn { flex: 0 1 auto; min-width: 0; }
 
     /* hairline between the last link and the actions cluster (mockup .acct-sep) */
     .nav-sep {
