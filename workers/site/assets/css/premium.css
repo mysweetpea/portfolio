@@ -711,28 +711,22 @@
 @media (min-width: 1024px) {
     .top-nav {
         display: flex;
-        justify-content: space-between;
+        /* NOT space-between: with three flex children (logo, group-l, group-r)
+           space-between spreads all three evenly and the bar reads as three
+           floating clumps. The reference sites (openclaw, hermes) put the brand
+           at one edge and ONE link group at the other, so the links stay packed
+           together and a single deliberate gap opens between brand and links. */
+        justify-content: flex-start;
         align-items: center;
         padding: 13px 30px;
-        /* Cap the row on ultra-wide screens: without this the two flanks drift
-           apart indefinitely (measured 866px of dead space between the links
-           and the wordmark at 2560px). 1600 keeps the spread generous through
-           every realistic desktop while stopping the drift. Below 1600 the
-           calc() is smaller than 30px, so the max() keeps the normal padding. */
-        padding-left:  max(30px, calc((100vw - 1600px) / 2));
-        padding-right: max(30px, calc((100vw - 1600px) / 2));
     }
-    .top-nav.nav-scrolled {
-        padding: 10px 30px;
-        padding-left:  max(30px, calc((100vw - 1600px) / 2));
-        padding-right: max(30px, calc((100vw - 1600px) / 2));
-    }
+    .top-nav.nav-scrolled { padding: 10px 30px; }
     .nav-toggle { display: none; }
 
     /* #nav-links dissolves so its two groups become the bar's two ends */
     .top-nav .nav-links { display: contents; }
     .nav-group { display: flex; align-items: center; gap: 2px; min-width: 0; }
-    .nav-group-l { flex: 0 0 auto; justify-content: flex-start; }
+    .nav-group-l { flex: 0 0 auto; justify-content: flex-start; margin-left: auto; }
     .nav-group-r { flex: 0 0 auto; justify-content: flex-end; }
 
     /* The brand is taken OUT of flow and centred on the viewport. It used to be
@@ -742,13 +736,16 @@
        100px on the right at 1198px; 528 vs 301 at 1920). Absolutely centring
        the brand lets the flanks sit at the true edges and the ink box ends up
        dead-centre at every width (measured 0px offset, no collision, 1024-2560). */
+    /* Brand back IN flow, at the LEFT edge — this is how both reference sites
+       actually do it (measured: openclaw brand at x=32, hermes at x=175 with a
+       centred 1240px rail; BOTH use justify-content:space-between and NEITHER
+       centres the wordmark). The centred-brand version I shipped first made the
+       bar look spread and odd, which is what the user reported. */
     .top-nav .nav-logo {
-        position: absolute;
-        left: 50%;
-        top: 50%;
-        transform: translate(-50%, -50%);
+        flex: 0 0 auto;
         gap: 9px;
-        padding: 0 18px;
+        padding: 0;
+        margin-right: 18px;
         text-decoration: none;
     }
     .top-nav .nav-logo img { width: 25px; height: 25px; display: block; }
