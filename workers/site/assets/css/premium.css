@@ -777,9 +777,13 @@
     .top-nav.nav-scrolled { padding: 10px 30px; }
     .nav-toggle { display: none; }
 
-    /* #nav-links dissolves so its two groups become the bar's two flanks */
+    /* #nav-links dissolves so its two groups become the bar's two flanks.
+       gap 10px (was 2px): with the faint pills in place, 2px read as cramped
+       — the pills nearly touched. 10px gives each pill clear air around it
+       while keeping the flank tight enough that the wordmark stays centred
+       (verified 0px ink diff at 1024-2560px). USER REQUEST 2026-09-18. */
     .top-nav .nav-links { display: contents; }
-    .nav-group { display: flex; align-items: center; gap: 2px; min-width: 0; }
+    .nav-group { display: flex; align-items: center; gap: 10px; min-width: 0; }
     /* THE BALANCE FIX: each flank claims an equal share (flex:1 1 0) and packs
        its content toward the CENTRE. Equal shares mean the wordmark stays
        optically centred no matter how the content differs, and packing inward
