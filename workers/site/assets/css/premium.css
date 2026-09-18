@@ -445,6 +445,19 @@
     box-shadow: 0 4px 24px rgba(143, 175, 181, 0.32);
 }
 
+/* The theme toggle's moon/sun are <img> elements, so site.css's blanket
+
+   img[src*="/assets/icons/"] { width: 40px; height: 40px; ... }
+   rule — written for the 40px service-card icons — inflates them to 40px
+   inside a 46px button, next to a 17px search glyph and a 15px account glyph.
+   Measured on the live site: the moon rendered 40x40 while search was 17x17,
+   so the toggle read as a huge blob (user-reported). Pin both to the size the
+   markup already declares, and drop the card-only drop-shadow with it.
+   Specificity (0,3,1) beats the blanket (0,1,1) without touching site.css. */
+.top-nav .theme-toggle img,
+.top-nav .theme-toggle .icon-moon img,
+.top-nav .theme-toggle .icon-sun img { width: 18px; height: 18px; filter: none; }
+
 /* Search + theme: icon buttons, no borders, no fill. */
 .top-nav .nav-search { border-radius: 999px; }
 .top-nav .nav-actions { gap: 2px; }
