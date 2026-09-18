@@ -170,11 +170,11 @@
         });
 
         /* Reset state if resized back to desktop.
-           Threshold tracks the drawer breakpoint (nav v3 = 1100px). Before
+           Threshold tracks the drawer breakpoint (nav v3 = 1024px). Before
            that the nav switched at 768px; now the drawer owns everything up
-           to 1099px, so resizing 900 -> 1000px must NOT close an open menu. */
+           to 1023px, so resizing 900 -> 1100px must NOT close an open menu. */
         window.addEventListener('resize', function () {
-            if (window.innerWidth >= 1100) {
+            if (window.innerWidth >= 1024) {
                 navLinks.classList.remove('nav-open');
                 navToggle.setAttribute('aria-expanded', 'false');
             }

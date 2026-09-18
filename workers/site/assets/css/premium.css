@@ -551,10 +551,10 @@
    sage) in the crowned structure (Fraunces wordmark dead centre, links split
    3/2 around it), under an always-on glass bar, with ONE ice-white action.
 
-   >=1100px: grid 1fr auto 1fr. LEFT (right-aligned): Services, How It
+   >=1024px: grid 1fr auto 1fr. LEFT (right-aligned): Services, How It
    Works, Status. CENTRE: wordmark. RIGHT (left-aligned): About, I Have a
    Code, hairline separator, search, theme, account, Get Access.
-   <=1099px: the site's existing hamburger drawer pattern — sticky bar,
+   <=1023px: the site's existing hamburger drawer pattern — sticky bar,
    wordmark back at the brand position beside the toggle, full-width card
    items, search/theme as a centred pill pair inside the drawer, and NO
    nested scroll container (the menu grows in page flow; the page scrolls).
@@ -686,8 +686,16 @@
 }
 [data-theme="light"] .top-nav.nav-signed-in .nav-account-chip #nav-account-avatar { box-shadow: inset 0 0 0 1.5px rgba(237, 243, 244, 0.25); }
 
-/* --- Desktop crown (mockup .nv4 grid) --- */
-@media (min-width: 1100px) {
+/* --- Desktop crown (mockup .nv4 grid) ---
+   BREAKPOINT: 1024px, chosen by measurement rather than taste. The crown is a
+   `1fr auto 1fr` grid, so BOTH flanks are sized to the wider one (the right:
+   about, code, actions, chip, CTA). With the CTA pinned so it cannot clip, the
+   row's true floor is ~1040px at full padding, ~1024 at the tightest tier.
+
+   Was 1100px, which misfired on real hardware: a 4K display in a 50/50 split at
+   175% Windows scaling gives (3840/1.75)/2 = 1097 CSS px — 3px under, so a
+   desktop got the phone drawer. 1024 also hands iPad landscape the crown. */
+@media (min-width: 1024px) {
     .top-nav {
         display: grid;
         grid-template-columns: 1fr auto 1fr;
@@ -720,6 +728,15 @@
         white-space: nowrap;
     }
 
+    /* The CTA must never be squashed. Flex items default to flex-shrink:1, and
+       "Get Access" is white-space:nowrap, so as the crowned row gets tight the
+       button collapses and clips its own label (measured: 28px wide / 96px of
+       text at 1000px, 53px at 1097px). Pin it — the nav should lose breathing
+       room, never the primary action. */
+    .top-nav .nav-cta { flex: none; }
+    /* Same reasoning for the account chip: the label inside is nowrap too. */
+    .top-nav .nav-account { flex: none; }
+
     /* hairline between the last link and the actions cluster (mockup .acct-sep) */
     .nav-sep {
         flex: none;
@@ -731,26 +748,47 @@
     }
 }
 
-/* Narrow desktop (just past the drawer breakpoint): the crowned columns get
-   tight, so trim bar/centre padding — proportions of the mockup unchanged. */
-@media (min-width: 1100px) and (max-width: 1279px) {
-    .top-nav { padding: 13px 20px; gap: 8px; }
-    .top-nav.nav-scrolled { padding: 10px 20px; }
-    .top-nav .nav-logo { padding: 0 8px; }
-    .top-nav .nav-btn { padding: 8px 8px; }
-    .top-nav .nav-cta { padding: 9px 13px; }
+/* Compact crown tier: 1000-1279px. The crowned row needs ~1050px at full
+   padding, so this tier trims padding/gaps to keep 0px overflow down to 1000.
+   Proportions of the mockup are unchanged — only breathing room shrinks. */
+@media (min-width: 1200px) and (max-width: 1399px) {
+    .top-nav { padding: 13px 18px; gap: 8px; }
+    .top-nav.nav-scrolled { padding: 10px 18px; }
+    .top-nav .nav-logo { padding: 0 10px; }
+    .top-nav .nav-btn { padding: 8px 9px; }
+    .top-nav .nav-cta { padding: 9px 14px; }
+    .top-nav .nav-actions { gap: 1px; }
+    .nav-sep { margin: 0 2px 0 5px; }
+}
+
+/* Extra-compact crown tier: 1000-1099px. This is ~100px tighter than the tier
+   above can absorb, so trim further rather than let the flex row overflow.
+   Covers the 4K-split-at-175% case (1097px) that motivated the breakpoint move. */
+@media (min-width: 1024px) and (max-width: 1199px) {
+    .top-nav { padding: 12px 8px; gap: 5px; }
+    .top-nav.nav-scrolled { padding: 10px 8px; }
+    .top-nav .nav-logo { padding: 0 3px; gap: 5px; }
+    .top-nav .nav-logo img { width: 21px; height: 21px; }
+    .top-nav .nav-brand { font-size: 0.92rem; letter-spacing: -0.02em; }
+    .top-nav .nav-btn { padding: 7px 4px; font-size: 0.69rem; gap: 4px; }
+    .top-nav .nav-cta { padding: 8px 9px; font-size: 0.7rem; }
+    .top-nav .nav-search,
+    .top-nav .theme-toggle { padding: 5px; }
+    .top-nav .nav-actions { gap: 0; }
+    .top-nav .nav-account-chip { padding: 7px 6px; }
+    .nav-sep { margin: 0 1px 0 2px; height: 15px; }
 }
 
 /* ==========================================================================
-   Mobile / tablet (<=1099px): the site's existing drawer pattern, widened
+   Mobile / tablet (<=1023px): the site's existing drawer pattern, widened
    from the old 768px breakpoint. Same rules the live drawer uses (site.css
-   v28 + the section-11 mobile block), restated here so the whole 0-1099px
+   v28 + the section-11 mobile block), restated here so the whole 0-999px
    range is one coherent treatment. Sticky bar, wordmark at the brand
    position, full-width card items, centred search/theme pill pair, and the
    menu grows in normal page flow (NO max-height / overflow — the page
    scrolls).
    ========================================================================== */
-@media (max-width: 1099.98px) {
+@media (max-width: 1023.98px) {
     .top-nav {
         position: sticky;
         top: 0;
@@ -807,131 +845,202 @@
         box-shadow: 0 18px 34px rgba(27, 43, 49, 0.14);
     }
 
-    /* Full-width cards, left-aligned, 48px tall (>= the 44px minimum) */
+    /* ── DRAWER REDESIGN (2026-09-18) ──────────────────────────────────────
+       Before: chunky bordered cards, and the search/theme buttons sat in the
+       MIDDLE of the menu (between the last link and the account row), which
+       broke the reading order and made the menu feel like a pile of parts.
+
+       Now: an editorial vertical list.
+         - groups dissolve so every row is a sibling we can order
+         - links = flat rows with hairline rules, monospace to match the
+           desktop crown's terminal voice
+         - a divider marks the shift from "navigate" to "account"
+         - the utility pair moves to the BOTTOM as a quiet footer row, where
+           secondary controls belong (Linear/Stripe/Vercel all do this)
+       ─────────────────────────────────────────────────────────────────── */
+
+    /* Flatten the two flank groups so each item becomes a flex child of the
+       drawer. This is what lets `order` rearrange the menu (see below). */
+    .top-nav .nav-group { display: contents; }
+
+    /* Reading order: links -> account -> primary CTA -> utility. */
+    .top-nav .nav-group-l > .nav-btn,
+    .top-nav .nav-group-r > .nav-btn { order: 0; }
+    .top-nav .nav-account              { order: 1; }
+    .top-nav .nav-cta                  { order: 2; }
+    .top-nav .nav-actions              { order: 3; }
+
+    /* Links: flat rows. Hairlines instead of boxes — less chrome, more list. */
     .top-nav .nav-btn,
     .top-nav .nav-cta {
         display: flex;
         align-items: center;
         justify-content: flex-start;
         width: 100%;
-        min-height: 48px;
+        min-height: 50px;
         margin: 0;
-        padding: 12px 14px;
-        font-size: 1rem;
-        font-weight: 650;
+        padding: 12px 8px;
+        font-size: 0.95rem;
+        font-weight: 500;
         text-align: left;
         white-space: normal;
-        border-radius: 10px;
+        border-radius: 8px;
     }
     .top-nav .nav-btn {
-        background: var(--card-bg);
-        border: 1px solid var(--border);
+        font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+        letter-spacing: -0.01em;
+        background: transparent;
+        border: 0;
+        /* hairline rules between rows, none after the last */
+        border-bottom: 1px solid var(--border);
     }
+    .top-nav .nav-group-r > .nav-cta { border-bottom: 0; }
+    .top-nav .nav-btn:last-of-type { border-bottom: 1px solid var(--border); }
     .top-nav .nav-btn:hover,
-    .top-nav .nav-btn:focus-visible { background: var(--card-bg); border-color: var(--border-primary); }
-    .top-nav .nav-btn svg { opacity: 0.6; }
-    .top-nav .nav-btn[aria-current="page"] {
+    .top-nav .nav-btn:focus-visible {
+        background: var(--primary-glow);
+        border-color: var(--border);
+    }
+    .top-nav .nav-btn svg { opacity: 0.55; }
+    /* Specificity note: section 11 sets .top-nav .nav-btn[aria-current="page"]
+       { color: var(--primary-bright) } (0,3,0) and loads BEFORE this block, but
+       a plain repeat here ties and source order wins — except where a later
+       [data-theme] rule intervenes. Qualifying with the group selector (0,4,0)
+       makes sage authoritative in the drawer at every theme. */
+    .top-nav .nav-group-l > .nav-btn[aria-current="page"],
+    .top-nav .nav-group-r > .nav-btn[aria-current="page"] {
         color: var(--sage);
-        background: var(--card-bg);
-        border-color: var(--border-primary);
+        background: transparent;
+        border-color: var(--border);
     }
     .top-nav .nav-btn[aria-current="page"] svg { opacity: 1; }
-    /* Drawer active accent: left bar (keeps the v11 drawer treatment), so the
-       section-11 centred underline can never leak into the 769-1099 range. */
-    .top-nav .nav-btn[aria-current="page"]::after {
-        content: '';
-        left: 0;
-        right: auto;
-        top: 8px;
-        bottom: 8px;
-        width: 2px;
-        height: auto;
-        background: linear-gradient(180deg, transparent, var(--primary-bright), transparent);
+    /* ── Neutralise site.css's v18 active-nav rule ────────────────────────
+       site.css L4129 carries, with !important:
+           .nav-btn.active, .nav-btn[aria-current="page"] {
+               color: var(--primary-bright) !important;
+               background: linear-gradient(...); border: 1px solid ...;
+               box-shadow: inset ... , 0 2px 10px ...;
+           }
+       (!important beats ANY specificity, and even beat an inline style during
+       testing — that is why sage silently never applied and the active row
+       painted as a boxed highlight instead of a flat row with a left bar.)
+       Resetting the same properties with !important here restores the drawer's
+       intended treatment. Scoped to <=1023.98px so the desktop crown is
+       untouched, and it keeps the v18 file itself immutable. */
+    .top-nav .nav-btn[aria-current="page"] {
+        color: var(--sage) !important;
+        background: transparent !important;
+        border: 0 !important;
+        border-bottom: 1px solid var(--border) !important;
+        box-shadow: none !important;
     }
-    [data-theme="light"] .top-nav .nav-btn {
-        background: rgba(255, 255, 255, 0.72);
-        border-color: rgba(51, 86, 95, 0.15);
-    }
-    [data-theme="light"] .top-nav .nav-btn:hover,
-    [data-theme="light"] .top-nav .nav-btn:focus-visible { background: rgba(255, 255, 255, 0.72); }
     [data-theme="light"] .top-nav .nav-btn[aria-current="page"] {
-        background: rgba(255, 255, 255, 0.72);
-        border-color: rgba(51, 86, 95, 0.3);
+        color: #2F5A44 !important;
+        background: transparent !important;
+        border: 0 !important;
+        border-bottom: 1px solid var(--border) !important;
+        box-shadow: none !important;
     }
 
-    /* Account chip in the drawer: full-width quiet card, 48px.
-       The chip's own (CSP-locked) inline style sets .nav-account to
-       inline-flex, which shrink-wraps the button to ~121px — so the flex
-       parent must be widened here for .nav-signin's width:100% to resolve
-       against the drawer instead of its own content. */
+    /* Active accent: a left bar INSIDE the row. (It was at left:-4px, i.e.
+       outside the padding box, so it never painted — the row's 8px radius
+       clipped it entirely.) The row gains left padding so the marker sits in
+       the gutter beside the glyph rather than over it. */
+    .top-nav .nav-group-l > .nav-btn[aria-current="page"],
+    .top-nav .nav-group-r > .nav-btn[aria-current="page"] { padding-left: 18px; }
+    .top-nav .nav-btn[aria-current="page"]::after {
+        content: '';
+        left: 6px;
+        right: auto;
+        top: 12px;
+        bottom: 12px;
+        width: 2px;
+        height: auto;
+        border-radius: 2px;
+        background: linear-gradient(180deg, transparent, var(--sage), transparent);
+    }
+    [data-theme="light"] .top-nav .nav-btn:hover,
+    [data-theme="light"] .top-nav .nav-btn:focus-visible { background: rgba(62, 124, 95, 0.07); }
+    [data-theme="light"] .top-nav .nav-btn[aria-current="page"] { color: #2F5A44; }
+
+    /* Divider: the account block opens a new section. */
     .top-nav .nav-account {
         display: flex;
         width: 100%;
+        margin-top: 12px;
+        padding-top: 12px;
+        border-top: 1px solid var(--border-primary);
     }
     .top-nav .nav-signin {
         display: flex;
         align-items: center;
         justify-content: flex-start;
         width: 100%;
-        min-height: 48px;
+        min-height: 50px;
         margin: 0;
-        padding: 12px 16px;
-        font-size: 1rem;
-        letter-spacing: 0;
+        padding: 12px 8px;
+        font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+        font-size: 0.95rem;
+        letter-spacing: -0.01em;
         text-align: left;
-        background: var(--card-bg);
-        border: 1px solid var(--border);
-        border-radius: 10px;
+        background: transparent;
+        border: 0;
+        border-radius: 8px;
     }
-    .top-nav .nav-signin:hover { background: var(--card-bg); border-color: var(--border-primary); }
-    .top-nav .nav-account-chip svg { width: 18px; height: 18px; }
-    [data-theme="light"] .top-nav .nav-signin {
-        background: rgba(255, 255, 255, 0.72);
-        border-color: rgba(51, 86, 95, 0.15);
-    }
+    .top-nav .nav-signin:hover { background: var(--primary-glow); border-color: transparent; }
+    .top-nav .nav-account-chip svg { width: 18px; height: 18px; opacity: 0.55; }
+    [data-theme="light"] .top-nav .nav-signin:hover { background: rgba(62, 124, 95, 0.07); }
 
-    /* Get Access: full-width ice pill */
+    /* Get Access: the one filled object, centred. */
     .top-nav .nav-cta {
         justify-content: center;
-        min-height: 48px;
+        min-height: 50px;
+        margin-top: 10px;
         padding: 13px 20px;
-        margin-top: 4px;
+        font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+        font-size: 0.9rem;
+        font-weight: 600;
+        border-radius: 10px;
     }
 
     /* Signed in, the chip IS the primary action: full-width ice pill */
     .top-nav.nav-signed-in .nav-account-chip {
         width: 100%;
-        min-height: 48px;
+        min-height: 50px;
         margin: 0;
-        padding: 12px 16px;
+        padding: 12px 8px;
         justify-content: flex-start;
-        border-radius: 999px;
+        border-radius: 10px;
     }
 
-    /* Search + theme move INSIDE the drawer: centred side-by-side pills */
+    /* Utility row: search + theme, quiet, at the foot of the menu. */
     .nav-sep { display: none; }
     .top-nav .nav-actions {
         display: flex;
         flex-direction: row;
         align-items: center;
         justify-content: center;
-        gap: 8px;
-        margin-top: 2px;
+        gap: 10px;
+        margin-top: 16px;
+        padding-top: 14px;
+        border-top: 1px solid var(--border);
     }
     .top-nav .nav-search,
     .top-nav .theme-toggle {
         display: inline-flex;
         align-items: center;
         justify-content: center;
-        width: 46px;
-        height: 46px;
-        min-width: 46px;
-        min-height: 46px;
+        width: 44px;
+        height: 44px;
+        min-width: 44px;
+        min-height: 44px;
         margin: 0;
         border-radius: 999px;
-        background: rgba(255, 255, 255, 0.05);
+        background: transparent;
         border: 1px solid var(--border);
     }
+    .top-nav .nav-search:hover,
+    .top-nav .theme-toggle:hover { background: var(--primary-glow); border-color: var(--border-primary); }
 }
 
 @media (prefers-reduced-motion: reduce) {
