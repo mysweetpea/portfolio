@@ -97,3 +97,46 @@
     descent-override: 25.47%;
     line-gap-override: 0%;
 }
+
+/* Figtree — variable, wght 300-900. The BODY face (trial 2026-09-18).
+   Chosen over Inter on the strength of: 15.8 KB vs 52.2 KB through an
+   identical subsetting pipeline (-70%), a warmer/rounder shape that suits the
+   garden palette, and no Reserved Font Name in its OFL (so subsetting is
+   unrestricted). Inter is kept on disk for instant rollback — to revert,
+   swap the family names back in site.css/premium.css and restore the preload.
+   Verify coverage after any rebuild: a-z 26/26, A-Z 26/26, 0-9 10/10. */
+@font-face {
+    font-family: 'Figtree';
+    font-style: normal;
+    font-weight: 300 900;
+    font-display: swap;
+    src: url('/assets/fonts/figtree-var.woff2') format('woff2');
+}
+
+/* Figtree metric-matched fallback. Segoe UI is an exact x-height match
+   (size-adjust 100.00%), so the swap moves nothing on Windows; the rest of
+   the stack is ordered by how close the metrics land. */
+@font-face {
+    font-family: 'Figtree Fallback';
+    src: local('Segoe UI'), local('Arial'), local('Helvetica Neue');
+    size-adjust: 100.00%;
+    ascent-override: 95.00%;
+    descent-override: 25.00%;
+    line-gap-override: 0%;
+}
+@font-face {
+    font-family: 'Figtree Fallback';
+    src: local('Verdana'), local('Tahoma');
+    size-adjust: 91.67%;
+    ascent-override: 103.63%;
+    descent-override: 27.27%;
+    line-gap-override: 0%;
+}
+@font-face {
+    font-family: 'Figtree Fallback';
+    src: local('Georgia');
+    size-adjust: 103.85%;
+    ascent-override: 91.47%;
+    descent-override: 24.07%;
+    line-gap-override: 0%;
+}

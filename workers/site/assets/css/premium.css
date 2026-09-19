@@ -5,7 +5,7 @@
 
 /* === 1. Fraunces editorial headings === */
 .hero h1, .section-title, .access-choice-title, .modal h2, .modal h3 {
-    font-family: 'Fraunces', 'Fraunces Fallback', 'Inter', 'Inter Fallback', Georgia, serif;
+    font-family: 'Fraunces', 'Fraunces Fallback', 'Figtree', 'Figtree Fallback', Georgia, serif;
     font-weight: 600;
     letter-spacing: -0.015em;
 }
