@@ -5,7 +5,7 @@
 
 /* === 1. Fraunces editorial headings === */
 .hero h1, .section-title, .access-choice-title, .modal h2, .modal h3 {
-    font-family: 'Fraunces', 'Inter', Georgia, serif;
+    font-family: 'Fraunces', 'Fraunces Fallback', 'Inter', 'Inter Fallback', Georgia, serif;
     font-weight: 600;
     letter-spacing: -0.015em;
 }
@@ -19,7 +19,7 @@
 }
 .proof-stat { text-align: center; }
 .proof-stat .proof-value {
-    font-family: 'Fraunces', serif; font-size: 1.7rem; font-weight: 600;
+    font-family: 'Fraunces', 'Fraunces Fallback', serif; font-size: 1.7rem; font-weight: 600;
     color: var(--primary-bright); display: block; line-height: 1.1;
 }
 .proof-stat .proof-label {
@@ -869,7 +869,7 @@
     }
     .top-nav .nav-logo img { width: 25px; height: 25px; display: block; }
     .top-nav .nav-brand {
-        font-family: 'Fraunces', Georgia, serif;
+        font-family: 'Fraunces', 'Fraunces Fallback', Georgia, serif;
         font-weight: 600;
         font-size: 1.06rem;
         letter-spacing: -0.01em;
@@ -966,7 +966,7 @@
        block's .nav-logo rules. */
     .top-nav .nav-logo img { width: 25px; height: 25px; display: block; }
     .top-nav .nav-brand {
-        font-family: 'Fraunces', Georgia, serif;
+        font-family: 'Fraunces', 'Fraunces Fallback', Georgia, serif;
         font-weight: 600;
         font-size: 1.06rem;
         letter-spacing: -0.01em;
@@ -1284,7 +1284,7 @@
 }
 .page-footer .footer-brand .nav-logo img { width: 28px; height: 28px; display: block; }
 .page-footer .footer-brand .nav-logo span {
-    font-family: 'Fraunces', Georgia, 'Times New Roman', serif;
+    font-family: 'Fraunces', 'Fraunces Fallback', Georgia, 'Times New Roman', serif;
     font-size: 1.05rem;
     font-weight: 600;
     letter-spacing: 0.01em;

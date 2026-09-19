@@ -1,9 +1,30 @@
 /* ==========================================================================
    MySweetPea — Self-hosted fonts (no Google Fonts requests)
-   Inter (variable, latin) + Fraunces (variable, latin)
+
+   Inter  (variable, wght 100-900) + Fraunces (variable, opsz + wght)
+   Both are SIL Open Font License 1.1 — free to self-host, subset and embed.
+
+   ⚠️ HISTORY (2026-09-18): the previous files were mis-sliced Google
+   subsets — inter-var.woff2 was a CYRILLIC bucket (148 of 157 codepoints)
+   and fraunces-var.woff2 was a VIETNAMESE bucket of Fraunces Medium
+   *Italic*. Neither contained the Latin alphabet, so the site silently fell
+   back to Times New Roman / Arial for ALL lowercase text and digits, and
+   document.fonts.check() still reported "loaded". They are rebuilt here from
+   the google/fonts variable TTFs via:
+       varLib.instancer  ->  pyftsubset --flavor=woff2
+   Verify coverage after ANY future rebuild:  a-z 26/26, A-Z 26/26, 0-9 10/10.
    ========================================================================== */
 
-/* Inter — variable font covering weights 400–800 */
+/* Inter — variable, weight axis only (opsz pinned to 14: the site uses Inter
+   for text, never display).
+   font-display: swap, NOT optional. Reasoning, measured: `optional` gives the
+   font only a ~100ms window and then NEVER swaps for that visit — so a cold
+   visit from a slow connection would render the whole site in a fallback and
+   the user would never see Inter at all. Because both fonts are <link
+   rel=preload>ed on every page, the font is already arriving by first paint,
+   and the metric-matched 'Inter Fallback' below means even the swap itself
+   moves nothing on the page (measured: identical line count and box height at
+   explicit line-height). So swap costs ~0 CLS here and always shows Inter. */
 @font-face {
     font-family: 'Inter';
     font-style: normal;
@@ -12,11 +33,67 @@
     src: url('/assets/fonts/inter-var.woff2') format('woff2');
 }
 
-/* Fraunces — variable font (regular + italic, optical size axis) */
+/* Fraunces — variable, opsz (9-144) + wght (100-900). Keeps opsz because the
+   site drives it to `clamp(2.5rem, 6vw, 4.25rem)` headings, where optical
+   sizing genuinely matters. font-display: swap is correct here — the serif
+   IS the brand, and headings are few. */
 @font-face {
     font-family: 'Fraunces';
     font-style: normal;
     font-weight: 100 900;
     font-display: swap;
     src: url('/assets/fonts/fraunces-var.woff2') format('woff2');
+}
+
+/* --------------------------------------------------------------------------
+   Metric-matched fallbacks.
+   These are local-only faces (no download) whose metrics are scaled to match
+   the webfonts, so if a webfont is unavailable the fallback occupies the SAME
+   space instead of reflowing the page.
+
+   Values computed from the actual font binaries via the x-height method
+   (NOT OS/2.xAvgCharWidth — that field is recomputed by subsetters and is
+   wrong on subsets; it would give ~148% here instead of ~105%).
+
+   Caveat: ascent/descent/line-gap-override are not yet supported in shipped
+   Safari; `size-adjust` is (Safari 17+). On Safari the fallback therefore
+   applies size-adjust only. The site sets explicit unitless `line-height`
+   almost everywhere, which neutralises the largest CLS contributor anyway.
+   -------------------------------------------------------------------------- */
+
+/* Inter fallbacks — best match first (browser uses the first available). */
+@font-face {
+    font-family: 'Inter Fallback';
+    src: local('Segoe UI'), local('Arial'), local('Helvetica Neue');
+    size-adjust: 109.18%;
+    ascent-override: 88.73%;
+    descent-override: 22.09%;
+    line-gap-override: 0%;
+}
+@font-face {
+    font-family: 'Inter Fallback';
+    src: local('Verdana'), local('Tahoma');
+    size-adjust: 100.09%;
+    ascent-override: 96.79%;
+    descent-override: 24.10%;
+    line-gap-override: 0%;
+}
+@font-face {
+    font-family: 'Inter Fallback';
+    src: local('Georgia');
+    size-adjust: 113.39%;
+    ascent-override: 85.44%;
+    descent-override: 21.27%;
+    line-gap-override: 0%;
+}
+
+/* Fraunces fallbacks — Georgia is a near-perfect metric twin (x-height ratio
+   0.4820 vs 0.4814), so it needs essentially no scaling. */
+@font-face {
+    font-family: 'Fraunces Fallback';
+    src: local('Georgia'), local('Times New Roman'), local('Times');
+    size-adjust: 100.12%;
+    ascent-override: 97.69%;
+    descent-override: 25.47%;
+    line-gap-override: 0%;
 }

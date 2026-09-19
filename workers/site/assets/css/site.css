@@ -33,7 +33,7 @@
 html { scroll-behavior: smooth; }
 
 body {
-    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+    font-family: 'Inter', 'Inter Fallback', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
     background: var(--bg);
     color: var(--text);
     min-height: 100vh;
@@ -2111,7 +2111,7 @@ body[data-page='support'] .faq-item.open .faq-question .arrow {
 
 /* Serif display accent (loaded via Google Fonts on each page) */
 .hero h1, .section-title {
-    font-family: 'Fraunces', 'Inter', Georgia, serif;
+    font-family: 'Fraunces', 'Fraunces Fallback', 'Inter', 'Inter Fallback', Georgia, serif;
     font-weight: 600;
     letter-spacing: -0.01em;
 }
@@ -4273,7 +4273,7 @@ body[data-page='contact'] .contact-hero .hero-sub {
 .access-choice-card.selected { border: 2px solid var(--sage); background: rgba(163, 201, 182, 0.10); box-shadow: 0 0 0 3px rgba(163, 201, 182, 0.10); }
 .access-choice-icon, .access-choice-title, .access-choice-price, .access-choice-copy { display: block; }
 .access-choice-icon { margin-bottom: 12px; }
-.access-choice-title { font-family: 'Fraunces', serif; font-size: 1.45rem; font-weight: 600; color: var(--primary-bright); }
+.access-choice-title { font-family: 'Fraunces', 'Fraunces Fallback', serif; font-size: 1.45rem; font-weight: 600; color: var(--primary-bright); }
 .access-choice-price { margin: 5px 0 12px; font-weight: 700; font-size: .9rem; color: var(--sage); }
 .access-choice-copy { color: var(--text-dim); font-size: .91rem; line-height: 1.58; }
 .tier-form-section { max-width: 720px; margin: 0 auto; padding: 0 var(--gutter, 1.25rem) 30px; }
@@ -4914,7 +4914,7 @@ body[data-page='pricing'] .btn-glass-seedling:disabled:hover { transform: none; 
     color: var(--bg, #0C1316);
     font-size: 0.68rem; font-weight: 800; letter-spacing: 0.09em; text-transform: uppercase;
 }
-.sp-title { font-family: 'Fraunces', serif; font-size: 1.6rem; letter-spacing: -0.01em; margin: 0 0 10px; color: var(--primary-bright); }
+.sp-title { font-family: 'Fraunces', 'Fraunces Fallback', serif; font-size: 1.6rem; letter-spacing: -0.01em; margin: 0 0 10px; color: var(--primary-bright); }
 .sp-copy { color: var(--text-dim); line-height: 1.62; max-width: 62ch; margin: 0 0 20px; }
 .sp-actions { display: flex; flex-wrap: wrap; gap: 12px; }
 .sp-btn {
@@ -4954,7 +4954,7 @@ body[data-page='pricing'] .btn-glass-seedling:disabled:hover { transform: none; 
     font-size: 0.62rem; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase;
     color: var(--primary-bright);
 }
-.mystery-title { font-family: 'Fraunces', serif; font-size: 1.35rem; margin: 0 0 10px; color: var(--primary-bright); }
+.mystery-title { font-family: 'Fraunces', 'Fraunces Fallback', serif; font-size: 1.35rem; margin: 0 0 10px; color: var(--primary-bright); }
 .mystery-copy { color: var(--text-dim); line-height: 1.6; max-width: 58ch; margin: 0 auto 12px; }
 .mystery-note { color: var(--text-faint); font-size: 0.86rem; margin: 0; }
 .mystery-note a { color: var(--sage); }
@@ -5326,7 +5326,7 @@ body[data-page='pricing'] .btn-glass-seedling:disabled:hover { transform: none; 
 
 /* --- Section titles: softer, more elegant --- */
 .section-title {
-    font-family: 'Fraunces', Georgia, serif;
+    font-family: 'Fraunces', 'Fraunces Fallback', Georgia, serif;
     font-weight: 600;
     letter-spacing: -0.01em;
 }
