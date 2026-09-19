@@ -7588,14 +7588,9 @@ body[data-page='pricing'] .hiw-step p { font-size: var(--t-fs-xs); line-height: 
         background: linear-gradient(180deg, transparent, var(--border-primary) 12%, var(--border-primary) 88%, transparent);
     }
     body[data-page='pricing'] .hiw-step { text-align: left; padding-left: 68px; padding-right: 18px; }
-    body[data-page='pricing'] .hiw-head { height: auto; }
     body[data-page='pricing'] .hiw-head { height: auto; margin-bottom: 12px; }
     body[data-page='pricing'] .hiw-head .hiw-num { position: absolute; top: 24px; left: -56px; transform: none; margin: 0; z-index: 1; width: 30px; height: 30px; background: var(--bg); border: 1px solid var(--border-primary); }
-    body[data-page='pricing'] .hiw-step .hiw-num { top: 24px; }
-    body[data-page='pricing'] .hiw-title { justify-content: flex-start; gap: 10px; }
-    body[data-page='pricing'] .hiw-title .hiw-icon { margin: 0; width: 38px; height: 38px; }
-    body[data-page='pricing'] .hiw-title .hiw-icon img { width: 21px; height: 21px; }
-}
+        }
 
 /* --- E3: "What's included" icon wall --- */
 body[data-page='pricing'] .hiw-included { margin-top: 40px; text-align: center; }
@@ -7652,6 +7647,11 @@ body[data-page='pricing'] .hiw-title { display: flex; align-items: center; justi
 body[data-page='pricing'] .hiw-title .hiw-icon { margin: 0; width: 44px; height: 44px; display: grid; place-items: center; background: radial-gradient(circle at 30% 25%, rgba(255,255,255,0.10), rgba(143,175,181,0.06)); border: 1px solid var(--border); border-radius: 12px; }
 body[data-page='pricing'] .hiw-title .hiw-icon img { width: 24px; height: 24px; }
 body[data-page='pricing'] .hiw-title h3 { margin: 0; text-align: left; }
+@media (max-width: 768px) {
+    body[data-page='pricing'] .hiw-title { justify-content: flex-start; gap: 10px; }
+    body[data-page='pricing'] .hiw-title .hiw-icon { margin: 0; width: 38px; height: 38px; }
+    body[data-page='pricing'] .hiw-title .hiw-icon img { width: 21px; height: 21px; }
+}
 
 /* --- tier feature keywords: more distinct (chip-style labels) --- */
 body[data-page='pricing'] .features .f-k { flex: 0 0 auto; padding: 3px 9px; text-align: center; font-family: var(--t-font-mono); font-size: var(--t-fs-4xs); font-weight: var(--t-fw-bold); letter-spacing: 0.1em; text-transform: uppercase; color: var(--sage); background: rgba(163,201,182,0.08); border: 1px solid rgba(163,201,182,0.22); border-radius: 6px; }
