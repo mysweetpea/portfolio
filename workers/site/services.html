@@ -47,10 +47,10 @@ html[data-theme="light"]{background:#E7EDEA;color-scheme:light}
     <link rel="preload" as="font" type="font/woff2" href="/assets/fonts/greatvibes.woff2" crossorigin>
     <link rel="preload" as="font" type="font/woff2" href="/assets/fonts/figtree-var.woff2" crossorigin>
     <link rel="preload" as="font" type="font/woff2" href="/assets/fonts/fraunces-var.woff2" crossorigin>
-                    <link rel="stylesheet" href="/assets/css/fonts.css?v=62">
-    <link rel="stylesheet" href="/assets/css/site.css?v=62">
-    <link rel="stylesheet" href="/assets/css/premium.css?v=62">
-    <link rel="stylesheet" href="/assets/css/type-tokens.css?v=62">
+                    <link rel="stylesheet" href="/assets/css/fonts.css?v=63">
+    <link rel="stylesheet" href="/assets/css/site.css?v=63">
+    <link rel="stylesheet" href="/assets/css/premium.css?v=63">
+    <link rel="stylesheet" href="/assets/css/type-tokens.css?v=63">
 <link rel="canonical" href="https://mysweetpea.cc/services">
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"Organization","name":"MySweetPea","url":"https://mysweetpea.cc","logo":"https://mysweetpea.cc/logo.png","description":"Private, self-hosted alternatives to the services you use every day. No ads, no tracking, no subscriptions — community funded.","email":"support@mysweetpea.cc","sameAs":["https://github.com/mysweetpea"]}</script>
 </head>
@@ -99,8 +99,8 @@ html[data-theme="light"]{background:#E7EDEA;color-scheme:light}
 
         <div class="view-switcher" id="services-switcher">
             <div class="view-tabs" role="tablist" aria-label="Services sections">
-                <button type="button" class="view-tab active" role="tab" aria-selected="true" data-view="services">Services</button>
-                <button type="button" class="view-tab" role="tab" aria-selected="false" data-view="faq">FAQ</button>
+                <button type="button" class="view-tab active" aria-pressed="true" data-view="services">Services</button>
+                <button type="button" class="view-tab" aria-pressed="false" data-view="faq">FAQ</button>
             </div>
 
                         <div class="view-panel active" data-view="services" role="tabpanel">
@@ -108,11 +108,11 @@ html[data-theme="light"]{background:#E7EDEA;color-scheme:light}
                 <h2 class="section-title glass-text reveal">The Sweet Pea Tier</h2>
                 <p class="section-subtitle reveal reveal-delay-1">Nine services, one account, running on our own hardware. Private, no ads, no tracking. Click any service to see a screenshot and open it — step-by-step guides live in your dashboard.</p>
 
-                <div class="filter-bar reveal reveal-delay-1" role="tablist" aria-label="Filter services by tier">
-                    <button type="button" class="filter-btn active" data-filter="all" role="tab" aria-selected="true"><svg class="f-ico" viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg>All <span class="f-count">15</span></button>
-                    <button type="button" class="filter-btn" data-filter="sweetpea" role="tab" aria-selected="false"><img class="f-ico" src="/assets/icons/icon-ui-blossom.svg" alt="" width="14" height="14" aria-hidden="true">Sweet Pea <span class="f-count">9</span></button>
-                    <button type="button" class="filter-btn" data-filter="seedling" role="tab" aria-selected="false"><img class="f-ico" src="/assets/icons/icon-ui-seedling.svg" alt="" width="14" height="14" aria-hidden="true">Seedling <span class="f-soon">Soon</span></button>
-                    <button type="button" class="filter-btn" data-filter="coming-soon" role="tab" aria-selected="false"><svg class="f-ico" viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg>Coming Soon <span class="f-count">6</span></button>
+                <div class="filter-bar reveal reveal-delay-1" role="group" aria-label="Filter services by tier">
+                    <button type="button" class="filter-btn active" data-filter="all" aria-pressed="true"><svg class="f-ico" viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg>All <span class="f-count">15</span></button>
+                    <button type="button" class="filter-btn" data-filter="sweetpea" aria-pressed="false"><img class="f-ico" src="/assets/icons/icon-ui-blossom.svg" alt="" width="14" height="14" aria-hidden="true">Sweet Pea <span class="f-count">9</span></button>
+                    <button type="button" class="filter-btn" data-filter="seedling" aria-pressed="false"><img class="f-ico" src="/assets/icons/icon-ui-seedling.svg" alt="" width="14" height="14" aria-hidden="true">Seedling <span class="f-soon">Soon</span></button>
+                    <button type="button" class="filter-btn" data-filter="coming-soon" aria-pressed="false"><svg class="f-ico" viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg>Coming Soon <span class="f-count">6</span></button>
                 </div>
 
                 <div class="tier-divider reveal" data-tier-divider="sweetpea"><div class="line"></div><div class="label"><span class="icon"><img src="/assets/icons/icon-ui-blossom.svg" class="" alt="" width="22" height="22" loading="lazy" decoding="async" aria-hidden="true"></span> Included with Sweet Pea</div><div class="line"></div></div>
@@ -129,7 +129,7 @@ html[data-theme="light"]{background:#E7EDEA;color-scheme:light}
                 </div>
 
                 
-                <div class="tier-divider reveal" style="margin-top: 60px;" data-tier-divider="seedling"><div class="line"></div><div class="label"><span class="icon"><img src="/assets/icons/icon-ui-seedling.svg" class="" alt="" width="22" height="22" loading="lazy" decoding="async" aria-hidden="true"></span> Seedling Tier <span class="tier-divider-soon">Coming soon</span></div><div class="line"></div></div>
+                <div class="tier-divider tier-divider--offset reveal" data-tier-divider="seedling"><div class="line"></div><div class="label"><span class="icon"><img src="/assets/icons/icon-ui-seedling.svg" class="" alt="" width="22" height="22" loading="lazy" decoding="async" aria-hidden="true"></span> Seedling Tier <span class="tier-divider-soon">Coming soon</span></div><div class="line"></div></div>
 <div class="mystery-tier reveal" id="seedling-mystery" data-tier-group="seedling">
                     <div class="mystery-inner">
                         <div class="mystery-veil" aria-hidden="true"></div>
@@ -141,7 +141,7 @@ html[data-theme="light"]{background:#E7EDEA;color-scheme:light}
                     </div>
                 </div>
 
-                <div class="tier-divider reveal" style="margin-top: 60px;" data-tier-divider="coming-soon"><div class="line"></div><div class="label"><span class="icon"><img src="/assets/icons/icon-ui-construction.svg" class="" alt="" width="22" height="22" loading="lazy" decoding="async" aria-hidden="true"></span> Coming Soon</div><div class="line"></div></div>
+                <div class="tier-divider tier-divider--offset reveal" data-tier-divider="coming-soon"><div class="line"></div><div class="label"><span class="icon"><img src="/assets/icons/icon-ui-construction.svg" class="" alt="" width="22" height="22" loading="lazy" decoding="async" aria-hidden="true"></span> Coming Soon</div><div class="line"></div></div>
                 <div class="coming-soon-grid" data-tier-group="coming-soon">
                     <div class="coming-soon-card reveal reveal-delay-3" data-tier="coming-soon"><div class="service-header"><div class="service-icon"><img src="/assets/icons/syncthing.svg" width="40" height="40" loading="lazy" decoding="async" alt="Syncthing"></div><h3>Syncthing</h3></div><p>Peer-to-peer file sync across devices.</p></div>
                     <div class="coming-soon-card reveal reveal-delay-1" data-tier="coming-soon"><div class="service-header"><div class="service-icon"><img src="/assets/icons/stalwart.svg" width="40" height="40" loading="lazy" decoding="async" alt="Stalwart Mail"></div><h3>Stalwart Mail</h3></div><p>Self-hosted email with IMAP, JMAP, and SMTP.</p></div>
@@ -237,10 +237,10 @@ html[data-theme="light"]{background:#E7EDEA;color-scheme:light}
         </figure>
     </div>
 
-    <script src="/assets/js/lenis.min.js?v=62" defer></script>
-    <script src="/assets/js/lenis-init.js?v=62" defer></script>
-    <script src="/assets/js/site.js?v=62" defer></script>
-    <script src="/assets/js/premium.js?v=62" defer></script>
+    <script src="/assets/js/lenis.min.js?v=63" defer></script>
+    <script src="/assets/js/lenis-init.js?v=63" defer></script>
+    <script src="/assets/js/site.js?v=63" defer></script>
+    <script src="/assets/js/premium.js?v=63" defer></script>
     <script>
 // FAQ Toggle
         function toggleFAQ(el) { var item = el.parentElement; var open = item.classList.toggle('open'); el.setAttribute('aria-expanded', String(open)); }
@@ -309,7 +309,7 @@ html[data-theme="light"]{background:#E7EDEA;color-scheme:light}
         document.querySelectorAll('.service-card[data-service]').forEach(function(card) {
             card.addEventListener('click', function() { openLightbox(card.dataset.service, card); });
             card.addEventListener('keydown', function(e) {
-                if (e.key === 'Enter' || e.key === ' ' || e.key === 'Spacebar') {
+                if (e.key === 'Enter' || e.key === ' ') {
                     e.preventDefault();
                     openLightbox(card.dataset.service, card);
                 }
@@ -324,6 +324,19 @@ html[data-theme="light"]{background:#E7EDEA;color-scheme:light}
 
         /* === Services filter bar (hides tier dividers + groups, animated) === */
         (function () {
+            /* derive tier counts from the DOM so badges can't desync (OCR final audit) */
+            (function () {
+                function countTier(t) {
+                    var g = document.querySelector('[data-tier-group="' + t + '"]');
+                    return g ? g.querySelectorAll('.service-card, .coming-soon-card').length : 0;
+                }
+                var map = { all: countTier('sweetpea') + countTier('coming-soon'), sweetpea: countTier('sweetpea'), 'coming-soon': countTier('coming-soon') };
+                document.querySelectorAll('.filter-btn .f-count').forEach(function (el) {
+                    var btn = el.closest('.filter-btn'); if (!btn) return;
+                    var v = map[btn.getAttribute('data-filter')];
+                    if (typeof v === 'number') el.textContent = v;
+                });
+            })();
             var filterBtns = document.querySelectorAll('.filter-btn');
             var groups = document.querySelectorAll('[data-tier-group]');
             var dividers = document.querySelectorAll('[data-tier-divider]');
@@ -343,7 +356,7 @@ html[data-theme="light"]{background:#E7EDEA;color-scheme:light}
             }
             filterBtns.forEach(function (btn) {
                 btn.addEventListener('click', function () {
-                    filterBtns.forEach(function (b) { b.classList.remove('active'); });
+                    filterBtns.forEach(function (b) { b.setAttribute('aria-pressed', b === btn ? 'true' : 'false'); b.classList.remove('active'); });
                     btn.classList.add('active');
                     var filter = btn.getAttribute('data-filter');
                     /* Animate: fade out, apply filter, fade in + re-trigger card animation */

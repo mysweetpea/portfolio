@@ -1534,11 +1534,6 @@ body[data-page='home'] .hero h1 {
     font-weight: var(--t-fw-bold);
 }
 
-.filter-btn {
-    font-size: var(--t-fs-xs);
-    font-weight: var(--t-fw-medium);
-}
-
 .status-row .uptime-pct {
     font-size: var(--t-fs-2xs);
     font-weight: var(--t-fw-medium);
