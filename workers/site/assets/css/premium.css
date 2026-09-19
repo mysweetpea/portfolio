@@ -1419,7 +1419,14 @@ button, input, select, textarea, optgroup {
    identically everywhere. No JS, no library, CSP-safe.
    ======================================================================== */
 .msb-wrap { display: inline-flex; align-items: center; gap: 9px; }
-.msb { display: block; width: 25px; height: 25px; overflow: visible; flex: none; }
+.msb {
+    /* 30px, up from 25px. USER REQUEST: the mark should read a little larger
+       than the wordmark beside it. At the nav's 24px Great Vibes the ascenders
+       only reach ~19.6px (script cap/x-height are low), so a 25px mark looked
+       the same size or smaller than the text. 30px makes it clearly dominant
+       while still fitting the 40.8px nav line box. */
+    display: block; width: 30px; height: 30px; overflow: visible; flex: none;
+}
 .msb-petal { transform-box: view-box; transform-origin: 50px 62px;
     transition: transform .55s cubic-bezier(.34, 1.35, .5, 1); }
 
@@ -1489,7 +1496,11 @@ button, input, select, textarea, optgroup {
 .page-footer .msb-wrap:focus-visible > span { color: var(--primary-bright); }
 
 /* Footer uses the same mark a little larger. */
-.footer-brand .msb { width: 28px; height: 28px; }
+.footer-brand .msb {
+    /* 34px, up from 28px — same reasoning as the nav mark, scaled up to match
+       the footer wordmark's larger setting. */
+    width: 34px; height: 34px;
+}
 
 /* Respect the OS setting: no unfurl, no drifting petals. */
 @media (prefers-reduced-motion: reduce) {
@@ -1528,6 +1539,7 @@ button, input, select, textarea, optgroup {
 }
 
 /* Home hero H1 - the one true display moment */
+body[data-page] .hero h1.glass-text,
 .hero h1.glass-text {
     font-family: 'Great Vibes', 'Segoe Script', cursive;
     font-weight: 400;
@@ -1535,7 +1547,18 @@ button, input, select, textarea, optgroup {
        same perceived size because of its small x-height. */
     font-size: clamp(2.9rem, 7vw, 5rem);
     letter-spacing: 0.01em;
-    line-height: 1.1;
+    /* LINE-HEIGHT, measured not guessed. Great Vibes' own outlines put the
+       real ink of "MySweetPea" at 0.818 em above the baseline and 0.319 em
+       below = 1.137 em total. Its hhea line box is 1.252 em. Setting 1.1
+       made the half-leading NEGATIVE (-5.47px at 72px), which pushed the
+       ink 3.1px ABOVE the content box; .hero has overflow:clip, so the
+       ascenders and the bottom of the descenders were being cut.
+       1.25 gives positive half-leading and contains the full 1.137 em. */
+    line-height: 1.25;
+    /* The old padding-bottom existed only to clear the clipped ink; with the
+       line box fixed it is no longer needed, but a hair of padding keeps the
+       descender off the following paragraph. */
+    padding-bottom: 0.04em;
 }
 
 h2.glass-text:not(.section-title),
