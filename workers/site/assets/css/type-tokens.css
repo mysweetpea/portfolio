@@ -10,7 +10,7 @@
   /* families */
   --t-font-body: 'Inter', 'Inter Fallback', 'Segoe UI', system-ui, sans-serif;
   --t-font-display: 'Instrument Serif', 'Instrument Serif Fallback', Georgia, serif;
-  --t-font-script: 'Great Vibes', 'Segoe Script', cursive;
+  --t-font-script: 'Instrument Serif', 'Instrument Serif Fallback', Georgia, serif; /* wordmark face (was Great Vibes cursive, retired 2026-09-19) */
   --t-font-mono: 'Cascadia Mono', ui-monospace, 'SF Mono', Menlo, monospace;
   /* weights */
   --t-fw-normal: 400; --t-fw-medium: 600; --t-fw-bold: 700;
@@ -2503,35 +2503,28 @@ body[data-page='pricing'] .hiw-step p {
 
 .top-nav .nav-brand {
     font-family: var(--t-font-script);
-    font-size: var(--t-fs-h2-plus);
+    font-size: 1.15rem;
     font-weight: var(--t-fw-normal);
 }
 
 @media (max-width: 768px) {
   .top-nav .nav-brand {
-      font-size: var(--t-fs-h2);
-  }
-
-}
-
-@media (max-width: 480px) {
-  .top-nav .nav-brand {
-      font-size: var(--t-fs-h2);
+      font-size: 1.05rem;
   }
 
 }
 
 .page-footer .footer-brand .nav-logo span {
     font-family: var(--t-font-script);
-    font-size: var(--t-fs-h2);
+    font-size: 1.1rem;
     font-weight: var(--t-fw-normal);
 }
 
 body[data-page] .hero h1.glass-text, .hero h1.glass-text {
     font-family: var(--t-font-script);
     font-weight: var(--t-fw-normal);
-    font-size: clamp(2.9rem, 7vw, 5rem);
-    line-height: var(--t-lh-script);
+    font-size: clamp(2.7rem, 6.4vw, 4.6rem);
+    line-height: 1.12;
 }
 
 h2.glass-text:not(.section-title), body[data-page] h2.glass-text:not(.section-title) {

@@ -18,7 +18,6 @@ const CORE = [
   '/assets/js/premium.js',
   '/assets/js/lenis.min.js',
   '/assets/js/lenis-init.js',
-  '/assets/fonts/greatvibes.woff2',
   '/assets/fonts/figtree-var.woff2',
   '/assets/fonts/inter-var.woff2',
   '/assets/fonts/fraunces-var.woff2',

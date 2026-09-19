@@ -7578,7 +7578,7 @@ body[data-page='pricing'] .hiw-head .hiw-num {
     font-family: var(--t-font-mono); font-size: var(--t-fs-2xs); font-weight: var(--t-fw-normal);
 }
 body[data-page='pricing'] .hiw-head .hiw-icon {
-    position: absolute; top: 0; right: calc(50% - 68px);
+    position: absolute; top: -12px; right: calc(50% - 68px);
     width: 52px; height: 52px; margin: 0;
     display: grid; place-items: center;
     background: radial-gradient(circle at 30% 25%, rgba(255,255,255,0.10), rgba(143,175,181,0.06));

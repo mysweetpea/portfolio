@@ -1505,18 +1505,17 @@ button, input, select, textarea, optgroup {
    to font-size (low x-height), so each size is bumped to keep optical parity
    with the previous Fraunces setting. */
 .top-nav .nav-brand {
-    font-family: 'Great Vibes', 'Segoe Script', cursive;
-    /* was 1.06rem Fraunces; script needs more size for the same optical weight */
-    font-size: 1.6rem;
+    font-family: 'Instrument Serif', 'Instrument Serif Fallback', Georgia, serif;
+    font-size: 1.15rem;
     font-weight: 400;
-    letter-spacing: 0.01em;
+    letter-spacing: 0.005em;
 }
 /* The drawer / compact bands were tuned for Fraunces metrics - keep parity. */
 @media (max-width: 768px) {
-    .top-nav .nav-brand { font-size: 1.5rem; }
+    .top-nav .nav-brand { font-size: 1.05rem; }
 }
 @media (max-width: 480px) {
-    .top-nav .nav-brand { font-size: 1.4rem; }
+    .top-nav .nav-brand { font-size: 1rem; }
 }
 
 /* Footer wordmark. MUST match the specificity of the existing
@@ -1524,34 +1523,23 @@ button, input, select, textarea, optgroup {
    measured: a bare `.footer-brand .nav-logo span` (0,2,1) is overridden and
    the footer keeps rendering Fraunces. */
 .page-footer .footer-brand .nav-logo span {
-    font-family: 'Great Vibes', 'Segoe Script', cursive;
-    font-size: 1.5rem;
+    font-family: 'Instrument Serif', 'Instrument Serif Fallback', Georgia, serif;
+    font-size: 1.1rem;
     font-weight: 400;
-    letter-spacing: 0.01em;
+    letter-spacing: 0.005em;
 }
 
 /* Home hero H1 - the one true display moment */
 body[data-page] .hero h1.glass-text,
 .hero h1.glass-text {
-    font-family: 'Great Vibes', 'Segoe Script', cursive;
+    font-family: 'Instrument Serif', 'Instrument Serif Fallback', Georgia, serif;
     font-weight: 400;
-    /* Fraunces sat at clamp(2.5rem,6vw,4.25rem); script needs ~1.18x for the
-       same perceived size because of its small x-height. */
-    font-size: clamp(2.9rem, 7vw, 5rem);
-    letter-spacing: 0.01em;
-    /* LINE-HEIGHT, measured not guessed. Great Vibes' own outlines put the
-       real ink of "MySweetPea" at 0.818 em above the baseline and 0.319 em
-       below = 1.137 em total. Its hhea line box is 1.252 em. Setting 1.1
-       made the half-leading NEGATIVE (-5.47px at 72px), which pushed the
-       ink 3.1px ABOVE the content box; .hero has overflow:clip, so the
-       ascenders and the bottom of the descenders were being cut.
-       1.25 gives positive half-leading and contains the full 1.137 em. */
-    line-height: 1.25;
-    /* The old padding-bottom existed only to clear the clipped ink; with the
-       line box fixed it is no longer needed, but a hair of padding keeps the
-       descender off the following paragraph. */
-    padding-bottom: 0.04em;
-}
+    /* Instrument is ~5% smaller-optical than Fraunces at the same size. */
+    font-size: clamp(2.7rem, 6.4vw, 4.6rem);
+    letter-spacing: -0.005em;
+    /* Instrument Serif is a normal-metric serif; 1.12 is comfortable and
+       needs none of the script-era clip fixes. */
+    line-height: 1.12;
 
 h2.glass-text:not(.section-title),
 body[data-page] h2.glass-text:not(.section-title) {

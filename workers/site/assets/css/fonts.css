@@ -147,13 +147,8 @@
    functional/scannable landmarks reads as decoration rather than structure.
    Subsetted to the site charset (135 cp) from the google/fonts source.
    -------------------------------------------------------------------------- */
-@font-face {
-    font-family: 'Great Vibes';
-    font-style: normal;
-    font-weight: 400;
-    font-display: swap;   /* display use, above the fold, preloaded */
-    src: url('/assets/fonts/greatvibes.woff2') format('woff2');
-}
+/* Great Vibes RETIRED 2026-09-19: the wordmark is Instrument Serif now.
+   The file stays at /assets/fonts/greatvibes.woff2 for instant rollback. */
 
 /* --------------------------------------------------------------------------
    Instrument Serif (2026-09-19) — the "Hermes-look" display serif. Sharp,
