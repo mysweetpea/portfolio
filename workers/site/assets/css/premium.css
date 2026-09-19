@@ -1387,6 +1387,31 @@
     .page-footer .footer-bottom { font-size: 0.79rem; }
 }
 
+/* === Control font inheritance (2026-09-18) ===
+   49 controls across all 14 pages rendered in the BROWSER DEFAULT (Arial)
+   instead of Inter/Fraunces: native form controls do NOT inherit font-family.
+   That made every <button> -- view tabs, filter chips, form submits, the
+   lightbox close, the theme toggle -- a different typeface from the text
+   around it. This is the single biggest reason the UI read as 'not quite
+   right'. Inherit first, then re-assert the mono treatments that are
+   deliberate (nav links + the footer status readout). */
+button, input, select, textarea, optgroup {
+    font-family: inherit;
+    font-size: inherit;
+    line-height: inherit;
+    letter-spacing: inherit;
+    color: inherit;
+}
+/* Elements that are intentionally monospace must opt back in explicitly,
+   since the rule above now beats the browser default they relied on.
+   NOTE: .nav-brand is deliberately NOT in this list -- the wordmark is
+   Fraunces (serif); only the nav LINKS are monospace. */
+.top-nav .nav-btn,
+.top-nav .nav-signin,
+.top-nav .nav-cta {
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+}
+
 /* === MySweetPea bloom logo (dependency-free) =============================
    Rest: the real mark, quiet. Hover/focus: petals unfurl, gradients shift
    fluorescent, white petals drift off. Both layers always present; only
