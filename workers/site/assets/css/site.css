@@ -5447,7 +5447,7 @@ body {
 }
 
 /* --- Premium link underline (subtle gradient) --- */
-.content-wrapper a:not(.nav-btn):not(.pc-btn):not(.hiw-inc-chip):not(.hiw-included-link):not(.nav-cta):not(.hero-btn):not(.cta-btn):not(.section-nav a):not(.wm-btn):not(.compare-cta):not(.teaser-btn):not(.status-action-btn):not(.service-chip):not(.github-link) {
+.content-wrapper a:not(.nav-btn):not(.pc-btn):not(.hiw-inc-chip):not(.hiw-included-link):not(.nav-cta):not(.hero-btn):not(.cta-btn):not(.section-nav a):not(.wm-btn):not(.compare-cta):not(.teaser-btn):not(.status-action-btn):not(.service-chip):not(.github-link):not([class*="btn-"]) {
     text-decoration: none;
     background-image: linear-gradient(90deg, var(--sage), var(--primary));
     background-size: 100% 1px;
@@ -5455,7 +5455,7 @@ body {
     background-repeat: no-repeat;
     transition: background-size 0.3s var(--ease-premium);
 }
-.content-wrapper a:not(.nav-btn):not(.pc-btn):not(.hiw-inc-chip):not(.hiw-included-link):not(.nav-cta):not(.hero-btn):not(.cta-btn):not(.section-nav a):not(.wm-btn):not(.compare-cta):not(.teaser-btn):not(.status-action-btn):not(.service-chip):not(.github-link):hover {
+.content-wrapper a:not(.nav-btn):not(.pc-btn):not(.hiw-inc-chip):not(.hiw-included-link):not(.nav-cta):not(.hero-btn):not(.cta-btn):not(.section-nav a):not(.wm-btn):not(.compare-cta):not(.teaser-btn):not(.status-action-btn):not(.service-chip):not(.github-link):not([class*="btn-"]):hover {
     background-size: 100% 2px;
 }
 
