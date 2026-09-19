@@ -1386,3 +1386,75 @@
     }
     .page-footer .footer-bottom { font-size: 0.79rem; }
 }
+
+/* === MySweetPea bloom logo (dependency-free) =============================
+   Rest: the real mark, quiet. Hover/focus: petals unfurl, gradients shift
+   fluorescent, white petals drift off. Both layers always present; only
+   opacity crossfades, which is the one thing that animates smoothly and
+   identically everywhere. No JS, no library, CSP-safe.
+   ======================================================================== */
+.msb-wrap { display: inline-flex; align-items: center; gap: 9px; }
+.msb { display: block; width: 25px; height: 25px; overflow: visible; flex: none; }
+.msb-petal { transform-box: view-box; transform-origin: 50px 62px;
+    transition: transform .55s cubic-bezier(.34, 1.35, .5, 1); }
+
+.msb-bloom { opacity: 0; transition: opacity .42s ease; }
+.msb-wrap:hover .msb-bloom, .msb-wrap:focus-visible .msb-bloom { opacity: 1; }
+
+.msb-bloom .msb-petal { transform: scale(.82); }
+.msb-wrap:hover .msb-bloom .p1, .msb-wrap:focus-visible .msb-bloom .p1 { transform: rotate(-16deg) scale(1.05); }
+.msb-wrap:hover .msb-bloom .p2, .msb-wrap:focus-visible .msb-bloom .p2 { transform: rotate(16deg) scale(1.05); }
+.msb-wrap:hover .msb-bloom .p3, .msb-wrap:focus-visible .msb-bloom .p3 { transform: rotate(-22deg) scale(1.05); }
+.msb-wrap:hover .msb-bloom .p4, .msb-wrap:focus-visible .msb-bloom .p4 { transform: rotate(22deg) scale(1.05); }
+.msb-wrap:hover .msb-bloom .p1 { transition-delay: 0ms; }
+.msb-wrap:hover .msb-bloom .p2 { transition-delay: 22ms; }
+.msb-wrap:hover .msb-bloom .p3 { transition-delay: 44ms; }
+.msb-wrap:hover .msb-bloom .p4 { transition-delay: 66ms; }
+.msb-wrap:hover .msb-bloom .p5 { transition-delay: 88ms; }
+
+.msb-core { transition: opacity .35s ease; }
+.msb-wrap:hover .msb-core { opacity: 1 !important; }
+
+/* Drifting petals: hidden at rest, thrown outward on hover. */
+/* Sparks are positioned by a parent <g> (SVG transform), and animated here
+   with a plain CSS translate - keeping the two on separate elements so the
+   inline SVG position is never clobbered by the keyframes. */
+.msb-spark { fill: #FFFFFF; opacity: 0; transform-box: view-box;
+    transform-origin: center; }
+.msb-wrap:hover .msb-spark { animation: msbDrift 1.15s ease-out forwards; }
+.msb-wrap:hover .s1 { animation-delay: .06s; }
+.msb-wrap:hover .s2 { animation-delay: .16s; }
+.msb-wrap:hover .s3 { animation-delay: .24s; }
+.msb-wrap:hover .s4 { animation-delay: .32s; }
+.msb-wrap:hover .s5 { animation-delay: .40s; }
+.msb-wrap:hover .s6 { animation-delay: .48s; }
+
+@keyframes msbDrift {
+    0%   { opacity: 0;   transform: translate(0, 0) scale(.6) rotate(0deg); }
+    18%  { opacity: .95; }
+    100% { opacity: 0;   transform: translate(var(--dx, 6px), var(--dy, -14px))
+                          scale(.35) rotate(var(--dr, 40deg)); }
+}
+/* Drift stays INSIDE the mark's bounding box (roughly +/-6 units of the
+   100-unit viewBox) so a spark can never collide with the wordmark beside
+   the logo. They read as petals lifting off the bloom, then fade. */
+.s1 { --dx: -4px; --dy: -9px; --dr: -50deg; }
+.s2 { --dx:  5px; --dy: -8px; --dr:  55deg; }
+.s3 { --dx: -2px; --dy: -11px; --dr: -28deg; }
+.s4 { --dx:  3px; --dy: -11px; --dr:  33deg; }
+.s5 { --dx: -6px; --dy: -6px; --dr: -66deg; }
+.s6 { --dx:  6px; --dy: -7px; --dr:  62deg; }
+
+/* Wordmark warms to teal on the same beat as the bloom. */
+.msb-wrap .nav-brand, .msb-wrap > span { transition: color .35s ease; }
+.msb-wrap:hover .nav-brand, .msb-wrap:focus-visible .nav-brand,
+.msb-wrap:hover > span, .msb-wrap:focus-visible > span { color: var(--primary-bright); }
+
+/* Footer uses the same mark a little larger. */
+.footer-brand .msb { width: 28px; height: 28px; }
+
+/* Respect the OS setting: no unfurl, no drifting petals. */
+@media (prefers-reduced-motion: reduce) {
+    .msb-petal, .msb-bloom, .msb-core, .msb-wrap .nav-brand { transition: none; }
+    .msb-wrap:hover .msb-spark { animation: none; }
+}
