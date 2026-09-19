@@ -1496,3 +1496,72 @@ button, input, select, textarea, optgroup {
     .msb-petal, .msb-bloom, .msb-core, .msb-wrap .nav-brand { transition: none; }
     .msb-wrap:hover .msb-spark { animation: none; }
 }
+
+/* === 13. Calligraphy brand mark (2026-09-18) ===
+   Great Vibes for the wordmark + hero only. Script faces run small relative
+   to font-size (low x-height), so each size is bumped to keep optical parity
+   with the previous Fraunces setting. */
+.top-nav .nav-brand {
+    font-family: 'Great Vibes', 'Segoe Script', cursive;
+    /* was 1.06rem Fraunces; script needs more size for the same optical weight */
+    font-size: 1.5rem;
+    font-weight: 400;
+    letter-spacing: 0.01em;
+}
+/* The drawer / compact bands were tuned for Fraunces metrics - keep parity. */
+@media (max-width: 768px) {
+    .top-nav .nav-brand { font-size: 1.4rem; }
+}
+@media (max-width: 480px) {
+    .top-nav .nav-brand { font-size: 1.3rem; }
+}
+
+/* Footer wordmark. MUST match the specificity of the existing
+   `.page-footer .footer-brand .nav-logo span` rule (0,3,1) or it loses -
+   measured: a bare `.footer-brand .nav-logo span` (0,2,1) is overridden and
+   the footer keeps rendering Fraunces. */
+.page-footer .footer-brand .nav-logo span {
+    font-family: 'Great Vibes', 'Segoe Script', cursive;
+    font-size: 1.5rem;
+    font-weight: 400;
+    letter-spacing: 0.01em;
+}
+
+/* Home hero H1 - the one true display moment */
+.hero h1.glass-text {
+    font-family: 'Great Vibes', 'Segoe Script', cursive;
+    font-weight: 400;
+    /* Fraunces sat at clamp(2.5rem,6vw,4.25rem); script needs ~1.18x for the
+       same perceived size because of its small x-height. */
+    font-size: clamp(2.9rem, 7vw, 5rem);
+    letter-spacing: 0.01em;
+    line-height: 1.1;
+}
+
+/* Section headings — the "big headers" the user asked to carry the script.
+   Sizes are ~1.25x the Fraunces values because script faces have a low
+   x-height and run optically small at the same font-size (measured against
+   the previous 2.5rem/1.1 section-title setting). */
+.hero h1.glass-text,
+.section-title.glass-text,
+h2.glass-text:not(.section-title) {
+    font-family: 'Great Vibes', 'Segoe Script', cursive;
+    font-weight: 400;
+    letter-spacing: 0.01em;
+}
+/* Specificity note: site.css sets `body[data-page='home'] .section-title`
+   (0,2,0 with an attribute) and `body[data-page='services'] .section-title`,
+   which BEAT a plain `.section-title.glass-text` (0,2,0). Measured: the home
+   heading rendered 35.2px instead of the intended 49.6px. The body[data-page]
+   qualifier here matches their weight so the display size actually applies. */
+.section-title.glass-text,
+body[data-page] .section-title.glass-text {
+    font-size: clamp(2.1rem, 4.6vw, 3.1rem);
+    line-height: 1.15;
+}
+h2.glass-text:not(.section-title),
+body[data-page] h2.glass-text:not(.section-title) {
+    font-size: clamp(2rem, 4.2vw, 2.9rem);
+    line-height: 1.15;
+}
+

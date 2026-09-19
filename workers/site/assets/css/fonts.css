@@ -140,3 +140,17 @@
     descent-override: 24.07%;
     line-gap-override: 0%;
 }
+
+/* --------------------------------------------------------------------------
+   Great Vibes - display script. Used ONLY for the brand wordmark (nav +
+   footer) and the home hero H1. NOT for section headings: a script used for
+   functional/scannable landmarks reads as decoration rather than structure.
+   Subsetted to the site charset (135 cp) from the google/fonts source.
+   -------------------------------------------------------------------------- */
+@font-face {
+    font-family: 'Great Vibes';
+    font-style: normal;
+    font-weight: 400;
+    font-display: swap;   /* display use, above the fold, preloaded */
+    src: url('/assets/fonts/greatvibes.woff2') format('woff2');
+}
