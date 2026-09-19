@@ -1070,9 +1070,10 @@ body[data-page='pricing'] .pricing-card.tier-seedling { border-color: rgba(163, 
 animation: pulseGlowGreen 4s ease-in-out infinite }
 body[data-page='pricing'] .pricing-card.tier-seedling:hover { border-color: rgba(163, 201, 182, 0.7);
 box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.08), 0 12px 40px rgba(0, 0, 0, 0.4), 0 0 20px rgba(163, 201, 182, 0.1) }
-body[data-page='pricing'] .pricing-card.tier-sweetpea { border-color: rgba(107, 154, 166, 0.4) }
-body[data-page='pricing'] .pricing-card.tier-sweetpea:hover { border-color: rgba(107, 154, 166, 0.7);
-box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.08), 0 12px 40px rgba(0, 0, 0, 0.4), 0 0 20px rgba(107, 154, 166, 0.1) }
+body[data-page='pricing'] .pricing-card.tier-sweetpea { border-color: rgba(217, 168, 108, 0.4);
+box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06), 0 8px 32px rgba(0, 0, 0, 0.3), 0 0 24px rgba(217, 168, 108, 0.07) }
+body[data-page='pricing'] .pricing-card.tier-sweetpea:hover { border-color: rgba(217, 168, 108, 0.7);
+box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.08), 0 12px 40px rgba(0, 0, 0, 0.4), 0 0 24px rgba(217, 168, 108, 0.12) }
 body[data-page='pricing'] .pricing-card:hover { transform: translatey(-6px) }
 body[data-page='pricing'] .tier-emoji-3d { display: inline-block;
 font-size: 2.5rem;
@@ -1119,11 +1120,15 @@ color: var(--text-dim);
 margin-bottom: 8px;
 padding-left: 24px;
 position: relative }
-body[data-page='pricing'] .pricing-card .features li::before { content: "✓";
+body[data-page='pricing'] .pricing-card .features li::before { content: "";
 position: absolute;
 left: 0;
-color: var(--primary);
-font-weight: 700 }
+top: 3px;
+width: 12px;
+height: 12px;
+background: var(--sage);
+-webkit-mask: url('/assets/icons/icon-ui-leaf.svg') center / contain no-repeat;
+mask: url('/assets/icons/icon-ui-leaf.svg') center / contain no-repeat }
 /* Glow Card */
 body[data-page='pricing'] .glow-card { position: relative }
 body[data-page='pricing'] .glow-card::before { content: "";
@@ -3162,8 +3167,8 @@ body[data-page='status'] .hero.status-hero h1 { font-size: 2rem; font-weight: 70
     color: #2F5A44;
 }
 [data-theme="light"] .compare-table th.col-sweetpea {
-    background: linear-gradient(180deg, rgba(94, 154, 124, 0.18), rgba(94, 154, 124, 0.06));
-    color: #2F5A44;
+    background: rgba(217, 168, 108, 0.12);
+    color: #7A5A20;
 }
 [data-theme="light"] .compare-table .check {
     background: rgba(62, 124, 95, 0.14);
@@ -3437,7 +3442,7 @@ body[data-page='pricing'] .tier-emoji-3d {
     margin: 0 auto 14px !important;
 }
 body[data-page='pricing'] .tier-emoji-3d .tier-icon {
-    width: 58px !important; height: 58px !important; margin: 0 !important;
+    width: 44px !important; height: 44px !important; margin: 0 !important;
 }
 
 /* Only show the icon matching the active theme */
@@ -4672,8 +4677,8 @@ body[data-page='home'] .hero h1 { font-size: clamp(2.75rem, 6.5vw, 4.5rem); }
     color: #2F7D55;
 }
 .compare-table th.col-sweetpea {
-    background: linear-gradient(180deg, rgba(94, 184, 168, 0.16), rgba(94, 184, 168, 0.06));
-    color: #2F6B5E;
+    background: color-mix(in srgb, var(--gold, #D9A86C) 7%, transparent);
+    color: var(--gold, #D9A86C);
 }
 .compare-table .compare-tier-icon {
     display: inline-flex; align-items: center; justify-content: center;
@@ -4887,46 +4892,9 @@ body[data-page='pricing'] .btn-glass-seedling:disabled:hover { transform: none; 
 .compare-table .compare-soon-tag { display: block; margin-top: 3px; font-size: 0.62rem; font-weight: 800; letter-spacing: 0.05em; text-transform: uppercase; color: var(--primary-bright); opacity: 0.85; }
 .compare-table .compare-cta.compare-cta-soon { background: rgba(143, 175, 181, 0.14); border: 1px solid var(--border-primary); color: var(--primary-bright); cursor: not-allowed; }
 .compare-table .compare-cta.compare-cta-soon:hover { transform: none; background: rgba(143, 175, 181, 0.14); }
-/* Services page: filter chip + divider tag. */
-/* === Sweet Pea spotlight + Seedling mystery tier ===
-   Sweet Pea is the sole available tier, so it gets a hero-grade intro block.
+/* === Seedling mystery tier ===
    Seedling is intentionally opaque until launch: one teaser card, no service
    names, no benefit list, no counts. */
-.sweetpea-spotlight {
-    position: relative; overflow: hidden;
-    margin: 8px 0 30px; padding: 30px 32px;
-    border: 1px solid transparent;
-    border-radius: var(--radius);
-    background:
-        linear-gradient(var(--card-bg, rgba(19,30,34,0.55)), var(--card-bg, rgba(19,30,34,0.55))) padding-box,
-        linear-gradient(120deg, rgba(197,213,216,0.55), rgba(94,184,168,0.35), rgba(197,213,216,0.18)) border-box;
-    box-shadow: 0 18px 48px rgba(0,0,0,0.28), inset 0 1px 0 rgba(255,255,255,0.06);
-}
-.sweetpea-spotlight::after {
-    content: ''; position: absolute; inset: -40% -10% auto auto;
-    width: 340px; height: 340px; border-radius: 50%;
-    background: radial-gradient(circle, rgba(94,184,168,0.16), transparent 65%);
-    pointer-events: none;
-}
-.sp-badge {
-    display: inline-block; margin-bottom: 12px; padding: 4px 12px; border-radius: 999px;
-    background: linear-gradient(135deg, var(--gold, #D9A86C), var(--gold-dim, #b7893f));
-    color: var(--bg, #0C1316);
-    font-size: 0.68rem; font-weight: 800; letter-spacing: 0.09em; text-transform: uppercase;
-}
-.sp-title { font-family: 'Fraunces', 'Fraunces Fallback', serif; font-size: 1.6rem; letter-spacing: -0.01em; margin: 0 0 10px; color: var(--primary-bright); }
-.sp-copy { color: var(--text-dim); line-height: 1.62; max-width: 62ch; margin: 0 0 20px; }
-.sp-actions { display: flex; flex-wrap: wrap; gap: 12px; }
-.sp-btn {
-    display: inline-flex; align-items: center; justify-content: center;
-    min-height: 46px; padding: 0 22px; border-radius: 999px;
-    font-weight: 700; font-size: 0.92rem; text-decoration: none;
-    transition: transform 180ms ease, box-shadow 180ms ease, background-color 180ms ease, border-color 180ms ease;
-}
-.sp-btn-primary { background: linear-gradient(135deg, var(--sage, #A3C9B6), var(--primary, #8FAFB5)); color: var(--bg, #0C1316); box-shadow: 0 10px 26px rgba(94,184,168,0.22); }
-.sp-btn-primary:hover { transform: translateY(-2px); box-shadow: 0 14px 32px rgba(94,184,168,0.3); }
-.sp-btn-ghost { border: 1px solid var(--border-primary); color: var(--primary-bright); background: rgba(143,175,181,0.08); }
-.sp-btn-ghost:hover { transform: translateY(-2px); border-color: var(--primary-bright); }
 
 /* Mystery tier card — no contents revealed until launch. */
 .mystery-tier { margin-top: 60px; }
@@ -4962,10 +4930,11 @@ body[data-page='pricing'] .btn-glass-seedling:disabled:hover { transform: none; 
 /* Seedling mystery cells in the compare table */
 .compare-table .mystery-cell {
     display: inline-flex; align-items: center; justify-content: center;
-    width: 22px; height: 22px; border-radius: 50%;
-    background: rgba(143, 175, 181, 0.12);
+    width: 26px; height: 26px; border-radius: 8px;
+    background: transparent;
     border: 1px dashed var(--border-primary);
-    color: var(--primary-bright);
+    color: var(--sage);
+    font-family: var(--t-font-mono);
     font-weight: 800; font-size: 0.78rem; line-height: 1;
 }
 [data-theme="light"] .compare-table .mystery-cell {
@@ -4975,24 +4944,12 @@ body[data-page='pricing'] .btn-glass-seedling:disabled:hover { transform: none; 
 }
 
 /* Light theme */
-[data-theme="light"] .sweetpea-spotlight {
-    background:
-        linear-gradient(#fff, #fff) padding-box,
-        linear-gradient(120deg, rgba(62,124,95,0.5), rgba(94,184,168,0.35), rgba(62,124,95,0.15)) border-box;
-    box-shadow: 0 16px 40px rgba(27,43,49,0.12);
-}
 [data-theme="light"] .mystery-inner { background: rgba(255,255,255,0.72); border-color: rgba(62,124,95,0.35); }
-[data-theme="light"] .sp-btn-ghost { color: #245A40; border-color: rgba(62,124,95,0.4); background: rgba(62,124,95,0.06); }
 
 @media (max-width: 640px) {
-    .sweetpea-spotlight { padding: 24px 20px; }
-    .sp-title { font-size: 1.35rem; }
-    .sp-actions { flex-direction: column; }
-    .sp-btn { width: 100%; }
     .mystery-inner { padding: 30px 20px 28px; }
 }
 
-.filter-soon { display: inline-block; margin-left: 4px; padding: 1px 6px; border-radius: 999px; background: rgba(143, 175, 181, 0.14); font-size: 0.6rem; font-weight: 800; letter-spacing: 0.05em; text-transform: uppercase; color: var(--primary-bright); vertical-align: middle; }
 .tier-divider-soon { margin-left: 8px; padding: 3px 9px; border-radius: 999px; background: rgba(143, 175, 181, 0.14); border: 1px solid var(--border-primary); font-size: 0.62rem; font-weight: 800; letter-spacing: 0.05em; text-transform: uppercase; color: var(--primary-bright); }
 @media (max-width: 640px) {
     /* Stack the compare table into per-service cards:
@@ -5490,7 +5447,7 @@ body {
 }
 
 /* --- Premium link underline (subtle gradient) --- */
-.content-wrapper a:not(.nav-btn):not(.nav-cta):not(.hero-btn):not(.cta-btn):not(.section-nav a):not(.wm-btn):not(.compare-cta):not(.teaser-btn):not(.status-action-btn):not(.service-chip):not(.github-link) {
+.content-wrapper a:not(.nav-btn):not(.pc-btn):not(.nav-cta):not(.hero-btn):not(.cta-btn):not(.section-nav a):not(.wm-btn):not(.compare-cta):not(.teaser-btn):not(.status-action-btn):not(.service-chip):not(.github-link) {
     text-decoration: none;
     background-image: linear-gradient(90deg, var(--sage), var(--primary));
     background-size: 100% 1px;
@@ -7339,7 +7296,6 @@ body[data-page='form'] .vc-text {
 /* === Seedling Coming Soon: light-theme variants === */
 [data-theme="light"] .access-choice-card.coming-soon::after,
 [data-theme="light"] .tier-badge-soon,
-[data-theme="light"] .filter-soon,
 [data-theme="light"] .tier-divider-soon,
 [data-theme="light"] .compare-table .compare-soon-tag {
     background: rgba(62, 124, 95, 0.12);
@@ -7507,7 +7463,6 @@ body[data-page='form'] .vc-text {
 .filter-btn.active .f-ico { opacity: 1; filter: drop-shadow(0 0 4px rgba(163,201,182,0.5)); }
 .filter-btn.active .f-count { background: rgba(163,201,182,0.2); border-color: rgba(163,201,182,0.45); color: var(--primary-bright); }
 .filter-btn:focus-visible { outline: 3px solid var(--primary-bright); outline-offset: 2px; box-shadow: none; }
-.filter-soon { display: none; }
 /* leaf in the gold tier pill */
 .tier-pill img[src*="icon-ui-leaf"] { display: block; width: 10px; height: 10px; object-fit: contain;
     filter: brightness(1.15) sepia(0.35) saturate(2.4) hue-rotate(-12deg); }
@@ -7560,3 +7515,174 @@ body[data-page='form'] .vc-text {
 /* OCR final audit: light-theme contrast for the dark-glass lightbox close */
 [data-theme='light'] .lightbox-close { background: rgba(27, 43, 49, 0.06); color: #1B2B31; border-color: rgba(46, 92, 70, 0.28); }
 [data-theme='light'] .lightbox-close:hover { background: rgba(27, 43, 49, 0.12); color: #10312B; }
+
+/* ==========================================================================
+   Pricing v2: premium evolution of How It Works (glass identity kept).
+   Gold stays exclusive to the Sweet Pea tier; sage for everything else.
+   Scoped with body[data-page='pricing'] so the token layer (loaded later)
+   never over-restates these sizes/weights.
+   ========================================================================== */
+
+/* --- E1: bottom CTA band (replaces the old support strip) --- */
+body[data-page='pricing'] .pricing-cta {
+    max-width: 1000px; margin: 56px auto 0; padding: 44px 28px;
+    text-align: center;
+    background: var(--card-bg); border: 1px solid var(--border); border-radius: var(--radius);
+    backdrop-filter: blur(16px) saturate(1.2);
+    -webkit-backdrop-filter: blur(16px) saturate(1.2);
+}
+body[data-page='pricing'] .pc-eyebrow {
+    display: block; margin-bottom: 10px;
+    font-family: var(--t-font-mono); font-size: var(--t-fs-4xs); font-weight: var(--t-fw-normal);
+    letter-spacing: 0.14em; text-transform: uppercase; color: var(--text-faint);
+}
+body[data-page='pricing'] .pc-title {
+    font-family: var(--t-font-display); font-size: var(--t-fs-h2); font-weight: var(--t-fw-bold);
+    margin: 0 0 10px; color: var(--text); letter-spacing: -0.01em;
+}
+body[data-page='pricing'] .pc-copy {
+    max-width: 52ch; margin: 0 auto 26px;
+    color: var(--text-dim); font-size: var(--t-fs-sm); line-height: 1.6;
+}
+body[data-page='pricing'] .pc-actions { display: flex; flex-wrap: wrap; justify-content: center; gap: 12px; }
+body[data-page='pricing'] .pc-btn {
+    display: inline-flex; align-items: center; justify-content: center;
+    min-height: 46px; padding: 0 24px; border-radius: 999px;
+    font-size: var(--t-fs-sm); font-weight: var(--t-fw-bold);
+    text-decoration: none; transition: var(--transition);
+}
+body[data-page='pricing'] .pc-btn-primary {
+    background: linear-gradient(135deg, var(--sage), var(--primary));
+    color: var(--bg); border: 1px solid transparent;
+    box-shadow: 0 10px 26px rgba(94, 184, 168, 0.22);
+}
+body[data-page='pricing'] .pc-btn-primary:hover {
+    filter: brightness(1.06); transform: translateY(-2px);
+    box-shadow: 0 14px 32px rgba(94, 184, 168, 0.3);
+}
+body[data-page='pricing'] .pc-btn-ghost {
+    border: 1px solid var(--border-primary); color: var(--primary-bright);
+    background: rgba(143, 175, 181, 0.08);
+}
+body[data-page='pricing'] .pc-btn-ghost:hover { transform: translateY(-2px); border-color: var(--primary-bright); }
+@media (max-width: 640px) {
+    body[data-page='pricing'] .pc-btn { width: 100%; }
+}
+
+/* --- E2: connected timeline steps --- */
+body[data-page='pricing'] .hiw-steps {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px;
+    position: relative;
+}
+body[data-page='pricing'] .hiw-steps::before {
+    content: ""; position: absolute; top: 46px; left: 8%; right: 8%; height: 1px;
+    background: linear-gradient(90deg, transparent, var(--border-primary), transparent);
+    z-index: 0;
+}
+body[data-page='pricing'] .hiw-step {
+    position: relative; z-index: 1; max-width: none;
+    padding: 26px 24px; text-align: center;
+    background: var(--card-bg); border: 1px solid var(--border); border-radius: var(--radius);
+    box-shadow: none;
+}
+body[data-page='pricing'] .hiw-step .hiw-icon {
+    width: 52px; height: 52px; margin: 0 auto 14px;
+    display: grid; place-items: center;
+    background: radial-gradient(circle at 30% 25%, rgba(255,255,255,0.10), rgba(143,175,181,0.06));
+    border: 1px solid var(--border); border-radius: 14px;
+}
+body[data-page='pricing'] .hiw-num {
+    position: absolute; top: -14px; left: 50%; transform: translateX(-50%);
+    width: 28px; height: 28px; margin: 0;
+    display: grid; place-items: center;
+    background: var(--bg); border: 1px solid var(--border); border-radius: 50%;
+    color: var(--primary-bright);
+    font-family: var(--t-font-mono); font-size: var(--t-fs-2xs); font-weight: var(--t-fw-normal);
+}
+body[data-page='pricing'] .hiw-arrow { display: none; }
+body[data-page='pricing'] .hiw-step h3 { margin: 6px 0 8px; font-size: var(--t-fs-md); }
+body[data-page='pricing'] .hiw-step p { font-size: var(--t-fs-xs); line-height: 1.6; }
+body[data-page='pricing'] .hiw-step em {
+    display: block; margin-top: 10px; font-style: normal;
+    font-family: var(--t-font-mono); font-size: var(--t-fs-3xs);
+    letter-spacing: 0.04em; color: var(--primary-bright); opacity: 0.85;
+}
+@media (max-width: 768px) {
+    body[data-page='pricing'] .hiw-steps { grid-template-columns: 1fr; gap: 28px; align-items: stretch; }
+    body[data-page='pricing'] .hiw-steps::before {
+        top: 8%; bottom: 8%; height: auto; width: 1px; left: 26px; right: auto;
+        background: linear-gradient(180deg, transparent, var(--border-primary), transparent);
+    }
+    body[data-page='pricing'] .hiw-step { text-align: left; padding-left: 64px; }
+    body[data-page='pricing'] .hiw-step .hiw-icon { position: absolute; left: 0; top: 26px; margin: 0; }
+    body[data-page='pricing'] .hiw-num { left: 26px; }
+}
+
+/* --- E3: "What's included" icon wall --- */
+body[data-page='pricing'] .hiw-included { margin-top: 40px; text-align: center; }
+body[data-page='pricing'] .hiw-included-label {
+    display: block; margin-bottom: 16px;
+    font-family: var(--t-font-mono); font-size: var(--t-fs-4xs); font-weight: var(--t-fw-normal);
+    letter-spacing: 0.12em; text-transform: uppercase; color: var(--text-faint);
+}
+body[data-page='pricing'] .hiw-included-wall {
+    display: flex; flex-wrap: wrap; justify-content: center; gap: 14px;
+    max-width: 620px; margin: 0 auto;
+}
+body[data-page='pricing'] .hiw-inc-chip {
+    display: grid; place-items: center; width: 52px; height: 52px;
+    background: radial-gradient(circle at 30% 25%, rgba(255,255,255,0.10), rgba(143,175,181,0.06));
+    border: 1px solid var(--border); border-radius: 14px;
+    transition: opacity .25s ease, border-color .25s ease, transform .25s ease;
+}
+body[data-page='pricing'] .hiw-inc-chip img { width: 26px; height: 26px; opacity: 0.85; }
+body[data-page='pricing'] .hiw-inc-chip:hover {
+    border-color: color-mix(in srgb, var(--sage) 30%, transparent);
+    transform: translateY(-2px);
+}
+body[data-page='pricing'] .hiw-inc-chip:hover img { opacity: 1; }
+body[data-page='pricing'] .hiw-included-link {
+    display: inline-block; margin-top: 18px; padding: 4px 2px;
+    font-family: var(--t-font-mono); font-size: var(--t-fs-3xs); letter-spacing: 0.06em;
+    color: var(--sage); text-decoration: none;
+}
+body[data-page='pricing'] .hiw-included-link:hover { text-decoration: underline; }
+
+/* --- E4: tier card type polish (token layer restates these later, so we
+   out-rank it with the extra .pricing-grid class) --- */
+body[data-page='pricing'] .pricing-grid .tier-name { font-size: var(--t-fs-md); }
+body[data-page='pricing'] .pricing-grid .pricing-card .price {
+    font-size: var(--t-fs-h2); font-weight: var(--t-fw-bold);
+}
+body[data-page='pricing'] .pricing-card.tier-sweetpea .price { color: var(--gold, #D9A86C); }
+body[data-page='pricing'] .pricing-grid .pricing-card .price-period {
+    font-family: var(--t-font-mono); font-size: var(--t-fs-4xs); font-weight: var(--t-fw-normal);
+    letter-spacing: 0.06em; text-transform: uppercase; color: var(--text-faint);
+}
+body[data-page='pricing'] .pricing-card.tier-seedling {
+    border-width: 1px; border-style: dashed; border-color: rgba(163, 201, 182, 0.35);
+}
+body[data-page='pricing'] .pricing-card .btn-glass-seedling:disabled {
+    color: var(--sage); background: rgba(163, 201, 182, 0.08);
+    border-color: rgba(163, 201, 182, 0.35);
+    cursor: not-allowed;
+}
+
+/* --- E5: compare table column emphasis --- */
+@media (min-width: 641px) {
+    .compare-table td.col-sweetpea { background: color-mix(in srgb, var(--gold, #D9A86C) 4%, transparent); }
+    .compare-table td.col-seedling { background: color-mix(in srgb, var(--sage) 4%, transparent); }
+}
+@media (min-width: 641px) and (max-width: 768px) {
+    .compare-table td:first-child { position: sticky; left: 0; background: var(--bg); z-index: 1; }
+}
+
+/* --- Motion kill-switch for everything added above --- */
+@media (prefers-reduced-motion: reduce) {
+    body[data-page='pricing'] .pc-btn,
+    body[data-page='pricing'] .pc-btn:hover,
+    body[data-page='pricing'] .pc-btn-primary:hover,
+    body[data-page='pricing'] .pc-btn-ghost:hover,
+    body[data-page='pricing'] .hiw-inc-chip,
+    body[data-page='pricing'] .hiw-inc-chip:hover { transition: none; transform: none; filter: none; }
+}
