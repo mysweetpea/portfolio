@@ -33,7 +33,7 @@
 html { scroll-behavior: smooth; }
 
 body {
-    font-family: 'Figtree', 'Figtree Fallback', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+    font-family: 'Inter', 'Inter Fallback', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
     background: var(--bg);
     color: var(--text);
     min-height: 100vh;
@@ -2116,7 +2116,7 @@ body[data-page='support'] .faq-item.open .faq-question .arrow {
 
 /* Serif display accent (loaded via Google Fonts on each page) */
 .hero h1, .section-title {
-    font-family: 'Fraunces', 'Fraunces Fallback', 'Figtree', 'Figtree Fallback', Georgia, serif;
+    font-family: 'Instrument Serif', 'Instrument Serif Fallback', Georgia, serif;
     font-weight: 600;
     letter-spacing: -0.01em;
 }
@@ -4278,7 +4278,7 @@ body[data-page='contact'] .contact-hero .hero-sub {
 .access-choice-card.selected { border: 2px solid var(--sage); background: rgba(163, 201, 182, 0.10); box-shadow: 0 0 0 3px rgba(163, 201, 182, 0.10); }
 .access-choice-icon, .access-choice-title, .access-choice-price, .access-choice-copy { display: block; }
 .access-choice-icon { margin-bottom: 12px; }
-.access-choice-title { font-family: 'Fraunces', 'Fraunces Fallback', serif; font-size: 1.45rem; font-weight: 600; color: var(--primary-bright); }
+.access-choice-title { font-family: 'Instrument Serif', 'Instrument Serif Fallback', serif; font-size: 1.45rem; font-weight: 600; color: var(--primary-bright); }
 .access-choice-price { margin: 5px 0 12px; font-weight: 700; font-size: .9rem; color: var(--sage); }
 .access-choice-copy { color: var(--text-dim); font-size: .91rem; line-height: 1.58; }
 .tier-form-section { max-width: 720px; margin: 0 auto; padding: 0 var(--gutter, 1.25rem) 30px; }
@@ -6207,7 +6207,6 @@ body[data-page='services'] .service-card .acct-pill {
     border-radius: 12px;
 }
 .hiw-step .hiw-icon img { width: 28px; height: 28px; }
-.hiw-step em { display: block; margin-top: 8px; color: var(--text-faint); font-size: 0.8rem; font-style: normal; }
 .hiw-arrow {
     display: flex; align-items: center; justify-content: center;
     color: var(--sage); font-size: 1.6rem; font-weight: 700;
@@ -7559,7 +7558,7 @@ body[data-page='pricing'] .hiw-steps {
     position: relative;
 }
 body[data-page='pricing'] .hiw-steps::before {
-    content: ""; position: absolute; top: 46px; left: 8%; right: 8%; height: 1px;
+    content: ""; position: absolute; top: 40px; left: 8%; right: 8%; height: 1px;
     background: linear-gradient(90deg, transparent, var(--border-primary), transparent);
     z-index: 0;
 }
@@ -7569,28 +7568,25 @@ body[data-page='pricing'] .hiw-step {
     background: var(--card-bg); border: 1px solid var(--border); border-radius: var(--radius);
     box-shadow: none;
 }
-body[data-page='pricing'] .hiw-step .hiw-icon {
-    width: 52px; height: 52px; margin: 0 auto 14px;
-    display: grid; place-items: center;
-    background: radial-gradient(circle at 30% 25%, rgba(255,255,255,0.10), rgba(143,175,181,0.06));
-    border: 1px solid var(--border); border-radius: 14px;
-}
-body[data-page='pricing'] .hiw-num {
-    position: absolute; top: -14px; left: 50%; transform: translateX(-50%);
+body[data-page='pricing'] .hiw-head { position: relative; height: 28px; margin-bottom: 16px; }
+body[data-page='pricing'] .hiw-head .hiw-num {
+    position: absolute; top: 0; left: 50%; transform: translateX(-50%); z-index: 1;
     width: 28px; height: 28px; margin: 0;
     display: grid; place-items: center;
     background: var(--bg); border: 1px solid var(--border); border-radius: 50%;
     color: var(--primary-bright);
     font-family: var(--t-font-mono); font-size: var(--t-fs-2xs); font-weight: var(--t-fw-normal);
 }
+body[data-page='pricing'] .hiw-head .hiw-icon {
+    position: absolute; top: 0; right: calc(50% - 68px);
+    width: 52px; height: 52px; margin: 0;
+    display: grid; place-items: center;
+    background: radial-gradient(circle at 30% 25%, rgba(255,255,255,0.10), rgba(143,175,181,0.06));
+    border: 1px solid var(--border); border-radius: 14px;
+}
 body[data-page='pricing'] .hiw-arrow { display: none; }
 body[data-page='pricing'] .hiw-step h3 { margin: 6px 0 8px; font-size: var(--t-fs-md); }
 body[data-page='pricing'] .hiw-step p { font-size: var(--t-fs-xs); line-height: 1.6; }
-body[data-page='pricing'] .hiw-step em {
-    display: block; margin-top: 10px; font-style: normal;
-    font-family: var(--t-font-mono); font-size: var(--t-fs-3xs);
-    letter-spacing: 0.04em; color: var(--primary-bright); opacity: 0.85;
-}
 @media (max-width: 768px) {
     body[data-page='pricing'] .hiw-steps { grid-template-columns: 1fr; gap: 28px; align-items: stretch; }
     body[data-page='pricing'] .hiw-steps::before {
@@ -7598,8 +7594,10 @@ body[data-page='pricing'] .hiw-step em {
         background: linear-gradient(180deg, transparent, var(--border-primary), transparent);
     }
     body[data-page='pricing'] .hiw-step { text-align: left; padding-left: 64px; }
-    body[data-page='pricing'] .hiw-step .hiw-icon { position: absolute; left: 0; top: 26px; margin: 0; }
-    body[data-page='pricing'] .hiw-num { left: 26px; }
+    body[data-page='pricing'] .hiw-head { height: auto; }
+    body[data-page='pricing'] .hiw-head .hiw-num { position: absolute; }
+    body[data-page='pricing'] .hiw-step .hiw-num { left: 26px; top: 26px; }
+    body[data-page='pricing'] .hiw-head .hiw-icon { position: static; margin: 0 0 10px; }
 }
 
 /* --- E3: "What's included" icon wall --- */
@@ -7650,6 +7648,26 @@ body[data-page='pricing'] .pricing-card .btn-glass-seedling:disabled {
     color: var(--sage); background: rgba(163, 201, 182, 0.08);
     border-color: rgba(163, 201, 182, 0.35);
     cursor: not-allowed;
+}
+
+/* --- E6: step note rows + tier card internals --- */
+body[data-page='pricing'] .hiw-note { display: flex; align-items: baseline; gap: 8px; padding: 8px 0; border-top: 1px solid var(--border); font-size: var(--t-fs-xs); color: var(--text-dim); text-align: left; }
+body[data-page='pricing'] .hiw-note:first-of-type { margin-top: 12px; }
+body[data-page='pricing'] .hiw-note-k { flex: 0 0 92px; font-family: var(--t-font-mono); font-size: var(--t-fs-4xs); letter-spacing: 0.08em; text-transform: uppercase; color: var(--sage); }
+body[data-page='pricing'] .tier-tagline { margin: 2px 0 10px; font-size: var(--t-fs-sm); color: var(--text-dim); }
+body[data-page='pricing'] .tier-divider { height: 1px; margin: 14px 0; background: linear-gradient(90deg, transparent, var(--border-primary), transparent); }
+body[data-page='pricing'] .features li { display: flex; gap: 10px; align-items: baseline; padding: 7px 0; }
+body[data-page='pricing'] .features .f-k { flex: 0 0 74px; font-family: var(--t-font-mono); font-size: var(--t-fs-4xs); letter-spacing: 0.08em; text-transform: uppercase; color: var(--sage); }
+body[data-page='pricing'] .tier-sweetpea .features .f-k { color: var(--gold, #D9A86C); }
+body[data-page='pricing'] .pricing-card .btn-glass-sweetpea {
+    background: linear-gradient(135deg, var(--gold), var(--gold-dim));
+    color: var(--bg); border: none;
+}
+body[data-page='pricing'] .pricing-card .btn-glass-sweetpea:hover:not(:disabled),
+body[data-page='pricing'] .pricing-card .btn-glass-sweetpea:focus-visible {
+    background: linear-gradient(135deg, var(--gold), var(--gold-dim));
+    color: var(--bg); border: none;
+    filter: brightness(1.06); transform: none; text-decoration: none;
 }
 
 /* --- E5: compare table column emphasis --- */

@@ -8,8 +8,8 @@
 
 :root {
   /* families */
-  --t-font-body: 'Figtree', 'Segoe UI', system-ui, sans-serif;
-  --t-font-display: 'Fraunces', Georgia, serif;
+  --t-font-body: 'Inter', 'Inter Fallback', 'Segoe UI', system-ui, sans-serif;
+  --t-font-display: 'Instrument Serif', 'Instrument Serif Fallback', Georgia, serif;
   --t-font-script: 'Great Vibes', 'Segoe Script', cursive;
   --t-font-mono: 'Cascadia Mono', ui-monospace, 'SF Mono', Menlo, monospace;
   /* weights */
