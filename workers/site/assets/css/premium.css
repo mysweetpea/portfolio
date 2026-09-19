@@ -1538,27 +1538,6 @@ button, input, select, textarea, optgroup {
     line-height: 1.1;
 }
 
-/* Section headings — the "big headers" the user asked to carry the script.
-   Sizes are ~1.25x the Fraunces values because script faces have a low
-   x-height and run optically small at the same font-size (measured against
-   the previous 2.5rem/1.1 section-title setting). */
-.hero h1.glass-text,
-.section-title.glass-text,
-h2.glass-text:not(.section-title) {
-    font-family: 'Great Vibes', 'Segoe Script', cursive;
-    font-weight: 400;
-    letter-spacing: 0.01em;
-}
-/* Specificity note: site.css sets `body[data-page='home'] .section-title`
-   (0,2,0 with an attribute) and `body[data-page='services'] .section-title`,
-   which BEAT a plain `.section-title.glass-text` (0,2,0). Measured: the home
-   heading rendered 35.2px instead of the intended 49.6px. The body[data-page]
-   qualifier here matches their weight so the display size actually applies. */
-.section-title.glass-text,
-body[data-page] .section-title.glass-text {
-    font-size: clamp(2.1rem, 4.6vw, 3.1rem);
-    line-height: 1.15;
-}
 h2.glass-text:not(.section-title),
 body[data-page] h2.glass-text:not(.section-title) {
     font-size: clamp(2rem, 4.2vw, 2.9rem);
