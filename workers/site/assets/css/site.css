@@ -5447,7 +5447,7 @@ body {
 }
 
 /* --- Premium link underline (subtle gradient) --- */
-.content-wrapper a:not(.nav-btn):not(.pc-btn):not(.nav-cta):not(.hero-btn):not(.cta-btn):not(.section-nav a):not(.wm-btn):not(.compare-cta):not(.teaser-btn):not(.status-action-btn):not(.service-chip):not(.github-link) {
+.content-wrapper a:not(.nav-btn):not(.pc-btn):not(.hiw-inc-chip):not(.hiw-included-link):not(.nav-cta):not(.hero-btn):not(.cta-btn):not(.section-nav a):not(.wm-btn):not(.compare-cta):not(.teaser-btn):not(.status-action-btn):not(.service-chip):not(.github-link) {
     text-decoration: none;
     background-image: linear-gradient(90deg, var(--sage), var(--primary));
     background-size: 100% 1px;
@@ -5455,7 +5455,7 @@ body {
     background-repeat: no-repeat;
     transition: background-size 0.3s var(--ease-premium);
 }
-.content-wrapper a:not(.nav-btn):not(.nav-cta):not(.hero-btn):not(.cta-btn):not(.section-nav a):not(.wm-btn):not(.compare-cta):not(.teaser-btn):not(.status-action-btn):not(.service-chip):not(.github-link):hover {
+.content-wrapper a:not(.nav-btn):not(.pc-btn):not(.hiw-inc-chip):not(.hiw-included-link):not(.nav-cta):not(.hero-btn):not(.cta-btn):not(.section-nav a):not(.wm-btn):not(.compare-cta):not(.teaser-btn):not(.status-action-btn):not(.service-chip):not(.github-link):hover {
     background-size: 100% 2px;
 }
 
@@ -6240,22 +6240,6 @@ body[data-page='services'] .service-card .acct-pill {
 .compare-legend .legend-dash { color: var(--text-faint); }
 
 /* --- Pricing support footer --- */
-.pricing-support {
-    max-width: 640px; margin: 0 auto 28px; padding: 20px 24px;
-    text-align: center;
-    background: var(--card-bg); border: 1px solid var(--border-primary);
-    border-radius: var(--radius);
-    backdrop-filter: blur(16px) saturate(1.2);
-}
-.pricing-support p { color: var(--text-dim); font-size: 0.95rem; margin-bottom: 0; }
-.pricing-support strong { color: var(--text); }
-.pricing-support a {
-    color: var(--sage); font-weight: 700; text-decoration: none;
-    border-bottom: 1px solid var(--sage); padding-bottom: 1px;
-    transition: color .18s ease, border-color .18s ease;
-}
-.pricing-support a:hover { color: var(--primary-bright); border-color: var(--primary-bright); }
-
 /* --- Mobile: stack hiw steps + arrows --- */
 @media (max-width: 640px) {
     .hiw-steps { flex-direction: column; align-items: center; }

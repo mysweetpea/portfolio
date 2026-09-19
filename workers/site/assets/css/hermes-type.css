@@ -1,17 +1,15 @@
 /* ==========================================================================
-   Hermes-look type layer (2026-09-19) — Instrument Serif display + Archivo
-   width-axis effects. Loads AFTER type-tokens.css so it can restate the
-   display/heading faces. The rest of the site keeps Figtree/Great Vibes.
+   Hermes-look type layer v2 (2026-09-19) — user-directed role split:
 
-   Design language borrowed from hermes-agent.nousresearch.com (measured):
-   - sharp single-weight serif for big statements (their Sigurd -> our
-     Instrument Serif)
-   - condensed poster lines + extended micro-labels (their Rules Variable
-     width axis -> our Archivo font-stretch)
-   - generous uppercase tracking on meta labels
+     Instrument Serif  -> BRANDING + ALL HEADINGS (display voice)
+     Archivo Variable  -> NUMBERS + their descriptive labels ONLY (stat voice)
+     Inter             -> everything else (body / nav / buttons / cards)
+
+   Inter is the rollback face kept on disk since the Figtree trial
+   (see fonts.css). Loads AFTER type-tokens.css; restates faces.
    ========================================================================== */
 
-/* --- 1. Display serif: hero H1 + section titles become Instrument Serif --- */
+/* --- 1. Branding + headings: Instrument Serif everywhere headers live --- */
 .hero h1,
 .section-title {
     font-family: 'Instrument Serif', 'Instrument Serif Fallback', 'Fraunces', 'Fraunces Fallback', Georgia, serif;
@@ -20,47 +18,57 @@
     line-height: 1.04;
 }
 
-/* Fraunces keeps mid-tier editorial spots (modals, access titles, proof stats)
-   where its warmth suits smaller sizes. */
-
-/* --- 2. Condensed poster voice: section subtitles become kicker lines --- */
-.section-subtitle,
-.hero-sub,
-.feature-intro,
-.steps-intro {
-    font-family: 'Archivo', 'Archivo Fallback', 'Figtree', sans-serif;
-    font-stretch: 76%;                /* condensed poster voice */
-    font-weight: 500;
-    text-transform: uppercase;
-    letter-spacing: 0.13em;
-    font-size: 0.74rem;
-    color: var(--text-faint);
+/* Mid-tier editorial headings that were Fraunces move to Instrument too,
+   so ALL headings share one brand voice. */
+.access-choice-title,
+.modal h2,
+.modal h3,
+.mystery-title {
+    font-family: 'Instrument Serif', 'Instrument Serif Fallback', 'Fraunces', Georgia, serif;
+    font-weight: 400;
+    letter-spacing: -0.005em;
 }
 
-/* --- 3. Extended micro-labels: hero proof labels + badges --- */
-.proof-label,
-.tier-badge,
-.compare-soon-tag {
-    font-family: 'Archivo', 'Archivo Fallback', 'Figtree', sans-serif;
-    font-stretch: 112%;               /* extended label voice */
-    font-weight: 500;
-    letter-spacing: 0.07em;
-}
-
-/* --- 4. Stat values: big condensed numerals (the Hermes stats look) --- */
-.proof-stat .proof-value {
+/* --- 2. Numbers + their labels: Archivo only, nothing else --- */
+.proof-stat .proof-value,
+.stat-value {
     font-family: 'Archivo', 'Archivo Fallback', sans-serif;
-    font-stretch: 78%;
+    font-stretch: 78%;                /* condensed stat numerals */
     font-weight: 650;
     letter-spacing: -0.01em;
 }
 
-/* --- 5. Hero H1 scale bump (Instrument reads smaller than Fraunces at the
-       same px because of its short x-height; compensate ~8%) --- */
+/* words describing the numbers (labels under / beside stats) */
+.proof-stat .proof-label,
+.stat-label {
+    font-family: 'Archivo', 'Archivo Fallback', sans-serif;
+    font-stretch: 100%;               /* normal width for readability */
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    font-size: 0.78rem;
+    color: var(--text-faint);
+}
+
+/* --- 3. Everything else: easy-reading Inter (was Figtree trial) --- */
+body {
+    font-family: 'Inter', 'Inter Fallback', sans-serif;
+}
+
+/* Buttons, nav links, cards inherit body Inter automatically; restate the
+   spots that previously named Figtree explicitly so nothing re-resolves to
+   a fallback chain that skips Inter. */
+.btn, .view-tab, .nav-links a, .nav-btn,
+.feature-card h3, .value-tab, .card h3, .svc-card h3 {
+    font-family: 'Inter', 'Inter Fallback', sans-serif;
+}
+
+/* --- 4. Hero H1 scale bump (Instrument's short x-height needs ~8% more
+       px than Fraunces to hold the same presence) --- */
 @media (min-width: 768px) {
     .hero h1 { font-size: clamp(3rem, 6.6vw, 4.75rem); }
 }
 
 @media (max-width: 640px) {
-    .section-subtitle, .hero-sub { font-size: 0.7rem; letter-spacing: 0.11em; }
+    .proof-stat .proof-label { font-size: 0.72rem; letter-spacing: 0.09em; }
 }
