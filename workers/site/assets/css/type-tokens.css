@@ -27,6 +27,7 @@
   --t-fs-hero: clamp(1.7rem, 1.5vw + 1.1rem, 2rem);
   --t-fs-h1: 2.2rem;
   --t-fs-h2: 1.55rem;
+  --t-fs-h2-plus: 1.6rem;
   --t-fs-h3: 1.2rem;
   --t-fs-lg: 1.05rem;
   --t-fs-body: 1rem;
@@ -115,7 +116,7 @@ body[data-page='p404'] .p404-help a {
   }
 
   body[data-page='p404'] .hero h1 {
-      font-size: var(--t-fs-h2);
+      font-size: var(--t-fs-h2-plus);
   }
 
 }
@@ -182,7 +183,7 @@ body[data-page='about'] .cta-card p {
 
 @media (max-width: 768px) {
   body[data-page='about'] .hero h1 {
-      font-size: var(--t-fs-h2);
+      font-size: var(--t-fs-h2-plus);
   }
 
 }
@@ -211,7 +212,7 @@ body[data-page='error'] .contact-link {
 
 @media (max-width: 768px) {
   body[data-page='error'] .hero h1 {
-      font-size: var(--t-fs-h2);
+      font-size: var(--t-fs-h2-plus);
   }
 
 }
@@ -261,7 +262,7 @@ body[data-page='form'] .validation-icon {
 }
 
 body[data-page='form'] .crypto-option .icon {
-    font-size: 1.8rem;
+    font-size: var(--t-fs-h2-plus);
 }
 
 body[data-page='form'] .crypto-option .name {
@@ -307,7 +308,7 @@ body[data-page='form'] .faq-answer p {
 
 @media (max-width: 768px) {
   body[data-page='form'] .hero h1 {
-      font-size: var(--t-fs-h2);
+      font-size: var(--t-fs-h2-plus);
   }
 
 }
@@ -361,7 +362,7 @@ body[data-page='home'] .stat-card .label {
 }
 
 body[data-page='home'] .cta-card h2 {
-    font-size: var(--t-fs-h2);
+    font-size: var(--t-fs-h2-plus);
 }
 
 body[data-page='home'] .cta-card p {
@@ -512,7 +513,7 @@ body[data-page='pricing'] .modal-footer .btn {
 
 @media (max-width: 768px) {
   body[data-page='pricing'] .hero h1 {
-      font-size: var(--t-fs-h2);
+      font-size: var(--t-fs-h2-plus);
   }
 
 }
@@ -551,7 +552,7 @@ body[data-page='success'] .contact-link {
 
 @media (max-width: 768px) {
   body[data-page='success'] .hero h1 {
-      font-size: var(--t-fs-h2);
+      font-size: var(--t-fs-h2-plus);
   }
 
 }
@@ -710,7 +711,7 @@ body[data-page='support'] .faq-answer p {
 
 @media (max-width: 768px) {
   body[data-page='support'] .hero h1 {
-      font-size: var(--t-fs-h2);
+      font-size: var(--t-fs-h2-plus);
   }
 
 }
@@ -1005,7 +1006,7 @@ body[data-page='status'] .hero.status-hero h1 {
 
 @media (max-width: 768px) {
   body[data-page] .hero h1 {
-      font-size: var(--t-fs-h2) !important;
+      font-size: var(--t-fs-h2-plus) !important;
   }
 
 }
@@ -1362,7 +1363,7 @@ body[data-page='status'] .status-updated {
 }
 
 .hiw-arrow {
-    font-size: var(--t-fs-h2);
+    font-size: var(--t-fs-h2-plus);
     font-weight: var(--t-fw-bold);
 }
 
@@ -1481,7 +1482,7 @@ body[data-page='redeem'] .redeem-hero h1 {
 }
 
 body[data-page='redeem'] .redeem-section .form-card h2 {
-    font-size: var(--t-fs-h2);
+    font-size: var(--t-fs-h2-plus);
 }
 
 body[data-page='redeem'] #rc-submit {
@@ -1635,7 +1636,7 @@ body[data-page='home'] .hero h1 {
 
 .sp-title {
     font-family: var(--t-font-display);
-    font-size: var(--t-fs-h2);
+    font-size: var(--t-fs-h2-plus);
 }
 
 .sp-copy {
@@ -1837,7 +1838,7 @@ body[data-page='home'] .hero h1 {
 }
 
 .dashboard-teaser-item .dt-num {
-    font-size: var(--t-fs-h2);
+    font-size: var(--t-fs-h2-plus);
     font-weight: var(--t-fw-bold);
 }
 
@@ -2019,7 +2020,7 @@ body[data-page='services'] .service-card .acct-pill {
 }
 
 .hiw-arrow {
-    font-size: var(--t-fs-h2);
+    font-size: var(--t-fs-h2-plus);
     font-weight: var(--t-fw-bold);
 }
 
@@ -2191,7 +2192,7 @@ body[data-page='status'] .status-report p {
 
 body[data-page='status'] .metric-value {
     font-weight: var(--t-fw-bold);
-    font-size: var(--t-fs-h2);
+    font-size: var(--t-fs-h2-plus);
     line-height: var(--t-lh-tight);
 }
 
@@ -2367,7 +2368,7 @@ body[data-page='form'] .vc-text {
 
 .proof-stat .proof-value {
     font-family: var(--t-font-display);
-    font-size: var(--t-fs-h2);
+    font-size: var(--t-fs-h2-plus);
     font-weight: var(--t-fw-medium);
     line-height: var(--t-lh-tight);
 }
@@ -2531,7 +2532,7 @@ body[data-page='form'] .vc-text {
 
 .top-nav .nav-brand {
     font-family: var(--t-font-script);
-    font-size: var(--t-fs-h2);
+    font-size: var(--t-fs-h2-plus);
     font-weight: var(--t-fw-normal);
 }
 
@@ -2544,7 +2545,7 @@ body[data-page='form'] .vc-text {
 
 @media (max-width: 480px) {
   .top-nav .nav-brand {
-      font-size: var(--t-fs-h3);
+      font-size: var(--t-fs-h2);
   }
 
 }

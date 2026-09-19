@@ -1225,9 +1225,6 @@
     max-width: 1180px;
     margin: 0 auto;
     padding: 0 34px 30px;
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    background: linear-gradient(180deg, transparent, rgba(94, 184, 168, 0.03));
     position: relative;
 }
 
@@ -1420,12 +1417,12 @@ button, input, select, textarea, optgroup {
    ======================================================================== */
 .msb-wrap { display: inline-flex; align-items: center; gap: 9px; }
 .msb {
-    /* 30px, up from 25px. USER REQUEST: the mark should read a little larger
+    /* 34px (brand-dominant lockup pass Sep 19; was 30px, before that 25px). USER REQUEST: the mark should read a little larger
        than the wordmark beside it. At the nav's 24px Great Vibes the ascenders
        only reach ~19.6px (script cap/x-height are low), so a 25px mark looked
        the same size or smaller than the text. 30px makes it clearly dominant
        while still fitting the 40.8px nav line box. */
-    display: block; width: 30px; height: 30px; overflow: visible; flex: none;
+    display: block; width: 34px; height: 34px; overflow: visible; flex: none;
 }
 .msb-petal { transform-box: view-box; transform-origin: 50px 62px;
     transition: transform .55s cubic-bezier(.34, 1.35, .5, 1); }
@@ -1515,16 +1512,16 @@ button, input, select, textarea, optgroup {
 .top-nav .nav-brand {
     font-family: 'Great Vibes', 'Segoe Script', cursive;
     /* was 1.06rem Fraunces; script needs more size for the same optical weight */
-    font-size: 1.5rem;
+    font-size: 1.6rem;
     font-weight: 400;
     letter-spacing: 0.01em;
 }
 /* The drawer / compact bands were tuned for Fraunces metrics - keep parity. */
 @media (max-width: 768px) {
-    .top-nav .nav-brand { font-size: 1.4rem; }
+    .top-nav .nav-brand { font-size: 1.5rem; }
 }
 @media (max-width: 480px) {
-    .top-nav .nav-brand { font-size: 1.3rem; }
+    .top-nav .nav-brand { font-size: 1.4rem; }
 }
 
 /* Footer wordmark. MUST match the specificity of the existing
