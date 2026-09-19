@@ -378,8 +378,8 @@
 }
 
 /* === Nav sign-in (dashboard entry) === */
-.nav-signin { border: 1px solid rgba(217,168,108,.45); border-radius: 999px; padding: 7px 16px; color: var(--gold, #D9A86C); }
-.nav-signin:hover { border-color: rgba(217,168,108,.8); background: rgba(217,168,108,.08); }
+.nav-signin { color: var(--gold, #D9A86C); }
+.nav-signin:hover { color: var(--gold, #D9A86C); text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 7px; text-decoration-color: color-mix(in srgb, var(--gold) 55%, transparent); }
 
 /* === 8. Micro-interaction polish === */
 .hero-btn, .cta-btn, .nav-cta { transition: transform 0.25s ease, box-shadow 0.25s ease, background 0.25s ease, color 0.25s ease; }
@@ -533,7 +533,7 @@
 }
 
 /* Light theme parity for the new states. */
-[data-theme="light"] .top-nav .nav-signin { color: #2F5A44; border-color: rgba(62, 124, 95, 0.14); }
+[data-theme="light"] .top-nav .nav-signin { color: #2F5A44; border-color: transparent; }
 [data-theme="light"] .top-nav .nav-signin:hover { color: #1B2B31; background: rgba(62, 124, 95, 0.10); }
 [data-theme="light"] .top-nav .nav-btn:hover { color: #1B2B31; }
 [data-theme="light"] .top-nav .nav-btn[aria-current="page"] { color: #1B2B31; }
@@ -658,16 +658,12 @@
     align-items: center;
     gap: 7px;
     padding: 8px 10px;
-    /* Faint pill so adjacent items read as separate targets (USER REQUEST
-       2026-09-18: "make each button have a very faint pill or something like
-       that so there is a clear separation between them"). Kept deliberately
-       below button-weight: a 4.5% wash plus a 6% hairline. The hover state
-       lifts it to 12%, so the resting pill still reads as inert.
-       --border-primary is a color-mix() of --primary, so both tones follow
-       the palette in dark AND light themes automatically. */
-    background: color-mix(in srgb, var(--primary) 4.5%, transparent);
-    border: 1px solid color-mix(in srgb, var(--primary) 6%, transparent);
-    border-radius: 999px;
+    /* Plain text links (USER REQUEST 2026-09-19: pills removed). Buttons are
+       distinguished by the mono voice + glyph, a hover underline, and the
+       gradient crown on the active page - no boxes at rest. */
+    background: transparent;
+    border: 0;
+    border-radius: 0;
     color: var(--text-dim);
     font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
     font-size: 0.775rem;
@@ -677,20 +673,20 @@
     transition: background 0.18s ease, border-color 0.18s ease, color 0.18s ease;
 }
 .top-nav .nav-btn:hover {
-    background: color-mix(in srgb, var(--primary) 12%, transparent);
-    border-color: color-mix(in srgb, var(--primary) 22%, transparent);
+    background: transparent;
     color: var(--primary-bright);
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 7px;
+    text-decoration-color: color-mix(in srgb, var(--primary) 45%, transparent);
 }
-/* Active page keeps the faint pill and gets the sage tint on top. */
+/* Active page: no box; the gradient crown underline marks it. */
 .top-nav .nav-btn[aria-current="page"] {
-    background: color-mix(in srgb, var(--sage) 9%, transparent);
-    border-color: color-mix(in srgb, var(--sage) 18%, transparent);
+    background: transparent;
 }
 .top-nav .nav-btn svg { flex: none; opacity: 0.6; transition: opacity 0.18s; }
 .top-nav .nav-btn:hover {
     color: var(--primary-bright);
-    /* background comes from the faint-pill rule above (12% wash). Deliberately
-       NOT `background: transparent` — that would cancel the pill. */
 }
 /* Retire section 11's teal hover glow. The :not() qualifier is required: the
    rule being retired is .top-nav .nav-btn:not([aria-current="page"]):hover
@@ -713,11 +709,10 @@
 .top-nav .nav-signin {
     margin-left: 4px;
     padding: 8px 11px;
-    /* Faint pill, matching the text links and the utility pair — every
-       clickable thing in the bar shares one grammar (USER REQUEST). */
-    border: 1px solid color-mix(in srgb, var(--primary) 6%, transparent);
-    border-radius: 999px;
-    background: color-mix(in srgb, var(--primary) 4.5%, transparent);
+    /* Plain text (pills retired 2026-09-19); gold tint marks the account path. */
+    border: 0;
+    border-radius: 0;
+    background: transparent;
     color: var(--text-dim);
     font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
     font-size: 0.775rem;
@@ -1564,3 +1559,26 @@ body[data-page] h2.glass-text:not(.section-title) {
     line-height: 1.15;
 }
 
+
+
+/* === Pills retired (2026-09-19): plain-text nav grammar. The active page is
+   marked by the gradient crown underline from the v18 block; these overrides
+   strip the legacy boxed active state that site.css still applies with
+   !important. Desktop bar only (min-width:1024px) - the mobile drawer keeps
+   its own active treatment. === */
+@media (min-width: 1024px) {
+    .top-nav .nav-btn.active,
+    .top-nav .nav-btn[aria-current="page"] {
+        color: var(--sage) !important;
+        background: transparent !important;
+        border: 0 !important;
+        box-shadow: none !important;
+    }
+    [data-theme="light"] .top-nav .nav-btn.active,
+    [data-theme="light"] .top-nav .nav-btn[aria-current="page"] {
+        color: #2F5A44 !important;
+        background: transparent !important;
+        border: 0 !important;
+        box-shadow: none !important;
+    }
+}
