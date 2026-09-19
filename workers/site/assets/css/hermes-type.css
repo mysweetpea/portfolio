@@ -1,0 +1,66 @@
+/* ==========================================================================
+   Hermes-look type layer (2026-09-19) — Instrument Serif display + Archivo
+   width-axis effects. Loads AFTER type-tokens.css so it can restate the
+   display/heading faces. The rest of the site keeps Figtree/Great Vibes.
+
+   Design language borrowed from hermes-agent.nousresearch.com (measured):
+   - sharp single-weight serif for big statements (their Sigurd -> our
+     Instrument Serif)
+   - condensed poster lines + extended micro-labels (their Rules Variable
+     width axis -> our Archivo font-stretch)
+   - generous uppercase tracking on meta labels
+   ========================================================================== */
+
+/* --- 1. Display serif: hero H1 + section titles become Instrument Serif --- */
+.hero h1,
+.section-title {
+    font-family: 'Instrument Serif', 'Instrument Serif Fallback', 'Fraunces', 'Fraunces Fallback', Georgia, serif;
+    font-weight: 400;                 /* Instrument is single-weight; size does the work */
+    letter-spacing: -0.01em;
+    line-height: 1.04;
+}
+
+/* Fraunces keeps mid-tier editorial spots (modals, access titles, proof stats)
+   where its warmth suits smaller sizes. */
+
+/* --- 2. Condensed poster voice: section subtitles become kicker lines --- */
+.section-subtitle,
+.hero-sub,
+.feature-intro,
+.steps-intro {
+    font-family: 'Archivo', 'Archivo Fallback', 'Figtree', sans-serif;
+    font-stretch: 76%;                /* condensed poster voice */
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.13em;
+    font-size: 0.74rem;
+    color: var(--text-faint);
+}
+
+/* --- 3. Extended micro-labels: hero proof labels + badges --- */
+.proof-label,
+.tier-badge,
+.compare-soon-tag {
+    font-family: 'Archivo', 'Archivo Fallback', 'Figtree', sans-serif;
+    font-stretch: 112%;               /* extended label voice */
+    font-weight: 500;
+    letter-spacing: 0.07em;
+}
+
+/* --- 4. Stat values: big condensed numerals (the Hermes stats look) --- */
+.proof-stat .proof-value {
+    font-family: 'Archivo', 'Archivo Fallback', sans-serif;
+    font-stretch: 78%;
+    font-weight: 650;
+    letter-spacing: -0.01em;
+}
+
+/* --- 5. Hero H1 scale bump (Instrument reads smaller than Fraunces at the
+       same px because of its short x-height; compensate ~8%) --- */
+@media (min-width: 768px) {
+    .hero h1 { font-size: clamp(3rem, 6.6vw, 4.75rem); }
+}
+
+@media (max-width: 640px) {
+    .section-subtitle, .hero-sub { font-size: 0.7rem; letter-spacing: 0.11em; }
+}

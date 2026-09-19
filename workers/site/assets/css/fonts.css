@@ -154,3 +154,57 @@
     font-display: swap;   /* display use, above the fold, preloaded */
     src: url('/assets/fonts/greatvibes.woff2') format('woff2');
 }
+
+/* --------------------------------------------------------------------------
+   Instrument Serif (2026-09-19) — the "Hermes-look" display serif. Sharp,
+   high-contrast, slightly condensed: the closest OFL match to the Sigurd
+   Variable used on hermes-agent.nousresearch.com. Regular (400) only — the
+   upstream family has just Regular + Italic; synthesize bold via weight if
+   ever needed, but design intent is single-weight display.
+   Source: google/fonts ofl/instrumentserif, subsetted latin, 20.3 KB.
+   -------------------------------------------------------------------------- */
+@font-face {
+    font-family: 'Instrument Serif';
+    font-style: normal;
+    font-weight: 400;
+    font-display: swap;
+    src: url('/assets/fonts/instrument-serif.woff2') format('woff2');
+}
+
+/* Instrument Serif metric fallback — Georgia is the closest local serif. */
+@font-face {
+    font-family: 'Instrument Serif Fallback';
+    src: local('Georgia'), local('Times New Roman'), local('Times');
+    size-adjust: 88%;
+    ascent-override: 105%;
+    descent-override: 26%;
+    line-gap-override: 0%;
+}
+
+/* --------------------------------------------------------------------------
+   Archivo Variable (2026-09-19) — grotesque with a real WIDTH axis
+   (wdth 62-125, wght 100-900). This is the trick behind the
+   hermes-agent.nousresearch.com condensed/extended display headlines
+   (Rules Variable there does the same with a 25%-200% axis). The site can
+   now do `font-stretch: 70%` poster lines and `font-stretch: 115%` labels
+   without a second font file.
+   Source: google/fonts ofl/archivo, subsetted latin, 85.9 KB.
+   -------------------------------------------------------------------------- */
+@font-face {
+    font-family: 'Archivo';
+    font-style: normal;
+    font-weight: 100 900;
+    font-stretch: 62% 125%;
+    font-display: swap;
+    src: url('/assets/fonts/archivo-var.woff2') format('woff2');
+}
+
+/* Archivo metric fallback — Segoe UI is the closest local grotesque. */
+@font-face {
+    font-family: 'Archivo Fallback';
+    src: local('Segoe UI'), local('Arial'), local('Helvetica Neue');
+    size-adjust: 104%;
+    ascent-override: 92%;
+    descent-override: 23%;
+    line-gap-override: 0%;
+}
