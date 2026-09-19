@@ -7578,8 +7578,7 @@ body[data-page='pricing'] .hiw-head .hiw-num {
     font-family: var(--t-font-mono); font-size: var(--t-fs-2xs); font-weight: var(--t-fw-normal);
 }
 body[data-page='pricing'] .hiw-head .hiw-icon {
-    position: absolute; top: -12px; right: calc(50% - 68px);
-    width: 52px; height: 52px; margin: 0;
+    position: static; width: 44px; height: 44px; margin: 0;
     display: grid; place-items: center;
     background: radial-gradient(circle at 30% 25%, rgba(255,255,255,0.10), rgba(143,175,181,0.06));
     border: 1px solid var(--border); border-radius: 14px;
@@ -7650,6 +7649,16 @@ body[data-page='pricing'] .pricing-card .btn-glass-seedling:disabled {
     cursor: not-allowed;
 }
 
+/* --- timeline title row (icon + h3 inline, below the num rail) --- */
+body[data-page='pricing'] .hiw-title { display: flex; align-items: center; justify-content: center; gap: 12px; margin: 4px 0 10px; }
+body[data-page='pricing'] .hiw-title .hiw-icon { width: 44px; height: 44px; display: grid; place-items: center; background: radial-gradient(circle at 30% 25%, rgba(255,255,255,0.10), rgba(143,175,181,0.06)); border: 1px solid var(--border); border-radius: 12px; }
+body[data-page='pricing'] .hiw-title .hiw-icon img { width: 24px; height: 24px; }
+body[data-page='pricing'] .hiw-title h3 { margin: 0; text-align: left; }
+
+/* --- tier feature keywords: more distinct (chip-style labels) --- */
+body[data-page='pricing'] .features .f-k { flex: 0 0 86px; font-family: var(--t-font-mono); font-size: var(--t-fs-4xs); font-weight: var(--t-fw-bold); letter-spacing: 0.1em; text-transform: uppercase; color: var(--sage); background: rgba(163,201,182,0.08); border: 1px solid rgba(163,201,182,0.22); border-radius: 6px; padding: 3px 0; text-align: center; }
+body[data-page='pricing'] .tier-sweetpea .features .f-k { color: var(--gold, #D9A86C); background: rgba(217,168,108,0.08); border-color: rgba(217,168,108,0.25); }
+
 /* --- E6: step note rows + tier card internals --- */
 body[data-page='pricing'] .hiw-note { display: flex; align-items: baseline; gap: 8px; padding: 8px 0; border-top: 1px solid var(--border); font-size: var(--t-fs-xs); color: var(--text-dim); text-align: left; }
 body[data-page='pricing'] .hiw-note:first-of-type { margin-top: 12px; }
@@ -7660,14 +7669,21 @@ body[data-page='pricing'] .features li { display: flex; gap: 10px; align-items: 
 body[data-page='pricing'] .features .f-k { flex: 0 0 74px; font-family: var(--t-font-mono); font-size: var(--t-fs-4xs); letter-spacing: 0.08em; text-transform: uppercase; color: var(--sage); }
 body[data-page='pricing'] .tier-sweetpea .features .f-k { color: var(--gold, #D9A86C); }
 body[data-page='pricing'] .pricing-card .btn-glass-sweetpea {
+    display: inline-flex; align-items: center; justify-content: center;
+    min-height: 50px; padding: 0 28px; border-radius: 999px;
     background: linear-gradient(135deg, var(--gold), var(--gold-dim));
-    color: var(--bg); border: none;
+    color: #14100A; border: 1px solid rgba(255,255,255,0.18);
+    box-shadow: 0 10px 26px rgba(217, 168, 108, 0.28), inset 0 1px 0 rgba(255,255,255,0.22);
+    font-size: var(--t-fs-sm); font-weight: var(--t-fw-bold); letter-spacing: 0.02em;
+    text-decoration: none; transition: filter .25s ease, transform .25s ease, box-shadow .25s ease;
 }
 body[data-page='pricing'] .pricing-card .btn-glass-sweetpea:hover:not(:disabled),
 body[data-page='pricing'] .pricing-card .btn-glass-sweetpea:focus-visible {
     background: linear-gradient(135deg, var(--gold), var(--gold-dim));
-    color: var(--bg); border: none;
-    filter: brightness(1.06); transform: none; text-decoration: none;
+    color: #14100A; border-color: rgba(255,255,255,0.28);
+    filter: brightness(1.07); transform: translateY(-2px);
+    box-shadow: 0 14px 32px rgba(217, 168, 108, 0.36), inset 0 1px 0 rgba(255,255,255,0.26);
+    text-decoration: none;
 }
 
 /* --- E5: compare table column emphasis --- */
