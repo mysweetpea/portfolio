@@ -1445,10 +1445,23 @@
 .s5 { --dx: -6px; --dy: -6px; --dr: -66deg; }
 .s6 { --dx:  6px; --dy: -7px; --dr:  62deg; }
 
-/* Wordmark warms to teal on the same beat as the bloom. */
+/* Wordmark warms to teal on the same beat as the bloom.
+   The footer wordmark is a bare <span> (no class) and site.css styles
+   `.nav-logo span` with a gradient text-fill, so plain `color` loses. The
+   footer rule below therefore resets the fill to `currentColor` and is
+   scoped to the footer wrapper to avoid touching the nav wordmark. */
 .msb-wrap .nav-brand, .msb-wrap > span { transition: color .35s ease; }
 .msb-wrap:hover .nav-brand, .msb-wrap:focus-visible .nav-brand,
 .msb-wrap:hover > span, .msb-wrap:focus-visible > span { color: var(--primary-bright); }
+
+/* Footer wordmark: plain colour, no gradient fill, so the hover colour lands. */
+.page-footer .msb-wrap > span {
+    -webkit-text-fill-color: currentColor;
+    background: none;
+    transition: color .35s ease;
+}
+.page-footer .msb-wrap:hover > span,
+.page-footer .msb-wrap:focus-visible > span { color: var(--primary-bright); }
 
 /* Footer uses the same mark a little larger. */
 .footer-brand .msb { width: 28px; height: 28px; }
