@@ -7441,10 +7441,10 @@ body[data-page='form'] .vc-text {
 /* ==== Services v2: card header, tier pill, github link (Sep 19) ==== */
 .service-title-wrap { display: flex; flex-direction: column; gap: 4px; min-width: 0; flex: 1; }
 .service-title-wrap h3 { display: block; line-height: 1.25; }
-.sp-meta { display: inline-flex; align-items: center; gap: 7px; font-family: ui-monospace, 'JetBrains Mono', 'Cascadia Mono', monospace; font-size: 0.62rem; font-weight: 600; letter-spacing: 0.09em; text-transform: uppercase; color: var(--text-dim); }
+.sp-meta { display: inline-flex; align-items: center; gap: 7px; font-family: ui-monospace, 'JetBrains Mono', 'Cascadia Mono', monospace; font-size: 0.7rem; font-weight: 600; letter-spacing: 0.09em; text-transform: uppercase; color: var(--text-dim); }
 .sp-meta .status-dot { margin-right: 0; width: 7px; height: 7px; }
 .sp-sep { opacity: 0.45; }
-.gh-link { display: inline-flex; align-items: center; gap: 4px; padding: 1px 7px; border-radius: 999px; border: 1px solid var(--border); color: var(--text-dim); font-size: 0.62rem; font-weight: 600; letter-spacing: 0.06em; text-decoration: none; transition: var(--transition); }
+.gh-link { display: inline-flex; align-items: center; gap: 4px; padding: 1px 7px; border-radius: 999px; border: 1px solid var(--border); color: var(--text-dim); font-size: 0.7rem; font-weight: 600; letter-spacing: 0.06em; text-decoration: none; transition: var(--transition); }
 .gh-link:hover { color: var(--text); border-color: var(--sage); background: rgba(143, 175, 181, 0.08); }
 .gh-link svg { opacity: 0.8; }
 .tier-pill { display: inline-flex; align-items: center; gap: 6px; padding: 5px 12px; border-radius: 999px; background: linear-gradient(135deg, rgba(217, 168, 108, 0.16), rgba(217, 168, 108, 0.07)); border: 1px solid rgba(217, 168, 108, 0.45); color: var(--gold, #D9A86C); font-size: var(--t-fs-3xs); font-weight: var(--t-fw-bold); letter-spacing: 0.05em; white-space: nowrap; flex-shrink: 0; box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06), 0 0 14px rgba(217, 168, 108, 0.12); }
@@ -7469,7 +7469,7 @@ body[data-page='form'] .vc-text {
 .lightbox-meta { display: inline-flex; align-items: center; gap: 7px; margin-top: 3px; font-family: ui-monospace, 'JetBrains Mono', 'Cascadia Mono', monospace; font-size: 0.62rem; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-dim); }
 .lightbox-meta .status-dot { margin-right: 0; width: 7px; height: 7px; }
 .lightbox-actions { display: flex; align-items: center; gap: 9px; margin-left: auto; }
-.lb-btn { display: inline-flex; align-items: center; gap: 7px; padding: 8px 14px; border-radius: 999px; font-size: var(--t-fs-2xs); font-weight: var(--t-fw-bold); letter-spacing: 0.02em; text-decoration: none; transition: var(--transition); }
+.lb-btn { display: inline-flex; align-items: center; min-height: 40px; gap: 7px; padding: 8px 14px; border-radius: 999px; font-size: var(--t-fs-2xs); font-weight: var(--t-fw-bold); letter-spacing: 0.02em; text-decoration: none; transition: var(--transition); }
 .lb-ghost { border: 1px solid var(--border-primary); color: var(--text-dim); }
 .lb-ghost:hover { color: var(--text); border-color: var(--sage); background: rgba(143, 175, 181, 0.08); }
 .lb-primary { background: linear-gradient(135deg, #8FAFB5, #6B9AA6); color: #06110F; box-shadow: 0 2px 14px rgba(143, 175, 181, 0.25); }
