@@ -17,3 +17,5 @@ fetch-icons.sh
 wrangler.jsonc
 .assetsignore
 .oc-tmp/
+# Scratch font test pages (underscore-prefixed); keep them unpublished.
+_fntest*.html
