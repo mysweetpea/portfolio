@@ -1849,3 +1849,60 @@ body[data-page='redeem'] #rc-submit { background: linear-gradient(135deg, var(--
 body[data-page='redeem'] #rc-submit:not(:disabled):hover, body[data-page='redeem'] #rc-submit:not(:disabled):focus-visible { filter: brightness(1.07); box-shadow: 0 10px 28px -8px rgba(143,175,181,.6); transform: translateY(-1px); }
 body[data-page='redeem'] #rc-submit:disabled { background: rgba(163,201,182,.18); color: rgba(237,243,244,.45); box-shadow: none; }
 [data-theme="light"] body[data-page='redeem'] #rc-submit:disabled { background: rgba(46,92,70,.12); color: rgba(30,42,45,.4); }
+
+
+/* ==== Redeem polish round 2 (Sep 20 evening) ====
+   From the fresh dark/light/mobile capture review:
+   1) callout demoted from competing panel to quiet footnote strip
+   2) chips live bare under the field (drop the odd bordered box)
+   3) submit gains presence (full-radius pill, stronger gradient, bloom) + chevron
+   4) card crown gains the bloom medallion (site keystone motif)
+   5) label/meta micro-rhythm tighten */
+
+/* 1) callout: no more heavy bordered panel above the code — quiet inline note */
+body[data-page='redeem'] .redeem-callout { border: none; background: transparent;
+    padding: 0; margin: 0 auto 26px; max-width: 520px; text-align: center; display: block; }
+body[data-page='redeem'] .redeem-callout strong { display: inline; color: var(--text-dim);
+    font-weight: 600; }
+body[data-page='redeem'] .redeem-callout span { display: inline; font-size: .88rem; }
+body[data-page='redeem'] .redeem-callout .btn { display: inline; background: none; border: none;
+    padding: 0; min-height: 0; color: var(--sage); font-weight: 600; white-space: normal; }
+body[data-page='redeem'] .redeem-callout .btn:hover, body[data-page='redeem'] .redeem-callout .btn:focus-visible {
+    background: none; color: var(--primary-bright); transform: none; }
+body[data-page='redeem'] .redeem-callout .btn::after { content: " 97"; font-size: .8em; }
+[data-theme="light"] body[data-page='redeem'] .redeem-callout strong { color: var(--text-dim); }
+
+/* 2) username chips: drop the bordered wrapper box, chips float freely */
+body[data-page='redeem'] .username-checks { border: none; background: none; padding: 2px 2px 0; }
+
+/* 3) submit: pill + presence */
+body[data-page='redeem'] #rc-submit { border-radius: 999px; min-height: 54px; font-size: 1rem;
+    letter-spacing: .01em; background: linear-gradient(135deg, var(--sage) 0%, var(--primary-bright) 100%);
+    box-shadow: 0 10px 30px -10px rgba(143,175,181,.55), inset 0 1px 0 rgba(255,255,255,.25); }
+body[data-page='redeem'] #rc-submit:not(:disabled):hover { transform: translateY(-2px);
+    box-shadow: 0 14px 34px -10px rgba(143,175,181,.65), inset 0 1px 0 rgba(255,255,255,.3); }
+body[data-page='redeem'] #rc-submit:disabled { background: rgba(163,201,182,.14); box-shadow: none; transform: none; }
+
+/* 4) crown medallion: small bloom on the card's top edge (site keystone motif) */
+body[data-page='redeem'] .form-card::before { height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(163,201,182,.55), transparent); }
+body[data-page='redeem'] .form-card .crown-bloom { position: absolute; top: -11px; left: 50%;
+    transform: translateX(-50%); width: 22px; height: 22px; border-radius: 50%;
+    display: grid; place-items: center; background: var(--bg);
+    border: 1px solid rgba(163,201,182,.35); box-shadow: 0 0 14px rgba(94,184,168,.25);
+    pointer-events: none; }
+body[data-page='redeem'] .form-card .crown-bloom svg { width: 12px; height: 12px; color: var(--sage); }
+
+/* 5) micro-rhythm: label letterspacing + tray margin balance */
+body[data-page='redeem'] .form-label { letter-spacing: .1em; font-size: .68rem; }
+body[data-page='redeem'] .redeem-code-group { margin-bottom: 18px; }
+
+
+/* polish r2 correction: the "no code yet?" note is .verify-banner — demote IT to the
+   quiet line (the previous block targeted .redeem-callout which this page doesn't use) */
+body[data-page='redeem'] .redeem-section .verify-banner,
+body[data-page='redeem'] .verify-banner { border: none; border-left: none; background: transparent;
+    padding: 0; margin: 0 0 24px; text-align: center; font-size: .86rem; color: var(--text-dim); }
+body[data-page='redeem'] .verify-banner strong { color: var(--text-dim); font-weight: 600; }
+body[data-page='redeem'] .verify-banner a { color: var(--sage); border-bottom: 1px solid rgba(163,201,182,.4); padding-bottom: 1px; }
+[data-theme="light"] body[data-page='redeem'] .verify-banner { color: var(--text-dim); }
