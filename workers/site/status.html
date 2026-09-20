@@ -46,11 +46,11 @@ html[data-theme="light"]{background:#E7EDEA;color-scheme:light}
     <link rel="preload" as="image" href="/logo.svg">
 <link rel="preload" as="font" type="font/woff2" href="/assets/fonts/instrument-serif.woff2" crossorigin>
 <link rel="preload" as="font" type="font/woff2" href="/assets/fonts/archivo-var.woff2" crossorigin>
-                    <link rel="stylesheet" href="/assets/css/fonts.css?v=73">
-    <link rel="stylesheet" href="/assets/css/site.css?v=73">
-    <link rel="stylesheet" href="/assets/css/premium.css?v=73">
-    <link rel="stylesheet" href="/assets/css/type-tokens.css?v=73">
-    <link rel="stylesheet" href="/assets/css/hermes-type.css?v=73">
+                    <link rel="stylesheet" href="/assets/css/fonts.css?v=74">
+    <link rel="stylesheet" href="/assets/css/site.css?v=74">
+    <link rel="stylesheet" href="/assets/css/premium.css?v=74">
+    <link rel="stylesheet" href="/assets/css/type-tokens.css?v=74">
+    <link rel="stylesheet" href="/assets/css/hermes-type.css?v=74">
 <link rel="canonical" href="https://mysweetpea.cc/status">
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"Organization","name":"MySweetPea","url":"https://mysweetpea.cc","logo":"https://mysweetpea.cc/logo.png","description":"Private, self-hosted alternatives to the services you use every day. No ads, no tracking, no subscriptions — community funded.","email":"support@mysweetpea.cc","sameAs":["https://github.com/mysweetpea"]}</script>
 </head>
@@ -137,106 +137,115 @@ html[data-theme="light"]{background:#E7EDEA;color-scheme:light}
                         </div>
                     </div>
 
-                    <div class="status-list status-list-operational reveal">
-                        <div class="status-row" data-service-key="vaultwarden">
-                            <div class="status-service">
-                                <img src="/assets/icons/vaultwarden.svg" alt="" width="28" height="28" loading="lazy" decoding="async">
-                                <div>
-                                    <div class="status-name">Vaultwarden</div>
-                                    <div class="status-desc">Password manager</div>
+                    <div class="status-cards reveal">
+                        <article class="status-card reveal" data-service-key="vaultwarden">
+                            <div class="sc-head">
+                                <span class="sc-icon"><img src="/assets/icons/vaultwarden.svg" alt="" width="26" height="26" loading="lazy" decoding="async"></span>
+                                <div class="sc-names">
+                                    <span class="sc-name">Vaultwarden</span>
+                                    <span class="sc-cat">Passwords</span>
                                 </div>
+                                <span class="status-badge status-online"><span class="status-dot" aria-hidden="true"></span><span class="badge-label">Operational</span></span>
                             </div>
-                            <span class="status-badge status-online">
-                            <div class="uptime-wrap"><div class="uptime-bar"><div class="uptime-bar-fill" style="width:99.9%"></div></div><span class="uptime-pct">99.9%</span></div><span class="status-dot"></span>Operational</span>
-                        </div>
-                        <div class="status-row" data-service-key="matrix">
-                            <div class="status-service">
-                                <img src="/assets/icons/matrix.svg" alt="" width="28" height="28" loading="lazy" decoding="async">
-                                <div>
-                                    <div class="status-name">Matrix / Element</div>
-                                    <div class="status-desc">Encrypted chat</div>
+                            <div class="sc-strip" aria-hidden="true"></div>
+                            <div class="sc-meta"><span class="sc-uptime">30d —</span><span class="sc-checks">—</span></div>
+                        </article>
+                        <article class="status-card reveal" data-service-key="matrix">
+                            <div class="sc-head">
+                                <span class="sc-icon"><img src="/assets/icons/matrix.svg" alt="" width="26" height="26" loading="lazy" decoding="async"></span>
+                                <div class="sc-names">
+                                    <span class="sc-name">Matrix / Element</span>
+                                    <span class="sc-cat">Encrypted chat</span>
                                 </div>
+                                <span class="status-badge status-online"><span class="status-dot" aria-hidden="true"></span><span class="badge-label">Operational</span></span>
                             </div>
-                            <span class="status-badge status-online">
-                            <div class="uptime-wrap"><div class="uptime-bar"><div class="uptime-bar-fill" style="width:99.9%"></div></div><span class="uptime-pct">99.9%</span></div><span class="status-dot"></span>Operational</span>
-                        </div>
-                        <div class="status-row" data-service-key="affine">
-                            <div class="status-service">
-                                <img src="/assets/icons/affine.svg" alt="" width="28" height="28" loading="lazy" decoding="async">
-                                <div>
-                                    <div class="status-name">AFFiNE</div>
-                                    <div class="status-desc">Notes & docs</div>
+                            <div class="sc-strip" aria-hidden="true"></div>
+                            <div class="sc-meta"><span class="sc-uptime">30d —</span><span class="sc-checks">—</span></div>
+                        </article>
+                        <article class="status-card reveal" data-service-key="affine">
+                            <div class="sc-head">
+                                <span class="sc-icon"><img src="/assets/icons/affine.svg" alt="" width="26" height="26" loading="lazy" decoding="async"></span>
+                                <div class="sc-names">
+                                    <span class="sc-name">AFFiNE</span>
+                                    <span class="sc-cat">Notes & docs</span>
                                 </div>
+                                <span class="status-badge status-online"><span class="status-dot" aria-hidden="true"></span><span class="badge-label">Operational</span></span>
                             </div>
-                            <span class="status-badge status-online">
-                            <div class="uptime-wrap"><div class="uptime-bar"><div class="uptime-bar-fill" style="width:99.9%"></div></div><span class="uptime-pct">99.9%</span></div><span class="status-dot"></span>Operational</span>
-                        </div>
-                        <div class="status-row" data-service-key="koalasync">
-                            <div class="status-service">
-                                <img src="/assets/icons/koalasync.svg" alt="" width="28" height="28" loading="lazy" decoding="async">
-                                <div>
-                                    <div class="status-name">KoalaSync</div>
-                                    <div class="status-desc">Watch parties</div>
+                            <div class="sc-strip" aria-hidden="true"></div>
+                            <div class="sc-meta"><span class="sc-uptime">30d —</span><span class="sc-checks">—</span></div>
+                        </article>
+                        <article class="status-card reveal" data-service-key="koalasync">
+                            <div class="sc-head">
+                                <span class="sc-icon"><img src="/assets/icons/koalasync.svg" alt="" width="26" height="26" loading="lazy" decoding="async"></span>
+                                <div class="sc-names">
+                                    <span class="sc-name">KoalaSync</span>
+                                    <span class="sc-cat">Watch parties</span>
                                 </div>
+                                <span class="status-badge status-online"><span class="status-dot" aria-hidden="true"></span><span class="badge-label">Operational</span></span>
                             </div>
-                            <span class="status-badge status-online">
-                            <div class="uptime-wrap"><div class="uptime-bar"><div class="uptime-bar-fill" style="width:99.9%"></div></div><span class="uptime-pct">99.9%</span></div><span class="status-dot"></span>Operational</span>
-                        </div>
-                        <div class="status-row" data-service-key="jellyfin">
-                            <div class="status-service">
-                                <img src="/assets/icons/jellyfin.svg" alt="" width="28" height="28" loading="lazy" decoding="async">
-                                <div>
-                                    <div class="status-name">Jellyfin / Moonfin</div>
-                                    <div class="status-desc">Media streaming</div>
+                            <div class="sc-strip" aria-hidden="true"></div>
+                            <div class="sc-meta"><span class="sc-uptime">30d —</span><span class="sc-checks">—</span></div>
+                        </article>
+                        <article class="status-card reveal" data-service-key="jellyfin">
+                            <div class="sc-head">
+                                <span class="sc-icon"><img src="/assets/icons/jellyfin.svg" alt="" width="26" height="26" loading="lazy" decoding="async"></span>
+                                <div class="sc-names">
+                                    <span class="sc-name">Jellyfin / Moonfin</span>
+                                    <span class="sc-cat">Media streaming</span>
                                 </div>
+                                <span class="status-badge status-online"><span class="status-dot" aria-hidden="true"></span><span class="badge-label">Operational</span></span>
                             </div>
-                            <span class="status-badge status-online">
-                            <div class="uptime-wrap"><div class="uptime-bar"><div class="uptime-bar-fill" style="width:99.9%"></div></div><span class="uptime-pct">99.9%</span></div><span class="status-dot"></span>Operational</span>
-                        </div>
-                        <div class="status-row" data-service-key="seerr">
-                            <div class="status-service">
-                                <img src="/assets/icons/seerr.svg" alt="" width="28" height="28" loading="lazy" decoding="async">
-                                <div>
-                                    <div class="status-name">Seerr</div>
-                                    <div class="status-desc">Media requests</div>
+                            <div class="sc-strip" aria-hidden="true"></div>
+                            <div class="sc-meta"><span class="sc-uptime">30d —</span><span class="sc-checks">—</span></div>
+                        </article>
+                        <article class="status-card reveal" data-service-key="seerr">
+                            <div class="sc-head">
+                                <span class="sc-icon"><img src="/assets/icons/seerr.svg" alt="" width="26" height="26" loading="lazy" decoding="async"></span>
+                                <div class="sc-names">
+                                    <span class="sc-name">Seerr</span>
+                                    <span class="sc-cat">Media requests</span>
                                 </div>
+                                <span class="status-badge status-online"><span class="status-dot" aria-hidden="true"></span><span class="badge-label">Operational</span></span>
                             </div>
-                            <span class="status-badge status-online">
-                            <div class="uptime-wrap"><div class="uptime-bar"><div class="uptime-bar-fill" style="width:99.9%"></div></div><span class="uptime-pct">99.9%</span></div><span class="status-dot"></span>Operational</span>
-                        </div>
-                        <div class="status-row" data-service-key="nextcloud">
-                            <div class="status-service">
-                                <img src="/assets/icons/nextcloud.svg" alt="" width="28" height="28" loading="lazy" decoding="async">
-                                <div>
-                                    <div class="status-name">Nextcloud</div>
-                                    <div class="status-desc">Files & calendar</div>
+                            <div class="sc-strip" aria-hidden="true"></div>
+                            <div class="sc-meta"><span class="sc-uptime">30d —</span><span class="sc-checks">—</span></div>
+                        </article>
+                        <article class="status-card reveal" data-service-key="nextcloud">
+                            <div class="sc-head">
+                                <span class="sc-icon"><img src="/assets/icons/nextcloud.svg" alt="" width="26" height="26" loading="lazy" decoding="async"></span>
+                                <div class="sc-names">
+                                    <span class="sc-name">Nextcloud</span>
+                                    <span class="sc-cat">Files & calendar</span>
                                 </div>
+                                <span class="status-badge status-online"><span class="status-dot" aria-hidden="true"></span><span class="badge-label">Operational</span></span>
                             </div>
-                            <span class="status-badge status-online">
-                            <div class="uptime-wrap"><div class="uptime-bar"><div class="uptime-bar-fill" style="width:99.9%"></div></div><span class="uptime-pct">99.9%</span></div><span class="status-dot"></span>Operational</span>
-                        </div>
-                        <div class="status-row" data-service-key="immich">
-                            <div class="status-service">
-                                <img src="/assets/icons/immich.svg" alt="" width="28" height="28" loading="lazy" decoding="async">
-                                <div>
-                                    <div class="status-name">Immich</div>
-                                    <div class="status-desc">Photo backup</div>
+                            <div class="sc-strip" aria-hidden="true"></div>
+                            <div class="sc-meta"><span class="sc-uptime">30d —</span><span class="sc-checks">—</span></div>
+                        </article>
+                        <article class="status-card reveal" data-service-key="immich">
+                            <div class="sc-head">
+                                <span class="sc-icon"><img src="/assets/icons/immich.svg" alt="" width="26" height="26" loading="lazy" decoding="async"></span>
+                                <div class="sc-names">
+                                    <span class="sc-name">Immich</span>
+                                    <span class="sc-cat">Photo backup</span>
                                 </div>
+                                <span class="status-badge status-online"><span class="status-dot" aria-hidden="true"></span><span class="badge-label">Operational</span></span>
                             </div>
-                            <span class="status-badge status-online">
-                            <div class="uptime-wrap"><div class="uptime-bar"><div class="uptime-bar-fill" style="width:99.9%"></div></div><span class="uptime-pct">99.9%</span></div><span class="status-dot"></span>Operational</span>
-                        </div>
-                        <div class="status-row" data-service-key="openwebui">
-                            <div class="status-service">
-                                <img src="/assets/icons/openwebui.svg" alt="" width="28" height="28" loading="lazy" decoding="async">
-                                <div>
-                                    <div class="status-name">Open WebUI</div>
-                                    <div class="status-desc">AI interface</div>
+                            <div class="sc-strip" aria-hidden="true"></div>
+                            <div class="sc-meta"><span class="sc-uptime">30d —</span><span class="sc-checks">—</span></div>
+                        </article>
+                        <article class="status-card reveal" data-service-key="openwebui">
+                            <div class="sc-head">
+                                <span class="sc-icon"><img src="/assets/icons/openwebui.svg" alt="" width="26" height="26" loading="lazy" decoding="async"></span>
+                                <div class="sc-names">
+                                    <span class="sc-name">Open WebUI</span>
+                                    <span class="sc-cat">AI interface</span>
                                 </div>
+                                <span class="status-badge status-online"><span class="status-dot" aria-hidden="true"></span><span class="badge-label">Operational</span></span>
                             </div>
-                            <span class="status-badge status-online">
-                            <div class="uptime-wrap"><div class="uptime-bar"><div class="uptime-bar-fill" style="width:99.9%"></div></div><span class="uptime-pct">99.9%</span></div><span class="status-dot"></span>Operational</span>
-                        </div>
+                            <div class="sc-strip" aria-hidden="true"></div>
+                            <div class="sc-meta"><span class="sc-uptime">30d —</span><span class="sc-checks">—</span></div>
+                        </article>
                     </div>
 
                     <div class="status-divider" aria-hidden="true"><span></span></div>
@@ -336,7 +345,7 @@ html[data-theme="light"]{background:#E7EDEA;color-scheme:light}
         var summary = document.getElementById('status-summary');
         var summaryText = summary ? summary.querySelector('strong') : null;
         var summaryTime = summary ? summary.querySelector('time') : null;
-        var rows = document.querySelectorAll('.status-row[data-service-key]');
+        var rows = document.querySelectorAll('.status-card[data-service-key]');
         var metricUptime = document.querySelector('.metric-card .metric-value');
         var metricLive = document.querySelectorAll('.metric-card .metric-value')[1];
         var metricIncidents = document.querySelectorAll('.metric-card .metric-value')[2];
@@ -352,20 +361,56 @@ html[data-theme="light"]{background:#E7EDEA;color-scheme:light}
         // Status page slug in Uptime Kuma (public URL /status/public)
         var STATUS_SLUG = 'public';
 
-        function setRow(row, up, pct) {
+        // 40-tick recent-checks strip, oldest -> newest left -> right.
+        // Slots without a beat are padded with t-none on the LEFT.
+        var STRIP_TICKS = 40;
+
+        function fmtHM(d) {
+            if (!d || isNaN(d.getTime())) return '?';
+            var hh = String(d.getHours()).padStart(2, '0');
+            var mm = String(d.getMinutes()).padStart(2, '0');
+            return hh + ':' + mm;
+        }
+
+        function renderStrip(card, list) {
+            var strip = card.querySelector('.sc-strip');
+            if (!strip) return;
+            strip.textContent = '';
+            var beats = list.slice(-STRIP_TICKS);
+            var pad = STRIP_TICKS - beats.length;
+            var i, tick;
+            for (i = 0; i < pad; i++) {
+                tick = document.createElement('i');
+                tick.className = 't-none';
+                strip.appendChild(tick);
+            }
+            beats.forEach(function (h) {
+                tick = document.createElement('i');
+                tick.className = (h && h.status !== 1) ? 't-down' : '';
+                strip.appendChild(tick);
+            });
+        }
+
+        function setRow(row, up, pct, list) {
             var badge = row.querySelector('.status-badge');
-            var fill = row.querySelector('.uptime-bar-fill');
-            var pctEl = row.querySelector('.uptime-pct');
+            var label = row.querySelector('.badge-label');
             var dot = row.querySelector('.status-dot');
+            var uptimeEl = row.querySelector('.sc-uptime');
+            var checksEl = row.querySelector('.sc-checks');
             if (badge) {
                 badge.classList.remove('status-online', 'status-down');
                 badge.classList.add(up ? 'status-online' : 'status-down');
-                var label = badge.childNodes[badge.childNodes.length - 1];
-                if (label && label.nodeType === 3) label.textContent = up ? 'Operational' : 'Down';
             }
-            if (fill) fill.style.width = (pct || 99.9) + '%';
-            if (pctEl) pctEl.textContent = (pct || 99.9) + '%';
+            if (label) label.textContent = up ? 'Operational' : 'Down';
             if (dot) dot.classList.toggle('status-down', !up);
+            if (uptimeEl) uptimeEl.textContent = (pct != null) ? '30d ' + pct + '%' : '30d —';
+            if (checksEl && list && list.length) {
+                var h = list[list.length - 1];
+                var t = h && h.time ? new Date(String(h.time).replace(' ', 'T')) : null;
+                checksEl.textContent = 'last ' + fmtHM(t);
+            }
+            row.classList.toggle('is-down', !up);
+            renderStrip(row, list || []);
         }
 
         // Fetch the status page heartbeat (single call, object keyed by monitor ID)
@@ -389,7 +434,7 @@ html[data-theme="light"]{background:#E7EDEA;color-scheme:light}
                 Object.keys(hb).forEach(function (id) {
                     var key = ID_TO_KEY[id];
                     if (!key) return;
-                    var row = document.querySelector('.status-row[data-service-key="' + key + '"]');
+                    var row = document.querySelector('.status-card[data-service-key="' + key + '"]');
                     if (!row) return;
                     var list = hb[id];
                     if (!list || !list.length) return;
@@ -397,9 +442,9 @@ html[data-theme="light"]{background:#E7EDEA;color-scheme:light}
                     var up = h.status === 1;
                     if (up) upCount++;
                     total++;
-                    var pct = uptimePct[id] != null ? uptimePct[id] : 99.9;
-                    uptimeSum += pct; uptimeCount++;
-                    setRow(row, up, pct);
+                    var pct = uptimePct[id] != null ? uptimePct[id] : null;
+                    uptimeSum += (pct != null ? pct : 99.9); uptimeCount++;
+                    setRow(row, up, pct, list);
                 });
                 if (summaryText) summaryText.textContent = upCount + ' of ' + total + ' operational';
                 if (summaryTime) summaryTime.textContent = 'Updated ' + new Date().toLocaleDateString();
@@ -420,30 +465,29 @@ html[data-theme="light"]{background:#E7EDEA;color-scheme:light}
                 // Status feed unreachable (network error, CORS, non-OK, or malformed
                 // payload). The static markup says "9 of 9 operational" — showing that
                 // during a monitoring outage would fabricate an all-green page exactly
-                // when accuracy matters most. Mark every row unknown and say so.
+                // when accuracy matters most. Mark every card unknown and say so.
+                // Strips are left EMPTY — never fake beats.
                 if (summaryText) summaryText.textContent = 'Status unavailable';
                 if (summaryTime) summaryTime.textContent = 'Live data unreachable';
                 if (summary) {
                     summary.classList.remove('status-all-online');
                     summary.classList.add('status-degraded');
                 }
-                rows.forEach(function (row) {
-                    var dot = row.querySelector('.status-dot');
+                rows.forEach(function (card) {
+                    var dot = card.querySelector('.status-dot');
                     if (dot) {
                         dot.classList.add('status-unknown');
                         dot.style.animation = 'none';
                     }
-                    var badge = row.querySelector('.status-badge');
+                    var badge = card.querySelector('.status-badge');
                     if (badge) {
                         badge.classList.remove('status-online', 'status-down');
                         badge.classList.add('status-unknown');
-                        var label = badge.childNodes[badge.childNodes.length - 1];
-                        if (label && label.nodeType === 3) label.textContent = 'Unknown';
                     }
-                    var pctEl = row.querySelector('.uptime-pct');
-                    if (pctEl) pctEl.textContent = '—';
-                    var fill = row.querySelector('.uptime-bar-fill');
-                    if (fill) fill.style.width = '0%';
+                    var label = card.querySelector('.badge-label');
+                    if (label) label.textContent = 'Unknown';
+                    var checksEl = card.querySelector('.sc-checks');
+                    if (checksEl) checksEl.textContent = 'live data unavailable';
                 });
                 if (metricUptime) metricUptime.textContent = '—';
                 if (metricLive) metricLive.textContent = '—';

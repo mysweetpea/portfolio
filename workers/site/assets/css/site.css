@@ -7706,3 +7706,45 @@ body[data-page='pricing'] .pricing-card a.tier-sweetpea-cta { background: linear
     body[data-page='pricing'] .pricing-card .btn-glass-sweetpea,
     body[data-page='pricing'] .pricing-card .btn-glass-sweetpea:hover:not(:disabled) { transition: none; transform: none; filter: none; box-shadow: none; }
 }
+
+/* ==== Status v2: card grid + heartbeat strips ==== */
+body[data-page='status'] .status-cards { display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 16px; max-width: 1000px; margin: 0 auto; }
+body[data-page='status'] .status-card { display: flex; flex-direction: column; gap: 12px; padding: 20px 22px; background: var(--card-bg); border: 1px solid var(--border); border-radius: var(--radius); backdrop-filter: blur(12px) saturate(1.1); transition: border-color .25s ease, transform .25s ease; }
+body[data-page='status'] .status-card:hover { border-color: color-mix(in srgb, var(--sage) 35%, transparent); transform: translateY(-2px); }
+body[data-page='status'] .sc-head { display: flex; align-items: center; gap: 12px; }
+body[data-page='status'] .sc-icon { display: grid; place-items: center; width: 46px; height: 46px; flex: none; border-radius: 12px; background: radial-gradient(circle at 30% 25%, rgba(255,255,255,0.10), rgba(143,175,181,0.06)); border: 1px solid var(--border); }
+body[data-page='status'] .sc-names { display: flex; flex-direction: column; gap: 2px; min-width: 0; margin-right: auto; }
+body[data-page='status'] .sc-name { font-size: var(--t-fs-body); font-weight: var(--t-fw-bold); color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+body[data-page='status'] .sc-cat { font-family: var(--t-font-mono); font-size: var(--t-fs-4xs); letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-faint); }
+body[data-page='status'] .sc-strip { display: flex; gap: 3px; align-items: flex-end; height: 26px; }
+body[data-page='status'] .sc-strip i { flex: 1 1 0; min-width: 2px; height: 32%; border-radius: 1px;
+    background: color-mix(in srgb, var(--sage) 55%, transparent); }
+body[data-page='status'] .sc-strip i:nth-last-child(-n+8) { height: 55%; }
+body[data-page='status'] .sc-strip i:nth-last-child(-n+4) { height: 80%; }
+body[data-page='status'] .sc-strip i:nth-last-child(1) { height: 100%; }
+body[data-page='status'] .sc-strip i.t-down { height: 100%; }
+body[data-page='status'] .sc-strip i.t-down { background: #D98C8C; }
+body[data-page='status'] .sc-strip i.t-none { background: color-mix(in srgb, var(--text-faint) 25%, transparent); }
+body[data-page='status'] .sc-meta { display: flex; justify-content: space-between; align-items: baseline; font-family: var(--t-font-mono); font-size: var(--t-fs-4xs); letter-spacing: 0.06em; color: var(--text-faint); }
+body[data-page='status'] .status-card.is-down { border-color: rgba(217,140,140,0.45); }
+body[data-page='status'] .status-card.is-down .sc-name { color: #D98C8C; }
+@media (max-width: 768px) {
+    body[data-page='status'] .status-cards { grid-template-columns: 1fr; }
+    body[data-page='status'] .sc-strip i { min-width: 1px; }
+}
+@media (prefers-reduced-motion: reduce) { body[data-page='status'] .status-card, body[data-page='status'] .status-card:hover { transition: none; transform: none; } }
+body[data-page='status'] .status-summary { max-width: 1000px; margin-left: auto; margin-right: auto; }
+/* E4: full-width state banner polish */
+body[data-page='status'] .status-summary { position: relative; padding: 18px 24px; }
+body[data-page='status'] .status-summary .status-dot { width: 10px; height: 10px; }
+/* E5: incidents date chip + panel width */
+body[data-page='status'] .incident-date { display: inline-block; padding: 3px 10px; border-radius: 999px; background: rgba(143,175,181,0.10); border: 1px solid var(--border); font-family: var(--t-font-mono); font-size: var(--t-fs-4xs); letter-spacing: 0.06em; color: var(--primary-bright); margin-bottom: 8px; }
+body[data-page='status'] .incidents-panel { max-width: 1000px; margin: 0 auto; }
+/* E5: resources as card grid */
+body[data-page='status'] .status-actions { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 14px; max-width: 1000px; margin: 0 auto; }
+body[data-page='status'] .status-action-btn { display: flex; align-items: center; gap: 10px; justify-content: center; min-height: 52px; background: var(--card-bg); border: 1px solid var(--border); border-radius: var(--radius); color: var(--text); font-weight: var(--t-fw-medium); transition: border-color .25s ease, transform .25s ease; }
+body[data-page='status'] .status-action-btn:hover { border-color: color-mix(in srgb, var(--sage) 35%, transparent); transform: translateY(-2px); }
+@media (max-width: 768px) {
+    body[data-page='status'] .status-actions { grid-template-columns: 1fr; }
+}
+/* === end Status v2 === */
