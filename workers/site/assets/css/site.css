@@ -7749,8 +7749,9 @@ body[data-page='status'] .sc-strip i:hover::after { opacity: 1; }
 body[data-page='status'] .line-lat { font-family: var(--t-font-mono); font-size: 0.62rem; letter-spacing: 0.05em;
     color: var(--text-faint); font-variant-numeric: tabular-nums; white-space: nowrap; }
 @media (max-width: 768px) {
-    body[data-page='status'] .sc-strip i { min-width: 1px; gap: 2px; }
+    body[data-page='status'] .sc-strip i { min-width: 1px; }
     body[data-page='status'] .sc-strip i::after { display: none; }
+    body[data-page='status'] .line-lat { min-width: 0; }
 }
 @media (prefers-reduced-motion: reduce) { body[data-page='status'] .status-action-btn, body[data-page='status'] .status-action-btn:hover { transition: none; transform: none; } }
 /* E4: full-width state banner polish */
@@ -7922,18 +7923,19 @@ body[data-page='status'] .status-summary.status-degraded {
 /* Console: one hairline-bordered block of data rows (R1 look) */
 body[data-page='status'] .status-console {
   display: flex; flex-direction: column;
-  border: 1px solid var(--hairline); border-radius: 14px; overflow: hidden;
+  border: 1px solid var(--hairline); border-radius: 14px;
   background: rgba(19,30,34,0.3);
 }
 body[data-page='status'] .status-line {
   display: grid; align-items: center; gap: 14px;
-  grid-template-columns: 34px 34px minmax(0,1.4fr) minmax(0,1fr) minmax(0,2fr) 70px 52px minmax(96px,1fr);
+  grid-template-columns: 34px 34px minmax(0,1.4fr) minmax(0,1fr) minmax(0,2fr) 70px minmax(52px,auto) minmax(96px,1fr);
   grid-template-areas: "idx icon name cat strip pct lat badge";
   padding: 13px 20px;
   border-bottom: 1px solid rgba(143,175,181,0.08);
   transition: background .2s ease;
 }
 body[data-page='status'] .status-line:last-child { border-bottom: none; }
+body[data-page='status'] .status-line:last-child { border-radius: 0 0 14px 14px; }
 body[data-page='status'] .status-line:hover { background: rgba(163,201,182,0.04); }
 body[data-page='status'] .line-idx { grid-area: idx; font-family: var(--t-font-mono); font-size: 0.66rem; color: var(--text-faint); }
 body[data-page='status'] .line-icon { grid-area: icon; display: grid; place-items: center; }
@@ -7972,12 +7974,13 @@ body[data-page='status'] .status-line.is-down .line-name { color: var(--error); 
   body[data-page='status'] .status-summary .status-summary-main strong { font-size: 1.22rem; }
   body[data-page='status'] .status-summary-meta { display: none; }
   body[data-page='status'] .status-console { border-radius: 12px; }
+  body[data-page='status'] .status-line:last-child { border-radius: 0 0 12px 12px; }
   body[data-page='status'] .status-line {
-    grid-template-columns: 26px minmax(0,1fr) auto;
+    grid-template-columns: 26px minmax(0,1fr) auto minmax(52px,auto);
     grid-template-areas:
-      "icon name badge"
-      "strip strip strip"
-      "pct lat checks";
+      "icon name name badge"
+      "strip strip strip strip"
+      "pct lat lat checks";
     gap: 9px 12px;
     padding: 12px 14px;
   }

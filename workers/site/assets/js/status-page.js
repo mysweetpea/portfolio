@@ -38,7 +38,7 @@
             // slice(-STRIP_TICKS) takes the MOST RECENT checks and ticks run
             // left-to-right = oldest-to-newest (was silently wrong before).
             var all = list.slice().sort(function (a, b) {
-                return String(a.time).localeCompare(String(b.time));
+                return String(a.time).localeCompare(String(b.time), 'en');
             });
             var beats = all.slice(-STRIP_TICKS);
             var pad = STRIP_TICKS - beats.length;
@@ -68,10 +68,12 @@
                     tick.style.setProperty('--h', Math.round(frac * 100) + '%');
                 }
                 if (h && h.time) {
-                    var t = h.time;
-                    tick.setAttribute('data-tip',
-                        (isDown ? 'DOWN' : (typeof h.ping === 'number' ? h.ping + ' ms' : 'up')) +
-                        ' · ' + t.slice(11, 16) + ' srv');
+                    var tipTime = h.time;
+                    var tipState;
+                    if (isDown) tipState = 'DOWN';
+                    else if (typeof h.ping === 'number') tipState = h.ping + ' ms';
+                    else tipState = 'up';
+                    tick.setAttribute('data-tip', tipState + ' · ' + tipTime.slice(11, 16) + ' srv');
                 }
                 strip.appendChild(tick);
             });
@@ -94,17 +96,20 @@
             if (uptimeEl) uptimeEl.textContent = (pct != null) ? ((win ? win + 'd ' : '') + pct + '%') : 'uptime —';
             if (pctEl) pctEl.textContent = (pct != null) ? pct + '%' : '—';
             if (checksEl && list && list.length) {
-                var h = list[list.length - 1];
-                var t = h && h.time ? new Date(String(h.time).replace(' ', 'T')) : null;
-                checksEl.textContent = (t && !isNaN(t)) ? ('last ' + fmtHM(t) + ' srv') : 'last —';
+                var t = list.slice().sort(function (a, b) {
+                    return String(a.time).localeCompare(String(b.time), 'en');
+                });
+                var h = t[t.length - 1];
+                var d = h && h.time ? new Date(String(h.time).replace(' ', 'T')) : null;
+                checksEl.textContent = (d && !isNaN(d)) ? ('last ' + fmtHM(d) + ' srv') : 'last —';
             }
-            // Avg latency over the strip window (up beats only) — the strip's
-            // heights encode per-beat ping; this chip gives the scale anchor.
+            // Avg latency over the STRIP window (up beats only) — matches what
+            // the bars encode; also reuses the newest-first→sorted beat order.
             var latEl = row.querySelector('.line-lat');
-            if (latEl) {
+            if (latEl && checksEl) {
                 var lat = [];
-                for (var li = 0; li < (list || []).length; li++) {
-                    var lb = list[li];
+                for (var li = Math.max(0, t.length - STRIP_TICKS); li < t.length; li++) {
+                    var lb = t[li];
                     if (lb && lb.status === 1 && typeof lb.ping === 'number') lat.push(lb.ping);
                 }
                 latEl.textContent = lat.length
