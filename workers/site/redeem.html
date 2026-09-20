@@ -187,7 +187,8 @@ html[data-theme="light"]{background:#E7EDEA;color-scheme:light}
  var endpoint='https://subscribe.mysweetpea.cc/webhook/redeem-code',btn=document.getElementById('rc-submit');
  var fields={'rc-code':'code','rc-name':'name','rc-email':'email','rc-username':'username'};
  function valid(type,v){v=v.trim();if(type==='code')return /^(PEA|FAM)-[A-Z0-9]{8}$/.test(v.toUpperCase());if(type==='name')return v.length>=2;if(type==='email')return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v);return /^[A-Za-z0-9_]{3,}$/.test(v);}
- function update(){btn.disabled=!Object.keys(fields).every(function(id){var v=document.getElementById(id).value;if(id==='rc-code'){var c=v.toUpperCase().replace(/[^A-Z0-9]/g,'').slice(0,11);v=c.length>=3?c.slice(0,3)+'-'+c.slice(3):c;}return valid(fields[id],v);});}
+ function normCode(v){var c=v.toUpperCase().replace(/[^A-Z0-9]/g,'').slice(0,11);return c.length>=3?c.slice(0,3)+'-'+c.slice(3):c;}
+ function update(){btn.disabled=!Object.keys(fields).every(function(id){var v=document.getElementById(id).value;if(id==='rc-code'){v=normCode(v);}return valid(fields[id],v);});}
  /* === Ledger key tray (approved mockup port) ===
     One invisible real input (#rc-code) drives everything; the 8 underline
     cells, counter and meta line are painted from it. Normalization always
@@ -215,9 +216,12 @@ html[data-theme="light"]{background:#E7EDEA;color-scheme:light}
   var pre=cl.slice(0,3), tail=cl.slice(3,11);
   for(var i=0;i<3;i++){var pc=pre[i]||'';cells[i].textContent=pc;cells[i].classList.toggle('filled',!!pc);}
   for(var i=3;i<11;i++){var tc=tail[i-3]||'';cells[i].textContent=tc;cells[i].classList.toggle('filled',!!tc);}
-  // caret glow: the slot just typed (or the slot being edited)
-  var lastTyped = cl.length ? Math.min(cl.length, 11) - 1 : 0;
-  cells.forEach(function(c,i){c.classList.toggle('cur',i===lastTyped&&document.activeElement===input);});
+  // caret glow: the slot being EDITED (selectionStart), else the slot just typed
+  var pos=input.selectionStart||0;
+  var dashInDisp=input.value.indexOf('-');
+  var alnumBefore=(dashInDisp>-1&&pos>dashInDisp)?pos-1:pos;
+  var editIdx=Math.max(0,Math.min(alnumBefore,10));
+  cells.forEach(function(c,i){c.classList.toggle('cur',i===editIdx&&document.activeElement===input);});
   var complete=cl.length===11;
   var full=codeValidFull(pre+'-'+tail);
   ledger.classList.toggle('valid',complete&&full);
@@ -231,17 +235,15 @@ html[data-theme="light"]{background:#E7EDEA;color-scheme:light}
   update();
  }
  function normalizeValue(){
-  var cl=input.value.toUpperCase().replace(/\s/g,'').replace(/[^A-Z0-9]/g,'').slice(0,11);
-  var pre=cl.slice(0,3),tail=cl.slice(3,11);
-  input.value = cl.length>=3 ? pre+'-'+tail : cl;
+  input.value = normCode(input.value);
   paint();
  }
  input.addEventListener('blur',normalizeValue);
- input.addEventListener('input',paint);input.addEventListener('keyup',paint);input.addEventListener('click',paint);input.addEventListener('blur',paint);input.addEventListener('focus',paint);
+ input.addEventListener('input',paint);input.addEventListener('keyup',paint);input.addEventListener('click',paint);input.addEventListener('focus',paint);
 
  document.getElementById('ledger').addEventListener('click',function(){input.focus();});
  Object.keys(fields).forEach(function(id){var el=document.getElementById(id);function placeCaret(){if(id!=='rc-code')return;var caret=document.querySelector('.cb-caret');if(!caret)return;var cells=document.querySelectorAll('.code-boxes .cb-cell');var pos=el.selectionStart||0;var v=el.value.replace('-','');var idx=pos;if(pos>3)idx=pos-1;if(idx>11)idx=11;var cell=cells[Math.min(idx,11)];if(cell){var r=cell.getBoundingClientRect();var br=document.querySelector('.code-boxes').getBoundingClientRect();caret.style.left=(r.left-br.left+r.width/2)+'px';}}function updateUsernameChecks(){if(id!=='rc-username')return;var v=el.value;var checks=document.querySelectorAll('#rc-username-checks .uc-item');if(!checks.length)return;var rules={len:v.length>=3,alnum:/[A-Za-z0-9]/.test(v),underscore:/^[A-Za-z0-9_]+$/.test(v)};checks.forEach(function(c){var k=c.getAttribute('data-uc');var ok=rules[k];c.classList.toggle('ok',ok);var icon=c.querySelector('.uc-icon');if(icon)icon.textContent=ok?'✓':'×';});}el.addEventListener('input',function(){if(id==='rc-code')return;var ok=valid(fields[id],el.value);el.classList.toggle('valid',ok);el.classList.toggle('invalid',el.value.trim().length>0&&!ok);var icon=document.getElementById(id+'-icon');if(icon){icon.classList.toggle('show',el.value.trim().length>0);icon.classList.toggle('valid',ok);icon.classList.toggle('invalid',el.value.trim().length>0&&!ok);icon.textContent=ok?'✓':'×';}update();updateUsernameChecks();});el.addEventListener('keyup',placeCaret);el.addEventListener('click',placeCaret);el.addEventListener('select',placeCaret);el.addEventListener('blur',function(){if(id==='rc-code')return;var ok=valid(fields[id],el.value);el.classList.toggle('valid',ok);el.classList.toggle('invalid',el.value.trim().length>0&&!ok);var icon=document.getElementById(id+'-icon');if(icon){icon.classList.toggle('show',el.value.trim().length>0);icon.classList.toggle('valid',ok);icon.classList.toggle('invalid',el.value.trim().length>0&&!ok);icon.textContent=ok?'✓':'×';}update();updateUsernameChecks();placeCaret();});});
- btn.addEventListener('click',function(){if(btn.disabled)return;var data={invite_code:(function(){var c=document.getElementById('rc-code').value.toUpperCase().replace(/[^A-Z0-9]/g,'').slice(0,11);return c.length>=3?c.slice(0,3)+'-'+c.slice(3):c;})(),name:document.getElementById('rc-name').value.trim(),email:document.getElementById('rc-email').value.trim(),username:document.getElementById('rc-username').value.trim()};btn.disabled=true;btn.classList.add('loading');btn.textContent='Creating account…';fetch(endpoint,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(data)}).then(function(r){return r.text().then(function(t){if(t){try{return JSON.parse(t);}catch(e){return {ok:r.ok};}}return {ok:r.ok};});}).then(function(result){if(!result.ok)throw new Error(result.msg||'Could not create account');window.location.href='/success.html?type=redeem';}).catch(function(e){btn.disabled=false;btn.classList.remove('loading');btn.textContent=e.message||'Try again';setTimeout(function(){btn.textContent='Request MySweetPea Account';update();},3000);});});
+ btn.addEventListener('click',function(){if(btn.disabled)return;var data={invite_code:normCode(document.getElementById('rc-code').value),name:document.getElementById('rc-name').value.trim(),email:document.getElementById('rc-email').value.trim(),username:document.getElementById('rc-username').value.trim()};btn.disabled=true;btn.classList.add('loading');btn.textContent='Creating account…';fetch(endpoint,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(data)}).then(function(r){return r.text().then(function(t){if(t){try{return JSON.parse(t);}catch(e){return {ok:r.ok};}}return {ok:r.ok};});}).then(function(result){if(!result.ok)throw new Error(result.msg||'Could not create account');window.location.href='/success.html?type=redeem';}).catch(function(e){btn.disabled=false;btn.classList.remove('loading');btn.textContent=e.message||'Try again';setTimeout(function(){btn.textContent='Request MySweetPea Account';update();},3000);});});
  paint();
 })();
 </script>    <script>
