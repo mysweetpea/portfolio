@@ -109,10 +109,10 @@ html[data-theme="light"]{background:#E7EDEA;color-scheme:light}
                 <div class="form-group redeem-code-group">
                     <label class="form-label glass-text" for="rc-code">Invite code</label>
                     <div class="ledger" id="ledger" aria-hidden="true">
-                        <span class="lpre" id="lpre"></span>
                         <span class="cells" id="lcells">
-                            <span class="cell"></span><span class="cell"></span><span class="cell"></span><span class="cell"></span>
-                            <span class="cell"></span><span class="cell"></span><span class="cell"></span><span class="cell"></span>
+                            <span class="cell"></span><span class="cell"></span><span class="cell"></span>
+                            <span class="ldash" aria-hidden="true"></span>
+                            <span class="cell"></span><span class="cell"></span><span class="cell"></span><span class="cell"></span><span class="cell"></span><span class="cell"></span><span class="cell"></span><span class="cell"></span>
                         </span>
                     </div>
                     <noscript><input type="text" class="form-input" id="rc-code-static" name="invite_code" placeholder="PEA-XXXXXXXX" autocomplete="off" maxlength="12" style="margin-top:10px"></noscript>
@@ -193,7 +193,7 @@ html[data-theme="light"]{background:#E7EDEA;color-scheme:light}
     webhook payload keeps its dash. */
  var cells=document.querySelectorAll('#lcells .cell'),
      lcount=document.getElementById('lcount'),
-     lpre=document.getElementById('lpre'),
+     
      ledger=document.getElementById('ledger'),
      lhint=document.getElementById('lhint'),
      hint=document.getElementById('rc-code-hint');
@@ -204,27 +204,30 @@ html[data-theme="light"]{background:#E7EDEA;color-scheme:light}
  document.querySelector('.redeem-code-group').appendChild(input);
  function codeValidFull(v){var t=v.toUpperCase().trim();return /^(PEA|FAM)-[A-Z0-9]{8}$/.test(t);}
  function paint(){
+  // 11 visible slots: cells 0-2 = prefix letters, dash auto-inserts, cells 3-10 = the 8 tail chars.
   var raw=input.value.toUpperCase().replace(/\s/g,'');
-  var m=raw.match(/^(PEA|FAM)-?([A-Z0-9]{0,8})/);
-  var pre=m?m[1]:'',tail=m?m[2]:'';
-  if(!m){var cl=raw.replace(/[^A-Z0-9]/g,'');pre=cl.slice(0,3);tail=cl.slice(3,11);}
-  input.value=pre?pre+(tail?'-'+tail:''):tail;
-  for(var i=0;i<cells.length;i++){var ch=tail[i]||'';cells[i].textContent=ch;cells[i].classList.toggle('filled',!!ch);}
+  var cl=raw.replace(/[^A-Z0-9]/g,'').slice(0,11);   // keep alnum only, cap 11
+  var pre=cl.slice(0,3), tail=cl.slice(3,11);
+  // canonical display value: PREFIX-dash-tail while typing
+  input.value = pre + (tail?'-'+tail:(cl.length>=3?'-':''));
+  for(var i=0;i<3;i++){var pc=pre[i]||'';cells[i].textContent=pc;cells[i].classList.toggle('filled',!!pc);}
+  for(var i=3;i<11;i++){var tc=tail[i-3]||'';cells[i].textContent=tc;cells[i].classList.toggle('filled',!!tc);}
+  // caret position: map selectionStart in the DISPLAY string to a slot index 0..10
   var pos=input.selectionStart||0;
-  var afterDash=pos>3?1:0;
-  var idx=Math.min(pos-(pre?3+afterDash:0),8);
-  cells.forEach(function(c,i){c.classList.toggle('cur',i===Math.max(0,idx)&&document.activeElement===input);});
-  var complete=tail.length===8;
+  var dashesBefore=(pos>3 && input.value.indexOf('-')>-1)?1:0;
+  var alnumBefore=Math.min(pos-dashesBefore,11);
+  cells.forEach(function(c,i){c.classList.toggle('cur',i===Math.max(0,Math.min(alnumBefore,10))&&document.activeElement===input);});
+  var complete=cl.length===11;
   var full=codeValidFull(input.value);
-  lpre.textContent=pre?pre+'-':'';
   ledger.classList.toggle('valid',complete&&full);
   ledger.classList.toggle('invalid',complete&&!full);
-  lcount.textContent=tail.length+' / 8 CHARACTERS';
-  lhint.textContent=complete?(full?'CODE COMPLETE — VALID':'CHECK CODE'):(pre?'FROM YOUR INVITE EMAIL':'START PEA- OR FAM-');
+  lcount.textContent=cl.length+' / 11 CHARACTERS';
+  lhint.textContent=complete?(full?'CODE COMPLETE — VALID':'CHECK CODE'):(cl.length?'KEEP GOING':'ENTER THE FULL CODE');
   lhint.classList.toggle('err',complete&&!full);
-  hint.textContent=tail.length===0&&pre===''?'Enter the code exactly as it appears in your email.':(full?'Code looks good — continue with your details.':(complete?'That code doesn’t look right — check it against your email.':'Keep going…'));
+  hint.textContent=cl.length===0?'Enter the code exactly as it appears in your email.':(full?'Code looks good — continue with your details.':(complete?'That code doesn’t look right — check it against your email.':'Keep going…'));
   hint.classList.toggle('success',full);
   hint.classList.toggle('error',complete&&!full);
+  var cicon=document.getElementById('rc-code-icon');
   update();
  }
  input.addEventListener('input',paint);input.addEventListener('keyup',paint);input.addEventListener('click',paint);input.addEventListener('blur',paint);input.addEventListener('focus',paint);
