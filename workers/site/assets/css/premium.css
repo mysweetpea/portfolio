@@ -1798,3 +1798,52 @@ body[data-page='redeem'] .redeem-code-group .validation-icon { left: auto; right
   body[data-page='redeem'] .form-submit, body[data-page='redeem'] .redeem-callout .btn svg { transition: none; }
   body[data-page='redeem'] .form-submit:not(:disabled):hover { transform: none; }
 }
+
+
+/* ==== Redeem polish completion (mockup parity + user tweaks) ====
+   Live prefix shows typed PEA-/FAM-; green/red STATE on strokes + meta
+   replaces the old check/X glyph; card/label/input/chip/submit polish
+   from the approved mockup. All scoped to the redeem page. */
+
+body[data-page='redeem'] .ledger .lpre { display: none; font-family: var(--t-font-mono,'Cascadia Mono',ui-monospace,'SF Mono',Menlo,monospace); font-size: 1.8rem; font-weight: 700; letter-spacing: .06em; color: var(--sage); line-height: 1; padding-bottom: 6px; }
+body[data-page='redeem'] .ledger .lpre:not(:empty) { display: block; }
+body[data-page='redeem'] .ledger.valid .cell::after { background: var(--sage); box-shadow: 0 8px 16px -8px rgba(163,201,182,.55); }
+body[data-page='redeem'] .ledger.valid .lmeta .right { color: var(--sage); }
+body[data-page='redeem'] .ledger.invalid .cell::after { background: rgba(212,106,106,.75); box-shadow: none; }
+body[data-page='redeem'] .ledger.invalid .cell.filled { color: var(--error); }
+body[data-page='redeem'] .ledger.invalid .lmeta .right { color: var(--error); }
+body[data-page='redeem'] .ledger.invalid .cell.cur::after { background: var(--error); animation: none; }
+@media (max-width: 640px) { body[data-page='redeem'] .ledger .lpre { font-size: 1.5rem; } }
+
+/* Card crown: hairline + soft bloom (mockup .form-card::before/::after) */
+body[data-page='redeem'] .form-card::before { content: ""; position: absolute; inset: 0 0 auto 0; height: 1px;
+    background: linear-gradient(90deg, transparent 4%, rgba(197,213,216,.38) 50%, transparent 96%); pointer-events: none; }
+body[data-page='redeem'] .form-card::after { content: ""; position: absolute; top: -70px; left: 50%; transform: translateX(-50%);
+    width: 70%; height: 120px; background: radial-gradient(ellipse at center, rgba(163,201,182,.14), transparent 68%);
+    filter: blur(10px); pointer-events: none; }
+body[data-page='redeem'] .form-card > * { position: relative; }
+
+/* Serif heading + mono micro-cap labels (mockup voice) */
+body[data-page='redeem'] .form-card > h2 { font-family: var(--t-font-display, 'Instrument Serif', Georgia, serif); font-weight: 400; font-size: 1.9rem; letter-spacing: .01em; }
+body[data-page='redeem'] .form-label { font-family: var(--t-font-mono,'Cascadia Mono',ui-monospace,'SF Mono',Menlo,monospace);
+    font-size: .68rem; font-weight: 600; letter-spacing: .16em; text-transform: uppercase; color: var(--text-dim); }
+
+/* Tall calm inputs, sage focus ring */
+body[data-page='redeem'] .form-input { min-height: 48px; border-radius: 10px; }
+body[data-page='redeem'] .form-input:focus { border-color: var(--sage); box-shadow: 0 0 0 3px rgba(163,201,182,.14); }
+
+/* Username checks: quiet chips */
+body[data-page='redeem'] .username-checks { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
+body[data-page='redeem'] .username-checks .uc-item { display: inline-flex; align-items: center; gap: 5px;
+    padding: 3px 9px; border: 1px solid var(--border); border-radius: 999px;
+    font-family: var(--t-font-mono,'Cascadia Mono',ui-monospace,'SF Mono',Menlo,monospace);
+    font-size: .64rem; letter-spacing: .06em; color: var(--text-faint);
+    transition: color .25s, border-color .25s, background-color .25s; }
+body[data-page='redeem'] .username-checks .uc-item .uc-icon { font-size: .68rem; }
+body[data-page='redeem'] .username-checks .uc-item.ok { color: var(--sage); border-color: rgba(163,201,182,.35); background: rgba(163,201,182,.07); }
+
+/* Gradient submit with hover bloom */
+body[data-page='redeem'] #rc-submit { background: linear-gradient(135deg, var(--sage), var(--primary-bright)); border: none; color: #10201D; box-shadow: 0 6px 20px -8px rgba(143,175,181,.45); transition: box-shadow .25s, filter .25s, transform .25s; }
+body[data-page='redeem'] #rc-submit:not(:disabled):hover, body[data-page='redeem'] #rc-submit:not(:disabled):focus-visible { filter: brightness(1.07); box-shadow: 0 10px 28px -8px rgba(143,175,181,.6); transform: translateY(-1px); }
+body[data-page='redeem'] #rc-submit:disabled { background: rgba(163,201,182,.18); color: rgba(237,243,244,.45); box-shadow: none; }
+[data-theme="light"] body[data-page='redeem'] #rc-submit:disabled { background: rgba(46,92,70,.12); color: rgba(30,42,45,.4); }
