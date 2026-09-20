@@ -1,3 +1,5 @@
+:root { --t-font-mono: 'JetBrains Mono', 'JetBrains Mono Fallback', 'Cascadia Mono', ui-monospace, 'SF Mono', Menlo, monospace; }
+
 /* ==========================================================================
    MySweetPea — Self-hosted fonts (no Google Fonts requests)
 
@@ -215,19 +217,47 @@
     font-style: normal;
     font-weight: 400;
     font-display: swap;
-    src: url('/assets/fonts/jbm-regular.woff2') format('woff2');
+    src: url('/assets/fonts/jbm-regular.l.woff2') format('woff2');
 }
 @font-face {
     font-family: 'JetBrains Mono';
     font-style: normal;
     font-weight: 500;
     font-display: swap;
-    src: url('/assets/fonts/jbm-medium.woff2') format('woff2');
+    src: url('/assets/fonts/jbm-medium.l.woff2') format('woff2');
 }
 @font-face {
     font-family: 'JetBrains Mono';
     font-style: normal;
     font-weight: 700;
     font-display: swap;
-    src: url('/assets/fonts/jbm-bold.woff2') format('woff2');
+    src: url('/assets/fonts/jbm-bold.l.woff2') format('woff2');
+}
+
+@font-face {
+    font-family: 'JetBrains Mono Fallback';
+    src: local('Consolas'), local('Menlo'), local('Courier New');
+    size-adjust: 100%;
+    ascent-override: 102%;
+    descent-override: 26%;
+    line-gap-override: 0%;
+}
+
+/* Weight-mapping faces: the site requests mono at 600 and 800 in places
+   (.sp-meta, .lightbox-meta, .compare-soon, .f-soon, status badges).
+   CSS font matching would snap 600->700 (too heavy) and 800->700 (too light);
+   these aliases bind the request to the correct file. */
+@font-face {
+    font-family: 'JetBrains Mono';
+    font-style: normal;
+    font-weight: 600;
+    font-display: swap;
+    src: url('/assets/fonts/jbm-medium.l.woff2') format('woff2');
+}
+@font-face {
+    font-family: 'JetBrains Mono';
+    font-style: normal;
+    font-weight: 800;
+    font-display: swap;
+    src: url('/assets/fonts/jbm-bold.l.woff2') format('woff2');
 }

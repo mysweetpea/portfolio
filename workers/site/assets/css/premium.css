@@ -316,7 +316,7 @@
     display: inline-flex;
     align-items: center;
     gap: 8px;
-    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-family: var(--t-font-mono);
     font-size: 0.735rem;
     letter-spacing: 0.06em;
     text-transform: uppercase;
@@ -665,7 +665,7 @@
     border: 0;
     border-radius: 0;
     color: var(--text-dim);
-    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-family: var(--t-font-mono);
     font-size: 0.775rem;
     letter-spacing: -0.01em;
     white-space: nowrap;
@@ -714,7 +714,7 @@
     border-radius: 0;
     background: transparent;
     color: var(--text-dim);
-    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-family: var(--t-font-mono);
     font-size: 0.775rem;
     letter-spacing: -0.01em;
     white-space: nowrap;
@@ -744,7 +744,7 @@
     border-radius: 999px;
     background: linear-gradient(135deg, var(--primary), var(--primary-dim));
     color: var(--bg);
-    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-family: var(--t-font-mono);
     font-size: 0.79rem;
     font-weight: 600;
     transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1),
@@ -1034,7 +1034,7 @@
         border-radius: 8px;
     }
     .top-nav .nav-btn {
-        font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+        font-family: var(--t-font-mono);
         letter-spacing: -0.01em;
         background: transparent;
         border: 0;
@@ -1126,7 +1126,7 @@
         min-height: 50px;
         margin: 0;
         padding: 12px 8px;
-        font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+        font-family: var(--t-font-mono);
         font-size: 0.95rem;
         letter-spacing: -0.01em;
         text-align: left;
@@ -1144,7 +1144,7 @@
         min-height: 50px;
         margin-top: 10px;
         padding: 13px 20px;
-        font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+        font-family: var(--t-font-mono);
         font-size: 0.9rem;
         font-weight: 600;
         border-radius: 10px;
@@ -1401,7 +1401,7 @@ button, input, select, textarea, optgroup {
 .top-nav .nav-btn,
 .top-nav .nav-signin,
 .top-nav .nav-cta {
-    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-family: var(--t-font-mono);
 }
 
 /* === MySweetPea bloom logo (dependency-free) =============================
