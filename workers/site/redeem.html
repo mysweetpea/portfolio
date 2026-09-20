@@ -224,9 +224,13 @@ html[data-theme="light"]{background:#E7EDEA;color-scheme:light}
   ledger.classList.toggle('valid',complete&&full);
   ledger.classList.toggle('invalid',complete&&!full);
   lcount.textContent=cl.length+' / 11 CHARACTERS';
-  lhint.textContent=complete?(full?'CODE COMPLETE — VALID':'CHECK CODE'):(cl.length?'KEEP GOING':'ENTER THE FULL CODE');
+  lhint.textContent=complete?(full?'CODE COMPLETE — VALID':'CHECK CODE'):(cl.length?'IN PROGRESS':'AWAITING CODE');
   lhint.classList.toggle('err',complete&&!full);
-  hint.textContent=cl.length===0?'Enter the code exactly as it appears in your email.':(full?'Code looks good — continue with your details.':(complete?'That code doesn’t look right — check it against your email.':'Keep going…'));
+  // Sentence hint = guidance only (no progress/validity echo — that's the meta row's job).
+  hint.textContent=
+      complete&&full  ? 'Code looks good — continue with your details.' :
+      complete&&!full ? 'That code doesn’t look right — check it against your email.' :
+      cl.length===0   ? 'Enter the code exactly as it appears in your email.' : '';
   hint.classList.toggle('success',full);
   hint.classList.toggle('error',complete&&!full);
   var cicon=document.getElementById('rc-code-icon');

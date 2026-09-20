@@ -1808,6 +1808,7 @@ body[data-page='redeem'] .redeem-code-group .validation-icon { left: auto; right
    from the approved mockup. All scoped to the redeem page. */
 
 
+body[data-page='redeem'] .form-hint:empty { display: none; margin: 0; }
 body[data-page='redeem'] .ledger.valid .cell::after { background: var(--sage); box-shadow: 0 8px 16px -8px rgba(163,201,182,.55); }
 body[data-page='redeem'] .ledger.valid .lmeta .right { color: var(--sage); }
 body[data-page='redeem'] .ledger.invalid .cell::after { background: rgba(212,106,106,.75); box-shadow: none; }
