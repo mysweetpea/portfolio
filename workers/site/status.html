@@ -46,11 +46,11 @@ html[data-theme="light"]{background:#E7EDEA;color-scheme:light}
     <link rel="preload" as="image" href="/logo.svg">
 <link rel="preload" as="font" type="font/woff2" href="/assets/fonts/instrument-serif.woff2" crossorigin>
 <link rel="preload" as="font" type="font/woff2" href="/assets/fonts/archivo-var.woff2" crossorigin>
-                    <link rel="stylesheet" href="/assets/css/fonts.css?v=81">
-    <link rel="stylesheet" href="/assets/css/site.css?v=81">
-    <link rel="stylesheet" href="/assets/css/premium.css?v=81">
-    <link rel="stylesheet" href="/assets/css/type-tokens.css?v=81">
-    <link rel="stylesheet" href="/assets/css/hermes-type.css?v=81">
+                    <link rel="stylesheet" href="/assets/css/fonts.css?v=82">
+    <link rel="stylesheet" href="/assets/css/site.css?v=82">
+    <link rel="stylesheet" href="/assets/css/premium.css?v=82">
+    <link rel="stylesheet" href="/assets/css/type-tokens.css?v=82">
+    <link rel="stylesheet" href="/assets/css/hermes-type.css?v=82">
 <link rel="canonical" href="https://mysweetpea.cc/status">
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"Organization","name":"MySweetPea","url":"https://mysweetpea.cc","logo":"https://mysweetpea.cc/logo.png","description":"Private, self-hosted alternatives to the services you use every day. No ads, no tracking, no subscriptions — community funded.","email":"support@mysweetpea.cc","sameAs":["https://github.com/mysweetpea"]}</script>
 </head>
@@ -115,26 +115,8 @@ html[data-theme="light"]{background:#E7EDEA;color-scheme:light}
                 <section class="status-section" aria-labelledby="status-summary">
                     <div class="status-summary status-all-online reveal" id="status-summary" role="status">
                         <span class="status-dot" aria-hidden="true"></span>
-                        <span class="status-summary-main"><strong>9 of 9 operational</strong><small>Current community services &middot; <time datetime="2026-08-05T00:00:00-04:00">Last reviewed Aug 5, 2026</time></small></span>
+                        <span class="status-summary-main"><strong>9 of 9 operational</strong><small>Uptime <span id="summary-pct">—</span> &middot; Current community services &middot; <time datetime="2026-08-05T00:00:00-04:00">Last reviewed Aug 5, 2026</time></small></span>
                         <div class="status-summary-meta">UPTIME WINDOW <b>30 DAYS</b><br>MONITOR <b>KUMA</b> &middot; CHECKS <b>15 MIN</b></div>
-                    </div>
-
-                    <div class="status-metrics reveal">
-                        <div class="metric-card">
-                            <div class="metric-value">99.9%</div>
-                            <div class="metric-label">Uptime (30 days)</div>
-                            <div class="metric-bar"><span style="width:99.9%"></span></div>
-                        </div>
-                        <div class="metric-card">
-                            <div class="metric-value">9</div>
-                            <div class="metric-label">Live services</div>
-                            <div class="metric-bar"><span style="width:100%"></span></div>
-                        </div>
-                        <div class="metric-card">
-                            <div class="metric-value" id="active-incidents-count">0</div>
-                            <div class="metric-label">Active incidents</div>
-                            <div class="metric-bar"><span id="active-incidents-bar" style="width:0%"></span></div>
-                        </div>
                     </div>
 
                     <div class="status-console reveal">
@@ -328,9 +310,9 @@ html[data-theme="light"]{background:#E7EDEA;color-scheme:light}
         var summaryText = summary ? summary.querySelector('strong') : null;
         var summaryTime = summary ? summary.querySelector('time') : null;
         var rows = document.querySelectorAll('.status-line[data-service-key]');
-        var metricUptime = document.querySelector('.metric-card .metric-value');
-        var metricLive = document.querySelectorAll('.metric-card .metric-value')[1];
-        var metricIncidents = document.querySelectorAll('.metric-card .metric-value')[2];
+        var metricUptime = null;
+        var metricLive = null;
+        var metricIncidents = null;
 
         // Map our service keys to Uptime Kuma monitor IDs
         var MONITOR_IDS = {
@@ -386,7 +368,8 @@ html[data-theme="light"]{background:#E7EDEA;color-scheme:light}
             }
             if (label) label.textContent = up ? 'Operational' : 'Down';
             if (dot) dot.classList.toggle('status-down', !up);
-            if (uptimeEl) uptimeEl.textContent = (pct != null) ? '30d ' + pct + '%' : '30d —';
+            var win = (window.UPTIME_WIN && window.UPTIME_WIN[row.dataset.serviceKey]) || null;
+            if (uptimeEl) uptimeEl.textContent = (pct != null) ? ((win ? win + 'd ' : '') + pct + '%') : 'uptime —';
             if (pctEl) pctEl.textContent = (pct != null) ? pct + '%' : '—';
             if (checksEl && list && list.length) {
                 var h = list[list.length - 1];
@@ -405,15 +388,18 @@ html[data-theme="light"]{background:#E7EDEA;color-scheme:light}
                 var hb = data.heartbeatList; // { "<monitorId>": [heartbeats...], ... }
                 // uptimeList keys are "<monitorId>_<durationDays>" (e.g. "1_24"),
                 // values are fractions 0..1 — normalize to a monitorId -> pct map
-                var uptimePct = {};
+                var uptimePct = {}; var uptimeWin = {};
                 if (data.uptimeList) {
                     Object.keys(data.uptimeList).forEach(function (k) {
                         var parts = k.split('_');
-                        if (parts[1] !== '30') return; /* label is 30d — only accept 30-day data */
+                        var id = parts[0], days = parts[1] ? parseInt(parts[1], 10) : 0;
                         var v = data.uptimeList[k];
-                        if (typeof v === 'number') uptimePct[parts[0]] = Math.round(v * 1000) / 10;
+                        if (typeof v === 'number' && (uptimePct[id] == null || days > uptimeWin[id])) {
+                            uptimePct[id] = Math.round(v * 1000) / 10; uptimeWin[id] = days;
+                        }
                     });
                 }
+                window.UPTIME_WIN = uptimeWin;
                 var upCount = 0, total = 0;
                 var uptimeSum = 0, uptimeCount = 0;
                 Object.keys(hb).forEach(function (id) {
@@ -434,16 +420,12 @@ html[data-theme="light"]{background:#E7EDEA;color-scheme:light}
                 if (summaryText) summaryText.textContent = upCount + ' of ' + total + ' operational';
                 if (summaryTime) summaryTime.textContent = 'Updated ' + new Date().toLocaleDateString();
                 // Connect the metric cards to real data
-                if (metricUptime && uptimeCount) {
+                if (uptimeCount) {
                     var avg = Math.round((uptimeSum / uptimeCount) * 10) / 10;
-                    metricUptime.textContent = avg + '%';
-                    var bar = metricUptime.parentNode.querySelector('.metric-bar span');
-                    if (bar) bar.style.width = avg + '%';
-                }
-                if (metricLive) {
-                    metricLive.textContent = total;
-                    var liveBar = metricLive.parentNode.querySelector('.metric-bar span');
-                    if (liveBar) liveBar.style.width = (total > 0 ? 100 : 0) + '%';
+                    var wins = Object.keys(uptimeWin).map(function (k) { return uptimeWin[k]; });
+                    var win = wins.length ? Math.min.apply(null, wins) : null;
+                    var headPct = document.getElementById('summary-pct');
+                    if (headPct) headPct.textContent = (win ? win + 'd avg ' : '') + avg + '%';
                 }
             })
             .catch(function () {
