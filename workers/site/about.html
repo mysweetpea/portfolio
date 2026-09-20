@@ -46,11 +46,11 @@ html[data-theme="light"]{background:#E7EDEA;color-scheme:light}
     <link rel="preload" as="image" href="/logo.svg">
 <link rel="preload" as="font" type="font/woff2" href="/assets/fonts/instrument-serif.woff2" crossorigin>
 <link rel="preload" as="font" type="font/woff2" href="/assets/fonts/archivo-var.woff2" crossorigin>
-                    <link rel="stylesheet" href="/assets/css/fonts.css?v=84">
-    <link rel="stylesheet" href="/assets/css/site.css?v=84">
-    <link rel="stylesheet" href="/assets/css/premium.css?v=84">
-    <link rel="stylesheet" href="/assets/css/type-tokens.css?v=84">
-    <link rel="stylesheet" href="/assets/css/hermes-type.css?v=84">
+                    <link rel="stylesheet" href="/assets/css/fonts.css?v=85">
+    <link rel="stylesheet" href="/assets/css/site.css?v=85">
+    <link rel="stylesheet" href="/assets/css/premium.css?v=85">
+    <link rel="stylesheet" href="/assets/css/type-tokens.css?v=85">
+    <link rel="stylesheet" href="/assets/css/hermes-type.css?v=85">
 <link rel="canonical" href="https://mysweetpea.cc/about">
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"Organization","name":"MySweetPea","url":"https://mysweetpea.cc","logo":"https://mysweetpea.cc/logo.png","description":"Private, self-hosted alternatives to the services you use every day. No ads, no tracking, no subscriptions — community funded.","email":"support@mysweetpea.cc","sameAs":["https://github.com/mysweetpea"]}</script>
 </head>
@@ -95,77 +95,135 @@ html[data-theme="light"]{background:#E7EDEA;color-scheme:light}
 
 
 <main id="main-content" class="content-wrapper">
-        <div class="hero">
-            <img src="/logo.svg" alt="" class="hero-watermark" aria-hidden="true" loading="lazy" decoding="async"><img src="/logo.svg" alt="MySweetPea logo" class="logo" width="160" height="160"><h1 class="glass-text">About MySweetPea</h1><p class="hero-sub pop-text">Self-hosted services for a privacy-first community.</p></div>
+        <div class="about-x-ticker" role="status" aria-label="Live service status ticker">
+            <div class="about-x-ticker-in">
+                <span class="about-x-tk"><i class="about-x-dot" aria-hidden="true"></i>jellyfin</span>
+                <span class="about-x-tk"><i class="about-x-dot" aria-hidden="true"></i>seerr</span>
+                <span class="about-x-tk"><i class="about-x-dot" aria-hidden="true"></i>nextcloud</span>
+                <span class="about-x-tk"><i class="about-x-dot" aria-hidden="true"></i>immich</span>
+                <span class="about-x-tk"><i class="about-x-dot" aria-hidden="true"></i>vaultwarden</span>
+                <span class="about-x-tk"><i class="about-x-dot" aria-hidden="true"></i>matrix</span>
+                <span class="about-x-tk"><i class="about-x-dot" aria-hidden="true"></i>affine</span>
+                <span class="about-x-tk"><i class="about-x-dot" aria-hidden="true"></i>open-webui</span>
+                <span class="about-x-tk"><i class="about-x-dot" aria-hidden="true"></i>koalasync</span>
+                <span class="about-x-tk about-x-tk-state" id="aboutTickerState">ALL SYSTEMS OPERATIONAL · LIVE</span>
+            </div>
+        </div>
+        <header class="about-x-hero">
+            <p class="about-x-eyebrow">About MySweetPea</p>
+            <h1 class="glass-text about-x-title">Private services, <em>kept like a garden.</em></h1>
+            <p class="about-x-hero-sub">Nine self-hosted services — media, photos, passwords, notes, chat — tended by one person and funded by the people who use them. No ads. No tracking. No subscriptions.</p>
+            <div class="about-x-bignum reveal">
+                <div class="about-x-bn about-x-lead">
+                    <p class="about-x-live" id="aboutUptimeState"><i class="about-x-dot about-x-dot-on" aria-hidden="true"></i><span class="about-x-live-txt">LIVE · LAST 24 H</span></p>
+                    <p class="about-x-bv"><span id="aboutUptimePct" data-count="99.9">99.9</span><small>%</small></p>
+                    <p class="about-x-bl">Uptime across all services</p>
+                </div>
+                <div class="about-x-bn">
+                    <p class="about-x-bv"><span data-count="9">9</span></p>
+                    <p class="about-x-bl">Services, all open source</p>
+                </div>
+                <div class="about-x-bn">
+                    <p class="about-x-bv"><span data-count="2">2</span></p>
+                    <p class="about-x-bl">Public repositories</p>
+                </div>
+            </div>
+        </header>
         <div class="view-switcher" id="about-switcher">
-            <div class="view-tabs" role="tablist" aria-label="About sections">
-                <button type="button" class="view-tab active" role="tab" aria-selected="true" data-view="about">About</button>
-                <button type="button" class="view-tab" role="tab" aria-selected="false" data-view="opensource">Open Source</button>
+            <div class="view-tabs about-x-tabs" role="tablist" aria-label="About sections">
+                <button type="button" class="view-tab active about-x-tab" role="tab" aria-selected="true" data-view="about">About</button>
+                <button type="button" class="view-tab about-x-tab" role="tab" aria-selected="false" data-view="opensource">Open Source</button>
             </div>
 
             <div class="view-panel active" data-view="about" role="tabpanel">
-                <div class="content-section about-section">
-                    <div class="card about-card reveal">
-                        <h2>What is MySweetPea?</h2>
-                        <p>MySweetPea is a small collection of private apps for a community. Instead of using large companies that track you or show ads, you can use tools for chat, passwords, notes, photos, and more in one private place.</p>
-                        <p>I run and maintain this project because privacy should be easier to choose. The goal is simple: useful everyday tools without advertising, tracking, or selling your information.</p>
-                    </div>
-                    <div class="card about-card reveal reveal-delay-1">
-                        <h2>What does “self-hosted” mean?</h2>
-                        <p>It means the apps run on computers and storage hardware that I own and manage, rather than on rented servers from a large technology company. Your services are provided from MySweetPea’s own equipment.</p>
-                        <p>For you, that means:</p>
-                        <ul class="about-list">
-                            <li><span class="al-icon" aria-hidden="true"><img src="/assets/icons/icon-ui-shield.svg" alt="" width="20" height="20"></span>Full control over the infrastructure and your data</li>
-                            <li><span class="al-icon" aria-hidden="true"><img src="/assets/icons/icon-ui-shield.svg" alt="" width="20" height="20"></span>No third-party access to your data — not even mine, since services like the password manager use encryption that even I cannot break</li>
-                            <li><span class="al-icon" aria-hidden="true"><img src="/assets/icons/icon-ui-globe.svg" alt="" width="20" height="20"></span>No vendor lock-in — if I shut down tomorrow, you still have your data</li>
-                            <li><span class="al-icon" aria-hidden="true"><img src="/assets/icons/icon-ui-globe.svg" alt="" width="20" height="20"></span>Transparency — you can view the project’s technical files on GitHub, a website where developers share code</li>
-                        </ul>
-                        <h2>One sign-in for everything</h2>
-                        <p>You sign in to MySweetPea services with a single username and password. Behind the scenes, that sign-in page runs on software called <strong>Authentik</strong> — that's just its name, not a typo of "authentic." It keeps your account secure and means you never need a separate password for each service.</p>
-                    </div>
-                    <div class="card about-card reveal reveal-delay-2">
-                        <h2>The Cost of Running MySweetPea</h2>
-                        <p>Running these services is not free, which is why donations matter. Here are the main expenses:</p>
-                        <ul class="about-list">
-                            <li><span class="al-icon" aria-hidden="true"><img src="/assets/icons/icon-ui-blossom.svg" alt="" width="20" height="20"></span>Electricity — three servers running 24 hours a day, 7 days a week use a lot of power</li>
-                            <li><span class="al-icon" aria-hidden="true"><img src="/assets/icons/icon-ui-blossom.svg" alt="" width="20" height="20"></span>Hardware — the physical servers, networking equipment, and storage drives that need occasional upgrades</li>
-                            <li><span class="al-icon" aria-hidden="true"><img src="/assets/icons/icon-ui-blossom.svg" alt="" width="20" height="20"></span>Internet bandwidth — streaming movies and serving services to multiple users at once requires a fast, reliable connection</li>
-                            <li><span class="al-icon" aria-hidden="true"><img src="/assets/icons/icon-ui-blossom.svg" alt="" width="20" height="20"></span>Domain registration — the mysweetpea.cc web address needs to be renewed every year</li>
-                            <li><span class="al-icon" aria-hidden="true"><img src="/assets/icons/icon-ui-blossom.svg" alt="" width="20" height="20"></span>Relay server — a small server that helps people outside my home network access the media streaming</li>
-                        </ul>
-                        <p>Donations help cover these ongoing costs and fund future improvements and new services. Without community support, this project would not be sustainable. Every dollar helps keep MySweetPea running.</p>
-                    </div>
+                <div class="about-x-shell">
+                    <section class="about-x-blk">
+                        <div class="about-x-shead reveal">
+                            <span class="about-x-idx">01 / ORIGIN</span>
+                            <h2>How the garden started</h2>
+                            <span class="about-x-tag">3 beats</span>
+                        </div>
+                        <div class="about-x-duo">
+                            <div class="about-x-prose">
+                                <p class="about-x-lead reveal">MySweetPea began as a single Jellyfin server on a repurposed laptop — one family movie collection in one place, instead of scattered drives and rotating streaming subscriptions.</p>
+                                <p class="about-x-lead reveal reveal-delay-1">Friends and family asked to share it. Sharing meant growing up: real accounts, encrypted vaults, nightly off-site backups, a domain, monitoring that pages a phone at 3&nbsp;a.m. <strong>The hobby became infrastructure.</strong></p>
+                                <p class="about-x-lead reveal reveal-delay-2">Today it's a small private garden — <strong>nine services, tended daily</strong>, answerable to no advertiser, algorithm or acquisition. It stays small on purpose.</p>
+                            </div>
+                            <dl class="about-x-factsheet reveal reveal-delay-1">
+                                <div class="about-x-fs-row"><dt class="about-x-fs-k">Founded</dt><dd class="about-x-fs-v"><b>2024</b>, one laptop</dd></div>
+                                <div class="about-x-fs-row"><dt class="about-x-fs-k">Grown to</dt><dd class="about-x-fs-v"><b>9 services</b> · one sign-in</dd></div>
+                                <div class="about-x-fs-row"><dt class="about-x-fs-k">Funding</dt><dd class="about-x-fs-v">community, <b>one-time</b></dd></div>
+                                <div class="about-x-fs-row"><dt class="about-x-fs-k">Backups</dt><dd class="about-x-fs-v"><span class="about-x-ok">nightly</span>, on-site + off-site</dd></div>
+                                <div class="about-x-fs-row"><dt class="about-x-fs-k">Watched by</dt><dd class="about-x-fs-v">uptime monitors, <span class="about-x-ok">24/7</span></dd></div>
+                            </dl>
+                        </div>
+                    </section>
+
+                    <section class="about-x-blk">
+                        <div class="about-x-shead reveal">
+                            <span class="about-x-idx">02 / PRINCIPLES</span>
+                            <h2>What &ldquo;self-hosted&rdquo; means here</h2>
+                        </div>
+                        <p class="about-x-lead about-x-lead-gap reveal">Most internet services run on someone else's computer, under someone else's rules. Here the opposite is true — and it changes how your data is treated:</p>
+                        <div class="about-x-prows reveal">
+                            <div class="about-x-prow"><span class="about-x-pno">P·01</span><h3>You hold the keys</h3><p>Your files, photos and passwords live on hardware in this garden — not replicated into someone's ad warehouse.</p></div>
+                            <div class="about-x-prow"><span class="about-x-pno">P·02</span><h3>Work, not magic</h3><p>No dark patterns, no lock-in. Updates, backups and fixes done by hand, on purpose.</p></div>
+                            <div class="about-x-prow"><span class="about-x-pno">P·03</span><h3>No third parties</h3><p>No brokers, no trackers, no &ldquo;partners.&rdquo; There is no one to sell your activity to.</p></div>
+                            <div class="about-x-prow"><span class="about-x-pno">P·04</span><h3>Transparent by design</h3><p>Open-source services, public infrastructure code. You can read exactly how this place runs.</p></div>
+                        </div>
+                    </section>
+
+                    <section class="about-x-blk">
+                        <div class="about-x-shead reveal">
+                            <span class="about-x-idx">03 / COST</span>
+                            <h2>The cost of keeping a garden</h2>
+                            <span class="about-x-tag">qualitative</span>
+                        </div>
+                        <p class="about-x-lead reveal">Running this properly isn't free — it's paid in electricity, hardware and hours. What it never costs is your data or attention. The full manifest:</p>
+                        <div class="about-x-manifest reveal">
+                            <div class="about-x-mf-head"><span>Running costs</span><span>Covered by</span></div>
+                            <div class="about-x-mf-row"><span class="about-x-mf-item">⚡ Electricity</span><span class="about-x-mf-dots" aria-hidden="true"></span><span class="about-x-mf-val">the contribution</span></div>
+                            <div class="about-x-mf-row"><span class="about-x-mf-item">🖧 Hardware &amp; drives</span><span class="about-x-mf-dots" aria-hidden="true"></span><span class="about-x-mf-val">the contribution</span></div>
+                            <div class="about-x-mf-row"><span class="about-x-mf-item">🌐 Internet &amp; domain</span><span class="about-x-mf-dots" aria-hidden="true"></span><span class="about-x-mf-val">the contribution</span></div>
+                            <div class="about-x-mf-row"><span class="about-x-mf-item">📡 Relay servers</span><span class="about-x-mf-dots" aria-hidden="true"></span><span class="about-x-mf-val">the contribution</span></div>
+                            <div class="about-x-mf-row"><span class="about-x-mf-item">💾 Nightly backups</span><span class="about-x-mf-dots" aria-hidden="true"></span><span class="about-x-mf-val">the contribution</span></div>
+                            <div class="about-x-mf-row"><span class="about-x-mf-item">🔧 Maintenance hours</span><span class="about-x-mf-dots" aria-hidden="true"></span><span class="about-x-mf-val">freely given</span></div>
+                            <div class="about-x-mf-total"><span class="about-x-mf-t">Your part</span><span class="about-x-mf-v">a single contribution when you join — never a meter</span></div>
+                        </div>
+                        <p class="about-x-mf-note reveal"><b>Never on the bill:</b> your data, your attention, or a subscription.</p>
+                    </section>
                 </div>
             </div>
 
             <div class="view-panel" data-view="opensource" role="tabpanel">
-                <div class="content-section about-section">
-                    <div class="card about-card reveal">
-                        <h2>Open Source</h2>
-                        <p>Every service we run is open source, meaning the code is freely available for anyone to inspect. Our infrastructure code is public on GitHub, so you can see exactly how everything is set up and secured. No black boxes, no hidden tracking, full transparency.</p>
-                        <div class="github-links">
-                            <a href="https://github.com/mysweetpea/homelab-k8s" target="_blank" rel="noopener noreferrer" class="github-link repo-homelab"><div class="icon github-icon" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg></div><div class="info"><div class="repo">homelab-k8s</div><div class="desc">All the code that runs the servers and services</div></div></a>
-                            <a href="https://github.com/mysweetpea/portfolio" target="_blank" rel="noopener noreferrer" class="github-link repo-portfolio"><div class="icon github-icon" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg></div><div class="info"><div class="repo">portfolio</div><div class="desc">The code for this website</div></div></a>
+                <div class="about-x-shell">
+                    <section class="about-x-blk about-x-oss">
+                        <div class="about-x-shead reveal">
+                            <span class="about-x-idx">OS / SOURCE</span>
+                            <h2>Built in the open</h2>
                         </div>
-                        <div class="trust-row">
-                            <span class="trust-badge"><span class="trust-icon" aria-hidden="true"><img src="/assets/icons/icon-ui-shield.svg" alt="" width="18" height="18"></span>End-to-end encrypted vaults</span>
-                            <span class="trust-badge"><span class="trust-icon" aria-hidden="true"><img src="/assets/icons/icon-ui-shield.svg" alt="" width="18" height="18"></span>No ads, no tracking, no data selling</span>
-                            <span class="trust-badge"><span class="trust-icon" aria-hidden="true"><img src="/assets/icons/icon-ui-globe.svg" alt="" width="18" height="18"></span>Open source, fully auditable</span>
-                            <span class="trust-badge"><span class="trust-icon" aria-hidden="true"><img src="/assets/icons/icon-ui-seedling.svg" alt="" width="18" height="18"></span>Community-funded, no corporate owners</span>
+                        <p class="about-x-lead reveal">Every service in the garden is open source — inspectable, auditable, no black boxes. The garden itself is no exception: the infrastructure and this website are both public.</p>
+                        <a href="https://github.com/mysweetpea/homelab-k8s" target="_blank" rel="noopener noreferrer" class="github-link repo-homelab about-x-repo reveal"><div class="icon github-icon" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg></div><div class="info"><div class="repo">homelab-k8s</div><div class="desc">Every service definition, firewall rule and backup script. The whole garden, as code, exactly as it runs.</div></div><span class="about-x-arrow" aria-hidden="true">↗</span></a>
+                        <a href="https://github.com/mysweetpea/portfolio" target="_blank" rel="noopener noreferrer" class="github-link repo-portfolio about-x-repo reveal reveal-delay-1"><div class="icon github-icon" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg></div><div class="info"><div class="repo">portfolio</div><div class="desc">The site, the dashboard, the workers behind them — written in the open.</div></div><span class="about-x-arrow" aria-hidden="true">↗</span></a>
+                        <div class="about-x-trust-grid">
+                            <span class="about-x-trust reveal"><i class="about-x-dot" aria-hidden="true"></i>End-to-end encrypted vaults</span>
+                            <span class="about-x-trust reveal reveal-delay-1"><i class="about-x-dot" aria-hidden="true"></i>No ads, no tracking, no data selling</span>
+                            <span class="about-x-trust reveal reveal-delay-2"><i class="about-x-dot" aria-hidden="true"></i>Open source, fully auditable</span>
+                            <span class="about-x-trust reveal reveal-delay-3"><i class="about-x-dot" aria-hidden="true"></i>Community-funded, no corporate owners</span>
                         </div>
-                    </div>
+                    </section>
                 </div>
             </div>
         </div>
         <div class="cta-section">
             <div class="cta-card reveal">
                 <p class="portal-hint" id="portalHint" aria-hidden="true">keep scrolling…</p>
-                <h2 class="glass-text" id="supportTrigger">Support the Project</h2>
+                <h2 class="glass-text" id="supportTrigger">Water the garden</h2>
                 <p>If you believe in privacy-first, community-funded services, consider supporting MySweetPea with a donation.</p>
                 <a href="/support.html" class="cta-btn">Donate Now</a>
             </div>
         </div>
-        </main>
+</main>
         <!-- Hermes-style portal easter egg: click "Support the Project" to arm;
              the girl fades in as the footer scrolls past, blending with the page
              (like hermes-agent.nousresearch.com); scroll back up to conceal. -->
@@ -228,10 +286,11 @@ html[data-theme="light"]{background:#E7EDEA;color-scheme:light}
 
 
 
-    <script src="/assets/js/lenis.min.js?v=67" defer></script>
-    <script src="/assets/js/lenis-init.js?v=67" defer></script>
-    <script src="/assets/js/site.js?v=67" defer></script>
-    <script src="/assets/js/premium.js?v=67" defer></script>
+    <script src="/assets/js/lenis.min.js?v=85" defer></script>
+    <script src="/assets/js/lenis-init.js?v=85" defer></script>
+    <script src="/assets/js/site.js?v=85" defer></script>
+    <script src="/assets/js/premium.js?v=85" defer></script>
+    <script src="/assets/js/about-page.js?v=85" defer></script>
     <script>
     if ('serviceWorker' in navigator) {
         window.addEventListener('load', function () {
