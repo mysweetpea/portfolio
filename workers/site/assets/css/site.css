@@ -7421,6 +7421,28 @@ body[data-page='form'] .vc-text {
 [data-theme='light'] .lightbox-shotwrap::after { background: linear-gradient(180deg, rgba(240, 246, 244, 0), rgba(240, 246, 244, 0.55)); }
 @media (max-width: 768px) { .lightbox { padding: 14px; } .lightbox-figure { max-width: 96vw; } .lightbox-shotwrap img#lightboxShot { max-height: 44vh; } .lightbox-actions { margin-left: 0; flex-basis: 100%; } .lb-btn { flex: 1; justify-content: center; padding: 11px 14px; } .lightbox-head { gap: 11px; } }
 @media (prefers-reduced-motion: reduce) { .lightbox-figure { animation: none; } }
+
+/* v2.1: one-line meta — LIVE + colored tier chip, single row */
+.lightbox-meta { flex-wrap: nowrap; white-space: nowrap; }
+.lightbox-meta .lm-live { color: var(--sage); }
+.lightbox-meta .lm-sep { color: var(--text-faint); }
+.lightbox-meta .lm-tier {
+  display: inline-flex; align-items: center; gap: 5px;
+  padding: 2px 9px; border-radius: 999px;
+  background: rgba(217, 168, 108, 0.14);
+  border: 1px solid rgba(217, 168, 108, 0.4);
+  color: var(--gold, #D9A86C);
+}
+.lightbox-meta .lm-tier img { display: block; width: 10px; height: 10px; filter: brightness(1.15) sepia(0.35) saturate(2.4) hue-rotate(-12deg); }
+[data-theme='light'] .lightbox-meta .lm-tier { background: rgba(217,168,108,0.1); border-color: rgba(217,168,108,0.45); color: #8A6428; }
+[data-theme='light'] .lightbox-meta .lm-live { color: #2F6B4E; }
+
+
+/* v2.2: beat the legacy .lightbox-text span{display:block} rule (0,1,1) */
+.lightbox-text .lightbox-meta { display: inline-flex; margin-top: 6px; }
+.lightbox-text .lightbox-meta .lm-live,
+.lightbox-text .lightbox-meta .lm-sep { display: inline; }
+
 /* === end Services v2 === */
 
 /* ---- Services v3: segmented filter bar, leaf pill, mystery polish, garden dividers ---- */
