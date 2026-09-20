@@ -123,7 +123,6 @@ html[data-theme="light"]{background:#E7EDEA;color-scheme:light}
                         <span id="lcount">0 / 8 CHARACTERS</span>
                         <span class="right" id="lhint">FROM YOUR INVITE EMAIL</span>
                     </div>
-                    <div class="form-hint" id="rc-code-hint">Enter the code exactly as it appears in your email.</div>
                 </div>
                 <div class="form-group"><label class="form-label glass-text" for="rc-name">Name</label><input type="text" class="form-input" id="rc-name" placeholder="Your name" autocomplete="name" maxlength="60"><span class="validation-icon" id="rc-name-icon" aria-hidden="true"></span></div>
                 <div class="form-group"><label class="form-label glass-text" for="rc-email">Email</label><input type="email" class="form-input" id="rc-email" placeholder="you@example.com" autocomplete="email" maxlength="120"><span class="validation-icon" id="rc-email-icon" aria-hidden="true"></span></div>
@@ -198,10 +197,9 @@ html[data-theme="light"]{background:#E7EDEA;color-scheme:light}
      lcount=document.getElementById('lcount'),
      
      ledger=document.getElementById('ledger'),
-     lhint=document.getElementById('lhint'),
-     hint=document.getElementById('rc-code-hint');
+     lhint=document.getElementById('lhint');
  var input=document.createElement('input');
- input.type='text';input.id='rc-code';input.className='form-input redeem-code-input';input.maxLength=12;input.autocomplete='off';
+ input.type='text';input.id='rc-code';input.className='form-input redeem-code-input';input.autocomplete='off';
  input.setAttribute('autocapitalize','characters');input.setAttribute('spellcheck','false');input.setAttribute('aria-label','Invite code');
  input.style.cssText='position:absolute;inset:0;width:100%;height:100%;opacity:0;cursor:text;z-index:3';
  document.querySelector('.redeem-code-group').appendChild(input);
@@ -211,8 +209,21 @@ html[data-theme="light"]{background:#E7EDEA;color-scheme:light}
   var raw=input.value.toUpperCase().replace(/\s/g,'');
   var cl=raw.replace(/[^A-Z0-9]/g,'').slice(0,11);   // keep alnum only, cap 11
   var pre=cl.slice(0,3), tail=cl.slice(3,11);
-  // canonical display value: PREFIX-dash-tail while typing
-  input.value = pre + (tail?'-'+tail:(cl.length>=3?'-':''));
+  // canonical display value: PREFIX-dash-tail while typing.
+  // Only touch .value when it differs AND restore the caret to the equivalent
+  // position (rewriting .value snaps selectionStart to the end, which made
+  // arrow-back-then-type edits land in the wrong place).
+  var disp = pre + (tail?'-'+tail:(cl.length>=3?'-':''));
+  if (input.value !== disp) {
+    var p0 = input.selectionStart || 0;
+    // alnum offset from the OLD string up to the caret
+    var oldPre = input.value.slice(0, p0).replace(/[^A-Z0-9]/g, '').length;
+    input.value = disp;
+    // walk the new display string to the same alnum offset (skipping the dash)
+    var np = 0, seen = 0;
+    while (np < disp.length && seen < oldPre) { if (/[A-Z0-9]/.test(disp[np])) seen++; np++; }
+    input.setSelectionRange(np, np);
+  }
   for(var i=0;i<3;i++){var pc=pre[i]||'';cells[i].textContent=pc;cells[i].classList.toggle('filled',!!pc);}
   for(var i=3;i<11;i++){var tc=tail[i-3]||'';cells[i].textContent=tc;cells[i].classList.toggle('filled',!!tc);}
   // caret position: map selectionStart in the DISPLAY string to a slot index 0..10
@@ -227,13 +238,8 @@ html[data-theme="light"]{background:#E7EDEA;color-scheme:light}
   lcount.textContent=cl.length+' / 11 CHARACTERS';
   lhint.textContent=complete?(full?'CODE COMPLETE — VALID':'CHECK CODE'):(cl.length?'IN PROGRESS':'AWAITING CODE');
   lhint.classList.toggle('err',complete&&!full);
+  window.__codeMeta=lhint;window.__codeState=complete?(full?'valid':'invalid'):'idle';
   // Sentence hint = guidance only (no progress/validity echo — that's the meta row's job).
-  hint.textContent=
-      complete&&full  ? 'Code looks good — continue with your details.' :
-      complete&&!full ? 'That code doesn’t look right — check it against your email.' :
-      cl.length===0   ? 'Enter the code exactly as it appears in your email.' : '';
-  hint.classList.toggle('success',full);
-  hint.classList.toggle('error',complete&&!full);
   var cicon=document.getElementById('rc-code-icon');
   update();
  }

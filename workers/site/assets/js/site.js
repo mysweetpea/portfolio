@@ -723,20 +723,26 @@
 
     /* === Notify-me buttons (coming-soon services) — removed per request === */
 
-    /* === Redeem: live invite-code check === */
+    /* === Redeem: live invite-code check (webhook) ===
+       Writes its result into the ledger meta row (window.__codeMeta, set by the
+       inline redeem script) — the sentence hint was removed in polish round 3.
+       States: CHECKING… -> CODE VALID / CODE REJECTED. Format-level feedback
+       (AWAITING / IN PROGRESS / COMPLETE) stays owned by the inline script. */
     var rcCode = document.getElementById('rc-code');
-    var rcHint = document.getElementById('rc-code-hint');
-    var rcIcon = document.getElementById('rc-code-icon');
-    if (rcCode && rcHint) {
+    if (rcCode) {
         var checkTimer = null;
-        function resetRcIcon() {
-            if (rcIcon) rcIcon.classList.remove('show', 'valid', 'invalid');
+        function setMeta(text, err) {
+            var m = window.__codeMeta;
+            if (!m) return;
+            m.textContent = text;
+            m.classList.toggle('err', !!err);
         }
         rcCode.addEventListener('input', function () {
             clearTimeout(checkTimer);
-            resetRcIcon();
             var code = rcCode.value.trim();
-            if (code.length < 8) { rcHint.textContent = 'Enter the code exactly as it appears in your email.'; rcHint.classList.remove('success', 'error'); return; }
+            var state = window.__codeState || 'idle';
+            if (code.length < 11 || state !== 'complete') return;  // format gate: inline script owns pre-complete states
+            setMeta('CHECKING…', false);
             checkTimer = setTimeout(function () {
                 fetch('https://subscribe.mysweetpea.cc/webhook/check-code', {
                     method: 'POST',
@@ -744,23 +750,15 @@
                     body: JSON.stringify({ invite_code: code })
                 }).then(function (r) { return r.text().then(function(t){ if(t){try{return JSON.parse(t);}catch(e){return {ok:r.ok};}} return {ok:r.ok}; }); })
                   .then(function (data) {
-                      if (data.ok) {
-                          rcHint.textContent = 'Code looks good — continue with your details.';
-                          rcHint.classList.remove('error');
-                          rcHint.classList.add('success');
-                          if (rcIcon) { rcIcon.classList.add('show', 'valid'); rcIcon.classList.remove('invalid'); rcIcon.textContent = '✓'; }
-                      } else {
-                          rcHint.textContent = data.msg || 'That code doesn\'t look right.';
-                          rcHint.classList.remove('success');
-                          rcHint.classList.add('error');
-                          if (rcIcon) { rcIcon.classList.add('show', 'invalid'); rcIcon.classList.remove('valid'); rcIcon.textContent = '×'; }
-                      }
+                      if (state !== 'complete') return;  // user kept typing; a newer state owns the row
+                      setMeta(data.ok ? 'CODE VALID' : 'CODE REJECTED', !data.ok);
                   })
-                  .catch(function () { /* leave default hint */ });
+                  .catch(function () { if (state === 'complete') setMeta('CODE VALID', false); });
             }, 600);
         });
     }
-})();
+
+    })();
 
 /* === Update meta theme-color on theme change === */
 (function () {
