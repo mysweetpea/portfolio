@@ -7729,17 +7729,28 @@ body[data-page='pricing'] .pricing-card a.tier-sweetpea-cta { background: linear
     body[data-page='pricing'] .pricing-card .btn-glass-sweetpea:hover:not(:disabled) { transition: none; transform: none; filter: none; box-shadow: none; }
 }
 
-/* ==== Status v2: heartbeat strips (cards replaced by v3 console below) ==== */
+/* ==== Status v2: heartbeat strips — REAL DATA v3 (latency-driven heights) ====
+   Height now encodes each beat's measured ping (per-service min-max scaled),
+   replacing the decorative nth-last-child recency gradient. Color = up/down. */
 body[data-page='status'] .sc-strip { display: flex; gap: 3px; align-items: flex-end; height: 26px; }
-body[data-page='status'] .sc-strip i { flex: 1 1 0; min-width: 2px; height: 32%; border-radius: 1px;
+body[data-page='status'] .sc-strip i { flex: 1 1 0; min-width: 2px; height: var(--h, 40%); border-radius: 1px;
     background: color-mix(in srgb, var(--sage) 55%, transparent); }
-body[data-page='status'] .sc-strip i:nth-last-child(-n+8) { height: 55%; }
-body[data-page='status'] .sc-strip i:nth-last-child(-n+4) { height: 80%; }
-body[data-page='status'] .sc-strip i:nth-last-child(1) { height: 100%; }
 body[data-page='status'] .sc-strip i.t-down { height: 100%; background: var(--error); }
 body[data-page='status'] .sc-strip i.t-none { background: color-mix(in srgb, var(--text-faint) 25%, transparent); }
+body[data-page='status'] .sc-strip i { position: relative; }
+body[data-page='status'] .sc-strip i::after {
+    content: attr(data-tip); pointer-events: none;
+    position: absolute; bottom: calc(100% + 6px); left: 50%; transform: translateX(-50%);
+    background: var(--card-bg); color: var(--text); border: 1px solid var(--border-primary);
+    font-family: var(--t-font-mono); font-size: 10px; line-height: 1.4; white-space: nowrap;
+    padding: 2px 6px; border-radius: 4px; opacity: 0; transition: opacity .12s ease; z-index: 30;
+}
+body[data-page='status'] .sc-strip i:hover::after { opacity: 1; }
+body[data-page='status'] .line-lat { font-family: var(--t-font-mono); font-size: 0.62rem; letter-spacing: 0.05em;
+    color: var(--text-faint); font-variant-numeric: tabular-nums; white-space: nowrap; }
 @media (max-width: 768px) {
-    body[data-page='status'] .sc-strip i { min-width: 1px; }
+    body[data-page='status'] .sc-strip i { min-width: 1px; gap: 2px; }
+    body[data-page='status'] .sc-strip i::after { display: none; }
 }
 @media (prefers-reduced-motion: reduce) { body[data-page='status'] .status-action-btn, body[data-page='status'] .status-action-btn:hover { transition: none; transform: none; } }
 /* E4: full-width state banner polish */
@@ -7916,8 +7927,8 @@ body[data-page='status'] .status-console {
 }
 body[data-page='status'] .status-line {
   display: grid; align-items: center; gap: 14px;
-  grid-template-columns: 34px 34px minmax(0,1.4fr) minmax(0,1fr) minmax(0,2fr) 70px minmax(96px,1fr);
-  grid-template-areas: "idx icon name cat strip pct badge";
+  grid-template-columns: 34px 34px minmax(0,1.4fr) minmax(0,1fr) minmax(0,2fr) 70px 52px minmax(96px,1fr);
+  grid-template-areas: "idx icon name cat strip pct lat badge";
   padding: 13px 20px;
   border-bottom: 1px solid rgba(143,175,181,0.08);
   transition: background .2s ease;
@@ -7966,7 +7977,7 @@ body[data-page='status'] .status-line.is-down .line-name { color: var(--error); 
     grid-template-areas:
       "icon name badge"
       "strip strip strip"
-      "pct pct checks";
+      "pct lat checks";
     gap: 9px 12px;
     padding: 12px 14px;
   }
@@ -7978,6 +7989,7 @@ body[data-page='status'] .status-line.is-down .line-name { color: var(--error); 
   body[data-page='status'] .line-name { white-space: normal; }
   body[data-page='status'] .status-line .sc-strip { height: 20px; }
   body[data-page='status'] .line-pct { text-align: left; }
+  body[data-page='status'] .line-lat { text-align: left; opacity: .85; }
   body[data-page='status'] .line-checks { display: inline-flex; justify-content: flex-end; text-align: right; }
 }
 

@@ -34,9 +34,24 @@
             var strip = card.querySelector('.sc-strip');
             if (!strip) return;
             strip.textContent = '';
-            var beats = list.slice(-STRIP_TICKS);
+            // Kuma returns beats NEWEST-FIRST; normalize to oldest -> newest so
+            // slice(-STRIP_TICKS) takes the MOST RECENT checks and ticks run
+            // left-to-right = oldest-to-newest (was silently wrong before).
+            var all = list.slice().sort(function (a, b) {
+                return String(a.time).localeCompare(String(b.time));
+            });
+            var beats = all.slice(-STRIP_TICKS);
             var pad = STRIP_TICKS - beats.length;
             var i, tick;
+            // Latency scaling: per-service min-max over THIS strip's pings so a
+            // quiet 100ms service and a spiky 1s service both use the full band.
+            var pings = [];
+            for (i = 0; i < beats.length; i++) {
+                if (beats[i] && typeof beats[i].ping === 'number' && beats[i].status === 1) pings.push(beats[i].ping);
+            }
+            var pmin = pings.length ? Math.min.apply(null, pings) : 0;
+            var pmax = pings.length ? Math.max.apply(null, pings) : 0;
+            var pspan = Math.max(pmax - pmin, 1);
             for (i = 0; i < pad; i++) {
                 tick = document.createElement('i');
                 tick.className = 't-none';
@@ -44,7 +59,20 @@
             }
             beats.forEach(function (h) {
                 tick = document.createElement('i');
-                tick.className = (h && h.status === 0) ? 't-down' : '';
+                var isDown = h && h.status === 0;
+                tick.className = isDown ? 't-down' : '';
+                // Height = measured response time (floor 18% so ticks stay
+                // visible; down beats stay full-height in error red).
+                if (!isDown && h && typeof h.ping === 'number') {
+                    var frac = 0.18 + 0.82 * ((h.ping - pmin) / pspan);
+                    tick.style.setProperty('--h', Math.round(frac * 100) + '%');
+                }
+                if (h && h.time) {
+                    var t = h.time;
+                    tick.setAttribute('data-tip',
+                        (isDown ? 'DOWN' : (typeof h.ping === 'number' ? h.ping + ' ms' : 'up')) +
+                        ' · ' + t.slice(11, 16) + ' srv');
+                }
                 strip.appendChild(tick);
             });
         }
@@ -69,6 +97,19 @@
                 var h = list[list.length - 1];
                 var t = h && h.time ? new Date(String(h.time).replace(' ', 'T')) : null;
                 checksEl.textContent = (t && !isNaN(t)) ? ('last ' + fmtHM(t) + ' srv') : 'last —';
+            }
+            // Avg latency over the strip window (up beats only) — the strip's
+            // heights encode per-beat ping; this chip gives the scale anchor.
+            var latEl = row.querySelector('.line-lat');
+            if (latEl) {
+                var lat = [];
+                for (var li = 0; li < (list || []).length; li++) {
+                    var lb = list[li];
+                    if (lb && lb.status === 1 && typeof lb.ping === 'number') lat.push(lb.ping);
+                }
+                latEl.textContent = lat.length
+                    ? '~' + Math.round(lat.reduce(function (a, b) { return a + b; }, 0) / lat.length) + ' ms'
+                    : '— ms';
             }
             row.classList.toggle('is-down', !up);
             renderStrip(row, list || []);
