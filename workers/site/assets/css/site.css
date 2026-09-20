@@ -7722,20 +7722,18 @@ body[data-page='status'] .sc-strip i { flex: 1 1 0; min-width: 2px; height: 32%;
 body[data-page='status'] .sc-strip i:nth-last-child(-n+8) { height: 55%; }
 body[data-page='status'] .sc-strip i:nth-last-child(-n+4) { height: 80%; }
 body[data-page='status'] .sc-strip i:nth-last-child(1) { height: 100%; }
-body[data-page='status'] .sc-strip i.t-down { height: 100%; }
-body[data-page='status'] .sc-strip i.t-down { background: #D98C8C; }
+body[data-page='status'] .sc-strip i.t-down { height: 100%; background: var(--error); }
 body[data-page='status'] .sc-strip i.t-none { background: color-mix(in srgb, var(--text-faint) 25%, transparent); }
 body[data-page='status'] .sc-meta { display: flex; justify-content: space-between; align-items: baseline; font-family: var(--t-font-mono); font-size: var(--t-fs-4xs); letter-spacing: 0.06em; color: var(--text-faint); }
-body[data-page='status'] .status-card.is-down { border-color: rgba(217,140,140,0.45); }
-body[data-page='status'] .status-card.is-down .sc-name { color: #D98C8C; }
+body[data-page='status'] .status-card.is-down { border-color: color-mix(in srgb, var(--error) 45%, transparent); }
+body[data-page='status'] .status-card.is-down .sc-name { color: var(--error); }
 @media (max-width: 768px) {
     body[data-page='status'] .status-cards { grid-template-columns: 1fr; }
     body[data-page='status'] .sc-strip i { min-width: 1px; }
 }
-@media (prefers-reduced-motion: reduce) { body[data-page='status'] .status-card, body[data-page='status'] .status-card:hover { transition: none; transform: none; } }
-body[data-page='status'] .status-summary { max-width: 1000px; margin-left: auto; margin-right: auto; }
+@media (prefers-reduced-motion: reduce) { body[data-page='status'] .status-card, body[data-page='status'] .status-card:hover, body[data-page='status'] .status-action-btn, body[data-page='status'] .status-action-btn:hover { transition: none; transform: none; } }
 /* E4: full-width state banner polish */
-body[data-page='status'] .status-summary { position: relative; padding: 18px 24px; }
+body[data-page='status'] .status-summary { max-width: 1000px; margin: 0 auto; position: relative; padding: 18px 24px; }
 body[data-page='status'] .status-summary .status-dot { width: 10px; height: 10px; }
 /* E5: incidents date chip + panel width */
 body[data-page='status'] .incident-date { display: inline-block; padding: 3px 10px; border-radius: 999px; background: rgba(143,175,181,0.10); border: 1px solid var(--border); font-family: var(--t-font-mono); font-size: var(--t-fs-4xs); letter-spacing: 0.06em; color: var(--primary-bright); margin-bottom: 8px; }

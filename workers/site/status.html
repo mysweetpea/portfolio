@@ -46,11 +46,11 @@ html[data-theme="light"]{background:#E7EDEA;color-scheme:light}
     <link rel="preload" as="image" href="/logo.svg">
 <link rel="preload" as="font" type="font/woff2" href="/assets/fonts/instrument-serif.woff2" crossorigin>
 <link rel="preload" as="font" type="font/woff2" href="/assets/fonts/archivo-var.woff2" crossorigin>
-                    <link rel="stylesheet" href="/assets/css/fonts.css?v=74">
-    <link rel="stylesheet" href="/assets/css/site.css?v=74">
-    <link rel="stylesheet" href="/assets/css/premium.css?v=74">
-    <link rel="stylesheet" href="/assets/css/type-tokens.css?v=74">
-    <link rel="stylesheet" href="/assets/css/hermes-type.css?v=74">
+                    <link rel="stylesheet" href="/assets/css/fonts.css?v=75">
+    <link rel="stylesheet" href="/assets/css/site.css?v=75">
+    <link rel="stylesheet" href="/assets/css/premium.css?v=75">
+    <link rel="stylesheet" href="/assets/css/type-tokens.css?v=75">
+    <link rel="stylesheet" href="/assets/css/hermes-type.css?v=75">
 <link rel="canonical" href="https://mysweetpea.cc/status">
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"Organization","name":"MySweetPea","url":"https://mysweetpea.cc","logo":"https://mysweetpea.cc/logo.png","description":"Private, self-hosted alternatives to the services you use every day. No ads, no tracking, no subscriptions — community funded.","email":"support@mysweetpea.cc","sameAs":["https://github.com/mysweetpea"]}</script>
 </head>
@@ -386,7 +386,7 @@ html[data-theme="light"]{background:#E7EDEA;color-scheme:light}
             }
             beats.forEach(function (h) {
                 tick = document.createElement('i');
-                tick.className = (h && h.status !== 1) ? 't-down' : '';
+                tick.className = (h && h.status === 0) ? 't-down' : '';
                 strip.appendChild(tick);
             });
         }
@@ -407,7 +407,7 @@ html[data-theme="light"]{background:#E7EDEA;color-scheme:light}
             if (checksEl && list && list.length) {
                 var h = list[list.length - 1];
                 var t = h && h.time ? new Date(String(h.time).replace(' ', 'T')) : null;
-                checksEl.textContent = 'last ' + fmtHM(t);
+                checksEl.textContent = (t && !isNaN(t)) ? ('last ' + fmtHM(t) + ' srv') : 'last —';
             }
             row.classList.toggle('is-down', !up);
             renderStrip(row, list || []);
@@ -424,9 +424,10 @@ html[data-theme="light"]{background:#E7EDEA;color-scheme:light}
                 var uptimePct = {};
                 if (data.uptimeList) {
                     Object.keys(data.uptimeList).forEach(function (k) {
-                        var id = k.split('_')[0];
+                        var parts = k.split('_');
+                        if (parts[1] !== '30') return; /* label is 30d — only accept 30-day data */
                         var v = data.uptimeList[k];
-                        if (typeof v === 'number') uptimePct[id] = Math.round(v * 1000) / 10;
+                        if (typeof v === 'number') uptimePct[parts[0]] = Math.round(v * 1000) / 10;
                     });
                 }
                 var upCount = 0, total = 0;
@@ -443,7 +444,7 @@ html[data-theme="light"]{background:#E7EDEA;color-scheme:light}
                     if (up) upCount++;
                     total++;
                     var pct = uptimePct[id] != null ? uptimePct[id] : null;
-                    uptimeSum += (pct != null ? pct : 99.9); uptimeCount++;
+                    if (pct != null) { uptimeSum += pct; uptimeCount++; }
                     setRow(row, up, pct, list);
                 });
                 if (summaryText) summaryText.textContent = upCount + ' of ' + total + ' operational';
