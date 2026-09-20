@@ -7745,4 +7745,25 @@ body[data-page='status'] .status-action-btn:hover { border-color: color-mix(in s
 @media (max-width: 768px) {
     body[data-page='status'] .status-actions { grid-template-columns: 1fr; }
 }
+
+/* --- v2.1 width unlock: the card grid is the page now --- */
+body[data-page='status'] .status-section { max-width: 1040px; }
+body[data-page='status'] .view-switcher { max-width: 1040px; }
+body[data-page='status'] .status-cards { max-width: none; }
+body[data-page='status'] .incidents-panel { max-width: none; }
+body[data-page='status'] .status-actions { max-width: none; }
+body[data-page='status'] .status-summary { max-width: none; }
+
+/* --- v2.1 polish: presence + rhythm --- */
+body[data-page='status'] .status-cards { gap: 18px; }
+body[data-page='status'] .status-card { padding: 22px 24px; }
+body[data-page='status'] .sc-strip { height: 34px; gap: 4px; }
+body[data-page='status'] .sc-strip i { border-radius: 2px; }
+body[data-page='status'] .metric-card { padding: 22px 24px; }
+body[data-page='status'] .metric-value { font-size: var(--t-fs-h2); }
+
+/* E4 banner: same width, stronger presence */
+body[data-page='status'] .status-summary { padding: 20px 26px; }
+body[data-page='status'] .status-summary .status-dot { width: 11px; height: 11px; }
+
 /* === end Status v2 === */
