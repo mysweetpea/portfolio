@@ -114,6 +114,7 @@ html[data-theme="light"]{background:#E7EDEA;color-scheme:light}
                             <span class="cell"></span><span class="cell"></span><span class="cell"></span><span class="cell"></span>
                         </span>
                     </div>
+                    <noscript><input type="text" class="form-input" id="rc-code-static" name="invite_code" placeholder="PEA-XXXXXXXX" autocomplete="off" maxlength="12" style="margin-top:10px"></noscript>
                     <span class="validation-icon" id="rc-code-icon" aria-hidden="true"></span>
                     <div class="lmeta">
                         <span id="lcount">0 / 8 CHARACTERS</span>
@@ -191,7 +192,6 @@ html[data-theme="light"]{background:#E7EDEA;color-scheme:light}
     writes the dashed form (PEA-XXXXXXXX) back into input.value so the
     webhook payload keeps its dash. */
  var cells=document.querySelectorAll('#lcells .cell'),
-     cellsWrap=document.getElementById('lcells'),
      lcount=document.getElementById('lcount'),
      lhint=document.getElementById('lhint'),
      hint=document.getElementById('rc-code-hint');
@@ -200,7 +200,7 @@ html[data-theme="light"]{background:#E7EDEA;color-scheme:light}
  input.setAttribute('autocapitalize','characters');input.setAttribute('spellcheck','false');input.setAttribute('aria-label','Invite code');
  input.style.cssText='position:absolute;inset:0;width:100%;height:100%;opacity:0;cursor:text;z-index:3';
  document.querySelector('.redeem-code-group').appendChild(input);
- function codeValidFull(v){var t=v.toUpperCase().trim();return /^(PEA|FAM)-?[A-Z0-9]{8}$/.test(t);}
+ function codeValidFull(v){var t=v.toUpperCase().trim();return /^(PEA|FAM)-[A-Z0-9]{8}$/.test(t);}
  function paint(){
   var raw=input.value.toUpperCase().replace(/\s/g,'');
   var m=raw.match(/^(PEA|FAM)-?([A-Z0-9]{0,8})/);
@@ -209,7 +209,7 @@ html[data-theme="light"]{background:#E7EDEA;color-scheme:light}
   input.value=pre?pre+(tail?'-'+tail:''):tail;
   for(var i=0;i<cells.length;i++){var ch=tail[i]||'';cells[i].textContent=ch;cells[i].classList.toggle('filled',!!ch);}
   var pos=input.selectionStart||0;
-  var afterDash=pos>4?1:0;
+  var afterDash=pos>3?1:0;
   var idx=Math.min(pos-(pre?3+afterDash:0),8);
   cells.forEach(function(c,i){c.classList.toggle('cur',i===Math.max(0,idx)&&document.activeElement===input);});
   var complete=tail.length===8;
@@ -220,10 +220,16 @@ html[data-theme="light"]{background:#E7EDEA;color-scheme:light}
   hint.textContent=tail.length===0&&pre===''?'Enter the code exactly as it appears in your email.':(full?'Code looks good — continue with your details.':(complete?'That code doesn’t look right — check it against your email.':'Keep going…'));
   hint.classList.toggle('success',full);
   hint.classList.toggle('error',complete&&!full);
+  var cicon=document.getElementById('rc-code-icon');
+  if(cicon){var any=input.value.trim().length>0;
+   cicon.classList.toggle('show',any);
+   cicon.classList.toggle('valid',full);
+   cicon.classList.toggle('invalid',any&&!full);
+   cicon.textContent=full?'✓':(any?'×':'');}
   update();
  }
- input.addEventListener('input',paint);input.addEventListener('keyup',paint);input.addEventListener('click',paint);
- cellsWrap.addEventListener('click',function(){input.focus();});
+ input.addEventListener('input',paint);input.addEventListener('keyup',paint);input.addEventListener('click',paint);input.addEventListener('blur',paint);input.addEventListener('focus',paint);
+
  document.getElementById('ledger').addEventListener('click',function(){input.focus();});
  Object.keys(fields).forEach(function(id){var el=document.getElementById(id);function placeCaret(){if(id!=='rc-code')return;var caret=document.querySelector('.cb-caret');if(!caret)return;var cells=document.querySelectorAll('.code-boxes .cb-cell');var pos=el.selectionStart||0;var v=el.value.replace('-','');var idx=pos;if(pos>3)idx=pos-1;if(idx>11)idx=11;var cell=cells[Math.min(idx,11)];if(cell){var r=cell.getBoundingClientRect();var br=document.querySelector('.code-boxes').getBoundingClientRect();caret.style.left=(r.left-br.left+r.width/2)+'px';}}function updateUsernameChecks(){if(id!=='rc-username')return;var v=el.value;var checks=document.querySelectorAll('#rc-username-checks .uc-item');if(!checks.length)return;var rules={len:v.length>=3,alnum:/[A-Za-z0-9]/.test(v),underscore:/^[A-Za-z0-9_]+$/.test(v)};checks.forEach(function(c){var k=c.getAttribute('data-uc');var ok=rules[k];c.classList.toggle('ok',ok);var icon=c.querySelector('.uc-icon');if(icon)icon.textContent=ok?'✓':'×';});}el.addEventListener('input',function(){if(id==='rc-code')return;var ok=valid(fields[id],el.value);el.classList.toggle('valid',ok);el.classList.toggle('invalid',el.value.trim().length>0&&!ok);var icon=document.getElementById(id+'-icon');if(icon){icon.classList.toggle('show',el.value.trim().length>0);icon.classList.toggle('valid',ok);icon.classList.toggle('invalid',el.value.trim().length>0&&!ok);icon.textContent=ok?'✓':'×';}update();updateUsernameChecks();});el.addEventListener('keyup',placeCaret);el.addEventListener('click',placeCaret);el.addEventListener('select',placeCaret);el.addEventListener('blur',function(){if(id==='rc-code')return;var ok=valid(fields[id],el.value);el.classList.toggle('valid',ok);el.classList.toggle('invalid',el.value.trim().length>0&&!ok);var icon=document.getElementById(id+'-icon');if(icon){icon.classList.toggle('show',el.value.trim().length>0);icon.classList.toggle('valid',ok);icon.classList.toggle('invalid',el.value.trim().length>0&&!ok);icon.textContent=ok?'✓':'×';}update();updateUsernameChecks();placeCaret();});});
  btn.addEventListener('click',function(){if(btn.disabled)return;var data={invite_code:document.getElementById('rc-code').value.trim(),name:document.getElementById('rc-name').value.trim(),email:document.getElementById('rc-email').value.trim(),username:document.getElementById('rc-username').value.trim()};btn.disabled=true;btn.classList.add('loading');btn.textContent='Creating account…';fetch(endpoint,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(data)}).then(function(r){return r.text().then(function(t){if(t){try{return JSON.parse(t);}catch(e){return {ok:r.ok};}}return {ok:r.ok};});}).then(function(result){if(!result.ok)throw new Error(result.msg||'Could not create account');window.location.href='/success.html?type=redeem';}).catch(function(e){btn.disabled=false;btn.classList.remove('loading');btn.textContent=e.message||'Try again';setTimeout(function(){btn.textContent='Request MySweetPea Account';update();},3000);});});
