@@ -230,7 +230,8 @@ html[data-theme="light"]{background:#E7EDEA;color-scheme:light}
   var pos=input.selectionStart||0;
   var dashesBefore=(pos>3 && input.value.indexOf('-')>-1)?1:0;
   var alnumBefore=Math.min(pos-dashesBefore,11);
-  cells.forEach(function(c,i){c.classList.toggle('cur',i===Math.max(0,Math.min(alnumBefore,10))&&document.activeElement===input);});
+    var lastTyped = cl.length ? Math.min(cl.length, 11) - 1 : 0;
+  cells.forEach(function(c,i){c.classList.toggle('cur',i===lastTyped&&document.activeElement===input);});
   var complete=cl.length===11;
   var full=codeValidFull(input.value);
   ledger.classList.toggle('valid',complete&&full);
