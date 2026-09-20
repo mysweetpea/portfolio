@@ -7707,15 +7707,7 @@ body[data-page='pricing'] .pricing-card a.tier-sweetpea-cta { background: linear
     body[data-page='pricing'] .pricing-card .btn-glass-sweetpea:hover:not(:disabled) { transition: none; transform: none; filter: none; box-shadow: none; }
 }
 
-/* ==== Status v2: card grid + heartbeat strips ==== */
-body[data-page='status'] .status-cards { display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 16px; max-width: 1000px; margin: 0 auto; }
-body[data-page='status'] .status-card { display: flex; flex-direction: column; gap: 12px; padding: 20px 22px; background: var(--card-bg); border: 1px solid var(--border); border-radius: var(--radius); backdrop-filter: blur(12px) saturate(1.1); transition: border-color .25s ease, transform .25s ease; }
-body[data-page='status'] .status-card:hover { border-color: color-mix(in srgb, var(--sage) 35%, transparent); transform: translateY(-2px); }
-body[data-page='status'] .sc-head { display: flex; align-items: center; gap: 12px; }
-body[data-page='status'] .sc-icon { display: grid; place-items: center; width: 46px; height: 46px; flex: none; border-radius: 12px; background: radial-gradient(circle at 30% 25%, rgba(255,255,255,0.10), rgba(143,175,181,0.06)); border: 1px solid var(--border); }
-body[data-page='status'] .sc-names { display: flex; flex-direction: column; gap: 2px; min-width: 0; margin-right: auto; }
-body[data-page='status'] .sc-name { font-size: var(--t-fs-body); font-weight: var(--t-fw-bold); color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-body[data-page='status'] .sc-cat { font-family: var(--t-font-mono); font-size: var(--t-fs-4xs); letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-faint); }
+/* ==== Status v2: heartbeat strips (cards replaced by v3 console below) ==== */
 body[data-page='status'] .sc-strip { display: flex; gap: 3px; align-items: flex-end; height: 26px; }
 body[data-page='status'] .sc-strip i { flex: 1 1 0; min-width: 2px; height: 32%; border-radius: 1px;
     background: color-mix(in srgb, var(--sage) 55%, transparent); }
@@ -7724,14 +7716,10 @@ body[data-page='status'] .sc-strip i:nth-last-child(-n+4) { height: 80%; }
 body[data-page='status'] .sc-strip i:nth-last-child(1) { height: 100%; }
 body[data-page='status'] .sc-strip i.t-down { height: 100%; background: var(--error); }
 body[data-page='status'] .sc-strip i.t-none { background: color-mix(in srgb, var(--text-faint) 25%, transparent); }
-body[data-page='status'] .sc-meta { display: flex; justify-content: space-between; align-items: baseline; font-family: var(--t-font-mono); font-size: var(--t-fs-4xs); letter-spacing: 0.06em; color: var(--text-faint); }
-body[data-page='status'] .status-card.is-down { border-color: color-mix(in srgb, var(--error) 45%, transparent); }
-body[data-page='status'] .status-card.is-down .sc-name { color: var(--error); }
 @media (max-width: 768px) {
-    body[data-page='status'] .status-cards { grid-template-columns: 1fr; }
     body[data-page='status'] .sc-strip i { min-width: 1px; }
 }
-@media (prefers-reduced-motion: reduce) { body[data-page='status'] .status-card, body[data-page='status'] .status-card:hover, body[data-page='status'] .status-action-btn, body[data-page='status'] .status-action-btn:hover { transition: none; transform: none; } }
+@media (prefers-reduced-motion: reduce) { body[data-page='status'] .status-action-btn, body[data-page='status'] .status-action-btn:hover { transition: none; transform: none; } }
 /* E4: full-width state banner polish */
 body[data-page='status'] .status-summary { max-width: 1000px; margin: 0 auto; position: relative; padding: 18px 24px; }
 body[data-page='status'] .status-summary .status-dot { width: 10px; height: 10px; }
@@ -7749,14 +7737,11 @@ body[data-page='status'] .status-action-btn:hover { border-color: color-mix(in s
 /* --- v2.1 width unlock: the card grid is the page now --- */
 body[data-page='status'] .status-section { max-width: 1040px; }
 body[data-page='status'] .view-switcher { max-width: 1040px; }
-body[data-page='status'] .status-cards { max-width: none; }
 body[data-page='status'] .incidents-panel { max-width: none; }
 body[data-page='status'] .status-actions { max-width: none; }
 body[data-page='status'] .status-summary { max-width: none; }
 
 /* --- v2.1 polish: presence + rhythm --- */
-body[data-page='status'] .status-cards { gap: 18px; }
-body[data-page='status'] .status-card { padding: 22px 24px; }
 body[data-page='status'] .sc-strip { height: 34px; gap: 4px; }
 body[data-page='status'] .sc-strip i { border-radius: 2px; }
 body[data-page='status'] .metric-card { padding: 22px 24px; }
@@ -7781,18 +7766,13 @@ body[data-page='status'] .status-summary .status-dot { width: 11px; height: 11px
   body[data-page='status'] .metric-value { font-size: var(--t-fs-h3); }
   body[data-page='status'] .metric-bar { height: 4px; }
 
-  /* cards: less padding, tighter strips — ticks sized for small screens */
-  body[data-page='status'] .status-card { padding: 16px 16px 14px; }
+  /* strips: tighter ticks sized for small screens */
   body[data-page='status'] .sc-strip { height: 28px; gap: 3px; }
   body[data-page='status'] .sc-strip i { min-width: 2px; }
 
   /* meta rows: readable instead of tiny */
   body[data-page='status'] .sc-uptime,
   body[data-page='status'] .sc-checks { font-size: var(--t-fs-xs); }
-
-  /* icon chip scale-down */
-  body[data-page='status'] .sc-icon { width: 40px; height: 40px; }
-  body[data-page='status'] .sc-icon img { width: 22px; height: 22px; }
 
   /* resources cards stack cleanly */
   body[data-page='status'] .status-actions { grid-template-columns: 1fr; }
@@ -7852,6 +7832,126 @@ body[data-page='status'] .metric-bar span {
 }
 [data-theme='light'] body[data-page='status'] .metric-card::before {
   background: linear-gradient(90deg, transparent, rgba(62,124,95,0.4), transparent);
+}
+
+/* --- Status v3: R2 ops banner + R1 terminal rows --- */
+/* Banner: Fraunces headline + mono sub-line left, telemetry block right;
+   2px sage top accent + radial glow from top-left. */
+body[data-page='status'] .status-summary {
+  position: relative; overflow: hidden;
+  justify-content: space-between; align-items: center; gap: 16px;
+  margin-bottom: 22px; padding: 24px 28px;
+  border: 1px solid rgba(163,201,182,0.25); border-radius: 18px;
+  background:
+    radial-gradient(90% 140% at 0% 0%, rgba(163,201,182,0.10), transparent 55%),
+    linear-gradient(160deg, rgba(255,255,255,0.04), transparent 40%),
+    var(--card-bg);
+}
+body[data-page='status'] .status-summary::before {
+  content: ""; position: absolute; top: 0; left: 0; right: 0; height: 2px;
+  background: linear-gradient(90deg, transparent, rgba(163,201,182,0.6), transparent);
+}
+body[data-page='status'] .status-summary .status-summary-main { display: grid; gap: 4px; min-width: 0; }
+body[data-page='status'] .status-summary .status-summary-main strong {
+  font-family: 'Fraunces','Fraunces Fallback',Georgia,serif;
+  font-size: 1.45rem; font-weight: 600; letter-spacing: -0.01em;
+  line-height: 1.2; color: var(--text);
+}
+body[data-page='status'] .status-summary .status-summary-main small {
+  font-family: var(--t-font-mono); font-size: 0.62rem; font-weight: var(--t-fw-normal);
+  letter-spacing: 0.12em; text-transform: uppercase; color: var(--text-faint);
+}
+body[data-page='status'] .status-summary small time {
+  margin: 0; padding: 0; border: 0; color: inherit; font-size: inherit; white-space: normal;
+}
+body[data-page='status'] .status-summary-meta {
+  flex: none; text-align: right; font-family: var(--t-font-mono);
+  font-size: 0.66rem; letter-spacing: 0.06em; line-height: 1.9; color: var(--text-faint);
+}
+body[data-page='status'] .status-summary-meta b { color: var(--sage); font-weight: 600; }
+[data-theme="light"] body[data-page='status'] .status-summary {
+  border-color: rgba(62,124,95,0.3);
+  background:
+    radial-gradient(90% 140% at 0% 0%, rgba(62,124,95,0.08), transparent 55%),
+    linear-gradient(160deg, rgba(255,255,255,0.5), transparent 40%),
+    var(--card-bg);
+}
+/* Degraded (feed unreachable) keeps its warm warning treatment on the new skin */
+body[data-page='status'] .status-summary.status-degraded {
+  border-color: rgba(217,168,108,0.4);
+  background:
+    radial-gradient(90% 140% at 0% 0%, rgba(217,168,108,0.10), transparent 55%),
+    var(--card-bg);
+}
+
+/* Console: one hairline-bordered block of data rows (R1 look) */
+body[data-page='status'] .status-console {
+  display: flex; flex-direction: column;
+  border: 1px solid var(--hairline); border-radius: 14px; overflow: hidden;
+  background: rgba(19,30,34,0.3);
+}
+body[data-page='status'] .status-line {
+  display: grid; align-items: center; gap: 14px;
+  grid-template-columns: 34px 34px minmax(0,1.4fr) minmax(0,1fr) minmax(0,2fr) 70px minmax(96px,1fr);
+  grid-template-areas: "idx icon name cat strip pct badge";
+  padding: 13px 20px;
+  border-bottom: 1px solid rgba(143,175,181,0.08);
+  transition: background .2s ease;
+}
+body[data-page='status'] .status-line:last-child { border-bottom: none; }
+body[data-page='status'] .status-line:hover { background: rgba(163,201,182,0.04); }
+body[data-page='status'] .line-idx { grid-area: idx; font-family: var(--t-font-mono); font-size: 0.66rem; color: var(--text-faint); }
+body[data-page='status'] .line-icon { grid-area: icon; display: grid; place-items: center; }
+body[data-page='status'] .line-icon img { width: 26px; height: 26px; object-fit: contain; }
+body[data-page='status'] .line-name { grid-area: name; font-size: 0.92rem; font-weight: 600; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+body[data-page='status'] .line-cat { grid-area: cat; font-family: var(--t-font-mono); font-size: 0.62rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-faint); }
+body[data-page='status'] .status-line .sc-strip { grid-area: strip; height: 22px; }
+body[data-page='status'] .line-pct { grid-area: pct; font-family: var(--t-font-mono); font-size: 0.7rem; color: var(--sage); text-align: right; font-variant-numeric: tabular-nums; }
+body[data-page='status'] .status-line .status-badge {
+  grid-area: badge; justify-self: end; margin-left: 0; gap: 6px;
+  padding: 3px 9px; border-radius: 999px;
+  font-family: var(--t-font-mono); font-size: 0.6rem; font-weight: 600; letter-spacing: 0.08em;
+  background: rgba(163,201,182,0.1); border: 1px solid rgba(163,201,182,0.3);
+}
+body[data-page='status'] .status-line .status-badge .status-dot { width: 7px; height: 7px; }
+body[data-page='status'] .status-line .status-badge.status-down { background: rgba(217,140,140,0.12); border-color: rgba(217,140,140,0.35); }
+body[data-page='status'] .status-line .status-badge.status-unknown { background: rgba(143,175,181,0.08); border-color: rgba(143,175,181,0.2); }
+body[data-page='status'] .line-checks { grid-area: checks; display: none; font-family: var(--t-font-mono); font-size: 0.62rem; letter-spacing: 0.06em; color: var(--text-faint); }
+body[data-page='status'] .status-line .sc-uptime,
+body[data-page='status'] .status-line .sc-checks { font-size: inherit; }
+/* Down: red left edge + name color (ported from the v2 card) */
+body[data-page='status'] .status-line.is-down { box-shadow: inset 3px 0 0 var(--error); }
+body[data-page='status'] .status-line.is-down .line-name { color: var(--error); }
+[data-theme="light"] body[data-page='status'] .status-console { background: rgba(250,253,250,0.55); }
+[data-theme="light"] body[data-page='status'] .status-line { border-bottom-color: rgba(46,92,70,0.10); }
+[data-theme="light"] body[data-page='status'] .status-line:hover { background: rgba(62,124,95,0.05); }
+[data-theme="light"] body[data-page='status'] .status-line .status-badge { background: rgba(62,124,95,0.1); border-color: rgba(62,124,95,0.28); }
+@media (prefers-reduced-motion: reduce) {
+  body[data-page='status'] .status-line,
+  body[data-page='status'] .status-line:hover { transition: none; }
+}
+
+/* v3 mobile: rows collapse — [icon name badge] / [strip full-width] / [pct checks] */
+@media (max-width: 768px) {
+  body[data-page='status'] .status-summary { padding: 18px 20px; }
+  body[data-page='status'] .status-summary .status-summary-main strong { font-size: 1.22rem; }
+  body[data-page='status'] .status-summary-meta { display: none; }
+  body[data-page='status'] .status-console { border-radius: 12px; }
+  body[data-page='status'] .status-line {
+    grid-template-columns: 26px minmax(0,1fr) auto;
+    grid-template-areas:
+      "icon name badge"
+      "strip strip strip"
+      "pct pct checks";
+    gap: 9px 12px;
+    padding: 12px 14px;
+  }
+  body[data-page='status'] .line-idx,
+  body[data-page='status'] .line-cat { display: none; }
+  body[data-page='status'] .line-name { white-space: normal; }
+  body[data-page='status'] .status-line .sc-strip { height: 20px; }
+  body[data-page='status'] .line-pct { text-align: left; }
+  body[data-page='status'] .line-checks { display: inline-flex; justify-content: flex-end; text-align: right; }
 }
 
 /* === end Status v2 === */
