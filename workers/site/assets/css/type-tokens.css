@@ -11,7 +11,7 @@
   --t-font-body: 'Inter', 'Inter Fallback', 'Segoe UI', system-ui, sans-serif;
   --t-font-display: 'Instrument Serif', 'Instrument Serif Fallback', Georgia, serif;
   --t-font-script: 'Instrument Serif', 'Instrument Serif Fallback', Georgia, serif; /* wordmark face (was Great Vibes cursive, retired 2026-09-19) */
-  --t-font-mono: 'Cascadia Mono', ui-monospace, 'SF Mono', Menlo, monospace;
+  --t-font-mono: 'JetBrains Mono', 'Cascadia Mono', ui-monospace, 'SF Mono', Menlo, monospace;
   /* weights */
   --t-fw-normal: 400; --t-fw-medium: 600; --t-fw-bold: 700;
   /* leading */

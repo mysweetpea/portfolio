@@ -57,7 +57,7 @@
 .ascii-ripple {
     margin: 0;
     padding: 0;
-    font-family: 'Cascadia Mono', 'Consolas', 'Courier New', monospace;
+    font-family: var(--t-font-mono);
     font-size: clamp(7px, 0.75vw, 12px);
     line-height: 1.28;
     letter-spacing: 1px;
@@ -1760,7 +1760,7 @@ body[data-page='redeem'] .ledger { display: flex; align-items: flex-end; justify
 body[data-page='redeem'] .ledger .cells { display: flex; align-items: flex-end; gap: 9px; }
 body[data-page='redeem'] .ledger .ldash { width: 14px; height: 2px; border-radius: 1px; background: rgba(143,175,181,.45); margin: 0 2px 7px; flex: none; }
 body[data-page='redeem'] .ledger.valid .ldash { background: var(--sage); }
-body[data-page='redeem'] .ledger .cell { width: 26px; height: 50px; position: relative; display: flex; align-items: center; justify-content: center; padding-bottom: 6px; font-family: var(--t-font-mono, 'Cascadia Mono', ui-monospace, 'SF Mono', Menlo, monospace); font-size: 1.3rem; font-weight: 700; color: var(--text); cursor: text; }
+body[data-page='redeem'] .ledger .cell { width: 26px; height: 50px; position: relative; display: flex; align-items: center; justify-content: center; padding-bottom: 6px; font-family: var(--t-font-mono); font-size: 1.3rem; font-weight: 700; color: var(--text); cursor: text; }
 body[data-page='redeem'] .ledger .cell:not(.filled)::before { content: "\00B7"; position: absolute; inset: 0 0 6px 0; display: flex; align-items: center; justify-content: center; font-size: 1.15rem; color: rgba(143,175,181,.32); transition: color .25s; }
 body[data-page='redeem'] .ledger .cell.cur:not(.filled)::before { color: rgba(197,213,216,.6); }
 body[data-page='redeem'] .ledger .cell::after { content: ""; position: absolute; bottom: 0; left: 50%; transform: translateX(-50%); width: 100%; height: 2px; border-radius: 1px; background: rgba(143,175,181,.28); transition: background .25s, box-shadow .25s; }
@@ -1768,7 +1768,7 @@ body[data-page='redeem'] .ledger .cell.filled::after { background: var(--sage); 
 body[data-page='redeem'] .ledger .cell.cur::after { background: var(--primary-bright); box-shadow: 0 0 10px rgba(94,184,168,.8); animation: redeemCaretPulse 1.1s ease-in-out infinite; }
 body[data-page='redeem'] .ledger .cell.filled.cur::after { background: var(--primary-bright); }
 @keyframes redeemCaretPulse { 50% { opacity: .4; } }
-body[data-page='redeem'] .lmeta { display: flex; justify-content: space-between; align-items: center; margin: 14px 4px 2px; font-family: var(--t-font-mono, 'Cascadia Mono', ui-monospace, 'SF Mono', Menlo, monospace); font-size: 11px; font-weight: 500; letter-spacing: .16em; color: var(--text-dim); }
+body[data-page='redeem'] .lmeta { display: flex; justify-content: space-between; align-items: center; margin: 14px 4px 2px; font-family: var(--t-font-mono); font-size: 11px; font-weight: 500; letter-spacing: .16em; color: var(--text-dim); }
 body[data-page='redeem'] .lmeta .right { color: var(--sage); transition: color .3s; }
 body[data-page='redeem'] .lmeta .right.err { color: var(--error); }
 /* Keep the code check icon fully visible inside the tray card (mockup position not required). */
@@ -1826,7 +1826,7 @@ body[data-page='redeem'] .form-card > * { position: relative; }
 
 /* Serif heading + mono micro-cap labels (mockup voice) */
 body[data-page='redeem'] .form-card > h2 { font-family: var(--t-font-display, 'Instrument Serif', Georgia, serif); font-weight: 400; font-size: 1.9rem; letter-spacing: .01em; }
-body[data-page='redeem'] .form-label { font-family: var(--t-font-mono,'Cascadia Mono',ui-monospace,'SF Mono',Menlo,monospace);
+body[data-page='redeem'] .form-label { font-family: var(--t-font-mono);
     font-size: .68rem; font-weight: 600; letter-spacing: .16em; text-transform: uppercase; color: var(--text-dim); }
 
 /* Tall calm inputs, sage focus ring */
@@ -1837,7 +1837,7 @@ body[data-page='redeem'] .form-input:focus { border-color: var(--sage); box-shad
 body[data-page='redeem'] .username-checks { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
 body[data-page='redeem'] .username-checks .uc-item { display: inline-flex; align-items: center; gap: 5px;
     padding: 3px 9px; border: 1px solid var(--border); border-radius: 999px;
-    font-family: var(--t-font-mono,'Cascadia Mono',ui-monospace,'SF Mono',Menlo,monospace);
+    font-family: var(--t-font-mono);
     font-size: .64rem; letter-spacing: .06em; color: var(--text-faint);
     transition: color .25s, border-color .25s, background-color .25s; }
 body[data-page='redeem'] .username-checks .uc-item .uc-icon { font-size: .68rem; }

@@ -203,3 +203,31 @@
     descent-override: 23%;
     line-gap-override: 0%;
 }
+
+
+/* --------------------------------------------------------------------------
+   JetBrains Mono (2026-09-20) — the site's terminal/mono voice.
+   Self-hosted OFL (JetBrains Mono 2.304), 3 weights, ~92KB each.
+   Used by: status console, redeem ledger, mono micro-copy.
+   -------------------------------------------------------------------------- */
+@font-face {
+    font-family: 'JetBrains Mono';
+    font-style: normal;
+    font-weight: 400;
+    font-display: swap;
+    src: url('/assets/fonts/jbm-regular.woff2') format('woff2');
+}
+@font-face {
+    font-family: 'JetBrains Mono';
+    font-style: normal;
+    font-weight: 500;
+    font-display: swap;
+    src: url('/assets/fonts/jbm-medium.woff2') format('woff2');
+}
+@font-face {
+    font-family: 'JetBrains Mono';
+    font-style: normal;
+    font-weight: 700;
+    font-display: swap;
+    src: url('/assets/fonts/jbm-bold.woff2') format('woff2');
+}
