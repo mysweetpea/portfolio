@@ -27,8 +27,15 @@
         function tick(t) {
             var p = Math.min(1, (t - t0) / 1200);
             var v = 1 - Math.pow(1 - p, 3);
-            el.textContent = (v * target).toFixed(dec);
-            if (p < 1) requestAnimationFrame(tick);
+            // last frame re-reads data-count: the live-value fetch may have updated it mid-animation
+            var tgt = p < 1 ? target : parseFloat(el.getAttribute('data-count'));
+            if (isNaN(tgt)) tgt = target;
+            if (p < 1) {
+                el.textContent = (v * tgt).toFixed(dec);
+                requestAnimationFrame(tick);
+            } else {
+                el.textContent = tgt.toFixed(dec);
+            }
         }
         requestAnimationFrame(tick);
     }
@@ -97,7 +104,9 @@
             var avg = Math.round((sum / n) * 10) / 10;
             var s = avg.toFixed(1);
             if (pctFired || reducedMotion || !('IntersectionObserver' in window)) {
-                // animation already ran (or will never run): show the live value
+                // animation already ran (or will never run): show the live value.
+                // data-count too — a count-up still in flight re-reads it on its final frame.
+                pctEl.setAttribute('data-count', s);
                 pctEl.textContent = s;
             } else {
                 // not fired yet: aim the count-up at the real number
