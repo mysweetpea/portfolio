@@ -66,8 +66,8 @@ document.querySelectorAll('.services-grid .service-card, .coming-soon-grid .comi
             renderIcon(icoEl, s.icon, (s.name || '') + ' icon');
             var ghEl = document.getElementById('lightboxGithub');
             if (ghEl) { ghEl.href = s.github || '#'; ghEl.style.display = s.github ? '' : 'none'; }
-            var opEl = document.getElementById('lightboxOpen');
-            if (opEl) { opEl.href = s.url || '#'; opEl.style.display = s.url ? '' : 'none'; }
+            /* Open button now deep-links to the dashboard Services tab
+               (static, in the markup) - per-service s.url no longer wired. */
             var tierEl = document.getElementById('lightboxTier');
             if (tierEl) tierEl.textContent = String(s.tierLabel || 'Sweet Pea').toUpperCase();
             lb.setAttribute('aria-label', s.name + ' screenshot');
