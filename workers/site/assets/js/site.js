@@ -83,7 +83,8 @@
        Grows the textarea height smoothly as the user types, so it never
        shows a scrollbar and feels elegant. Respects reduced-motion. */
     var autoGrow = reduceMotion.matches ? false : true;
-    document.querySelectorAll('textarea.form-input, textarea').forEach(function (ta) {
+    var growTais = [];
+    document.querySelectorAll('textarea').forEach(function (ta) {
         if (!autoGrow) return;
         ta.style.overflow = 'hidden';
         ta.style.resize = 'none';
@@ -94,8 +95,20 @@
         }
         grow();
         ta.addEventListener('input', grow);
-        window.addEventListener('resize', grow);
+        growTais.push(grow);
     });
+    /* One shared resize listener instead of one per textarea (N reflows per
+       resize event on form-heavy pages). */
+    if (growTais.length) {
+        var growRaf = 0;
+        window.addEventListener('resize', function () {
+            if (growRaf) return;
+            growRaf = requestAnimationFrame(function () {
+                growRaf = 0;
+                growTais.forEach(function (g) { g(); });
+            });
+        }, { passive: true });
+    }
 
     /* === Glow-card mouse tracking === */
     if (finePointer.matches && !reduceMotion.matches) {
@@ -154,9 +167,16 @@
             if (!focusables.length) return;
             var first = focusables[0];
             var last = focusables[focusables.length - 1];
-            if (event.shiftKey && document.activeElement === first) {
+            var active = document.activeElement;
+            var inside = navLinks.contains(active);
+            if (!inside) {
+                /* Focus escaped the drawer (or started outside): pull it back
+                   to the first item so Tab never lands in page content while
+                   the menu is visually open. */
+                event.preventDefault(); first.focus();
+            } else if (event.shiftKey && active === first) {
                 event.preventDefault(); last.focus();
-            } else if (!event.shiftKey && document.activeElement === last) {
+            } else if (!event.shiftKey && active === last) {
                 event.preventDefault(); first.focus();
             }
         });
@@ -164,9 +184,21 @@
         /* Move focus into the menu when it opens */
         navToggle.addEventListener('click', function () {
             if (navLinks.classList.contains('nav-open')) {
-                var firstLink = navLinks.querySelector('a[href], button, summary');
+                var firstLink = navLinks.querySelector('a[href], button:not([disabled]), summary');
                 if (firstLink) firstLink.focus();
             }
+        });
+
+        /* Light dismiss: a click outside both the menu and the toggle closes
+           the drawer (standard dialog behavior; also stops Tab from wandering
+           into page content behind an open menu). */
+        document.addEventListener('click', function (event) {
+            if (!navLinks.classList.contains('nav-open')) return;
+            var tgt = event.target;
+            if (!tgt || typeof tgt.closest !== 'function') return;
+            if (tgt.closest('#nav-links') || tgt.closest('.nav-toggle')) return;
+            navLinks.classList.remove('nav-open');
+            navToggle.setAttribute('aria-expanded', 'false');
         });
 
         /* Reset state if resized back to desktop.
@@ -174,9 +206,20 @@
            that the nav switched at 768px; now the drawer owns everything up
            to 1023px, so resizing 900 -> 1100px must NOT close an open menu. */
         window.addEventListener('resize', function () {
-            if (window.innerWidth >= 1024) {
+            if (window.innerWidth >= 1024 && navLinks.classList.contains('nav-open')) {
+                /* If keyboard focus was inside the menu it is about to become
+                   display:none — park it on the toggle instead of <body>. */
+                var hadFocus = navLinks.contains(document.activeElement);
                 navLinks.classList.remove('nav-open');
                 navToggle.setAttribute('aria-expanded', 'false');
+                if (hadFocus) {
+                    /* At desktop width the toggle is display:none and cannot
+                       take focus — park keyboard focus on the first inline
+                       link instead of dropping it to <body>. */
+                    var fallback = navToggle.offsetParent !== null ? navToggle
+                        : navLinks.querySelector('a[href]');
+                    if (fallback) fallback.focus();
+                }
             }
         }, { passive: true });
     }
@@ -195,18 +238,29 @@
     var rafId = null;
     var resizeTimer = null;
     var lastViewportWidth = 0;
+    var lastViewportHeight = 0;
     var PETAL_COUNT = 22;
+    var gradientCache = {};
+    var petalThemeLight = false;
+    function refreshPetalTheme() { petalThemeLight = document.documentElement.getAttribute('data-theme') === 'light'; }
+    refreshPetalTheme();
+    /* The theme-color block (later IIFE) calls this through the window hook
+       whenever data-theme changes — keeps cached gradients in sync. */
+    window.__mspPetalThemeRefresh = refreshPetalTheme;
 
     function resize(force) {
         var nextWidth = window.innerWidth;
         var nextHeight = window.innerHeight;
 
-        /* Ignore mobile browser-chrome height changes unless explicitly forced. */
-        if (!force && nextWidth === lastViewportWidth) return;
+        /* Ignore mobile browser-chrome height jitter unless the viewport truly
+           changed. Height is tracked too: a desktop height-only resize (devtools
+           open, window snapped) must still resize the canvas backing store. */
+        if (!force && nextWidth === lastViewportWidth && nextHeight === lastViewportHeight) return;
 
         width = nextWidth;
         height = nextHeight;
         lastViewportWidth = nextWidth;
+        lastViewportHeight = nextHeight;
         dpr = Math.min(window.devicePixelRatio || 1, 2);
 
         canvas.width = Math.round(width * dpr);
@@ -238,18 +292,26 @@
         ctx.rotate(petal.rotation);
         ctx.globalAlpha = petal.opacity;
 
-        var light = document.documentElement.getAttribute('data-theme') === 'light';
-        var gradient = ctx.createRadialGradient(0, 0, 0, 0, 0, petal.size);
-        if (petal.tone > 0.5) {
-            /* sage/green tone */
-            gradient.addColorStop(0, light ? '#7EAD93' : '#C4E1CC');
-            gradient.addColorStop(0.5, light ? '#5D8D72' : '#A3C9B6');
-            gradient.addColorStop(1, light ? 'rgba(64, 105, 81, 0.24)' : 'rgba(93, 122, 110, 0.28)');
-        } else {
-            /* frost/ice tone */
-            gradient.addColorStop(0, light ? '#A9C4C9' : '#DDE6E8');
-            gradient.addColorStop(0.5, light ? '#7E9FA8' : '#B8CDD2');
-            gradient.addColorStop(1, light ? 'rgba(94, 130, 145, 0.22)' : 'rgba(143, 175, 181, 0.26)');
+        var light = petalThemeLight;
+        /* Gradients are cached per (tone x size x theme): sizes are immutable
+           per petal and the theme only changes on toggle, so re-reading
+           data-theme and re-allocating 22 gradients per frame is pure waste. */
+        var key = (petal.tone > 0.5 ? 's' : 'f') + petal.size + (light ? 'L' : 'D');
+        var gradient = gradientCache[key];
+        if (!gradient) {
+            gradient = ctx.createRadialGradient(0, 0, 0, 0, 0, petal.size);
+            if (petal.tone > 0.5) {
+                /* sage/green tone */
+                gradient.addColorStop(0, light ? '#7EAD93' : '#C4E1CC');
+                gradient.addColorStop(0.5, light ? '#5D8D72' : '#A3C9B6');
+                gradient.addColorStop(1, light ? 'rgba(64, 105, 81, 0.24)' : 'rgba(93, 122, 110, 0.28)');
+            } else {
+                /* frost/ice tone */
+                gradient.addColorStop(0, light ? '#A9C4C9' : '#DDE6E8');
+                gradient.addColorStop(0.5, light ? '#7E9FA8' : '#B8CDD2');
+                gradient.addColorStop(1, light ? 'rgba(94, 130, 145, 0.22)' : 'rgba(143, 175, 181, 0.26)');
+            }
+            gradientCache[key] = gradient;
         }
         ctx.fillStyle = gradient;
 
@@ -309,7 +371,7 @@
     window.addEventListener('resize', function () {
         window.clearTimeout(resizeTimer);
         resizeTimer = window.setTimeout(function () {
-            if (window.innerWidth !== lastViewportWidth) resize(false);
+            if (window.innerWidth !== lastViewportWidth || window.innerHeight !== lastViewportHeight) resize(false);
         }, 150);
     }, { passive: true });
 
@@ -318,14 +380,16 @@
         else start();
     });
 
-    reduceMotion.addEventListener('change', function (event) {
+    var onReduceChange = function (event) {
         if (event.matches) {
             stop();
             forceRevealAll();
         } else {
             start();
         }
-    });
+    };
+    if (reduceMotion.addEventListener) reduceMotion.addEventListener('change', onReduceChange);
+    else if (reduceMotion.addListener) reduceMotion.addListener(onReduceChange); /* old Safari <=13 */
 
     start();
     window.addEventListener('load', function () {
@@ -751,29 +815,36 @@
        when the API is unreachable — that would hide real outages. */
     var homeStatus = document.getElementById('homeStatus');
     var homeStatusText = document.getElementById('homeStatusText');
-    var homeStatusDot = document.getElementById('homeStatusDot');
+    /* The dot's color is driven by .home-status.online/.degraded/.offline via
+       CSS (site.css) — no per-dot JS state needed. */
     if (homeStatus && homeStatusText) {
         var STATUS_NAMES = {
             1: 'Vaultwarden', 2: 'Matrix', 3: 'AFFiNE', 4: 'KoalaSync',
             5: 'Jellyfin', 6: 'Seerr', 7: 'Nextcloud', 8: 'Immich', 9: 'Open WebUI'
         };
-        fetch('https://status.mysweetpea.cc/api/status-page/heartbeat/public')
-            .then(function (r) { return r.ok ? r.json() : Promise.reject(); })
+        var STATUS_TOTAL = Object.keys(STATUS_NAMES).length; /* single source of truth */
+        /* A hung connection must degrade to the honest catch path like any
+           other failure — race the request against a 10s timeout. */
+        var aborter = ('AbortController' in window) ? new AbortController() : null;
+        var abortTimer = aborter ? setTimeout(function () { aborter.abort(); }, 10000) : 0;
+        fetch('https://status.mysweetpea.cc/api/status-page/heartbeat/public', aborter ? { signal: aborter.signal } : {})
+            .then(function (r) { if (abortTimer) clearTimeout(abortTimer); return r.ok ? r.json() : Promise.reject(); })
             .then(function (data) {
                 var hb = data && data.heartbeatList;
                 if (!hb) throw new Error('no data');
                 var down = [], seen = 0;
-                // Count only our 9 known service monitors — the public page
+                // Count only our known service monitors — the public page
                 // also includes the mysweetpea.cc website itself.
                 Object.keys(STATUS_NAMES).forEach(function (id) {
                     var list = hb[id];
-                    if (!list || !list.length) return;
+                    if (!list || !list.length) return; /* counted below as not reporting */
                     seen++;
                     var last = list[list.length - 1];
                     if (last.status !== 1) {
                         down.push(STATUS_NAMES[id] || ('Service ' + id));
                     }
                 });
+                var notReporting = STATUS_TOTAL - seen;
                 if (seen === 0) {
                     /* Payload with data for NONE of our monitors (malformed
                        response or Kuma renumbering): claiming "all
@@ -781,6 +852,13 @@
                     homeStatusText.textContent = 'Status unavailable — check the status page';
                     homeStatus.classList.remove('online', 'offline');
                     homeStatus.classList.add('degraded');
+                } else if (notReporting > 0) {
+                    /* Monitors missing/empty from the payload are UNKNOWN,
+                       not healthy — a service that stopped reporting must not
+                       silently count as operational. */
+                    homeStatusText.textContent = down.length + ' of ' + STATUS_TOTAL + ' down · ' + notReporting + ' not reporting';
+                    homeStatus.classList.remove('online');
+                    homeStatus.classList.add(down.length > 0 ? 'offline' : 'degraded');
                 } else if (down.length === 0) {
                     homeStatusText.textContent = 'All systems operational';
                     homeStatus.classList.remove('degraded', 'offline');
@@ -809,18 +887,20 @@
 
     })();
 
-/* === Update meta theme-color on theme change === */
+/* === Update meta theme-color on theme change ===
+       Observes data-theme on <html> instead of guessing from .theme-toggle
+       clicks: deterministic, covers OS-preference flips and any other script
+       that changes the theme, no 50ms race. */
 (function () {
     var meta = document.querySelector('meta[name="theme-color"]');
     if (!meta) return;
     function update() {
         var light = document.documentElement.getAttribute('data-theme') === 'light';
         meta.setAttribute('content', light ? '#D8E1DD' : '#0C1316');
+        if (typeof window.__mspPetalThemeRefresh === 'function') window.__mspPetalThemeRefresh();
     }
     update();
-    document.querySelectorAll('.theme-toggle').forEach(function (btn) {
-        btn.addEventListener('click', function () { setTimeout(update, 50); });
-    });
+    new MutationObserver(update).observe(document.documentElement, { attributeFilter: ['data-theme'] });
 })();
 
 /* ==========================================================================
@@ -857,10 +937,16 @@
             });
         });
 
-        // Support deep-linking: ?view=services opens that tab
+        // Support deep-linking: ?view=services opens that tab.
+        // Only activate a view this switcher actually owns — an unknown value
+        // (stale link, typo) must keep the default panel, not blank the page.
         var params = new URLSearchParams(window.location.search);
         var initial = params.get('view');
-        if (initial) activate(initial);
+        if (initial) {
+            var valid = false;
+            tabs.forEach(function (tab) { if (tab.getAttribute('data-view') === initial) valid = true; });
+            if (valid) activate(initial);
+        }
     });
 })();
 
@@ -874,7 +960,11 @@
     'use strict';
 
     document.addEventListener('click', function (event) {
-        var el = event.target.closest('[data-action]');
+        /* event.target can be document/documentElement/text (synthetic
+           dispatch) — guard before dereferencing .closest. */
+        var tgt = event.target;
+        if (!tgt || typeof tgt.closest !== 'function') return;
+        var el = tgt.closest('[data-action]');
         if (!el) return;
         var action = el.getAttribute('data-action');
 
@@ -890,6 +980,7 @@
         }
         if (action === 'toggle-faq') {
             var item = el.parentElement;
+            if (!item) return; /* malformed branch must not kill the shared bus */
             var open = item.classList.toggle('open');
             el.setAttribute('aria-expanded', String(open));
             return;
@@ -928,7 +1019,9 @@
     var open = false;
     var video = portal.querySelector('video');
     var spacer = document.getElementById('portalSpacer');
-    var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    /* Keep the MediaQueryList and read .matches at use time so a mid-session
+       OS reduced-motion change is honored (a load-time snapshot goes stale). */
+    var reduceMotionQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
 
     function setOpacity(o) {
         // Gradual fade: opacity ramps 0→1 with scroll (Hermes-style), so the
@@ -988,12 +1081,15 @@
         if (armed || open) { close(); return; }
         armed = true;
         portal.classList.add('armed');
-        portal.setAttribute('aria-hidden', 'false');
+        /* aria-hidden stays true until the portal is actually perceivable
+           (setOpacity flips it when opacity > 0.98) — otherwise its content
+           sits in the accessibility tree while still invisible. */
+        portal.setAttribute('aria-hidden', 'true');
         if (spacer) spacer.classList.add('armed');
         if (hint) hint.classList.add('visible');
         // Start the video on arm so she's already animating when the cover lifts.
         if (video && video.paused) { video.play().catch(function () {}); }
-        if (reduceMotion) {
+        if (reduceMotionQuery.matches) {
             // Reduced motion: reveal immediately instead of scroll-ramping.
             setOpacity(1);
             return;
