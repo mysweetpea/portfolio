@@ -1768,7 +1768,7 @@ body[data-page='redeem'] .ledger .cell.filled::after { background: var(--sage); 
 body[data-page='redeem'] .ledger .cell.cur::after { background: var(--primary-bright); box-shadow: 0 0 6px rgba(94,184,168,.9), 0 0 14px rgba(94,184,168,.5); animation: redeemCaretPulse 1.1s ease-in-out infinite; }
 /* cursor visibility: the whole active slot gets a wash so the caret is findable at a glance, not just a 2px underline */
 body[data-page='redeem'] .ledger .cell.cur { background: rgba(94,184,168,.10); border-radius: 4px; }
-body[data-page='redeem'] .ledger .cell.cur:not(.filled)::before { content: " B7"; color: var(--primary-bright); font-weight: 700; text-shadow: 0 0 8px rgba(94,184,168,.8); }
+body[data-page='redeem'] .ledger .cell.cur:not(.filled)::before { content: "\00B7"; color: var(--primary-bright); font-weight: 700; text-shadow: 0 0 8px rgba(94,184,168,.8); }
 body[data-page='redeem'] .ledger .cell.filled.cur::after { background: var(--primary-bright); }
 @keyframes redeemCaretPulse { 50% { opacity: .55; } }
 body[data-page='redeem'] .lmeta { display: flex; justify-content: space-between; align-items: center; margin: 14px 4px 2px; font-family: var(--t-font-mono); font-size: 11px; font-weight: 500; letter-spacing: .16em; color: var(--text-dim); }
@@ -1872,7 +1872,7 @@ body[data-page='redeem'] .redeem-callout .btn { display: inline; background: non
     padding: 0; min-height: 0; color: var(--sage); font-weight: 600; white-space: normal; }
 body[data-page='redeem'] .redeem-callout .btn:hover, body[data-page='redeem'] .redeem-callout .btn:focus-visible {
     background: none; color: var(--primary-bright); transform: none; }
-body[data-page='redeem'] .redeem-callout .btn::after { content: " 97"; font-size: .8em; }
+body[data-page='redeem'] .redeem-callout .btn::after { content: " \2197"; font-size: .8em; }
 [data-theme="light"] body[data-page='redeem'] .redeem-callout strong { color: var(--text-dim); }
 
 /* 2) username chips: drop the bordered wrapper box, chips float freely */
