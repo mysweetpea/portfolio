@@ -13,7 +13,7 @@ a.feature-card.garden-card{display:block;text-decoration:none;color:inherit}
 .garden-card .g-live i{width:6px;height:6px;border-radius:50%;background:#7BD88F;box-shadow:0 0 6px #7BD88F88}
 .garden-card h3{margin:0 0 8px}
 .garden-card p{margin:0 0 14px}
-.garden-card .g-open{font-family:var(--t-font-mono,ui-monospace,monospace);font-size:.64rem;letter-spacing:.14em;text-transform:uppercase;color:var(--text-faint);transition:color .2s}
+.garden-card .g-open{font-family:var(--t-font-mono,ui-monospace,monospace);font-size:.64rem;letter-spacing:.14em;text-transform:uppercase;color:var(--text-faint);transition:color .2s;display:inline-flex;align-items:center;gap:6px}
 .garden-card:hover .g-open{color:var(--sage)}
 /* ON THE RECORD — proof band */
 .record-band{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;max-width:1080px;margin:0 auto;padding:0 20px}
@@ -59,6 +59,9 @@ a.feature-card.garden-card{display:block;text-decoration:none;color:inherit}
     border-radius: 999px; text-decoration: none;
     background:
         linear-gradient(160deg, rgba(255,255,255,0.05), transparent 45%),
+        var(--card-bg);
+    background:
+        linear-gradient(160deg, rgba(255,255,255,0.05), transparent 45%),
         color-mix(in srgb, var(--card-bg) 88%, transparent);
     border: 1px solid var(--border);
     box-shadow: 0 2px 14px rgba(0,0,0,0.28), inset 0 1px 0 rgba(255,255,255,0.06);
@@ -93,14 +96,14 @@ a.feature-card.garden-card{display:block;text-decoration:none;color:inherit}
     width:5px; height:5px; border-radius:50%; background: var(--sage);
     box-shadow: 0 0 8px var(--sage), 0 0 14px rgba(163,201,182,.5);
     opacity:0; transform: scale(0); transition: opacity .5s ease .3s, transform .5s ease .3s; }
-.hero-steps li.visible-node::after, .hero-steps li::after { opacity:1; transform: scale(1); }
+.hero-steps li.visible::after { opacity:1; transform: scale(1); }
 @media (max-width: 760px){
   .hero-steps { flex-direction: column; gap: 10px; }
   .hero-steps li + li::before { left:11px; top:-10px; width:1px; height:8px;
       background: linear-gradient(180deg, transparent, rgba(163,201,182,.55)); }
   .hero-steps li + li::after { left:9px; top:-3px; }
 }
-@media (prefers-reduced-motion: reduce){ .hero-steps li + li::after { transition:none; } }
+@media (prefers-reduced-motion: reduce){ .hero-steps li + li::after { transition:none; opacity:1; transform:none; } .record:hover, .garden-card:hover .feature-icon img { transform:none; } }
 
 
 /* ===== V4: value-card icon chips ===== */
@@ -124,7 +127,7 @@ a.feature-card.garden-card{display:block;text-decoration:none;color:inherit}
 .garden-card:hover::before{opacity:.9}
 .garden-card .feature-icon img{transition:transform .3s ease, filter .3s ease}
 .garden-card:hover .feature-icon img{transform:translateY(-2px) scale(1.06);filter:drop-shadow(0 0 10px rgba(163,201,182,.4))}
-.garden-card .g-open{display:inline-flex;align-items:center;gap:6px}
+
 .garden-card .g-open .arr{display:inline-block;transition:transform .25s ease}
 .garden-card:hover .g-open .arr{transform:translateX(4px)}
 /* 3b. live dot pulse */

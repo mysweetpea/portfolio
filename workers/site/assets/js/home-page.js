@@ -9,6 +9,8 @@
         .then(function(r){ return r.ok ? r.json() : null; })
         .then(function(d){
           if(!d || !d.heartbeatList) { setMeta('live · 9 monitors'); return; }
+          /* Kuma public payload: heartbeatList[monitorId] = beat array (status===1 means UP);
+             uptimeList['<monitorId>_24'] = 24h uptime as a FRACTION 0-1 (hence *100). */
           var hb = d.heartbeatList, total = 0, up = 0, sum = 0, n = 0;
           Object.keys(hb).forEach(function(k){
             var beats = hb[k]; if(!beats || !beats.length) return;
@@ -29,6 +31,7 @@
 
 (function(){
   'use strict';
+  function initMotion(){
   var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
   /* grow-lines: observe vines + eyebrows */
@@ -41,6 +44,7 @@
   function animateCount(el){
     var target = parseFloat(el.getAttribute('data-count'));
     var dec = parseInt(el.getAttribute('data-dec') || '0', 10);
+    if (!isFinite(target)) { el.textContent = el.getAttribute('data-count') || ''; return; }
     if (reduce || !(target > 0)) { el.textContent = target.toFixed(dec); return; }
     var t0 = null, dur = 1100;
     function step(ts){
@@ -56,4 +60,7 @@
     entries.forEach(function(e){ if(e.isIntersecting){ animateCount(e.target); cio.unobserve(e.target); } });
   }, {threshold:.4});
   document.querySelectorAll('.record .cnt').forEach(function(el){ cio.observe(el); });
+  }
+  if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded', initMotion);
+  else initMotion();
 })();
