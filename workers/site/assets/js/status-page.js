@@ -271,7 +271,7 @@
                 }
                 if (empty) empty.hidden = true;
                 if (failEl) failEl.hidden = true;
-                list.forEach(function (inc) {
+                list.filter(function (inc) { return inc && typeof inc === 'object'; }).forEach(function (inc) {
                     var item = document.createElement('div');
                     item.className = 'incident-item ' + (inc.status === 'resolved' ? 'incident-resolved' : 'incident-active');
                     var date = document.createElement('div');
