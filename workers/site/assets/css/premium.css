@@ -2098,6 +2098,7 @@ body[data-page='services'] .tdiv { display: flex; align-items: center; gap: 16px
 /* optical nudge: +2px right margin on text/chip compensates the medallion's visual
    weight so the GROUP reads centered next to the heavier left circle */
 body[data-page='services'] .tdiv .tt,
+body[data-page='services'] .tdiv .chip { margin-right: 2px; }
 body[data-page='services'] .tdiv .ln { flex: 1; height: 1px; }
 body[data-page='services'] .tdiv .ln.l { background: linear-gradient(90deg, transparent, rgba(163,201,182,.4)); }
 body[data-page='services'] .tdiv .ln.r { background: linear-gradient(90deg, rgba(163,201,182,.4), transparent); }
