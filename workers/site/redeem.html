@@ -180,7 +180,7 @@ html[data-theme="light"]{background:#E7EDEA;color-scheme:light}
 
     <script src="/assets/js/lenis.min.js?v=67" defer></script>
     <script src="/assets/js/lenis-init.js?v=67" defer></script>
-    <script src="/assets/js/site.js?v=67" defer></script>
+    <script src="/assets/js/site.js?v=68" defer></script>
     <script src="/assets/js/premium.js?v=67" defer></script>
     <script>
 (function () {
@@ -212,7 +212,19 @@ html[data-theme="light"]{background:#E7EDEA;color-scheme:light}
   // reversed input. The invisible input is the source of truth; we normalize a
   // SEPARATE copy for display + validation, and normalize the real value only on blur.
   var raw=input.value.toUpperCase().replace(/\s/g,'');
-  var cl=raw.replace(/[^A-Z0-9]/g,'').slice(0,11);
+  var alnum=raw.replace(/[^A-Z0-9]/g,'');
+  var cl=alnum.slice(0,11);
+  // CAP ENFORCEMENT: if the real input exceeds 11 alnum (insertion at cap), rewrite
+  // it to the clamped form with the caret kept in place — otherwise edits past the
+  // cap silently no-op and a stale VALID keeps showing (user-reported bug).
+  if (alnum !== cl) {
+    var rebuilt=(cl.length>=3)?cl.slice(0,3)+'-'+cl.slice(3):cl;
+    var caret=input.selectionStart||0;
+    var alnumBeforeCaret=input.value.slice(0,caret).toUpperCase().replace(/[^A-Z0-9]/g,'').length;
+    input.value=rebuilt;
+    var newCaret=cl.length>=3?Math.min(alnumBeforeCaret+(alnumBeforeCaret>3?1:0),rebuilt.length):alnumBeforeCaret;
+    try{input.setSelectionRange(newCaret,newCaret);}catch(e){}
+  }
   var pre=cl.slice(0,3), tail=cl.slice(3,11);
   for(var i=0;i<3;i++){var pc=pre[i]||'';cells[i].textContent=pc;cells[i].classList.toggle('filled',!!pc);}
   for(var i=3;i<11;i++){var tc=tail[i-3]||'';cells[i].textContent=tc;cells[i].classList.toggle('filled',!!tc);}
@@ -227,9 +239,14 @@ html[data-theme="light"]{background:#E7EDEA;color-scheme:light}
   ledger.classList.toggle('valid',complete&&full);
   ledger.classList.toggle('invalid',complete&&!full);
   lcount.textContent=cl.length+' / 11 CHARACTERS';
+  window.__codeMeta=lhint;window.__codeState=complete?(full?'valid':'invalid'):'idle';
+  // Live-check contract: once the code is format-complete, the meta row belongs to
+  // site.js (CHECKING… / CODE VALID / CODE REJECTED — server truth). paint() only
+  // writes the format-level line while INCOMPLETE, so editing a verified code
+  // immediately drops any stale VALID instead of keeping it on screen.
+  if(complete && window.__liveCheckOwner){ return; }
   lhint.textContent=complete?(full?'CODE COMPLETE — VALID':'CHECK CODE'):(cl.length?'IN PROGRESS':'AWAITING CODE');
   lhint.classList.toggle('err',complete&&!full);
-  window.__codeMeta=lhint;window.__codeState=complete?(full?'valid':'invalid'):'idle';
   // Sentence hint = guidance only (no progress/validity echo — that's the meta row's job).
   var cicon=document.getElementById('rc-code-icon');
   update();

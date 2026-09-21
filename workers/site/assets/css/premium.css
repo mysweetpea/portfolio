@@ -1765,9 +1765,12 @@ body[data-page='redeem'] .ledger .cell:not(.filled)::before { content: "\00B7"; 
 body[data-page='redeem'] .ledger .cell.cur:not(.filled)::before { color: rgba(197,213,216,.6); }
 body[data-page='redeem'] .ledger .cell::after { content: ""; position: absolute; bottom: 0; left: 50%; transform: translateX(-50%); width: 100%; height: 2px; border-radius: 1px; background: rgba(143,175,181,.28); transition: background .25s, box-shadow .25s; }
 body[data-page='redeem'] .ledger .cell.filled::after { background: var(--sage); box-shadow: 0 8px 16px -8px rgba(163,201,182,.5); }
-body[data-page='redeem'] .ledger .cell.cur::after { background: var(--primary-bright); box-shadow: 0 0 10px rgba(94,184,168,.8); animation: redeemCaretPulse 1.1s ease-in-out infinite; }
+body[data-page='redeem'] .ledger .cell.cur::after { background: var(--primary-bright); box-shadow: 0 0 6px rgba(94,184,168,.9), 0 0 14px rgba(94,184,168,.5); animation: redeemCaretPulse 1.1s ease-in-out infinite; }
+/* cursor visibility: the whole active slot gets a wash so the caret is findable at a glance, not just a 2px underline */
+body[data-page='redeem'] .ledger .cell.cur { background: rgba(94,184,168,.10); border-radius: 4px; }
+body[data-page='redeem'] .ledger .cell.cur:not(.filled)::before { content: " B7"; color: var(--primary-bright); font-weight: 700; text-shadow: 0 0 8px rgba(94,184,168,.8); }
 body[data-page='redeem'] .ledger .cell.filled.cur::after { background: var(--primary-bright); }
-@keyframes redeemCaretPulse { 50% { opacity: .4; } }
+@keyframes redeemCaretPulse { 50% { opacity: .55; } }
 body[data-page='redeem'] .lmeta { display: flex; justify-content: space-between; align-items: center; margin: 14px 4px 2px; font-family: var(--t-font-mono); font-size: 11px; font-weight: 500; letter-spacing: .16em; color: var(--text-dim); }
 body[data-page='redeem'] .lmeta .right { color: var(--sage); transition: color .3s; }
 body[data-page='redeem'] .lmeta .right.err { color: var(--error); }
