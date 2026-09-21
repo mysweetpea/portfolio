@@ -917,10 +917,20 @@
                 var active = t.getAttribute('data-view') === view;
                 t.classList.toggle('active', active);
                 t.setAttribute('aria-selected', active ? 'true' : 'false');
+                /* Roving tabindex: exactly one tab per switcher stays in the
+                   Tab order (WAI-ARIA tabs pattern). */
+                t.tabIndex = active ? 0 : -1;
             });
             panels.forEach(function (p) {
                 var active = p.getAttribute('data-view') === view;
                 p.classList.toggle('active', active);
+                /* CSS-only hiding breaks when the stylesheet is late or off:
+                   the hidden attribute keeps panels out of the a11y tree and
+                   layout regardless. */
+                if (p.hasAttribute('hidden') !== !active) {
+                    if (active) p.removeAttribute('hidden');
+                    else p.setAttribute('hidden', '');
+                }
                 // Reveal any .reveal elements inside the now-active panel so
                 // FAQ/content isn't stuck hidden when switching tabs.
                 if (active) {
@@ -931,10 +941,28 @@
             });
         }
 
-        tabs.forEach(function (tab) {
+        tabs.forEach(function (tab, idx) {
             tab.addEventListener('click', function () {
                 activate(tab.getAttribute('data-view'));
+                tab.focus();
             });
+            tab.addEventListener('keydown', function (e) {
+                var dir = e.key === 'ArrowRight' || e.key === 'ArrowDown' ? 1
+                    : e.key === 'ArrowLeft' || e.key === 'ArrowUp' ? -1 : 0;
+                if (!dir) return;
+                e.preventDefault();
+                var n = tabs.length;
+                var next = tabs[((idx + dir) % n + n) % n];
+                activate(next.getAttribute('data-view'));
+                next.focus();
+            });
+        });
+
+        /* Normalize on load: sync hidden attrs + roving tabindex for the
+           initially-active view (markup may omit hidden; CSS-only hiding
+           breaks when the stylesheet is late or off). */
+        tabs.forEach(function (tab) {
+            if (tab.classList.contains('active')) { activate(tab.getAttribute('data-view')); }
         });
 
         // Support deep-linking: ?view=services opens that tab.

@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+<meta charset="UTF-8">
 <style id="msp-paint-guard">/* Paint guard: prevents the pre-CSS white flash on navigation.
    Measured: with stylesheets in flight the page painted pure white (255,255,255)
    because no early background/color-scheme was set. Keep this FIRST in <head>. */
@@ -26,17 +27,17 @@ html[data-theme="light"]{background:#E7EDEA;color-scheme:light}
   },6000);
 })();
 </script>
-    <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="robots" content="noindex, nofollow, noarchive, nosnippet, noimageindex">
 
     <title>MySweetPea — Service Status</title>
     <meta name="description" content="Live status of MySweetPea services — uptime, incidents, and availability for all self-hosted apps.">
     <meta name="theme-color" content="#0C1316">
+    <meta name="theme-color" content="#D8E1DD" media="(prefers-color-scheme: light)">
     <meta property="og:title" content="MySweetPea — Service Status">
     <meta property="og:description" content="Live status of MySweetPea services — uptime, incidents, and availability.">
     <meta property="og:type" content="website">
-    <meta property="og:url" content="https://mysweetpea.cc/status.html">
+    <meta property="og:url" content="https://mysweetpea.cc/status">
     
     <meta property="og:image" content="https://mysweetpea.cc/og-card.png">
     <meta name="twitter:card" content="summary_large_image">
@@ -46,11 +47,11 @@ html[data-theme="light"]{background:#E7EDEA;color-scheme:light}
     <link rel="preload" as="image" href="/logo.svg">
 <link rel="preload" as="font" type="font/woff2" href="/assets/fonts/instrument-serif.woff2" crossorigin>
 <link rel="preload" as="font" type="font/woff2" href="/assets/fonts/archivo-var.woff2" crossorigin>
-                    <link rel="stylesheet" href="/assets/css/fonts.css?v=104">
-    <link rel="stylesheet" href="/assets/css/site.css?v=104">
-    <link rel="stylesheet" href="/assets/css/premium.css?v=104">
-    <link rel="stylesheet" href="/assets/css/type-tokens.css?v=104">
-    <link rel="stylesheet" href="/assets/css/hermes-type.css?v=104">
+                    <link rel="stylesheet" href="/assets/css/fonts.css?v=105">
+    <link rel="stylesheet" href="/assets/css/site.css?v=105">
+    <link rel="stylesheet" href="/assets/css/premium.css?v=105">
+    <link rel="stylesheet" href="/assets/css/type-tokens.css?v=105">
+    <link rel="stylesheet" href="/assets/css/hermes-type.css?v=105">
 <link rel="canonical" href="https://mysweetpea.cc/status">
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"Organization","name":"MySweetPea","url":"https://mysweetpea.cc","logo":"https://mysweetpea.cc/logo.png","description":"Private, self-hosted alternatives to the services you use every day. No ads, no tracking, no subscriptions — community funded.","email":"support@mysweetpea.cc","sameAs":["https://github.com/mysweetpea"]}</script>
 </head>
@@ -106,17 +107,17 @@ html[data-theme="light"]{background:#E7EDEA;color-scheme:light}
 
         <div class="view-switcher" id="status-switcher">
             <div class="view-tabs" role="tablist" aria-label="Status sections">
-                <button type="button" class="view-tab active" role="tab" aria-selected="true" data-view="status">Status</button>
-                <button type="button" class="view-tab" role="tab" aria-selected="false" data-view="incidents">Incidents</button>
-                <button type="button" class="view-tab" role="tab" aria-selected="false" data-view="resources">Resources</button>
+                <button type="button" class="view-tab active" role="tab" aria-selected="true" id="tab-status" aria-controls="panel-status" data-view="status">Status</button>
+                <button type="button" class="view-tab" role="tab" aria-selected="false" id="tab-incidents" aria-controls="panel-incidents" data-view="incidents">Incidents</button>
+                <button type="button" class="view-tab" role="tab" aria-selected="false" id="tab-resources" aria-controls="panel-resources" data-view="resources">Resources</button>
             </div>
 
-            <div class="view-panel active" data-view="status" role="tabpanel">
+            <div class="view-panel active" id="panel-status" role="tabpanel" aria-labelledby="tab-status" data-view="status">
                 <section class="status-section" aria-labelledby="status-summary">
-                    <div class="status-summary status-all-online reveal" id="status-summary" role="status">
+                    <div class="status-summary status-degraded reveal" id="status-summary" role="status">
                         <span class="status-dot" aria-hidden="true"></span>
-                        <span class="status-summary-main"><strong>9 of 9 operational</strong><small>Uptime <span id="summary-pct">—</span> &middot; Current community services &middot; <time datetime="2026-08-05T00:00:00-04:00">Last reviewed Aug 5, 2026</time></small></span>
-                        <div class="status-summary-meta">UPTIME WINDOW <b>30 DAYS</b><br>MONITOR <b>KUMA</b> &middot; CHECKS <b>15 MIN</b></div>
+                        <span class="status-summary-main"><strong>&mdash; of 9 monitored</strong><small>Uptime <span id="summary-pct">—</span> &middot; Current community services &middot; <time id="summary-updated" datetime="">Checking&hellip;</time></small></span>
+                        <div class="status-summary-meta">UPTIME WINDOW <b>24 HOURS</b><br>MONITOR <b>KUMA</b> &middot; CHECKS <b>60 SEC</b></div>
                     </div>
 
                     <div class="status-console reveal">
@@ -127,8 +128,8 @@ html[data-theme="light"]{background:#E7EDEA;color-scheme:light}
                             <span class="line-cat">PASSWORDS</span>
                             <div class="sc-strip" aria-hidden="true"></div>
                             <span class="line-pct"></span><span class="line-lat">— ms</span>
-                            <span class="status-badge status-online"><span class="status-dot" aria-hidden="true"></span><span class="badge-label">Operational</span></span>
-                            <span class="line-checks"><span class="sc-uptime">30d —</span><span class="sc-checks">—</span></span>
+                            <span class="status-badge status-unknown"><span class="status-dot status-unknown" aria-hidden="true"></span><span class="badge-label">Checking&hellip;</span></span>
+                            <span class="line-checks"><span class="sc-uptime">&mdash;</span><span class="sc-checks">—</span></span>
                         </div>
                         <div class="status-line" data-service-key="matrix">
                             <span class="line-idx" aria-hidden="true">02</span>
@@ -137,8 +138,8 @@ html[data-theme="light"]{background:#E7EDEA;color-scheme:light}
                             <span class="line-cat">ENCRYPTED CHAT</span>
                             <div class="sc-strip" aria-hidden="true"></div>
                             <span class="line-pct"></span><span class="line-lat">— ms</span>
-                            <span class="status-badge status-online"><span class="status-dot" aria-hidden="true"></span><span class="badge-label">Operational</span></span>
-                            <span class="line-checks"><span class="sc-uptime">30d —</span><span class="sc-checks">—</span></span>
+                            <span class="status-badge status-unknown"><span class="status-dot status-unknown" aria-hidden="true"></span><span class="badge-label">Checking&hellip;</span></span>
+                            <span class="line-checks"><span class="sc-uptime">&mdash;</span><span class="sc-checks">—</span></span>
                         </div>
                         <div class="status-line" data-service-key="affine">
                             <span class="line-idx" aria-hidden="true">03</span>
@@ -147,8 +148,8 @@ html[data-theme="light"]{background:#E7EDEA;color-scheme:light}
                             <span class="line-cat">DOCS & WIKIS</span>
                             <div class="sc-strip" aria-hidden="true"></div>
                             <span class="line-pct"></span><span class="line-lat">— ms</span>
-                            <span class="status-badge status-online"><span class="status-dot" aria-hidden="true"></span><span class="badge-label">Operational</span></span>
-                            <span class="line-checks"><span class="sc-uptime">30d —</span><span class="sc-checks">—</span></span>
+                            <span class="status-badge status-unknown"><span class="status-dot status-unknown" aria-hidden="true"></span><span class="badge-label">Checking&hellip;</span></span>
+                            <span class="line-checks"><span class="sc-uptime">&mdash;</span><span class="sc-checks">—</span></span>
                         </div>
                         <div class="status-line" data-service-key="koalasync">
                             <span class="line-idx" aria-hidden="true">04</span>
@@ -157,8 +158,8 @@ html[data-theme="light"]{background:#E7EDEA;color-scheme:light}
                             <span class="line-cat">WATCH TOGETHER</span>
                             <div class="sc-strip" aria-hidden="true"></div>
                             <span class="line-pct"></span><span class="line-lat">— ms</span>
-                            <span class="status-badge status-online"><span class="status-dot" aria-hidden="true"></span><span class="badge-label">Operational</span></span>
-                            <span class="line-checks"><span class="sc-uptime">30d —</span><span class="sc-checks">—</span></span>
+                            <span class="status-badge status-unknown"><span class="status-dot status-unknown" aria-hidden="true"></span><span class="badge-label">Checking&hellip;</span></span>
+                            <span class="line-checks"><span class="sc-uptime">&mdash;</span><span class="sc-checks">—</span></span>
                         </div>
                         <div class="status-line" data-service-key="jellyfin">
                             <span class="line-idx" aria-hidden="true">05</span>
@@ -167,8 +168,8 @@ html[data-theme="light"]{background:#E7EDEA;color-scheme:light}
                             <span class="line-cat">MEDIA</span>
                             <div class="sc-strip" aria-hidden="true"></div>
                             <span class="line-pct"></span><span class="line-lat">— ms</span>
-                            <span class="status-badge status-online"><span class="status-dot" aria-hidden="true"></span><span class="badge-label">Operational</span></span>
-                            <span class="line-checks"><span class="sc-uptime">30d —</span><span class="sc-checks">—</span></span>
+                            <span class="status-badge status-unknown"><span class="status-dot status-unknown" aria-hidden="true"></span><span class="badge-label">Checking&hellip;</span></span>
+                            <span class="line-checks"><span class="sc-uptime">&mdash;</span><span class="sc-checks">—</span></span>
                         </div>
                         <div class="status-line" data-service-key="seerr">
                             <span class="line-idx" aria-hidden="true">06</span>
@@ -177,8 +178,8 @@ html[data-theme="light"]{background:#E7EDEA;color-scheme:light}
                             <span class="line-cat">REQUESTS</span>
                             <div class="sc-strip" aria-hidden="true"></div>
                             <span class="line-pct"></span><span class="line-lat">— ms</span>
-                            <span class="status-badge status-online"><span class="status-dot" aria-hidden="true"></span><span class="badge-label">Operational</span></span>
-                            <span class="line-checks"><span class="sc-uptime">30d —</span><span class="sc-checks">—</span></span>
+                            <span class="status-badge status-unknown"><span class="status-dot status-unknown" aria-hidden="true"></span><span class="badge-label">Checking&hellip;</span></span>
+                            <span class="line-checks"><span class="sc-uptime">&mdash;</span><span class="sc-checks">—</span></span>
                         </div>
                         <div class="status-line" data-service-key="nextcloud">
                             <span class="line-idx" aria-hidden="true">07</span>
@@ -187,8 +188,8 @@ html[data-theme="light"]{background:#E7EDEA;color-scheme:light}
                             <span class="line-cat">FILES</span>
                             <div class="sc-strip" aria-hidden="true"></div>
                             <span class="line-pct"></span><span class="line-lat">— ms</span>
-                            <span class="status-badge status-online"><span class="status-dot" aria-hidden="true"></span><span class="badge-label">Operational</span></span>
-                            <span class="line-checks"><span class="sc-uptime">30d —</span><span class="sc-checks">—</span></span>
+                            <span class="status-badge status-unknown"><span class="status-dot status-unknown" aria-hidden="true"></span><span class="badge-label">Checking&hellip;</span></span>
+                            <span class="line-checks"><span class="sc-uptime">&mdash;</span><span class="sc-checks">—</span></span>
                         </div>
                         <div class="status-line" data-service-key="immich">
                             <span class="line-idx" aria-hidden="true">08</span>
@@ -197,8 +198,8 @@ html[data-theme="light"]{background:#E7EDEA;color-scheme:light}
                             <span class="line-cat">PHOTOS</span>
                             <div class="sc-strip" aria-hidden="true"></div>
                             <span class="line-pct"></span><span class="line-lat">— ms</span>
-                            <span class="status-badge status-online"><span class="status-dot" aria-hidden="true"></span><span class="badge-label">Operational</span></span>
-                            <span class="line-checks"><span class="sc-uptime">30d —</span><span class="sc-checks">—</span></span>
+                            <span class="status-badge status-unknown"><span class="status-dot status-unknown" aria-hidden="true"></span><span class="badge-label">Checking&hellip;</span></span>
+                            <span class="line-checks"><span class="sc-uptime">&mdash;</span><span class="sc-checks">—</span></span>
                         </div>
                         <div class="status-line" data-service-key="openwebui">
                             <span class="line-idx" aria-hidden="true">09</span>
@@ -207,8 +208,8 @@ html[data-theme="light"]{background:#E7EDEA;color-scheme:light}
                             <span class="line-cat">AI</span>
                             <div class="sc-strip" aria-hidden="true"></div>
                             <span class="line-pct"></span><span class="line-lat">— ms</span>
-                            <span class="status-badge status-online"><span class="status-dot" aria-hidden="true"></span><span class="badge-label">Operational</span></span>
-                            <span class="line-checks"><span class="sc-uptime">30d —</span><span class="sc-checks">—</span></span>
+                            <span class="status-badge status-unknown"><span class="status-dot status-unknown" aria-hidden="true"></span><span class="badge-label">Checking&hellip;</span></span>
+                            <span class="line-checks"><span class="sc-uptime">&mdash;</span><span class="sc-checks">—</span></span>
                         </div>
                     </div>
 
@@ -218,23 +219,16 @@ html[data-theme="light"]{background:#E7EDEA;color-scheme:light}
                 </section>
             </div>
 
-            <div class="view-panel" data-view="incidents" role="tabpanel">
+            <div class="view-panel" id="panel-incidents" role="tabpanel" aria-labelledby="tab-incidents" data-view="incidents" hidden>
                 <section class="status-section" aria-label="Incidents">
                     <div class="incidents-panel reveal">
                         <h3 class="incidents-title">Recent incidents</h3>
-                        <div class="incident-item incident-resolved">
-                            <div class="incident-date">Aug 3, 2026</div>
-                            <div class="incident-body">
-                                <strong>private namespace recovery</strong> — All services restored after an ArgoCD sync incident. Automated backups and namespace protection added to prevent recurrence.
-                                <span class="incident-badge">Resolved</span>
-                            </div>
-                        </div>
-                        <p class="incidents-empty" hidden>No active incidents. All systems operational.</p>
+                        <p class="incidents-empty" hidden>Checking for incidents&hellip;</p>
                     </div>
                 </section>
             </div>
 
-            <div class="view-panel" data-view="resources" role="tabpanel">
+            <div class="view-panel" id="panel-resources" role="tabpanel" aria-labelledby="tab-resources" data-view="resources" hidden>
                 <section class="status-section" aria-label="Resources">
                     <div class="status-resources reveal">
                         <h3 class="status-resources-title">Resources</h3>
@@ -299,15 +293,15 @@ html[data-theme="light"]{background:#E7EDEA;color-scheme:light}
 
 
 
-    <script src="/assets/js/lenis.min.js?v=104" defer></script>
-    <script src="/assets/js/lenis-init.js?v=104" defer></script>
-    <script src="/assets/js/site.js?v=104" defer></script>
-    <script src="/assets/js/premium.js?v=104" defer></script>
-    <script src="/assets/js/status-page.js?v=104" defer></script>
+    <script src="/assets/js/lenis.min.js?v=105" defer></script>
+    <script src="/assets/js/lenis-init.js?v=105" defer></script>
+    <script src="/assets/js/site.js?v=105" defer></script>
+    <script src="/assets/js/premium.js?v=105" defer></script>
+    <script src="/assets/js/status-page.js?v=105" defer></script>
     <script>
     if ('serviceWorker' in navigator) {
         window.addEventListener('load', function () {
-            navigator.serviceWorker.register('/sw.js').catch(function () {});
+            navigator.serviceWorker.register('/sw.js').catch(function (err) { console.warn('[msp] service worker registration failed:', err); });
         });
     }
     </script>

@@ -4,9 +4,6 @@
         var summaryText = summary ? summary.querySelector('strong') : null;
         var summaryTime = summary ? summary.querySelector('time') : null;
         var rows = document.querySelectorAll('.status-line[data-service-key]');
-        var metricUptime = null;
-        var metricLive = null;
-        var metricIncidents = null;
 
         // Map our service keys to Uptime Kuma monitor IDs
         var MONITOR_IDS = {
@@ -79,7 +76,7 @@
             });
         }
 
-        function setRow(row, up, pct, list) {
+        function setRow(row, up, pct, list, unknown) {
             var badge = row.querySelector('.status-badge');
             var label = row.querySelector('.badge-label');
             var dot = row.querySelector('.status-dot');
@@ -87,42 +84,57 @@
             var checksEl = row.querySelector('.sc-checks');
             var pctEl = row.querySelector('.line-pct');
             if (badge) {
-                badge.classList.remove('status-online', 'status-down');
-                badge.classList.add(up ? 'status-online' : 'status-down');
+                badge.classList.remove('status-online', 'status-down', 'status-unknown');
+                badge.classList.add(unknown ? 'status-unknown' : (up ? 'status-online' : 'status-down'));
             }
-            if (label) label.textContent = up ? 'Operational' : 'Down';
-            if (dot) dot.classList.toggle('status-down', !up);
+            if (label) label.textContent = unknown ? 'Not reporting' : (up ? 'Operational' : 'Down');
+            if (dot) {
+                dot.classList.remove('status-unknown');
+                if (unknown) dot.classList.add('status-unknown');
+                else dot.classList.toggle('status-down', !up);
+            }
             var win = (window.UPTIME_WIN && window.UPTIME_WIN[row.dataset.serviceKey]) || null;
             if (uptimeEl) uptimeEl.textContent = (pct != null) ? ((win ? win + 'd ' : '') + pct + '%') : 'uptime —';
             if (pctEl) pctEl.textContent = (pct != null) ? pct + '%' : '—';
-            if (checksEl && list && list.length) {
+            if (unknown) {
+                if (uptimeEl) uptimeEl.textContent = 'no data';
+                if (checksEl) checksEl.textContent = 'not reporting';
+            } else if (checksEl && list && list.length) {
                 var t = list.slice().sort(function (a, b) {
                     return String(a.time).localeCompare(String(b.time), 'en');
                 });
                 var h = t[t.length - 1];
                 var d = h && h.time ? new Date(String(h.time).replace(' ', 'T')) : null;
                 checksEl.textContent = (d && !isNaN(d)) ? ('last ' + fmtHM(d) + ' srv') : 'last —';
-            }
-            // Avg latency over the STRIP window (up beats only) — matches what
-            // the bars encode; also reuses the newest-first→sorted beat order.
-            var latEl = row.querySelector('.line-lat');
-            if (latEl && checksEl) {
-                var lat = [];
-                for (var li = Math.max(0, t.length - STRIP_TICKS); li < t.length; li++) {
-                    var lb = t[li];
-                    if (lb && lb.status === 1 && typeof lb.ping === 'number') lat.push(lb.ping);
+                // Avg latency over the STRIP window (up beats only) — matches
+                // what the bars encode; inside this branch t is defined.
+                var latEl = row.querySelector('.line-lat');
+                if (latEl) {
+                    var lat = [];
+                    for (var li = Math.max(0, t.length - STRIP_TICKS); li < t.length; li++) {
+                        var lb = t[li];
+                        if (lb && lb.status === 1 && typeof lb.ping === 'number') lat.push(lb.ping);
+                    }
+                    latEl.textContent = lat.length
+                        ? '~' + Math.round(lat.reduce(function (a, b) { return a + b; }, 0) / lat.length) + ' ms'
+                        : '— ms';
                 }
-                latEl.textContent = lat.length
-                    ? '~' + Math.round(lat.reduce(function (a, b) { return a + b; }, 0) / lat.length) + ' ms'
-                    : '— ms';
             }
             row.classList.toggle('is-down', !up);
             renderStrip(row, list || []);
         }
 
-        // Fetch the status page heartbeat (single call, object keyed by monitor ID)
-        fetch('https://status.mysweetpea.cc/api/status-page/heartbeat/' + STATUS_SLUG)
-            .then(function (r) { return r.ok ? r.json() : Promise.reject(); })
+        // Fetch the status page heartbeat (single call, object keyed by monitor ID).
+        // Race a hung connection against a 10s timeout so the page degrades to
+        // the honest catch path instead of spinning on the static defaults.
+        var kumaAborter = ('AbortController' in window) ? new AbortController() : null;
+        var kumaAbortTimer = kumaAborter ? setTimeout(function () { kumaAborter.abort(); }, 10000) : 0;
+        fetch('https://status.mysweetpea.cc/api/status-page/heartbeat/' + STATUS_SLUG,
+              kumaAborter ? { signal: kumaAborter.signal } : {})
+            .then(function (r) {
+                if (kumaAbortTimer) clearTimeout(kumaAbortTimer);
+                return r.ok ? r.json() : Promise.reject();
+            })
             .then(function (data) {
                 if (!data || !data.heartbeatList) return Promise.reject();
                 var hb = data.heartbeatList; // { "<monitorId>": [heartbeats...], ... }
@@ -142,13 +154,23 @@
                 window.UPTIME_WIN = uptimeWin;
                 var upCount = 0, total = 0;
                 var uptimeSum = 0, uptimeCount = 0;
-                Object.keys(hb).forEach(function (id) {
-                    var key = ID_TO_KEY[id];
-                    if (!key) return;
+                /* Iterate OUR 9 monitor ids (not payload keys): a monitor
+                   missing/empty from the payload must count as NOT REPORTING,
+                   never silently vanish from the denominator. */
+                Object.keys(MONITOR_IDS).forEach(function (k) {
+                    var key = k, id = String(MONITOR_IDS[k]);
                     var row = document.querySelector('.status-line[data-service-key="' + key + '"]');
                     if (!row) return;
-                    var list = hb[id];
-                    if (!list || !list.length) return;
+                    var list = (hb[id] || []).filter(function (b) { return b && typeof b.time === 'string'; });
+                    if (!list.length) {
+                        /* Not in payload / no beats: unknown, not operational. */
+                        setRow(row, false, uptimePct[id] != null ? uptimePct[id] : null, [], true);
+                        total++;
+                        return;
+                    }
+                    /* Sort once by time; newest = max timestamp. Order-proof
+                       against any future Kuma ordering change. */
+                    list.sort(function (a, b) { return a.time < b.time ? -1 : a.time > b.time ? 1 : 0; });
                     var h = list[list.length - 1];
                     var up = h.status === 1;
                     if (up) upCount++;
@@ -157,8 +179,25 @@
                     if (pct != null) { uptimeSum += pct; uptimeCount++; }
                     setRow(row, up, pct, list);
                 });
-                if (summaryText) summaryText.textContent = upCount + ' of ' + total + ' operational';
-                if (summaryTime) summaryTime.textContent = 'Updated ' + new Date().toLocaleDateString();
+                var downCount = total - upCount;
+                /* Banner class tells the truth: green ONLY when every one of
+                   the 9 monitored services reported up. */
+                if (summary) {
+                    summary.classList.remove('status-all-online', 'status-degraded');
+                    summary.classList.add(downCount === 0 ? 'status-all-online' : 'status-degraded');
+                }
+                if (summaryText) {
+                    /* textContent shows entities literally — use a real
+                       middle dot. */
+                    summaryText.textContent = downCount === 0
+                        ? '9 of 9 operational'
+                        : (upCount + ' of ' + total + ' operational \u00B7 ' + downCount + ' down');
+                }
+                if (summaryTime) {
+                    var now = new Date();
+                    summaryTime.setAttribute('datetime', now.toISOString());
+                    summaryTime.textContent = 'Updated ' + now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+                }
                 // Connect the metric cards to real data
                 if (uptimeCount) {
                     var avg = Math.round((uptimeSum / uptimeCount) * 10) / 10;
@@ -196,8 +235,6 @@
                     var checksEl = card.querySelector('.sc-checks');
                     if (checksEl) checksEl.textContent = 'live data unavailable';
                 });
-                if (metricUptime) metricUptime.textContent = '—';
-                if (metricLive) metricLive.textContent = '—';
             });
     })();
 
@@ -210,21 +247,30 @@
         var container = panel.querySelector('.incident-item');
         if (container) container.remove();
 
-        fetch('https://subscribe.mysweetpea.cc/webhook/incidents')
-            .then(function (r) { return r.text().then(function(t){ if(t){try{return JSON.parse(t);}catch(e){return [];}} return []; }); })
+        /* Fetch failure must say so: the static empty-state text was replaced
+           with a neutral pending line, and a network error would otherwise
+           leave "Checking…" forever — indistinguishable from a real outage
+           handling. Show an explicit unavailable line instead. */
+        var failEl = document.createElement('p');
+        failEl.className = 'incidents-empty';
+        failEl.textContent = 'Incident feed unavailable.';
+        failEl.hidden = true;
+        panel.appendChild(failEl);
+        var aborter = ('AbortController' in window) ? new AbortController() : null;
+        var abortTimer = aborter ? setTimeout(function () { aborter.abort(); }, 10000) : 0;
+        fetch('https://subscribe.mysweetpea.cc/webhook/incidents', aborter ? { signal: aborter.signal } : {})
+            .then(function (r) {
+                if (abortTimer) clearTimeout(abortTimer);
+                return r.text().then(function(t){ if(t){try{return JSON.parse(t);}catch(e){return [];}} return []; });
+            })
             .then(function (data) {
                 var list = Array.isArray(data) ? data : (data && data.incidents) || [];
                 if (!list.length) {
-                    if (empty) empty.hidden = false;
+                    if (empty) { empty.textContent = 'No active incidents. All systems operational.'; empty.hidden = false; }
                     return;
                 }
                 if (empty) empty.hidden = true;
-                // Update the Active incidents metric
-                var activeCount = list.filter(function (i) { return i.status !== 'resolved'; }).length;
-                var countEl = document.getElementById('active-incidents-count');
-                var barEl = document.getElementById('active-incidents-bar');
-                if (countEl) countEl.textContent = activeCount;
-                if (barEl) barEl.style.width = Math.min(100, activeCount * 20) + '%';
+                if (failEl) failEl.hidden = true;
                 list.forEach(function (inc) {
                     var item = document.createElement('div');
                     item.className = 'incident-item ' + (inc.status === 'resolved' ? 'incident-resolved' : 'incident-active');
@@ -246,5 +292,11 @@
                     panel.appendChild(item);
                 });
             })
-            .catch(function () { /* keep static fallback */ });
+            .catch(function () {
+                /* Feed unreachable (network/CORS/timeout/malformed): say so —
+                   the old comment claimed a "static fallback" but the static
+                   item is deleted at init, so this used to render NOTHING. */
+                if (empty) empty.hidden = true;
+                if (failEl) failEl.hidden = false;
+            });
     })();
