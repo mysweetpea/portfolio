@@ -2089,3 +2089,29 @@ body[data-page='services'] .service-card .service-title-wrap h3 { display: block
 body[data-page='services'] .service-card .service-title-wrap .sp-meta { margin-top: 4px; display: inline-flex; }
 
 
+
+
+/* === 9. Tier dividers — D1+D4 hybrid: keystone medallion + whisper-fade lines.
+   Alternate direction per tier (sweetpea/coming-soon lead-left, seedling lead-right).
+   Notches of the ticket cards above must not collide: dividers keep their own row. */
+body[data-page='services'] .tdiv { display: flex; align-items: center; gap: 18px; margin: 0 auto; }
+body[data-page='services'] .tdiv .ln { flex: 1; height: 1px; }
+body[data-page='services'] .tdiv .ln.l { background: linear-gradient(90deg, transparent, rgba(163,201,182,.4)); }
+body[data-page='services'] .tdiv .ln.r { background: linear-gradient(90deg, rgba(163,201,182,.4), transparent); }
+body[data-page='services'] .tdiv .key { flex: none; width: 52px; height: 52px; border-radius: 50%;
+    display: grid; place-items: center; background: var(--bg);
+    border: 1px solid var(--border-primary);
+    box-shadow: 0 0 20px rgba(94,184,168,.22), inset 0 0 12px rgba(94,184,168,.07); }
+body[data-page='services'] .tdiv .key img { width: 24px; height: 24px;
+    filter: drop-shadow(0 0 5px rgba(163,201,182,.4)); }
+body[data-page='services'] .tdiv .tt { flex: none; font-size: .9rem; font-weight: 600;
+    letter-spacing: .02em; color: var(--primary-bright); white-space: nowrap; }
+body[data-page='services'] .tdiv .chip { flex: none; font-family: var(--t-font-mono, var(--mono));
+    font-size: .62rem; letter-spacing: .05em; padding: 3px 9px; border-radius: 999px;
+    background: rgba(143,175,181,.14); border: 1px solid var(--border-primary);
+    color: var(--primary-bright); }
+@media (max-width: 640px) {
+    body[data-page='services'] .tdiv .tt { font-size: .82rem; }
+    body[data-page='services'] .tdiv .key { width: 44px; height: 44px; }
+    body[data-page='services'] .tdiv .key img { width: 20px; height: 20px; }
+}

@@ -3,6 +3,16 @@
 
         
 
+/* === Tier dividers: fill '+N queued' chip from the coming-soon grid */
+(function () {
+    var chip = document.getElementById('csQueued');
+    var grid = document.querySelector('.coming-soon-grid');
+    if (!chip || !grid) return;
+    var n = grid.querySelectorAll('.coming-soon-card').length;
+    if (n > 0) chip.textContent = '+' + n + ' queued';
+    else chip.style.display = 'none';
+})();
+
 /* === Ticket cards: release the filter-entrance animation after it plays.
    cardIn uses fill-mode:both, which pins transform:translateY(0) forever and
    blocks the :hover lift. Dropping the animation after 'animationend' lets
