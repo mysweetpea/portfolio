@@ -1949,3 +1949,148 @@ body[data-page='services'] .service-card.service-card { transition:
     transform .7s ease, opacity .7s ease, border-color .18s ease, background .18s ease, box-shadow .22s ease !important; }
 .js .service-card.service-card.reveal.visible { transition:
     transform .22s cubic-bezier(.05,.7,.1,1), border-color .18s ease, background .18s ease, box-shadow .22s ease, opacity .7s ease !important; }
+
+/* ==== Services ticket cards (Sep 20) ====
+   Ticket layout per approved mockup (.oc-tmp/card-hybrid.html): the card's
+   existing content sits in .ticket-main; a dashed perforation with punched
+   notches separates it from .ticket-stub (icon + live uptime %, or a SOON
+   placeholder on coming-soon cards). Appended block — nothing above edited. */
+
+body[data-page='services'] .service-card,
+body[data-page='services'] .coming-soon-card { display: grid;
+    grid-template-columns: minmax(0, 1fr) 96px;
+    padding: 0;
+    border-radius: 16px;
+    overflow: hidden; }
+
+/* main panel + perforated seam */
+body[data-page='services'] .service-card .ticket-main,
+body[data-page='services'] .coming-soon-card .ticket-main { position: relative;
+    min-width: 0;
+    padding: 20px 20px 18px;
+    border-right: 1px dashed var(--border-primary); }
+/* punched notches on the seam (half-circles once the card clips them) */
+body[data-page='services'] .service-card .ticket-main::before,
+body[data-page='services'] .service-card .ticket-main::after,
+body[data-page='services'] .coming-soon-card .ticket-main::before,
+body[data-page='services'] .coming-soon-card .ticket-main::after { content: "";
+    position: absolute;
+    right: -10px;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: var(--bg);
+    border: 1px solid var(--border); }
+body[data-page='services'] .service-card .ticket-main::before,
+body[data-page='services'] .coming-soon-card .ticket-main::before { top: -10px; }
+body[data-page='services'] .service-card .ticket-main::after,
+body[data-page='services'] .coming-soon-card .ticket-main::after { bottom: -10px; }
+
+/* stub */
+body[data-page='services'] .service-card .ticket-stub,
+body[data-page='services'] .coming-soon-card .ticket-stub { display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    background: rgba(12, 19, 22, 0.35); }
+body[data-page='services'] .service-card .ticket-stub img { width: 36px;
+    height: 36px;
+    object-fit: contain;
+    filter: none;
+    transition: transform .25s cubic-bezier(.05, .7, .1, 1); }
+/* keep long titles on one row now that the seam eats 96px */
+body[data-page='services'] .service-card .service-title-wrap h3 { min-width: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis; }
+
+@media (hover: hover) {
+    body[data-page='services'] .service-card:hover .ticket-stub img { transform: scale(1.08); }
+}
+
+/* hover lift + glow (mockup curve) */
+body[data-page='services'] .service-card:hover { transform: translateY(-2px);
+    box-shadow: 0 12px 30px -16px rgba(0, 0, 0, .55); }
+[data-theme="light"] body[data-page='services'] .service-card:hover { box-shadow: 0 12px 26px -18px rgba(46, 61, 59, .4); }
+
+/* live uptime chip (dot pulses via CSS only) */
+body[data-page='services'] .stub-live { font-family: 'JetBrains Mono', 'Cascadia Mono', ui-monospace, Menlo, monospace;
+    font-size: 10.5px;
+    letter-spacing: .06em;
+    color: var(--sage);
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-variant-numeric: tabular-nums; }
+body[data-page='services'] .stub-live i { width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--sage);
+    box-shadow: 0 0 6px rgba(163, 201, 182, .6);
+    font-style: normal;
+    animation: msp-stub-pulse 2.4s ease-in-out infinite; }
+@keyframes msp-stub-pulse { 0%, 100% { box-shadow: 0 0 6px rgba(163, 201, 182, .6); opacity: 1; }
+    50% { box-shadow: 0 0 9px 2px rgba(163, 201, 182, .75); opacity: .7; } }
+
+/* coming-soon placeholder chip */
+body[data-page='services'] .stub-soon { font-family: 'JetBrains Mono', 'Cascadia Mono', ui-monospace, Menlo, monospace;
+    font-size: 10px;
+    letter-spacing: .14em;
+    text-transform: uppercase;
+    color: var(--text-faint);
+    border: 1px dashed var(--border-primary);
+    border-radius: 8px;
+    padding: 9px 12px;
+    line-height: 1; }
+
+/* light theme: stub surface + notch fill match the sage-tinted canvas */
+[data-theme="light"] body[data-page='services'] .service-card .ticket-stub,
+[data-theme="light"] body[data-page='services'] .coming-soon-card .ticket-stub { background: rgba(231, 237, 234, .55); }
+[data-theme="light"] body[data-page='services'] .service-card .ticket-main::before,
+[data-theme="light"] body[data-page='services'] .service-card .ticket-main::after,
+[data-theme="light"] body[data-page='services'] .coming-soon-card .ticket-main::before,
+[data-theme="light"] body[data-page='services'] .coming-soon-card .ticket-main::after { background: #E7EDEA;
+    border-color: rgba(51, 86, 95, .16); }
+
+/* mobile: single-column card — stub becomes a horizontal strip BELOW the body,
+   perforation horizontal, notch on the left edge, icon row centered */
+@media (max-width: 520px) {
+    body[data-page='services'] .service-card,
+    body[data-page='services'] .coming-soon-card { grid-template-columns: 1fr; }
+    body[data-page='services'] .service-card .ticket-main,
+    body[data-page='services'] .coming-soon-card .ticket-main { border-right: none;
+        border-bottom: 1px dashed var(--border-primary); }
+    body[data-page='services'] .service-card .ticket-main::before,
+    body[data-page='services'] .coming-soon-card .ticket-main::before { top: auto;
+        bottom: -10px;
+        left: -10px;
+        right: auto; }
+    body[data-page='services'] .service-card .ticket-main::after,
+    body[data-page='services'] .coming-soon-card .ticket-main::after { display: none; }
+    body[data-page='services'] .service-card .ticket-stub,
+    body[data-page='services'] .coming-soon-card .ticket-stub { flex-direction: row;
+        padding: 10px 18px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    body[data-page='services'] .service-card,
+    body[data-page='services'] .service-card:hover,
+    body[data-page='services'] .coming-soon-card,
+    body[data-page='services'] .coming-soon-card:hover { transform: none; }
+    body[data-page='services'] .service-card .ticket-stub img,
+    body[data-page='services'] .service-card:hover .ticket-stub img { transform: none;
+        transition: none; }
+    body[data-page='services'] .stub-live i { animation: none; }
+}
+
+/* r2e: title row must own full width; pill sits above (own row), never squeezes it */
+body[data-page='services'] .service-card .service-title-wrap { display: block; }
+body[data-page='services'] .service-card .service-title-wrap h3 {
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    display: block; max-width: 100%;
+}
+body[data-page='services'] .service-card .service-title-wrap .sp-meta { margin-top: 4px; display: inline-flex; }
+body[data-page='services'] .service-card .service-header .pill-gap { height: 8px; }
+
+
