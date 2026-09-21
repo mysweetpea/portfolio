@@ -2027,9 +2027,8 @@ body[data-page='services'] .stub-live i { width: 6px;
     height: 6px;
     border-radius: 50%;
     background: var(--sage);
-    box-shadow: 0 0 6px rgba(163, 201, 182, .6);
     font-style: normal;
-    animation: msp-stub-pulse 2.4s ease-in-out infinite; }
+    opacity: .85; }
 @keyframes msp-stub-pulse { 0%, 100% { box-shadow: 0 0 6px rgba(163, 201, 182, .6); opacity: 1; }
     50% { box-shadow: 0 0 9px 2px rgba(163, 201, 182, .75); opacity: .7; } }
 
@@ -2050,7 +2049,7 @@ body[data-page='services'] .stub-soon { font-family: 'JetBrains Mono', 'Cascadia
 [data-theme="light"] body[data-page='services'] .service-card .ticket-main::before,
 [data-theme="light"] body[data-page='services'] .service-card .ticket-main::after,
 [data-theme="light"] body[data-page='services'] .coming-soon-card .ticket-main::before,
-[data-theme="light"] body[data-page='services'] .coming-soon-card .ticket-main::after { background: #E7EDEA;
+[data-theme="light"] body[data-page='services'] .coming-soon-card .ticket-main::after { background: var(--bg);
     border-color: rgba(51, 86, 95, .16); }
 
 /* mobile: single-column card — stub becomes a horizontal strip BELOW the body,
@@ -2086,11 +2085,7 @@ body[data-page='services'] .stub-soon { font-family: 'JetBrains Mono', 'Cascadia
 
 /* r2e: title row must own full width; pill sits above (own row), never squeezes it */
 body[data-page='services'] .service-card .service-title-wrap { display: block; }
-body[data-page='services'] .service-card .service-title-wrap h3 {
-    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
-    display: block; max-width: 100%;
-}
+body[data-page='services'] .service-card .service-title-wrap h3 { display: block; max-width: 100%; }
 body[data-page='services'] .service-card .service-title-wrap .sp-meta { margin-top: 4px; display: inline-flex; }
-body[data-page='services'] .service-card .service-header .pill-gap { height: 8px; }
 
 

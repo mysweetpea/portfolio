@@ -444,7 +444,7 @@
                         var nameEl = h3.cloneNode(true);
                         nameEl.querySelectorAll('.live-badge, .status-dot, .acct-pill').forEach(function (n) { n.remove(); });
                         var name = nameEl.textContent.trim();
-                        var icon = card.querySelector('.service-icon img');
+                        var icon = card.querySelector('.service-icon img') || card.querySelector('.ticket-stub img');
                         var desc = card.querySelector('p');
                         parsed.push({
                             label: name,

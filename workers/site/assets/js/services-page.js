@@ -1,7 +1,19 @@
 // FAQ Toggle
         function toggleFAQ(el) { var item = el.parentElement; var open = item.classList.toggle('open'); el.setAttribute('aria-expanded', String(open)); }
 
-        // Screenshot lightbox
+        
+
+/* === Ticket cards: release the filter-entrance animation after it plays.
+   cardIn uses fill-mode:both, which pins transform:translateY(0) forever and
+   blocks the :hover lift. Dropping the animation after 'animationend' lets
+   the hover transform apply (filters re-add the animation on next shuffle). */
+document.querySelectorAll('.services-grid .service-card, .coming-soon-grid .coming-soon-card').forEach(function (card) {
+    card.addEventListener('animationend', function (e) {
+        if (e.animationName === 'cardIn') card.style.animation = 'none';
+    });
+});
+
+// Screenshot lightbox
         var SERVICES = {
             vaultwarden: { name:'Vaultwarden', icon:'<img src="/assets/icons/vaultwarden.svg" width="40" height="40" loading="lazy" decoding="async" alt="Vaultwarden">', shot:'/assets/screenshots/vaultwarden.webp', github:'https://github.com/dani-garcia/vaultwarden', tier:'sweetpea', tierLabel:'Sweet Pea', plain:'A safe place to store all your passwords — like a locked drawer for your digital life.', replaces:'Think of it like LastPass or 1Password.', desc:'Vaultwarden is a password manager that remembers all your passwords so you do not have to. It creates strong, unique passwords for every website and fills them in automatically. Your vault is encrypted end-to-end — even we cannot see your passwords.', url:'https://vault.mysweetpea.cc' },
             matrix: { name:'Matrix / Element', icon:'<img src="/assets/icons/matrix.svg" width="40" height="40" loading="lazy" decoding="async" alt="Matrix">', shot:'/assets/screenshots/element.webp', github:'https://github.com/element-hq/element-web', tier:'sweetpea', tierLabel:'Sweet Pea', plain:'A private chat app for messaging friends — nobody else can read your messages.', replaces:'Think of it like Discord or Slack, but private.', desc:'Matrix is a private, encrypted chat system. Element is the app you use to access it. Create rooms, send messages, share files, all encrypted.', url:'https://chat.mysweetpea.cc' },
