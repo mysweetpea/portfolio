@@ -52,6 +52,7 @@ html[data-theme="light"]{background:#E7EDEA;color-scheme:light}
     <link rel="stylesheet" href="/assets/css/premium.css?v=106">
     <link rel="stylesheet" href="/assets/css/type-tokens.css?v=106">
     <link rel="stylesheet" href="/assets/css/hermes-type.css?v=106">
+    <link rel="stylesheet" href="/assets/css/home.css?v=1">
 <link rel="canonical" href="https://mysweetpea.cc/">
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"Organization","name":"MySweetPea","url":"https://mysweetpea.cc","logo":"https://mysweetpea.cc/icon-512.png","description":"Private, self-hosted alternatives to the services you use every day. No ads, no tracking, no subscriptions — community funded.","email":"support@mysweetpea.cc","sameAs":["https://github.com/mysweetpea"]}</script>
 </head>
@@ -110,6 +111,8 @@ html[data-theme="light"]{background:#E7EDEA;color-scheme:light}
             <a href="/status.html" class="home-status" id="homeStatus" aria-live="polite">
                 <span class="status-dot" id="homeStatusDot" aria-hidden="true"></span>
                 <span id="homeStatusText">Checking service status…</span>
+                <span class="hs-meta" id="hsMeta">live</span>
+                <svg class="hs-chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 18l6-6-6-6"/></svg>
             </a>
             <div class="hero-proof" aria-label="MySweetPea at a glance">
                 <div class="proof-stat"><span class="proof-value" data-count="9" data-suffix="">0</span><span class="proof-label">Public services</span></div>
@@ -125,9 +128,30 @@ html[data-theme="light"]{background:#E7EDEA;color-scheme:light}
             </ol>
         </div>
 
-        <div class="vine-divider" aria-hidden="true"></div>
+        <div class="vine-divider reveal-grow" aria-hidden="true"></div>
+
+        <section class="features-section" id="sec-garden">
+            <p class="sec-eyebrow reveal"><span class="n">01</span> The Garden</p>
+            <h2 class="section-title glass-text reveal">What's growing.</h2>
+            <p class="section-subtitle reveal reveal-delay-1">Nine services, one sign-in — all tended on hardware I own. Every card is live right now.</p>
+            <div class="garden-grid" style="margin-top:34px">
+                <a class="feature-card garden-card reveal" href="/services.html"><div class="g-top"><div class="icon feature-icon" aria-hidden="true"><img src="/assets/icons/jellyfin.svg" alt="" width="48" height="48" loading="lazy" decoding="async"></div><span class="g-live"><i></i>Live</span></div><h3><span class="g-idx">01</span>Jellyfin</h3><p>Movies, shows and live TV — your stream, your rules.</p><span class="g-open">Open card <span class="arr">→</span></span></a>
+                <a class="feature-card garden-card reveal" href="/services.html"><div class="g-top"><div class="icon feature-icon" aria-hidden="true"><img src="/assets/icons/nextcloud.svg" alt="" width="48" height="48" loading="lazy" decoding="async"></div><span class="g-live"><i></i>Live</span></div><h3><span class="g-idx">02</span>Nextcloud</h3><p>Files, calendar and contacts that sync everywhere.</p><span class="g-open">Open card <span class="arr">→</span></span></a>
+                <a class="feature-card garden-card reveal" href="/services.html"><div class="g-top"><div class="icon feature-icon" aria-hidden="true"><img src="/assets/icons/immich.svg" alt="" width="48" height="48" loading="lazy" decoding="async"></div><span class="g-live"><i></i>Live</span></div><h3><span class="g-idx">03</span>Immich</h3><p>Phone photos, backed up and organized automatically.</p><span class="g-open">Open card <span class="arr">→</span></span></a>
+                <a class="feature-card garden-card reveal" href="/services.html"><div class="g-top"><div class="icon feature-icon" aria-hidden="true"><img src="/assets/icons/matrix.svg" alt="" width="48" height="48" loading="lazy" decoding="async"></div><span class="g-live"><i></i>Live</span></div><h3><span class="g-idx">04</span>Element</h3><p>Encrypted chat and calls — no ads reading along.</p><span class="g-open">Open card <span class="arr">→</span></span></a>
+                <a class="feature-card garden-card reveal" href="/services.html"><div class="g-top"><div class="icon feature-icon" aria-hidden="true"><img src="/assets/icons/vaultwarden.svg" alt="" width="48" height="48" loading="lazy" decoding="async"></div><span class="g-live"><i></i>Live</span></div><h3><span class="g-idx">05</span>Vaultwarden</h3><p>Passwords and passkeys, synced to every device.</p><span class="g-open">Open card <span class="arr">→</span></span></a>
+                <a class="feature-card garden-card reveal" href="/services.html"><div class="g-top"><div class="icon feature-icon" aria-hidden="true"><img src="/assets/icons/affine.svg" alt="" width="48" height="48" loading="lazy" decoding="async"></div><span class="g-live"><i></i>Live</span></div><h3><span class="g-idx">06</span>AFFiNE</h3><p>Notes, docs and whiteboards that stay yours.</p><span class="g-open">Open card <span class="arr">→</span></span></a>
+                <a class="feature-card garden-card reveal" href="/services.html"><div class="g-top"><div class="icon feature-icon" aria-hidden="true"><img src="/assets/icons/openwebui.svg" alt="" width="48" height="48" loading="lazy" decoding="async"></div><span class="g-live"><i></i>Live</span></div><h3><span class="g-idx">07</span>Open WebUI</h3><p>Private AI chat on models you choose.</p><span class="g-open">Open card <span class="arr">→</span></span></a>
+                <a class="feature-card garden-card reveal" href="/services.html"><div class="g-top"><div class="icon feature-icon" aria-hidden="true"><img src="/assets/icons/koalasync.svg" alt="" width="48" height="48" loading="lazy" decoding="async"></div><span class="g-live"><i></i>Live</span></div><h3><span class="g-idx">08</span>KoalaSync</h3><p>Watch parties with perfectly synced playback.</p><span class="g-open">Open card <span class="arr">→</span></span></a>
+                <a class="feature-card garden-card reveal" href="/services.html"><div class="g-top"><div class="icon feature-icon" aria-hidden="true"><img src="/assets/icons/seerr.svg" alt="" width="48" height="48" loading="lazy" decoding="async"></div><span class="g-live"><i></i>Live</span></div><h3><span class="g-idx">09</span>Seerr</h3><p>Request anything — it appears in your library.</p><span class="g-open">Open card <span class="arr">→</span></span></a>
+            </div>
+            <p style="text-align:center;margin:26px 0 0"><a href="/services.html" class="hero-btn hero-btn-secondary" style="display:inline-flex">Explore every service</a></p>
+        </section>
+
+        <div class="vine-divider reveal-grow" aria-hidden="true"></div>
 
         <section class="features-section" id="sec-features">
+            <p class="sec-eyebrow reveal"><span class="n">02</span> What we stand for</p>
             <h2 class="section-title glass-text reveal">Why MySweetPea?</h2>
             <p class="section-subtitle reveal reveal-delay-1">Choose a value to explore what we stand for.</p>
             <div class="value-tabs reveal reveal-delay-1" role="group" aria-label="Core values">
@@ -145,12 +169,54 @@ html[data-theme="light"]{background:#E7EDEA;color-scheme:light}
             </div>
         </section>
 
-        <div class="vine-divider" aria-hidden="true"></div>
+        <div class="vine-divider reveal-grow" aria-hidden="true"></div>
+
+        <section class="features-section" id="sec-record">
+            <p class="sec-eyebrow reveal"><span class="n">03</span> On the Record</p>
+            <h2 class="section-title glass-text reveal">Numbers, not promises.</h2>
+            <p class="section-subtitle reveal reveal-delay-1">Measured live from the garden — every figure links to its source.</p>
+            <div class="record-band" style="margin-top:34px">
+                <div class="record reveal"><div class="v"><span class="cnt" data-count="99.9" data-dec="1">0.0</span><small>%</small></div><div class="l">Uptime · last 24 hours</div><a class="s" href="/status.html">status.mysweetpea.cc ↗</a></div>
+                <div class="record reveal reveal-delay-1"><div class="v"><span class="cnt" data-count="9">0</span><small>/9</small></div><div class="l">Services operational</div><a class="s" href="/status.html">live monitors ↗</a></div>
+                <div class="record reveal reveal-delay-2"><div class="v">0</div><div class="l">Ads · trackers · subscriptions</div><a class="s" href="/about.html">the full story ↗</a></div>
+                <div class="record reveal reveal-delay-3"><div class="v"><span class="cnt" data-count="2024">2024</span></div><div class="l">Founded · real hardware, nightly backups</div><a class="s" href="/about.html">the story ↗</a></div>
+            </div>
+        </section>
+
+        <div class="vine-divider reveal-grow" aria-hidden="true"></div>
+
+        <section class="features-section" id="sec-gardener">
+            <p class="sec-eyebrow reveal"><span class="n">04</span> The Gardener</p>
+            <h2 class="section-title glass-text reveal">Tended by one person.</h2>
+            <div class="gardener" style="margin-top:30px">
+                <div class="med reveal" aria-hidden="true">✦</div>
+                <div class="reveal reveal-delay-1">
+                    <p><strong>MySweetPea is run by one person.</strong> Founded 2024 on real hardware, backed up nightly to two locations, with a public post-mortem on the wall when things broke. It stays small on purpose — so every member gets a garden, not a queue.</p>
+                    <div class="g-links"><a href="/about.html">The full story ↗</a><a href="/status.html">Incident history ↗</a><a href="https://github.com/mysweetpea" rel="noopener">The public repos ↗</a></div>
+                </div>
+            </div>
+        </section>
+
+        <div class="vine-divider reveal-grow" aria-hidden="true"></div>
+
+        <section class="features-section" id="sec-faq">
+            <p class="sec-eyebrow reveal"><span class="n">05</span> Questions</p>
+            <h2 class="section-title glass-text reveal">Asked &amp; answered.</h2>
+            <div class="faq-wrap" style="margin-top:30px">
+                <details class="reveal"><summary>Why is access invite-only?<span class="pm">+</span></summary><div class="a">Capacity is real — hardware, bandwidth and one gardener. Invites keep the garden fast and supported for the people already in it. When capacity grows, access opens.</div></details>
+                <details class="reveal"><summary>What happens to my data if this disappears?<span class="pm">+</span></summary><div class="a">Every service exports in standard formats — files, calendars, photos, passwords. No lock-in is a design rule here, not a promise.</div></details>
+                <details class="reveal"><summary>Is it really free of tracking?<span class="pm">+</span></summary><div class="a">No analytics, no trackers, no ad networks. The only public metrics are the uptime monitors on the status page.</div></details>
+                <details class="reveal"><summary>Can I request a new service?<span class="pm">+</span></summary><div class="a">Yes — that is the roadmap. Members suggest, the garden grows. Use the Suggest a Service link in the footer.</div></details>
+                <details class="reveal"><summary>What does it cost?<span class="pm">+</span></summary><div class="a">A one-time community contribution — amount confirmed in your invite email. It covers power, hardware, bandwidth and the domain. No subscription, no renewal, ever.</div></details>
+            </div>
+        </section>
+
+        <div class="vine-divider reveal-grow" aria-hidden="true"></div>
 
         <div class="cta-section" id="sec-cta">
             <div class="cta-card reveal">
                 <h2 class="glass-text">Ready to Join?</h2>
-                <p>A $5 minimum community contribution helps protect capacity and supports the infrastructure. Not a subscription.</p>
+                <p>A one-time community contribution — amount confirmed in your invite email — helps protect capacity and supports the infrastructure. Not a subscription.</p>
                 <div class="cta-buttons">
                     <a href="/pricing.html" class="cta-btn">How It Works</a>
                     <a href="/form.html" class="cta-btn cta-btn-ghost">Get Access</a>
@@ -162,7 +228,7 @@ html[data-theme="light"]{background:#E7EDEA;color-scheme:light}
 <a href="#" class="back-to-top" aria-label="Back to top" data-action="back-to-top"><img src="/assets/icons/icon-ui-arrow-up.svg" class="" alt="" width="22" height="22" loading="lazy" decoding="async" aria-hidden="true"></a>
 <footer class="page-footer">
     <div class="footer-inner">
-        <div class="vine-divider" aria-hidden="true"></div>
+        <div class="vine-divider reveal-grow" aria-hidden="true"></div>
         <div class="footer-grid">
             <div class="footer-brand">
             <a href="/index.html" class="nav-logo msb-wrap"><svg class="msb" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false"><defs><linearGradient id="f-fi" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#E8F6F3" stop-opacity=".95"/><stop offset="50%" stop-color="#A2D9CE" stop-opacity=".85"/><stop offset="100%" stop-color="#48C9B0" stop-opacity=".75"/></linearGradient><linearGradient id="f-fr" x1="100%" y1="0%" x2="0%" y2="100%"><stop offset="0%" stop-color="#D4E6F1" stop-opacity=".95"/><stop offset="50%" stop-color="#85C1E9" stop-opacity=".85"/><stop offset="100%" stop-color="#2E86C1" stop-opacity=".75"/></linearGradient><linearGradient id="f-fk" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#F5EEF8" stop-opacity=".95"/><stop offset="100%" stop-color="#D2B4DE" stop-opacity=".85"/></linearGradient><linearGradient id="f-ni" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#EAFFFA" stop-opacity="1"/><stop offset="50%" stop-color="#6BFFD9" stop-opacity="1"/><stop offset="100%" stop-color="#19F5B8" stop-opacity="1"/></linearGradient><linearGradient id="f-nr" x1="100%" y1="0%" x2="0%" y2="100%"><stop offset="0%" stop-color="#EAF9FF" stop-opacity="1"/><stop offset="50%" stop-color="#5FE3FF" stop-opacity="1"/><stop offset="100%" stop-color="#12C8F5" stop-opacity="1"/></linearGradient><linearGradient id="f-nk" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#FBF5FF" stop-opacity="1"/><stop offset="100%" stop-color="#D9A6FF" stop-opacity="1"/></linearGradient></defs><circle class="msb-bg" cx="50" cy="50" r="44" fill="#0B1D2E"/><g class="msb-rest"><path class="msb-petal p1" d="M 48 68 C 31 64, 23 52, 37 48 C 46 45, 51 52, 48 68" fill="url(#f-fi)"/><path class="msb-petal p2" d="M 52 68 C 69 64, 77 52, 63 48 C 54 45, 49 52, 52 68" fill="url(#f-fr)"/><path class="msb-petal p3" d="M 48 60 C 33 56, 29 38, 43 32 C 49 29, 52 40, 48 60" fill="url(#f-fr)"/><path class="msb-petal p4" d="M 52 60 C 67 56, 71 38, 57 32 C 51 29, 48 40, 52 60" fill="url(#f-fi)"/><path class="msb-petal p5" d="M 50 64 C 44 61, 42 53, 50 49 C 58 53, 56 61, 50 64" fill="url(#f-fk)"/></g><g class="msb-bloom"><path class="msb-petal p1" d="M 48 68 C 31 64, 23 52, 37 48 C 46 45, 51 52, 48 68" fill="url(#f-ni)"/><path class="msb-petal p2" d="M 52 68 C 69 64, 77 52, 63 48 C 54 45, 49 52, 52 68" fill="url(#f-nr)"/><path class="msb-petal p3" d="M 48 60 C 33 56, 29 38, 43 32 C 49 29, 52 40, 48 60" fill="url(#f-nr)"/><path class="msb-petal p4" d="M 52 60 C 67 56, 71 38, 57 32 C 51 29, 48 40, 52 60" fill="url(#f-ni)"/><path class="msb-petal p5" d="M 50 64 C 44 61, 42 53, 50 49 C 58 53, 56 61, 50 64" fill="url(#f-nk)"/></g><g class="msb-sparks"><g transform="translate(30.0 40.0)"><path class="msb-spark s1" d="M 0 3.9 C -2.9 1.8, -3.4 -2.1, 0 -3.9 C 3.4 -2.1, 2.9 1.8, 0 3.9"/></g><g transform="translate(70.0 39.0)"><path class="msb-spark s2" d="M 0 3.9 C -2.9 1.8, -3.4 -2.1, 0 -3.9 C 3.4 -2.1, 2.9 1.8, 0 3.9"/></g><g transform="translate(27.0 54.0)"><path class="msb-spark s3" d="M 0 3.9 C -2.9 1.8, -3.4 -2.1, 0 -3.9 C 3.4 -2.1, 2.9 1.8, 0 3.9"/></g><g transform="translate(73.0 53.0)"><path class="msb-spark s4" d="M 0 3.9 C -2.9 1.8, -3.4 -2.1, 0 -3.9 C 3.4 -2.1, 2.9 1.8, 0 3.9"/></g><g transform="translate(42.0 31.0)"><path class="msb-spark s5" d="M 0 3.9 C -2.9 1.8, -3.4 -2.1, 0 -3.9 C 3.4 -2.1, 2.9 1.8, 0 3.9"/></g><g transform="translate(58.0 31.0)"><path class="msb-spark s6" d="M 0 3.9 C -2.9 1.8, -3.4 -2.1, 0 -3.9 C 3.4 -2.1, 2.9 1.8, 0 3.9"/></g></g><circle class="msb-core" cx="50" cy="48" r="4" fill="#FFFFFF" opacity=".75"/><circle class="msb-core" cx="50" cy="52" r="2.5" fill="#FFFFFF" opacity=".5"/></svg><span>MySweetPea</span></a>
@@ -208,6 +274,7 @@ html[data-theme="light"]{background:#E7EDEA;color-scheme:light}
     <script src="/assets/js/lenis-init.js?v=106" defer></script>
     <script src="/assets/js/site.js?v=106" defer></script>
     <script src="/assets/js/premium.js?v=106" defer></script>
+    <script src="/assets/js/home-page.js" defer></script>
     <script>
     if ('serviceWorker' in navigator) {
         window.addEventListener('load', function () {
