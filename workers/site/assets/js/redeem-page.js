@@ -20,6 +20,38 @@
  input.style.cssText='position:absolute;inset:0;width:100%;height:100%;opacity:0;cursor:text;z-index:3';
  document.querySelector('.redeem-code-group').appendChild(input);
  function codeValidFull(v){var t=v.toUpperCase().trim();return /^(PEA|FAM)-[A-Z0-9]{8}$/.test(t);}
+ /* === Live DB check (single owner — moved here from site.js) ===
+    Every edit re-queries the database: the painted verdict ALWAYS belongs to the
+    exact code currently in the input. A monotonic seq token means in-flight
+    fetches for older values can never paint; the per-value memo (dbValue/dbState)
+    reuses a verdict on blur/refocus of an UNCHANGED code without refetching. */
+ var checkTimer=null,checkSeq=0,dbState='idle',dbValue='';
+ function metaRow(pre,tail,complete,full){
+  var norm=pre+'-'+tail;
+  if(!complete||!full){clearTimeout(checkTimer);dbState='idle';dbValue='';
+   lhint.textContent=complete?'CHECK CODE':(norm.replace('-','').length?'IN PROGRESS':'AWAITING CODE');
+   lhint.classList.toggle('err',complete&&!full);return;}
+  if(dbValue!==norm){
+   // TIMER RULE: clear ONLY when scheduling a replacement. paint() also fires on
+   // keyup/click/focus for the same value — clearing there would kill the pending
+   // check before it fires (the stuck-at-CHECKING bug).
+   clearTimeout(checkTimer);
+   dbValue=norm;dbState='checking';
+   var seq=++checkSeq;
+   checkTimer=setTimeout(function(){
+    fetch('https://subscribe.mysweetpea.cc/webhook/check-code',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({invite_code:norm})})
+    .then(function(r){return r.text().then(function(t){if(t){try{return JSON.parse(t);}catch(e){return {ok:r.ok};}}return {ok:r.ok};});})
+    .then(function(data){if(seq!==checkSeq)return;dbState=data.ok?'valid':'invalid';
+     lhint.textContent=data.ok?'CODE VALID':'CODE REJECTED';lhint.classList.toggle('err',!data.ok);})
+    .catch(function(){if(seq!==checkSeq)return;dbState='error';
+     lhint.textContent='CHECK FAILED — TRY AGAIN';lhint.classList.add('err');});
+   },600);
+  }
+  if(dbState==='checking'){lhint.textContent='CHECKING…';lhint.classList.remove('err');}
+  else if(dbState==='valid'){lhint.textContent='CODE VALID';lhint.classList.remove('err');}
+  else if(dbState==='invalid'){lhint.textContent='CODE REJECTED';lhint.classList.add('err');}
+  else if(dbState==='error'){lhint.textContent='CHECK FAILED — TRY AGAIN';lhint.classList.add('err');}
+ }
  function paint(){
   // 11 visible slots: cells 0-2 = prefix letters, dash after slot 3, cells 3-10 = 8 tail chars.
   // DESIGN RULE (learned the hard way): NEVER rewrite input.value during typing.
@@ -55,14 +87,7 @@
   ledger.classList.toggle('invalid',complete&&!full);
   lcount.textContent=cl.length+' / 11 CHARACTERS';
   window.__codeMeta=lhint;window.__codeState=complete?(full?'valid':'invalid'):'idle';
-  // Live-check contract: once the code is format-complete, the meta row belongs to
-  // site.js (CHECKING… / CODE VALID / CODE REJECTED — server truth). paint() only
-  // writes the format-level line while INCOMPLETE, so editing a verified code
-  // immediately drops any stale VALID instead of keeping it on screen.
-  if(complete && window.__liveCheckOwner){ return; }
-  lhint.textContent=complete?(full?'CODE COMPLETE — VALID':'CHECK CODE'):(cl.length?'IN PROGRESS':'AWAITING CODE');
-  lhint.classList.toggle('err',complete&&!full);
-  // Sentence hint = guidance only (no progress/validity echo — that's the meta row's job).
+  metaRow(pre,tail,complete,full);
   var cicon=document.getElementById('rc-code-icon');
   update();
  }

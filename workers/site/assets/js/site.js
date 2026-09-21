@@ -724,49 +724,10 @@
     /* === Notify-me buttons (coming-soon services) — removed per request === */
 
     /* === Redeem: live invite-code check (webhook) ===
-       Writes its result into the ledger meta row (window.__codeMeta, set by the
-       inline redeem script) — the sentence hint was removed in polish round 3.
-       States: CHECKING… -> CODE VALID / CODE REJECTED. Format-level feedback
-       (AWAITING / IN PROGRESS / COMPLETE) stays owned by the inline script. */
-    var rcCode = document.getElementById('rc-code');
-    if (rcCode) {
-        var checkTimer = null;
-        var checkSeq = 0;      // increments on every edit; stale fetch results are dropped
-        function setMeta(text, err) {
-            var m = window.__codeMeta;
-            if (!m) return;
-            m.textContent = text;
-            m.classList.toggle('err', !!err);
-        }
-        rcCode.addEventListener('input', function () {
-            clearTimeout(checkTimer);
-            // Any edit immediately re-takes ownership of the meta row: the inline
-            // paint() clears stale results because __liveCheckOwner flips false here.
-            window.__liveCheckOwner = false;
-            var seq = ++checkSeq;                    // monotonic token: only the newest run may paint
-            var code = rcCode.value.trim();
-            var state = window.__codeState || 'idle';
-            if (code.length < 11 || state === 'idle') return;  // format gate: run once all 11 chars are present (valid|invalid)
-            setMeta('CHECKING…', false);
-            window.__liveCheckOwner = true;          // from here the meta row is ours
-            checkTimer = setTimeout(function () {
-                fetch('https://subscribe.mysweetpea.cc/webhook/check-code', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ invite_code: code })
-                }).then(function (r) { return r.text().then(function(t){ if(t){try{return JSON.parse(t);}catch(e){return {ok:r.ok};}} return {ok:r.ok}; }); })
-                  .then(function (data) {
-                      if (seq !== checkSeq) return;  // a newer keystroke owns the row now
-                      setMeta(data.ok ? 'CODE VALID' : 'CODE REJECTED', !data.ok);
-                  })
-                  .catch(function () {
-                      // NEVER claim VALID on a network failure — say the check failed.
-                      if (seq !== checkSeq) return;
-                      setMeta('CHECK FAILED — TRY AGAIN', true);
-                  });
-            }, 600);
-        });
-    }
+       MOVED into assets/js/redeem-page.js (single owner — this block ran BEFORE
+       the dynamically-created #rc-code input existed, so it never attached after
+       the script was externalized; every edit now re-checks from there). */
+    
 
     })();
 
