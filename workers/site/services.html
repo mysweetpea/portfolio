@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+<meta charset="UTF-8">
 <style id="msp-paint-guard">/* Paint guard: prevents the pre-CSS white flash on navigation.
    Measured: with stylesheets in flight the page painted pure white (255,255,255)
    because no early background/color-scheme was set. Keep this FIRST in <head>. */
@@ -23,20 +24,20 @@ html[data-theme="light"]{background:#E7EDEA;color-scheme:light}
   document.documentElement.classList.add('js');
   setTimeout(function(){
     if(!window.__mspRevealInit)document.documentElement.classList.remove('js');
-  },2500);
+  },6000);
 })();
 </script>
-    <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="robots" content="noindex, nofollow, noarchive, nosnippet, noimageindex">
 
     <title>MySweetPea — Services</title>
     <meta name="description" content="Explore MySweetPea's self-hosted services: media, files, photos, passwords, chat, and more — all private, no ads, no tracking.">
     <meta name="theme-color" content="#0C1316">
+    <meta name="theme-color" media="(prefers-color-scheme: light)" content="#E7EDEA">
     <meta property="og:title" content="MySweetPea — Services">
     <meta property="og:description" content="Explore MySweetPea's self-hosted services: media, files, photos, passwords, chat, and more.">
     <meta property="og:type" content="website">
-    <meta property="og:url" content="https://mysweetpea.cc/services.html">
+    <meta property="og:url" content="https://mysweetpea.cc/services">
     
     <meta property="og:image" content="https://mysweetpea.cc/og-card.png">
     <meta name="twitter:card" content="summary_large_image">
@@ -46,11 +47,11 @@ html[data-theme="light"]{background:#E7EDEA;color-scheme:light}
     <link rel="preload" as="image" href="/logo.svg">
 <link rel="preload" as="font" type="font/woff2" href="/assets/fonts/instrument-serif.woff2" crossorigin>
 <link rel="preload" as="font" type="font/woff2" href="/assets/fonts/archivo-var.woff2" crossorigin>
-                    <link rel="stylesheet" href="/assets/css/fonts.css?v=99">
-    <link rel="stylesheet" href="/assets/css/site.css?v=99">
-    <link rel="stylesheet" href="/assets/css/premium.css?v=99">
-    <link rel="stylesheet" href="/assets/css/type-tokens.css?v=99">
-    <link rel="stylesheet" href="/assets/css/hermes-type.css?v=99">
+                    <link rel="stylesheet" href="/assets/css/fonts.css?v=100">
+    <link rel="stylesheet" href="/assets/css/site.css?v=100">
+    <link rel="stylesheet" href="/assets/css/premium.css?v=100">
+    <link rel="stylesheet" href="/assets/css/type-tokens.css?v=100">
+    <link rel="stylesheet" href="/assets/css/hermes-type.css?v=100">
 <link rel="canonical" href="https://mysweetpea.cc/services">
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"Organization","name":"MySweetPea","url":"https://mysweetpea.cc","logo":"https://mysweetpea.cc/logo.png","description":"Private, self-hosted alternatives to the services you use every day. No ads, no tracking, no subscriptions — community funded.","email":"support@mysweetpea.cc","sameAs":["https://github.com/mysweetpea"]}</script>
 </head>
@@ -216,7 +217,7 @@ html[data-theme="light"]{background:#E7EDEA;color-scheme:light}
     <div class="lightbox" id="serviceLightbox" role="dialog" aria-modal="true" aria-hidden="true">
         <figure class="lightbox-figure">
             <button class="lightbox-close" type="button" data-action="close-lightbox" aria-label="Close screenshot">&times;</button>
-            <div class="lightbox-shotwrap"><img id="lightboxShot" src="" alt=""></div>
+            <div class="lightbox-shotwrap"><img id="lightboxShot" alt=""></div>
             <figcaption class="lightbox-caption">
                 <div class="lightbox-head">
                     <span class="lightbox-ico" id="lightboxIco"></span>
@@ -237,11 +238,11 @@ html[data-theme="light"]{background:#E7EDEA;color-scheme:light}
         </figure>
     </div>
 
-    <script src="/assets/js/lenis.min.js?v=99" defer></script>
-    <script src="/assets/js/lenis-init.js?v=99" defer></script>
-    <script src="/assets/js/site.js?v=99" defer></script>
-    <script src="/assets/js/premium.js?v=99" defer></script>
-    <script src="/assets/js/services-page.js?v=99" defer></script>
+    <script src="/assets/js/lenis.min.js?v=100" defer></script>
+    <script src="/assets/js/lenis-init.js?v=100" defer></script>
+    <script src="/assets/js/site.js?v=100" defer></script>
+    <script src="/assets/js/premium.js?v=100" defer></script>
+    <script src="/assets/js/services-page.js?v=100" defer></script>
     <script>
     if ('serviceWorker' in navigator) {
         window.addEventListener('load', function () {

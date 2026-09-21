@@ -115,27 +115,37 @@
             asciiPre.textContent = out;
         }
 
-        var rafId = 0, running = false, visible = true, reduced = false;
-        var lastTs = 0;
+        var rafId = 0, running = false, pageVisible = true, inView = false, reduced = false;
+        var lastTs = 0, lastPhase = 0;
         function frame(ts) {
-            if (!visible || !running) { rafId = 0; return; }
-            if (ts - lastTs >= 100) { lastTs = ts; renderRipple(ts / 1000); }
+            if (!pageVisible || !inView || !running) { rafId = 0; return; }
+            if (ts - lastTs >= 100) { lastTs = ts; lastPhase = ts / 1000; renderRipple(lastPhase); }
             rafId = requestAnimationFrame(frame);
         }
-        function start() { if (!running && !reduced) { running = true; lastTs = 0; rafId = requestAnimationFrame(frame); } }
-        function stop() { running = false; if (rafId) cancelAnimationFrame(rafId); rafId = 0; }
+        /* Single gate: animate only while the strip is on screen AND the tab
+           is visible. (Previously visibilitychange restarted the loop even
+           when the observer had stopped it for an off-screen hero, so a
+           hide/show cycle with the hero scrolled away resumed a hidden rAF.) */
+        function syncRipple() {
+            var should = pageVisible && inView && !reduced;
+            if (should && !running) { running = true; lastTs = 0; rafId = requestAnimationFrame(frame); }
+            else if (!should && running) { running = false; if (rafId) cancelAnimationFrame(rafId); rafId = 0; }
+        }
         document.addEventListener('visibilitychange', function () {
-            visible = !document.hidden;
-            visible ? start() : stop();
+            pageVisible = !document.hidden;
+            syncRipple();
         });
         var asciiObserver = new IntersectionObserver(function (entries) {
             entries.forEach(function (entry) {
-                if (entry.isIntersecting) start(); else stop();
+                inView = entry.isIntersecting;
+                syncRipple();
             });
         }, { rootMargin: '160px 0px' });
         asciiObserver.observe(asciiPre);
 
-        // Rebuild the grid on resize/orientation change (mobile rotation)
+        // Rebuild the grid on resize/orientation change (mobile rotation).
+        // Re-render at the CURRENT phase — a t=0 re-render visibly snaps the
+        // wave pattern mid-animation.
         var resizeTimer = 0;
         window.addEventListener('resize', function () {
             clearTimeout(resizeTimer);
@@ -143,18 +153,19 @@
                 var newCols = computeCols();
                 if (newCols !== COLS) {
                     buildCells();
-                    renderRipple(reduced ? 1.2 : 0);
+                    renderRipple(reduced ? 1.2 : lastPhase);
                 }
             }, 200);
         });
 
         // Reduced-motion: render one static frame instead of animating
-        if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        if (reduceMotion.matches) {
             reduced = true;
             renderRipple(1.2);
         } else {
             renderRipple(0);
-            start();
+            /* Animation begins once the IntersectionObserver reports the
+               strip in view; initial state is intentionally stopped. */
         }
     }
 
@@ -183,78 +194,101 @@
         toast.appendChild(text);
         toast.appendChild(close);
         stack.appendChild(toast);
+        var dismissTimer = 0;
         function dismiss() {
+            /* Cancel the auto-dismiss timer and guard against double-dismiss
+               (close click + 5s timer both firing re-added toast-out and
+               scheduled remove() twice). */
+            if (dismissTimer) { clearTimeout(dismissTimer); dismissTimer = 0; }
+            if (toast.isConnected === false) return;
             toast.classList.add('toast-out');
-            setTimeout(function () { toast.remove(); }, 260);
+            dismissTimer = setTimeout(function () { dismissTimer = 0; toast.remove(); }, 260);
         }
-        setTimeout(dismiss, 5000);
+        dismissTimer = setTimeout(dismiss, 5000);
         return toast;
     };
 
-    /* === 4. Live status dots on service cards (services page) === */
+    /* === 4+5. Live status dots on service cards + footer status widget ===
+       Both widgets consume the SAME heartbeat payload — fetch it once and
+       share the result (two independent fetches issued duplicate requests on
+       the services page, the only page with both widgets). */
     var SERVICE_MONITORS = {
         vaultwarden: 1, matrix: 2, affine: 3, koalasync: 4,
         jellyfin: 5, seerr: 6, nextcloud: 7, immich: 8, openwebui: 9
     };
-    var cards = document.querySelectorAll('.service-card[data-service]');
-    if (cards.length) {
-        fetch('https://status.mysweetpea.cc/api/status-page/heartbeat/public')
-            .then(function (r) { return r.ok ? r.json() : Promise.reject(); })
-            .then(function (data) {
-                var hb = data && data.heartbeatList;
-                if (!hb) return;
-                cards.forEach(function (card) {
-                    var key = card.getAttribute('data-service');
-                    var id = SERVICE_MONITORS[key];
-                    if (!id) return;
-                    var list = hb[id];
-                    if (!list || !list.length) return;
-                    var up = list[list.length - 1].status === 1;
-                    var dot = card.querySelector('.status-dot');
-                    if (!dot) return;
-                    dot.classList.remove('status-down', 'status-unknown');
-                    if (!up) dot.classList.add('status-down');
-                    dot.title = up ? 'Operational' : 'Down';
-                    dot.setAttribute('aria-label', up ? 'Status: operational' : 'Status: down');
-                });
-            })
-            .catch(function () {
-                cards.forEach(function (card) {
-                    var dot = card.querySelector('.status-dot');
-                    if (dot) dot.classList.add('status-unknown');
-                });
-            });
-    }
-
-    /* === 5. Footer status widget === */
-    var footerStatus = document.getElementById('footerStatus');
-    var footerStatusText = document.getElementById('footerStatusText');
-    if (footerStatus && footerStatusText) {
-        fetch('https://status.mysweetpea.cc/api/status-page/heartbeat/public')
-            .then(function (r) { return r.ok ? r.json() : Promise.reject(); })
-            .then(function (data) {
-                var hb = data && data.heartbeatList;
-                if (!hb) throw new Error('no data');
-                var down = 0, total = 0;
-                // Count only our 9 known service monitors — the public page
-                // also includes the mysweetpea.cc website itself.
-                Object.keys(SERVICE_MONITORS).forEach(function (key) {
-                    var list = hb[SERVICE_MONITORS[key]];
-                    if (!list || !list.length) return;
-                    total++;
-                    if (list[list.length - 1].status !== 1) down++;
-                });
-                if (down === 0) {
-                    footerStatusText.textContent = 'All systems operational';
-                    footerStatus.classList.add('online');
-                } else {
-                    footerStatusText.textContent = down + ' of ' + total + ' services down';
-                    footerStatus.classList.add('offline');
+    function applyHeartbeat(hb) {
+        /* Card dots */
+        var cards = document.querySelectorAll('.service-card[data-service]');
+        if (cards.length) {
+            cards.forEach(function (card) {
+                var dot = card.querySelector('.status-dot');
+                if (!dot) return;
+                var id = SERVICE_MONITORS[card.getAttribute('data-service')];
+                var list = (hb && id) ? hb[id] : null;
+                if (!list || !list.length) {
+                    /* No heartbeat for this monitor (unknown/renumbered ID):
+                       the default dot styling reads as healthy — mark it
+                       unknown instead of silently claiming uptime. */
+                    dot.classList.add('status-unknown');
+                    dot.title = 'Status unknown';
+                    dot.setAttribute('aria-label', 'Status: unknown');
+                    return;
                 }
-            })
-            .catch(function () {
+                var up = list[list.length - 1].status === 1;
+                dot.classList.remove('status-down', 'status-unknown');
+                if (!up) dot.classList.add('status-down');
+                dot.title = up ? 'Operational' : 'Down';
+                dot.setAttribute('aria-label', up ? 'Status: operational' : 'Status: down');
+            });
+        }
+        /* Footer pill */
+        var footerStatus = document.getElementById('footerStatus');
+        var footerStatusText = document.getElementById('footerStatusText');
+        if (footerStatus && footerStatusText) {
+            var down = 0, total = 0;
+            // Count only our 9 known service monitors — the public page
+            // also includes the mysweetpea.cc website itself.
+            Object.keys(SERVICE_MONITORS).forEach(function (key) {
+                var list = hb ? hb[SERVICE_MONITORS[key]] : null;
+                if (!list || !list.length) return;
+                total++;
+                if (list[list.length - 1].status !== 1) down++;
+            });
+            if (total === 0) {
+                /* Payload without data for ANY known monitor ID (malformed
+                   response or Kuma renumbering): "All systems operational"
+                   here would be a lie — report unavailable. */
                 footerStatusText.textContent = 'Status unavailable';
                 footerStatus.classList.add('degraded');
-            });
+            } else if (down === 0) {
+                footerStatusText.textContent = 'All systems operational';
+                footerStatus.classList.add('online');
+            } else {
+                footerStatusText.textContent = down + ' of ' + total + ' services down';
+                footerStatus.classList.add('offline');
+            }
+        }
     }
+    function markAllUnknown() {
+        document.querySelectorAll('.service-card[data-service] .status-dot').forEach(function (dot) {
+            dot.classList.add('status-unknown');
+            dot.title = 'Status unknown';
+            dot.setAttribute('aria-label', 'Status: unknown');
+        });
+        var footerStatus = document.getElementById('footerStatus');
+        var footerStatusText = document.getElementById('footerStatusText');
+        if (footerStatus && footerStatusText) {
+            footerStatusText.textContent = 'Status unavailable';
+            footerStatus.classList.add('degraded');
+        }
+    }
+    var heartbeatPromise = fetch('https://status.mysweetpea.cc/api/status-page/heartbeat/public')
+        .then(function (r) { return r.ok ? r.json() : Promise.reject(new Error('HTTP ' + r.status)); })
+        .then(function (data) {
+            var hb = data && data.heartbeatList;
+            if (!hb) throw new Error('no heartbeatList');
+            applyHeartbeat(hb);
+        })
+        .catch(function () { markAllUnknown(); });
+
 })();
