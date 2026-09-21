@@ -1906,54 +1906,46 @@ body[data-page='redeem'] .verify-banner { border: none; border-left: none; backg
 body[data-page='redeem'] .verify-banner strong { color: var(--text-dim); font-weight: 600; }
 body[data-page='redeem'] .verify-banner a { color: var(--sage); border-bottom: 1px solid rgba(163,201,182,.4); padding-bottom: 1px; }
 [data-theme="light"] body[data-page='redeem'] .verify-banner { color: var(--text-dim); }
+/* ==== Services polish (Sep 20, OCR-consolidated) ====
+   User: "I like my current setup, polish it." Surgical, additive:
+   3x3 grid at 1440, interior hierarchy, M3 hover, pill-on-own-row,
+   focus ring, rhythm. Replaces the r2b/r2c patch-on-patch block. */
 
-
-/* ==== Services polish round 2 (Sep 20) — surgical, additive only ====
-   User: "I like my current setup, polish it." Fixes the measured defects only:
-   3-col grid at 1440 (was 2 + orphan), card interior hierarchy, hover craft,
-   section rhythm. No structural changes. */
-
-/* 3 clean columns at 1440 (9 cards = 3x3); keeps 2-col at tablet */
 body[data-page='services'] .services-grid { grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px; }
 
-/* Card interior: quiet hierarchy lift */
-body[data-page='services'] .service-card h3 { font-size: 1.12rem; letter-spacing: .01em; }
+/* interior hierarchy */
+body[data-page='services'] .service-card h3 { font-size: 1.12rem; letter-spacing: .01em; line-height: 1.25; }
 body[data-page='services'] .service-card p { font-size: .9rem; line-height: 1.6; color: var(--text-dim); }
 body[data-page='services'] .service-card .service-icon img { width: 30px; height: 30px; }
 
-/* Hover: M3 decelerate + hairline glow (same grammar as redeem card) */
-body[data-page='services'] .service-card { transition: transform .22s cubic-bezier(.05,.7,.1,1), border-color .18s ease, background .18s ease, box-shadow .22s ease; }
-body[data-page='services'] .service-card:hover { transform: translateY(-3px); box-shadow: 0 14px 34px -14px rgba(0,0,0,.5), inset 0 1px 0 0 rgba(255,255,255,.05); }
+/* transition: full override INCLUDING opacity so the .reveal entrance still animates
+   (transition-property must contain opacity for the reveal fade to run) */
+body[data-page='services'] .service-card { position: relative;
+    transition: transform .7s ease, opacity .7s ease, border-color .18s ease, background .18s ease, box-shadow .22s ease; }
+/* once the reveal has settled, hand transform back to the fast hover curve */
+.js .reveal.visible { transition: transform .22s cubic-bezier(.05,.7,.1,1), border-color .18s ease, background .18s ease, box-shadow .22s ease; }
+body[data-page='services'] .service-card:hover { transform: translateY(-3px);
+    box-shadow: 0 14px 34px -14px rgba(0,0,0,.5), inset 0 1px 0 0 rgba(255,255,255,.05); }
+[data-theme="light"] body[data-page='services'] .service-card:hover { box-shadow: 0 14px 30px -16px rgba(46,61,59,.35); }
 @media (hover:hover) { body[data-page='services'] .service-card:hover .service-icon img { filter: drop-shadow(0 0 6px rgba(163,201,182,.35)); } }
 
-/* Focus ring for keyboard users (cards are role=button) */
 body[data-page='services'] .service-card:focus-visible { outline: 2px solid var(--sage); outline-offset: 2px; }
-
-/* Meta line: tighter tracking */
 body[data-page='services'] .sp-meta { letter-spacing: .04em; }
 
-/* Tier pill: quieter (was competing with the title) */
+/* header column: pill row on top, then icon+title+meta row */
+body[data-page='services'] .service-card .service-header { flex-wrap: nowrap; flex-direction: column; align-items: stretch; gap: 8px; }
+body[data-page='services'] .service-card .tier-pill { order: -1; align-self: flex-start; }
+body[data-page='services'] .service-card .service-title-wrap { display: flex; flex-direction: row; align-items: center; gap: 12px; min-width: 0; }
+body[data-page='services'] .service-card .service-title-wrap .sp-meta { margin-left: auto; flex: none; }
 body[data-page='services'] .tier-pill { opacity: .92; }
 body[data-page='services'] .service-card:hover .tier-pill { opacity: 1; }
 
-/* Section rhythm: divider gap above grids tightened to kill the floaty feel */
 body[data-page='services'] .tier-divider { margin: 34px auto 22px; }
 
 
-/* polish r2b: title wrap fix — pill was stealing title width at 3 cols */
-body[data-page='services'] .service-card .service-header { flex-wrap: nowrap; }
-body[data-page='services'] .service-card .service-title-wrap { min-width: 0; flex: 1; }
-body[data-page='services'] .service-card .service-title-wrap h3 { line-height: 1.25; }
-body[data-page='services'] .service-card .tier-pill { flex: none; }
-
-
-/* polish r2c: pill leaves the header flow — absolute top-right, title owns its row */
-body[data-page='services'] .service-card { position: relative; }
-body[data-page='services'] .service-card .tier-pill { order: -1; align-self: flex-start; margin: 0 0 10px; }
-body[data-page='services'] .service-card .service-header { flex-wrap: nowrap; padding-right: 0; flex-direction: column; align-items: stretch; gap: 10px; }
-body[data-page='services'] .service-card .service-header::after { content: none; }
-body[data-page='services'] .service-card .tier-pill { order: -1; align-self: flex-start; }
-body[data-page='services'] .service-card .service-header .service-title-wrap { display: flex; align-items: center; gap: 12px; }
-body[data-page='services'] .service-card .service-header .service-title-wrap .sp-meta { margin-left: auto; flex: none; }
-body[data-page='services'] .service-card .service-title-wrap { min-width: 0; flex: 1; }
-body[data-page='services'] .service-card .service-title-wrap h3 { white-space: normal; line-height: 1.25; overflow-wrap: anywhere; }
+/* transition authority: site.css:3976 sets transition !important (theme-smooth), so
+   ours must also be !important to restore reveal-fade + fast hover lift on cards */
+body[data-page='services'] .service-card.service-card { transition:
+    transform .7s ease, opacity .7s ease, border-color .18s ease, background .18s ease, box-shadow .22s ease !important; }
+.js .service-card.service-card.reveal.visible { transition:
+    transform .22s cubic-bezier(.05,.7,.1,1), border-color .18s ease, background .18s ease, box-shadow .22s ease, opacity .7s ease !important; }
