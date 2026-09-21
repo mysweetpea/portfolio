@@ -95,7 +95,7 @@ html[data-theme="light"]{background:#E7EDEA;color-scheme:light}
 
 
 
-<main id="main-content" class="content-wrapper">
+<main id="main-content" tabindex="-1" class="content-wrapper">
         <div class="about-x-ticker" role="status" aria-label="Live service status ticker">
             <div class="about-x-ticker-in">
                 <span class="about-x-tk"><i class="about-x-dot" aria-hidden="true"></i>jellyfin</span>
@@ -107,7 +107,7 @@ html[data-theme="light"]{background:#E7EDEA;color-scheme:light}
                 <span class="about-x-tk"><i class="about-x-dot" aria-hidden="true"></i>affine</span>
                 <span class="about-x-tk"><i class="about-x-dot" aria-hidden="true"></i>open-webui</span>
                 <span class="about-x-tk"><i class="about-x-dot" aria-hidden="true"></i>koalasync</span>
-                <span class="about-x-tk about-x-tk-state" id="aboutTickerState">ALL SYSTEMS OPERATIONAL · LIVE</span>
+                <span class="about-x-tk about-x-tk-state" id="aboutTickerState" role="status" aria-live="polite">ALL SYSTEMS OPERATIONAL · LIVE</span>
             </div>
         </div>
         <header class="about-x-hero">
@@ -116,7 +116,7 @@ html[data-theme="light"]{background:#E7EDEA;color-scheme:light}
             <p class="about-x-hero-sub">Nine self-hosted services — media, photos, passwords, notes, chat — tended by one person and funded by the people who use them. No ads. No tracking. No subscriptions.</p>
             <div class="about-x-bignum reveal">
                 <div class="about-x-bn about-x-lead">
-                    <p class="about-x-live" id="aboutUptimeState"><i class="about-x-dot about-x-dot-on" aria-hidden="true"></i><span class="about-x-live-txt">LIVE · LAST 24 H</span></p>
+                    <p class="about-x-live" id="aboutUptimeState" role="status"><i class="about-x-dot about-x-dot-on" aria-hidden="true"></i><span class="about-x-live-txt">LIVE · LAST 24 H</span></p>
                     <p class="about-x-bv"><span id="aboutUptimePct" data-count="99.9">99.9</span><small>%</small></p>
                     <p class="about-x-bl">Uptime across all services</p>
                 </div>
@@ -146,12 +146,13 @@ html[data-theme="light"]{background:#E7EDEA;color-scheme:light}
                         </div>
                         <div class="about-x-duo">
                             <div class="about-x-prose">
-                                <p class="about-x-lead reveal">MySweetPea began as a single Jellyfin server on a repurposed laptop — one family movie collection in one place, instead of scattered drives and rotating streaming subscriptions.</p>
-                                <p class="about-x-lead reveal reveal-delay-1">Friends and family asked to share it. Sharing meant growing up: real accounts, encrypted vaults, nightly off-site backups, a domain, monitoring that pages a phone at 3&nbsp;a.m. <strong>The hobby became infrastructure.</strong></p>
-                                <p class="about-x-lead reveal reveal-delay-2">Today it's a small private garden — <strong>nine services, tended daily</strong>, answerable to no advertiser, algorithm or acquisition. It stays small on purpose.</p>
+                                <p class="about-x-lead reveal">MySweetPea started about six months ago, out of frustration. It felt like every big company was harvesting more and more of our data — privacy online had basically disappeared. The breaking point for me was age-verification laws: governments passing identity checks for ordinary browsing, with checks being built into operating systems themselves. Online anonymity was being legislated away, and I didn't want to accept that as normal.</p>
+                                <p class="about-x-lead reveal reveal-delay-1">So I started self-hosting on my own machine, with Docker. I expected a chore and found something I genuinely love: services I control completely — no ads, no tracking, no subscriptions. Pretty quickly I wanted more. Plenty of people are sick of the same things I am, so why keep this to one person? I built a proper server so the garden could reach beyond just me.</p>
+                                <p class="about-x-lead reveal reveal-delay-2">The hardware tells its own story. I began on spare parts, and family kept handing me their old unused machines — junk to them, <strong>server nodes to me</strong>. That scrap-heap garden now runs <strong>nine services, tended daily</strong>, answerable to no advertiser, algorithm or acquisition. And I'm still having fun improving it — which is probably the most honest thing about this place: it's run by one person who actually enjoys running it.</p>
                             </div>
                             <dl class="about-x-factsheet reveal reveal-delay-1">
-                                <div class="about-x-fs-row"><dt class="about-x-fs-k">Founded</dt><dd class="about-x-fs-v"><b>2024</b>, one laptop</dd></div>
+                                <div class="about-x-fs-row"><dt class="about-x-fs-k">Started</dt><dd class="about-x-fs-v"><b>2026</b>, one machine + Docker</dd></div>
+                                <div class="about-x-fs-row"><dt class="about-x-fs-k">Hardware</dt><dd class="about-x-fs-v"><b>reclaimed</b> family machines</dd></div>
                                 <div class="about-x-fs-row"><dt class="about-x-fs-k">Grown to</dt><dd class="about-x-fs-v"><b>9 services</b> · one sign-in</dd></div>
                                 <div class="about-x-fs-row"><dt class="about-x-fs-k">Funding</dt><dd class="about-x-fs-v">community, <b>one-time</b></dd></div>
                                 <div class="about-x-fs-row"><dt class="about-x-fs-k">Backups</dt><dd class="about-x-fs-v"><span class="about-x-ok">nightly</span>, on-site + off-site</dd></div>

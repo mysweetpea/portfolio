@@ -91,7 +91,7 @@
             var sum = 0, n = 0;
             Object.keys(MONITOR_IDS).forEach(function (name) {
                 var v = data.uptimeList[MONITOR_IDS[name] + '_24'];
-                if (typeof v === 'number') { sum += v; n++; }
+                if (typeof v === 'number' && v >= 0 && v <= 1) { sum += v; n++; }
             });
             if (!n) return Promise.reject();
             var avg = Math.round((sum / n) * 10) / 10;
