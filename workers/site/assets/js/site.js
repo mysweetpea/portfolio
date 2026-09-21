@@ -762,18 +762,26 @@
             .then(function (data) {
                 var hb = data && data.heartbeatList;
                 if (!hb) throw new Error('no data');
-                var down = [];
+                var down = [], seen = 0;
                 // Count only our 9 known service monitors — the public page
                 // also includes the mysweetpea.cc website itself.
                 Object.keys(STATUS_NAMES).forEach(function (id) {
                     var list = hb[id];
                     if (!list || !list.length) return;
+                    seen++;
                     var last = list[list.length - 1];
                     if (last.status !== 1) {
                         down.push(STATUS_NAMES[id] || ('Service ' + id));
                     }
                 });
-                if (down.length === 0) {
+                if (seen === 0) {
+                    /* Payload with data for NONE of our monitors (malformed
+                       response or Kuma renumbering): claiming "all
+                       operational" here would be a lie. */
+                    homeStatusText.textContent = 'Status unavailable — check the status page';
+                    homeStatus.classList.remove('online', 'offline');
+                    homeStatus.classList.add('degraded');
+                } else if (down.length === 0) {
                     homeStatusText.textContent = 'All systems operational';
                     homeStatus.classList.remove('degraded', 'offline');
                     homeStatus.classList.add('online');
