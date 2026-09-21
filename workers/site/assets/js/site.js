@@ -404,6 +404,7 @@
     var CMDK_ITEMS = [];
     var CMDK_SERVICES_LOADED = false;
     var CMDK_SERVICE_ITEMS = [];   // parsed once, reused on every open
+    var SERVICES_URL = '/services.html';
 
     function cmdkBuildIndex() {
         var items = [];
@@ -432,10 +433,13 @@
         CMDK_ITEMS = items;
 
         if (!CMDK_SERVICES_LOADED) {
-            CMDK_SERVICES_LOADED = true;
-            fetch('/services.html')
+            /* Latch ONLY on success - a transient fetch failure previously
+               set the flag before the request resolved, permanently removing
+               service entries from the palette for the page lifetime. */
+            fetch(SERVICES_URL)
                 .then(function (r) { return r.ok ? r.text() : Promise.reject(); })
                 .then(function (html) {
+                    CMDK_SERVICES_LOADED = true;
                     var parsed = [];
                     var doc = new DOMParser().parseFromString(html, 'text/html');
                     doc.querySelectorAll('.service-card[data-service]').forEach(function (card) {
@@ -448,7 +452,7 @@
                         var desc = card.querySelector('p');
                         parsed.push({
                             label: name,
-                            url: '/services.html',
+                            url: SERVICES_URL,
                             kind: 'service',
                             icon: icon ? icon.getAttribute('src') : '',
                             desc: desc ? desc.textContent.trim() : ''
@@ -498,15 +502,28 @@
             cmdkList.innerHTML = '<div class="cmdk-empty">No matches found.</div>';
             return;
         }
+        function esc(s) {
+            return String(s).replace(/[&<>"']/g, function (c) {
+                return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
+            });
+        }
+        function safeUrl(u) {
+            /* data is dev/DOM-scraped, but a javascript: URL in an href would
+               execute on click - whitelist http(s) and relative paths. */
+            var s = String(u || '#');
+            return /^(https?:|\/|#)/i.test(s) ? s : '#';
+        }
         cmdkList.innerHTML = cmdkFiltered.map(function (item, i) {
-            var icon = item.icon ? '<img src="' + item.icon + '" alt="" loading="lazy">' : '';
-            var desc = item.desc ? '<span class="cmdk-desc">' + item.desc + '</span>' : '';
-            return '<a class="cmdk-item' + (i === cmdkActive ? ' active' : '') + '" href="' + item.url + '" role="option" data-i="' + i + '">' +
-                icon + '<span class="cmdk-label">' + item.label + desc + '</span><span class="cmdk-kind">' + item.kind + '</span></a>';
+            var icon = item.icon ? '<img src="' + esc(item.icon) + '" alt="" loading="lazy">' : '';
+            var desc = item.desc ? '<span class="cmdk-desc">' + esc(item.desc) + '</span>' : '';
+            return '<a class="cmdk-item' + (i === cmdkActive ? ' active' : '') + '" href="' + esc(safeUrl(item.url)) + '" role="option" data-i="' + i + '">' +
+                icon + '<span class="cmdk-label">' + esc(item.label) + desc + '</span><span class="cmdk-kind">' + esc(item.kind) + '</span></a>';
         }).join('');
     }
 
+    var cmdkLastTrigger = null;
     function cmdkOpen() {
+        cmdkLastTrigger = document.activeElement;
         backdrop.classList.add('open');
         cmdkInput.value = '';
         cmdkFiltered = cmdkBuildIndex();
@@ -515,7 +532,12 @@
         cmdkInput.focus();
     }
     function cmdkClose() {
+        if (!backdrop.classList.contains('open')) return;
         backdrop.classList.remove('open');
+        /* Return focus to the invoking control (nav search button / Cmd+K
+           context) so keyboard users are not dropped at <body>. */
+        if (cmdkLastTrigger && typeof cmdkLastTrigger.focus === 'function') cmdkLastTrigger.focus();
+        cmdkLastTrigger = null;
     }
 
     document.addEventListener('keydown', function (e) {
@@ -526,9 +548,19 @@
         }
         if (!backdrop.classList.contains('open')) return;
         if (e.key === 'Escape') cmdkClose();
-        else if (e.key === 'ArrowDown') { e.preventDefault(); cmdkActive = Math.min(cmdkActive + 1, cmdkFiltered.length - 1); cmdkRender(); }
+        else if (e.key === 'ArrowDown') { if (cmdkFiltered.length) { e.preventDefault(); cmdkActive = Math.min(cmdkActive + 1, cmdkFiltered.length - 1); cmdkRender(); } }
         else if (e.key === 'ArrowUp') { e.preventDefault(); cmdkActive = Math.max(cmdkActive - 1, 0); cmdkRender(); }
         else if (e.key === 'Enter' && cmdkFiltered[cmdkActive]) { window.location.href = cmdkFiltered[cmdkActive].url; }
+        else if (e.key === 'Tab') {
+            /* Minimal focus trap: the backdrop is aria-modal - keep Tab cycling
+               inside the palette instead of leaking to the page behind. */
+            var f = backdrop.querySelectorAll('input, a.cmdk-item, button');
+            if (f.length) {
+                var first = f[0], last = f[f.length - 1];
+                if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+                else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+            }
+        }
     });
 
     cmdkInput.addEventListener('input', function () {
@@ -556,19 +588,35 @@
         if (!btn) { return; }
         var text = btn.getAttribute('data-copy') || btn.getAttribute('data-email') || '';
         if (!text) { return; }
-        var done = function() {
-            var orig = btn.textContent;
-            btn.textContent = 'Copied!';
-            btn.classList.add('copied');
-            setTimeout(function() { btn.textContent = orig; btn.classList.remove('copied'); }, 2000);
-        };
+        /* Swap ONLY a dedicated .copy-label text node when present (buttons
+           may contain icons - textContent nuked them permanently); show
+           'Copied!' on real success, 'Copy failed' on real failure. */
+        var label = btn.querySelector('.copy-label');
+        var savedLabel = label ? label.textContent : null;
+        var busy = btn.classList.contains('copied') || btn.classList.contains('copy-failed');
+        if (busy) return;
+        function feedback(cls, msg) {
+            btn.classList.add(cls);
+            if (label) label.textContent = msg;
+            else if (btn.children.length === 0) btn.textContent = msg;
+            setTimeout(function() {
+                btn.classList.remove(cls);
+                if (label) label.textContent = savedLabel;
+                else if (btn.children.length === 0) btn.textContent = text;
+            }, 2000);
+        }
         if (navigator.clipboard && navigator.clipboard.writeText) {
-            navigator.clipboard.writeText(text).then(done).catch(done);
+            navigator.clipboard.writeText(text).then(
+                function() { feedback('copied', 'Copied!'); },
+                function() { feedback('copy-failed', 'Copy failed'); }
+            );
         } else {
             var ta = document.createElement('textarea');
             ta.value = text; document.body.appendChild(ta); ta.select();
-            try { document.execCommand('copy'); } catch (err) {}
-            document.body.removeChild(ta); done();
+            var ok = false;
+            try { ok = document.execCommand('copy'); } catch (err) {}
+            document.body.removeChild(ta);
+            feedback(ok ? 'copied' : 'copy-failed', ok ? 'Copied!' : 'Copy failed');
         }
     });
 })();
@@ -601,10 +649,19 @@
 
     /* === Card entrance stagger (index-based) === */
     var grids = document.querySelectorAll('.features-grid, .services-grid, .coming-soon-grid, .testimonials-grid, .members-teaser-grid');
+    var staggerReduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     grids.forEach(function (grid) {
         Array.prototype.forEach.call(grid.children, function (card, i) {
+            if (staggerReduced) return;
             var delay = Math.min(i * 0.08, 0.5);
             card.style.transitionDelay = delay + 's';
+            /* Clear after the entrance so hover/press transitions are not
+               delayed by up to 0.5s for the life of the page. */
+            card.addEventListener('transitionend', function clear(e) {
+                if (e.target !== card) return;
+                card.style.transitionDelay = '';
+                card.removeEventListener('transitionend', clear);
+            });
         });
     });
 
@@ -614,6 +671,19 @@
     try { savedTheme = localStorage.getItem('msp-theme'); } catch (e) {}
     if (!savedTheme && window.matchMedia('(prefers-color-scheme: light)').matches) {
         root.setAttribute('data-theme', 'light');
+    }
+    /* Live OS-theme sync (only while no explicit saved choice exists -
+       a saved msp-theme always wins until the user clears it). */
+    if (window.matchMedia) {
+        var osScheme = window.matchMedia('(prefers-color-scheme: light)');
+        var schemeHandler = function (e) {
+            var saved = null;
+            try { saved = localStorage.getItem('msp-theme'); } catch (err) {}
+            if (saved) return;
+            root.setAttribute('data-theme', e.matches ? 'light' : 'dark');
+        };
+        if (typeof osScheme.addEventListener === 'function') osScheme.addEventListener('change', schemeHandler);
+        else if (typeof osScheme.addListener === 'function') osScheme.addListener(schemeHandler);
     }
 
     /* === First-visit welcome modal — removed per request === */
