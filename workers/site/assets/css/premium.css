@@ -2095,6 +2095,7 @@ body[data-page='services'] .service-card .service-title-wrap .sp-meta { margin-t
    as a centered group between two whisper-fade hairlines (same structure for all tiers).
    Notches of the ticket cards above must not collide: dividers keep their own row. */
 body[data-page='services'] .tdiv { display: flex; align-items: center; gap: 16px; margin: 0 auto; }
+body[data-page='services'] .tdiv { margin-top: 56px; margin-bottom: 36px; }
 /* optical nudge: +2px right margin on text/chip compensates the medallion's visual
    weight so the GROUP reads centered next to the heavier left circle */
 body[data-page='services'] .tdiv .tt,
