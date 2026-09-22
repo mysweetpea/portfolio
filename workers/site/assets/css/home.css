@@ -76,21 +76,15 @@ body[data-page='home'] .feature-card.garden-card .feature-icon img{width:34px;he
 
 
 
-/* ===== V4b: step connectors — glowing dot-and-line, tuned per viewport ===== */
+/* ===== V4b: step connectors — MOBILE ONLY (desktop is a clean gap, no connector) ===== */
 .hero-steps { position: relative; }
 .hero-steps li { position: relative; }
-/* DESKTOP: single glow dot centered in the column gap (26px) — no dash line,
-   the dot alone reads as flow without the 'weird' floating tick. */
-.hero-steps li + li::before { content:''; position:absolute; left:-13px; top:50%;
-    margin-top:-2.5px; width:5px; height:5px; border-radius:50%;
-    background: var(--sage); opacity:.75;
-    box-shadow: 0 0 8px rgba(163,201,182,.6), 0 0 14px rgba(163,201,182,.35); }
 @media (max-width: 760px){
   .hero-steps { flex-direction: column; gap: 10px; }
-  /* MOBILE: keep the short descending glow tick the user liked */
-  .hero-steps li + li::before { left:11px; top:-10px; margin-top:0; width:1px; height:8px;
-      border-radius:0; background: linear-gradient(180deg, transparent, rgba(163,201,182,.55));
-      box-shadow:none; }
+  /* Short descending glow tick between stacked steps */
+  .hero-steps li + li::before { content:''; position:absolute; left:11px; top:-10px;
+      width:1px; height:8px;
+      background: linear-gradient(180deg, transparent, rgba(163,201,182,.55)); }
 }
 
 

@@ -15,14 +15,15 @@
   function animateCount(el){
     var target = parseFloat(el.getAttribute('data-count'));
     var dec = parseInt(el.getAttribute('data-dec') || '0', 10);
-    if (!isFinite(target)) { el.textContent = el.getAttribute('data-count') || ''; return; }
-    if (reduce || !(target > 0)) { el.textContent = target.toFixed(dec); return; }
+    var suffix = el.getAttribute('data-suffix') || '';
+    if (!isFinite(target)) { el.textContent = (el.getAttribute('data-count') || '') + suffix; return; }
+    if (reduce || !(target > 0)) { el.textContent = target.toFixed(dec) + suffix; return; }
     var t0 = null, dur = 1100;
     function step(ts){
       if(!t0) t0 = ts;
       var p = Math.min((ts - t0)/dur, 1);
       var eased = 1 - Math.pow(1-p, 4);
-      el.textContent = (target*eased).toFixed(dec);
+      el.textContent = (target*eased).toFixed(dec) + suffix;
       if(p < 1) requestAnimationFrame(step);
     }
     requestAnimationFrame(step);
