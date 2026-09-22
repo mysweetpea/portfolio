@@ -2123,3 +2123,215 @@ body[data-page='services'] .tdiv .chip { flex: none; font-family: var(--t-font-m
     body[data-page='services'] .tdiv .key { width: 44px; height: 44px; }
     body[data-page='services'] .tdiv .key img { width: 20px; height: 20px; }
 }
+
+/* ===== FORM POLISH v2 (form.html) ===== */
+/* 1. Icon medallions — gold for the live Sweet Pea tier, sage for the Seedling placeholder. */
+body[data-page='form'] .access-choice-card:not(.coming-soon) .access-choice-icon {
+    width: 52px; height: 52px; border-radius: 50%;
+    background: radial-gradient(circle at 50% 38%, rgba(217,168,108,.18), rgba(217,168,108,.14));
+    border: 1px solid rgba(217,168,108,.35);
+    box-shadow: 0 0 22px rgba(217,168,108,.15);
+}
+body[data-page='form'] .access-choice-icon img { display: block; }
+body[data-page='form'] .access-choice-card.coming-soon .access-choice-icon {
+    width: 52px; height: 52px; border-radius: 50%;
+    background: radial-gradient(circle at 50% 38%, rgba(163,201,182,.14), rgba(163,201,182,.09));
+    border: 1px solid rgba(163,201,182,.28);
+    box-shadow: 0 0 18px rgba(163,201,182,.10);
+}
+/* 2. Card hover/selected states — consistent lift, gold selection ring. */
+body[data-page='form'] .access-choice-card {
+    transition: transform .25s ease, border-color .25s ease, box-shadow .25s ease;
+}
+body[data-page='form'] .access-choice-card[data-tier].selected {
+    border-color: rgba(217,168,108,.5);
+    box-shadow: 0 0 0 1px rgba(217,168,108,.4), 0 8px 26px rgba(217,168,108,.12);
+}
+body[data-page='form'] .access-choice-card:focus-visible {
+    box-shadow: 0 0 0 3px rgba(143,175,181,.28), 0 12px 32px rgba(0,0,0,.24);
+}
+/* 3. Seedling coming-soon skin — intentional dashed placeholder, not a faded card. */
+body[data-page='form'] .access-choice-card.coming-soon {
+    opacity: 1;
+    background: rgba(14,22,26,.25);
+    border: 1px dashed rgba(143,175,181,.25);
+    box-shadow: none;
+}
+body[data-page='form'] .access-choice-card.coming-soon::after {
+    content: none;
+    animation: none;
+}
+body[data-page='form'] .access-choice-card.coming-soon:hover,
+body[data-page='form'] .access-choice-card.coming-soon:focus-visible {
+    transform: none;
+    border-color: rgba(143,175,181,.25);
+    background: rgba(14,22,26,.25);
+    box-shadow: none;
+}
+body[data-page='form'] .access-choice-card.coming-soon .access-choice-price {
+    display: inline-block;
+    padding: 4px 12px;
+    border: 1px solid rgba(163,201,182,.3);
+    border-radius: 999px;
+    font-size: var(--t-fs-3xs);
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    color: var(--sage);
+}
+/* 4. verify-banner — symmetric radius, sage accent edge, glass surface. */
+body[data-page='form'] .verify-banner {
+    border: 1px solid rgba(163,201,182,.16);
+    border-left: 3px solid rgba(163,201,182,.55);
+    border-radius: 12px;
+    background: rgba(19,30,34,.55);
+    backdrop-filter: blur(16px) saturate(1.2);
+    -webkit-backdrop-filter: blur(16px) saturate(1.2);
+}
+/* 5. Inputs — calm focus ring; validation icon springs in. */
+body[data-page='form'] .form-input:focus {
+    border-color: rgba(143,175,181,.55);
+    box-shadow: 0 0 0 3px rgba(143,175,181,.14);
+}
+body[data-page='form'] .validation-icon {
+    transform: scale(.5);
+    transition: opacity .2s ease, transform .25s cubic-bezier(.34,1.56,.64,1);
+}
+body[data-page='form'] .validation-icon.show { transform: scale(1); }
+/* 6. req/opt tags — quiet hairline pills. */
+body[data-page='form'] .req-tag, body[data-page='form'] .opt-tag {
+    border: 1px solid rgba(143,175,181,.22);
+    border-radius: 999px;
+    font-size: var(--t-fs-4xs);
+    letter-spacing: .08em;
+    padding: 2px 8px;
+    color: var(--text-dim);
+    background: transparent;
+}
+/* 7. verify-check — spring checkmark, visible focus, roomier hover. */
+body[data-page='form'] .verify-check { border-radius: 12px; }
+body[data-page='form'] .verify-check:hover {
+    background: rgba(14,22,26,.35);
+    border-color: rgba(163,201,182,.3);
+}
+body[data-page='form'] .verify-check input:focus-visible + .vc-box {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(143,175,181,.3);
+}
+body[data-page='form'] .vc-box::after {
+    transform: scale(.4);
+    transition: opacity .18s ease, transform .25s cubic-bezier(.34,1.56,.64,1);
+}
+body[data-page='form'] .verify-check input:checked + .vc-box::after {
+    opacity: 1;
+    transform: scale(1);
+}
+/* 8. form-progress — status rail: gradient dots, connector fill sweep. */
+body[data-page='form'] .form-progress .step .dot {
+    transition: background .3s ease, color .3s ease, border-color .3s ease, box-shadow .3s ease;
+}
+body[data-page='form'] .form-progress .step.done .dot {
+    background: linear-gradient(135deg, #8FAFB5, #A3C9B6);
+    color: #0C1316;
+    border-color: transparent;
+    box-shadow: 0 0 10px rgba(143,175,181,.25);
+}
+body[data-page='form'] .form-progress .connector {
+    position: relative;
+    overflow: hidden;
+}
+body[data-page='form'] .form-progress .connector::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(90deg, #8FAFB5, #A3C9B6);
+    transform: scaleX(0);
+    transform-origin: left center;
+    transition: transform .4s ease;
+}
+body[data-page='form'] .form-progress .connector.done::after { transform: scaleX(1); }
+body[data-page='form'] .form-progress .connector:has(+ .step.active)::after { transform: scaleX(1); }
+/* 9. Panel reveal — form card fades and rises once the panel is unhidden. */
+@keyframes formCardReveal {
+    from { opacity: 0; transform: translateY(14px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+body[data-page='form'] .tier-form-panel.revealed .form-card {
+    animation: formCardReveal .45s cubic-bezier(.22,1,.36,1) both;
+}
+/* 10. Submit button — lift, glow, press, focus ring; success state; loading overlay blur. */
+body[data-page='form'] .form-submit {
+    min-height: 48px;
+    transition: transform .25s ease, box-shadow .25s ease, background .25s ease, opacity .2s ease;
+}
+body[data-page='form'] .form-submit:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 26px rgba(143,175,181,.25);
+}
+body[data-page='form'] .form-submit:active:not(:disabled) { transform: translateY(1px); }
+body[data-page='form'] .form-submit:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(143,175,181,.35);
+}
+body[data-page='form'] .form-submit.success {
+    background: linear-gradient(135deg, #A3C9B6, #8FAFB5);
+    pointer-events: none;
+}
+body[data-page='form'] .form-overlay {
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+}
+/* 11. username-checks — checkmark feedback eases to sage. */
+body[data-page='form'] .uc-item { transition: color .2s ease; }
+body[data-page='form'] .uc-icon {
+    transition: color .2s ease, background-color .2s ease, box-shadow .2s ease;
+}
+body[data-page='form'] .uc-item.ok .uc-icon {
+    box-shadow: 0 0 0 1px rgba(163,201,182,.35);
+}
+/* 12. Vine divider between tier choice and form sections — subtle. */
+body[data-page='form'] main > .vine-divider { margin: 8px auto; }
+/* 13. Hero micro-polish — form peeks above the fold sooner. */
+body[data-page='form'] .access-hero { padding-top: 72px; }
+body[data-page='form'] .access-hero img.logo { width: 140px; height: 140px; }
+/* 14. redeem-callout — glass chip; gentle lift on its button. */
+body[data-page='form'] .redeem-callout {
+    border: 1px solid rgba(143,175,181,.22);
+    border-radius: 14px;
+    background: rgba(14,22,26,.35);
+    backdrop-filter: blur(16px) saturate(1.2);
+    -webkit-backdrop-filter: blur(16px) saturate(1.2);
+}
+body[data-page='form'] .redeem-callout .btn {
+    transition: transform .25s ease, box-shadow .25s ease, background-color .2s ease, border-color .2s ease;
+}
+body[data-page='form'] .redeem-callout .btn:hover,
+body[data-page='form'] .redeem-callout .btn:focus-visible {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 22px rgba(143,175,181,.22);
+}
+/* 15. Mobile — stacked callout, wrapping progress rail, comfortable touch targets. */
+@media (max-width: 640px) {
+    body[data-page='form'] .access-hero { padding-top: 56px; }
+    body[data-page='form'] .access-hero img.logo { width: 120px; height: 120px; }
+    body[data-page='form'] .form-progress { flex-wrap: wrap; justify-content: center; }
+    body[data-page='form'] .form-input { min-height: 44px; }
+    body[data-page='form'] .form-submit { min-height: 48px; }
+    body[data-page='form'] .redeem-callout .btn { width: 100%; }
+}
+/* 16. Reduced motion — everything above settles instantly. */
+@media (prefers-reduced-motion: reduce) {
+    body[data-page='form'] .access-choice-card,
+    body[data-page='form'] .validation-icon,
+    body[data-page='form'] .vc-box::after,
+    body[data-page='form'] .form-progress .step .dot,
+    body[data-page='form'] .form-progress .connector::after,
+    body[data-page='form'] .uc-item,
+    body[data-page='form'] .uc-icon,
+    body[data-page='form'] .form-submit,
+    body[data-page='form'] .redeem-callout .btn {
+        transition-duration: .01ms;
+    }
+    body[data-page='form'] .tier-form-panel.revealed .form-card {
+        animation: none;
+    }
+}
