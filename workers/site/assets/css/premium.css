@@ -685,9 +685,6 @@
     background: transparent;
 }
 .top-nav .nav-btn svg { flex: none; opacity: 0.6; transition: opacity 0.18s; }
-.top-nav .nav-btn:hover {
-    color: var(--primary-bright);
-}
 /* Retire section 11's teal hover glow. The :not() qualifier is required: the
    rule being retired is .top-nav .nav-btn:not([aria-current="page"]):hover
    (specificity 0,4,0), which beats a plain .top-nav .nav-btn:hover (0,3,0)
@@ -725,7 +722,6 @@
 .top-nav .nav-signin:hover {
     color: var(--primary-bright);
     background: color-mix(in srgb, var(--primary) 12%, transparent);
-    border-color: color-mix(in srgb, var(--primary) 22%, transparent);
 }
 .top-nav .nav-account-chip svg { width: 15px; height: 15px; }
 
@@ -1926,7 +1922,7 @@ body[data-page='services'] .service-card .service-icon img { width: 30px; height
 body[data-page='services'] .service-card { position: relative;
     transition: transform .7s ease, opacity .7s ease, border-color .18s ease, background .18s ease, box-shadow .22s ease; }
 /* once the reveal has settled, hand transform back to the fast hover curve */
-.js .reveal.visible { transition: transform .22s cubic-bezier(.05,.7,.1,1), border-color .18s ease, background .18s ease, box-shadow .22s ease; }
+.js .reveal.visible { transition: opacity .7s ease, transform .22s cubic-bezier(.05,.7,.1,1), border-color .18s ease, background .18s ease, box-shadow .22s ease; }
 body[data-page='services'] .service-card:hover { transform: translateY(-3px);
     box-shadow: 0 14px 34px -14px rgba(0,0,0,.5), inset 0 1px 0 0 rgba(255,255,255,.05); }
 [data-theme="light"] body[data-page='services'] .service-card:hover { box-shadow: 0 14px 30px -16px rgba(46,61,59,.35); }
@@ -2032,8 +2028,7 @@ body[data-page='services'] .stub-live i { width: 6px;
     background: var(--sage);
     font-style: normal;
     opacity: .85; }
-@keyframes msp-stub-pulse { 0%, 100% { box-shadow: 0 0 6px rgba(163, 201, 182, .6); opacity: 1; }
-    50% { box-shadow: 0 0 9px 2px rgba(163, 201, 182, .75); opacity: .7; } }
+ }
 
 /* coming-soon placeholder chip */
 body[data-page='services'] .stub-soon { font-family: 'JetBrains Mono', 'Cascadia Mono', ui-monospace, Menlo, monospace;

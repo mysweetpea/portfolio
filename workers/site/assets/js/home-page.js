@@ -35,4 +35,26 @@
   }
   if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded', initMotion);
   else initMotion();
+
+/* garden live line: paints the shared status line under the garden grid.
+   Kuma contract: heartbeatList keyed by monitor id (1-9 = our services); status===1 means up. */
+  var live = document.getElementById('gardenLive');
+  if (live) {
+    var txt = live.querySelector('.gl-txt');
+    var aborter = ('AbortController' in window) ? new AbortController() : null;
+    var abortTimer = aborter ? setTimeout(function(){ aborter.abort(); }, 10000) : 0;
+    fetch('https://status.mysweetpea.cc/api/status-page/heartbeat/public', aborter ? { signal: aborter.signal } : {})
+      .then(function(r){ if (abortTimer) clearTimeout(abortTimer); return r.ok ? r.json() : Promise.reject(); })
+      .then(function(data){
+        var hb = data && data.heartbeatList;
+        if (!hb) throw new Error('no data');
+        var up = 0, seen = 0;
+        for (var id = 1; id <= 9; id++) {
+          var beats = hb[String(id)];
+          if (beats && beats.length) { seen++; if (beats[beats.length - 1].status === 1) up++; }
+        }
+        if (txt) txt.textContent = seen ? (up + '/' + seen + ' services live') : 'live status unavailable';
+      })
+      .catch(function(){ if (txt) txt.textContent = 'live status unavailable'; });
+  }
 })();
