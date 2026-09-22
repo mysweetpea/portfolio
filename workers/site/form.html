@@ -60,7 +60,7 @@ html[data-theme="light"]{background:#E7EDEA;color-scheme:light}
 <link rel="preload" as="font" type="font/woff2" href="/assets/fonts/archivo-var.woff2" crossorigin>
                     <link rel="stylesheet" href="/assets/css/fonts.css?v=108">
     <link rel="stylesheet" href="/assets/css/site.css?v=108">
-    <link rel="stylesheet" href="/assets/css/premium.css?v=109">
+    <link rel="stylesheet" href="/assets/css/premium.css?v=110">
     <link rel="stylesheet" href="/assets/css/type-tokens.css?v=108">
     <link rel="stylesheet" href="/assets/css/hermes-type.css?v=108">
 <link rel="canonical" href="https://mysweetpea.cc/form">
@@ -137,41 +137,58 @@ html[data-theme="light"]{background:#E7EDEA;color-scheme:light}
         <div class="vine-divider" aria-hidden="true"></div>
 
         <section class="tier-form-section" aria-live="polite">
-            <div class="form-progress" aria-hidden="true">
-                <span class="step active"><span class="dot">1</span>Choose tier</span>
-                <span class="connector"></span>
-                <span class="step"><span class="dot">2</span>Submit request</span>
-                <span class="connector"></span>
-                <span class="step"><span class="dot">3</span>Get invite code</span>
-            </div>
             <div class="tier-form-panel" id="panel-seedling" hidden>
                 <div class="form-card glow-card">
                     <div class="form-overlay" id="seedling-overlay"><div class="spinner" aria-hidden="true"></div></div>
                     <form class="form-body" novalidate>
-                    <span class="form-tier-label">Seedling tier</span>
-                    <h2>Complete your Seedling request</h2>
+                    <div class="arch-window" aria-hidden="true">
+                        <svg class="arch" viewBox="0 0 120 44" preserveAspectRatio="none"><path d="M8 43 V20 a52 52 0 0 1 104 0 V43"/></svg>
+                        <div class="bloom" id="ga-bloom">
+                            <span class="petal" style="--r:0deg"></span>
+                            <span class="petal core" style="--r:72deg"></span>
+                            <span class="petal" style="--r:144deg"></span>
+                            <span class="petal core" style="--r:216deg"></span>
+                            <span class="petal" style="--r:288deg"></span>
+                            <span class="heart"></span>
+                        </div>
+                    </div>
+                    <div class="plate">
+                        <span class="form-tier-label">Accession Nº 002 · Seedling</span>
+                        <h2>Request for the Seedling Key</h2>
+                        <span class="latin">Seedling — the garden gives back</span>
+                    </div>
+                    <div class="rail" aria-hidden="true">
+                        <div class="vine"><i></i></div>
+                        <div class="node n1 done"><svg viewBox="0 0 24 24"><path d="M12 21c-4.4-1.7-7-5.2-7-9.5C5 7 8 3.5 12 3s7 4 7 8.5c0 4.3-2.6 7.8-7 9.5z"/></svg></div>
+                        <div class="node n2"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 3.6-6.5 8-6.5s8 2.5 8 6.5"/></svg></div>
+                        <div class="node n3"><svg viewBox="0 0 24 24"><rect x="4" y="6" width="16" height="13" rx="2.5"/><path d="M4 9l8 5.5L20 9"/></svg></div>
+                        <div class="node n4"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3.2"/><path d="M16 12h5M16 8.5h4M15.5 15.5h3.5"/><circle cx="8.5" cy="12" r="4"/></svg></div>
+                        <div class="node n5"><svg viewBox="0 0 24 24"><circle cx="9" cy="9.5" r="5"/><circle cx="15" cy="14.5" r="5"/></svg></div>
+                        <div class="node n6"><svg viewBox="0 0 24 24"><circle cx="8" cy="15" r="4"/><path d="M11 12 20 3M15.5 7.5 18 10M12.5 10.5 15 13"/></svg></div>
+                    </div>
                     <div class="verify-banner" role="note"><strong>Please note:</strong> a real person personally verifies every donation. You will usually receive your invite code by email <strong>within 24 hours</strong> — it is not instant.</div>
                     <ol class="request-steps">
                         <li><strong>Send a $5 or larger crypto donation</strong> using one of the options below.</li>
                         <li><strong>Copy the transaction hash</strong> from your wallet after sending the donation.</li>
                         <li><strong>Submit this form.</strong> We verify your donation and email your invite code.</li>
                     </ol>
-                    <div class="form-group">
-                        <label class="form-label glass-text" for="ga-name">Name <span class="req-tag">required</span></label>
-                        <input type="text" class="form-input" id="ga-name" placeholder="Your name" autocomplete="name" maxlength="60" required>
-                        <span class="validation-icon" id="ga-name-icon" aria-hidden="true"></span>
+                    <div class="srow">
+                        <label class="slabel" for="ga-name">Name<i>as you'd like to be known</i></label>
+                        <div class="sfield"><input type="text" id="ga-name" placeholder="Your name" autocomplete="name" maxlength="60" required><span class="grow"></span></div>
+                        <span class="validation-icon vic" id="ga-name-icon" aria-hidden="true"></span>
                     </div>
-                    <div class="form-group">
-                        <label class="form-label glass-text" for="ga-email">Email <span class="req-tag">required</span></label>
-                        <input type="email" class="form-input" id="ga-email" placeholder="you@example.com" autocomplete="email" maxlength="120" required>
-                        <span class="validation-icon" id="ga-email-icon" aria-hidden="true"></span>
+                    <div class="srow">
+                        <label class="slabel" for="ga-email">Email<i>where your key is sent</i></label>
+                        <div class="sfield"><input type="email" id="ga-email" placeholder="you@example.com" autocomplete="email" maxlength="120" required><span class="grow"></span></div>
+                        <span class="validation-icon vic" id="ga-email-icon" aria-hidden="true"></span>
                     </div>
-                    <div class="form-group">
-                        <label class="form-label glass-text" for="ga-username">Preferred username <span class="req-tag">required</span></label>
-                        <input type="text" class="form-input" id="ga-username" placeholder="Choose a username" autocomplete="username" maxlength="30" required>
-                        <span class="validation-icon" id="ga-username-icon" aria-hidden="true"></span>
+                    <div class="srow">
+                        <label class="slabel" for="ga-username">Username<i>your name in the garden</i></label>
+                        <div class="sfield"><input type="text" id="ga-username" placeholder="Choose a username" autocomplete="username" maxlength="30" required><span class="grow"></span>
                         <div class="form-hint">At least 3 characters; letters, numbers, and underscores only.</div>
                         <div class="username-checks" id="ga-username-checks"><span class="uc-item" data-uc="len"><span class="uc-icon">×</span> At least 3 characters</span><span class="uc-item" data-uc="alnum"><span class="uc-icon">×</span> Letters/Numbers</span><span class="uc-item" data-uc="underscore"><span class="uc-icon">×</span> Underscore only</span></div>
+                        </div>
+                        <span class="validation-icon vic" id="ga-username-icon" aria-hidden="true"></span>
                     </div>
                     <fieldset class="form-group crypto-fieldset">
                         <legend class="form-label glass-text">Choose a cryptocurrency</legend>
@@ -186,13 +203,14 @@ html[data-theme="light"]{background:#E7EDEA;color-scheme:light}
                         <div class="copy-hint">Click the address to copy it</div>
                         <div class="qr-wrap" id="qr-wrap" hidden><canvas id="wallet-qr" aria-hidden="true"></canvas><div class="qr-hint">Scan with your mobile wallet</div></div>
                     </div>
-                    <div class="form-group">
-                        <label class="form-label glass-text" for="ga-txhash">Transaction hash <span class="req-tag">required</span></label>
-                        <input type="text" class="form-input" id="ga-txhash" placeholder="Paste your transaction hash" maxlength="100" required>
-                        <span class="validation-icon" id="ga-txhash-icon" aria-hidden="true"></span>
+                    <div class="srow">
+                        <label class="slabel" for="ga-txhash">Transaction hash<i>proof of your donation</i></label>
+                        <div class="sfield"><input type="text" id="ga-txhash" placeholder="Paste your transaction hash" maxlength="100" required><span class="grow"></span>
                         <div class="form-hint">Required — this lets us match your payment to your request.</div>
+                        </div>
+                        <span class="validation-icon vic" id="ga-txhash-icon" aria-hidden="true"></span>
                     </div>
-                    <label class="verify-check"><input type="checkbox" id="ga-verify" required><span class="vc-box" aria-hidden="true"></span><span class="vc-text">I understand a real person will personally verify my request before my invite code is sent.</span></label>
+                    <label class="verify-check covenant"><input type="checkbox" id="ga-verify" required><span class="cov-head"><span class="seal" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg></span><span class="cov-title">The Gardener's Covenant<b>I understand a real person will personally verify my request before my invite code is sent.</b></span></span><span class="cov-note">Every request is verified by hand. Your invite usually arrives within 24 hours.</span></label>
                     <button type="submit" class="form-submit" id="ga-submit">Submit Seedling Request</button>
                     </form>
                 </div>
@@ -202,25 +220,47 @@ html[data-theme="light"]{background:#E7EDEA;color-scheme:light}
                 <div class="form-card glow-card">
                     <div class="form-overlay" id="sweetpea-overlay"><div class="spinner" aria-hidden="true"></div></div>
                     <form class="form-body" novalidate>
-                    <span class="form-tier-label sweetpea-label">Sweet Pea tier</span>
-                    <h2>Request Sweet Pea access</h2>
+                    <div class="arch-window" aria-hidden="true">
+                        <svg class="arch" viewBox="0 0 120 44" preserveAspectRatio="none"><path d="M8 43 V20 a52 52 0 0 1 104 0 V43"/></svg>
+                        <div class="bloom" id="sp-bloom">
+                            <span class="petal" style="--r:0deg"></span>
+                            <span class="petal core" style="--r:72deg"></span>
+                            <span class="petal" style="--r:144deg"></span>
+                            <span class="petal core" style="--r:216deg"></span>
+                            <span class="petal" style="--r:288deg"></span>
+                            <span class="heart"></span>
+                        </div>
+                    </div>
+                    <div class="plate">
+                        <span class="form-tier-label">Accession Nº 001 · Sweet Pea</span>
+                        <h2>Request for the Garden Key</h2>
+                        <span class="latin">Lathyrus odoratus — grown by hand, admitted by hand</span>
+                    </div>
+                    <div class="rail" aria-hidden="true">
+                        <div class="vine"><i></i></div>
+                        <div class="node n1 done"><svg viewBox="0 0 24 24"><path d="M12 21c-4.4-1.7-7-5.2-7-9.5C5 7 8 3.5 12 3s7 4 7 8.5c0 4.3-2.6 7.8-7 9.5z"/></svg></div>
+                        <div class="node n2"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 3.6-6.5 8-6.5s8 2.5 8 6.5"/></svg></div>
+                        <div class="node n3"><svg viewBox="0 0 24 24"><rect x="4" y="6" width="16" height="13" rx="2.5"/><path d="M4 9l8 5.5L20 9"/></svg></div>
+                        <div class="node n4"><svg viewBox="0 0 24 24"><circle cx="8" cy="15" r="4"/><path d="M11 12 20 3M15.5 7.5 18 10M12.5 10.5 15 13"/></svg></div>
+                    </div>
                     <div class="verify-banner" role="note"><strong>What happens next:</strong> submit this request and we will review it. If approved, we will email you an invitation code to create your MySweetPea account.</div>
                     <p class="form-desc">No crypto donation or transaction hash is needed for this request. Tell us a little about yourself and we will email you an invite code if approved.</p>
-                    <div class="form-group">
-                        <label class="form-label glass-text" for="sp-name">Name <span class="req-tag">required</span></label>
-                        <input type="text" class="form-input" id="sp-name" placeholder="Your name" autocomplete="name" maxlength="60" required>
-                        <span class="validation-icon" id="sp-name-icon" aria-hidden="true"></span>
+                    <div class="srow">
+                        <label class="slabel" for="sp-name">Name<i>as you'd like to be known</i></label>
+                        <div class="sfield"><input type="text" id="sp-name" placeholder="Your name" autocomplete="name" maxlength="60" required><span class="grow"></span></div>
+                        <span class="validation-icon vic" id="sp-name-icon" aria-hidden="true"></span>
                     </div>
-                    <div class="form-group">
-                        <label class="form-label glass-text" for="sp-email">Email <span class="req-tag">required</span></label>
-                        <input type="email" class="form-input" id="sp-email" placeholder="you@example.com" autocomplete="email" maxlength="120" required>
-                        <span class="validation-icon" id="sp-email-icon" aria-hidden="true"></span>
+                    <div class="srow">
+                        <label class="slabel" for="sp-email">Email<i>where your key is sent</i></label>
+                        <div class="sfield"><input type="email" id="sp-email" placeholder="you@example.com" autocomplete="email" maxlength="120" required><span class="grow"></span></div>
+                        <span class="validation-icon vic" id="sp-email-icon" aria-hidden="true"></span>
                     </div>
-                    <div class="form-group">
-                        <label class="form-label glass-text" for="sp-message">Anything else you would like us to know? <span class="opt-tag">optional</span></label>
-                        <textarea class="form-input" id="sp-message" rows="4" placeholder="A short note is fine — tell us what you plan to use, if you like." maxlength="500"></textarea>
+                    <div class="srow">
+                        <label class="slabel" for="sp-message">Anything else<i>entirely optional</i></label>
+                        <div class="sfield"><textarea id="sp-message" rows="4" placeholder="A short note is fine — tell us what you plan to use, if you like." maxlength="500"></textarea><span class="grow"></span></div>
+                        <span class="vic-spacer" aria-hidden="true"></span>
                     </div>
-                    <label class="verify-check"><input type="checkbox" id="sp-verify" required><span class="vc-box" aria-hidden="true"></span><span class="vc-text">I understand a real person will personally review my request before my invite code is sent.</span></label>
+                    <label class="verify-check covenant"><input type="checkbox" id="sp-verify" required><span class="cov-head"><span class="seal" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg></span><span class="cov-title">The Gardener's Covenant<b>I know a real person will read this — I'm glad to wait.</b></span></span><span class="cov-note">Every request is verified by hand. Your invite usually arrives within 24 hours.</span></label>
                     <button type="submit" class="form-submit" id="sp-submit">Submit Sweet Pea Request</button>
                     </form>
                 </div>
@@ -282,7 +322,7 @@ html[data-theme="light"]{background:#E7EDEA;color-scheme:light}
     <script src="/assets/js/site.js?v=108" defer></script>
     <script src="/assets/js/premium.js?v=107" defer></script>
     <script src="/assets/js/qrcode.min.js?v=107" defer></script>
-    <script src="/assets/js/form-page.js?v=108" defer></script>
+    <script src="/assets/js/form-page.js?v=109" defer></script>
     <script>
     if ('serviceWorker' in navigator) {
         window.addEventListener('load', function () {

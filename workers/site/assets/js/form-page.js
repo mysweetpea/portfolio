@@ -118,4 +118,55 @@
     document.getElementById('sp-submit').addEventListener('click',function(){if(this.disabled)return;post(ENDPOINTS.sweetPeaRequest,{name:document.getElementById('sp-name').value.trim(),email:document.getElementById('sp-email').value.trim(),message:document.getElementById('sp-message').value.trim(),tier:'sweetpea'},this,'Submit Sweet Pea Request','/success.html?type=sweetpea-request','sweetpea-overlay');});
     var requested = new URLSearchParams(location.search).get('tier'); if(requested==='sweetpea'){var card=document.querySelector('.access-choice-card[data-tier="sweetpea"]');if(card)card.click();}
     updateButtons();
+    /* ==== v109 addition — Conservatory Night-Bloom wiring (bloom + vine rail +
+       submit .ready). Presentation-only: reuses the exact predicates defined
+       above (valid()/allValid()/chosenCrypto/checkbox state); adds no new
+       validation rules and does not touch submit gating (the disabled attr
+       stays owned by updateButtons()). ==== */
+    var bloomPanels = [
+        { panelId: 'panel-sweetpea', bloomId: 'sp-bloom', btnId: 'sp-submit',
+          isReady: function () { return allValid(['sp-name', 'sp-email']) && !!(document.getElementById('sp-verify') || {}).checked; },
+          nodeOk: [null,
+            function () { return valid('name', document.getElementById('sp-name').value); },
+            function () { return valid('email', document.getElementById('sp-email').value); },
+            function () { return allValid(['sp-name', 'sp-email']) && !!(document.getElementById('sp-verify') || {}).checked; }] },
+        { panelId: 'panel-seedling', bloomId: 'ga-bloom', btnId: 'ga-submit',
+          isReady: function () { return allValid(['ga-name', 'ga-email', 'ga-username', 'ga-txhash']) && !!chosenCrypto && !!(document.getElementById('ga-verify') || {}).checked; },
+          nodeOk: [null,
+            function () { return valid('name', document.getElementById('ga-name').value); },
+            function () { return valid('email', document.getElementById('ga-email').value); },
+            function () { return valid('username', document.getElementById('ga-username').value); },
+            function () { return !!chosenCrypto; },
+            function () { return valid('tx', document.getElementById('ga-txhash').value) && !!(document.getElementById('ga-verify') || {}).checked; }] }
+    ];
+    function syncBloomAndRail() {
+        bloomPanels.forEach(function (p) {
+            var ready = p.isReady();
+            var bloom = document.getElementById(p.bloomId);
+            if (bloom) bloom.classList.toggle('open', ready);
+            var btn = document.getElementById(p.btnId);
+            if (btn) btn.classList.toggle('ready', ready);
+            var rail = document.querySelector('#' + p.panelId + ' .rail');
+            if (!rail) return;
+            var nodes = rail.querySelectorAll('.node');
+            var done = 0;
+            for (var i = 0; i < nodes.length; i++) {
+                var ok = i === 0 || !!(p.nodeOk[i] && p.nodeOk[i]());
+                nodes[i].classList.toggle('done', ok);
+                if (ok) done++;
+            }
+            var vine = rail.querySelector('.vine');
+            if (vine) vine.style.setProperty('--growth', Math.round((done / nodes.length) * 100) + '%');
+        });
+    }
+    ['sp-name', 'sp-email', 'sp-verify', 'ga-name', 'ga-email', 'ga-username', 'ga-txhash', 'ga-verify'].forEach(function (id) {
+        var el = document.getElementById(id);
+        if (!el) return;
+        el.addEventListener('input', syncBloomAndRail);
+        el.addEventListener('change', syncBloomAndRail);
+    });
+    Array.prototype.forEach.call(document.querySelectorAll('.crypto-option'), function (b) {
+        b.addEventListener('click', syncBloomAndRail);
+    });
+    syncBloomAndRail();
 })();

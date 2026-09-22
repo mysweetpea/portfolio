@@ -2340,3 +2340,497 @@ body[data-page='form'] .form-body { display: block; margin: 0; padding: 0; }
     .toast-stack .toast { animation: none; }
     ::view-transition-group(*), ::view-transition-old(*), ::view-transition-new(*) { animation: none; }
 }
+
+/* ==== Form redesign: Conservatory Night-Bloom (user-approved composite) ====
+   Scope: BOTH tier form panels on form.html only. Glasshouse arch card, night
+   bloom (opens when the panel's requirements are complete), specimen plate
+   header, vine progress rail, specimen rows, Gardener's Covenant, serif
+   submit. Hero, tier choice cards, redeem callout and footer are untouched.
+   All colors come from existing tokens; --f-gold gets a light-theme override
+   because the site defines no light variant for --gold. ==================== */
+body[data-page='form'] .tier-form-panel {
+    --f-gold: var(--gold, #D9A86C);
+    --f-ink: #0B1417;
+    --f-inputbg: rgba(9, 15, 18, .5);
+}
+[data-theme="light"] body[data-page='form'] .tier-form-panel {
+    --f-gold: #8A6428;
+    --f-ink: #F2F6F5;
+    --f-inputbg: rgba(255, 255, 255, .7);
+}
+/* 1. Glasshouse card — square top replaced by the arch outline (::after). */
+body[data-page='form'] .tier-form-panel .form-card {
+    border: 1px solid var(--border);
+    border-top: none;
+    border-radius: 0 0 var(--radius) var(--radius);
+    padding: 0 46px 36px 92px;
+    overflow: hidden;
+}
+body[data-page='form'] .tier-form-panel .form-card::after {
+    content: "";
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 84px;
+    border-radius: 320px 320px 0 0;
+    border: 1px solid var(--border);
+    border-bottom: none;
+    pointer-events: none;
+    background: linear-gradient(180deg, color-mix(in srgb, var(--primary) 7%, transparent), transparent 85%);
+}
+/* 2. Arch window + night bloom — closed at rest (.open toggled by JS). */
+body[data-page='form'] .tier-form-panel .arch-window {
+    height: 88px;
+    display: grid;
+    place-items: center;
+    position: relative;
+    z-index: 1;
+}
+body[data-page='form'] .tier-form-panel .arch-window svg.arch {
+    position: absolute;
+    top: 6px; left: 0; right: 0;
+    width: 100%;
+    height: 44px;
+    stroke: var(--sage);
+    fill: none;
+    stroke-width: 1.1;
+    opacity: .5;
+}
+body[data-page='form'] .tier-form-panel .bloom {
+    width: 58px; height: 58px;
+    position: relative;
+    margin-top: 10px;
+    filter: drop-shadow(0 6px 18px color-mix(in srgb, var(--f-gold) 28%, transparent));
+}
+body[data-page='form'] .tier-form-panel .bloom .petal {
+    position: absolute;
+    left: 50%; top: 52%;
+    width: 23px; height: 36px;
+    border-radius: 50% / 60% 60% 40% 40%;
+    background: linear-gradient(180deg, color-mix(in srgb, var(--f-gold) 75%, transparent), var(--f-gold));
+    opacity: .15;
+    transform-origin: 50% 100%;
+    transform: translate(-50%, -92%) rotate(var(--r)) scaleY(.7);
+    transition: transform .8s cubic-bezier(.34, 1.4, .64, 1), opacity .8s;
+}
+body[data-page='form'] .tier-form-panel .bloom .petal.core {
+    background: linear-gradient(180deg, color-mix(in srgb, var(--sage) 70%, transparent), var(--sage));
+    opacity: .18;
+}
+body[data-page='form'] .tier-form-panel .bloom.open .petal {
+    opacity: .92;
+    transform: translate(-50%, -100%) rotate(var(--r)) scaleY(1);
+}
+body[data-page='form'] .tier-form-panel .bloom .heart {
+    position: absolute;
+    left: 50%; top: 52%;
+    width: 11px; height: 11px;
+    border-radius: 50%;
+    transform: translate(-50%, -50%) scale(.5);
+    background: radial-gradient(circle at 35% 30%, #F3D9A8, var(--f-gold));
+    box-shadow: 0 0 16px 2px color-mix(in srgb, var(--f-gold) 60%, transparent);
+    opacity: 0;
+    transition: opacity .7s .25s, transform .7s .25s;
+}
+body[data-page='form'] .tier-form-panel .bloom.open .heart {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+}
+/* 3. Specimen plate header. */
+body[data-page='form'] .tier-form-panel .plate {
+    text-align: center;
+    padding: 6px 0 20px;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 6px;
+    position: relative;
+}
+body[data-page='form'] .tier-form-panel .plate .form-tier-label {
+    display: block;
+    margin: 0;
+    padding: 0;
+    background: none;
+    border-radius: 0;
+    color: var(--text-faint);
+    font-family: var(--t-font-mono, ui-monospace, 'Cascadia Mono', monospace);
+    font-size: 9.5px;
+    font-weight: 500;
+    letter-spacing: .3em;
+    text-transform: uppercase;
+}
+body[data-page='form'] .tier-form-panel .plate h2 {
+    font-family: var(--t-font-display, 'Instrument Serif', Georgia, serif);
+    font-weight: 400;
+    font-size: 30px;
+    margin: 9px 0 6px;
+    letter-spacing: .01em;
+    color: var(--text);
+}
+body[data-page='form'] .tier-form-panel .plate .latin {
+    font-family: var(--t-font-display, 'Instrument Serif', Georgia, serif);
+    font-style: italic;
+    font-size: 15px;
+    color: var(--f-gold);
+}
+/* 4. Vine rail — grows down the left of the card; nodes gain .done via JS. */
+body[data-page='form'] .tier-form-panel .rail {
+    position: absolute;
+    left: 30px;
+    top: 104px;
+    bottom: 52px;
+    width: 26px;
+}
+body[data-page='form'] .tier-form-panel .rail .vine {
+    position: absolute;
+    left: 12px; top: 10px; bottom: 10px;
+    width: 2px;
+    border-radius: 2px;
+    background: color-mix(in srgb, var(--border) 85%, transparent);
+    overflow: hidden;
+}
+body[data-page='form'] .tier-form-panel .rail .vine i {
+    position: absolute;
+    left: 0; top: 0;
+    width: 100%;
+    height: var(--growth, 0%);
+    background: linear-gradient(180deg, var(--f-gold), var(--sage) 55%, var(--primary));
+    transition: height .6s cubic-bezier(.4, 0, .2, 1);
+}
+body[data-page='form'] .tier-form-panel .rail .node {
+    position: absolute;
+    left: 0;
+    width: 26px; height: 26px;
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    background: var(--f-inputbg);
+    border: 1px solid var(--border);
+    color: var(--text-faint);
+    transition: background .35s, border-color .35s, color .35s;
+}
+body[data-page='form'] .tier-form-panel .rail .node svg {
+    width: 13px; height: 13px;
+    stroke: currentColor;
+    fill: none;
+    stroke-width: 1.8;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+body[data-page='form'] .tier-form-panel .rail .node.done {
+    background: color-mix(in srgb, var(--sage) 24%, var(--f-inputbg));
+    border-color: var(--sage);
+    color: var(--sage);
+}
+body[data-page='form'] .tier-form-panel .rail .n1 { top: -2px; }
+body[data-page='form'] .tier-form-panel .rail .n2 { top: calc(20% - 13px); }
+body[data-page='form'] .tier-form-panel .rail .n3 { top: calc(40% - 13px); }
+body[data-page='form'] .tier-form-panel .rail .n4 { top: calc(60% - 13px); }
+body[data-page='form'] .tier-form-panel .rail .n5 { top: calc(80% - 13px); }
+body[data-page='form'] .tier-form-panel .rail .n6 { top: auto; bottom: -2px; }
+body[data-page='form'] #panel-sweetpea .rail .n2 { top: calc(33% - 13px); }
+body[data-page='form'] #panel-sweetpea .rail .n3 { top: calc(66% - 13px); }
+body[data-page='form'] #panel-sweetpea .rail .n4 { top: auto; bottom: -2px; }
+/* 5. Specimen rows — mono label / underlined serif input / drawn check. */
+body[data-page='form'] .tier-form-panel .srow {
+    position: relative;
+    display: grid;
+    grid-template-columns: 112px 1fr 30px;
+    align-items: end;
+    gap: 13px;
+    padding: 14px 0;
+    border-bottom: 1px dashed color-mix(in srgb, var(--border) 80%, transparent);
+}
+body[data-page='form'] .tier-form-panel .srow:last-of-type { border-bottom: none; }
+body[data-page='form'] .tier-form-panel .slabel {
+    display: block;
+    font-family: var(--t-font-mono, ui-monospace, 'Cascadia Mono', monospace);
+    font-size: 10px;
+    letter-spacing: .18em;
+    text-transform: uppercase;
+    color: var(--text-faint);
+    padding-bottom: 12px;
+    cursor: pointer;
+}
+body[data-page='form'] .tier-form-panel .slabel i {
+    display: block;
+    font-style: normal;
+    letter-spacing: .08em;
+    font-size: 8.5px;
+    margin-top: 3px;
+    color: color-mix(in srgb, var(--text-faint) 70%, transparent);
+}
+body[data-page='form'] .tier-form-panel .sfield { position: relative; min-width: 0; }
+body[data-page='form'] .tier-form-panel .sfield input[type="text"],
+body[data-page='form'] .tier-form-panel .sfield input[type="email"] {
+    width: 100%;
+    background: transparent;
+    border: none;
+    border-bottom: 1px solid var(--border);
+    border-radius: 0;
+    padding: 9px 2px;
+    font-family: var(--t-font-display, 'Instrument Serif', Georgia, serif);
+    font-style: italic;
+    font-size: 16.5px;
+    color: var(--text);
+    outline: none;
+    transition: border-color .25s;
+}
+body[data-page='form'] .tier-form-panel .sfield textarea {
+    display: block;
+    width: 100%;
+    background: transparent;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 10px 12px;
+    font-family: var(--t-font-display, 'Instrument Serif', Georgia, serif);
+    font-style: italic;
+    font-size: 16.5px;
+    line-height: 1.5;
+    color: var(--text);
+    outline: none;
+    resize: vertical;
+    min-height: 96px;
+    transition: border-color .25s;
+}
+body[data-page='form'] .tier-form-panel .sfield textarea:focus { border-color: var(--border-primary); }
+body[data-page='form'] .tier-form-panel .sfield input::placeholder,
+body[data-page='form'] .tier-form-panel .sfield textarea::placeholder {
+    color: color-mix(in srgb, var(--text-faint) 55%, transparent);
+    font-style: italic;
+}
+body[data-page='form'] .tier-form-panel .sfield input:focus { border-bottom-color: transparent; }
+body[data-page='form'] .tier-form-panel .sfield .grow {
+    position: absolute;
+    left: 0; right: 0; bottom: 0;
+    height: 1px;
+    background: linear-gradient(90deg, var(--sage), var(--primary));
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform .35s cubic-bezier(.4, 0, .2, 1);
+    pointer-events: none;
+}
+body[data-page='form'] .tier-form-panel .sfield input:focus ~ .grow,
+body[data-page='form'] .tier-form-panel .sfield textarea:focus ~ .grow { transform: scaleX(1); }
+body[data-page='form'] .tier-form-panel .sfield .form-hint { font-size: .72rem; margin-top: 6px; }
+body[data-page='form'] .tier-form-panel .sfield .username-checks {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px 14px;
+    margin-top: 8px;
+    font-size: .72rem;
+    color: var(--text-faint);
+}
+body[data-page='form'] .tier-form-panel .sfield .username-checks .uc-item.ok { color: var(--sage); }
+/* 6. Drawn-check validation icons (JS still drives .show/.valid/.invalid). */
+body[data-page='form'] .tier-form-panel .srow .validation-icon {
+    position: absolute;
+    right: 2px;
+    bottom: 12px;
+    width: 18px; height: 18px;
+    line-height: normal;
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    font-size: 0;
+    color: transparent;
+    opacity: 0;
+    transform: scale(.6);
+    pointer-events: none;
+    transition: opacity .2s ease, transform .35s cubic-bezier(.34, 1.56, .64, 1);
+}
+body[data-page='form'] .tier-form-panel .srow .validation-icon.show { opacity: 1; transform: scale(1); }
+body[data-page='form'] .tier-form-panel .srow .validation-icon.valid {
+    background: color-mix(in srgb, var(--sage) 22%, transparent);
+}
+body[data-page='form'] .tier-form-panel .srow .validation-icon.valid::before {
+    content: "";
+    width: 10px; height: 10px;
+    background: var(--sage);
+    -webkit-mask: url('/assets/icons/icon-ui-checkmark.svg') center/contain no-repeat;
+    mask: url('/assets/icons/icon-ui-checkmark.svg') center/contain no-repeat;
+}
+body[data-page='form'] .tier-form-panel .srow .validation-icon.invalid {
+    background: color-mix(in srgb, var(--error) 18%, transparent);
+}
+body[data-page='form'] .tier-form-panel .srow .validation-icon.invalid::before {
+    content: "×";
+    font-size: 12px;
+    font-weight: 700;
+    line-height: 1;
+    color: var(--error);
+}
+/* 7. The Gardener's Covenant — wax seal + drawn check (checkbox ids kept). */
+body[data-page='form'] .tier-form-panel .covenant {
+    display: block;
+    margin: 16px 0 24px;
+    padding: 17px 17px 15px;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    position: relative;
+    background: color-mix(in srgb, var(--f-inputbg) 60%, transparent);
+    cursor: pointer;
+}
+body[data-page='form'] .tier-form-panel .covenant:hover { border-color: var(--border-primary); }
+body[data-page='form'] .tier-form-panel .covenant input {
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+    width: 0; height: 0;
+}
+body[data-page='form'] .tier-form-panel .cov-head { display: flex; align-items: center; gap: 12px; }
+body[data-page='form'] .tier-form-panel .seal {
+    flex: none;
+    width: 30px; height: 30px;
+    border-radius: 50%;
+    border: 1.5px solid var(--border);
+    display: grid;
+    place-items: center;
+    transition: background .35s, border-color .35s, box-shadow .35s;
+}
+body[data-page='form'] .tier-form-panel .seal svg {
+    width: 14px; height: 14px;
+    stroke: var(--f-ink);
+    stroke-width: 2.6;
+    fill: none;
+    stroke-dasharray: 20;
+    stroke-dashoffset: 20;
+    transition: stroke-dashoffset .4s .1s ease;
+}
+body[data-page='form'] .tier-form-panel .covenant input:checked ~ .cov-head .seal {
+    background: radial-gradient(circle at 35% 30%, #E5BC85, var(--f-gold) 70%);
+    border-color: var(--f-gold);
+    box-shadow: 0 3px 14px -3px color-mix(in srgb, var(--f-gold) 70%, transparent);
+}
+body[data-page='form'] .tier-form-panel .covenant input:checked ~ .cov-head .seal svg { stroke-dashoffset: 0; }
+body[data-page='form'] .tier-form-panel .covenant input:focus-visible ~ .cov-head .seal {
+    outline: 2px solid var(--primary-bright);
+    outline-offset: 2px;
+}
+body[data-page='form'] .tier-form-panel .cov-title {
+    font-family: var(--t-font-mono, ui-monospace, 'Cascadia Mono', monospace);
+    font-size: 10px;
+    letter-spacing: .22em;
+    text-transform: uppercase;
+    color: var(--text-dim);
+}
+body[data-page='form'] .tier-form-panel .cov-title b {
+    display: block;
+    font-family: var(--t-font-display, 'Instrument Serif', Georgia, serif);
+    font-style: italic;
+    font-size: 16.5px;
+    letter-spacing: 0;
+    text-transform: none;
+    color: var(--text);
+    margin-top: 3px;
+    font-weight: 400;
+    transition: color .3s;
+}
+body[data-page='form'] .tier-form-panel .cov-note {
+    font-size: 12.5px;
+    color: var(--text-faint);
+    margin-top: 10px;
+    padding-left: 42px;
+    line-height: 1.5;
+}
+/* 8. Submit — serif, teal fill when .ready, gold when .success (sent). */
+body[data-page='form'] .tier-form-panel .form-submit {
+    width: 100%;
+    height: 56px;
+    min-height: 56px;
+    padding: 0;
+    border-radius: 14px;
+    border: 1px solid var(--border);
+    background: color-mix(in srgb, var(--f-inputbg) 70%, transparent);
+    color: var(--text-dim);
+    font-family: var(--t-font-display, 'Instrument Serif', Georgia, serif);
+    font-size: 18.5px;
+    font-weight: 400;
+    letter-spacing: .02em;
+    cursor: not-allowed;
+    position: relative;
+    overflow: hidden;
+    isolation: isolate;
+    box-shadow: none;
+    transition: color .3s, border-color .3s, background .3s, transform .3s, box-shadow .3s;
+}
+body[data-page='form'] .tier-form-panel .form-submit::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+    border-radius: inherit;
+    background: linear-gradient(135deg, var(--primary), var(--primary-dim));
+    opacity: 0;
+    transform: none;
+    transition: opacity .3s;
+    pointer-events: none;
+}
+body[data-page='form'] .tier-form-panel .form-submit.ready:not([disabled]) {
+    border-color: transparent;
+    color: var(--f-ink);
+    cursor: pointer;
+}
+body[data-page='form'] .tier-form-panel .form-submit.ready:not([disabled])::after { opacity: 1; transform: none; }
+body[data-page='form'] .tier-form-panel .form-submit.ready:not([disabled]):hover {
+    transform: translateY(-1px);
+    box-shadow: 0 14px 30px -12px color-mix(in srgb, var(--primary) 60%, transparent);
+}
+body[data-page='form'] .tier-form-panel .form-submit.ready:not([disabled]):hover::after { opacity: 1; transform: none; }
+body[data-page='form'] .tier-form-panel .form-submit[disabled] {
+    opacity: 1;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+}
+body[data-page='form'] .tier-form-panel .form-submit[disabled]::after { opacity: 0; }
+body[data-page='form'] .tier-form-panel .form-submit.success {
+    background: linear-gradient(135deg, var(--f-gold), #C09055);
+    border-color: transparent;
+    color: #241A0B;
+    pointer-events: none;
+}
+body[data-page='form'] .tier-form-panel .form-submit.success::after {
+    opacity: 1;
+    background: linear-gradient(135deg, var(--f-gold), #C09055);
+}
+/* Loading spinner (existing JS adds .loading) restored on the new ::after. */
+body[data-page='form'] .tier-form-panel .form-submit.loading::after {
+    top: 50%; left: 50%; right: auto; bottom: auto;
+    width: 20px; height: 20px;
+    margin: -10px 0 0 -10px;
+    background: none;
+    border: 2px solid color-mix(in srgb, var(--primary) 30%, transparent);
+    border-top-color: var(--primary);
+    border-radius: 50%;
+    z-index: 1;
+    opacity: 1;
+    animation: btnSpin .7s linear infinite;
+}
+/* 9. Mobile — rail tucks in, rows go single-column; arch never clips the bloom. */
+@media (max-width: 640px) {
+    body[data-page='form'] .tier-form-panel .form-card { padding: 0 22px 28px 60px; }
+    body[data-page='form'] .tier-form-panel .rail { left: 16px; }
+    body[data-page='form'] .tier-form-panel .srow { grid-template-columns: 1fr; gap: 2px; padding: 12px 0; }
+    body[data-page='form'] .tier-form-panel .slabel { padding-bottom: 0; }
+    body[data-page='form'] .tier-form-panel .sfield input[type="text"],
+    body[data-page='form'] .tier-form-panel .sfield input[type="email"] { padding-right: 26px; }
+    body[data-page='form'] .tier-form-panel .plate h2 { font-size: 25px; }
+}
+/* 10. Reduced motion — bloom/vine/seal/check changes settle instantly. */
+@media (prefers-reduced-motion: reduce) {
+    body[data-page='form'] .tier-form-panel .bloom .petal,
+    body[data-page='form'] .tier-form-panel .bloom .heart,
+    body[data-page='form'] .tier-form-panel .rail .vine i,
+    body[data-page='form'] .tier-form-panel .rail .node,
+    body[data-page='form'] .tier-form-panel .srow .validation-icon,
+    body[data-page='form'] .tier-form-panel .sfield .grow,
+    body[data-page='form'] .tier-form-panel .seal,
+    body[data-page='form'] .tier-form-panel .seal svg,
+    body[data-page='form'] .tier-form-panel .cov-title b,
+    body[data-page='form'] .tier-form-panel .form-submit,
+    body[data-page='form'] .tier-form-panel .form-submit::after {
+        transition: none !important;
+    }
+    /* keep the site's slowed (not frozen) submit spinner under reduced motion */
+    body[data-page='form'] .tier-form-panel .form-submit.loading::after { animation-duration: 2s; }
+}
