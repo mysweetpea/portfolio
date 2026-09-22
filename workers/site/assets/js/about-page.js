@@ -90,7 +90,9 @@
         if (tickerEl) tickerEl.textContent = 'STATUS UNAVAILABLE';
     }
 
-    fetch('https://status.mysweetpea.cc/api/status-page/heartbeat/public')
+    var aborter = ('AbortController' in window) ? new AbortController() : null;
+    var abortTimer = aborter ? setTimeout(function () { aborter.abort(); }, 10000) : 0;
+    fetch('https://status.mysweetpea.cc/api/status-page/heartbeat/public', aborter ? { signal: aborter.signal } : {})
         .then(function (r) { return r.ok ? r.json() : Promise.reject(); })
         .then(function (data) {
             if (!data || !data.uptimeList || !pctEl) return Promise.reject();
@@ -113,5 +115,5 @@
                 pctEl.setAttribute('data-count', s);
             }
         })
-        .catch(markUnreachable);
-})();
+        .then(function () { if (abortTimer) clearTimeout(abortTimer); })
+        .catch(markUnreachable); })();
