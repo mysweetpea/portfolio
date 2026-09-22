@@ -891,7 +891,7 @@
     }
 }
 
-/* Compact crown tier: 1000-1279px. The crowned row needs ~1050px at full
+/* Compact crown tier: 1200-1399px. The crowned row needs ~1050px at full
    padding, so this tier trims padding/gaps to keep 0px overflow down to 1000.
    Proportions of the mockup are unchanged — only breathing room shrinks. */
 @media (min-width: 1200px) and (max-width: 1399px) {
@@ -904,7 +904,7 @@
     .nav-sep { margin: 0 2px 0 5px; }
 }
 
-/* Extra-compact crown tier: 1000-1099px. This is ~100px tighter than the tier
+/* Extra-compact crown tier: 1024-1199px. This is ~100px tighter than the tier
    above can absorb, so trim further rather than let the flex row overflow.
    Covers the 4K-split-at-175% case (1097px) that motivated the breakpoint move. */
 @media (min-width: 1024px) and (max-width: 1199px) {
@@ -951,7 +951,7 @@
 
     .top-nav .nav-logo { padding: 0; gap: 9px; }
 
-    /* The logo mark + wordmark sizing lives in the min-width:1100px grid block,
+    /* The logo mark + wordmark sizing lives in the min-width:1024px crown block,
        so the drawer must restate it or it falls back to site.css's 32px mark
        with no gap (the two elements touch). Keep these in sync with the grid
        block's .nav-logo rules. */
@@ -2028,7 +2028,6 @@ body[data-page='services'] .stub-live i { width: 6px;
     background: var(--sage);
     font-style: normal;
     opacity: .85; }
- }
 
 /* coming-soon placeholder chip */
 body[data-page='services'] .stub-soon { font-family: 'JetBrains Mono', 'Cascadia Mono', ui-monospace, Menlo, monospace;
@@ -2329,4 +2328,15 @@ body[data-page='form'] .redeem-callout .btn:focus-visible {
     body[data-page='form'] .tier-form-panel.revealed .form-card {
         animation: none;
     }
+}
+
+
+/* ==== Form polish r3 (OCR round, Sep 22) ====
+   1) .form-body wrapper (real <form novalidate> panels) must not disturb card layout.
+   2) Reduced-motion opt-out for toastIn/::view-transition (OCR #10). */
+body[data-page='form'] .form-body { display: block; margin: 0; padding: 0; }
+@media (prefers-reduced-motion: reduce) {
+    .toast { animation: none; }
+    .toast-stack .toast { animation: none; }
+    ::view-transition-group(*), ::view-transition-old(*), ::view-transition-new(*) { animation: none; }
 }

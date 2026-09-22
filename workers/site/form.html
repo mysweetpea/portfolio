@@ -23,7 +23,18 @@ html[data-theme="light"]{background:#E7EDEA;color-scheme:light}
   }catch(e){}
   document.documentElement.classList.add('js');
   setTimeout(function(){
-    if(!window.__mspRevealInit)document.documentElement.classList.remove('js');
+    if(!window.__mspRevealInit){
+      /* site.js late/failed: keep content visible. Poll a little longer
+         first (slow connections); only strip html.js as a last resort. */
+      var tries=0;
+      var iv=setInterval(function(){
+        tries++;
+        if(window.__mspRevealInit||tries>=6){
+          clearInterval(iv);
+          if(!window.__mspRevealInit)document.documentElement.classList.remove('js');
+        }
+      },2000);
+    }
   },6000);
 })();
 </script>
@@ -49,7 +60,7 @@ html[data-theme="light"]{background:#E7EDEA;color-scheme:light}
 <link rel="preload" as="font" type="font/woff2" href="/assets/fonts/archivo-var.woff2" crossorigin>
                     <link rel="stylesheet" href="/assets/css/fonts.css?v=108">
     <link rel="stylesheet" href="/assets/css/site.css?v=108">
-    <link rel="stylesheet" href="/assets/css/premium.css?v=108">
+    <link rel="stylesheet" href="/assets/css/premium.css?v=109">
     <link rel="stylesheet" href="/assets/css/type-tokens.css?v=108">
     <link rel="stylesheet" href="/assets/css/hermes-type.css?v=108">
 <link rel="canonical" href="https://mysweetpea.cc/form">
@@ -136,6 +147,7 @@ html[data-theme="light"]{background:#E7EDEA;color-scheme:light}
             <div class="tier-form-panel" id="panel-seedling" hidden>
                 <div class="form-card glow-card">
                     <div class="form-overlay" id="seedling-overlay"><div class="spinner" aria-hidden="true"></div></div>
+                    <form class="form-body" novalidate>
                     <span class="form-tier-label">Seedling tier</span>
                     <h2>Complete your Seedling request</h2>
                     <div class="verify-banner" role="note"><strong>Please note:</strong> a real person personally verifies every donation. You will usually receive your invite code by email <strong>within 24 hours</strong> — it is not instant.</div>
@@ -181,13 +193,15 @@ html[data-theme="light"]{background:#E7EDEA;color-scheme:light}
                         <div class="form-hint">Required — this lets us match your payment to your request.</div>
                     </div>
                     <label class="verify-check"><input type="checkbox" id="ga-verify" required><span class="vc-box" aria-hidden="true"></span><span class="vc-text">I understand a real person will personally verify my request before my invite code is sent.</span></label>
-                    <button type="button" class="form-submit" id="ga-submit">Submit Seedling Request</button>
+                    <button type="submit" class="form-submit" id="ga-submit">Submit Seedling Request</button>
+                    </form>
                 </div>
             </div>
 
             <div class="tier-form-panel" id="panel-sweetpea" hidden>
                 <div class="form-card glow-card">
                     <div class="form-overlay" id="sweetpea-overlay"><div class="spinner" aria-hidden="true"></div></div>
+                    <form class="form-body" novalidate>
                     <span class="form-tier-label sweetpea-label">Sweet Pea tier</span>
                     <h2>Request Sweet Pea access</h2>
                     <div class="verify-banner" role="note"><strong>What happens next:</strong> submit this request and we will review it. If approved, we will email you an invitation code to create your MySweetPea account.</div>
@@ -207,7 +221,8 @@ html[data-theme="light"]{background:#E7EDEA;color-scheme:light}
                         <textarea class="form-input" id="sp-message" rows="4" placeholder="A short note is fine — tell us what you plan to use, if you like." maxlength="500"></textarea>
                     </div>
                     <label class="verify-check"><input type="checkbox" id="sp-verify" required><span class="vc-box" aria-hidden="true"></span><span class="vc-text">I understand a real person will personally review my request before my invite code is sent.</span></label>
-                    <button type="button" class="form-submit" id="sp-submit">Submit Sweet Pea Request</button>
+                    <button type="submit" class="form-submit" id="sp-submit">Submit Sweet Pea Request</button>
+                    </form>
                 </div>
             </div>
         </section>
