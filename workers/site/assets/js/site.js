@@ -1147,7 +1147,11 @@
             t.classList.toggle('active', t.getAttribute('data-value') === value);
         });
         cards.forEach(function (c) {
-            c.classList.toggle('show', c.getAttribute('data-value') === value);
+            var on = c.getAttribute('data-value') === value;
+            c.classList.toggle('show', on);
+            // Reveal may never have fired for cards that were display:none when the
+            // IntersectionObserver scanned — mark them visible as they are shown.
+            if (on) c.classList.add('visible');
         });
     }
 
