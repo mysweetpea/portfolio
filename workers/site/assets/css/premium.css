@@ -2361,8 +2361,9 @@ body[data-page='form'] .tier-form-panel {
 /* 1. Glasshouse card — square top replaced by the arch outline (::after). */
 body[data-page='form'] .tier-form-panel .form-card {
     border: 1px solid var(--border);
-    border-top: none;
-    border-radius: 0 0 var(--radius) var(--radius);
+    /* top corners share the arch's 320px span: ONE continuous edge, no
+       hard/soft double line at the top-left/right junctions */
+    border-radius: 320px 320px var(--radius) var(--radius);
     padding: 0 46px 36px 92px;
     overflow: hidden;
 }
@@ -2370,12 +2371,11 @@ body[data-page='form'] .tier-form-panel .form-card::after {
     content: "";
     position: absolute;
     top: 0; left: 0; right: 0;
-    height: 84px;
-    border-radius: 320px 320px 0 0;
-    border: 1px solid var(--border);
-    border-bottom: none;
+    height: 96px;
+    border-radius: 319px 319px 0 0; /* inset 1px inside the card border */
+    border: none;
     pointer-events: none;
-    background: linear-gradient(180deg, color-mix(in srgb, var(--primary) 7%, transparent), transparent 85%);
+    background: linear-gradient(180deg, color-mix(in srgb, var(--primary) 8%, transparent), transparent 88%);
 }
 /* 2. Arch window + night bloom — closed at rest (.open toggled by JS). */
 body[data-page='form'] .tier-form-panel .arch-window {
@@ -2399,48 +2399,46 @@ body[data-page='form'] .tier-form-panel .bloom {
     width: 58px; height: 58px;
     position: relative;
     margin-top: 10px;
-    filter: drop-shadow(0 6px 18px color-mix(in srgb, var(--f-gold) 28%, transparent));
+    display: grid;
+    place-items: center;
 }
-body[data-page='form'] .tier-form-panel .bloom .petal {
+body[data-page='form'] .tier-form-panel .bloom .bloom-logo {
+    width: 46px; height: 46px;
+    opacity: .55;
+    filter: grayscale(.6) brightness(1.4);
+    transition: opacity .8s, filter .8s, transform .8s cubic-bezier(.34, 1.4, .64, 1);
+    transform: scale(.92);
+}
+body[data-page='form'] .tier-form-panel .bloom .bloom-heart {
     position: absolute;
-    left: 50%; top: 52%;
-    width: 23px; height: 36px;
-    border-radius: 50% / 60% 60% 40% 40%;
-    background: linear-gradient(180deg, color-mix(in srgb, var(--f-gold) 75%, transparent), var(--f-gold));
-    opacity: .15;
-    transform-origin: 50% 100%;
-    transform: translate(-50%, -92%) rotate(var(--r)) scaleY(.7);
-    transition: transform .8s cubic-bezier(.34, 1.4, .64, 1), opacity .8s;
-}
-body[data-page='form'] .tier-form-panel .bloom .petal.core {
-    background: linear-gradient(180deg, color-mix(in srgb, var(--sage) 70%, transparent), var(--sage));
-    opacity: .18;
-}
-body[data-page='form'] .tier-form-panel .bloom.open .petal {
-    opacity: .92;
-    transform: translate(-50%, -100%) rotate(var(--r)) scaleY(1);
-}
-body[data-page='form'] .tier-form-panel .bloom .heart {
-    position: absolute;
-    left: 50%; top: 52%;
-    width: 11px; height: 11px;
+    width: 58px; height: 58px;
     border-radius: 50%;
-    transform: translate(-50%, -50%) scale(.5);
-    background: radial-gradient(circle at 35% 30%, #F3D9A8, var(--f-gold));
-    box-shadow: 0 0 16px 2px color-mix(in srgb, var(--f-gold) 60%, transparent);
+    background: radial-gradient(circle, color-mix(in srgb, var(--f-gold) 55%, transparent), transparent 70%);
     opacity: 0;
-    transition: opacity .7s .25s, transform .7s .25s;
+    transform: scale(.5);
+    transition: opacity .7s .15s, transform .7s .15s;
+    pointer-events: none;
 }
-body[data-page='form'] .tier-form-panel .bloom.open .heart {
+body[data-page='form'] .tier-form-panel .bloom.open .bloom-logo {
     opacity: 1;
-    transform: translate(-50%, -50%) scale(1);
+    filter: none;
+    transform: scale(1);
 }
+body[data-page='form'] .tier-form-panel .bloom.open .bloom-heart {
+    opacity: 1;
+    transform: scale(1);
+}
+
+
+
+
+
 /* 3. Specimen plate header. */
 body[data-page='form'] .tier-form-panel .plate {
     text-align: center;
-    padding: 6px 0 20px;
+    padding: 10px 0 22px;
     border-bottom: 1px solid var(--border);
-    margin-bottom: 6px;
+    margin-bottom: 14px;
     position: relative;
 }
 body[data-page='form'] .tier-form-panel .plate .form-tier-label {
@@ -2532,12 +2530,13 @@ body[data-page='form'] #panel-sweetpea .rail .n4 { top: auto; bottom: -2px; }
 body[data-page='form'] .tier-form-panel .srow {
     position: relative;
     display: grid;
-    grid-template-columns: 112px 1fr 30px;
+    grid-template-columns: 118px 1fr 30px;
     align-items: end;
-    gap: 13px;
-    padding: 14px 0;
-    border-bottom: 1px dashed color-mix(in srgb, var(--border) 80%, transparent);
+    gap: 16px;
+    padding: 17px 0 19px;
+    border-bottom: 1px solid color-mix(in srgb, var(--border) 60%, transparent);
 }
+body[data-page='form'] .tier-form-panel .srow + .srow { margin-top: 2px; }
 body[data-page='form'] .tier-form-panel .srow:last-of-type { border-bottom: none; }
 body[data-page='form'] .tier-form-panel .slabel {
     display: block;
@@ -2545,71 +2544,80 @@ body[data-page='form'] .tier-form-panel .slabel {
     font-size: 10px;
     letter-spacing: .18em;
     text-transform: uppercase;
-    color: var(--text-faint);
-    padding-bottom: 12px;
+    color: var(--text-dim);
+    padding-bottom: 15px;
     cursor: pointer;
 }
 body[data-page='form'] .tier-form-panel .slabel i {
     display: block;
     font-style: normal;
-    letter-spacing: .08em;
-    font-size: 8.5px;
-    margin-top: 3px;
+    letter-spacing: .04em;
+    font-size: 8px;
+    margin-top: 4px;
+    white-space: nowrap;
     color: color-mix(in srgb, var(--text-faint) 70%, transparent);
 }
+body[data-page='form'] .tier-form-panel .srow { grid-template-columns: 140px 1fr 30px; }
 body[data-page='form'] .tier-form-panel .sfield { position: relative; min-width: 0; }
 body[data-page='form'] .tier-form-panel .sfield input[type="text"],
 body[data-page='form'] .tier-form-panel .sfield input[type="email"] {
     width: 100%;
-    background: transparent;
-    border: none;
-    border-bottom: 1px solid var(--border);
-    border-radius: 0;
-    padding: 9px 2px;
-    font-family: var(--t-font-display, 'Instrument Serif', Georgia, serif);
-    font-style: italic;
-    font-size: 16.5px;
+    background: var(--f-inputbg);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 13px 16px;
+    font-family: var(--t-font-body, 'Inter', sans-serif);
+    font-style: normal;
+    font-size: 17px;
+    font-weight: 500;
     color: var(--text);
     outline: none;
-    transition: border-color .25s;
+    transition: border-color .25s, background .25s, box-shadow .25s;
+}
+body[data-page='form'] .tier-form-panel .sfield input[type="text"]:hover,
+body[data-page='form'] .tier-form-panel .sfield input[type="email"]:hover { border-color: var(--border-primary); }
+body[data-page='form'] .tier-form-panel .sfield input[type="text"]:focus,
+body[data-page='form'] .tier-form-panel .sfield input[type="email"]:focus {
+    border-color: var(--primary);
+    background: color-mix(in srgb, var(--primary) 6%, var(--f-inputbg));
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--primary) 16%, transparent);
 }
 body[data-page='form'] .tier-form-panel .sfield textarea {
     display: block;
     width: 100%;
-    background: transparent;
+    background: var(--f-inputbg);
     border: 1px solid var(--border);
-    border-radius: 10px;
-    padding: 10px 12px;
-    font-family: var(--t-font-display, 'Instrument Serif', Georgia, serif);
-    font-style: italic;
+    border-radius: 12px;
+    padding: 12px 16px;
+    font-family: var(--t-font-body, 'Inter', sans-serif);
+    font-style: normal;
     font-size: 16.5px;
-    line-height: 1.5;
+    font-weight: 500;
+    line-height: 1.55;
     color: var(--text);
     outline: none;
     resize: vertical;
     min-height: 96px;
-    transition: border-color .25s;
+    transition: border-color .25s, background .25s, box-shadow .25s;
+}
+body[data-page='form'] .tier-form-panel .sfield textarea:hover { border-color: var(--border-primary); }
+body[data-page='form'] .tier-form-panel .sfield textarea:focus {
+    border-color: var(--primary);
+    background: color-mix(in srgb, var(--primary) 6%, var(--f-inputbg));
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--primary) 16%, transparent);
 }
 body[data-page='form'] .tier-form-panel .sfield textarea:focus { border-color: var(--border-primary); }
 body[data-page='form'] .tier-form-panel .sfield input::placeholder,
 body[data-page='form'] .tier-form-panel .sfield textarea::placeholder {
-    color: color-mix(in srgb, var(--text-faint) 55%, transparent);
-    font-style: italic;
+    color: color-mix(in srgb, var(--text-faint) 60%, transparent);
+    font-style: normal;
+    font-weight: 400;
 }
 body[data-page='form'] .tier-form-panel .sfield input:focus { border-bottom-color: transparent; }
-body[data-page='form'] .tier-form-panel .sfield .grow {
-    position: absolute;
-    left: 0; right: 0; bottom: 0;
-    height: 1px;
-    background: linear-gradient(90deg, var(--sage), var(--primary));
-    transform: scaleX(0);
-    transform-origin: left;
-    transition: transform .35s cubic-bezier(.4, 0, .2, 1);
-    pointer-events: none;
-}
+body[data-page='form'] .tier-form-panel .sfield .grow { display: none; }
 body[data-page='form'] .tier-form-panel .sfield input:focus ~ .grow,
 body[data-page='form'] .tier-form-panel .sfield textarea:focus ~ .grow { transform: scaleX(1); }
-body[data-page='form'] .tier-form-panel .sfield .form-hint { font-size: .72rem; margin-top: 6px; }
+body[data-page='form'] .tier-form-panel .sfield .form-hint { font-size: .74rem; margin: 7px 4px 0; }
 body[data-page='form'] .tier-form-panel .sfield .username-checks {
     display: flex;
     flex-wrap: wrap;
@@ -2622,8 +2630,8 @@ body[data-page='form'] .tier-form-panel .sfield .username-checks .uc-item.ok { c
 /* 6. Drawn-check validation icons (JS still drives .show/.valid/.invalid). */
 body[data-page='form'] .tier-form-panel .srow .validation-icon {
     position: absolute;
-    right: 2px;
-    bottom: 12px;
+    right: 15px;
+    bottom: 32px;
     width: 18px; height: 18px;
     line-height: normal;
     border-radius: 50%;
@@ -2658,6 +2666,10 @@ body[data-page='form'] .tier-form-panel .srow .validation-icon.invalid::before {
     color: var(--error);
 }
 /* 7. The Gardener's Covenant — wax seal + drawn check (checkbox ids kept). */
+body[data-page='form'] .tier-form-panel .srow:has(textarea) {
+    border-bottom: none;
+    padding-bottom: 6px;
+}
 body[data-page='form'] .tier-form-panel .covenant {
     display: block;
     margin: 16px 0 24px;
@@ -2810,16 +2822,19 @@ body[data-page='form'] .tier-form-panel .form-submit.loading::after {
 @media (max-width: 640px) {
     body[data-page='form'] .tier-form-panel .form-card { padding: 0 22px 28px 60px; }
     body[data-page='form'] .tier-form-panel .rail { left: 16px; }
-    body[data-page='form'] .tier-form-panel .srow { grid-template-columns: 1fr; gap: 2px; padding: 12px 0; }
-    body[data-page='form'] .tier-form-panel .slabel { padding-bottom: 0; }
+    body[data-page='form'] .tier-form-panel .srow { grid-template-columns: 1fr; gap: 2px; padding: 14px 0 16px; }
+    body[data-page='form'] .tier-form-panel .slabel { padding-bottom: 8px; }
     body[data-page='form'] .tier-form-panel .sfield input[type="text"],
-    body[data-page='form'] .tier-form-panel .sfield input[type="email"] { padding-right: 26px; }
+    body[data-page='form'] .tier-form-panel .sfield input[type="email"] { padding-right: 44px; }
+    body[data-page='form'] .tier-form-panel .srow .validation-icon { right: 13px; bottom: auto; top: 50%; transform: translateY(-50%) scale(.6); }
+    body[data-page='form'] .tier-form-panel .srow .validation-icon.show,
+    body[data-page='form'] .tier-form-panel .srow .validation-icon.valid.show { transform: translateY(-50%) scale(1); }
     body[data-page='form'] .tier-form-panel .plate h2 { font-size: 25px; }
 }
 /* 10. Reduced motion — bloom/vine/seal/check changes settle instantly. */
 @media (prefers-reduced-motion: reduce) {
-    body[data-page='form'] .tier-form-panel .bloom .petal,
-    body[data-page='form'] .tier-form-panel .bloom .heart,
+    body[data-page='form'] .tier-form-panel .bloom .bloom-logo,
+    body[data-page='form'] .tier-form-panel .bloom .bloom-heart,
     body[data-page='form'] .tier-form-panel .rail .vine i,
     body[data-page='form'] .tier-form-panel .rail .node,
     body[data-page='form'] .tier-form-panel .srow .validation-icon,

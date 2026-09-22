@@ -49,7 +49,7 @@ html[data-theme="light"]{background:#E7EDEA;color-scheme:light}
 <link rel="preload" as="font" type="font/woff2" href="/assets/fonts/archivo-var.woff2" crossorigin>
                     <link rel="stylesheet" href="/assets/css/fonts.css?v=108">
     <link rel="stylesheet" href="/assets/css/site.css?v=108">
-    <link rel="stylesheet" href="/assets/css/premium.css?v=110">
+    <link rel="stylesheet" href="/assets/css/premium.css?v=111">
     <link rel="stylesheet" href="/assets/css/type-tokens.css?v=108">
     <link rel="stylesheet" href="/assets/css/hermes-type.css?v=108">
 <link rel="canonical" href="https://mysweetpea.cc/form">
@@ -132,14 +132,7 @@ html[data-theme="light"]{background:#E7EDEA;color-scheme:light}
                     <form class="form-body" novalidate>
                     <div class="arch-window" aria-hidden="true">
                         <svg class="arch" viewBox="0 0 120 44" preserveAspectRatio="none"><path d="M8 43 V20 a52 52 0 0 1 104 0 V43"/></svg>
-                        <div class="bloom" id="ga-bloom">
-                            <span class="petal" style="--r:0deg"></span>
-                            <span class="petal core" style="--r:72deg"></span>
-                            <span class="petal" style="--r:144deg"></span>
-                            <span class="petal core" style="--r:216deg"></span>
-                            <span class="petal" style="--r:288deg"></span>
-                            <span class="heart"></span>
-                        </div>
+                        <div class="bloom" id="ga-bloom"><img class="bloom-logo" src="/logo-favicon.svg" alt="" aria-hidden="true"><span class="bloom-heart" aria-hidden="true"></span></div>
                     </div>
                     <div class="plate">
                         <span class="form-tier-label">Accession Nº 002 · Seedling</span>
@@ -211,19 +204,11 @@ html[data-theme="light"]{background:#E7EDEA;color-scheme:light}
                     <form class="form-body" novalidate>
                     <div class="arch-window" aria-hidden="true">
                         <svg class="arch" viewBox="0 0 120 44" preserveAspectRatio="none"><path d="M8 43 V20 a52 52 0 0 1 104 0 V43"/></svg>
-                        <div class="bloom" id="sp-bloom">
-                            <span class="petal" style="--r:0deg"></span>
-                            <span class="petal core" style="--r:72deg"></span>
-                            <span class="petal" style="--r:144deg"></span>
-                            <span class="petal core" style="--r:216deg"></span>
-                            <span class="petal" style="--r:288deg"></span>
-                            <span class="heart"></span>
-                        </div>
+                        <div class="bloom" id="sp-bloom"><img class="bloom-logo" src="/logo-favicon.svg" alt="" aria-hidden="true"><span class="bloom-heart" aria-hidden="true"></span></div>
                     </div>
                     <div class="plate">
-                        <span class="form-tier-label">Accession Nº 001 · Sweet Pea</span>
-                        <h2>Request for the Garden Key</h2>
-                        <span class="latin">Lathyrus odoratus — grown by hand, admitted by hand</span>
+                        <span class="form-tier-label">Sweet Pea tier</span>
+                        <h2>Request your Garden Key</h2>
                     </div>
                     <div class="rail" aria-hidden="true">
                         <div class="vine"><i></i></div>
@@ -233,7 +218,6 @@ html[data-theme="light"]{background:#E7EDEA;color-scheme:light}
                         <div class="node n4"><svg viewBox="0 0 24 24"><circle cx="8" cy="15" r="4"/><path d="M11 12 20 3M15.5 7.5 18 10M12.5 10.5 15 13"/></svg></div>
                     </div>
                     <div class="verify-banner" role="note"><strong>What happens next:</strong> submit this request and we will review it. If approved, we will email you an invitation code to create your MySweetPea account.</div>
-                    <p class="form-desc">No crypto donation or transaction hash is needed for this request. Tell us a little about yourself and we will email you an invite code if approved.</p>
                     <div class="srow">
                         <label class="slabel" for="sp-name">Name<i>as you'd like to be known</i></label>
                         <div class="sfield"><input type="text" id="sp-name" placeholder="Your name" autocomplete="name" maxlength="60" required><span class="grow"></span></div>
@@ -249,7 +233,7 @@ html[data-theme="light"]{background:#E7EDEA;color-scheme:light}
                         <div class="sfield"><textarea id="sp-message" rows="4" placeholder="A short note is fine — tell us what you plan to use, if you like." maxlength="500"></textarea><span class="grow"></span></div>
                         <span class="vic-spacer" aria-hidden="true"></span>
                     </div>
-                    <label class="verify-check covenant"><input type="checkbox" id="sp-verify" required><span class="cov-head"><span class="seal" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg></span><span class="cov-title">The Gardener's Covenant<b>I know a real person will read this — I'm glad to wait.</b></span></span><span class="cov-note">Every request is verified by hand. Your invite usually arrives within 24 hours.</span></label>
+                    <label class="verify-check covenant"><input type="checkbox" id="sp-verify" required><span class="cov-head"><span class="seal" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg></span><span class="cov-title">The Gardener's Covenant<b>I understand that a real person will review this request.</b></span></span><span class="cov-note">Every request is verified by hand. Your invite usually arrives within 24 hours.</span></label>
                     <button type="submit" class="form-submit" id="sp-submit">Submit Sweet Pea Request</button>
                     </form>
                 </div>
