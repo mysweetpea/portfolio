@@ -83,7 +83,7 @@
     document.querySelectorAll('.crypto-option').forEach(function(button){
         var type=button.getAttribute('data-type');
         if(!WALLETS[type] || WALLETS[type]==='Coming Soon'){button.disabled=true;button.classList.add('unavailable');var label=document.createElement('span');label.className='crypto-soon';label.textContent='Coming soon';button.appendChild(label);return;}
-        button.addEventListener('click',function(){chosenCrypto=type;document.querySelectorAll('.crypto-option').forEach(function(b){b.classList.toggle('selected',b===button);});var display=document.getElementById('wallet-display'),address=document.getElementById('wallet-addr');address.textContent=WALLETS[type];display.hidden=false;renderQR(WALLETS[type]);updateButtons();});
+        button.addEventListener('click',function(){chosenCrypto=type;document.querySelectorAll('.crypto-option').forEach(function(b){b.classList.toggle('selected',b===button);b.setAttribute('aria-pressed',b===button?'true':'false');});var display=document.getElementById('wallet-display'),address=document.getElementById('wallet-addr');address.textContent=WALLETS[type];address.setAttribute('aria-label','Copy donation address '+WALLETS[type]);display.hidden=false;renderQR(WALLETS[type]);updateButtons();});
     });
     /* QR code for the selected wallet (renders once a real address exists) */
     function renderQR(text) {

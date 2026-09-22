@@ -23,19 +23,8 @@ html[data-theme="light"]{background:#E7EDEA;color-scheme:light}
   }catch(e){}
   document.documentElement.classList.add('js');
   setTimeout(function(){
-    if(!window.__mspRevealInit){
-      /* site.js late/failed: keep content visible. Poll a little longer
-         first (slow connections); only strip html.js as a last resort. */
-      var tries=0;
-      var iv=setInterval(function(){
-        tries++;
-        if(window.__mspRevealInit||tries>=6){
-          clearInterval(iv);
-          if(!window.__mspRevealInit)document.documentElement.classList.remove('js');
-        }
-      },2000);
-    }
-  },6000);
+    if(!window.__mspRevealInit)document.documentElement.classList.remove('js');
+  },10000);
 })();
 </script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -136,7 +125,7 @@ html[data-theme="light"]{background:#E7EDEA;color-scheme:light}
 
         <div class="vine-divider" aria-hidden="true"></div>
 
-        <section class="tier-form-section" aria-live="polite">
+        <section class="tier-form-section">
             <div class="tier-form-panel" id="panel-seedling" hidden>
                 <div class="form-card glow-card">
                     <div class="form-overlay" id="seedling-overlay"><div class="spinner" aria-hidden="true"></div></div>
@@ -193,13 +182,13 @@ html[data-theme="light"]{background:#E7EDEA;color-scheme:light}
                     <fieldset class="form-group crypto-fieldset">
                         <legend class="form-label glass-text">Choose a cryptocurrency</legend>
                         <div class="crypto-options">
-                            <button type="button" class="crypto-option" data-type="monero"><span class="icon" aria-hidden="true"><img src="/assets/icons/icon-crypto-monero.svg" alt="" width="28" height="28"></span><span class="name">Monero (XMR)</span></button>
-                            <button type="button" class="crypto-option" data-type="bitcoin"><span class="icon" aria-hidden="true"><img src="/assets/icons/icon-crypto-bitcoin.svg" alt="" width="28" height="28"></span><span class="name">Bitcoin (BTC)</span></button>
+                            <button type="button" class="crypto-option" data-type="monero" aria-pressed="false"><span class="icon" aria-hidden="true"><img src="/assets/icons/icon-crypto-monero.svg" alt="" width="28" height="28"></span><span class="name">Monero (XMR)</span></button>
+                            <button type="button" class="crypto-option" data-type="bitcoin" aria-pressed="false"><span class="icon" aria-hidden="true"><img src="/assets/icons/icon-crypto-bitcoin.svg" alt="" width="28" height="28"></span><span class="name">Bitcoin (BTC)</span></button>
                         </div>
                     </fieldset>
                     <div class="wallet-display" id="wallet-display" hidden>
                         <div class="wl">Send your $5+ donation to:</div>
-                        <button type="button" class="wa" id="wallet-addr" aria-label="Copy wallet address"></button>
+                        <button type="button" class="wa" id="wallet-addr"></button>
                         <div class="copy-hint">Click the address to copy it</div>
                         <div class="qr-wrap" id="qr-wrap" hidden><canvas id="wallet-qr" aria-hidden="true"></canvas><div class="qr-hint">Scan with your mobile wallet</div></div>
                     </div>
@@ -322,7 +311,7 @@ html[data-theme="light"]{background:#E7EDEA;color-scheme:light}
     <script src="/assets/js/site.js?v=108" defer></script>
     <script src="/assets/js/premium.js?v=107" defer></script>
     <script src="/assets/js/qrcode.min.js?v=107" defer></script>
-    <script src="/assets/js/form-page.js?v=109" defer></script>
+    <script src="/assets/js/form-page.js?v=110" defer></script>
     <script>
     if ('serviceWorker' in navigator) {
         window.addEventListener('load', function () {
