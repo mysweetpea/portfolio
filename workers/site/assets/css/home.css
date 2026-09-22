@@ -198,8 +198,10 @@ body[data-page='home'] .feature-card.garden-card .feature-icon img{width:34px;he
       kill our reveal-delay + hover transition (documented trap) — counter with a
       full-property !important rule of our own, higher specificity. */
 body[data-page='home'] a.feature-card.garden-card{transition:transform .22s ease,border-color .22s ease,background .22s ease,opacity .7s ease,box-shadow .22s ease !important}
-body[data-page='home'] a.feature-card.garden-card:not(.visible){transition-delay:0s,0s,0s,calc(var(--i,0)*40ms),0s !important}
-body[data-page='home'] a.feature-card.garden-card.visible{transition-delay:0s !important}
+/* stagger lives on .visible (the AFTER-change state — transition-delay is read from there).
+     calc(var()) inside a delay LIST is invalid at computed-value time (collapses to 0s) —
+     so markup sets --d directly (style="--i:N;--d:Nms") and we use it uncalc'd. */
+body[data-page='home'] a.feature-card.garden-card.visible{transition-delay:0s,0s,0s,var(--d,0s),0s !important  /* slot 3 = opacity */}
 .garden-card:hover{transform:translateY(-2px)}
 /* 3. section-title radial glow (quiet, behind text) */
 .features-section{position:relative}
@@ -216,8 +218,8 @@ body[data-page='home'] a.feature-card.garden-card.visible{transition-delay:0s !i
 /* 7. eyebrow rule draw animation is handled by .reveal on .sec-eyebrow (already wired);
       keep FAQ + gardener untouched */
 @media (prefers-reduced-motion: reduce){
-  .garden-card{transition:none}
-  .garden-card:hover{transform:none}
+  body[data-page='home'] a.feature-card.garden-card{transition:none !important}
+  body[data-page='home'] a.feature-card.garden-card:hover{transform:none}
   .garden-live .dot{animation:none}
   .features-section::before{display:none}
 }
