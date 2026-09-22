@@ -10,7 +10,13 @@
         if (type === 'name') return value.length >= 2;
         if (type === 'email') return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
         if (type === 'username') return /^[A-Za-z0-9_]{3,}$/.test(value);
-        if (type === 'tx') return value.length >= 8;
+        if (type === 'tx') {
+            /* Chain-aware: XMR + BTC txids are 64 hex chars; accept either
+               but reject obvious garbage. Unknown future chains: >=16 alnum. */
+            var v = value.trim();
+            if (/^[0-9a-fA-F]{64}$/.test(v)) return true;
+            return /^[0-9a-zA-Z]{16,}$/.test(v);
+        }
         return false;
     }
     var fields = { 'ga-name':'name', 'ga-email':'email', 'ga-username':'username', 'ga-txhash':'tx', 'sp-name':'name', 'sp-email':'email' };
@@ -49,7 +55,15 @@
             var tier = card.getAttribute('data-tier');
             /* Seedling is a "coming soon" placeholder until crypto donations are
                wired up — clicking it must NOT reveal the dead donation form. */
-            if (card.classList.contains('coming-soon')) { return; }
+            if (card.classList.contains('coming-soon')) {
+                /* Keyboard users activate this real <button> with Enter/Space —
+                   give them the same feedback pointer users get from the
+                   COMING SOON badge instead of a silent no-op. */
+                if (typeof window.showToast === 'function') {
+                    window.showToast('The Seedling Tier is coming soon — requests open at launch.', 'info');
+                }
+                return;
+            }
             document.querySelectorAll('.access-choice-card').forEach(function(c){var picked=c===card;c.classList.toggle('selected',picked);c.setAttribute('aria-pressed',String(picked));});
             // Reveal the panel first so the form exists, then smooth-scroll to it.
             ['seedling','sweetpea'].forEach(function(name){var panel=document.getElementById('panel-'+name),active=name===tier;panel.hidden=!active;panel.classList.toggle('active',active);panel.classList.toggle('revealed',active);});
