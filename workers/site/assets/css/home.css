@@ -5,16 +5,32 @@
 .sec-eyebrow{display:flex;align-items:center;gap:12px;font-family:var(--t-font-mono,ui-monospace,monospace);font-size:.68rem;letter-spacing:.22em;text-transform:uppercase;color:var(--sage);margin:0 auto 16px;max-width:1080px;padding:0 20px}
 .sec-eyebrow::before{content:'';width:26px;height:1px;background:var(--sage);opacity:.7}
 .sec-eyebrow .n{color:var(--text-faint);letter-spacing:.14em}
-/* THE GARDEN — services as glass cards (feature-card visual system) */
-.garden-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;max-width:1080px;margin:0 auto;padding:0 20px}
-a.feature-card.garden-card{display:block;text-decoration:none;color:inherit}
-.garden-card .g-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
-.garden-card .g-live{display:inline-flex;align-items:center;gap:6px;font-family:var(--t-font-mono,ui-monospace,monospace);font-size:.6rem;letter-spacing:.16em;color:#7BD88F;text-transform:uppercase}
-.garden-card .g-live i{width:6px;height:6px;border-radius:50%;background:#7BD88F;box-shadow:0 0 6px #7BD88F88}
-.garden-card h3{margin:0 0 8px}
-.garden-card p{margin:0 0 14px}
-.garden-card .g-open{font-family:var(--t-font-mono,ui-monospace,monospace);font-size:.64rem;letter-spacing:.14em;text-transform:uppercase;color:var(--text-faint);transition:color .2s;display:inline-flex;align-items:center;gap:6px}
-.garden-card:hover .g-open{color:var(--sage)}
+/* ===== GARDEN — compact tile grid (9 services, one glance) ===== */
+.garden-grid{display:grid;grid-template-columns:repeat(9,1fr);gap:10px;max-width:1080px;margin:0 auto;padding:0 20px}
+a.feature-card.garden-card{display:flex;flex-direction:column;align-items:center;gap:8px;text-decoration:none;color:inherit;padding:16px 8px 13px;border-radius:14px;position:relative;overflow:visible}
+body[data-page='home'] .feature-card.garden-card .icon.feature-icon{width:40px;height:40px;border-radius:12px;margin:0}
+body[data-page='home'] .feature-card.garden-card .feature-icon img{width:34px;height:34px}
+.garden-card h3{margin:0;font-size:.8rem;font-weight:600;letter-spacing:.01em;white-space:nowrap}
+.garden-card .g-idx{display:none}
+.garden-card .g-top{display:contents}
+.garden-card .g-live{display:none}
+.garden-card p{display:none}
+.garden-card .g-open{display:none}
+/* tooltip = the card's former description */
+.garden-card::after{content:attr(data-tip);position:absolute;left:50%;bottom:calc(100% + 8px);transform:translateX(-50%) translateY(4px);background:var(--card-bg);color:var(--text);border:1px solid var(--border);border-radius:8px;padding:7px 11px;font-size:.68rem;line-height:1.45;width:max-content;max-width:180px;text-align:center;opacity:0;pointer-events:none;transition:opacity .18s ease,transform .18s ease;z-index:30;box-shadow:0 6px 18px rgba(0,0,0,.35)}
+.garden-card:hover::after,.garden-card:focus-visible::after{opacity:1;transform:translateX(-50%) translateY(0)}
+/* shared live line under the grid */
+.garden-live{display:flex;align-items:center;justify-content:center;gap:7px;margin:18px auto 0;font-family:var(--t-font-mono,ui-monospace,monospace);font-size:.62rem;letter-spacing:.16em;text-transform:uppercase;color:var(--text-faint)}
+.garden-live .dot{width:6px;height:6px;border-radius:50%;background:#7BD88F;box-shadow:0 0 6px #7BD88F88;flex:none}
+.garden-live.is-degraded .dot{background:var(--gold,#D9A86C);box-shadow:0 0 6px #D9A86C88}
+.garden-live.is-offline .dot{background:var(--error,#D98C8C);box-shadow:0 0 6px #D98C8C88}
+/* icon glow on tile hover (kept from v3) */
+.garden-card .feature-icon img{transition:transform .22s ease,filter .22s ease}
+.garden-card:hover .feature-icon img{transform:translateY(-3px);filter:drop-shadow(0 0 8px rgba(143,175,181,.5))}
+.garden-card::before{content:'';position:absolute;top:0;left:14%;right:14%;height:2px;border-radius:2px;background:linear-gradient(90deg,transparent,rgba(143,175,181,.45),transparent);opacity:0;transition:opacity .22s ease}
+.garden-card:hover::before{opacity:1}
+.garden-card:hover{border-color:var(--sage,#A3C9B6)}
+
 /* ON THE RECORD — proof band */
 .record-band{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;max-width:1080px;margin:0 auto;padding:0 20px}
 .record{border:1px solid var(--border);background:var(--card-bg);border-radius:18px;padding:30px 26px}
@@ -41,10 +57,18 @@ a.feature-card.garden-card{display:block;text-decoration:none;color:inherit}
 .faq-wrap details .a{padding:0 4px 22px;font-size:.92rem;line-height:1.7;color:var(--text-dim);max-width:62ch}
 /* responsive */
 @media(max-width:900px){
- .garden-grid{grid-template-columns:repeat(2,1fr)}
+ .garden-grid{grid-template-columns:repeat(5,1fr);gap:8px}
+ .garden-card h3{font-size:.72rem}
 }
 @media(max-width:640px){
- .garden-grid{grid-template-columns:1fr}
+ .garden-grid{grid-template-columns:repeat(3,1fr);gap:7px;padding:0 14px}
+ .garden-card{padding:12px 6px 10px;gap:6px}
+ body[data-page='home'] .feature-card.garden-card .icon.feature-icon{width:34px;height:34px}
+ body[data-page='home'] .feature-card.garden-card .feature-icon img{width:28px;height:28px}
+ .garden-card h3{font-size:.66rem}
+ .garden-card::after{display:none}
+}
+@media(max-width:640px){
  .record-band{grid-template-columns:1fr}
  .gardener{flex-direction:column}
 }
@@ -158,4 +182,42 @@ a.feature-card.garden-card{display:block;text-decoration:none;color:inherit}
   .garden-card .g-live i,.gardener .med{animation:none}
   .garden-card,.record,.faq-wrap details,.faq-wrap summary,.garden-card .g-open .arr,.garden-card .feature-icon img{transition:none}
   .faq-wrap details[open] .a{animation:none}
+}
+
+
+/* garden footer: CTA + shared live line */
+.garden-foot{display:flex;flex-direction:column;align-items:center;gap:14px;margin-top:26px}
+.garden-foot .garden-live{margin:0}
+
+/* garden live line: static dot under reduced motion */
+@media (prefers-reduced-motion: reduce){ .garden-live .dot{ box-shadow:0 0 6px #7BD88F55 } }
+
+/* ===== POLISH PASS (compact era) ===== */
+/* 2. tile hover lift (tiny, matches card language).
+      site.css:3976 sets a blanket !important transition on .feature-card which would
+      kill our reveal-delay + hover transition (documented trap) — counter with a
+      full-property !important rule of our own, higher specificity. */
+body[data-page='home'] a.feature-card.garden-card{transition:transform .22s ease,border-color .22s ease,background .22s ease,opacity .7s ease,box-shadow .22s ease !important}
+body[data-page='home'] a.feature-card.garden-card:not(.visible){transition-delay:0s,0s,0s,calc(var(--i,0)*40ms),0s !important}
+body[data-page='home'] a.feature-card.garden-card.visible{transition-delay:0s !important}
+.garden-card:hover{transform:translateY(-2px)}
+/* 3. section-title radial glow (quiet, behind text) */
+.features-section{position:relative}
+.features-section .section-title{position:relative;z-index:1}
+.features-section{overflow-x:clip}
+.features-section::before{content:'';position:absolute;top:-40px;left:50%;transform:translateX(-50%);width:520px;height:220px;background:radial-gradient(ellipse at center,rgba(143,175,181,.07),transparent 70%);pointer-events:none;z-index:0}
+/* 4. garden-foot: hairline above, keeps CTA + live line as one composed unit */
+.garden-foot{padding-top:22px;border-top:1px solid var(--border);width:calc(100% - 40px);max-width:1040px}
+/* 5. live dot gentle breathing (not a ping — subtle) */
+@keyframes glBreath{0%,100%{opacity:1}50%{opacity:.55}}
+.garden-live .dot{animation:glBreath 2.8s ease-in-out infinite}
+/* 6. record tiles: count-up numerals get tabular-nums so width doesn't jitter */
+.record .v{font-variant-numeric:tabular-nums}
+/* 7. eyebrow rule draw animation is handled by .reveal on .sec-eyebrow (already wired);
+      keep FAQ + gardener untouched */
+@media (prefers-reduced-motion: reduce){
+  .garden-card{transition:none}
+  .garden-card:hover{transform:none}
+  .garden-live .dot{animation:none}
+  .features-section::before{display:none}
 }

@@ -3,12 +3,20 @@
 (function(){
   'use strict';
   function setMeta(txt){ var m = document.getElementById('hsMeta'); if(m && txt) m.textContent = txt; }
+  var gardenEl = null, gardenTxt = null;
+  function gardenState(cls, txt){
+    if(!gardenEl){ gardenEl = document.getElementById('gardenLive'); gardenTxt = gardenEl ? gardenEl.querySelector('.gl-txt') : null; }
+    if(!gardenEl) return;
+    gardenEl.classList.remove('is-degraded','is-offline');
+    if(cls) gardenEl.classList.add(cls);
+    if(gardenTxt && txt) gardenTxt.textContent = txt;
+  }
   function tryFetch(){
     try {
       fetch('https://status.mysweetpea.cc/api/status-page/heartbeat/public', {mode:'cors'})
         .then(function(r){ return r.ok ? r.json() : null; })
         .then(function(d){
-          if(!d || !d.heartbeatList) { setMeta('live · 9 monitors'); return; }
+          if(!d || !d.heartbeatList) { setMeta('live · 9 monitors'); gardenState('is-degraded','live status unavailable'); return; }
           /* Kuma public payload: heartbeatList[monitorId] = beat array (status===1 means UP);
              uptimeList['<monitorId>_24'] = 24h uptime as a FRACTION 0-1 (hence *100). */
           var hb = d.heartbeatList, total = 0, up = 0, sum = 0, n = 0;
@@ -18,11 +26,14 @@
             if(last.status === 1){ up++; var v24 = d.uptimeList && d.uptimeList[k + '_24'];
               if(typeof v24 === 'number'){ sum += v24; n++; } }
           });
-          if(total === 0){ setMeta('live · 9 monitors'); return; }
+          if(total === 0){ setMeta('live · 9 monitors'); gardenState('is-degraded','live status unavailable'); return; }
           var avg = n ? (sum/n*100) : null;
           setMeta('live · ' + up + '/' + total + (avg !== null ? ' · ' + avg.toFixed(1) + '% 24h' : ''));
+          if(up === total) gardenState(null, 'all ' + total + ' services live');
+          else if(up === 0) gardenState('is-offline', 'services offline');
+          else gardenState('is-degraded', up + ' of ' + total + ' services live');
         })
-        .catch(function(){ setMeta('live · 9 monitors'); });
+        .catch(function(){ setMeta('live · 9 monitors'); gardenState('is-degraded','live status unavailable'); });
     } catch(e){}
   }
   if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded', tryFetch);
