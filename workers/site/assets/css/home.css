@@ -76,58 +76,22 @@ body[data-page='home'] .feature-card.garden-card .feature-icon img{width:34px;he
 
 
 
-/* ===== V4: hero status pill - glass telemetry redesign (overrides site.css v45) ===== */
-.home-status {
-    display: inline-flex; align-items: center; gap: 10px;
-    margin: 22px auto 0; padding: 9px 18px 9px 12px;
-    border-radius: 999px; text-decoration: none;
-    background:
-        linear-gradient(160deg, rgba(255,255,255,0.05), transparent 45%),
-        var(--card-bg);
-    background:
-        linear-gradient(160deg, rgba(255,255,255,0.05), transparent 45%),
-        color-mix(in srgb, var(--card-bg) 88%, transparent);
-    border: 1px solid var(--border);
-    box-shadow: 0 2px 14px rgba(0,0,0,0.28), inset 0 1px 0 rgba(255,255,255,0.06);
-    color: var(--text-dim); font-size: 0.84rem; letter-spacing: 0.01em;
-    backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
-    transition: border-color .3s ease, color .3s ease, transform .3s ease, box-shadow .3s ease;
-}
-.home-status:hover { border-color: var(--border-primary); color: var(--text);
-    transform: translateY(-1px); box-shadow: 0 4px 20px rgba(0,0,0,0.34), inset 0 1px 0 rgba(255,255,255,0.07); }
-.home-status .status-dot { margin-right: 0; position: relative; flex: none; }
-.home-status .status-dot::after { content:''; position:absolute; inset:-4px; border-radius:50%;
-    border:1px solid var(--sage); opacity:0; }
-.home-status.online .status-dot::after { animation: hsping 2.4s ease-out infinite; }
-@keyframes hsping { 0% { transform: scale(.6); opacity:.7 } 80%,100% { transform: scale(1.9); opacity:0 } }
-.home-status .hs-meta { font-family: var(--t-font-mono, ui-monospace, monospace);
-    font-size: 0.66rem; letter-spacing: 0.08em; text-transform: uppercase;
-    color: var(--text-faint); border-left: 1px solid var(--border);
-    padding-left: 10px; margin-left: 2px; }
-.home-status:hover .hs-meta { color: var(--text-dim); }
-.home-status .hs-chev { flex:none; width: 12px; height: 12px; opacity:.5; transition: transform .25s ease, opacity .25s ease; }
-.home-status:hover .hs-chev { transform: translateX(2px); opacity:.9; }
-@media (prefers-reduced-motion: reduce){ .home-status .status-dot::after{ animation:none; opacity:0 } .home-status, .home-status .hs-chev { transition:none } }
-
-/* ===== V4b: torrin glow connectors on hero-steps ===== */
+/* ===== V4b: step connectors — glowing dot-and-line, tuned per viewport ===== */
 .hero-steps { position: relative; }
 .hero-steps li { position: relative; }
-.hero-steps li + li::before { content:''; position:absolute; left:-14px; top:50%;
-    width:12px; height:1px;
-    background: linear-gradient(90deg, transparent, rgba(163,201,182,.55), transparent);
-    box-shadow: 0 0 8px rgba(163,201,182,.45); }
-.hero-steps li + li::after { content:''; position:absolute; left:-3px; top:calc(50% - 2.5px);
-    width:5px; height:5px; border-radius:50%; background: var(--sage);
-    box-shadow: 0 0 8px var(--sage), 0 0 14px rgba(163,201,182,.5);
-    opacity:0; transform: scale(0); transition: opacity .5s ease .3s, transform .5s ease .3s; }
-.hero-steps li.visible::after { opacity:1; transform: scale(1); }
+/* DESKTOP: single glow dot centered in the column gap (26px) — no dash line,
+   the dot alone reads as flow without the 'weird' floating tick. */
+.hero-steps li + li::before { content:''; position:absolute; left:-13px; top:50%;
+    margin-top:-2.5px; width:5px; height:5px; border-radius:50%;
+    background: var(--sage); opacity:.75;
+    box-shadow: 0 0 8px rgba(163,201,182,.6), 0 0 14px rgba(163,201,182,.35); }
 @media (max-width: 760px){
   .hero-steps { flex-direction: column; gap: 10px; }
-  .hero-steps li + li::before { left:11px; top:-10px; width:1px; height:8px;
-      background: linear-gradient(180deg, transparent, rgba(163,201,182,.55)); }
-  .hero-steps li + li::after { left:9px; top:-3px; }
+  /* MOBILE: keep the short descending glow tick the user liked */
+  .hero-steps li + li::before { left:11px; top:-10px; margin-top:0; width:1px; height:8px;
+      border-radius:0; background: linear-gradient(180deg, transparent, rgba(163,201,182,.55));
+      box-shadow:none; }
 }
-@media (prefers-reduced-motion: reduce){ .hero-steps li + li::after { transition:none; opacity:1; transform:none; } .record:hover, .garden-card:hover .feature-icon img { transform:none; } }
 
 
 /* ===== V4: value-card icon chips ===== */
@@ -223,3 +187,25 @@ body[data-page='home'] a.feature-card.garden-card.visible{transition-delay:0s,0s
   .garden-live .dot{animation:none}
   .features-section::before{display:none}
 }
+
+/* ===== SMOOTHNESS PASS ===== */
+/* Reveal transitions already opacity/transform-only (compositor-friendly).
+   1. Promote the animated surfaces so transforms don't repaint neighbors
+      (tiles/vines/records each get their own layer only while transitioning). */
+.garden-card, .record, .vine-divider, .hero-steps li { will-change: transform, opacity; }
+/* Drop the hint after the entrance window to free memory: JS toggles a class
+   on load-complete; CSS keeps it simple — browsers GC will-change after paint
+   quiesce, so the static hint is acceptable (22 petals + 9 tiles = trivial). */
+/* 2. Lenis + IO reveals: respect the scroller — IO rootMargin already set in JS.
+   3. Images: prevent decode jank when tiles first reveal (icons are tiny but
+      many; decode-ahead keeps first reveal clean). */
+.garden-card .feature-icon img { content-visibility: auto; }
+
+/* 4. Sticky smoothness guarantee: html { scroll-behavior } is Lenis's job —
+      ensure no double-smoothing from CSS side. */
+html { scroll-behavior: auto; }
+
+/* 5. FAQ open/close: animate smoothly (grid-template-rows trick, no JS) */
+.faq-wrap details .a { max-height: 0; overflow: hidden; padding-top:0; padding-bottom:0; transition: max-height .38s ease, opacity .3s ease, padding .38s ease; opacity: 0; }
+.faq-wrap details[open] .a { max-height: 260px; opacity: 1; padding-top:0; padding-bottom:22px; }
+@media (prefers-reduced-motion: reduce){ .faq-wrap details .a { transition:none; max-height:none; opacity:1; padding-bottom:22px; } }
