@@ -32,7 +32,7 @@ body[data-page='home'] .feature-card.garden-card .feature-icon img{width:34px;he
 .garden-card:hover{border-color:var(--sage,#A3C9B6)}
 
 /* ON THE RECORD — proof band */
-.record-band{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;max-width:1080px;margin:0 auto;padding:0 20px}
+.record-band{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;max-width:1140px;margin:0 auto;padding:0 20px}
 .record{border:1px solid var(--border);background:var(--card-bg);border-radius:18px;padding:30px 26px}
 .record .v{font-family:var(--t-font-display,'Instrument Serif',Georgia,serif);font-size:clamp(2.4rem,5vw,3.6rem);font-weight:400;line-height:1;color:var(--text);letter-spacing:-.01em}
 .record .v small{font-size:.45em;color:var(--text-dim)}
@@ -69,7 +69,6 @@ body[data-page='home'] .feature-card.garden-card .feature-icon img{width:34px;he
  .garden-card::after{display:none}
 }
 @media(max-width:640px){
- .record-band{grid-template-columns:1fr}
  .gardener{flex-direction:column}
 }
 
@@ -203,3 +202,53 @@ html { scroll-behavior: auto; }
 .faq-wrap details .a { max-height: 0; overflow: hidden; padding-top:0; padding-bottom:0; transition: max-height .38s ease, opacity .3s ease, padding .38s ease; opacity: 0; }
 .faq-wrap details[open] .a { max-height: 260px; opacity: 1; padding-top:0; padding-bottom:22px; }
 @media (prefers-reduced-motion: reduce){ .faq-wrap details .a { transition:none; max-height:none; opacity:1; padding-bottom:22px; } }
+
+
+/* ===== AESTHETICS PASS — garden tiles, record panel, gardener feature, scan-friendly prose ===== */
+
+/* ── 01 The Garden: hover lift/shadow handled by site.css page rule (stronger, keep) ── */
+.g-idx{font-family:var(--t-font-mono,ui-monospace,monospace);font-size:.56rem;color:var(--text-faint);
+  letter-spacing:.08em;margin-right:6px;vertical-align:2px}
+.garden-card:hover .g-idx{color:var(--sage)}
+
+/* ── 03 On the Record: instrument-panel cards ── */
+.record{position:relative;background:linear-gradient(165deg,rgba(143,175,181,.055),rgba(143,175,181,.015));
+  border:1px solid var(--border);border-radius:14px;padding:20px 20px 16px;
+  transition:transform .25s var(--ease-premium, ease),border-color .25s ease,box-shadow .25s ease}
+.record::before{content:'';position:absolute;top:0;left:16px;right:16px;height:2px;border-radius:2px;
+  background:linear-gradient(90deg,transparent,rgba(143,175,181,.55),transparent);
+  box-shadow:0 0 10px rgba(143,175,181,.35)}
+.record:hover{transform:translateY(-3px);border-color:var(--border-primary);
+  box-shadow:0 10px 24px rgba(0,0,0,.30)}
+.record .v{font-family:var(--t-font-display,'Instrument Serif',Georgia,serif);
+  font-size:2.1rem;line-height:1.05;color:var(--text);letter-spacing:-.01em}
+.record .v small{font-size:1.05rem;color:var(--sage);margin-left:2px}
+.record .l{margin-top:6px}
+.record .s{margin-top:10px}
+
+/* ── 04 The Gardener: feature card treatment ── */
+.gardener{background:linear-gradient(165deg,rgba(143,175,181,.05),rgba(143,175,181,.012));
+  border:1px solid var(--border);border-radius:16px;padding:26px 26px 22px;
+  position:relative;overflow:hidden}
+.gardener::before{content:'';position:absolute;top:-40px;right:-40px;width:180px;height:180px;
+  border-radius:50%;background:radial-gradient(circle,rgba(143,175,181,.10),transparent 65%);pointer-events:none}
+.gardener .med{flex:0 0 56px;width:56px;height:56px;font-size:1.25rem}
+.gardener p{font-size:1.02rem;line-height:1.75}
+.gardener .g-links a{border-bottom:none;padding:6px 0;transition:color .2s ease}
+.gardener .g-links a:hover{color:var(--text)}
+
+/* ── Scan-friendly long reads (about + home prose) ── */
+.about-x-lead{font-size:1.03rem;line-height:1.8;color:var(--text-dim)}
+.about-x-lead strong{color:var(--text);font-weight:600}
+.about-x-prose .about-x-lead + .about-x-lead{margin-top:14px}
+/* First paragraph gets a quiet drop-in feel via existing reveal; keep measure tight */
+.about-x-prose{max-width:64ch}
+.about-x-prow p{line-height:1.65}
+
+@media (max-width:1020px){ .record-band{grid-template-columns:repeat(2,1fr)} }
+@media (max-width:760px){
+  .record-band{grid-template-columns:1fr}
+  .gardener{padding:20px 16px 18px}
+  .record{padding:16px 14px 13px}
+  .record .v{font-size:1.7rem}
+}
