@@ -1144,7 +1144,9 @@
 
     function show(value) {
         tabs.forEach(function (t) {
-            t.classList.toggle('active', t.getAttribute('data-value') === value);
+            var on = t.getAttribute('data-value') === value;
+            t.classList.toggle('active', on);
+            t.setAttribute('aria-pressed', on ? 'true' : 'false');
         });
         cards.forEach(function (c) {
             var on = c.getAttribute('data-value') === value;
