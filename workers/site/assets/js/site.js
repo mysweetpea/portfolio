@@ -479,51 +479,70 @@
         //    the nav "More" dropdown was removed in the minimal-nav pass, so
         //    anything it used to contribute (Changelog, Donate, Suggest,
         //    Contact, About) must still be reachable from the palette.
-        document.querySelectorAll('.nav-logo[href], .nav-btn, .footer-col a').forEach(function (a) {
+        document.querySelectorAll('.nav-btn, .footer-col a').forEach(function (a) {
             var href = a.getAttribute('href');
             if (!href || href.indexOf('http') === 0 || href.indexOf('mailto:') === 0) return;
             var label = a.textContent.trim();
             if (!label || seen[href]) return;
             seen[href] = true;
-            items.push({ label: label, url: href, kind: 'page' });
+            items.push({ label: label, url: href, kind: 'page',
+                         keywords: (a.getAttribute('data-keywords') || '').trim().toLowerCase() });
         });
 
-        // 2. Services parsed from the services page on first call, then reused.
-        //    (Previously the async fetch pushed into this call-local array, so
-        //    every open after the first rebuilt a nav-only index — services
-        //    disappeared from the palette, and the input filter below, which
-        //    reads CMDK_ITEMS, never saw them either.)
+        // 1b. Home = wherever the brand logo points (dynamic, not assumed).
+        var logo = document.querySelector('.nav-logo[href]');
+        if (logo && !seen[logo.getAttribute('href')]) {
+            seen[logo.getAttribute('href')] = true;
+            items.unshift({ label: 'Home', url: logo.getAttribute('href'), kind: 'page', keywords: 'mysweetpea my sweet pea start front landing brand' });
+        }
+
+        // 2. Services parsed from the services page. When services.html itself
+        //    is open we re-parse the LIVE DOM on every palette open (cheap —
+        //    ~15 cards), so cards added/renamed even at runtime are picked up.
+        //    On every other page we fetch services.html once per page load and
+        //    latch on success (a transient fetch failure must not wipe service
+        //    entries for the page lifetime). Either way the index tracks the
+        //    markup — no hardcoded service list anywhere.
+        cmdkBuildIndex._pages = items.slice();   /* pages-only snapshot for async rebuilds */
+        var localDoc = document.querySelector('.service-card[data-service], .coming-soon-card[data-tier]') ? document : null;
+        var parseCards = function (root) {
+            var parsed = [];
+            root.querySelectorAll('.service-card[data-service], .coming-soon-card[data-tier]').forEach(function (card) {
+                var h3 = card.querySelector('h3');
+                if (!h3) return;
+                var nameEl = h3.cloneNode(true);
+                nameEl.querySelectorAll('.live-badge, .status-dot, .acct-pill, .sp-meta').forEach(function (n) { n.remove(); });
+                var soon = card.hasAttribute('data-tier') && card.getAttribute('data-tier') === 'coming-soon';
+                var name = nameEl.textContent.trim();
+                var icon = card.querySelector('.service-icon img') || card.querySelector('.ticket-stub img');
+                var desc = card.querySelector('p');
+                var kw = (card.getAttribute('data-keywords') || '').trim();
+                parsed.push({
+                    label: name,
+                    url: SERVICES_URL,
+                    kind: soon ? 'coming soon' : 'service',
+                    icon: icon ? icon.getAttribute('src') : '',
+                    desc: desc ? desc.textContent.trim() : '',
+                    keywords: kw ? kw.toLowerCase() : ''
+                });
+            });
+            return parsed;
+        };
+        if (localDoc) {
+            CMDK_SERVICE_ITEMS = parseCards(localDoc);
+            CMDK_SERVICES_LOADED = true;
+        }
         items = items.concat(CMDK_SERVICE_ITEMS);
         CMDK_ITEMS = items;
 
         if (!CMDK_SERVICES_LOADED) {
-            /* Latch ONLY on success - a transient fetch failure previously
-               set the flag before the request resolved, permanently removing
-               service entries from the palette for the page lifetime. */
             fetch(SERVICES_URL)
                 .then(function (r) { return r.ok ? r.text() : Promise.reject(); })
                 .then(function (html) {
                     CMDK_SERVICES_LOADED = true;
-                    var parsed = [];
-                    var doc = new DOMParser().parseFromString(html, 'text/html');
-                    doc.querySelectorAll('.service-card[data-service]').forEach(function (card) {
-                        var h3 = card.querySelector('h3');
-                        if (!h3) return;
-                        var nameEl = h3.cloneNode(true);
-                        nameEl.querySelectorAll('.live-badge, .status-dot, .acct-pill').forEach(function (n) { n.remove(); });
-                        var name = nameEl.textContent.trim();
-                        var icon = card.querySelector('.service-icon img') || card.querySelector('.ticket-stub img');
-                        var desc = card.querySelector('p');
-                        parsed.push({
-                            label: name,
-                            url: SERVICES_URL,
-                            kind: 'service',
-                            icon: icon ? icon.getAttribute('src') : '',
-                            desc: desc ? desc.textContent.trim() : ''
-                        });
-                    });
+                    var parsed = parseCards(new DOMParser().parseFromString(html, 'text/html'));
                     CMDK_SERVICE_ITEMS = parsed;
-                    CMDK_ITEMS = CMDK_ITEMS.concat(parsed);
+                    CMDK_ITEMS = cmdkBuildIndex._pages.concat(parsed);
                     if (backdrop.classList.contains('open')) {
                         cmdkFiltered = cmdkApplyFilter(cmdkInput.value);
                         cmdkActive = 0;
@@ -535,15 +554,62 @@
         return items;
     }
 
-    /* Shared filter so the live input handler and the async refresh agree. */
+    /* Shared filter so the live input handler and the async refresh agree.
+       Scoring keeps results coherent for vague/ambiguous input:
+         100 exact · 90 prefix · 80 word-start · 60 substring · fuzzy subsequence
+       keywords and desc rank below the name so the title wins ties.
+       Multi-word queries ("private netflix", "photo backup") require every
+       word to hit somewhere; a single-word typo still matches fuzzily. */
+    function cmdkScore(hay, needle) {
+        if (!hay) return -1;
+        var idx = hay.indexOf(needle);
+        if (idx === 0) return 100;
+        if (idx > 0) {
+            /* right after a space/punct = word start */
+            if (/[\s\-\/·—]/.test(hay.charAt(idx - 1))) return 80;
+            return 60;
+        }
+        /* fuzzy: all chars of needle in order inside hay (typo/partial class) */
+        var hi = 0;
+        for (var i = 0; i < needle.length; i++) {
+            hi = hay.indexOf(needle.charAt(i), hi);
+            if (hi === -1) return -1;
+            hi++;
+        }
+        return 20;
+    }
     function cmdkApplyFilter(rawQuery) {
         var q = (rawQuery || '').trim().toLowerCase();
         if (!q) return CMDK_ITEMS.slice();
-        return CMDK_ITEMS.filter(function (item) {
-            if (item.label.toLowerCase().indexOf(q) !== -1) return true;
-            if (item.desc && item.desc.toLowerCase().indexOf(q) !== -1) return true;
-            return false;
+        /* Stopwords carry no meaning for navigation - requiring them to match
+           turns natural queries like "who runs this" into fuzzy noise. */
+        var STOP = ['the','a','an','of','to','and','or','is','are','for','on','in','it','this','that','my','me','i','how','do','does','what','where','which'];
+        var words = q.split(/\s+/).filter(function (w) {
+            return w && STOP.indexOf(w) === -1;
         });
+        if (!words.length) return CMDK_ITEMS.slice();
+        var scored = [];
+        CMDK_ITEMS.forEach(function (item) {
+            var label = (item.label || '').toLowerCase();
+            var kw = (item.keywords || '');
+            var desc = (item.desc || '').toLowerCase();
+            var total = 0, ok = true;
+            for (var w = 0; w < words.length; w++) {
+                var word = words[w];
+                var best = cmdkScore(label, word);
+                var kScore = cmdkScore(kw, word);
+                if (kScore > best) best = Math.max(best, Math.min(kScore + 5, 85)); /* synonyms help, never beat the name */
+                if (best < 0 && desc) {
+                    var dScore = cmdkScore(desc, word);
+                    if (dScore > 0) best = Math.min(dScore, 55); /* description is the weakest signal */
+                }
+                if (best < 0) { ok = false; break; }
+                total += best;
+            }
+            if (ok) scored.push({ item: item, s: total });
+        });
+        scored.sort(function (a, b) { return b.s - a.s; });
+        return scored.map(function (x) { return x.item; });
     }
 
     var backdrop = document.createElement('div');
@@ -628,6 +694,10 @@
     });
 
     cmdkInput.addEventListener('input', function () {
+        /* Re-scan before filtering: the index is cheap to rebuild (a couple of
+           querySelectorAll passes), and this keeps results correct even if the
+           underlying pages/markup changed while the palette is open. */
+        cmdkBuildIndex();
         cmdkFiltered = cmdkApplyFilter(cmdkInput.value);
         cmdkActive = 0;
         cmdkRender();
@@ -642,6 +712,19 @@
     backdrop.addEventListener('click', function (e) {
         if (e.target === backdrop) cmdkClose();
     });
+
+    /* Public search API — other pages (e.g. the 404 search box) reuse the
+       same dynamic index + fuzzy scorer instead of keeping their own copy. */
+    window.MSPSearch = {
+        query: function (q) { cmdkBuildIndex(); return cmdkApplyFilter(q); },
+        goto: function (q) {
+            var r = window.MSPSearch.query(q);
+            if (r.length) { window.location.href = r[0].url; return true; }
+            return false;
+        },
+        /* Pre-warms the service index (call once on page load). */
+        warm: function () { cmdkBuildIndex(); }
+    };
 })();
 
 /* === Global copy-email buttons (class="copy-email-btn" data-copy="...") ===
