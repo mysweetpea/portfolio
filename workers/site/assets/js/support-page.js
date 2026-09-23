@@ -9,6 +9,24 @@
 (function () {
     'use strict';
 
+    /* Vine divider grows in on scroll (same grammar as home/changelog pages). */
+    var vine = document.querySelector('.vine-divider.reveal-grow');
+    if (vine && 'IntersectionObserver' in window &&
+        !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        vine.style.opacity = '0';
+        vine.style.transform = 'scaleX(0.25)';
+        vine.style.transition = 'opacity .8s ease, transform .8s cubic-bezier(.22,1,.36,1)';
+        new IntersectionObserver(function (entries, obs) {
+            entries.forEach(function (en) {
+                if (en.isIntersecting) {
+                    vine.style.opacity = '';
+                    vine.style.transform = '';
+                    obs.disconnect();
+                }
+            });
+        }, { threshold: 0.4 }).observe(vine);
+    }
+
     /* One delegated handler for both actions. site.js's own bus listener runs
        first (registered earlier); this guard is belt-and-braces for the
        coming-soon state and must never fight it. */

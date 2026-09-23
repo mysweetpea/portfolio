@@ -93,6 +93,41 @@ body[data-page='support'] .dn-card-github .dn-card-actions { margin-top: 4px; }
 body[data-page='support'] .dn-crypto {
     background: linear-gradient(160deg, var(--card-bg) 55%, color-mix(in srgb, var(--primary) 7%, transparent) 130%);
 }
+
+/* --- cursor-tracked glow border (site.js feeds --mouse-x/y on .glow-card) --- */
+body[data-page='support'] .dn-card { position: relative; overflow: hidden; }
+body[data-page='support'] .dn-card.glow-card::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    padding: 1px;
+    background: radial-gradient(300px circle at var(--mouse-x, 50%) var(--mouse-y, 50%),
+        color-mix(in srgb, var(--primary) 40%, transparent), transparent 40%);
+    background: radial-gradient(300px circle at var(--mouse-x, 50%) var(--mouse-y, 50%),
+        rgba(143, 175, 181, 0.4), transparent 40%);
+    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    opacity: 0;
+    transition: opacity 0.3s;
+    pointer-events: none;
+    z-index: 1;
+}
+body[data-page='support'] .dn-card.glow-card:hover::before { opacity: 1; }
+
+/* --- page vine divider breathing ------------------------------------------ */
+body[data-page='support'] .vine-divider { margin: 46px auto 0; }
+
+/* --- icon chips: layered tint + hairline ring ------------------------------ */
+body[data-page='support'] .dn-card-icon {
+    border: 1px solid var(--border-primary);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05);
+}
+body[data-page='support'] .dn-crypto .dn-card-icon {
+    background: linear-gradient(150deg, color-mix(in srgb, var(--primary) 16%, transparent), color-mix(in srgb, var(--primary) 6%, transparent));
+}
 body[data-page='support'] .dn-card-head {
     display: flex;
     align-items: flex-start;
