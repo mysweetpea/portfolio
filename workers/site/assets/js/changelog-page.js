@@ -14,6 +14,7 @@
     if (!feed) return;
 
     var MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+    var WEEKDAYS = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
     var CAT_LABEL = { f: 'Feature', i: 'Improvement', d: 'Fix' };
     var REPO_KEYS = ['repo:portfolio', 'repo:homelab-k8s'];
     var CAT_KEYS = ['cat:f', 'cat:i', 'cat:d'];
@@ -90,22 +91,35 @@
         var filtering = !active.all;
         var shown = 0;
         feed.textContent = '';
-        // Progressive reveal: show the most recent weeks, archive the rest.
-        // Filtering always shows everything (the user asked to see it all).
-        var visibleWeeks = filtering ? weeks.length : (renderFeed.expanded ? weeks.length : 2);
+        // Accordion weeks: every week renders as a collapsed header; the two most
+        // recent open by default. Filtering opens everything (you're hunting).
         weeks.forEach(function (wk, wi) {
             var rows = wk.items.filter(passes);
             if (!rows.length) return;
-            if (wi >= visibleWeeks) return;
             shown += rows.length;
-            var block = el('div', 'cl2-wk');
-            block.appendChild(el('div', 'cl2-week-label', wk.label));
+            var open = filtering || wi < 2;
+            var block = el('div', 'cl2-wk' + (open ? ' open' : ''));
+            block.setAttribute('data-wk', wi);
+            var head = el('button', 'cl2-wk-head');
+            head.type = 'button';
+            head.setAttribute('aria-expanded', open ? 'true' : 'false');
+            head.appendChild(el('span', 'cl2-week-label', wk.label));
+            var meta = rows.length + (rows.length === 1 ? ' change' : ' changes');
+            if (wk.noise > 0) meta += ' \u00B7 ' + wk.noise + ' auto';
+            head.appendChild(el('span', 'cl2-wk-meta', meta));
+            head.appendChild(el('span', 'cl2-wk-caret', '\u25BE'));
+            head.addEventListener('click', function () {
+                var isOpen = block.classList.toggle('open');
+                head.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+                syncExpandToggle();
+            });
+            block.appendChild(head);
+            var body = el('div', 'cl2-wk-body');
+            if (!filtering && wk.noise > 0) {
+                body.appendChild(el('div', 'cl2-noise',
+                    wk.noise + ' automatic service updates hidden this week'));
+            }
             var panel = el('div', 'cl2-panel');
-            var head = el('div', 'cl2-panel-head');
-            head.appendChild(el('span', null, 'Commits \u00B7 daily'));
-            head.appendChild(el('span', 'cl2-panel-count',
-                rows.length + (rows.length === 1 ? ' change' : ' changes')));
-            panel.appendChild(head);
             rows.forEach(function (it) {
                 var row = el('div', 'cl2-row');
                 row.appendChild(el('span', 'cl2-t', dateShort(it.date)));
@@ -117,34 +131,151 @@
                 row.appendChild(el('span', 'cl2-cat ' + (it.cat || 'i'), CAT_LABEL[it.cat] || 'Improvement'));
                 panel.appendChild(row);
             });
-            block.appendChild(panel);
-            if (!filtering && wk.noise > 0) {
-                block.appendChild(el('div', 'cl2-noise',
-                    wk.noise + ' automatic service updates this week'));
-            }
+            body.appendChild(panel);
+            block.appendChild(body);
             feed.appendChild(block);
         });
-        // "Show older activity" control when archive weeks are hidden (unfiltered view only)
-        var hidden = !filtering && !renderFeed.expanded &&
-            weeks.some(function (wk, wi) { return wi >= visibleWeeks && wk.items.length > 0; });
-        var existing = document.getElementById('cl2-more');
-        if (existing && existing.parentNode) existing.parentNode.removeChild(existing);
-        if (hidden) {
-            var total = 0;
-            weeks.forEach(function (wk, wi) { if (wi >= visibleWeeks) total += wk.items.length; });
-            var more = el('button', 'cl2-chip cl2-more', 'Show older activity \u00B7 ' + total + ' more');
-            more.id = 'cl2-more';
-            more.type = 'button';
-            more.addEventListener('click', function () {
-                renderFeed.expanded = true;
-                renderFeed();
-            });
-            feed.appendChild(more);
-        }
+        syncExpandToggle();
+        renderGraph();
         if (!shown) {
-            feed.textContent = '';
             feed.appendChild(el('div', 'cl2-empty', 'Nothing matches those filters yet.'));
         }
+    }
+
+    /* Expand / collapse all control (lives in the Activity eyebrow row) */
+    function syncExpandToggle() {
+        var btn = document.getElementById('cl2-expand');
+        if (!btn) return;
+        var blocks = Array.prototype.slice.call(feed.querySelectorAll('.cl2-wk'));
+        if (!blocks.length) { btn.hidden = true; return; }
+        var openCount = blocks.filter(function (b) { return b.classList.contains('open'); }).length;
+        btn.hidden = false;
+        btn.textContent = openCount === blocks.length ? 'Collapse all' : 'Expand all';
+    }
+
+    function allWeeksOpen(open) {
+        Array.prototype.forEach.call(feed.querySelectorAll('.cl2-wk'), function (b) {
+            b.classList.toggle('open', open);
+            var h = b.querySelector('.cl2-wk-head');
+            if (h) h.setAttribute('aria-expanded', open ? 'true' : 'false');
+        });
+        syncExpandToggle();
+    }
+
+    /* === 30-day stacked activity graph (pure DOM; shares the chip filters) === */
+    function dayKey(d) { return d.getFullYear() + '-' + d.getMonth() + '-' + d.getDate(); }
+
+    function renderGraph() {
+        var g = document.getElementById('cl2-graph');
+        var cap = document.getElementById('cl2-graph-cap');
+        var totalEl = document.getElementById('cl2-graph-total');
+        var legend = document.getElementById('cl2-legend');
+        if (!g) return;
+        g.textContent = '';
+        if (legend) legend.textContent = '';
+        var all = [];
+        (data.weeks || []).forEach(function (wk) { all = all.concat(wk.items); });
+        if (!all.length) { g.hidden = true; if (cap) cap.hidden = true; return; }
+        g.hidden = false; if (cap) cap.hidden = false;
+
+        var now = new Date();
+        var days = [];
+        var byKey = {};
+        for (var i = 29; i >= 0; i--) {
+            var d = new Date(now.getFullYear(), now.getMonth(), now.getDate() - i);
+            var dy = { date: d, f: 0, i: 0, d: 0, total: 0 };
+            days.push(dy);
+            byKey[dayKey(d)] = dy;
+        }
+        var legendCounts = { f: 0, i: 0, d: 0 };
+        all.forEach(function (it) {
+            var dt = new Date(it.date);
+            if (isNaN(dt.getTime())) return;
+            var c = it.cat || 'i';
+            if (c in legendCounts) legendCounts[c]++;
+            var dy = byKey[dayKey(dt)];
+            if (!dy || !passes(it)) return;
+            if (c in dy) { dy[c]++; dy.total++; }
+        });
+
+        var max = 0, grand = 0;
+        days.forEach(function (dy) { if (dy.total > max) max = dy.total; grand += dy.total; });
+        var H = window.innerWidth <= 760 ? 88 : 128;
+
+        days.forEach(function (dy, idx) {
+            var col = el('button', 'cl2-col');
+            col.type = 'button';
+            var lbl = WEEKDAYS[dy.date.getDay()] + ', ' + dateShort(dy.date.toISOString());
+            col.setAttribute('aria-label', lbl + ': ' + dy.total + (dy.total === 1 ? ' change' : ' changes'));
+            col.style.transitionDelay = (idx * 14) + 'ms';
+            if (dy.total > 0) {
+                var bar = el('span', 'cl2-bar');
+                [['f', dy.f], ['d', dy.d], ['i', dy.i]].forEach(function (pair) {
+                    var c = pair[0], n = pair[1];
+                    if (!n) return;
+                    var seg = el('span', 'cl2-seg seg-' + c);
+                    seg.style.height = Math.max(3, Math.round(n / max * H)) + 'px';
+                    bar.appendChild(seg);
+                });
+                col.appendChild(bar);
+            } else {
+                col.appendChild(el('span', 'cl2-bar cl2-bar-zero'));
+            }
+            col.addEventListener('mouseenter', function () { graphCaption(dy); });
+            col.addEventListener('focus', function () { graphCaption(dy); });
+            col.addEventListener('click', function () { jumpToDay(dy.date); });
+            g.appendChild(col);
+        });
+        if (cap) {
+            cap.textContent = 'Hover a day for detail \u00B7 click it to jump to that week';
+            if (!active.all) cap.textContent = 'Filtered view \u2014 graph shows matching changes only. ' + cap.textContent;
+        }
+        if (totalEl) totalEl.textContent = grand + ' in the last 30 days';
+        if (legend) {
+            [['f', 'Features'], ['i', 'Improvements'], ['d', 'Fixes']].forEach(function (pair) {
+                var key = 'cat:' + pair[0];
+                var b = el('button', 'cl2-legend-item cl2-chip' + (active[key] ? ' on' : ''));
+                b.type = 'button';
+                b.setAttribute('data-f', key);
+                b.setAttribute('aria-pressed', active[key] ? 'true' : 'false');
+                b.appendChild(el('span', 'cl2-dot dot-' + pair[0]));
+                b.appendChild(txt(pair[1] + ' \u00B7 ' + legendCounts[pair[0]]));
+                legend.appendChild(b);
+            });
+        }
+    }
+
+    function graphCaption(dy) {
+        var cap = document.getElementById('cl2-graph-cap');
+        if (!cap) return;
+        var parts = [];
+        if (dy.f) parts.push(dy.f + ' ' + (dy.f === 1 ? 'feature' : 'features'));
+        if (dy.i) parts.push(dy.i + ' ' + (dy.i === 1 ? 'improvement' : 'improvements'));
+        if (dy.d) parts.push(dy.d + ' ' + (dy.d === 1 ? 'fix' : 'fixes'));
+        cap.textContent = WEEKDAYS[dy.date.getDay()] + ', ' + dateShort(dy.date.toISOString()) +
+            ' \u2014 ' + (parts.length ? parts.join(' \u00B7 ') : 'no changes');
+    }
+
+    function jumpToDay(date) {
+        var key = dayKey(date);
+        var target = null;
+        Array.prototype.some.call(feed.querySelectorAll('.cl2-wk'), function (block) {
+            var wi = block.getAttribute('data-wk');
+            var wk = (data.weeks || [])[Number(wi)];
+            if (!wk) return false;
+            var hit = wk.items.some(function (it) {
+                var dt = new Date(it.date);
+                return !isNaN(dt.getTime()) && dayKey(dt) === key && passes(it);
+            });
+            if (hit) { target = block; return true; }
+            return false;
+        });
+        if (!target) return;
+        target.classList.add('open');
+        var h = target.querySelector('.cl2-wk-head');
+        if (h) h.setAttribute('aria-expanded', 'true');
+        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        syncExpandToggle();
     }
 
     /* Vine divider grow-on-scroll (same mechanics as home-page.js) */
@@ -164,24 +295,48 @@
         Array.prototype.forEach.call(vines, function (v) { io.observe(v); });
     })();
 
+    /* Shared filter application: header chips AND graph legend chips */
+    function applyFilter(key) {
+        if (!(key in active)) return;
+        if (key === 'all') {
+            Object.keys(active).forEach(function (k) { active[k] = false; });
+            active.all = true;
+        } else {
+            active[key] = !active[key];
+            active.all = !anyOn(REPO_KEYS) && !anyOn(CAT_KEYS);
+        }
+        // sync every chip surface (header row + graph legend)
+        Array.prototype.forEach.call(document.querySelectorAll('.cl2-chip'), function (b) {
+            var k = b.getAttribute('data-f');
+            if (k in active) {
+                b.classList.toggle('on', !!active[k]);
+                b.setAttribute('aria-pressed', active[k] ? 'true' : 'false');
+            }
+        });
+        if (data) renderFeed();  // renderFeed re-renders the graph too
+    }
+
     if (chipsBox) {
         chipsBox.addEventListener('click', function (ev) {
             var btn = ev.target && ev.target.closest ? ev.target.closest('.cl2-chip') : null;
             if (!btn) return;
-            var f = btn.getAttribute('data-f');
-            if (!f || !(f in active)) return;
-            if (f === 'all') {
-                Object.keys(active).forEach(function (k) { active[k] = false; });
-                active.all = true;
-            } else {
-                active[f] = !active[f];
-                active.all = !anyOn(REPO_KEYS) && !anyOn(CAT_KEYS);
-            }
-            Array.prototype.forEach.call(chipsBox.querySelectorAll('.cl2-chip'), function (b) {
-                var key = b.getAttribute('data-f');
-                if (key in active) b.classList.toggle('on', !!active[key]);
-            });
-            if (data) renderFeed();
+            applyFilter(btn.getAttribute('data-f'));
+        });
+    }
+    var legendBox = document.getElementById('cl2-legend');
+    if (legendBox) {
+        legendBox.addEventListener('click', function (ev) {
+            var btn = ev.target && ev.target.closest ? ev.target.closest('.cl2-chip') : null;
+            if (!btn) return;
+            applyFilter(btn.getAttribute('data-f'));
+        });
+    }
+    var expandBtn = document.getElementById('cl2-expand');
+    if (expandBtn) {
+        expandBtn.addEventListener('click', function () {
+            var blocks = Array.prototype.slice.call(feed.querySelectorAll('.cl2-wk'));
+            var openCount = blocks.filter(function (b) { return b.classList.contains('open'); }).length;
+            allWeeksOpen(openCount !== blocks.length);
         });
     }
 

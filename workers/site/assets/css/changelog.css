@@ -346,6 +346,181 @@ body[data-page='changelog'] .cl2-more:hover {
     background: rgba(143, 175, 181, 0.09);
 }
 
+/* === Week accordion === */
+body[data-page='changelog'] .cl2-wk-head {
+    display: flex;
+    align-items: baseline;
+    gap: 12px;
+    width: 100%;
+    padding: 14px 20px;
+    background: transparent;
+    border: 0;
+    border-bottom: 1px solid var(--hairline);
+    cursor: pointer;
+    text-align: left;
+    color: var(--text);
+}
+body[data-page='changelog'] .cl2-wk:last-child .cl2-wk-head {
+    border-bottom-color: transparent;
+}
+body[data-page='changelog'] .cl2-wk-head:hover .cl2-week-label {
+    color: var(--primary-bright);
+}
+body[data-page='changelog'] .cl2-wk-meta {
+    font-family: var(--t-font-mono);
+    font-size: var(--t-fs-4xs);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--text-faint);
+}
+body[data-page='changelog'] .cl2-wk-caret {
+    margin-left: auto;
+    font-size: 0.8em;
+    color: var(--text-faint);
+    transition: transform 0.3s ease;
+}
+body[data-page='changelog'] .cl2-wk.open .cl2-wk-caret { transform: rotate(180deg); }
+
+body[data-page='changelog'] .cl2-wk-body {
+    display: none;
+}
+body[data-page='changelog'] .cl2-wk.open .cl2-wk-body { display: block; }
+
+/* the old inner panel head is gone (accordion head replaces it) */
+body[data-page='changelog'] .cl2-wk-body .cl2-panel {
+    border: 0;
+    background: transparent;
+}
+body[data-page='changelog'] .cl2-wk-body .cl2-noise { border-radius: 0; }
+
+/* Expand-all control in the Activity eyebrow */
+body[data-page='changelog'] .cl2-expand {
+    margin-left: auto;
+    padding: 4px 12px;
+    font-size: var(--t-fs-4xs);
+}
+body[data-page='changelog'] .cl2-expand[hidden] { display: none; }
+
+/* === 30-day activity graph === */
+body[data-page='changelog'] .cl2-graphsec {
+    margin-top: 34px;
+}
+body[data-page='changelog'] .cl2-graph {
+    display: flex;
+    align-items: flex-end;
+    gap: 3px;
+    height: 132px;
+    padding: 18px 4px 0;
+    border-bottom: 1px solid var(--hairline);
+}
+body[data-page='changelog'] .cl2-col {
+    flex: 1 1 0;
+    min-width: 0;
+    height: 100%;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    padding: 0;
+    background: transparent;
+    border: 0;
+    cursor: pointer;
+    opacity: 0;
+    transform: translateY(8px);
+    animation: cl2-bar-in 0.5s ease forwards;
+}
+@keyframes cl2-bar-in {
+    to { opacity: 1; transform: translateY(0); }
+}
+body[data-page='changelog'] .cl2-bar {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    width: 100%;
+    max-width: 26px;
+}
+body[data-page='changelog'] .cl2-bar-zero {
+    height: 2px;
+    border-radius: 1px;
+    background: var(--hairline);
+}
+body[data-page='changelog'] .cl2-seg {
+    display: block;
+    width: 100%;
+}
+body[data-page='changelog'] .cl2-seg.seg-f {
+    background: #7ED4B8;
+    border-radius: 2px 2px 0 0;
+}
+body[data-page='changelog'] .cl2-seg.seg-i {
+    background: var(--primary);
+}
+body[data-page='changelog'] .cl2-seg.seg-f + .cl2-seg.seg-i,
+body[data-page='changelog'] .cl2-seg.seg-i + .cl2-seg.seg-d {
+    border-radius: 0;
+}
+body[data-page='changelog'] .cl2-seg.seg-d {
+    background: var(--gold);
+    border-radius: 0;
+}
+/* bottom-most segment gets the base radius */
+body[data-page='changelog'] .cl2-bar .cl2-seg:last-child {
+    border-radius: 0 0 2px 2px;
+}
+body[data-page='changelog'] .cl2-bar .cl2-seg:only-child {
+    border-radius: 2px;
+}
+body[data-page='changelog'] .cl2-col:hover .cl2-bar,
+body[data-page='changelog'] .cl2-col:focus-visible .cl2-bar {
+    filter: brightness(1.25);
+}
+body[data-page='changelog'] .cl2-col:focus-visible {
+    outline: 2px solid var(--primary-bright);
+    outline-offset: 2px;
+}
+body[data-page='changelog'] .cl2-graph-foot {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 14px;
+    flex-wrap: wrap;
+    margin-top: 12px;
+}
+body[data-page='changelog'] .cl2-legend {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+body[data-page='changelog'] .cl2-legend-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    padding: 5px 12px;
+    font-size: var(--t-fs-4xs);
+}
+body[data-page='changelog'] .cl2-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    flex: none;
+}
+body[data-page='changelog'] .cl2-dot.dot-f { background: #7ED4B8; }
+body[data-page='changelog'] .cl2-dot.dot-i { background: var(--primary); }
+body[data-page='changelog'] .cl2-dot.dot-d { background: var(--gold); }
+body[data-page='changelog'] .cl2-graph-total {
+    font-family: var(--t-font-mono);
+    font-size: var(--t-fs-4xs);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--text-faint);
+}
+body[data-page='changelog'] .cl2-graph-cap {
+    font-family: var(--t-font-mono);
+    font-size: var(--t-fs-4xs);
+    letter-spacing: 0.04em;
+    color: var(--text-faint);
+    min-height: 1.2em;
+}
+
 /* hidden-attr overrides (author CSS beats the UA [hidden] rule otherwise) */
 body[data-page='changelog'] .cl2-highlights[hidden],
 body[data-page='changelog'] .vine-divider[hidden] { display: none !important; }
@@ -410,6 +585,22 @@ body[data-page='changelog'] .cl2-empty {
         justify-content: center;
         text-align: center;
     }
+    /* accordion density on phones */
+    body[data-page='changelog'] .cl2-wk-head { padding: 12px 16px; gap: 8px; }
+    body[data-page='changelog'] .cl2-week-label { font-size: var(--t-fs-xs); }
+    body[data-page='changelog'] .cl2-wk-meta { display: none; }
+    /* graph: shorter bars, tighter gaps, caption drops below the legend */
+    body[data-page='changelog'] .cl2-graph {
+        gap: 1px;
+        height: 96px;
+        padding: 14px 0 0;
+    }
+    body[data-page='changelog'] .cl2-bar { max-width: 14px; }
+    body[data-page='changelog'] .cl2-graph-foot {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 8px;
+    }
 }
 
 /* === Reduced motion: kill shimmer + hover transforms + pulse + entrances === */
@@ -421,6 +612,8 @@ body[data-page='changelog'] .cl2-empty {
     body[data-page='changelog'] .cl2-hl:hover { transform: none; }
     body[data-page='changelog'] .cl2-skel { animation: none; }
     body[data-page='changelog'] .cl2-pulse::before { animation: none; }
+    body[data-page='changelog'] .cl2-col { animation: none; opacity: 1; transform: none; }
+    body[data-page='changelog'] .cl2-wk-caret { transition: none; }
     body[data-page='changelog'] .vine-divider.reveal-grow::before,
     body[data-page='changelog'] .vine-divider.reveal-grow::after {
         transform: scaleX(1);

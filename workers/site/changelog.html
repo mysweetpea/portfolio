@@ -50,7 +50,7 @@ html[data-theme="light"]{background:#E7EDEA;color-scheme:light}
     <link rel="stylesheet" href="/assets/css/site.css?v=107">
     <link rel="stylesheet" href="/assets/css/premium.css?v=114">
     <link rel="stylesheet" href="/assets/css/type-tokens.css?v=107">
-    <link rel="stylesheet" href="/assets/css/changelog.css?v=4">
+    <link rel="stylesheet" href="/assets/css/changelog.css?v=5">
     <link rel="stylesheet" href="/assets/css/hermes-type.css?v=107">
 <link rel="canonical" href="https://mysweetpea.cc/changelog">
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"Organization","name":"MySweetPea","url":"https://mysweetpea.cc","logo":"https://mysweetpea.cc/icon-512.png","description":"Private, self-hosted alternatives to the services you use every day. No ads, no tracking, no subscriptions — community funded.","email":"support@mysweetpea.cc","sameAs":["https://github.com/mysweetpea"]}</script>
@@ -109,8 +109,22 @@ html[data-theme="light"]{background:#E7EDEA;color-scheme:light}
 
             <div class="vine-divider reveal-grow" aria-hidden="true"></div>
 
+            <section class="cl2-graphsec" aria-label="30-day activity graph">
+                <div class="cl2-eyebrow">
+                    <span>Last 30 days</span>
+                    <span class="cl2-graph-total" id="cl2-graph-total"></span>
+                </div>
+                <div class="cl2-graph" id="cl2-graph" role="img" aria-label="Stacked bar chart of changes per day over the last 30 days"></div>
+                <div class="cl2-graph-foot">
+                    <div class="cl2-legend" id="cl2-legend" role="group" aria-label="Filter by category"></div>
+                    <span class="cl2-graph-cap" id="cl2-graph-cap"></span>
+                </div>
+            </section>
+
             <section class="cl2-console" aria-label="Activity">
-                <div class="cl2-eyebrow">Activity <span class="cl2-score" id="cl2-score"></span></div>
+                <div class="cl2-eyebrow">Activity <span class="cl2-score" id="cl2-score"></span>
+                    <button type="button" class="cl2-chip cl2-expand" id="cl2-expand" hidden>Collapse all</button>
+                </div>
                 <div class="cl2-chips" id="cl2-chips" role="group" aria-label="Filter activity">
                     <button class="cl2-chip on" data-f="all">All</button>
                     <button class="cl2-chip" data-f="repo:portfolio">portfolio</button>
@@ -176,7 +190,7 @@ html[data-theme="light"]{background:#E7EDEA;color-scheme:light}
     <script src="/assets/js/lenis-init.js?v=107" defer></script>
     <script src="/assets/js/site.js?v=108" defer></script>
     <script src="/assets/js/premium.js?v=107" defer></script>
-    <script src="/assets/js/changelog-page.js?v=4" defer></script>
+    <script src="/assets/js/changelog-page.js?v=5" defer></script>
     <script>
     if ('serviceWorker' in navigator) {
         window.addEventListener('load', function () {
