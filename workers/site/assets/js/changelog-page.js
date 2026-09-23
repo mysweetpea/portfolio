@@ -107,9 +107,12 @@
             var meta = rows.length + (rows.length === 1 ? ' change' : ' changes');
             if (wk.noise > 0) meta += ' \u00B7 ' + wk.noise + ' auto';
             head.appendChild(el('span', 'cl2-wk-meta', meta));
+            head.appendChild(el('span', 'cl2-wk-toggle', (open ? 'Hide' : 'Show ' + rows.length)));
             head.appendChild(el('span', 'cl2-wk-caret', '\u25BE'));
             head.addEventListener('click', function () {
                 var isOpen = block.classList.toggle('open');
+                var tg = head.querySelector('.cl2-wk-toggle');
+                if (tg) tg.textContent = isOpen ? 'Hide' : 'Show ' + rows.length;
                 head.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
                 syncExpandToggle();
             });
@@ -158,6 +161,13 @@
             b.classList.toggle('open', open);
             var h = b.querySelector('.cl2-wk-head');
             if (h) h.setAttribute('aria-expanded', open ? 'true' : 'false');
+            var tg = b.querySelector('.cl2-wk-toggle');
+            if (tg) {
+                var wi = Number(b.getAttribute('data-wk'));
+                var wk = (data && data.weeks) ? data.weeks[wi] : null;
+                var n = wk ? wk.items.filter(passes).length : 0;
+                tg.textContent = open ? 'Hide' : 'Show ' + n;
+            }
         });
         syncExpandToggle();
     }
@@ -172,7 +182,7 @@
         var legend = document.getElementById('cl2-legend');
         if (!g) return;
         g.textContent = '';
-        if (legend) legend.textContent = '';
+        // NOTE: legend is STATIC in HTML now — do not clear it here.
         var all = [];
         (data.weeks || []).forEach(function (wk) { all = all.concat(wk.items); });
         if (!all.length) { g.hidden = true; if (cap) cap.hidden = true; return; }
@@ -221,8 +231,10 @@
             } else {
                 col.appendChild(el('span', 'cl2-bar cl2-bar-zero'));
             }
-            col.addEventListener('mouseenter', function () { graphCaption(dy); });
-            col.addEventListener('focus', function () { graphCaption(dy); });
+            col.addEventListener('mouseenter', function () { graphCaption(dy); showTip(col, dy); });
+            col.addEventListener('mouseleave', hideTip);
+            col.addEventListener('focus', function () { graphCaption(dy); showTip(col, dy); });
+            col.addEventListener('blur', hideTip);
             col.addEventListener('click', function () { jumpToDay(dy.date); });
             g.appendChild(col);
         });
@@ -234,16 +246,17 @@
         // the Activity score mirrors the graph's strict 30-day count (API totals include stragglers)
         var scoreEl = document.getElementById('cl2-score');
         if (scoreEl) scoreEl.textContent = grand + (grand === 1 ? ' change' : ' changes') + ' in the last 30 days';
+        // Legend is now STATIC in the HTML (two labeled filter groups); here we
+        // only keep the counts + on-state in sync (data-count + aria-pressed).
         if (legend) {
             [['f', 'Features'], ['i', 'Improvements'], ['d', 'Fixes']].forEach(function (pair) {
                 var key = 'cat:' + pair[0];
-                var b = el('button', 'cl2-legend-item cl2-chip' + (active[key] ? ' on' : ''));
-                b.type = 'button';
-                b.setAttribute('data-f', key);
+                var b = legend.querySelector('[data-f="' + key + '"]');
+                if (!b) return;
                 b.setAttribute('aria-pressed', active[key] ? 'true' : 'false');
-                b.appendChild(el('span', 'cl2-dot dot-' + pair[0]));
-                b.appendChild(txt(pair[1] + ' \u00B7 ' + legendCounts[pair[0]]));
-                legend.appendChild(b);
+                b.classList.toggle('on', !!active[key]);
+                var cnt = b.querySelector('.lg-count');
+                if (cnt) cnt.textContent = String(legendCounts[pair[0]]);
             });
         }
     }
@@ -258,6 +271,31 @@
         cap.textContent = WEEKDAYS[dy.date.getDay()] + ', ' + dateShort(dy.date.toISOString()) +
             ' \u2014 ' + (parts.length ? parts.join(' \u00B7 ') : 'no changes');
     }
+
+    /* Floating tooltip for graph columns (also mirrors into the caption line) */
+    var tipEl = null;
+    function showTip(col, dy) {
+        if (!tipEl) {
+            tipEl = el('div', 'cl2-tip');
+            tipEl.setAttribute('aria-hidden', 'true');
+            document.body.appendChild(tipEl);
+        }
+        tipEl.textContent = '';
+        var s = el('span', 'cl2-tip-day', WEEKDAYS[dy.date.getDay()].slice(0, 3) + ', ' + dateShort(dy.date.toISOString()));
+        tipEl.appendChild(s);
+        tipEl.appendChild(el('b', null, String(dy.total)));
+        tipEl.appendChild(txt(' change' + (dy.total === 1 ? '' : 's')));
+        var parts = [];
+        if (dy.f) parts.push(dy.f + ' feat');
+        if (dy.i) parts.push(dy.i + ' impr');
+        if (dy.d) parts.push(dy.d + ' fix');
+        if (parts.length) tipEl.appendChild(el('span', 'cl2-tip-break', parts.join(' \u00B7 ')));
+        tipEl.hidden = false;
+        var r = col.getBoundingClientRect();
+        tipEl.style.left = Math.round(r.left + r.width / 2 + window.scrollX) + 'px';
+        tipEl.style.top = Math.round(r.top + window.scrollY - 10) + 'px';
+    }
+    function hideTip() { if (tipEl) tipEl.hidden = true; }
 
     function jumpToDay(date) {
         var key = dayKey(date);
@@ -277,6 +315,8 @@
         target.classList.add('open');
         var h = target.querySelector('.cl2-wk-head');
         if (h) h.setAttribute('aria-expanded', 'true');
+        var tg = target.querySelector('.cl2-wk-toggle');
+        if (tg) tg.textContent = 'Hide';
         target.scrollIntoView({ behavior: 'smooth', block: 'start' });
         syncExpandToggle();
     }
@@ -316,7 +356,15 @@
                 b.setAttribute('aria-pressed', active[k] ? 'true' : 'false');
             }
         });
+        // Reset affordance only while a filter is active
+        var resetBtn = document.getElementById('cl2-reset');
+        if (resetBtn) resetBtn.hidden = !!active.all;
         if (data) renderFeed();  // renderFeed re-renders the graph too
+    }
+
+    var resetBtn = document.getElementById('cl2-reset');
+    if (resetBtn) {
+        resetBtn.addEventListener('click', function () { applyFilter('all'); });
     }
 
     if (chipsBox) {
