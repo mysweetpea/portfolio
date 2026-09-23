@@ -4,23 +4,47 @@
    the two verified light-theme overrides. Tested: light + dark, 1440/768/390.
    ========================================================================== */
 
-/* --- hero stats strip ----------------------------------------------------- */
+/* --- hero polish ------------------------------------------------------------ */
+body[data-page='support'] .dn-eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    font-family: var(--t-font-mono, ui-monospace, monospace);
+    font-size: var(--t-fs-3xs, 0.72rem);
+    text-transform: uppercase;
+    letter-spacing: 0.16em;
+    color: var(--sage);
+}
+body[data-page='support'] .dn-eyebrow::before,
+body[data-page='support'] .dn-eyebrow::after {
+    content: "";
+    width: 22px;
+    height: 1px;
+    background: var(--border-primary);
+}
+body[data-page='support'] .hero-sub { max-width: 620px; }
+
+/* --- hero stats strip: instrument tiles with hairline separators ------------ */
 body[data-page='support'] .dn-hero-stats {
     display: flex;
     justify-content: center;
-    gap: clamp(18px, 4vw, 44px);
-    margin: 26px auto 6px;
+    gap: 0;
+    margin: 30px auto 6px;
     flex-wrap: wrap;
 }
 body[data-page='support'] .dn-stat {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 2px;
+    gap: 4px;
+    padding: 2px 34px;
+    border-left: 1px solid var(--border);
 }
+body[data-page='support'] .dn-stat:first-child { border-left: none; }
 body[data-page='support'] .dn-stat-n {
     font-family: var(--t-font-display, Georgia, serif);
     font-size: var(--t-fs-h2, 1.8rem);
+    line-height: 1.1;
     color: var(--text);
 }
 body[data-page='support'] .dn-stat-l {
@@ -32,13 +56,19 @@ body[data-page='support'] .dn-stat-l {
 }
 
 /* --- section rhythm -------------------------------------------------------- */
-body[data-page='support'] .dn-section { margin-top: 52px; }
+/* Page column: matches the changelog/about console grammar (720px centered)
+   so the page reads as one column instead of full-bleed rows. */
+body[data-page='support'] .dn-section {
+    max-width: 764px; /* 720 + 2×22px breathing over changelog's 720 */
+    margin: 52px auto 0;
+    padding: 0 24px;
+}
 body[data-page='support'] .dn-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    grid-template-columns: 1fr 1fr;
     gap: 18px;
     margin-top: 26px;
-    align-items: stretch;
+    align-items: start; /* organic heights — no stretched hole in the short card */
 }
 
 /* --- cards ------------------------------------------------------------------
@@ -48,7 +78,7 @@ body[data-page='support'] .dn-card {
     display: flex;
     flex-direction: column;
     gap: 14px;
-    padding: 24px;
+    padding: 26px 24px;
     border-radius: var(--radius, 18px);
     background: var(--card-bg);
     border: 1px solid var(--border);
@@ -56,9 +86,10 @@ body[data-page='support'] .dn-card {
 }
 body[data-page='support'] .dn-card:hover {
     transform: translateY(-2px);
-    border-color: var(--border-strong, var(--border));
+    border-color: var(--border-primary);
     box-shadow: 0 14px 40px rgba(0, 0, 0, 0.18);
 }
+body[data-page='support'] .dn-card-github .dn-card-actions { margin-top: 4px; }
 body[data-page='support'] .dn-crypto {
     background: linear-gradient(160deg, var(--card-bg) 55%, color-mix(in srgb, var(--primary) 7%, transparent) 130%);
 }
@@ -286,8 +317,8 @@ body[data-page='support'] .faq-answer a { color: var(--primary); }
     body[data-page='support'] .dn-why { padding: 18px; grid-template-columns: 1fr; }
     body[data-page='support'] .dn-why-icon { grid-row: auto; }
     body[data-page='support'] .crypto-options { grid-template-columns: 1fr; }
-    body[data-page='support'] .dn-hero-stats { gap: 14px 22px; }
-    body[data-page='support'] .dn-stat { min-width: 86px; }
+    body[data-page='support'] .dn-hero-stats { gap: 0; }
+    body[data-page='support'] .dn-stat { min-width: 0; padding: 2px 20px; }
     body[data-page='support'] .faq-question { padding: 15px 16px; }
 }
 
