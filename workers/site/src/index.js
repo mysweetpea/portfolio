@@ -32,7 +32,7 @@ export default {
     // (f/d/i), top-3 highlights with optional manual override, week-grouped rows.
     if (url.pathname === '/api/commits') {
       const now = Date.now();
-      if (commitsCache.data && (now - commitsCache.ts) < COMMITS_TTL) {
+      if (commitsCache.data && (now - commitsCache.ts) < (commitsCache.ttl || COMMITS_TTL)) {
         return new Response(JSON.stringify(commitsCache.data), {
           headers: {
             'Content-Type': 'application/json',
@@ -52,15 +52,28 @@ export default {
 
       const results = await Promise.all(repos.map(async (repo) => {
         try {
-          const res = await fetch('https://api.github.com/repos/' + repo + '/commits?per_page=60', { headers });
+          const res = await fetch('https://api.github.com/repos/' + repo + '/commits?per_page=100', { headers });
           if (!res.ok) return [];
-          const data = await res.json();
-          return data.map((c) => ({
+          let data = await res.json();
+          // Paginate until the 30-day window is covered (guarded, max 3 pages).
+          const cutoff = Date.now() - 30 * 86400000;
+          for (let page = 1; page < 3 && Array.isArray(data) && data.length === 100; page++) {
+            const oldest = data[data.length - 1];
+            const od = oldest && oldest.commit && oldest.commit.author && Date.parse(oldest.commit.author.date);
+            if (!od || od < cutoff) break;
+            const res2 = await fetch('https://api.github.com/repos/' + repo + '/commits?per_page=100&page=' + (page + 1), { headers });
+            if (!res2.ok) break;
+            const more = await res2.json();
+            if (!Array.isArray(more) || more.length === 0) break;
+            data = data.concat(more);
+          }
+          if (!Array.isArray(data)) return [];
+          return data.filter((c) => c && c.sha && c.commit && c.commit.author && c.commit.author.date).map((c) => ({
             repo: repo.split('/')[1],
             full: c.sha,
             sha: c.sha.slice(0, 7),
-            message: (c.commit && c.commit.message || '').split('\n')[0],
-            date: c.commit && c.commit.author && c.commit.author.date
+            message: (c.commit.message || '').split('\n')[0],
+            date: c.commit.author.date
           }));
         } catch (e) {
           return [];
@@ -175,11 +188,11 @@ export default {
         }))
       };
 
-      // Don't cache empty results: a transient GitHub failure would otherwise
-      // blank the changelog for the whole TTL.
-      if (items.length > 0 || total.noise > 0) {
-        commitsCache = { data: payload, ts: now };
-      }
+      // Cache good results for the full TTL; cache empty results only 30s so a
+      // GitHub failure/repo-hiccup bounds the fan-out instead of re-fetching on
+      // every request, without blanking the changelog for 5 minutes.
+      const ttl = (items.length > 0 || total.noise > 0) ? COMMITS_TTL : 30_000;
+      commitsCache = { data: payload, ts: now, ttl };
 
       return new Response(JSON.stringify(payload), {
         headers: {
@@ -207,21 +220,27 @@ export default {
       if (!state.logged_in) return new Response(JSON.stringify({ error: 'sign_in_required' }), { status: 401, headers: { 'Content-Type': 'application/json', 'Cache-Control': 'no-store' } });
       let payload;
       try { payload = await request.json(); } catch { return new Response(JSON.stringify({ error: 'bad_json' }), { status: 400, headers: JSON_HEADERS }); }
+      if (!payload || typeof payload !== 'object') return new Response(JSON.stringify({ error: 'bad_json' }), { status: 400, headers: JSON_HEADERS });
       // Sanitize: only known fields, bounded lengths
       const clean = {
         service_name: String(payload.service_name || '').slice(0, 120),
         project_url: String(payload.project_url || '').slice(0, 300),
         category: String(payload.category || '').slice(0, 60),
         reason: String(payload.reason || '').slice(0, 2000),
-        your_name: state.name || String(payload.your_name || '').slice(0, 120),
+        your_name: (state.name || String(payload.your_name || '')).slice(0, 120),
         your_email: String(payload.your_email || '').slice(0, 200)
       };
       if (!clean.service_name || !clean.category || !clean.reason) return new Response(JSON.stringify({ error: 'missing_fields' }), { status: 400, headers: JSON_HEADERS });
-      const upstream = await fetch('https://subscribe.mysweetpea.cc/webhook/suggest', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(clean)
-      });
+      let upstream;
+      try {
+        upstream = await fetch('https://subscribe.mysweetpea.cc/webhook/suggest', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(clean)
+        });
+      } catch (e) {
+        return new Response(JSON.stringify({ error: 'upstream_unreachable' }), { status: 502, headers: JSON_HEADERS });
+      }
       return new Response(JSON.stringify({ ok: upstream.ok }), {
         status: upstream.ok ? 200 : 502,
         headers: { 'Content-Type': 'application/json', 'Cache-Control': 'no-store' }

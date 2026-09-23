@@ -96,7 +96,7 @@
                 var row = el('div', 'cl2-row');
                 row.appendChild(el('span', 'cl2-t', dateShort(it.date)));
                 var m = el('span', 'cl2-m');
-                m.appendChild(txt(it.message));
+                m.appendChild(el('span', 'cl2-mtxt', it.message));
                 m.appendChild(el('span', null, ' \u00B7 ' + it.repo));
                 row.appendChild(m);
                 row.appendChild(el('span', 'cl2-cat ' + (it.cat || 'i'), CAT_LABEL[it.cat] || 'Improvement'));
@@ -136,27 +136,32 @@
         });
     }
 
-    fetch('/api/commits')
-        .then(function (res) {
-            return res.ok ? res.json() : Promise.reject(new Error('HTTP ' + res.status));
-        })
-        .then(function (payload) {
-            if (!payload || !Array.isArray(payload.weeks) || !Array.isArray(payload.highlights)) {
-                throw new Error('unexpected /api/commits shape');
-            }
-            data = payload;
-            if (pulse) pulse.hidden = false;
-            if (score) {
-                var t = payload.totals || {};
-                var n = (t.features || 0) + (t.improvements || 0) + (t.fixes || 0);
-                score.textContent = n + (n === 1 ? ' change' : ' changes') + ' this month';
-            }
-            renderHighlights();
-            renderFeed();
-        })
-        .catch(function (err) {
-            console.warn('[cl2] activity feed failed:', err);
-            feed.textContent = '';
-            feed.appendChild(el('div', 'cl2-empty', "Couldn't load the activity feed. Refresh to try again."));
-        });
+    (function () {
+        var ctl;
+        try { ctl = new AbortController(); } catch (e) { ctl = null; }
+        if (ctl) setTimeout(function () { ctl.abort(); }, 10000);
+        fetch('/api/commits', ctl ? { signal: ctl.signal } : undefined)
+            .then(function (res) {
+                return res.ok ? res.json() : Promise.reject(new Error('HTTP ' + res.status));
+            })
+            .then(function (payload) {
+                var ok = payload && Array.isArray(payload.weeks) && Array.isArray(payload.highlights) &&
+                    payload.weeks.every(function (w) { return w && Array.isArray(w.items); });
+                if (!ok) throw new Error('unexpected /api/commits shape');
+                data = payload;
+                if (pulse) pulse.hidden = false;
+                if (score) {
+                    var t = payload.totals || {};
+                    var n = (t.features || 0) + (t.improvements || 0) + (t.fixes || 0);
+                    score.textContent = n + (n === 1 ? ' change' : ' changes') + ' this month';
+                }
+                renderHighlights();
+                renderFeed();
+            })
+            .catch(function (err) {
+                console.warn('[cl2] activity feed failed:', err);
+                feed.textContent = '';
+                feed.appendChild(el('div', 'cl2-empty', "Couldn't load the activity feed. Refresh to try again."));
+            });
+    })();
 })();

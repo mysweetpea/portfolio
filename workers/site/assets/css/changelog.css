@@ -17,8 +17,10 @@
 
 /* === Hero pulse line (unhidden by changelog-page.js after a good load) === */
 body[data-page='changelog'] .cl2-pulse {
-    display: inline-flex;
+    /* block-level (not inline-flex): auto side margins only center block boxes */
+    display: flex;
     align-items: center;
+    justify-content: center;
     gap: 9px;
     width: max-content;
     max-width: 100%;
@@ -178,6 +180,10 @@ body[data-page='changelog'] .cl2-chips {
     gap: 8px;
     margin-bottom: 14px;
 }
+body[data-page='changelog'] .cl2-chip:focus-visible {
+    outline: 2px solid var(--primary-bright);
+    outline-offset: 2px;
+}
 body[data-page='changelog'] .cl2-chip {
     padding: 6px 13px;
     border: 1px solid var(--hairline);
@@ -271,6 +277,13 @@ body[data-page='changelog'] .cl2-m {
     color: var(--text);
     overflow-wrap: anywhere;
 }
+/* keep the console scannable: clamp long messages to two lines (repo suffix stays visible) */
+body[data-page='changelog'] .cl2-mtxt {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
 body[data-page='changelog'] .cl2-m span { color: var(--text-faint); }
 body[data-page='changelog'] .cl2-cat {
     display: inline-flex;
@@ -306,10 +319,10 @@ body[data-page='changelog'] .cl2-noise {
     font-size: var(--t-fs-3xs);
     font-style: italic;
     letter-spacing: 0.04em;
-    color: rgba(233, 243, 244, 0.30);
+    color: rgba(233, 243, 244, 0.45);
 }
 html[data-theme='light'] body[data-page='changelog'] .cl2-noise {
-    color: rgba(27, 43, 49, 0.42);
+    color: rgba(27, 43, 49, 0.55);
 }
 
 /* === Skeletons / empty state === */
