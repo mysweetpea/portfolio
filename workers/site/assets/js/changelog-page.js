@@ -243,6 +243,18 @@
             if (!active.all) cap.textContent = 'Filtered view \u2014 graph shows matching changes only. ' + cap.textContent;
         }
         if (totalEl) totalEl.textContent = grand + ' in the last 30 days';
+        // Time axis: 5 evenly spaced date ticks under the bars (oldest left, today right)
+        var axis = document.getElementById('cl2-axis');
+        if (axis) {
+            axis.textContent = '';
+            [0, 7, 14, 21, 29].forEach(function (back) {
+                var d = days[days.length - 1 - back];
+                if (!d) return;
+                var t = el('span', 'cl2-axis-tick', MONTHS[d.date.getMonth()] + ' ' + d.date.getDate());
+                // spread ticks with flex space-between; last one right-aligned
+                axis.appendChild(t);
+            });
+        }
         // the Activity score mirrors the graph's strict 30-day count (API totals include stragglers)
         var scoreEl = document.getElementById('cl2-score');
         if (scoreEl) scoreEl.textContent = grand + (grand === 1 ? ' change' : ' changes') + ' in the last 30 days';
@@ -286,10 +298,15 @@
         tipEl.appendChild(el('b', null, String(dy.total)));
         tipEl.appendChild(txt(' change' + (dy.total === 1 ? '' : 's')));
         var parts = [];
-        if (dy.f) parts.push(dy.f + ' feat');
-        if (dy.i) parts.push(dy.i + ' impr');
-        if (dy.d) parts.push(dy.d + ' fix');
-        if (parts.length) tipEl.appendChild(el('span', 'cl2-tip-break', parts.join(' \u00B7 ')));
+        if (dy.f) parts.push({ n: dy.f, w: dy.f === 1 ? 'feat' : 'feats', c: 'dot-f' });
+        if (dy.i) parts.push({ n: dy.i, w: dy.i === 1 ? 'improvement' : 'improvements', c: 'dot-i' });
+        if (dy.d) parts.push({ n: dy.d, w: dy.d === 1 ? 'fix' : 'fixes', c: 'dot-d' });
+        parts.forEach(function (p2, i2) {
+            if (i2) tipEl.appendChild(txt(' \u00B7 '));
+            tipEl.appendChild(el('span', 'cl2-dot cl2-tip-dot ' + p2.c));
+            tipEl.appendChild(txt(p2.n + ' ' + p2.w));
+        });
+        if (!parts.length) tipEl.appendChild(el('span', 'cl2-tip-break', 'no changes'));
         tipEl.hidden = false;
         var r = col.getBoundingClientRect();
         tipEl.style.left = Math.round(r.left + r.width / 2 + window.scrollX) + 'px';
