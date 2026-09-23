@@ -15,6 +15,9 @@
     50% { opacity: 0.45; }
 }
 
+/* Feature accent (was hardcoded #7ED4B8 in 4 places — tokenized per audit) */
+body[data-page='changelog'] { --cl2-feat: #7ED4B8; --cl2-feat-border: rgba(126, 212, 184, 0.4); }
+
 /* === Hero pulse line (unhidden by changelog-page.js after a good load) === */
 body[data-page='changelog'] .cl2-pulse {
     /* block-level (not inline-flex): auto side margins only center block boxes */
@@ -164,8 +167,8 @@ body[data-page='changelog'] .cl2-tag {
     color: var(--text-dim);
 }
 body[data-page='changelog'] .cl2-tag.f {
-    color: #7ED4B8;
-    border-color: rgba(126, 212, 184, 0.4);
+    color: var(--cl2-feat);
+    border-color: var(--cl2-feat-border);
 }
 body[data-page='changelog'] .cl2-tag.i {
     color: var(--primary-bright);
@@ -202,16 +205,25 @@ body[data-page='changelog'] .cl2-chip {
     letter-spacing: 0.1em;
     color: var(--text-dim);
     cursor: pointer;
-    transition: color 0.2s ease, border-color 0.2s ease, background 0.2s ease;
+    transition: color 0.2s ease, border-color 0.2s ease, background 0.2s ease, box-shadow 0.2s ease;
 }
 body[data-page='changelog'] .cl2-chip:hover {
     color: var(--text);
-    border-color: rgba(143, 175, 181, 0.5);
+    border-color: rgba(143, 175, 181, 0.65);
+    background: rgba(143, 175, 181, 0.1);
 }
 body[data-page='changelog'] .cl2-chip.on {
     color: var(--text);
-    border-color: rgba(143, 175, 181, 0.5);
-    background: rgba(143, 175, 181, 0.09);
+    background: rgba(143, 175, 181, 0.2);
+    border-color: var(--primary-bright);
+    box-shadow: inset 0 0 0 1px rgba(143, 175, 181, 0.4);
+}
+body[data-page='changelog'] .cl2-chip.on::after {
+    content: '\00D7';
+    margin-left: 7px;
+    font-size: 1.1em;
+    line-height: 1;
+    opacity: 0.75;
 }
 
 /* === Week blocks === */
@@ -314,7 +326,7 @@ body[data-page='changelog'] .cl2-cat::before {
     border-radius: 50%;
     background: var(--primary);
 }
-body[data-page='changelog'] .cl2-cat.f::before { background: #7ED4B8; }
+body[data-page='changelog'] .cl2-cat.f::before { background: var(--cl2-feat); }
 body[data-page='changelog'] .cl2-cat.i::before { background: var(--primary); }
 body[data-page='changelog'] .cl2-cat.d::before { background: var(--gold); }
 
@@ -332,19 +344,7 @@ html[data-theme='light'] body[data-page='changelog'] .cl2-noise {
     color: rgba(27, 43, 49, 0.55);
 }
 
-/* "Show older activity" archive control */
-body[data-page='changelog'] .cl2-more {
-    display: block;
-    margin: 18px auto 6px;
-    padding: 9px 18px;
-    font-size: var(--t-fs-xs);
-    color: var(--text-dim);
-}
-body[data-page='changelog'] .cl2-more:hover {
-    color: var(--text);
-    border-color: rgba(143, 175, 181, 0.5);
-    background: rgba(143, 175, 181, 0.09);
-}
+/* .cl2-more ("Show older activity") removed Sep 23 — accordion superseded it. */
 
 /* === Week accordion === */
 body[data-page='changelog'] .cl2-wk-head {
@@ -374,7 +374,7 @@ body[data-page='changelog'] .cl2-wk-meta {
     color: var(--text-faint);
 }
 body[data-page='changelog'] .cl2-wk-caret {
-    margin-left: auto;
+    flex: none;
     font-size: 0.8em;
     color: var(--text-faint);
     transition: transform 0.3s ease;
@@ -482,13 +482,7 @@ body[data-page='changelog'] .cl2-wk-toggle {
 body[data-page='changelog'] .cl2-wk-head:hover .cl2-wk-toggle {
     background: rgba(143, 175, 181, 0.16);
 }
-body[data-page='changelog'] .cl2-wk-caret {
-    margin-left: 0;
-    flex: none;
-    font-size: 0.8em;
-    color: var(--text-faint);
-    transition: transform 0.3s ease;
-}
+/* duplicate .cl2-wk-caret block merged into the accordion rules (Sep 23 audit) */
 
 /* === 30-day activity graph === */
 body[data-page='changelog'] .cl2-graphsec {
@@ -537,7 +531,7 @@ body[data-page='changelog'] .cl2-seg {
     width: 100%;
 }
 body[data-page='changelog'] .cl2-seg.seg-f {
-    background: #7ED4B8;
+    background: var(--cl2-feat);
     border-radius: 2px 2px 0 0;
 }
 body[data-page='changelog'] .cl2-seg.seg-i {
@@ -592,7 +586,7 @@ body[data-page='changelog'] .cl2-dot {
     border-radius: 50%;
     flex: none;
 }
-body[data-page='changelog'] .cl2-dot.dot-f { background: #7ED4B8; }
+body[data-page='changelog'] .cl2-dot.dot-f { background: var(--cl2-feat); }
 body[data-page='changelog'] .cl2-dot.dot-i { background: var(--primary); }
 body[data-page='changelog'] .cl2-dot.dot-d { background: var(--gold); }
 body[data-page='changelog'] .cl2-graph-total {
@@ -615,6 +609,7 @@ body[data-page='changelog'] .cl2-tip {
     position: absolute;
     z-index: 30;
     transform: translate(-50%, -100%);
+    max-width: min(92vw, 320px);
     display: flex;
     align-items: baseline;
     gap: 6px;
@@ -626,7 +621,7 @@ body[data-page='changelog'] .cl2-tip {
     font-size: var(--t-fs-xs);
     color: var(--text);
     pointer-events: none;
-    white-space: nowrap;
+    white-space: normal;
 }
 body[data-page='changelog'] .cl2-tip[hidden] { display: none; }
 body[data-page='changelog'] .cl2-tip b {
@@ -665,27 +660,11 @@ body[data-page='changelog'] .cl2-chip {
     cursor: pointer;
     transition: color 0.2s ease, border-color 0.2s ease, background 0.2s ease, box-shadow 0.2s ease;
 }
-body[data-page='changelog'] .cl2-chip:hover {
-    color: var(--text);
-    border-color: rgba(143, 175, 181, 0.65);
-    background: rgba(143, 175, 181, 0.1);
-}
-body[data-page='changelog'] .cl2-chip.on {
-    background: rgba(143, 175, 181, 0.2);
-    border-color: var(--primary-bright);
-    color: var(--text);
-    box-shadow: inset 0 0 0 1px rgba(143, 175, 181, 0.4);
-}
-body[data-page='changelog'] .cl2-chip.on::after {
-    content: '\00D7';
-    margin-left: 7px;
-    font-size: 1.1em;
-    line-height: 1;
-    opacity: 0.75;
-}
+/* duplicate .cl2-chip restyle blocks merged into the base rules above (Sep 23 audit) */
 
 /* hidden-attr overrides (author CSS beats the UA [hidden] rule otherwise) */
 body[data-page='changelog'] .cl2-highlights[hidden],
+body[data-page='changelog'] .cl2-graph[hidden],
 body[data-page='changelog'] .vine-divider[hidden] { display: none !important; }
 
 /* === Vine divider between sections (SVG injected by site.js; grow animation

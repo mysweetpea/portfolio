@@ -21,6 +21,7 @@ const DASH = 'https://dashboard.mysweetpea.cc';
 
 // In-memory cache for /api/commits (survives across requests within an isolate)
 let commitsCache = { data: null, ts: 0 };
+let commitsInflight = null; // shared fan-out: concurrent cold misses get the same promise
 const COMMITS_TTL = 300_000; // 5 minutes in ms
 
 export default {
@@ -36,12 +37,15 @@ export default {
         return new Response(JSON.stringify(commitsCache.data), {
           headers: {
             'Content-Type': 'application/json',
-            'Cache-Control': 'public, max-age=300',
+            'Cache-Control': 'public, max-age=' + Math.round((commitsCache.ttl || COMMITS_TTL) / 1000),
             'X-Cache': 'HIT'
           }
         });
       }
-
+      // In-flight dedup: concurrent cold misses share one GitHub fan-out;
+      // the handler RETURNS the shared promise so the route resolves the response.
+      if (commitsInflight) return commitsInflight;
+      commitsInflight = (async () => {
       const token = env.GITHUB_TOKEN || '';
       const repos = ['mysweetpea/portfolio', 'mysweetpea/homelab-k8s'];
       const headers = {
@@ -53,7 +57,7 @@ export default {
       const results = await Promise.all(repos.map(async (repo) => {
         try {
           const res = await fetch('https://api.github.com/repos/' + repo + '/commits?per_page=100', { headers });
-          if (!res.ok) return [];
+          if (!res.ok) { console.error('commits fetch failed', repo, res.status); return []; }
           let data = await res.json();
           // Paginate until the 30-day window is covered (guarded, max 3 pages).
           const cutoff = Date.now() - 30 * 86400000;
@@ -76,6 +80,7 @@ export default {
             date: c.commit.author.date
           }));
         } catch (e) {
+          console.error('commits fetch threw', repo, e && e.message);
           return [];
         }
       }));
@@ -197,10 +202,16 @@ export default {
       return new Response(JSON.stringify(payload), {
         headers: {
           'Content-Type': 'application/json',
-          'Cache-Control': 'public, max-age=300',
+          // browser/edge cache must match the effective TTL (30s on degraded
+          // results — otherwise a blank changelog is cached the full 5 minutes)
+          'Cache-Control': 'public, max-age=' + Math.round(ttl / 1000),
           'X-Cache': 'MISS'
         }
       });
+      })();
+      const result = commitsInflight;
+      commitsInflight = null;
+      return result;
     }
 
     // --- Suggest-a-Service: authenticated proxy to the n8n webhook ---
@@ -208,6 +219,11 @@ export default {
     // upstream webhook is never exposed to the public.
     if (url.pathname === '/api/suggest') {
       if (request.method !== 'POST') return new Response(JSON.stringify({ error: 'method_not_allowed' }), { status: 405, headers: JSON_HEADERS });
+      // CSRF guard: same-origin browser submissions only (state-changing POST)
+      const site = request.headers.get('Sec-Fetch-Site');
+      const origin = request.headers.get('Origin');
+      if (site && site !== 'same-origin') return new Response(JSON.stringify({ error: 'cross_site_forbidden' }), { status: 403, headers: JSON_HEADERS });
+      if (origin) { try { if (new URL(origin).host !== url.host) return new Response(JSON.stringify({ error: 'cross_site_forbidden' }), { status: 403, headers: JSON_HEADERS }); } catch { return new Response(JSON.stringify({ error: 'bad_origin' }), { status: 403, headers: JSON_HEADERS }); } }
       const state = await (async () => {
         const fwd = {};
         const cookie = request.headers.get('Cookie');
@@ -221,14 +237,15 @@ export default {
       let payload;
       try { payload = await request.json(); } catch { return new Response(JSON.stringify({ error: 'bad_json' }), { status: 400, headers: JSON_HEADERS }); }
       if (!payload || typeof payload !== 'object') return new Response(JSON.stringify({ error: 'bad_json' }), { status: 400, headers: JSON_HEADERS });
-      // Sanitize: only known fields, bounded lengths
+      // Sanitize: only known fields, bounded lengths, explicit types
+      const str = (v) => (typeof v === 'string' ? v : '');
       const clean = {
-        service_name: String(payload.service_name || '').slice(0, 120),
-        project_url: String(payload.project_url || '').slice(0, 300),
-        category: String(payload.category || '').slice(0, 60),
-        reason: String(payload.reason || '').slice(0, 2000),
-        your_name: (state.name || String(payload.your_name || '')).slice(0, 120),
-        your_email: String(payload.your_email || '').slice(0, 200)
+        service_name: str(payload.service_name).slice(0, 120),
+        project_url: str(payload.project_url).slice(0, 300),
+        category: str(payload.category).slice(0, 60),
+        reason: str(payload.reason).slice(0, 2000),
+        your_name: (typeof state.name === 'string' && state.name ? state.name : str(payload.your_name)).slice(0, 120),
+        your_email: str(payload.your_email).slice(0, 200)
       };
       if (!clean.service_name || !clean.category || !clean.reason) return new Response(JSON.stringify({ error: 'missing_fields' }), { status: 400, headers: JSON_HEADERS });
       let upstream;
@@ -259,7 +276,8 @@ export default {
       if (lang) fwd['Accept-Language'] = lang;
       let upstream;
       try {
-        upstream = await fetch(DASH + '/api/auth/state' + (url.search || ''), { headers: fwd });
+        // client query-params deliberately dropped — no parameter injection upstream
+        upstream = await fetch(DASH + '/api/auth/state', { headers: fwd });
       } catch (e) {
         return new Response(JSON.stringify({ logged_in: false, error: 'upstream_unreachable' }), {
           status: 502,
@@ -286,11 +304,14 @@ export default {
         return new Response('upstream_unreachable', { status: 502 });
       }
       if (!upstream.ok) return new Response('no avatar', { status: upstream.status });
+      const ctype = upstream.headers.get('Content-Type') || '';
+      // only relay actual images — never let an HTML error page render same-origin
+      const safeType = ctype.startsWith('image/') ? ctype : 'application/octet-stream';
       const buf = await upstream.arrayBuffer();
       return new Response(buf, {
         status: 200,
         headers: {
-          'Content-Type': upstream.headers.get('Content-Type') || 'image/png',
+          'Content-Type': safeType,
           'Cache-Control': 'private, max-age=300'
         }
       });

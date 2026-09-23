@@ -1,6 +1,8 @@
 /* === Changelog page: Highlights + Activity console (C3) ===
    Renders /api/commits into highlight cards + week-grouped rows with
-   repo/category chip filters. Vanilla JS, zero deps.
+   repo/category chip filters. Vanilla JS, zero deps. Deliberate ES5
+   (var + loose == in legacy guards) for max browser reach — per the
+   site's no-build/no-transpile policy.
    Honest states: fetch failure = visible error, never fake data.
    All dynamic strings go through textContent - never innerHTML. */
 (function () {
@@ -10,7 +12,6 @@
     var hlList = document.getElementById('cl2-hl-list');
     var feed = document.getElementById('cl2-feed');
     var chipsBox = document.getElementById('cl2-chips');
-    var score = document.getElementById('cl2-score');
     if (!feed) return;
 
     var MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
@@ -32,7 +33,7 @@
     function txt(s) { return document.createTextNode(s); }
 
     function dateShort(iso) {
-        var d = new Date(iso);
+        var d = (iso instanceof Date) ? iso : new Date(iso);
         if (isNaN(d.getTime())) return '';
         return MONTHS[d.getMonth()] + ' ' + d.getDate();
     }
@@ -215,7 +216,7 @@
         days.forEach(function (dy, idx) {
             var col = el('button', 'cl2-col');
             col.type = 'button';
-            var lbl = WEEKDAYS[dy.date.getDay()] + ', ' + dateShort(dy.date.toISOString());
+            var lbl = WEEKDAYS[dy.date.getDay()] + ', ' + dateShort(dy.date);
             col.setAttribute('aria-label', lbl + ': ' + dy.total + (dy.total === 1 ? ' change' : ' changes'));
             col.style.transitionDelay = (idx * 14) + 'ms';
             if (dy.total > 0) {
@@ -280,7 +281,7 @@
         if (dy.f) parts.push(dy.f + ' ' + (dy.f === 1 ? 'feature' : 'features'));
         if (dy.i) parts.push(dy.i + ' ' + (dy.i === 1 ? 'improvement' : 'improvements'));
         if (dy.d) parts.push(dy.d + ' ' + (dy.d === 1 ? 'fix' : 'fixes'));
-        cap.textContent = WEEKDAYS[dy.date.getDay()] + ', ' + dateShort(dy.date.toISOString()) +
+        cap.textContent = WEEKDAYS[dy.date.getDay()] + ', ' + dateShort(dy.date) +
             ' \u2014 ' + (parts.length ? parts.join(' \u00B7 ') : 'no changes');
     }
 
@@ -293,7 +294,7 @@
             document.body.appendChild(tipEl);
         }
         tipEl.textContent = '';
-        var s = el('span', 'cl2-tip-day', WEEKDAYS[dy.date.getDay()].slice(0, 3) + ', ' + dateShort(dy.date.toISOString()));
+        var s = el('span', 'cl2-tip-day', WEEKDAYS[dy.date.getDay()].slice(0, 3) + ', ' + dateShort(dy.date));
         tipEl.appendChild(s);
         tipEl.appendChild(el('b', null, String(dy.total)));
         tipEl.appendChild(txt(' change' + (dy.total === 1 ? '' : 's')));
@@ -309,8 +310,18 @@
         if (!parts.length) tipEl.appendChild(el('span', 'cl2-tip-break', 'no changes'));
         tipEl.hidden = false;
         var r = col.getBoundingClientRect();
-        tipEl.style.left = Math.round(r.left + r.width / 2 + window.scrollX) + 'px';
+        var left = Math.round(r.left + r.width / 2 + window.scrollX);
         tipEl.style.top = Math.round(r.top + window.scrollY - 10) + 'px';
+        // clamp to viewport so first/last columns never push the tip off-screen
+        tipEl.style.left = '0px';
+        var tw = tipEl.offsetWidth;
+        if (tw) {
+            var minX = window.scrollX + 8;
+            var maxX = window.scrollX + document.documentElement.clientWidth - tw - 8;
+            tipEl.style.left = Math.min(Math.max(left, minX), Math.max(minX, maxX)) + 'px';
+        } else {
+            tipEl.style.left = left + 'px';
+        }
     }
     function hideTip() { if (tipEl) tipEl.hidden = true; }
 
@@ -412,23 +423,33 @@
         var ctl;
         try { ctl = new AbortController(); } catch (e) { ctl = null; }
         if (ctl) setTimeout(function () { ctl.abort(); }, 10000);
-        fetch('/api/commits', ctl ? { signal: ctl.signal } : undefined)
-            .then(function (res) {
-                return res.ok ? res.json() : Promise.reject(new Error('HTTP ' + res.status));
-            })
-            .then(function (payload) {
-                var ok = payload && Array.isArray(payload.weeks) && Array.isArray(payload.highlights) &&
-                    payload.weeks.every(function (w) { return w && Array.isArray(w.items); });
-                if (!ok) throw new Error('unexpected /api/commits shape');
-                data = payload;
-                if (pulse) pulse.hidden = false;
-                renderHighlights();
-                renderFeed();
-            })
-            .catch(function (err) {
-                console.warn('[cl2] activity feed failed:', err);
-                feed.textContent = '';
-                feed.appendChild(el('div', 'cl2-empty', "Couldn't load the activity feed. Refresh to try again."));
-            });
+        var timer = null;
+        var fail = function (err) {
+            if (timer) { clearTimeout(timer); timer = null; }
+            console.warn('[cl2] activity feed failed:', err);
+            feed.textContent = '';
+            feed.appendChild(el('div', 'cl2-empty', "Couldn't load the activity feed. Refresh to try again."));
+        };
+        // belt-and-braces: even without AbortController the pulse can't spin forever
+        if (!ctl) timer = setTimeout(function () { fail(new Error('timeout')); }, 12000);
+        try {
+            fetch('/api/commits', ctl ? { signal: ctl.signal } : undefined)
+                .then(function (res) {
+                    return res.ok ? res.json() : Promise.reject(new Error('HTTP ' + res.status));
+                })
+                .then(function (payload) {
+                    var ok = payload && Array.isArray(payload.weeks) && Array.isArray(payload.highlights) &&
+                        payload.weeks.every(function (w) { return w && Array.isArray(w.items); });
+                    if (!ok) throw new Error('unexpected /api/commits shape');
+                    if (timer) { clearTimeout(timer); timer = null; }
+                    data = payload;
+                    if (pulse) pulse.hidden = false;
+                    renderHighlights();
+                    renderFeed();
+                })
+                .catch(fail);
+        } catch (syncErr) {
+            fail(syncErr);
+        }
     })();
 })();
