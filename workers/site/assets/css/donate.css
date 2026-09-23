@@ -63,12 +63,56 @@ body[data-page='support'] .dn-section {
     margin: 52px auto 0;
     padding: 0 24px;
 }
+body[data-page='support'] .dn-tabs {
+    display: flex;
+    justify-content: center;
+    gap: 6px;
+    margin: 26px auto 0;
+    padding: 5px;
+    width: fit-content;
+    max-width: 100%;
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    background: var(--card-bg);
+}
+body[data-page='support'] .dn-tab {
+    appearance: none;
+    font: inherit;
+    padding: 10px 22px;
+    border-radius: 999px;
+    border: 1px solid transparent;
+    background: transparent;
+    color: var(--text-dim);
+    font-size: 0.88rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: color 0.2s ease, background 0.2s ease;
+    white-space: nowrap;
+}
+body[data-page='support'] .dn-tab:hover { color: var(--text); background: var(--primary-glow); }
+body[data-page='support'] .dn-tab.active {
+    background: linear-gradient(135deg, var(--primary), var(--primary-dim) 60%, var(--sage-dim));
+    color: var(--bg); /* theme token — dark: #0C1316, light: #E7EDEA */
+    border-color: transparent;
+    cursor: default;
+}
+body[data-page='support'] .dn-tab:focus-visible {
+    outline: 3px solid var(--primary-bright, var(--primary));
+    outline-offset: 2px;
+}
+@media (max-width: 480px) {
+    body[data-page='support'] .dn-tabs { border-radius: 26px; }
+    body[data-page='support'] .dn-tab { padding: 9px 16px; font-size: 0.82rem; }
+}
+
+body[data-page='support'] .dn-panels { margin-top: 22px; }
+body[data-page='support'] .dn-panels .dn-card[hidden] { display: none; }
 body[data-page='support'] .dn-grid {
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: 1fr;
     gap: 18px;
-    margin-top: 26px;
-    align-items: start; /* organic heights — no stretched hole in the short card */
+    margin-top: 22px;
+    align-items: start;
 }
 
 /* --- cards ------------------------------------------------------------------
@@ -202,24 +246,29 @@ body[data-page='support'] .crypto-option {
     cursor: pointer;
     transition: border-color 0.2s ease, background 0.2s ease;
 }
-body[data-page='support'] .crypto-option:disabled {
-    cursor: not-allowed;
-    opacity: 0.75;
-}
-body[data-page='support'] .crypto-option:disabled:hover { transform: none; border-color: var(--border-primary); }
-body[data-page='support'] .crypto-option:hover { border-color: var(--primary); }
-body[data-page='support'] .crypto-option:focus-visible { outline: 3px solid var(--primary-bright); outline-offset: 2px; }
 body[data-page='support'] .crypto-option .name {
-    font-size: var(--t-fs-sm, 0.92rem);
-    color: var(--text);
+    flex: 1 1 auto;
+    min-width: 0; /* lets the name ellipsis-wrap instead of pushing the chip out */
 }
 body[data-page='support'] .crypto-soon {
+    flex: none; /* never squeezed — the leak fix: chip stays inside its box */
     margin-left: auto;
     font-family: var(--t-font-mono, ui-monospace, monospace);
     font-size: var(--t-fs-4xs, 0.66rem);
     text-transform: uppercase;
     letter-spacing: 0.06em;
     color: var(--text-faint);
+}
+body[data-page='support'] .crypto-option:disabled {
+    cursor: not-allowed;
+    opacity: 0.75;
+}
+body[data-page='support'] .crypto-option:disabled:hover { transform: none; border-color: var(--border-primary); }
+body[data-page='support'] .crypto-option:hover:not(:disabled) { border-color: var(--primary); }
+body[data-page='support'] .crypto-option:focus-visible { outline: 3px solid var(--primary-bright); outline-offset: 2px; }
+body[data-page='support'] .crypto-option .name {
+    font-size: var(--t-fs-sm, 0.92rem);
+    color: var(--text);
 }
 
 /* --- wallet coming-soon box ----------------------------------------------- */

@@ -9,6 +9,32 @@
 (function () {
     'use strict';
 
+    /* === Way-to-give tab switcher (site pill-tab grammar) ==================== */
+    var tabs = Array.prototype.slice.call(document.querySelectorAll('.dn-tab'));
+    if (tabs.length) {
+        function selectTab(tab) {
+            tabs.forEach(function (t) {
+                var on = t === tab;
+                t.classList.toggle('active', on);
+                t.setAttribute('aria-selected', on ? 'true' : 'false');
+                t.tabIndex = on ? 0 : -1;
+                var panel = document.getElementById(t.getAttribute('aria-controls'));
+                if (panel) panel.hidden = !on;
+            });
+        }
+        tabs.forEach(function (t, i) {
+            t.addEventListener('click', function () { selectTab(t); });
+            t.addEventListener('keydown', function (ev) {
+                var dir = ev.key === 'ArrowRight' ? 1 : ev.key === 'ArrowLeft' ? -1 : 0;
+                if (!dir) return;
+                ev.preventDefault();
+                var next = tabs[(i + dir + tabs.length) % tabs.length];
+                selectTab(next);
+                next.focus();
+            });
+        });
+    }
+
     /* Vine divider grows in on scroll (same grammar as home/changelog pages). */
     var vine = document.querySelector('.vine-divider.reveal-grow');
     if (vine && 'IntersectionObserver' in window &&
