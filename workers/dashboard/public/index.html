@@ -2785,6 +2785,10 @@ function guideDetailHtml(key) {
     { name: 'Open WebUI',  url: 'https://ai.mysweetpea.cc',      blurb: 'AI assistants', icon: '/icons/openwebui.svg' },
     { name: 'KoalaSync',   url: 'https://sync.mysweetpea.cc',    blurb: 'Watch parties, in sync', icon: '/icons/koalasync.svg' },
   ];
+  /* Single source of truth — the command palette (later script block) reads
+     this to build its service commands, so new services here are searchable
+     automatically. (const inside this IIFE is invisible cross-block.) */
+  window.SERVICES = SERVICES;
   const SVC_COLORS = [
     { fg: 'var(--primary-bright)', bg: 'var(--v-soft)' },
     { fg: 'var(--sage)',           bg: 'rgba(163,201,182,.15)' },
@@ -3562,28 +3566,122 @@ function relFuture(v) {
 'use strict';
 /* ================= PHASE 3+9: command palette + stat cards + library chart ================= */
 (function () {
-  const COMMANDS = [
-    { t: 'Go to Home',                 d: 'Dashboard tab',             run: () => setTab('home') },
-    { t: 'Go to Statistics',           d: 'Library, photos & members', run: () => setTab('stats') },
-    { t: 'Go to Media',                d: 'Watch & library stats',     run: () => setTab('media') },
-    { t: 'Go to Services',             d: 'Launchers & uptime',        run: () => setTab('services') },
-    { t: 'Go to Guides',               d: 'Setup how-tos per service', run: () => setTab('guides') },
-    { t: 'Go to Contact',              d: 'Email us anytime',          run: () => setTab('contact') },
-    { t: 'Go to Security',             d: 'Checklist, MFA, sessions',  run: () => setTab('security') },
-    { t: 'Go to Account',              d: 'Profile & avatar',          run: () => setTab('account') },
-    { t: 'Change password',            d: 'Account tab · inline form',  run: () => { setTab('account'); const el = document.getElementById('pw-current'); if (el) el.focus(); } },
-    { t: 'Set up TOTP',                d: 'Authentik · MFA',           run: () => ceremony('mfa', 'TOTP setup') },
-    { t: 'Add a passkey',              d: 'Authentik · MFA',           run: () => ceremony('mfa', 'Passkey setup') },
-    { t: 'Recovery codes',             d: 'Authentik · MFA',           run: () => ceremony('mfa', 'Recovery codes') },
-    { t: 'Manage sessions',            d: 'Authentik · sessions',      run: () => { goSection('sec-sessions'); ceremony('sessions', 'Sessions'); } },
-    { t: 'Sign out everywhere',        d: 'Revoke all other sessions', run: () => { goSection('sec-sessions'); revokeAll(); } },
-    { t: 'Open Jellyfin',              d: 'media.mysweetpea.cc',       run: () => location.assign('https://media.mysweetpea.cc') },
-    { t: 'Open Vaultwarden',           d: 'vault.mysweetpea.cc',       run: () => location.assign('https://vault.mysweetpea.cc') },
-    { t: 'Open Nextcloud',             d: 'cloud.mysweetpea.cc',       run: () => location.assign('https://cloud.mysweetpea.cc') },
-    { t: 'Open Photos (Immich)',       d: 'photos.mysweetpea.cc',      run: () => location.assign('https://photos.mysweetpea.cc') },
-    { t: 'Open Notes (AFFiNE)',        d: 'notes.mysweetpea.cc',       run: () => location.assign('https://notes.mysweetpea.cc') },
-      ];
-  let sel = 0, filtered = COMMANDS.slice();
+  /* ---- dynamic command index ----
+     Commands are DERIVED from the live single-source-of-truth structures
+     (TABS/TAB_LABELS, SERVICES, GUIDES, GUIDE_ORDER) instead of a hardcoded
+     list. Add a tab, service, or guide to its source array and the palette
+     picks it up automatically — no palette edits. Static entries remain only
+     for actions that have no data structure (account actions, sign-out).
+     Matching shares the site palette's fuzzy scorer: exact > prefix >
+     word-start > substring > fuzzy-subsequence, keyword-aware, multi-word,
+     stopword-filtered — so vague input like "netflix", "photo backup",
+     "jelyfin" still lands on the right command. */
+  function mspScore(hay, needle) {
+    if (!hay) return -1;
+    var idx = hay.indexOf(needle);
+    if (idx === 0) return 100;
+    if (idx > 0) {
+      if (/[\s\-\/·—]/.test(hay.charAt(idx - 1))) return 80;
+      return 60;
+    }
+    var hi = 0;
+    for (var i = 0; i < needle.length; i++) {
+      hi = hay.indexOf(needle.charAt(i), hi);
+      if (hi === -1) return -1;
+      hi++;
+    }
+    return 20;
+  }
+  var MSP_STOP = ['the','a','an','of','to','and','or','is','are','for','on','in','it','this','that','my','me','i','how','do','does','what','where','which','who','why','when','can','you','your'];
+  function mspFilter(items, rawQuery) {
+    var q = (rawQuery || '').trim().toLowerCase();
+    if (!q) return items.slice();
+    var words = q.split(/\s+/).filter(function (w) { return w && MSP_STOP.indexOf(w) === -1; });
+    if (!words.length) return items.slice();
+    var scored = [];
+    items.forEach(function (item) {
+      var label = (item.t || '').toLowerCase();
+      var kw = (item.k || '').toLowerCase();
+      var d = (item.d || '').toLowerCase();
+      var total = 0, ok = true;
+      for (var w = 0; w < words.length; w++) {
+        var best = mspScore(label, words[w]);
+        var kS = mspScore(kw, words[w]);
+        if (kS > best) best = Math.max(best, Math.min(kS + 5, 85));
+        if (best < 0 && d) {
+          var dS = mspScore(d, words[w]);
+          if (dS > 0) best = Math.min(dS, 55);
+        }
+        if (best < 0) { ok = false; break; }
+        total += best;
+      }
+      if (ok) scored.push({ item: item, s: total });
+    });
+    scored.sort(function (a, b) { return b.s - a.s; });
+    return scored.map(function (x) { return x.item; });
+  }
+  /* Per-service keywords: plain-language aliases so ambiguous searches land
+     right. Data (content), not code — extend the string when a service gains
+     a new common name; the palette reads it, nothing else changes. */
+  var MSP_SVC_KW = {
+    'Jellyfin':    'netflix media server movies tv shows streaming plex watch',
+    'Seerr':       'request requests new media ask add content overseerr',
+    'Nextcloud':   'google drive files storage documents calendar contacts sync dropbox',
+    'Immich':      'google photos photos pictures videos backup library memories',
+    'Vaultwarden': '1password lastpass passwords vault credentials bitwarden',
+    'Element':     'matrix chat messaging discord slack element call rooms',
+    'AFFiNE':      'notion evernote notes docs documents wiki knowledge whiteboard',
+    'Open WebUI':  'chatgpt ai assistant chatbot llm chat',
+    'KoalaSync':   'watch party together friends sync anime',
+  };
+  var MSP_GUIDE_KW = {
+    'jellyfin':    'apps install download moonfin client setup tv phone',
+    'seerr':       'request media app setup',
+    'nextcloud':   'files app sync client setup davx5',
+    'immich':      'photos app mobile upload setup',
+    'vaultwarden': 'bitwarden app extension setup passwords',
+    'matrix':      'element app login setup chat',
+    'affine':      'notes app setup',
+    'openwebui':   'ai chat app setup',
+    'koalasync':   'watch party extension setup',
+  };
+  function mspServiceCmds() {
+    var src = (typeof window.SERVICES !== 'undefined' && window.SERVICES) ? window.SERVICES : [];
+    return src.map(function (s) {
+      return { t: 'Open ' + s.name, d: (s.blurb || '') + ' · ' + String(s.url || '').replace(/^https?:\/\//, '').split('/')[0], k: MSP_SVC_KW[s.name] || '', run: function () { window.open(s.url, '_blank', 'noopener'); } };
+    });
+  }
+  function mspGuideCmds() {
+    return (typeof GUIDE_ORDER !== 'undefined' ? GUIDE_ORDER : []).map(function (key) {
+      var g = (typeof GUIDES !== 'undefined' && GUIDES[key]) ? GUIDES[key] : null;
+      if (!g) return null;
+      return { t: 'Guide: ' + g.name, d: 'Setup how-to · Guides tab', k: MSP_GUIDE_KW[key] || '', run: function () { setTab('guides'); var chip = document.querySelector('.svc-guide-chip[data-guide="' + key + '"]'); if (chip) chip.click(); } };
+    }).filter(Boolean);
+  }
+  function mspBuildCommands() {
+    var cmds = [];
+    /* Tabs — from the live TABS array (+ dropdown-only tabs), not literals */
+    TABS.concat(EXTRA_TABS).forEach(function (t) {
+      var kw = t === 'stats' ? 'statistics numbers charts' : t;
+      if (t === 'contact') kw = 'contact email message human talk gardener runs about person';
+      cmds.push({ t: 'Go to ' + TAB_LABELS[t], d: 'Dashboard tab', k: kw, run: function () { setTab(t); } });
+    });
+    /* Account/security actions — no data structure exists for these */
+    cmds.push(
+      { t: 'Change password', d: 'Account tab · inline form', k: 'password change login credential', run: function () { setTab('account'); var el = document.getElementById('pw-current'); if (el) el.focus(); } },
+      { t: 'Set up TOTP', d: 'Authentik · MFA', k: 'two factor authenticator 2fa', run: function () { ceremony('mfa', 'TOTP setup'); } },
+      { t: 'Add a passkey', d: 'Authentik · MFA', k: 'webauthn fingerprint face', run: function () { ceremony('mfa', 'Passkey setup'); } },
+      { t: 'Recovery codes', d: 'Authentik · MFA', k: 'backup codes 2fa', run: function () { ceremony('mfa', 'Recovery codes'); } },
+      { t: 'Manage sessions', d: 'Authentik · sessions', k: 'devices logged in sign out revoke', run: function () { goSection('sec-sessions'); ceremony('sessions', 'Sessions'); } },
+      { t: 'Sign out everywhere', d: 'Revoke all other sessions', k: 'logout all devices', run: function () { goSection('sec-sessions'); revokeAll(); } }
+    );
+    /* Services — every entry in SERVICES, with plain-language keywords */
+    cmds = cmds.concat(mspServiceCmds());
+    /* Guides — one command per guide */
+    cmds = cmds.concat(mspGuideCmds());
+    return cmds;
+  }
+  let sel = 0, filtered = [];
 
   const pal = $('#pal'), input = $('#pal-q'), list = $('#pal-list');
 
@@ -3598,14 +3696,13 @@ function relFuture(v) {
     });
     const s = list.querySelector('.sel'); if (s) s.scrollIntoView({ block: 'nearest' });
   }
-  function open()  { pal.classList.add('open'); input.value = ''; filtered = COMMANDS.slice(); sel = 0; render(); setTimeout(() => input.focus(), 0); }
+  function open()  { filtered = mspBuildCommands(); sel = 0; pal.classList.add('open'); input.value = ''; filtered = mspFilter(filtered, ''); render(); setTimeout(() => input.focus(), 0); }
   function close() { pal.classList.remove('open'); input.blur(); }
 
   window.mspPalette = { open, close };
 
   input.addEventListener('input', () => {
-    const q = input.value.trim().toLowerCase();
-    filtered = !q ? COMMANDS.slice() : COMMANDS.filter(c => (c.t + ' ' + c.d).toLowerCase().includes(q));
+    filtered = mspFilter(mspBuildCommands(), input.value);
     sel = 0; render();
   });
   input.addEventListener('keydown', (e) => {
@@ -3615,6 +3712,11 @@ function relFuture(v) {
     else if (e.key === 'Escape') { close(); }
   });
   pal.addEventListener('mousedown', (e) => { if (e.target === pal) close(); });
+  /* Esc closes from anywhere (input handler above only fires when the input
+     has focus; arrow/tab navigation can leave focus elsewhere). */
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && pal.classList.contains('open')) { e.preventDefault(); close(); }
+  });
 
   document.addEventListener('keydown', (e) => {
     if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') { e.preventDefault(); pal.classList.contains('open') ? close() : open(); }
