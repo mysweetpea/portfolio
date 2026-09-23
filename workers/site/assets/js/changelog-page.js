@@ -37,7 +37,11 @@
     }
 
     function cleanTitle(msg) {
-        var s = String(msg).replace(/^(feat|fix)(\([^)]*\))?:\s*/i, '');
+        var s = String(msg);
+        // strip conventional prefixes: type(scope): and bare scope: — "form: fix x" -> "Fix x"
+        s = s.replace(/^(feat|fix)(\([^)]*\))?:\s*/i, '');
+        s = s.replace(/^[a-z][a-z0-9-]{1,15}:\s+/i, '');
+        // sentence-case the first word
         return s.charAt(0).toUpperCase() + s.slice(1);
     }
 
@@ -55,7 +59,14 @@
     function renderHighlights() {
         if (!hlList) return;
         hlList.textContent = '';
-        (data.highlights || []).forEach(function (h) {
+        var hs = (data.highlights || []);
+        // No highlights this window: hide the section + vine, keep the page honest.
+        var hlSection = document.querySelector('.cl2-highlights');
+        if (hlSection) hlSection.hidden = hs.length === 0;
+        var vine = document.querySelector('.vine-divider.reveal-grow');
+        if (vine) vine.hidden = hs.length === 0;
+        if (!hs.length) return;
+        hs.forEach(function (h) {
             var card = el('div', 'cl2-hl');
             var top = el('div', 'cl2-hl-top');
             top.appendChild(el('span', 'cl2-hl-date', dateShort(h.date)));
@@ -63,9 +74,9 @@
             card.appendChild(top);
             card.appendChild(el('h2', null, cleanTitle(h.message)));
             var meta = el('p', 'cl2-hl-meta');
-            meta.appendChild(el('span', null, h.repo));
-            meta.appendChild(txt(' \u00B7 sha ' + h.sha));
+            meta.appendChild(el('span', null, h.sha));
             meta.appendChild(txt(' \u00B7 ' + dateShort(h.date)));
+            meta.appendChild(txt(' \u00B7 ' + (h.repo === 'portfolio' ? 'website' : 'infrastructure')));
             card.appendChild(meta);
             var tags = el('div', 'cl2-tags');
             tags.appendChild(el('span', 'cl2-tag ' + (h.cat || 'i'), CAT_LABEL[h.cat] || 'Improvement'));
@@ -79,13 +90,16 @@
         var filtering = !active.all;
         var shown = 0;
         feed.textContent = '';
-        weeks.forEach(function (wk) {
+        // Progressive reveal: show the most recent weeks, archive the rest.
+        // Filtering always shows everything (the user asked to see it all).
+        var visibleWeeks = filtering ? weeks.length : (renderFeed.expanded ? weeks.length : 2);
+        weeks.forEach(function (wk, wi) {
             var rows = wk.items.filter(passes);
             if (!rows.length) return;
+            if (wi >= visibleWeeks) return;
             shown += rows.length;
             var block = el('div', 'cl2-wk');
-            block.appendChild(el('div', 'cl2-week-label',
-                wk.label + ' \u00B7 ' + rows.length + (rows.length === 1 ? ' change' : ' changes')));
+            block.appendChild(el('div', 'cl2-week-label', wk.label));
             var panel = el('div', 'cl2-panel');
             var head = el('div', 'cl2-panel-head');
             head.appendChild(el('span', null, 'Commits \u00B7 daily'));
@@ -96,6 +110,7 @@
                 var row = el('div', 'cl2-row');
                 row.appendChild(el('span', 'cl2-t', dateShort(it.date)));
                 var m = el('span', 'cl2-m');
+                m.setAttribute('data-when', dateShort(it.date));
                 m.appendChild(el('span', 'cl2-mtxt', it.message));
                 m.appendChild(el('span', null, ' \u00B7 ' + it.repo));
                 row.appendChild(m);
@@ -109,11 +124,45 @@
             }
             feed.appendChild(block);
         });
+        // "Show older activity" control when archive weeks are hidden (unfiltered view only)
+        var hidden = !filtering && !renderFeed.expanded &&
+            weeks.some(function (wk, wi) { return wi >= visibleWeeks && wk.items.length > 0; });
+        var existing = document.getElementById('cl2-more');
+        if (existing && existing.parentNode) existing.parentNode.removeChild(existing);
+        if (hidden) {
+            var total = 0;
+            weeks.forEach(function (wk, wi) { if (wi >= visibleWeeks) total += wk.items.length; });
+            var more = el('button', 'cl2-chip cl2-more', 'Show older activity \u00B7 ' + total + ' more');
+            more.id = 'cl2-more';
+            more.type = 'button';
+            more.addEventListener('click', function () {
+                renderFeed.expanded = true;
+                renderFeed();
+            });
+            feed.appendChild(more);
+        }
         if (!shown) {
             feed.textContent = '';
             feed.appendChild(el('div', 'cl2-empty', 'Nothing matches those filters yet.'));
         }
     }
+
+    /* Vine divider grow-on-scroll (same mechanics as home-page.js) */
+    (function () {
+        var vines = document.querySelectorAll('.vine-divider.reveal-grow');
+        if (!vines.length) return;
+        var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        if (reduce || !('IntersectionObserver' in window)) {
+            Array.prototype.forEach.call(vines, function (v) { v.classList.add('visible'); });
+            return;
+        }
+        var io = new IntersectionObserver(function (entries) {
+            entries.forEach(function (e) {
+                if (e.isIntersecting) { e.target.classList.add('visible'); io.unobserve(e.target); }
+            });
+        }, { threshold: 0.2, rootMargin: '0px 0px -8% 0px' });
+        Array.prototype.forEach.call(vines, function (v) { io.observe(v); });
+    })();
 
     if (chipsBox) {
         chipsBox.addEventListener('click', function (ev) {
@@ -153,7 +202,7 @@
                 if (score) {
                     var t = payload.totals || {};
                     var n = (t.features || 0) + (t.improvements || 0) + (t.fixes || 0);
-                    score.textContent = n + (n === 1 ? ' change' : ' changes') + ' this month';
+                    score.textContent = n + (n === 1 ? ' change' : ' changes') + ' in the last 30 days';
                 }
                 renderHighlights();
                 renderFeed();

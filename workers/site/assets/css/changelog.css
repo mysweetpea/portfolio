@@ -76,6 +76,10 @@ body[data-page='changelog'] .cl2-score {
 }
 
 /* === Highlight cards === */
+@keyframes cl2-fade-up {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
 body[data-page='changelog'] .cl2-hl {
     position: relative;
     border: 1px solid var(--border-primary);
@@ -84,7 +88,10 @@ body[data-page='changelog'] .cl2-hl {
     padding: clamp(20px, 3vw, 32px);
     margin-bottom: 16px;
     transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+    animation: cl2-fade-up 0.55s ease both;
 }
+body[data-page='changelog'] .cl2-hl:nth-child(2) { animation-delay: 0.08s; }
+body[data-page='changelog'] .cl2-hl:nth-child(3) { animation-delay: 0.16s; }
 body[data-page='changelog'] .cl2-hl::before {
     content: '';
     position: absolute;
@@ -325,6 +332,39 @@ html[data-theme='light'] body[data-page='changelog'] .cl2-noise {
     color: rgba(27, 43, 49, 0.55);
 }
 
+/* "Show older activity" archive control */
+body[data-page='changelog'] .cl2-more {
+    display: block;
+    margin: 18px auto 6px;
+    padding: 9px 18px;
+    font-size: var(--t-fs-xs);
+    color: var(--text-dim);
+}
+body[data-page='changelog'] .cl2-more:hover {
+    color: var(--text);
+    border-color: rgba(143, 175, 181, 0.5);
+    background: rgba(143, 175, 181, 0.09);
+}
+
+/* hidden-attr overrides (author CSS beats the UA [hidden] rule otherwise) */
+body[data-page='changelog'] .cl2-highlights[hidden],
+body[data-page='changelog'] .vine-divider[hidden] { display: none !important; }
+
+/* === Vine divider between sections (SVG injected by site.js; grow animation
+   ported from home.css — the observer lives in changelog-page.js) === */
+body[data-page='changelog'] .vine-divider {
+    margin: 44px auto;
+}
+body[data-page='changelog'] .vine-divider.reveal-grow::before,
+body[data-page='changelog'] .vine-divider.reveal-grow::after {
+    transform: scaleX(0);
+    transition: transform 0.9s cubic-bezier(0.4, 0, 0.2, 1) 0.1s;
+}
+body[data-page='changelog'] .vine-divider.reveal-grow.visible::before,
+body[data-page='changelog'] .vine-divider.reveal-grow.visible::after {
+    transform: scaleX(1);
+}
+
 /* === Skeletons / empty state === */
 body[data-page='changelog'] .cl2-skel {
     height: 74px;
@@ -353,6 +393,16 @@ body[data-page='changelog'] .cl2-empty {
         padding: 12px 16px;
     }
     body[data-page='changelog'] .cl2-t { display: none; }
+    /* keep the "when" on mobile: inline date chip before the message */
+    body[data-page='changelog'] .cl2-m::before {
+        content: attr(data-when);
+        display: inline-block;
+        margin-right: 8px;
+        font-family: var(--t-font-mono);
+        font-size: var(--t-fs-4xs);
+        letter-spacing: 0.08em;
+        color: var(--text-faint);
+    }
     body[data-page='changelog'] .cl2-cat { justify-self: end; }
     body[data-page='changelog'] .cl2-hl h2 { font-size: var(--t-fs-h2); }
     body[data-page='changelog'] .cl2-pulse {
@@ -362,12 +412,18 @@ body[data-page='changelog'] .cl2-empty {
     }
 }
 
-/* === Reduced motion: kill shimmer + hover transforms + pulse === */
+/* === Reduced motion: kill shimmer + hover transforms + pulse + entrances === */
 @media (prefers-reduced-motion: reduce) {
     body[data-page='changelog'] .cl2-hl,
     body[data-page='changelog'] .cl2-row,
     body[data-page='changelog'] .cl2-chip { transition: none; }
+    body[data-page='changelog'] .cl2-hl { animation: none; }
     body[data-page='changelog'] .cl2-hl:hover { transform: none; }
     body[data-page='changelog'] .cl2-skel { animation: none; }
     body[data-page='changelog'] .cl2-pulse::before { animation: none; }
+    body[data-page='changelog'] .vine-divider.reveal-grow::before,
+    body[data-page='changelog'] .vine-divider.reveal-grow::after {
+        transform: scaleX(1);
+        transition: none;
+    }
 }
