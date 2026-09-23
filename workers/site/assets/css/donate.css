@@ -74,6 +74,7 @@ body[data-page='support'] .dn-card-icon {
     width: 48px;
     height: 48px;
     border-radius: 14px;
+    background: var(--primary-glow); /* fallback for no color-mix() support */
     background: color-mix(in srgb, var(--primary) 10%, transparent);
     border: 1px solid var(--border-primary);
 }
@@ -110,8 +111,8 @@ body[data-page='support'] .dn-soon-pill {
     font-size: var(--t-fs-4xs, 0.66rem);
     text-transform: uppercase;
     letter-spacing: 0.07em;
-    color: var(--sage, #A3C9B6);
-    border: 1px dashed var(--sage, #A3C9B6);
+    color: var(--sage);
+    border: 1px dashed var(--sage);
     border-radius: 999px;
     padding: 4px 10px;
     white-space: nowrap;
@@ -124,17 +125,22 @@ body[data-page='support'] .crypto-options {
     gap: 10px;
 }
 body[data-page='support'] .crypto-option {
+    appearance: none;
+    font: inherit;
+    text-align: left;
     display: flex;
     align-items: center;
     gap: 10px;
     padding: 12px 14px;
     border-radius: 14px;
     border: 1px solid var(--border-primary);
+    background: var(--card-bg); /* fallback for no color-mix() support */
     background: color-mix(in srgb, var(--card-bg) 60%, transparent);
     cursor: pointer;
     transition: border-color 0.2s ease, background 0.2s ease;
 }
 body[data-page='support'] .crypto-option:hover { border-color: var(--primary); }
+body[data-page='support'] .crypto-option:focus-visible { outline: 3px solid var(--primary-bright); outline-offset: 2px; }
 body[data-page='support'] .crypto-option .name {
     font-size: var(--t-fs-sm, 0.92rem);
     color: var(--text);
@@ -156,6 +162,7 @@ body[data-page='support'] .dn-wallet-soon {
     padding: 15px 16px;
     border: 1px dashed var(--sage);
     border-radius: 14px;
+    background: var(--card-bg); /* fallback for no color-mix() support */
     background: color-mix(in srgb, var(--card-bg) 60%, transparent);
 }
 body[data-page='support'] .dn-wallet-soon img { flex: none; opacity: 0.9; }
@@ -203,7 +210,7 @@ body[data-page='support'] .dn-btn-ghost:hover {
 }
 body[data-page='support'] .dn-btn-primary {
     background: linear-gradient(135deg, var(--primary), var(--primary-dim));
-    color: #0C1316;
+    color: var(--bg); /* theme token — dark: #0C1316, light: #E7EDEA (both ≥4.5:1 on theme primaries) */
     border: none;
 }
 body[data-page='support'] .dn-btn-primary:hover {
@@ -264,12 +271,12 @@ body[data-page='support'] .faq-answer p { margin: 0; line-height: 1.65; font-siz
 body[data-page='support'] .faq-answer a { color: var(--primary); }
 
 /* --- light-theme contrast overrides (verified pairs) -----------------------
+   Theme is a MANUAL html[data-theme] switch (site.js), not prefers-color-scheme —
+   key the override to the attribute so manual light-theme users get it too.
    --sage #A3C9B6 fails on light bg for small text — darkened locally. */
-@media (prefers-color-scheme: light) {
-    body[data-page='support'] .dn-soon-pill,
-    body[data-page='support'] .dn-wallet-soon { border-color: #2F6B4E; }
-    body[data-page='support'] .dn-soon-pill { color: #2F6B4E; }
-}
+[data-theme="light"] body[data-page='support'] .dn-soon-pill,
+[data-theme="light"] body[data-page='support'] .dn-wallet-soon { border-color: #2F6B4E; }
+[data-theme="light"] body[data-page='support'] .dn-soon-pill { color: #2F6B4E; }
 
 /* --- mobile ---------------------------------------------------------------- */
 @media (max-width: 760px) {
@@ -290,4 +297,5 @@ body[data-page='support'] .faq-answer a { color: var(--primary); }
     body[data-page='support'] .dn-btn,
     body[data-page='support'] .crypto-option { transition: none !important; }
     body[data-page='support'] .dn-card:hover { transform: none; }
+    body[data-page='support'] .dn-btn:hover { transform: none; }
 }

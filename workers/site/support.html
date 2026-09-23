@@ -22,9 +22,12 @@ html[data-theme="light"]{background:#E7EDEA;color-scheme:light}
     if(t)document.documentElement.setAttribute('data-theme',t);
   }catch(e){}
   document.documentElement.classList.add('js');
-  setTimeout(function(){
+  // Deferred scripts execute BEFORE DOMContentLoaded, so the decisive check
+  // must run after site.js had its chance — a plain timer here races the
+  // loader (site.js re-adds .js unconditionally and would re-hide reveals).
+  document.addEventListener('DOMContentLoaded', function(){
     if(!window.__mspRevealInit)document.documentElement.classList.remove('js');
-  },6000);
+  });
 })();
 </script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -34,7 +37,7 @@ html[data-theme="light"]{background:#E7EDEA;color-scheme:light}
     <meta name="description" content="Support MySweetPea's privacy-first, self-hosted services with a crypto donation — Monero or Bitcoin.">
     <meta name="theme-color" content="#0C1316">
     <meta name="theme-color" content="#D8E1DD" media="(prefers-color-scheme: light)">
-    <meta property="og:title" content="MySweetPea — Support">
+    <meta property="og:title" content="MySweetPea — Donate">
     <meta property="og:description" content="Support MySweetPea's privacy-first, self-hosted services with a crypto donation — Monero or Bitcoin.">
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://mysweetpea.cc/support">
@@ -52,7 +55,7 @@ html[data-theme="light"]{background:#E7EDEA;color-scheme:light}
     <link rel="stylesheet" href="/assets/css/premium.css?v=114">
     <link rel="stylesheet" href="/assets/css/type-tokens.css?v=107">
     <link rel="stylesheet" href="/assets/css/hermes-type.css?v=107">
-<link rel="stylesheet" href="/assets/css/donate.css?v=1">
+<link rel="stylesheet" href="/assets/css/donate.css?v=2">
 <link rel="canonical" href="https://mysweetpea.cc/support">
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"Organization","name":"MySweetPea","url":"https://mysweetpea.cc","logo":"https://mysweetpea.cc/icon-512.png","description":"Private, self-hosted alternatives to the services you use every day. No ads, no tracking, no subscriptions — community funded.","email":"support@mysweetpea.cc","sameAs":["https://github.com/mysweetpea"]}</script>
 </head>
@@ -105,7 +108,7 @@ html[data-theme="light"]{background:#E7EDEA;color-scheme:light}
         <p class="hero-sub pop-text">MySweetPea runs on one person's hardware and your trust — never on ads,
             trackers, or subscriptions. Donations keep the garden growing.</p>
         <div class="dn-hero-stats" id="dn-hero-stats">
-            <div class="dn-stat"><span class="dn-stat-n" data-count="9">0</span><span class="dn-stat-l">Public services</span></div>
+            <div class="dn-stat"><span class="dn-stat-n" data-count="9">9</span><span class="dn-stat-l">Public services</span></div>
             <div class="dn-stat"><span class="dn-stat-n">0</span><span class="dn-stat-l">Ads &amp; trackers</span></div>
             <div class="dn-stat"><span class="dn-stat-n">100%</span><span class="dn-stat-l">Community funded</span></div>
         </div>
@@ -127,8 +130,8 @@ html[data-theme="light"]{background:#E7EDEA;color-scheme:light}
                     <span class="dn-soon-pill">Coming soon</span>
                 </div>
                 <div class="crypto-options" id="dn-crypto-options">
-                    <div class="crypto-option" data-type="monero" data-action="select-crypto"><div class="icon"><img src="/assets/icons/icon-crypto-monero.svg" alt="" width="28" height="28" loading="lazy" decoding="async"></div><div class="name">Monero (XMR)</div><div class="crypto-soon">Soon</div></div>
-                    <div class="crypto-option" data-type="bitcoin" data-action="select-crypto"><div class="icon"><img src="/assets/icons/icon-crypto-bitcoin.svg" alt="" width="28" height="28" loading="lazy" decoding="async"></div><div class="name">Bitcoin (BTC)</div><div class="crypto-soon">Soon</div></div>
+                    <button type="button" class="crypto-option" data-type="monero" data-action="select-crypto" aria-disabled="true"><span class="icon"><img src="/assets/icons/icon-crypto-monero.svg" alt="" width="28" height="28" loading="lazy" decoding="async"></span><span class="name">Monero (XMR)</span><span class="crypto-soon">Soon</span></button>
+                    <button type="button" class="crypto-option" data-type="bitcoin" data-action="select-crypto" aria-disabled="true"><span class="icon"><img src="/assets/icons/icon-crypto-bitcoin.svg" alt="" width="28" height="28" loading="lazy" decoding="async"></span><span class="name">Bitcoin (BTC)</span><span class="crypto-soon">Soon</span></button>
                 </div>
                 <div class="dn-wallet-soon" id="dn-wallet-soon">
                     <img src="/assets/icons/icon-ui-blossom.svg" alt="" width="22" height="22" loading="lazy" decoding="async" aria-hidden="true">
@@ -139,7 +142,7 @@ html[data-theme="light"]{background:#E7EDEA;color-scheme:light}
                 </div>
                 <div class="wallet-display" id="wallet-display" hidden>
                     <div class="wl">Send your donation to:</div>
-                    <div class="wa" id="wallet-addr" data-action="copy-wallet">Loading...</div>
+                    <div class="wa" id="wallet-addr" data-action="copy-wallet" data-wallet="" title="">Loading...</div>
                     <div class="copy-hint">Click address to copy to clipboard</div>
                 </div>
             </article>
@@ -265,7 +268,7 @@ html[data-theme="light"]{background:#E7EDEA;color-scheme:light}
     <script src="/assets/js/lenis-init.js?v=107" defer></script>
     <script src="/assets/js/site.js?v=109" defer></script>
     <script src="/assets/js/premium.js?v=107" defer></script>
-    <script src="/assets/js/support-page.js?v=1" defer></script>
+    <script src="/assets/js/support-page.js?v=2" defer></script>
     <script>
     if ('serviceWorker' in navigator) {
         window.addEventListener('load', function () {
