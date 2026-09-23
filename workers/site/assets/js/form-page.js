@@ -183,4 +183,52 @@
         b.addEventListener('click', syncBloomAndRail);
     });
     syncBloomAndRail();
+
+    /* ==== Polish r4 — anchored spine: pin each rail node vertically to its
+       field row. Uses offsetTop walks (layout boxes, immune to the reveal
+       transition's transform) + double-rAF re-run after each trigger. ==== */
+    function offsetWithin(el, ancestor) {
+        var t = 0, n = el;
+        while (n && n !== ancestor) { t += n.offsetTop; n = n.offsetParent; }
+        return t;
+    }
+    function alignRailToRows() {
+        ['panel-sweetpea', 'panel-seedling'].forEach(function (pid) {
+            var panel = document.getElementById(pid);
+            var rail = panel && panel.querySelector('.rail');
+            if (!panel || !rail) return;
+            var card = panel.querySelector('.form-card');
+            if (!card) return;
+            var railH = rail.offsetHeight || 1;
+            var rows = Array.prototype.slice.call(panel.querySelectorAll('.srow'))
+                .filter(function (r) { return r.offsetParent !== null; });
+            var cov = panel.querySelector('.covenant');
+            var btn = panel.querySelector('.form-submit');
+            var centers = rows.map(function (r) {
+                return offsetWithin(r, card) + r.offsetHeight / 2;
+            });
+            if (cov && cov.offsetParent) centers.push(offsetWithin(cov, card) + Math.min(40, cov.offsetHeight / 2));
+            if (btn && btn.offsetParent) centers.push(offsetWithin(btn, card) + btn.offsetHeight / 2);
+            var nodes = rail.querySelectorAll('.node');
+            for (var i = 0; i < nodes.length && i < centers.length; i++) {
+                /* rail spans its own box; convert card-y to rail-y */
+                var railTop = offsetWithin(rail, card);
+                var y = centers[i] - railTop - 13; /* 13 = half node */
+                nodes[i].style.top = Math.max(-2, Math.min(railH - 24, Math.round(y))) + 'px';
+            }
+        });
+    }
+    function alignRailSoon() {
+        requestAnimationFrame(function () { requestAnimationFrame(alignRailToRows); });
+    }
+    window.addEventListener('resize', alignRailSoon);
+    document.fonts && document.fonts.ready && document.fonts.ready.then(alignRailSoon);
+    ['panel-sweetpea', 'panel-seedling'].forEach(function (pid) {
+        var p = document.getElementById(pid);
+        if (!p) return;
+        new MutationObserver(alignRailSoon).observe(p, { attributes: true, attributeFilter: ['hidden', 'class'] });
+        p.addEventListener('transitionend', alignRailSoon);
+    });
+    setTimeout(alignRailSoon, 350);
+    setTimeout(alignRailSoon, 1200);
 })();

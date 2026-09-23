@@ -2852,3 +2852,39 @@ body[data-page='form'] .tier-form-panel .form-submit.loading::after {
     /* keep the site's slowed (not frozen) submit spinner under reduced motion */
     body[data-page='form'] .tier-form-panel .form-submit.loading::after { animation-duration: 2s; }
 }
+
+/* ==== 11. Polish r4 — design-director pass (user: 'more aesthetically pleasing').
+   Quieter banner, anchored-spine node glow, input inner light, submit presence. */
+body[data-page='form'] .tier-form-panel .verify-banner {
+    background: color-mix(in srgb, var(--f-inputbg) 45%, transparent);
+    border: 1px solid color-mix(in srgb, var(--border) 70%, transparent);
+    border-left: 2px solid color-mix(in srgb, var(--sage) 55%, transparent);
+    border-radius: 10px;
+    padding: 14px 18px;
+}
+body[data-page='form'] .tier-form-panel .verify-banner p { font-size: .92rem; line-height: 1.6; }
+body[data-page='form'] .tier-form-panel .srow .sfield input[type="text"],
+body[data-page='form'] .tier-form-panel .srow .sfield input[type="email"],
+body[data-page='form'] .tier-form-panel .srow .sfield textarea {
+    box-shadow: inset 0 1px 0 color-mix(in srgb, #ffffff 4%, transparent);
+}
+body[data-page='form'] .tier-form-panel .rail .node.done {
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--sage) 12%, transparent),
+                0 0 14px color-mix(in srgb, var(--sage) 22%, transparent);
+}
+body[data-page='form'] .tier-form-panel .covenant p { text-wrap: pretty; }
+body[data-page='form'] .tier-form-panel .form-submit.ready:not([disabled]) {
+    border-color: color-mix(in srgb, var(--primary) 45%, var(--border));
+    box-shadow: 0 0 0 1px color-mix(in srgb, var(--primary) 18%, transparent),
+                0 6px 24px color-mix(in srgb, var(--primary) 16%, transparent);
+    animation: msp-submit-breathe 2.6s ease-in-out infinite;
+}
+@keyframes msp-submit-breathe {
+    0%, 100% { box-shadow: 0 0 0 1px color-mix(in srgb, var(--primary) 18%, transparent),
+                           0 6px 24px color-mix(in srgb, var(--primary) 16%, transparent); }
+    50% { box-shadow: 0 0 0 1px color-mix(in srgb, var(--primary) 30%, transparent),
+                      0 8px 32px color-mix(in srgb, var(--primary) 26%, transparent); }
+}
+@media (prefers-reduced-motion: reduce) {
+    body[data-page='form'] .tier-form-panel .form-submit.ready:not([disabled]) { animation: none; }
+}
