@@ -231,6 +231,9 @@
             if (!active.all) cap.textContent = 'Filtered view \u2014 graph shows matching changes only. ' + cap.textContent;
         }
         if (totalEl) totalEl.textContent = grand + ' in the last 30 days';
+        // the Activity score mirrors the graph's strict 30-day count (API totals include stragglers)
+        var scoreEl = document.getElementById('cl2-score');
+        if (scoreEl) scoreEl.textContent = grand + (grand === 1 ? ' change' : ' changes') + ' in the last 30 days';
         if (legend) {
             [['f', 'Features'], ['i', 'Improvements'], ['d', 'Fixes']].forEach(function (pair) {
                 var key = 'cat:' + pair[0];
@@ -354,11 +357,6 @@
                 if (!ok) throw new Error('unexpected /api/commits shape');
                 data = payload;
                 if (pulse) pulse.hidden = false;
-                if (score) {
-                    var t = payload.totals || {};
-                    var n = (t.features || 0) + (t.improvements || 0) + (t.fixes || 0);
-                    score.textContent = n + (n === 1 ? ' change' : ' changes') + ' in the last 30 days';
-                }
                 renderHighlights();
                 renderFeed();
             })
