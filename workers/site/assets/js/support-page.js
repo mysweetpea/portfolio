@@ -25,6 +25,12 @@
                 }
             });
         }, { threshold: 0.4 }).observe(vine);
+        /* Safety net: if the observer never fires (odd viewport, clipped
+           ancestor), the divider must not stay invisible. */
+        setTimeout(function () {
+            vine.style.opacity = '';
+            vine.style.transform = '';
+        }, 3000);
     }
 
     /* One delegated handler for both actions. site.js's own bus listener runs
@@ -36,12 +42,14 @@
 
         /* copy-wallet safety: never copy a placeholder. The address element
            carries its payload in data-wallet (not textContent) so presentational
-           child nodes can never leak into the clipboard. Hidden today; when real
-           addresses go live the genuine value passes through. */
+           child nodes can never leak into the clipboard. Gate is data-driven:
+           empty attr = no address = no copy. When real addresses go live the
+           genuine value passes through — no string sync with the markup. */
         var addr = t.closest('[data-action="copy-wallet"]');
         if (addr) {
+            if (addr.__dnBusy) return; /* feedback already running — no double write */
             var value = addr.getAttribute('data-wallet') || '';
-            if (!value || value === 'Coming Soon' || value === 'Loading...') return;
+            if (!value.trim()) return;
             if (navigator.clipboard && navigator.clipboard.writeText) {
                 navigator.clipboard.writeText(value).then(function () {
                     flashCopied(addr, false);
@@ -73,7 +81,7 @@
         el.__dnBusy = true;
         var prev = el.getAttribute('data-label') || el.textContent;
         el.setAttribute('data-label', prev);
-        el.textContent = failed ? 'Copy failed — select the address manually' : 'Copied!';
+        el.textContent = failed ? 'Copy failed' : 'Copied!';
         setTimeout(function () {
             el.textContent = prev;
             el.__dnBusy = false;

@@ -55,7 +55,7 @@ html[data-theme="light"]{background:#E7EDEA;color-scheme:light}
     <link rel="stylesheet" href="/assets/css/premium.css?v=114">
     <link rel="stylesheet" href="/assets/css/type-tokens.css?v=107">
     <link rel="stylesheet" href="/assets/css/hermes-type.css?v=107">
-<link rel="stylesheet" href="/assets/css/donate.css?v=4">
+<link rel="stylesheet" href="/assets/css/donate.css?v=5">
 <link rel="canonical" href="https://mysweetpea.cc/support">
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"Organization","name":"MySweetPea","url":"https://mysweetpea.cc","logo":"https://mysweetpea.cc/icon-512.png","description":"Private, self-hosted alternatives to the services you use every day. No ads, no tracking, no subscriptions — community funded.","email":"support@mysweetpea.cc","sameAs":["https://github.com/mysweetpea"]}</script>
 </head>
@@ -130,8 +130,8 @@ html[data-theme="light"]{background:#E7EDEA;color-scheme:light}
                     <span class="dn-soon-pill">Coming soon</span>
                 </div>
                 <div class="crypto-options" id="dn-crypto-options">
-                    <button type="button" class="crypto-option" data-type="monero" data-action="select-crypto" aria-disabled="true"><span class="icon"><img src="/assets/icons/icon-crypto-monero.svg" alt="" width="28" height="28" loading="lazy" decoding="async"></span><span class="name">Monero (XMR)</span><span class="crypto-soon">Soon</span></button>
-                    <button type="button" class="crypto-option" data-type="bitcoin" data-action="select-crypto" aria-disabled="true"><span class="icon"><img src="/assets/icons/icon-crypto-bitcoin.svg" alt="" width="28" height="28" loading="lazy" decoding="async"></span><span class="name">Bitcoin (BTC)</span><span class="crypto-soon">Soon</span></button>
+                    <button type="button" class="crypto-option" data-type="monero" data-action="select-crypto" disabled aria-disabled="true" title="Wallet addresses are being set up"><span class="icon"><img src="/assets/icons/icon-crypto-monero.svg" alt="" width="28" height="28" loading="lazy" decoding="async"></span><span class="name">Monero (XMR)</span><span class="crypto-soon">Soon</span></button>
+                    <button type="button" class="crypto-option" data-type="bitcoin" data-action="select-crypto" disabled aria-disabled="true" title="Wallet addresses are being set up"><span class="icon"><img src="/assets/icons/icon-crypto-bitcoin.svg" alt="" width="28" height="28" loading="lazy" decoding="async"></span><span class="name">Bitcoin (BTC)</span><span class="crypto-soon">Soon</span></button>
                 </div>
                 <div class="dn-wallet-soon" id="dn-wallet-soon">
                     <img src="/assets/icons/icon-ui-blossom.svg" alt="" width="22" height="22" loading="lazy" decoding="async" aria-hidden="true">
@@ -142,7 +142,7 @@ html[data-theme="light"]{background:#E7EDEA;color-scheme:light}
                 </div>
                 <div class="wallet-display" id="wallet-display" hidden>
                     <div class="wl">Send your donation to:</div>
-                    <div class="wa" id="wallet-addr" data-action="copy-wallet" data-wallet="" title="">Loading...</div>
+                    <div class="wa" id="wallet-addr" data-action="copy-wallet" data-wallet="" title="Wallet addresses are being set up">Coming soon</div>
                     <div class="copy-hint">Click address to copy to clipboard</div>
                 </div>
             </article>
@@ -252,7 +252,7 @@ html[data-theme="light"]{background:#E7EDEA;color-scheme:light}
     <script src="/assets/js/lenis-init.js?v=107" defer></script>
     <script src="/assets/js/site.js?v=109" defer></script>
     <script src="/assets/js/premium.js?v=107" defer></script>
-    <script src="/assets/js/support-page.js?v=3" defer></script>
+    <script src="/assets/js/support-page.js?v=4" defer></script>
     <script>
     if ('serviceWorker' in navigator) {
         window.addEventListener('load', function () {
