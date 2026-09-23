@@ -52,6 +52,7 @@ html[data-theme="light"]{background:#E7EDEA;color-scheme:light}
     <link rel="stylesheet" href="/assets/css/premium.css?v=114">
     <link rel="stylesheet" href="/assets/css/type-tokens.css?v=107">
     <link rel="stylesheet" href="/assets/css/hermes-type.css?v=107">
+<link rel="stylesheet" href="/assets/css/donate.css?v=1">
 <link rel="canonical" href="https://mysweetpea.cc/support">
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"Organization","name":"MySweetPea","url":"https://mysweetpea.cc","logo":"https://mysweetpea.cc/icon-512.png","description":"Private, self-hosted alternatives to the services you use every day. No ads, no tracking, no subscriptions — community funded.","email":"support@mysweetpea.cc","sameAs":["https://github.com/mysweetpea"]}</script>
 </head>
@@ -96,63 +97,125 @@ html[data-theme="light"]{background:#E7EDEA;color-scheme:light}
 
 
 <main id="main-content" class="content-wrapper">
-        <div class="hero">
-            <img src="/logo.svg" alt="" class="hero-watermark" aria-hidden="true" loading="lazy" decoding="async">
-            <img src="/logo.svg" alt="MySweetPea logo" class="logo" width="160" height="160">
-            <h1 class="glass-text">Donate to MySweetPea</h1>
-            <p class="hero-sub pop-text">Voluntary support for community infrastructure. No account or access required.</p>
+    <div class="hero">
+        <img src="/logo.svg" alt="" class="hero-watermark" aria-hidden="true" loading="lazy" decoding="async">
+        <img src="/logo.svg" alt="MySweetPea logo" class="logo" width="160" height="160">
+        <p class="eyebrow dn-eyebrow">Support the garden</p>
+        <h1 class="glass-text">Every seed counts.</h1>
+        <p class="hero-sub pop-text">MySweetPea runs on one person's hardware and your trust — never on ads,
+            trackers, or subscriptions. Donations keep the garden growing.</p>
+        <div class="dn-hero-stats" id="dn-hero-stats">
+            <div class="dn-stat"><span class="dn-stat-n" data-count="9">0</span><span class="dn-stat-l">Public services</span></div>
+            <div class="dn-stat"><span class="dn-stat-n">0</span><span class="dn-stat-l">Ads &amp; trackers</span></div>
+            <div class="dn-stat"><span class="dn-stat-n">100%</span><span class="dn-stat-l">Community funded</span></div>
         </div>
-        <div class="account-help-box reveal">Looking for help with your account instead? This page is only for donations — <a href="/contact.html" data-keywords="email reach message touch help questions">contact us</a> and we'll be happy to help.</div>
+    </div>
+    <div class="account-help-box reveal">Looking for help with your account instead? This page is only for donations — <a href="/contact.html">contact us</a> and we'll be happy to help.</div>
 
-        <div class="view-switcher" id="support-switcher">
-            <div class="view-tabs" role="tablist" aria-label="Donate sections">
-                <button type="button" class="view-tab active" role="tab" aria-selected="true" data-view="donate">Donate</button>
-                <button type="button" class="view-tab" role="tab" aria-selected="false" data-view="faq">FAQ</button>
-            </div>
+    <section class="dn-section reveal" aria-labelledby="dn-ways-h">
+        <div class="faq-header"><span class="eyebrow">Ways to support</span><h2 class="section-title glass-text" id="dn-ways-h">Choose your way to give</h2></div>
 
-            <div class="view-panel active" data-view="donate" role="tabpanel">
-                <div class="container reveal">
-                    <div class="card glow-card">
-                        <h2>Donate to the Community</h2>
-                        <p class="subtitle">Your contribution helps keep MySweetPea running and funds future improvements.</p>
-                        <div class="info-box">Donations are completely anonymous. No name, email, or account required. Just send crypto to the wallet address and you are done. Thank you for your support!</div>
-                        <div class="crypto-section-label">Select Cryptocurrency</div>
-                        <div class="crypto-options">
-                            <div class="crypto-option" data-type="monero" data-action="select-crypto" data-type="monero"><div class="icon" aria-hidden="true"><img src="/assets/icons/icon-crypto-monero.svg" class="" alt="" width="28" height="28" loading="lazy" decoding="async" aria-hidden="true"></div><div class="name">Monero (XMR)</div></div>
-                            <div class="crypto-option" data-type="bitcoin" data-action="select-crypto" data-type="bitcoin"><div class="icon" aria-hidden="true"><img src="/assets/icons/icon-crypto-bitcoin.svg" class="" alt="" width="28" height="28" loading="lazy" decoding="async" aria-hidden="true"></div><div class="name">Bitcoin (BTC)</div></div>
-                        </div>
-                        <div class="wallet-display" id="wallet-display">
-                            <div class="wl">Send your donation to:</div>
-                            <div class="wa" id="wallet-addr" data-action="copy-wallet">Loading...</div>
-                            <div class="copy-hint">Click address to copy to clipboard</div>
-                        </div>
-                        <div class="thank-you">
-                            <div class="heart" aria-hidden="true"><img src="/assets/icons/icon-ui-blossom.svg" class="" alt="" width="44" height="44" loading="lazy" decoding="async" aria-hidden="true"></div>
-                            <p>Why crypto? We prioritize privacy. Crypto donations (especially Monero) are anonymous, irreversible, and require no personal information. No KYC, no chargebacks, no paper trail.</p>
-                        </div>
+        <div class="dn-grid">
+            <!-- 1. Crypto (primary, Coming Soon state) -->
+            <article class="dn-card dn-crypto glow-card" id="dn-crypto-card">
+                <div class="dn-card-head">
+                    <div class="dn-card-icon"><img src="/assets/icons/icon-crypto-monero.svg" alt="" width="30" height="30" loading="lazy" decoding="async"></div>
+                    <div>
+                        <h3>Cryptocurrency</h3>
+                        <p class="dn-card-sub">The privacy-first way — anonymous, no account</p>
+                    </div>
+                    <span class="dn-soon-pill">Coming soon</span>
+                </div>
+                <div class="crypto-options" id="dn-crypto-options">
+                    <div class="crypto-option" data-type="monero" data-action="select-crypto"><div class="icon"><img src="/assets/icons/icon-crypto-monero.svg" alt="" width="28" height="28" loading="lazy" decoding="async"></div><div class="name">Monero (XMR)</div><div class="crypto-soon">Soon</div></div>
+                    <div class="crypto-option" data-type="bitcoin" data-action="select-crypto"><div class="icon"><img src="/assets/icons/icon-crypto-bitcoin.svg" alt="" width="28" height="28" loading="lazy" decoding="async"></div><div class="name">Bitcoin (BTC)</div><div class="crypto-soon">Soon</div></div>
+                </div>
+                <div class="dn-wallet-soon" id="dn-wallet-soon">
+                    <img src="/assets/icons/icon-ui-blossom.svg" alt="" width="22" height="22" loading="lazy" decoding="async" aria-hidden="true">
+                    <div>
+                        <strong>Wallet addresses are being set up.</strong>
+                        <p>Monero and Bitcoin giving goes live here the moment the wallets are ready — this box becomes the address, click-to-copy.</p>
                     </div>
                 </div>
-            </div>
-
-            <div class="view-panel" data-view="faq" role="tabpanel">
-                <div class="faq-header"><span class="eyebrow">Questions</span><h2 class="section-title glass-text reveal">FAQ</h2></div>
-                <div class="faq-section reveal">
-                    <div class="faq-item">
-<button class="faq-question" type="button" id="support-faq-q-1" aria-expanded="false" aria-controls="support-faq-a-1" data-action="toggle-faq">Why do you need donations? <span class="arrow"><img src="/assets/icons/icon-ui-chevron-down.svg" class="" alt="" width="16" height="16" loading="lazy" decoding="async" aria-hidden="true"></span></button>
-<div class="faq-answer" id="support-faq-a-1" role="region" aria-labelledby="support-faq-q-1"><p>Running these services costs money — server hardware, electricity, internet bandwidth, and domain registration. Donations help cover these costs and fund future improvements and new services. We do not run ads or sell your data.</p></div></div>
-                    <div class="faq-item">
-<button class="faq-question" type="button" id="support-faq-q-2" aria-expanded="false" aria-controls="support-faq-a-2" data-action="toggle-faq">Why don't you accept credit cards? <span class="arrow"><img src="/assets/icons/icon-ui-chevron-down.svg" class="" alt="" width="16" height="16" loading="lazy" decoding="async" aria-hidden="true"></span></button>
-<div class="faq-answer" id="support-faq-a-2" role="region" aria-labelledby="support-faq-q-2"><p>We prioritize privacy. Credit card payments require sharing your personal and financial information with payment processors, which creates a paper trail linking your identity to our services. Cryptocurrency donations (Monero and Bitcoin) allow us to maintain a privacy-first approach with no KYC requirements, no chargebacks, and no third-party data collection.</p></div></div>
-                    <div class="faq-item">
-<button class="faq-question" type="button" id="support-faq-q-3" aria-expanded="false" aria-controls="support-faq-a-3" data-action="toggle-faq">Is my donation anonymous? <span class="arrow"><img src="/assets/icons/icon-ui-chevron-down.svg" class="" alt="" width="16" height="16" loading="lazy" decoding="async" aria-hidden="true"></span></button>
-<div class="faq-answer" id="support-faq-a-3" role="region" aria-labelledby="support-faq-q-3"><p>Yes. Crypto donations are anonymous by default. Monero (XMR) is fully anonymous — sender, receiver, and amount are all hidden. Bitcoin (BTC) is pseudonymous — your wallet address is visible but not linked to your identity.</p></div></div>
-                    <div class="faq-item">
-<button class="faq-question" type="button" id="support-faq-q-4" aria-expanded="false" aria-controls="support-faq-a-4" data-action="toggle-faq">Can I get a refund? <span class="arrow"><img src="/assets/icons/icon-ui-chevron-down.svg" class="" alt="" width="16" height="16" loading="lazy" decoding="async" aria-hidden="true"></span></button>
-<div class="faq-answer" id="support-faq-a-4" role="region" aria-labelledby="support-faq-q-4"><p>Crypto donations are irreversible. If you have a genuine issue, contact support@mysweetpea.cc.</p></div></div>
+                <div class="wallet-display" id="wallet-display" hidden>
+                    <div class="wl">Send your donation to:</div>
+                    <div class="wa" id="wallet-addr" data-action="copy-wallet">Loading...</div>
+                    <div class="copy-hint">Click address to copy to clipboard</div>
                 </div>
+            </article>
+
+            <!-- 2. GitHub Star (free) -->
+            <article class="dn-card">
+                <div class="dn-card-head">
+                    <div class="dn-card-icon"><svg viewBox="0 0 16 16" width="26" height="26" fill="currentColor" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27s1.36.09 2 .27c1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8Z"/></svg></div>
+                    <div>
+                        <h3>Star on GitHub</h3>
+                        <p class="dn-card-sub">Free, takes 5 seconds, helps others find the garden</p>
+                    </div>
+                </div>
+                <p class="dn-card-body">Both the website and the homelab infrastructure are public. Stars push the
+                    projects up search and discovery, which brings in new members — the only growth channel this
+                    garden has.</p>
+                <div class="dn-card-actions">
+                    <a class="dn-btn dn-btn-ghost" href="https://github.com/mysweetpea/portfolio" target="_blank" rel="noopener noreferrer">Star portfolio ↗</a>
+                    <a class="dn-btn dn-btn-ghost" href="https://github.com/mysweetpea/homelab-k8s" target="_blank" rel="noopener noreferrer">Star homelab ↗</a>
+                </div>
+            </article>
+
+            <!-- 3. Spread the word -->
+            <article class="dn-card">
+                <div class="dn-card-head">
+                    <div class="dn-card-icon"><img src="/assets/icons/icon-ui-blossom.svg" alt="" width="26" height="26" loading="lazy" decoding="async"></div>
+                    <div>
+                        <h3>Tell a friend</h3>
+                        <p class="dn-card-sub">Word of mouth is how this garden grows</p>
+                    </div>
+                </div>
+                <p class="dn-card-body">Know someone tired of ads, tracking, and subscription fatigue? Send them the
+                    door. Every new member is a vote for a quieter internet.</p>
+                <div class="dn-card-actions">
+                    <a class="dn-btn dn-btn-primary" href="/form.html">Invite someone</a>
+                </div>
+            </article>
+        </div>
+
+        <div class="dn-why reveal" id="dn-why">
+            <div class="dn-why-icon"><img src="/assets/icons/icon-ui-blossom.svg" alt="" width="34" height="34" loading="lazy" decoding="async"></div>
+            <h3>Why crypto?</h3>
+            <p>Privacy is the whole point. Crypto donations (especially Monero) are anonymous and irreversible —
+                no name, no email, no account, no KYC, no chargebacks, no paper trail. You give the way the
+                garden runs: directly, and between strangers who trust each other.</p>
+        </div>
+    </section>
+
+    <div class="vine-divider reveal-grow" aria-hidden="true"></div>
+
+    <section class="dn-section reveal" aria-labelledby="dn-faq-h">
+        <div class="faq-header"><span class="eyebrow">Questions</span><h2 class="section-title glass-text" id="dn-faq-h">FAQ</h2></div>
+        <div class="faq-section">
+            <div class="faq-item">
+                <button class="faq-question" type="button" id="sup-faq-q-1" aria-expanded="false" aria-controls="sup-faq-a-1" data-action="toggle-faq">Where does my donation actually go? <span class="arrow"><img src="/assets/icons/icon-ui-chevron-down.svg" alt="" width="16" height="16" loading="lazy" decoding="async" aria-hidden="true"></span></button>
+                <div class="faq-answer" id="sup-faq-a-1" role="region" aria-labelledby="sup-faq-q-1"><p>Straight into the hardware it runs on — server nodes, electricity, bandwidth, and the domain. Anything past running costs goes toward new services. There are no salaries: MySweetPea is one gardener, and the books (infrastructure costs) are public in the <a href="https://github.com/mysweetpea/homelab-k8s" target="_blank" rel="noopener noreferrer">homelab repository</a>.</p></div>
+            </div>
+            <div class="faq-item">
+                <button class="faq-question" type="button" id="sup-faq-q-2" aria-expanded="false" aria-controls="sup-faq-a-2" data-action="toggle-faq">Why don't you accept credit cards? <span class="arrow"><img src="/assets/icons/icon-ui-chevron-down.svg" alt="" width="16" height="16" loading="lazy" decoding="async" aria-hidden="true"></span></button>
+                <div class="faq-answer" id="sup-faq-a-2" role="region" aria-labelledby="sup-faq-q-2"><p>We prioritize privacy. Card payments route your identity through payment processors and create a paper trail linking you to this garden. Crypto (Monero especially) keeps giving anonymous — no KYC, no chargebacks, no third party collecting either of us.</p></div>
+            </div>
+            <div class="faq-item">
+                <button class="faq-question" type="button" id="sup-faq-q-3" aria-expanded="false" aria-controls="sup-faq-a-3" data-action="toggle-faq">Is my donation anonymous? <span class="arrow"><img src="/assets/icons/icon-ui-chevron-down.svg" alt="" width="16" height="16" loading="lazy" decoding="async" aria-hidden="true"></span></button>
+                <div class="faq-answer" id="sup-faq-a-3" role="region" aria-labelledby="sup-faq-q-3"><p>Yes. Monero is anonymous by default — sender, receiver, and amount are all hidden. Bitcoin is pseudonymous: the address is public but not linked to you. We never ask for a name or email alongside a donation.</p></div>
+            </div>
+            <div class="faq-item">
+                <button class="faq-question" type="button" id="sup-faq-q-4" aria-expanded="false" aria-controls="sup-faq-a-4" data-action="toggle-faq">Can I get a refund? <span class="arrow"><img src="/assets/icons/icon-ui-chevron-down.svg" alt="" width="16" height="16" loading="lazy" decoding="async" aria-hidden="true"></span></button>
+                <div class="faq-answer" id="sup-faq-a-4" role="region" aria-labelledby="sup-faq-q-4"><p>Crypto donations are irreversible by design — the same property that protects your privacy. If something genuinely went wrong, write to <a href="mailto:support@mysweetpea.cc">support@mysweetpea.cc</a> and a human will read it.</p></div>
+            </div>
+            <div class="faq-item">
+                <button class="faq-question" type="button" id="sup-faq-q-5" aria-expanded="false" aria-controls="sup-faq-a-5" data-action="toggle-faq">When do crypto wallets go live? <span class="arrow"><img src="/assets/icons/icon-ui-chevron-down.svg" alt="" width="16" height="16" loading="lazy" decoding="async" aria-hidden="true"></span></button>
+                <div class="faq-answer" id="sup-faq-a-5" role="region" aria-labelledby="sup-faq-q-5"><p>Soon. Wallet addresses are being set up carefully — once they're live they appear right on this page with click-to-copy. Until then, starring the repos on GitHub or sharing the garden with a friend helps just as much.</p></div>
             </div>
         </div>
-        </main>
+    </section>
+</main>
 <a href="#" class="back-to-top" aria-label="Back to top" data-action="back-to-top"><img src="/assets/icons/icon-ui-arrow-up.svg" class="" alt="" width="22" height="22" loading="lazy" decoding="async" aria-hidden="true"></a>
 <footer class="page-footer">
     <div class="footer-inner">
@@ -202,31 +265,7 @@ html[data-theme="light"]{background:#E7EDEA;color-scheme:light}
     <script src="/assets/js/lenis-init.js?v=107" defer></script>
     <script src="/assets/js/site.js?v=109" defer></script>
     <script src="/assets/js/premium.js?v=107" defer></script>
-    <script>
-function toggleFAQ(el) { var item = el.parentElement; var open = item.classList.toggle('open'); el.setAttribute('aria-expanded', String(open)); }
-        var WALLETS = { monero: 'Coming Soon', bitcoin: 'Coming Soon' };
-        // Mark unavailable wallets so users never see "Coming Soon" as a payable address.
-        document.querySelectorAll('.crypto-option').forEach(function(o) {
-            var type = o.getAttribute('data-type');
-            if (!WALLETS[type] || WALLETS[type] === 'Coming Soon') {
-                o.classList.add('unavailable');
-                o.setAttribute('aria-disabled', 'true');
-                var note = document.createElement('div');
-                note.className = 'crypto-soon';
-                note.textContent = 'Coming soon';
-                o.appendChild(note);
-            }
-        });
-        function selectCrypto(el, type) {
-            if (el.classList.contains('unavailable')) { return; }
-            var wd0 = document.getElementById('wallet-display');
-            if (wd0) { wd0.classList.add('visible'); }
-            document.querySelectorAll('.crypto-option').forEach(function(o) { o.classList.remove('selected'); });
-            el.classList.add('selected'); document.getElementById('wallet-addr').textContent = WALLETS[type];
-        }
-        function copyWallet() { var a = document.getElementById('wallet-addr').textContent; if (!a || a === 'Coming Soon' || a === 'Loading...') { return; } navigator.clipboard.writeText(a).then(function() { var e = document.getElementById('wallet-addr'); var o = e.textContent; e.textContent = 'Copied!'; setTimeout(function() { e.textContent = o; }, 1500); }); }
-        
-    </script>
+    <script src="/assets/js/support-page.js?v=1" defer></script>
     <script>
     if ('serviceWorker' in navigator) {
         window.addEventListener('load', function () {
