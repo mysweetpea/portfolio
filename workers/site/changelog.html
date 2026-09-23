@@ -50,6 +50,7 @@ html[data-theme="light"]{background:#E7EDEA;color-scheme:light}
     <link rel="stylesheet" href="/assets/css/site.css?v=107">
     <link rel="stylesheet" href="/assets/css/premium.css?v=114">
     <link rel="stylesheet" href="/assets/css/type-tokens.css?v=107">
+    <link rel="stylesheet" href="/assets/css/changelog.css?v=1">
     <link rel="stylesheet" href="/assets/css/hermes-type.css?v=107">
 <link rel="canonical" href="https://mysweetpea.cc/changelog">
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"Organization","name":"MySweetPea","url":"https://mysweetpea.cc","logo":"https://mysweetpea.cc/icon-512.png","description":"Private, self-hosted alternatives to the services you use every day. No ads, no tracking, no subscriptions — community funded.","email":"support@mysweetpea.cc","sameAs":["https://github.com/mysweetpea"]}</script>
@@ -96,17 +97,31 @@ html[data-theme="light"]{background:#E7EDEA;color-scheme:light}
             <img src="/logo.svg" alt="MySweetPea logo" class="hero-watermark" aria-hidden="true" loading="lazy" decoding="async">
             <img src="/logo.svg" alt="MySweetPea logo" class="logo" width="160" height="160">
             <h1 class="glass-text">Changelog</h1>
-            <p class="hero-sub pop-text">What's new at MySweetPea — service updates, improvements, and community changes.</p>
+            <p class="hero-sub pop-text">What's new at MySweetPea &mdash; service updates, improvements, and community changes.</p>
+            <span class="cl2-pulse" id="cl2-pulse" hidden>Updated daily &middot; pulled from our public repos</span>
         </div>
 
         <div class="content-section changelog-section">
-            <div class="changelog-github reveal">
-                <h3>Recent commits</h3>
-                <p class="changelog-github-note">Automatically pulled from our GitHub repositories.</p>
-                <div class="commit-list" id="commit-list">
-                    <p class="commit-loading">Loading recent commits…</p>
+            <section class="cl2-highlights" aria-label="Highlights">
+                <div class="cl2-eyebrow">Highlights</div>
+                <div id="cl2-hl-list"></div>
+            </section>
+            <section class="cl2-console" aria-label="Activity">
+                <div class="cl2-eyebrow">Activity <span class="cl2-score" id="cl2-score"></span></div>
+                <div class="cl2-chips" id="cl2-chips" role="group" aria-label="Filter activity">
+                    <button class="cl2-chip on" data-f="all">All</button>
+                    <button class="cl2-chip" data-f="repo:portfolio">portfolio</button>
+                    <button class="cl2-chip" data-f="repo:homelab-k8s">homelab-k8s</button>
+                    <button class="cl2-chip" data-f="cat:f">Features</button>
+                    <button class="cl2-chip" data-f="cat:i">Improvements</button>
+                    <button class="cl2-chip" data-f="cat:d">Fixes</button>
                 </div>
-            </div>
+                <div id="cl2-feed">
+                    <div class="cl2-skel"></div>
+                    <div class="cl2-skel"></div>
+                    <div class="cl2-skel"></div>
+                </div>
+            </section>
         </div>
         </main>
 <a href="#" class="back-to-top" aria-label="Back to top" data-action="back-to-top"><img src="/assets/icons/icon-ui-arrow-up.svg" class="" alt="" width="22" height="22" loading="lazy" decoding="async" aria-hidden="true"></a>
@@ -158,54 +173,7 @@ html[data-theme="light"]{background:#E7EDEA;color-scheme:light}
     <script src="/assets/js/lenis-init.js?v=107" defer></script>
     <script src="/assets/js/site.js?v=108" defer></script>
     <script src="/assets/js/premium.js?v=107" defer></script>
-    <script>
-    /* === Changelog: pull recent commits from GitHub (via Worker proxy) === */
-    (function () {
-        var list = document.getElementById('commit-list');
-        if (!list) return;
-
-        fetch('/api/commits')
-            .then(function (res) { return res.ok ? res.json() : Promise.reject(); })
-            .then(function (commits) {
-                if (!commits || !commits.length) {
-                    list.innerHTML = '<p class="commit-empty">No recent commits available.</p>';
-                    return;
-                }
-                list.innerHTML = '';
-                var currentGroup = null;
-                commits.forEach(function (c) {
-                    var d = new Date(c.date);
-                    var groupKey = d.getFullYear() + '-' + (d.getMonth() + 1);
-                    if (groupKey !== currentGroup) {
-                        currentGroup = groupKey;
-                        var monthName = d.toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
-                        var head = document.createElement('div');
-                        head.className = 'commit-group';
-                        head.textContent = monthName;
-                        list.appendChild(head);
-                    }
-                    var item = document.createElement('div');
-                    item.className = 'commit-item';
-                    var repo = document.createElement('span');
-                    repo.className = 'commit-repo commit-repo-' + c.repo;
-                    repo.textContent = c.repo;
-                    var msg = document.createElement('span');
-                    msg.className = 'commit-msg';
-                    msg.textContent = c.message;
-                    var date = document.createElement('span');
-                    date.className = 'commit-date';
-                    date.textContent = d.toLocaleDateString();
-                    item.appendChild(repo);
-                    item.appendChild(msg);
-                    item.appendChild(date);
-                    list.appendChild(item);
-                });
-            })
-            .catch(function () {
-                list.innerHTML = '<p class="commit-empty">No recent commits available.</p>';
-            });
-    })();
-    </script>
+    <script src="/assets/js/changelog-page.js?v=1" defer></script>
     <script>
     if ('serviceWorker' in navigator) {
         window.addEventListener('load', function () {

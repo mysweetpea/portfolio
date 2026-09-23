@@ -28,6 +28,8 @@ export default {
     const url = new URL(request.url);
 
     // --- Proxy GitHub commits for the changelog (token stays server-side) ---
+    // "Highlights + Activity console" aggregation: noise-filtered, categorized
+    // (f/d/i), top-3 highlights with optional manual override, week-grouped rows.
     if (url.pathname === '/api/commits') {
       const now = Date.now();
       if (commitsCache.data && (now - commitsCache.ts) < COMMITS_TTL) {
@@ -50,11 +52,12 @@ export default {
 
       const results = await Promise.all(repos.map(async (repo) => {
         try {
-          const res = await fetch('https://api.github.com/repos/' + repo + '/commits?per_page=10', { headers });
+          const res = await fetch('https://api.github.com/repos/' + repo + '/commits?per_page=60', { headers });
           if (!res.ok) return [];
           const data = await res.json();
           return data.map((c) => ({
             repo: repo.split('/')[1],
+            full: c.sha,
             sha: c.sha.slice(0, 7),
             message: (c.commit && c.commit.message || '').split('\n')[0],
             date: c.commit && c.commit.author && c.commit.author.date
@@ -65,13 +68,120 @@ export default {
       }));
 
       const all = results.flat().sort((a, b) => new Date(b.date) - new Date(a.date));
-      // Don't cache empty results: a transient GitHub failure would otherwise
-      // blank the changelog for the whole TTL.
-      if (all.length > 0) {
-        commitsCache = { data: all, ts: now };
+
+      // 1. NOISE: drop automated deploy commits, count them (total + per repo)
+      const NOISE_RE = /^build: automatic update of /i;
+      const items = [];
+      const total = { features: 0, improvements: 0, fixes: 0, noise: 0 };
+      for (const c of all) {
+        if (NOISE_RE.test(c.message)) { total.noise++; continue; }
+        items.push(c);
       }
 
-      return new Response(JSON.stringify(all), {
+      // 2. Categorize by prefix: f = feature, d = fix, i = improvement
+      const catOf = (msg) => {
+        const m = msg.toLowerCase();
+        if (/^feat/.test(m) || /^add /.test(m) || /^new /.test(m)) return 'f';
+        if (/(^|[:\s])fix/.test(m) || m.includes('defect') || /^revert /.test(m)) return 'd';
+        return 'i';
+      };
+
+      // 3. Highlight candidates: big features + security/backup fixes
+      const flagged = [];
+      for (const it of items) {
+        const m = it.message.toLowerCase();
+        it.cat = catOf(it.message);
+        total[it.cat === 'f' ? 'features' : it.cat === 'd' ? 'fixes' : 'improvements']++;
+        const featCandidate = it.cat === 'f' && (/^feat/.test(m) || it.message.length > 40);
+        const secCandidate = it.cat === 'd' && (m.includes('security') || m.includes('backup'));
+        if (featCandidate || secCandidate) flagged.push(it);
+      }
+
+      // 4. OPTIONAL manual override: /changelog-highlights.json in the site
+      //    assets (JSON array of 7-char or longer hex shas; 7/32/40 all work)
+      //    forces highlight=true for matches, BEFORE the cap to 3. Purely
+      //    optional; absence is fine.
+      try {
+        const res = await env.ASSETS.fetch(new Request('https://assets.local/changelog-highlights.json'));
+        if (res.ok) {
+          const arr = await res.json();
+          if (Array.isArray(arr)) {
+            const forced = new Set(arr
+              .filter((s) => typeof s === 'string' && /^[0-9a-f]{7,40}$/i.test(s.trim()))
+              .map((s) => s.trim().toLowerCase()));
+            for (const it of items) {
+              if (flagged.includes(it)) continue;
+              for (const sha of forced) {
+                if (it.full.startsWith(sha)) { flagged.push(it); break; }
+              }
+            }
+          }
+        }
+      } catch (e) { /* override file absent - purely optional */ }
+
+      const highlights = flagged.slice(0, 3); // items are already newest-first
+      const isHighlight = new Set(highlights);
+      const rows = items.filter((it) => !isHighlight.has(it));
+
+      // 5. Group the rest into Monday-based weeks, newest first (cap 6)
+      const weekStart = (dstr) => {
+        const d = new Date(dstr);
+        if (isNaN(d.getTime())) return null;
+        const back = (d.getUTCDay() + 6) % 7; // days since Monday
+        const mon = new Date(d.getTime() - back * 86400000);
+        return Date.UTC(mon.getUTCFullYear(), mon.getUTCMonth(), mon.getUTCDate());
+      };
+      const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+      const weekLabel = (start) => {
+        const mon = new Date(start);
+        const sun = new Date(start + 6 * 86400000);
+        const from = MONTHS[mon.getUTCMonth()] + ' ' + mon.getUTCDate();
+        const to = sun.getUTCMonth() === mon.getUTCMonth()
+          ? String(sun.getUTCDate())
+          : MONTHS[sun.getUTCMonth()] + ' ' + sun.getUTCDate();
+        return 'Week of ' + from + ' \u2013 ' + to;
+      };
+
+      const weeks = [];
+      const byStart = new Map();
+      for (const it of rows) {
+        const start = weekStart(it.date);
+        if (start === null) continue;
+        let wk = byStart.get(start);
+        if (!wk) {
+          wk = { label: weekLabel(start), count: 0, noise: 0, start, items: [] };
+          byStart.set(start, wk);
+          weeks.push(wk);
+        }
+        wk.count++;
+        wk.items.push({ sha: it.sha, repo: it.repo, message: it.message, date: it.date, cat: it.cat });
+      }
+      for (const c of all) {
+        if (!NOISE_RE.test(c.message)) continue;
+        const start = weekStart(c.date);
+        const wk = start !== null ? byStart.get(start) : null;
+        if (wk) wk.noise++;
+      }
+      weeks.sort((a, b) => b.start - a.start);
+
+      const payload = {
+        generated: new Date().toISOString(),
+        totals: total,
+        highlights: highlights.map((it) => ({
+          sha: it.sha, repo: it.repo, message: it.message, date: it.date, cat: it.cat
+        })),
+        weeks: weeks.slice(0, 6).map((wk) => ({
+          label: wk.label, count: wk.count, noise: wk.noise, items: wk.items
+        }))
+      };
+
+      // Don't cache empty results: a transient GitHub failure would otherwise
+      // blank the changelog for the whole TTL.
+      if (items.length > 0 || total.noise > 0) {
+        commitsCache = { data: payload, ts: now };
+      }
+
+      return new Response(JSON.stringify(payload), {
         headers: {
           'Content-Type': 'application/json',
           'Cache-Control': 'public, max-age=300',

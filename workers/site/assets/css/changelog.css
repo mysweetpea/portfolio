@@ -1,0 +1,360 @@
+/* ==========================================================================
+   MySweetPea - Changelog "Highlights + Activity console" (C3)
+   Loaded AFTER type-tokens.css. All type via --t-* tokens; all colors via
+   existing site palette vars (plus the palette-derived rgba literals the
+   mockup specifies). Every rule scoped to body[data-page='changelog'].
+   ========================================================================== */
+
+@keyframes cl2-shimmer {
+    0% { background-position: -200% center; }
+    100% { background-position: 200% center; }
+}
+
+@keyframes cl2-pulse-dot {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.45; }
+}
+
+/* === Hero pulse line (unhidden by changelog-page.js after a good load) === */
+body[data-page='changelog'] .cl2-pulse {
+    display: inline-flex;
+    align-items: center;
+    gap: 9px;
+    width: max-content;
+    max-width: 100%;
+    margin: 18px auto 0;
+    font-family: var(--t-font-mono);
+    font-size: var(--t-fs-3xs);
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--sage);
+}
+body[data-page='changelog'] .cl2-pulse[hidden] { display: none; }
+body[data-page='changelog'] .cl2-pulse::before {
+    content: '';
+    flex: none;
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--sage);
+    box-shadow: 0 0 10px rgba(163, 201, 182, 0.9), 0 0 22px rgba(163, 201, 182, 0.45);
+    animation: cl2-pulse-dot 2.4s ease-in-out infinite;
+}
+
+/* === Sections + eyebrow === */
+body[data-page='changelog'] .cl2-highlights,
+body[data-page='changelog'] .cl2-console {
+    margin: 0 0 38px;
+}
+body[data-page='changelog'] .cl2-eyebrow {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin: 0 0 14px;
+    font-family: var(--t-font-mono);
+    font-size: var(--t-fs-3xs);
+    font-weight: var(--t-fw-normal);
+    text-transform: uppercase;
+    letter-spacing: 0.18em;
+    color: var(--text-faint);
+}
+body[data-page='changelog'] .cl2-eyebrow::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--hairline);
+}
+body[data-page='changelog'] .cl2-score {
+    margin-left: auto;
+    font-family: var(--t-font-mono);
+    font-size: var(--t-fs-3xs);
+    text-transform: none;
+    letter-spacing: 0.06em;
+    color: var(--sage);
+}
+
+/* === Highlight cards === */
+body[data-page='changelog'] .cl2-hl {
+    position: relative;
+    border: 1px solid var(--border-primary);
+    border-radius: 18px;
+    background: var(--card-bg);
+    padding: clamp(20px, 3vw, 32px);
+    margin-bottom: 16px;
+    transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+}
+body[data-page='changelog'] .cl2-hl::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 18px;
+    right: 18px;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(197, 213, 216, 0.4), transparent);
+}
+body[data-page='changelog'] .cl2-hl:hover {
+    transform: translateY(-2px);
+    border-color: rgba(143, 175, 181, 0.5);
+    box-shadow: 0 0 34px rgba(94, 184, 168, 0.09), 0 12px 32px rgba(0, 0, 0, 0.22);
+}
+body[data-page='changelog'] .cl2-hl-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+}
+body[data-page='changelog'] .cl2-hl-date {
+    font-family: var(--t-font-mono);
+    font-size: var(--t-fs-3xs);
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--text-faint);
+}
+body[data-page='changelog'] .cl2-hl h2 {
+    margin: 10px 0 8px;
+    font-family: var(--t-font-display);
+    font-weight: var(--t-fw-normal);
+    font-size: clamp(1.5rem, 2.6vw, 1.9rem);
+    line-height: var(--t-lh-tight);
+    color: var(--text);
+    overflow-wrap: anywhere;
+}
+body[data-page='changelog'] .cl2-hl p {
+    margin: 0 0 4px;
+    font-size: var(--t-fs-body);
+    line-height: var(--t-lh-loose);
+    color: var(--text-dim);
+}
+body[data-page='changelog'] .cl2-hl p strong { color: var(--text); }
+body[data-page='changelog'] .cl2-hl p.cl2-hl-meta {
+    font-family: var(--t-font-mono);
+    font-size: var(--t-fs-xs);
+    line-height: var(--t-lh-snug);
+    letter-spacing: 0.02em;
+    color: var(--text-faint);
+    overflow-wrap: anywhere;
+}
+
+/* === Tag pills === */
+body[data-page='changelog'] .cl2-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 14px;
+}
+body[data-page='changelog'] .cl2-tag {
+    display: inline-flex;
+    align-items: center;
+    padding: 3px 10px;
+    border: 1px solid var(--border-primary);
+    border-radius: 999px;
+    font-family: var(--t-font-mono);
+    font-size: var(--t-fs-4xs);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--text-dim);
+}
+body[data-page='changelog'] .cl2-tag.f {
+    color: #7ED4B8;
+    border-color: rgba(126, 212, 184, 0.4);
+}
+body[data-page='changelog'] .cl2-tag.i {
+    color: var(--primary-bright);
+    border-color: rgba(197, 213, 216, 0.35);
+}
+body[data-page='changelog'] .cl2-tag.d {
+    color: var(--gold);
+    border-color: rgba(217, 168, 108, 0.4);
+}
+body[data-page='changelog'] .cl2-tag.n {
+    color: var(--text-dim);
+    border-color: var(--hairline);
+}
+
+/* === Activity console === */
+body[data-page='changelog'] .cl2-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 14px;
+}
+body[data-page='changelog'] .cl2-chip {
+    padding: 6px 13px;
+    border: 1px solid var(--hairline);
+    border-radius: 999px;
+    background: transparent;
+    font-family: var(--t-font-mono);
+    font-size: var(--t-fs-3xs);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--text-dim);
+    cursor: pointer;
+    transition: color 0.2s ease, border-color 0.2s ease, background 0.2s ease;
+}
+body[data-page='changelog'] .cl2-chip:hover {
+    color: var(--text);
+    border-color: rgba(143, 175, 181, 0.5);
+}
+body[data-page='changelog'] .cl2-chip.on {
+    color: var(--text);
+    border-color: rgba(143, 175, 181, 0.5);
+    background: rgba(143, 175, 181, 0.09);
+}
+
+/* === Week blocks === */
+body[data-page='changelog'] .cl2-wk { margin-bottom: 26px; }
+body[data-page='changelog'] .cl2-week-label {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 0 0 10px;
+    font-family: var(--t-font-mono);
+    font-size: var(--t-fs-3xs);
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    color: var(--text-faint);
+}
+body[data-page='changelog'] .cl2-week-label::before {
+    content: '';
+    flex: none;
+    width: 34px;
+    height: 1px;
+    background: var(--hairline);
+}
+body[data-page='changelog'] .cl2-panel {
+    border: 1px solid var(--hairline);
+    border-radius: 14px;
+    background: var(--card-bg);
+    overflow: hidden;
+}
+body[data-page='changelog'] .cl2-panel-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 13px 18px;
+    border-bottom: 1px solid var(--hairline);
+    font-family: var(--t-font-mono);
+    font-size: var(--t-fs-3xs);
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--text-faint);
+}
+body[data-page='changelog'] .cl2-panel-count {
+    color: var(--sage);
+    text-transform: none;
+    letter-spacing: 0.06em;
+}
+
+/* === Rows === */
+body[data-page='changelog'] .cl2-row {
+    display: grid;
+    grid-template-columns: 86px 1fr auto;
+    gap: 12px;
+    align-items: center;
+    padding: 12px 18px;
+    border-bottom: 1px solid var(--hairline);
+    transition: background 0.2s ease;
+}
+body[data-page='changelog'] .cl2-row:last-child { border-bottom: 0; }
+body[data-page='changelog'] .cl2-row:hover { background: rgba(143, 175, 181, 0.04); }
+body[data-page='changelog'] .cl2-t {
+    font-family: var(--t-font-mono);
+    font-size: var(--t-fs-3xs);
+    letter-spacing: 0.06em;
+    color: var(--text-faint);
+    white-space: nowrap;
+}
+body[data-page='changelog'] .cl2-m {
+    font-size: var(--t-fs-md);
+    line-height: var(--t-lh-snug);
+    color: var(--text);
+    overflow-wrap: anywhere;
+}
+body[data-page='changelog'] .cl2-m span { color: var(--text-faint); }
+body[data-page='changelog'] .cl2-cat {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    justify-self: end;
+    padding: 4px 11px;
+    border: 1px solid var(--hairline);
+    border-radius: 999px;
+    font-family: var(--t-font-mono);
+    font-size: var(--t-fs-4xs);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--text-dim);
+}
+body[data-page='changelog'] .cl2-cat::before {
+    content: '';
+    flex: none;
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--primary);
+}
+body[data-page='changelog'] .cl2-cat.f::before { background: #7ED4B8; }
+body[data-page='changelog'] .cl2-cat.i::before { background: var(--primary); }
+body[data-page='changelog'] .cl2-cat.d::before { background: var(--gold); }
+
+/* === Noise footnote (only when a week had automated commits) === */
+body[data-page='changelog'] .cl2-noise {
+    padding: 11px 18px;
+    border-top: 1px dashed var(--hairline);
+    font-family: var(--t-font-mono);
+    font-size: var(--t-fs-3xs);
+    font-style: italic;
+    letter-spacing: 0.04em;
+    color: rgba(233, 243, 244, 0.30);
+}
+html[data-theme='light'] body[data-page='changelog'] .cl2-noise {
+    color: rgba(27, 43, 49, 0.42);
+}
+
+/* === Skeletons / empty state === */
+body[data-page='changelog'] .cl2-skel {
+    height: 74px;
+    border-radius: 14px;
+    margin-bottom: 12px;
+    background: linear-gradient(90deg, rgba(143, 175, 181, 0.06), rgba(143, 175, 181, 0.14), rgba(143, 175, 181, 0.06));
+    background-size: 200% 100%;
+    animation: cl2-shimmer 1.3s linear infinite;
+}
+body[data-page='changelog'] .cl2-empty {
+    border: 1px dashed var(--hairline);
+    border-radius: 14px;
+    padding: 26px;
+    text-align: center;
+    font-family: var(--t-font-mono);
+    font-size: var(--t-fs-sm);
+    color: var(--text-faint);
+    overflow-wrap: anywhere;
+}
+
+/* === Mobile <= 760px: zero horizontal overflow at 390px === */
+@media (max-width: 760px) {
+    body[data-page='changelog'] .cl2-row {
+        grid-template-columns: 1fr;
+        gap: 6px;
+        padding: 12px 16px;
+    }
+    body[data-page='changelog'] .cl2-t { display: none; }
+    body[data-page='changelog'] .cl2-cat { justify-self: end; }
+    body[data-page='changelog'] .cl2-hl h2 { font-size: var(--t-fs-h2); }
+    body[data-page='changelog'] .cl2-pulse {
+        display: flex;
+        justify-content: center;
+        text-align: center;
+    }
+}
+
+/* === Reduced motion: kill shimmer + hover transforms + pulse === */
+@media (prefers-reduced-motion: reduce) {
+    body[data-page='changelog'] .cl2-hl,
+    body[data-page='changelog'] .cl2-row,
+    body[data-page='changelog'] .cl2-chip { transition: none; }
+    body[data-page='changelog'] .cl2-hl:hover { transform: none; }
+    body[data-page='changelog'] .cl2-skel { animation: none; }
+    body[data-page='changelog'] .cl2-pulse::before { animation: none; }
+}
