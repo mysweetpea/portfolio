@@ -2944,12 +2944,20 @@ body[data-page='form'] .tier-form-panel .form-submit.ready:not([disabled]) {
    strengths that survive a light background (teal halo + soft contact shadow,
    no heavy black). Must override BOTH the static filter and both keyframes. */
 [data-theme='light'] .ascii-logo {
-    /* logo.svg petals are ice-pale (designed for dark); deepen them so the
-       flower reads on a light background, then keep the teal halo */
-    filter: brightness(0.8) saturate(1.45) drop-shadow(0 0 26px rgba(94, 184, 168, 0.45)) drop-shadow(0 6px 16px rgba(27, 43, 49, 0.28));
+    /* logo-light.svg (swapped in by site.js on light themes) carries the
+       deepened petals; this adds the teal halo so the flower glows */
+    filter: drop-shadow(0 0 26px rgba(94, 184, 168, 0.45)) drop-shadow(0 6px 16px rgba(27, 43, 49, 0.28));
 }
 @keyframes asciiLogoBreathLight {
-    0%, 100% { transform: translate(-50%, -50%) scale(1); filter: brightness(0.8) saturate(1.45) drop-shadow(0 0 26px rgba(94, 184, 168, 0.45)) drop-shadow(0 6px 16px rgba(27, 43, 49, 0.28)); }
-    50% { transform: translate(-50%, -50%) scale(1.04); filter: brightness(0.8) saturate(1.45) drop-shadow(0 0 38px rgba(94, 184, 168, 0.6)) drop-shadow(0 8px 20px rgba(27, 43, 49, 0.32)); }
+    0%, 100% { transform: translate(-50%, -50%) scale(1); filter: drop-shadow(0 0 26px rgba(94, 184, 168, 0.45)) drop-shadow(0 6px 16px rgba(27, 43, 49, 0.28)); }
+    50% { transform: translate(-50%, -50%) scale(1.04); filter: drop-shadow(0 0 38px rgba(94, 184, 168, 0.6)) drop-shadow(0 8px 20px rgba(27, 43, 49, 0.32)); }
 }
 [data-theme='light'] .ascii-logo { animation-name: asciiLogoBreathLight; }
+
+/* === Light-mode polish 3: theme-aware logo disc (Sep 24) === */
+/* The inline msb mark carries a dark-navy disc tuned for the dark theme;
+   on light backgrounds it reads as a murky blob. Swap to a soft deep-teal
+   disc that keeps the pastel petals luminous. Pure CSS — the circle's
+   markup fill attribute loses to any CSS fill rule. Dark mode untouched. */
+[data-theme='light'] .msb-bg { fill: #2E5651; }
+[data-theme='light'] .msb { filter: drop-shadow(0 1px 3px rgba(27, 43, 49, 0.25)); }

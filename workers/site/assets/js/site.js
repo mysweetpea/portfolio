@@ -1370,3 +1370,40 @@
     new MutationObserver(sync).observe(label, { childList: true, characterData: true, subtree: true });
     sync();
 })();
+
+/* ==========================================================================
+   v109: Theme-aware logo + icon variants (light-mode polish 3)
+   - .ascii-logo (injected by premium.js as /logo.svg): swap to the
+     deepened-petal light variant on light themes. Both files are SW
+     precached, so the swap is instant and offline-safe.
+   - /assets/icons/affine2.svg (solid near-white mark): swap to the
+     dark-ink light variant — near-white is invisible on light chips.
+   Runs on initial load AND on any data-theme change (same
+   MutationObserver pattern as the theme-color block above — no reliance
+   on toggle-click events, covers OS-preference flips).
+   ========================================================================== */
+(function () {
+    'use strict';
+    var SWAPS = [
+        { match: '/logo.svg', dark: '/logo.svg', light: '/logo-light.svg' },
+        { match: '/assets/icons/affine2.svg', dark: '/assets/icons/affine2.svg', light: '/assets/icons/affine-light.svg' }
+    ];
+    function applyThemeAssets() {
+        var light = document.documentElement.getAttribute('data-theme') === 'light';
+        document.querySelectorAll('img').forEach(function (img) {
+            var src = img.getAttribute('src') || '';
+            for (var i = 0; i < SWAPS.length; i++) {
+                var s = SWAPS[i];
+                if (src === s.light && !light) { img.setAttribute('src', s.dark); break; }
+                if (src === s.dark && light) { img.setAttribute('src', s.light); break; }
+            }
+        });
+    }
+    applyThemeAssets();
+    new MutationObserver(applyThemeAssets).observe(document.documentElement, { attributeFilter: ['data-theme'] });
+    /* premium.js injects the ascii-logo <img> after this script runs (both
+       are defer, premium.js is later in the DOM) — catch late-injected
+       images with a load sweep. */
+    window.addEventListener('load', applyThemeAssets);
+    setTimeout(applyThemeAssets, 300);
+})();
