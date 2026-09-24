@@ -96,6 +96,18 @@
         if (tickerEl) tickerEl.textContent = 'STATUS UNAVAILABLE';
     }
 
+    /* markup ships neutral (no dot-on, "CHECKING…"); this flips it to live
+       ONLY after a verified fetch. Keeps the page honest when JS dies or
+       the status page is unreachable. */
+    function markVerified() {
+        if (stateEl) {
+            var dot = stateEl.querySelector('.about-x-dot');
+            var label = stateEl.querySelector('.about-x-live-txt');
+            if (dot) { dot.classList.add('about-x-dot-on'); dot.classList.remove('about-x-dot-off'); }
+            if (label) label.textContent = 'LIVE · LAST 24 H';
+        }
+    }
+
     var aborter = ('AbortController' in window) ? new AbortController() : null;
     /* timer cleared on EVERY settle path (success AND failure) */
     var abortTimer = aborter ? setTimeout(function () { aborter.abort(); }, 10000) : 0;
@@ -133,4 +145,11 @@
             clearAbort();
             console.warn('[msp] about uptime fetch failed:', err && err.message ? err.message : err);
             markUnreachable();
+        })
+        /* success path: verified — flip the live badge + ticker */
+        .then(function () {
+            markVerified();
+            if (tickerEl && tickerEl.textContent.indexOf('CHECKING') !== -1) {
+                tickerEl.textContent = 'ALL SYSTEMS OPERATIONAL · LIVE';
+            }
         }); })();

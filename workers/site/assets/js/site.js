@@ -1062,6 +1062,24 @@
 (function () {
     'use strict';
     document.querySelectorAll('.view-switcher').forEach(function (switcher) {
+        /* WAI-ARIA tabs wiring: give each tab its panel relationship
+           (aria-controls ↔ id/aria-labelledby) once at init. Panels get
+           tabindex="0" when active so keyboard users can reach scrolled
+           panel content. */
+        switcher.querySelectorAll('.view-tab').forEach(function (tab, ti) {
+            if (!tab.id) tab.id = switcher.id ? switcher.id + '-tab-' + ti : 'vw-tab-' + ti;
+        });
+        switcher.querySelectorAll('.view-panel').forEach(function (panel, pi) {
+            if (!panel.id) panel.id = switcher.id ? switcher.id + '-panel-' + pi : 'vw-panel-' + pi;
+        });
+        switcher.querySelectorAll('.view-tab').forEach(function (tab) {
+            var view = tab.getAttribute('data-view');
+            var panel = switcher.querySelector('.view-panel[data-view="' + view + '"]');
+            if (panel) {
+                tab.setAttribute('aria-controls', panel.id);
+                panel.setAttribute('aria-labelledby', tab.id);
+            }
+        });
         var tabs = switcher.querySelectorAll('.view-tab');
         var panels = switcher.querySelectorAll('.view-panel');
 
@@ -1077,6 +1095,9 @@
             panels.forEach(function (p) {
                 var active = p.getAttribute('data-view') === view;
                 p.classList.toggle('active', active);
+                /* Active panel is focusable so keyboard users can scroll it
+                   (WAI-ARIA tabs pattern requires a focusable panel). */
+                p.tabIndex = active ? 0 : -1;
                 /* CSS-only hiding breaks when the stylesheet is late or off:
                    the hidden attribute keeps panels out of the a11y tree and
                    layout regardless. */
