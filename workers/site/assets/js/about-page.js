@@ -129,8 +129,8 @@
                 console.warn('[msp] about uptime: partial monitor set (' + n + '/' + Object.keys(MONITOR_IDS).length + ')');
                 return Promise.reject(new Error('partial monitor set'));
             }
-            var avg = Math.round((sum / n) * 10) / 10;
-            var s = avg.toFixed(1);
+            var avg = Math.round((sum / n) * 1000) / 10;
+            var s = avg.toFixed(1);   /* one decimal, matching "99.9" markup default */
             if (pctFired || reducedMotion || !('IntersectionObserver' in window)) {
                 // animation already ran (or will never run): show the live value.
                 // data-count too — a count-up still in flight re-reads it on its final frame.
