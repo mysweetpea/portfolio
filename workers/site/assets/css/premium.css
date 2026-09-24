@@ -2938,3 +2938,18 @@ body[data-page='form'] .tier-form-panel .form-submit.ready:not([disabled]) {
     background: linear-gradient(160deg, rgba(255,255,255,.6), transparent 40%), rgba(250,253,250,.65);
     border-color: rgba(46, 92, 70, 0.16);
 }
+
+/* === Light-mode polish pass 2: ascii logo glow (Sep 24) === */
+/* Flower in the ASCII ripple: keep the breath animation but swap to glow
+   strengths that survive a light background (teal halo + soft contact shadow,
+   no heavy black). Must override BOTH the static filter and both keyframes. */
+[data-theme='light'] .ascii-logo {
+    /* logo.svg petals are ice-pale (designed for dark); deepen them so the
+       flower reads on a light background, then keep the teal halo */
+    filter: brightness(0.8) saturate(1.45) drop-shadow(0 0 26px rgba(94, 184, 168, 0.45)) drop-shadow(0 6px 16px rgba(27, 43, 49, 0.28));
+}
+@keyframes asciiLogoBreathLight {
+    0%, 100% { transform: translate(-50%, -50%) scale(1); filter: brightness(0.8) saturate(1.45) drop-shadow(0 0 26px rgba(94, 184, 168, 0.45)) drop-shadow(0 6px 16px rgba(27, 43, 49, 0.28)); }
+    50% { transform: translate(-50%, -50%) scale(1.04); filter: brightness(0.8) saturate(1.45) drop-shadow(0 0 38px rgba(94, 184, 168, 0.6)) drop-shadow(0 8px 20px rgba(27, 43, 49, 0.32)); }
+}
+[data-theme='light'] .ascii-logo { animation-name: asciiLogoBreathLight; }
