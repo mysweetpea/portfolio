@@ -5,6 +5,10 @@
    ========================================================================== */
 
 /* --- hero polish ------------------------------------------------------------ */
+body[data-page='support'] .hero img.logo {
+    display: block; /* inline flow on this hero left the logo 144px left of center */
+    margin: 0 auto 16px;
+}
 body[data-page='support'] .dn-eyebrow {
     display: inline-flex;
     align-items: center;
@@ -24,36 +28,6 @@ body[data-page='support'] .dn-eyebrow::after {
 }
 body[data-page='support'] .hero-sub { max-width: 620px; }
 
-/* --- hero stats strip: instrument tiles with hairline separators ------------ */
-body[data-page='support'] .dn-hero-stats {
-    display: flex;
-    justify-content: center;
-    gap: 0;
-    margin: 30px auto 6px;
-    flex-wrap: wrap;
-}
-body[data-page='support'] .dn-stat {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 4px;
-    padding: 2px 34px;
-    border-left: 1px solid var(--border);
-}
-body[data-page='support'] .dn-stat:first-child { border-left: none; }
-body[data-page='support'] .dn-stat-n {
-    font-family: var(--t-font-display, Georgia, serif);
-    font-size: var(--t-fs-h2, 1.8rem);
-    line-height: 1.1;
-    color: var(--text);
-}
-body[data-page='support'] .dn-stat-l {
-    font-family: var(--t-font-mono, ui-monospace, monospace);
-    font-size: var(--t-fs-4xs, 0.66rem);
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-    color: var(--text-faint);
-}
 
 /* --- section rhythm -------------------------------------------------------- */
 /* Page column: matches the changelog/about console grammar (720px centered)
@@ -320,10 +294,25 @@ body[data-page='support'] .dn-btn-ghost {
     border: 1px solid var(--border-primary);
     color: var(--text);
     background: transparent;
+    display: inline-flex;
+    align-items: center;
+    gap: 9px;
 }
+body[data-page='support'] .dn-btn-ghost svg { flex: none; opacity: 0.85; transition: opacity 0.2s ease; }
 body[data-page='support'] .dn-btn-ghost:hover {
     border-color: var(--primary);
+    background: color-mix(in srgb, var(--primary) 7%, transparent);
+    background: rgba(143, 175, 181, 0.07); /* fallback */
     transform: translateY(-1px);
+}
+body[data-page='support'] .dn-btn-ghost:hover svg { opacity: 1; }
+body[data-page='support'] .dn-card-foot {
+    margin: 14px 0 0;
+    font-family: var(--t-font-mono, ui-monospace, monospace);
+    font-size: var(--t-fs-4xs, 0.66rem);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--text-faint);
 }
 body[data-page='support'] .dn-btn-primary {
     background: linear-gradient(135deg, var(--primary), var(--primary-dim));
@@ -338,18 +327,41 @@ body[data-page='support'] .dn-btn-primary:hover {
 /* --- why crypto ------------------------------------------------------------ */
 body[data-page='support'] .dn-why {
     margin-top: 22px;
-    display: grid;
-    grid-template-columns: auto 1fr;
-    grid-template-rows: auto auto;
-    column-gap: 16px;
-    row-gap: 6px;
-    align-items: center;
-    padding: 22px 24px;
+    padding: 24px 26px;
     border-radius: var(--radius, 18px);
     background: var(--card-bg);
     border: 1px solid var(--border);
+    position: relative;
+    overflow: hidden;
 }
-body[data-page='support'] .dn-why-icon { grid-row: 1 / span 2; }
+/* soft blossom glow in the top corner — same ambient grammar as the cards */
+body[data-page='support'] .dn-why::before {
+    content: "";
+    position: absolute;
+    top: -60px;
+    right: -60px;
+    width: 200px;
+    height: 200px;
+    border-radius: 50%;
+    background: radial-gradient(circle, color-mix(in srgb, var(--sage) 9%, transparent), transparent 70%);
+    background: radial-gradient(circle, rgba(163, 201, 182, 0.09), transparent 70%); /* fallback */
+    pointer-events: none;
+}
+body[data-page='support'] .dn-why-head {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 12px;
+}
+body[data-page='support'] .dn-why-icon {
+    display: grid;
+    place-items: center;
+    width: 44px;
+    height: 44px;
+    border-radius: 12px;
+    border: 1px solid var(--border-primary);
+    background: color-mix(in srgb, var(--sage) 8%, transparent);
+}
 body[data-page='support'] .dn-why h3 {
     margin: 0;
     font-family: var(--t-font-display, Georgia, serif);
@@ -357,12 +369,40 @@ body[data-page='support'] .dn-why h3 {
     font-size: var(--t-fs-lg, 1.2rem);
     color: var(--text);
 }
-body[data-page='support'] .dn-why p {
-    margin: 0;
-    font-size: var(--t-fs-sm, 0.92rem);
-    line-height: 1.65;
-    color: var(--text);
-    max-width: 72ch;
+body[data-page='support'] .dn-why p { margin: 0; line-height: 1.7; color: var(--text-dim, var(--text)); }
+body[data-page='support'] .dn-why-points {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 14px;
+    margin-top: 18px;
+    padding-top: 16px;
+    border-top: 1px solid var(--border);
+}
+body[data-page='support'] .dn-why-point {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    padding: 12px 14px;
+    border-radius: 12px;
+    background: color-mix(in srgb, var(--card-bg) 50%, transparent);
+    background: rgba(255, 255, 255, 0.02); /* fallback */
+    border: 1px solid var(--border);
+}
+body[data-page='support'] .dn-why-point .pt-label {
+    font-family: var(--t-font-mono, ui-monospace, monospace);
+    font-size: var(--t-fs-4xs, 0.66rem);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--sage);
+}
+body[data-page='support'] .dn-why-point .pt-desc {
+    font-size: var(--t-fs-sm, 0.88rem);
+    line-height: 1.5;
+    color: var(--text-dim, var(--text));
+}
+@media (max-width: 760px) {
+    body[data-page='support'] .dn-why { padding: 18px; }
+    body[data-page='support'] .dn-why-points { grid-template-columns: 1fr; }
 }
 
 /* --- FAQ: page-scoped additions only. Global accordion animation + arrow
@@ -400,14 +440,10 @@ body[data-page='support'] .faq-answer a { color: var(--primary); }
     body[data-page='support'] .dn-why { padding: 18px; grid-template-columns: 1fr; }
     body[data-page='support'] .dn-why-icon { grid-row: auto; }
     body[data-page='support'] .crypto-options { grid-template-columns: 1fr; }
-    body[data-page='support'] .dn-hero-stats { gap: 0; }
-    body[data-page='support'] .dn-stat { min-width: 0; padding: 2px 18px; }
     body[data-page='support'] .faq-question { padding: 15px 16px; }
 }
 
 @media (max-width: 480px) {
-    body[data-page='support'] .dn-hero-stats { gap: 10px 0; flex-direction: column; }
-    body[data-page='support'] .dn-stat { border-left: none; padding: 4px 0; }
 }
 
 /* --- reduced motion -------------------------------------------------------- */
