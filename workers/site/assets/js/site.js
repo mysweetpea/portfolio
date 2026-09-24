@@ -1389,11 +1389,11 @@
     var SWAPS = [
         { match: '/logo.svg', dark: '/logo.svg', light: '/logo-light.svg' },
         { match: '/assets/icons/affine2.svg', dark: '/assets/icons/affine2.svg', light: '/assets/icons/affine-light.svg' },
-        { match: '/assets/icons/feature-open.svg', dark: '/assets/icons/feature-open.svg', light: '/assets/icons/feature-open-light.svg' },
-        { match: '/assets/icons/feature-free.svg', dark: '/assets/icons/feature-free.svg', light: '/assets/icons/feature-free-light.svg' },
+        { match: '/assets/icons/feature-open-v2.svg', dark: '/assets/icons/feature-open-v2.svg', light: '/assets/icons/feature-open-light.svg' },
+        { match: '/assets/icons/feature-free-v2.svg', dark: '/assets/icons/feature-free-v2.svg', light: '/assets/icons/feature-free-light.svg' },
         { match: '/assets/icons/feature-private.svg', dark: '/assets/icons/feature-private.svg', light: '/assets/icons/feature-private-light.svg' },
-        { match: '/assets/icons/feature-community.svg', dark: '/assets/icons/feature-community.svg', light: '/assets/icons/feature-community-light.svg' },
-        { match: '/assets/icons/feature-selfhosted.svg', dark: '/assets/icons/feature-selfhosted.svg', light: '/assets/icons/feature-selfhosted-light.svg' },
+        { match: '/assets/icons/feature-community-v2.svg', dark: '/assets/icons/feature-community-v2.svg', light: '/assets/icons/feature-community-light.svg' },
+        { match: '/assets/icons/feature-selfhosted-v2.svg', dark: '/assets/icons/feature-selfhosted-v2.svg', light: '/assets/icons/feature-selfhosted-light.svg' },
         { match: '/assets/icons/feature-experimental.svg', dark: '/assets/icons/feature-experimental.svg', light: '/assets/icons/feature-experimental-light.svg' }
     ];
     function applyThemeAssets() {
