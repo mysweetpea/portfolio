@@ -275,3 +275,45 @@ html { scroll-behavior: auto; }
 [data-theme="light"] body[data-page='home'] .g-ico{background:rgba(78,124,136,.06)}
 [data-theme="light"] body[data-page='home'] .g-exposure-inner{border-left-color:rgba(180,84,78,.32)}
 [data-theme="light"] body[data-page='home'] .g-altname{color:#8A6A3C}
+
+/* ===== 05 VERIFY, DON'T TRUST — proof cards ===== */
+body[data-page='home'] .vb-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;max-width:1140px;margin:0 auto;padding:0 20px}
+body[data-page='home'] .vb-card{border:1px solid var(--border);background:var(--card-bg);border-radius:18px;padding:30px 26px;display:flex;flex-direction:column;transition:transform .22s ease,border-color .25s ease,background .25s ease}
+body[data-page='home'] .vb-card:hover{transform:translateY(-3px);border-color:var(--border-primary);background:var(--card-bg-hover)}
+body[data-page='home'] .vb-ico{width:46px;height:46px;border-radius:12px;background:rgba(143,175,181,.08);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;margin-bottom:16px}
+body[data-page='home'] .vb-ico img{width:24px;height:24px}
+body[data-page='home'] .vb-title{font-family:var(--t-font-display,'Instrument Serif',Georgia,serif);font-weight:400;font-size:1.3rem;color:var(--text);margin:0 0 10px;line-height:1.25}
+body[data-page='home'] .vb-body{margin:0;font-size:.9rem;line-height:1.7;color:var(--text-dim);flex:1}
+body[data-page='home'] .vb-link{display:inline-block;margin-top:18px;font-family:var(--t-font-mono,ui-monospace,monospace);font-size:.64rem;letter-spacing:.14em;text-transform:uppercase;color:var(--sage);text-decoration:none;border-bottom:1px dotted var(--sage);transition:color .2s ease;padding:10px 0;margin-top:8px}
+body[data-page='home'] .vb-link:hover{color:var(--text)}
+body[data-page='home'] .vb-note{font-family:var(--t-font-mono,ui-monospace,monospace);font-size:.68rem;line-height:1.8;letter-spacing:.03em;color:var(--text-faint);max-width:760px;margin:26px auto 0;padding:0 20px;text-align:center}
+body[data-page='home'] .vb-note em{color:var(--text-dim);font-style:italic}
+
+/* ===== 06 TWO DOORS — gateway vs installer ===== */
+body[data-page='home'] .gw-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;max-width:940px;margin:0 auto;padding:0 20px}
+body[data-page='home'] .gw-card{border:1px solid var(--border);background:var(--card-bg);border-radius:18px;padding:32px 30px;position:relative;transition:transform .22s ease,border-color .25s ease,background .25s ease}
+body[data-page='home'] .gw-card:hover{transform:translateY(-3px);border-color:var(--border-primary);background:var(--card-bg-hover)}
+body[data-page='home'] .gw-card-alt{border-style:dashed}
+body[data-page='home'] .gw-card-alt:hover{border-color:rgba(163,201,182,.45)}
+body[data-page='home'] .gw-kicker{font-family:var(--t-font-mono,ui-monospace,monospace);font-size:.58rem;letter-spacing:.2em;text-transform:uppercase;color:var(--text-faint);margin:0 0 14px}
+body[data-page='home'] .gw-card .vb-ico{margin-bottom:14px}
+body[data-page='home'] .gw-btn{margin-top:22px;align-self:flex-start;width:auto}
+body[data-page='home'] .gw-card{display:flex;flex-direction:column}
+body[data-page='home'] .gw-card-alt .vb-title{color:var(--text)}
+body[data-page='home'] .gw-card-alt .vb-body{color:var(--text-dim)}
+
+@media (max-width:1020px){
+  body[data-page='home'] .vb-grid{grid-template-columns:1fr}
+  body[data-page='home'] .gw-grid{grid-template-columns:1fr}
+}
+@media (max-width:760px){
+  body[data-page='home'] .vb-card{padding:24px 20px}
+  body[data-page='home'] .gw-card{padding:26px 22px}
+  body[data-page='home'] .vb-note{padding:0 16px}
+}
+
+/* ===== LIGHT THEME — verify + doors ===== */
+[data-theme="light"] body[data-page='home'] .vb-ico{background:rgba(78,124,136,.06)}
+[data-theme="light"] body[data-page='home'] .vb-card{background:rgba(255,255,255,.5)}
+[data-theme="light"] body[data-page='home'] .gw-card{background:rgba(255,255,255,.5)}
+[data-theme="light"] body[data-page='home'] .gw-card-alt{background:rgba(255,255,255,.35)}
