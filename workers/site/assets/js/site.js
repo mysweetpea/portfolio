@@ -1378,6 +1378,8 @@
      precached, so the swap is instant and offline-safe.
    - /assets/icons/affine2.svg (solid near-white mark): swap to the
      dark-ink light variant — near-white is invisible on light chips.
+   - /assets/icons/feature-*.svg (home glass tiles): pale-ice glyphs
+     vanish on white chips — swap to the deepened -light variants.
    Runs on initial load AND on any data-theme change (same
    MutationObserver pattern as the theme-color block above — no reliance
    on toggle-click events, covers OS-preference flips).
@@ -1386,7 +1388,13 @@
     'use strict';
     var SWAPS = [
         { match: '/logo.svg', dark: '/logo.svg', light: '/logo-light.svg' },
-        { match: '/assets/icons/affine2.svg', dark: '/assets/icons/affine2.svg', light: '/assets/icons/affine-light.svg' }
+        { match: '/assets/icons/affine2.svg', dark: '/assets/icons/affine2.svg', light: '/assets/icons/affine-light.svg' },
+        { match: '/assets/icons/feature-open.svg', dark: '/assets/icons/feature-open.svg', light: '/assets/icons/feature-open-light.svg' },
+        { match: '/assets/icons/feature-free.svg', dark: '/assets/icons/feature-free.svg', light: '/assets/icons/feature-free-light.svg' },
+        { match: '/assets/icons/feature-private.svg', dark: '/assets/icons/feature-private.svg', light: '/assets/icons/feature-private-light.svg' },
+        { match: '/assets/icons/feature-community.svg', dark: '/assets/icons/feature-community.svg', light: '/assets/icons/feature-community-light.svg' },
+        { match: '/assets/icons/feature-selfhosted.svg', dark: '/assets/icons/feature-selfhosted.svg', light: '/assets/icons/feature-selfhosted-light.svg' },
+        { match: '/assets/icons/feature-experimental.svg', dark: '/assets/icons/feature-experimental.svg', light: '/assets/icons/feature-experimental-light.svg' }
     ];
     function applyThemeAssets() {
         var light = document.documentElement.getAttribute('data-theme') === 'light';
