@@ -4527,7 +4527,7 @@ body[data-page='home'] .hero h1 { font-size: clamp(2.75rem, 6.5vw, 4.5rem); }
     --bg: #E8EFEA;
     --text: #1B2B31;
     --text-dim: #3E5A52;
-    --text-faint: #5E7A70;
+    --text-faint: #4A635B;
     --primary: #3E7C5F;
     --primary-dim: #2F6B4E;
     --primary-bright: #245A40;
@@ -4537,12 +4537,16 @@ body[data-page='home'] .hero h1 { font-size: clamp(2.75rem, 6.5vw, 4.5rem); }
     --card-bg: rgba(250, 253, 250, 0.85);
     --card-bg-hover: rgba(255, 255, 255, 0.95);
     --ice: #2A4A3E;
-    --sage: #3E7C5F;
+    --sage: #2F6B4E;
     --sage-dim: #5E9A7C;
     --slate: #5F7E92;
     --error: #B4544E;
     --success: #3E7C5F;
     --hairline: rgba(46, 92, 70, 0.12);
+    /* gold: light variant — dark #D9A86C is 1.84:1 here (invisible) */
+    --gold: #7A5A20;
+    --gold-dim: #8A6428;
+    --gold-glow: rgba(122, 90, 32, 0.16);
 }
 [data-theme="light"] .bg-gradient { opacity: 0.36; }
 [data-theme="light"] .grain-overlay { opacity: 0.22; }
@@ -7997,3 +8001,24 @@ body[data-page='status'] .status-line.is-down .line-name { color: var(--error); 
 }
 
 /* === end Status v2 === */
+
+/* Light mode: suggest lock-box CTA — inline #0C1316 text fails on the dark-green gradient */
+[data-theme="light"] body[data-page='suggest'] #suggestLocked a {
+    color: #F2F6F4;
+}
+
+/* === Light theme token overrides — MUST stay after every :root block (cascade:
+   :root at 5306 re-declares --gold AFTER the 4526 light block, beating it at equal
+   specificity; this EOF block restores light wins). v108. === */
+[data-theme="light"] {
+    --gold: #7A5A20;
+    --gold-dim: #8A6428;
+    --gold-glow: rgba(122, 90, 32, 0.16);
+    --text-faint: #4A635B;
+    --sage: #2F6B4E;
+}
+
+/* === Light theme: link/button contrast on the deeper green tokens === */
+[data-theme="light"] body[data-page='success'] .contact-link a,
+[data-theme="light"] body[data-page='error'] .contact-link a { color: #2F6B4E; }
+[data-theme="light"] .redeem-callout .btn { color: #F2F6F4; }

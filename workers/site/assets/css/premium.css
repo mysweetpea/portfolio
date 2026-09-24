@@ -2922,3 +2922,19 @@ body[data-page='form'] .tier-form-panel .form-submit.ready:not([disabled]) {
 @media (max-width: 900px) {
     .about-x-ana { grid-template-columns: 1fr; }
 }
+
+/* === Light theme: form-page dark-tint islands -> green-tinted glass === */
+[data-theme="light"] body[data-page='form'] .access-choice-card.coming-soon,
+[data-theme="light"] body[data-page='form'] .access-choice-card.coming-soon:hover,
+[data-theme="light"] body[data-page='form'] .access-choice-card.coming-soon:focus-visible {
+    background: rgba(62, 124, 95, 0.06);
+    border-color: rgba(46, 92, 70, 0.28);
+}
+[data-theme="light"] body[data-page='form'] .verify-check:hover {
+    background: rgba(62, 124, 95, 0.08);
+    border-color: rgba(46, 92, 70, 0.28);
+}
+[data-theme="light"] body[data-page='form'] .redeem-callout {
+    background: linear-gradient(160deg, rgba(255,255,255,.6), transparent 40%), rgba(250,253,250,.65);
+    border-color: rgba(46, 92, 70, 0.16);
+}
