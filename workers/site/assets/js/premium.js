@@ -57,7 +57,7 @@
     if (asciiPre) {
         var asciiLogo = document.createElement('img');
         asciiLogo.className = 'ascii-logo';
-        asciiLogo.src = '/logo.svg';
+        asciiLogo.src = document.documentElement.getAttribute('data-theme') === 'light' ? '/logo-light.svg' : '/logo.svg';
         asciiLogo.alt = '';
         asciiLogo.width = 150;
         asciiLogo.height = 150;

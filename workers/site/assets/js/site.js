@@ -1372,46 +1372,50 @@
 })();
 
 /* ==========================================================================
-   v109: Theme-aware logo + icon variants (light-mode polish 3)
-   - .ascii-logo (injected by premium.js as /logo.svg): swap to the
-     deepened-petal light variant on light themes. Both files are SW
-     precached, so the swap is instant and offline-safe.
-   - /assets/icons/affine2.svg (solid near-white mark): swap to the
-     dark-ink light variant — near-white is invisible on light chips.
-   - /assets/icons/feature-*.svg (home glass tiles): pale-ice glyphs
-     vanish on white chips — swap to the deepened -light variants.
-   Runs on initial load AND on any data-theme change (same
-   MutationObserver pattern as the theme-color block above — no reliance
-   on toggle-click events, covers OS-preference flips).
+   v109: Theme-aware logo + icon swap (light theme gets the polished
+   light-variant files). Assets on this site are served from the domain
+   root — the SWAPS table keys on the pathname, so this module depends on
+   that (any base-path/CDN rewrite would break the match).
+   Rule: light variant filename = dark filename with '-light' before the
+   extension. Add a DARK path here and the light one is derived.
    ========================================================================== */
-(function () {
+    (function () {
     'use strict';
     var SWAPS = [
-        { match: '/logo.svg', dark: '/logo.svg', light: '/logo-light.svg' },
-        { match: '/assets/icons/affine2.svg', dark: '/assets/icons/affine2.svg', light: '/assets/icons/affine-light.svg' },
-        { match: '/assets/icons/feature-open-v2.svg', dark: '/assets/icons/feature-open-v2.svg', light: '/assets/icons/feature-open-light.svg' },
-        { match: '/assets/icons/feature-free-v2.svg', dark: '/assets/icons/feature-free-v2.svg', light: '/assets/icons/feature-free-light.svg' },
-        { match: '/assets/icons/feature-private.svg', dark: '/assets/icons/feature-private.svg', light: '/assets/icons/feature-private-light.svg' },
-        { match: '/assets/icons/feature-community-v2.svg', dark: '/assets/icons/feature-community-v2.svg', light: '/assets/icons/feature-community-light.svg' },
-        { match: '/assets/icons/feature-selfhosted-v2.svg', dark: '/assets/icons/feature-selfhosted-v2.svg', light: '/assets/icons/feature-selfhosted-light.svg' },
-        { match: '/assets/icons/feature-experimental.svg', dark: '/assets/icons/feature-experimental.svg', light: '/assets/icons/feature-experimental-light.svg' }
+        '/logo.svg',
+        '/assets/icons/affine2.svg',
+        '/assets/icons/feature-open-v2.svg',
+        '/assets/icons/feature-free-v2.svg',
+        '/assets/icons/feature-private.svg',
+        '/assets/icons/feature-community-v2.svg',
+        '/assets/icons/feature-selfhosted-v2.svg',
+        '/assets/icons/feature-experimental.svg'
     ];
+    function lightPath(p) {
+        var dot = p.lastIndexOf('.');
+        return p.slice(0, dot) + '-light' + p.slice(dot);
+    }
     function applyThemeAssets() {
         var light = document.documentElement.getAttribute('data-theme') === 'light';
         document.querySelectorAll('img').forEach(function (img) {
-            var src = img.getAttribute('src') || '';
+            var raw = img.getAttribute('src') || '';
+            if (!raw || raw.indexOf('data:') === 0) return;
+            var path;
+            try { path = new URL(raw, location.href).pathname; } catch (e) { return; }
             for (var i = 0; i < SWAPS.length; i++) {
-                var s = SWAPS[i];
-                if (src === s.light && !light) { img.setAttribute('src', s.dark); break; }
-                if (src === s.dark && light) { img.setAttribute('src', s.light); break; }
+                var dark = SWAPS[i];
+                var lit = lightPath(dark);
+                if (path === lit && !light) { img.setAttribute('src', dark); return; }
+                if (path === dark && light) { img.setAttribute('src', lit); return; }
             }
         });
     }
     applyThemeAssets();
     new MutationObserver(applyThemeAssets).observe(document.documentElement, { attributeFilter: ['data-theme'] });
     /* premium.js injects the ascii-logo <img> after this script runs (both
-       are defer, premium.js is later in the DOM) — catch late-injected
-       images with a load sweep. */
+       are defer, premium.js is later in the DOM). premium.js sets the
+       theme-correct src itself at creation; the load sweep + short timer
+       below cover any other late-injected themed images. */
     window.addEventListener('load', applyThemeAssets);
     setTimeout(applyThemeAssets, 300);
 })();
