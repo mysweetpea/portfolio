@@ -1,4 +1,7 @@
-/* home-page.js — home runtime: garden live-line, grow lines, count-ups */
+/* home-page.js — home runtime: garden live-line, grow lines, count-ups,
+   garden exposure accordion.
+   JS convention for this file: ES5 only (var + function, no arrow/let/const),
+   matching the site's no-build vanilla baseline. */
 
 (function(){
   'use strict';
@@ -32,6 +35,29 @@
     entries.forEach(function(e){ if(e.isIntersecting){ animateCount(e.target); cio.unobserve(e.target); } });
   }, {threshold:.4});
   document.querySelectorAll('.record .cnt').forEach(function(el){ cio.observe(el); });
+
+  /* garden exposure rows: one delegated listener, rows toggle independently.
+     The head is a real <button> so keyboard (Enter/Space) works natively; the
+     hidden attribute flips display and CSS runs the fade-in — no measuring. */
+  var rowsBox = document.getElementById('gardenRows');
+  if (rowsBox) {
+    rowsBox.addEventListener('click', function(ev){
+      var t = ev.target;
+      if (!t || !t.closest) return;
+      var head = t.closest('.g-row-head');
+      if (!head || !rowsBox.contains(head)) return;
+      var wasOpen = head.getAttribute('aria-expanded') === 'true';
+      var panel = document.getElementById(head.getAttribute('aria-controls'));
+      if (!panel) return;
+      head.setAttribute('aria-expanded', wasOpen ? 'false' : 'true');
+      panel.hidden = wasOpen;
+      var row = head.closest('.garden-row');
+      if (row) {
+        if (wasOpen) row.classList.remove('open');
+        else row.classList.add('open');
+      }
+    });
+  }
   }
   if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded', initMotion);
   else initMotion();

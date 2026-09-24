@@ -5,31 +5,59 @@
 .sec-eyebrow{display:flex;align-items:center;gap:12px;font-family:var(--t-font-mono,ui-monospace,monospace);font-size:.68rem;letter-spacing:.22em;text-transform:uppercase;color:var(--sage);margin:0 auto 16px;max-width:1080px;padding:0 20px}
 .sec-eyebrow::before{content:'';width:26px;height:1px;background:var(--sage);opacity:.7}
 .sec-eyebrow .n{color:var(--text-faint);letter-spacing:.14em}
-/* ===== GARDEN — compact tile grid (9 services, one glance) ===== */
-.garden-grid{display:grid;grid-template-columns:repeat(9,1fr);gap:10px;max-width:1080px;margin:0 auto;padding:0 20px}
-a.feature-card.garden-card{display:flex;flex-direction:column;align-items:center;gap:8px;text-decoration:none;color:inherit;padding:16px 8px 13px;border-radius:14px;position:relative;overflow:visible}
-body[data-page='home'] .feature-card.garden-card .icon.feature-icon{width:40px;height:40px;border-radius:12px;margin:0}
-body[data-page='home'] .feature-card.garden-card .feature-icon img{width:34px;height:34px}
-.garden-card h3{margin:0;font-size:.8rem;font-weight:600;letter-spacing:.01em;white-space:nowrap}
-.garden-card .g-idx{display:none}
-.garden-card .g-top{display:contents}
-.garden-card .g-live{display:none}
-.garden-card p{display:none}
-.garden-card .g-open{display:none}
-/* tooltip = the card's former description */
-.garden-card::after{content:attr(data-tip);position:absolute;left:50%;bottom:calc(100% + 8px);transform:translateX(-50%) translateY(4px);background:var(--card-bg);color:var(--text);border:1px solid var(--border);border-radius:8px;padding:7px 11px;font-size:.68rem;line-height:1.45;width:max-content;max-width:180px;text-align:center;opacity:0;pointer-events:none;transition:opacity .18s ease,transform .18s ease;z-index:30;box-shadow:0 6px 18px rgba(0,0,0,.35)}
-.garden-card:hover::after,.garden-card:focus-visible::after{opacity:1;transform:translateX(-50%) translateY(0)}
-/* shared live line under the grid */
-.garden-live{display:flex;align-items:center;justify-content:center;gap:7px;margin:18px auto 0;font-family:var(--t-font-mono,ui-monospace,monospace);font-size:.62rem;letter-spacing:.16em;text-transform:uppercase;color:var(--text-faint)}
-.garden-live .dot{width:6px;height:6px;border-radius:50%;background:#7BD88F;box-shadow:0 0 6px #7BD88F88;flex:none}
-.garden-live.is-degraded .dot{background:var(--gold,#D9A86C);box-shadow:0 0 6px #D9A86C88}
-.garden-live.is-offline .dot{background:var(--error,#D98C8C);box-shadow:0 0 6px #D98C8C88}
-/* icon glow on tile hover (kept from v3) */
-.garden-card .feature-icon img{transition:transform .22s ease,filter .22s ease}
-.garden-card:hover .feature-icon img{transform:translateY(-3px);filter:drop-shadow(0 0 8px rgba(143,175,181,.5))}
-.garden-card::before{content:'';position:absolute;top:0;left:14%;right:14%;height:2px;border-radius:2px;background:linear-gradient(90deg,transparent,rgba(143,175,181,.45),transparent);opacity:0;transition:opacity .22s ease}
-.garden-card:hover::before{opacity:1}
-.garden-card:hover{border-color:var(--sage,#A3C9B6)}
+/* ===== SECTION 00 — What MySweetPea actually is (two-column, stacked mobile) ===== */
+body[data-page='home'] .what-grid{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,.95fr);gap:38px;align-items:start;max-width:1080px;margin:0 auto;padding:0 20px}
+body[data-page='home'] .what-lead{margin:0;font-size:1.12rem;line-height:1.75;color:var(--text);font-weight:500}
+body[data-page='home'] .what-p{margin:16px 0 0;font-size:.95rem;line-height:1.8;color:var(--text-dim)}
+body[data-page='home'] .what-mono{margin:20px 0 0;padding-top:14px;border-top:1px dotted var(--border-primary);font-family:var(--t-font-mono,ui-monospace,monospace);font-size:.66rem;line-height:1.7;letter-spacing:.08em;color:var(--text-dim)}
+body[data-page='home'] .what-card{position:relative;overflow:hidden;background:var(--card-bg);border:1px solid var(--border);border-radius:18px;padding:26px 24px;backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px)}
+body[data-page='home'] .what-card::before{content:'';position:absolute;top:0;left:16px;right:16px;height:2px;border-radius:2px;background:linear-gradient(90deg,transparent,rgba(143,175,181,.5),transparent)}
+body[data-page='home'] .what-card-title{margin:0;font-family:var(--t-font-display,'Instrument Serif',Georgia,serif);font-weight:600;font-size:1.45rem;letter-spacing:-.01em;color:var(--text)}
+body[data-page='home'] .what-card-intro{margin:10px 0 0;font-size:.88rem;line-height:1.7;color:var(--text-dim)}
+body[data-page='home'] .what-defs{margin:18px 0 0;border-top:1px solid var(--border)}
+body[data-page='home'] .what-def{display:grid;grid-template-columns:96px minmax(0,1fr);gap:12px;padding:11px 0;border-bottom:1px solid var(--border);align-items:baseline}
+body[data-page='home'] .what-def:last-child{border-bottom:0}
+body[data-page='home'] .what-def dt{font-family:var(--t-font-mono,ui-monospace,monospace);font-size:.6rem;letter-spacing:.1em;text-transform:uppercase;color:var(--sage)}
+body[data-page='home'] .what-def dd{margin:0;font-size:.85rem;line-height:1.6;color:var(--text)}
+body[data-page='home'] .what-proof{display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:10px 12px;max-width:1080px;margin:32px auto 0;padding:0 20px}
+body[data-page='home'] .what-pill{font-family:var(--t-font-mono,ui-monospace,monospace);font-size:.62rem;letter-spacing:.1em;text-transform:uppercase;color:var(--text-dim);background:rgba(143,175,181,.07);border:1px solid var(--border);border-radius:999px;padding:8px 14px;white-space:nowrap}
+body[data-page='home'] .what-sep{color:var(--text-faint)}
+
+/* ===== GARDEN — expandable exposure rows (button + hidden region, no <details>) ===== */
+body[data-page='home'] .garden-rows{max-width:1080px;margin:0 auto;padding:0 20px}
+/* .garden-row carries the reveal stagger itself (--d inline in markup); the full
+   transition list + .visible delay-list mirror the old garden-card pattern —
+   premium.css:1925 `.js .reveal.visible` would otherwise flatten both (documented trap). */
+body[data-page='home'] .garden-row{border:1px solid var(--border);border-radius:var(--radius-sm,12px);background:var(--card-bg);overflow:hidden;transition:opacity .7s ease,transform .7s ease,border-color .25s ease,background .25s ease,box-shadow .25s ease !important}
+body[data-page='home'] .garden-row.visible{transition-delay:var(--d,0s),var(--d,0s),0s,0s,0s !important /* slots 1-2 = opacity,transform */}
+body[data-page='home'] .garden-row + .garden-row{margin-top:10px}
+body[data-page='home'] .garden-row:hover,body[data-page='home'] .garden-row.open{border-color:var(--border-primary)}
+body[data-page='home'] .g-row-head{display:grid;grid-template-columns:auto auto minmax(0,1fr) auto auto;align-items:center;gap:16px;width:100%;min-height:44px;padding:14px 18px;background:none;border:0;color:inherit;font:inherit;text-align:left;cursor:pointer}
+body[data-page='home'] .g-row-head:focus-visible{outline:2px solid var(--primary-bright);outline-offset:-2px}
+body[data-page='home'] .g-row-head .g-idx{margin-right:0;vertical-align:baseline}
+body[data-page='home'] .g-row-head:hover .g-idx,body[data-page='home'] .garden-row.open .g-idx{color:var(--sage)}
+body[data-page='home'] .g-ico{flex:none;width:44px;height:44px;border-radius:12px;display:flex;align-items:center;justify-content:center;background:rgba(143,175,181,.06);border:1px solid var(--border)}
+body[data-page='home'] .g-ico img{width:40px;height:40px;content-visibility:auto}
+body[data-page='home'] .g-who{display:flex;flex-direction:column;gap:2px;min-width:0}
+body[data-page='home'] .g-name{font-weight:600;font-size:.95rem;letter-spacing:.01em;color:var(--text)}
+body[data-page='home'] .g-line{font-size:.8rem;line-height:1.5;color:var(--text-dim)}
+body[data-page='home'] .g-alt{flex:none;display:flex;flex-direction:column;align-items:flex-end;gap:2px;text-align:right}
+body[data-page='home'] .g-replaces{font-family:var(--t-font-mono,ui-monospace,monospace);font-size:.55rem;letter-spacing:.14em;text-transform:uppercase;color:var(--text-faint)}
+body[data-page='home'] .g-altname{font-family:var(--t-font-mono,ui-monospace,monospace);font-size:.68rem;letter-spacing:.02em;color:var(--gold,#D9A86C)}
+body[data-page='home'] .g-caret{flex:none;font-size:.6rem;line-height:1;color:var(--text-faint);transition:transform .25s ease,color .25s ease}
+body[data-page='home'] .garden-row.open .g-caret{transform:rotate(90deg);color:var(--sage)}
+/* exposure panel: `hidden` toggles display; the fade-in is a plain animation that
+   restarts every time the element re-enters the render tree (no JS class juggling) */
+body[data-page='home'] .g-exposure{padding:0 18px 16px}
+body[data-page='home'] .g-exposure-inner{border-left:2px solid rgba(217,140,140,.35);padding:12px 4px 4px 18px}
+body[data-page='home'] .g-exposure:not([hidden]) .g-exposure-inner{animation:gxIn .25s ease}
+@keyframes gxIn{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:none}}
+body[data-page='home'] .g-ev{font-family:var(--t-font-mono,ui-monospace,monospace);font-size:.58rem;letter-spacing:.18em;text-transform:uppercase;color:var(--error,#D98C8C)}
+body[data-page='home'] .g-body{margin:8px 0 0;font-size:.9rem;line-height:1.7;color:var(--text-dim);max-width:68ch}
+body[data-page='home'] .g-contrast{margin:12px 0 0;padding-top:12px;border-top:1px dashed var(--border);font-size:.9rem;line-height:1.65;color:var(--text);max-width:68ch}
+body[data-page='home'] .g-src{margin:12px 0 0;font-family:var(--t-font-mono,ui-monospace,monospace);font-size:.62rem;letter-spacing:.04em;color:var(--text-faint);overflow-wrap:break-word}
+body[data-page='home'] .g-src a{color:var(--text-faint);text-decoration:none}
+body[data-page='home'] .g-src a:hover{color:var(--text-dim);text-decoration:underline}
 
 /* ON THE RECORD — proof band */
 .record-band{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;max-width:1140px;margin:0 auto;padding:0 20px}
@@ -55,18 +83,21 @@ body[data-page='home'] .feature-card.garden-card .feature-icon img{width:34px;he
 .faq-wrap summary .pm{font-family:var(--t-font-mono,ui-monospace,monospace);font-size:.95rem;color:var(--text-faint);transition:transform .2s}
 .faq-wrap details[open] summary .pm{transform:rotate(45deg);color:var(--sage)}
 .faq-wrap details .a{padding:0 4px 22px;font-size:.92rem;line-height:1.7;color:var(--text-dim);max-width:62ch}
-/* responsive */
-@media(max-width:900px){
- .garden-grid{grid-template-columns:repeat(5,1fr);gap:8px}
- .garden-card h3{font-size:.72rem}
-}
-@media(max-width:640px){
- .garden-grid{grid-template-columns:repeat(3,1fr);gap:7px;padding:0 14px}
- .garden-card{padding:12px 6px 10px;gap:6px}
- body[data-page='home'] .feature-card.garden-card .icon.feature-icon{width:34px;height:34px}
- body[data-page='home'] .feature-card.garden-card .feature-icon img{width:28px;height:28px}
- .garden-card h3{font-size:.66rem}
- .garden-card::after{display:none}
+/* responsive — what-is grid stacks; garden rows compact (icon 32px, alt tag under the
+   name line, caret stays). No overflow at 390px: minmax(0,1fr) caps the who column,
+   pills/URLs wrap, and the full row head remains the >=44px tap target. */
+@media(max-width:760px){
+  body[data-page='home'] .what-grid{grid-template-columns:1fr;gap:26px}
+  body[data-page='home'] .g-row-head{grid-template-columns:auto auto minmax(0,1fr) auto;grid-template-areas:"idx ico who caret" ". . alt alt";gap:10px 12px;row-gap:8px;padding:13px 14px}
+  body[data-page='home'] .g-row-head .g-idx{grid-area:idx}
+  body[data-page='home'] .g-ico{grid-area:ico;width:36px;height:36px}
+  body[data-page='home'] .g-ico img{width:32px;height:32px}
+  body[data-page='home'] .g-who{grid-area:who}
+  body[data-page='home'] .g-alt{grid-area:alt;flex-direction:row;align-items:baseline;gap:8px;justify-self:start;text-align:left}
+  body[data-page='home'] .g-caret{grid-area:caret}
+  body[data-page='home'] .g-exposure{padding:0 14px 14px}
+  body[data-page='home'] .g-exposure-inner{padding-left:14px}
+  body[data-page='home'] .what-pill{white-space:normal}
 }
 @media(max-width:640px){
  .gardener{flex-direction:column}
@@ -102,18 +133,6 @@ body[data-page='home'] .feature-card.garden-card .feature-icon img{width:34px;he
 /* 2. eyebrow grow line */
 .sec-eyebrow::before{transform:scaleX(0);transform-origin:left;transition:transform .9s cubic-bezier(.4,0,.2,1) .2s}
 .sec-eyebrow.visible::before{transform:scaleX(1)}
-/* 3a. garden card: top accent + hover craft */
-.garden-card{position:relative;overflow:hidden}
-.garden-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,rgba(163,201,182,.6),transparent);opacity:0;transition:opacity .35s ease}
-.garden-card:hover::before{opacity:.9}
-.garden-card .feature-icon img{transition:transform .3s ease, filter .3s ease}
-.garden-card:hover .feature-icon img{transform:translateY(-2px) scale(1.06);filter:drop-shadow(0 0 10px rgba(163,201,182,.4))}
-
-.garden-card .g-open .arr{display:inline-block;transition:transform .25s ease}
-.garden-card:hover .g-open .arr{transform:translateX(4px)}
-/* 3b. live dot pulse */
-@keyframes livePulse{0%,100%{box-shadow:0 0 0 0 rgba(123,216,143,.45)}50%{box-shadow:0 0 0 5px rgba(123,216,143,0)}}
-.garden-card .g-live i{animation:livePulse 2.4s ease-in-out infinite}
 /* 3c. card index numerals */
 .g-idx{font-family:var(--t-font-mono,ui-monospace,monospace);font-size:.6rem;letter-spacing:.12em;color:var(--text-faint);margin-right:8px;font-weight:400}
 /* 4. record tiles: instrument-panel craft + hover */
@@ -136,9 +155,12 @@ body[data-page='home'] .feature-card.garden-card .feature-icon img{width:34px;he
 @media (prefers-reduced-motion: reduce){
   .vine-divider.reveal-grow::before,.vine-divider.reveal-grow::after{transform:scaleX(1);transition:none}
   .sec-eyebrow::before{transform:scaleX(1);transition:none}
-  .garden-card .g-live i,.gardener .med{animation:none}
-  .garden-card,.record,.faq-wrap details,.faq-wrap summary,.garden-card .g-open .arr,.garden-card .feature-icon img{transition:none}
+  .gardener .med{animation:none}
+  .record,.faq-wrap details,.faq-wrap summary{transition:none}
   .faq-wrap details[open] .a{animation:none}
+  body[data-page='home'] .garden-row{transition-delay:0s !important}
+  body[data-page='home'] .g-caret{transition:none}
+  body[data-page='home'] .g-exposure:not([hidden]) .g-exposure-inner{animation:none}
 }
 
 
@@ -150,16 +172,8 @@ body[data-page='home'] .feature-card.garden-card .feature-icon img{width:34px;he
 @media (prefers-reduced-motion: reduce){ .garden-live .dot{ box-shadow:0 0 6px #7BD88F55 } }
 
 /* ===== POLISH PASS (compact era) ===== */
-/* 2. tile hover lift (tiny, matches card language).
-      site.css:3976 sets a blanket !important transition on .feature-card which would
-      kill our reveal-delay + hover transition (documented trap) — counter with a
-      full-property !important rule of our own, higher specificity. */
-body[data-page='home'] a.feature-card.garden-card{transition:transform .22s ease,border-color .22s ease,background .22s ease,opacity .7s ease,box-shadow .22s ease !important}
-/* stagger lives on .visible (the AFTER-change state — transition-delay is read from there).
-     calc(var()) inside a delay LIST is invalid at computed-value time (collapses to 0s) —
-     so markup sets --d directly (style="--i:N;--d:Nms") and we use it uncalc'd. */
-body[data-page='home'] a.feature-card.garden-card.visible{transition-delay:0s,0s,0s,var(--d,0s),0s !important  /* slot 3 = opacity */}
-.garden-card:hover{transform:translateY(-2px)}
+/* garden-row reveal stagger + hover transition now live in the GARDEN block above
+   (same !important counter-pattern vs premium.css `.js .reveal.visible`). */
 /* 3. section-title radial glow (quiet, behind text) */
 .features-section{position:relative}
 .features-section .section-title{position:relative;z-index:1}
@@ -175,8 +189,6 @@ body[data-page='home'] a.feature-card.garden-card.visible{transition-delay:0s,0s
 /* 7. eyebrow rule draw animation is handled by .reveal on .sec-eyebrow (already wired);
       keep FAQ + gardener untouched */
 @media (prefers-reduced-motion: reduce){
-  body[data-page='home'] a.feature-card.garden-card{transition:none !important}
-  body[data-page='home'] a.feature-card.garden-card:hover{transform:none}
   .garden-live .dot{animation:none}
   .features-section::before{display:none}
 }
@@ -184,15 +196,15 @@ body[data-page='home'] a.feature-card.garden-card.visible{transition-delay:0s,0s
 /* ===== SMOOTHNESS PASS ===== */
 /* Reveal transitions already opacity/transform-only (compositor-friendly).
    1. Promote the animated surfaces so transforms don't repaint neighbors
-      (tiles/vines/records each get their own layer only while transitioning). */
-.garden-card, .record, .vine-divider, .hero-steps li { will-change: transform, opacity; }
+      (rows/vines/records each get their own layer only while transitioning). */
+body[data-page='home'] .garden-row, .record, .vine-divider, .hero-steps li { will-change: transform, opacity; }
 /* Drop the hint after the entrance window to free memory: JS toggles a class
    on load-complete; CSS keeps it simple — browsers GC will-change after paint
-   quiesce, so the static hint is acceptable (22 petals + 9 tiles = trivial). */
+   quiesce, so the static hint is acceptable (22 petals + 9 rows = trivial). */
 /* 2. Lenis + IO reveals: respect the scroller — IO rootMargin already set in JS.
-   3. Images: prevent decode jank when tiles first reveal (icons are tiny but
+   3. Images: prevent decode jank when rows first reveal (icons are tiny but
       many; decode-ahead keeps first reveal clean). */
-.garden-card .feature-icon img { content-visibility: auto; }
+body[data-page='home'] .g-ico img { content-visibility: auto; }
 
 /* 4. Sticky smoothness guarantee: html { scroll-behavior } is Lenis's job —
       ensure no double-smoothing from CSS side. */
@@ -204,12 +216,11 @@ html { scroll-behavior: auto; }
 @media (prefers-reduced-motion: reduce){ .faq-wrap details .a { transition:none; max-height:none; opacity:1; padding-bottom:22px; } }
 
 
-/* ===== AESTHETICS PASS — garden tiles, record panel, gardener feature, scan-friendly prose ===== */
+/* ===== AESTHETICS PASS — garden rows, record panel, gardener feature, scan-friendly prose ===== */
 
-/* ── 01 The Garden: hover lift/shadow handled by site.css page rule (stronger, keep) ── */
+/* ── 01 The Garden: row index numerals ── */
 .g-idx{font-family:var(--t-font-mono,ui-monospace,monospace);font-size:.56rem;color:var(--text-faint);
   letter-spacing:.08em;margin-right:6px;vertical-align:2px}
-.garden-card:hover .g-idx{color:var(--sage)}
 
 /* ── 03 On the Record: instrument-panel cards ── */
 .record{position:relative;background:linear-gradient(165deg,rgba(143,175,181,.055),rgba(143,175,181,.015));
@@ -252,3 +263,9 @@ html { scroll-behavior: auto; }
   .record{padding:16px 14px 13px}
   .record .v{font-size:1.7rem}
 }
+
+/* ===== LIGHT THEME — dark-first tints that need a light variant (manual switch) ===== */
+[data-theme="light"] body[data-page='home'] .what-pill{background:rgba(78,124,136,.06)}
+[data-theme="light"] body[data-page='home'] .g-ico{background:rgba(78,124,136,.06)}
+[data-theme="light"] body[data-page='home'] .g-exposure-inner{border-left-color:rgba(180,84,78,.32)}
+[data-theme="light"] body[data-page='home'] .g-altname{color:#8A6A3C}
