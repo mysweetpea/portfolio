@@ -23,7 +23,10 @@ html[data-theme="light"]{background:#E7EDEA;color-scheme:light}
   }catch(e){}
   document.documentElement.classList.add('js');
   setTimeout(function(){
-    if(!window.__mspRevealInit)document.documentElement.classList.remove('js');
+    if(!window.__mspRevealInit){
+      window.__mspWatchdogFired=true;   /* site.js must not re-hide content after this */
+      document.documentElement.classList.remove('js');
+    }
   },6000);
 })();
 </script>
@@ -32,7 +35,7 @@ html[data-theme="light"]{background:#E7EDEA;color-scheme:light}
 
     <title>MySweetPea — Self-Hosted Services</title>
     <meta name="description" content="Private, self-hosted alternatives to the services you use every day. No ads, no tracking, no subscriptions — community funded.">
-    <meta name="theme-color" content="#0C1316">
+    <meta name="theme-color" content="#0C1316" media="(prefers-color-scheme: dark)">
     <meta name="theme-color" content="#D8E1DD" media="(prefers-color-scheme: light)">
     <meta property="og:title" content="MySweetPea — Self-Hosted Services">
     <meta property="og:description" content="Private, self-hosted alternatives to the services you use every day. No ads, no tracking, no subscriptions — community funded.">
@@ -413,7 +416,7 @@ html[data-theme="light"]{background:#E7EDEA;color-scheme:light}
             <h2 class="section-title glass-text reveal">Numbers, not promises.</h2>
             <p class="section-subtitle reveal reveal-delay-1">Measured live from the garden — every figure links to its source.</p>
             <div class="record-band" style="margin-top:34px">
-                <div class="record reveal"><div class="v"><span class="cnt" data-count="99.9" data-dec="1">0.0</span><small>%</small></div><div class="l">Measured uptime · last 24 hours</div><a class="s" href="/status.html">live status page ↗</a></div>
+                <div class="record reveal"><div class="v"><span class="cnt" id="recUptime" data-count="99.9" data-dec="1">0.0</span><small>%</small></div><div class="l">Measured uptime · last 24 hours</div><a class="s" href="/status.html">live status page ↗</a></div>
                 <div class="record reveal reveal-delay-1"><div class="v"><span class="cnt" data-count="24" data-suffix="/7">0/7</span></div><div class="l">Watched by uptime monitors — and backed up every night</div><a class="s" href="/status.html">live monitors ↗</a></div>
                 <div class="record reveal reveal-delay-2"><div class="v">2026</div><div class="l">Started on one machine at home — grown for everyone sick of the same web</div><a class="s" href="/about.html">the story ↗</a></div>
                 <div class="record reveal reveal-delay-3"><div class="v">2</div><div class="l">Public repos — every config, script and page, exactly as it runs</div><a class="s" href="https://github.com/mysweetpea" rel="noopener">github.com/mysweetpea ↗</a></div>
@@ -512,7 +515,7 @@ html[data-theme="light"]{background:#E7EDEA;color-scheme:light}
     <script src="/assets/js/lenis-init.js?v=107" defer></script>
     <script src="/assets/js/site.js?v=110" defer></script>
     <script src="/assets/js/premium.js?v=107" defer></script>
-    <script src="/assets/js/home-page.js?v=8" defer></script>
+    <script src="/assets/js/home-page.js?v=9" defer></script>
     <script>
     if ('serviceWorker' in navigator) {
         window.addEventListener('load', function () {

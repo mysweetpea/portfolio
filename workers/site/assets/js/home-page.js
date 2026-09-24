@@ -62,25 +62,57 @@
   if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded', initMotion);
   else initMotion();
 
-/* garden live line: paints the shared status line under the garden grid.
-   Kuma contract: heartbeatList keyed by monitor id (1-9 = our services); status===1 means up. */
-  var live = document.getElementById('gardenLive');
-  if (live) {
-    var txt = live.querySelector('.gl-txt');
+/* garden live line + uptime tile: paints the shared status line under the
+   garden grid AND the "Measured uptime · last 24 hours" record tile.
+   Kuma contract: heartbeatList keyed by monitor id (1-9 = our services);
+   status===1 means up; uptimeList["<id>_24"] = fraction 0..1.
+   Runs inside the same DOM-ready contract as initMotion (defer scripts
+   always execute after the DOM is parsed, but this keeps one pattern). */
+  function initLive(){
+    var live = document.getElementById('gardenLive');
+    var recUptime = document.getElementById('recUptime');
+    if (!live && !recUptime) return;
+    var txt = live ? live.querySelector('.gl-txt') : null;
     var aborter = ('AbortController' in window) ? new AbortController() : null;
+    /* timer is cleared on EVERY settle path (success AND failure), not just
+       success — a stray timer aborts nothing but was never reaped. */
     var abortTimer = aborter ? setTimeout(function(){ aborter.abort(); }, 10000) : 0;
+    function clearAbort(){ if (abortTimer) { clearTimeout(abortTimer); abortTimer = 0; } }
+    function paintUnavailable(){
+      if (txt) txt.textContent = 'live status unavailable';
+      /* honesty rule: the tile must not keep pretending — mark it so the
+         count-up never re-aims at the stale 99.9 default. */
+      if (recUptime) recUptime.removeAttribute('data-count');
+    }
     fetch('https://status.mysweetpea.cc/api/status-page/heartbeat/public', aborter ? { signal: aborter.signal } : {})
-      .then(function(r){ if (abortTimer) clearTimeout(abortTimer); return r.ok ? r.json() : Promise.reject(); })
+      .then(function(r){ clearAbort(); return r.ok ? r.json() : Promise.reject(new Error('HTTP ' + r.status)); })
       .then(function(data){
         var hb = data && data.heartbeatList;
-        if (!hb) throw new Error('no data');
+        if (!hb) throw new Error('no heartbeatList');
         var up = 0, seen = 0;
         for (var id = 1; id <= 9; id++) {
           var beats = hb[String(id)];
           if (beats && beats.length) { seen++; if (beats[beats.length - 1].status === 1) up++; }
         }
         if (txt) txt.textContent = seen ? (up + '/' + seen + ' services live') : 'live status unavailable';
+        /* real 24h average for the record tile (same math as status page) */
+        if (recUptime && data.uptimeList) {
+          var sum = 0, n = 0;
+          for (var u = 1; u <= 9; u++) {
+            var v = data.uptimeList[u + '_24'];
+            if (typeof v === 'number' && v >= 0 && v <= 1) { sum += v; n++; }
+          }
+          if (n === 9) {
+            var avg = (Math.round((sum / n) * 1000) / 10).toFixed(1);
+            recUptime.setAttribute('data-count', avg);
+            recUptime.textContent = avg;   /* paint live value (count-up may re-read data-count on final frame) */
+          } else {
+            console.warn('[msp] uptime tile: partial monitor set (' + n + '/9) — keeping static value');
+          }
+        }
       })
-      .catch(function(){ if (txt) txt.textContent = 'live status unavailable'; });
+      .catch(function(err){ clearAbort(); console.warn('[msp] live status fetch failed:', err && err.message ? err.message : err); paintUnavailable(); });
   }
+  if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded', initLive);
+  else initLive();
 })();

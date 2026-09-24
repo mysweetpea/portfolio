@@ -48,8 +48,13 @@
     }
 
     /* Signal the early-paint watchdog that the reveal system is live, so it
-       does not drop the html.js class (which would disable reveal styling). */
-    window.__mspRevealInit = true;
+       does not drop the html.js class (which would disable reveal styling).
+       Inverse race: if the watchdog ALREADY fired (site.js loaded >6s late),
+       do not add html.js now — that would snap visible content back to
+       opacity:0 and fade it in again. Leave content permanently visible. */
+    if (!window.__mspWatchdogFired) {
+        window.__mspRevealInit = true;
+    }
 
     /* === Scroll reveal animations === */
     var revealEls = Array.prototype.slice.call(document.querySelectorAll('.reveal'));

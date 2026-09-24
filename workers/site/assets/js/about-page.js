@@ -75,14 +75,20 @@
 
     function markUnreachable() {
         if (stateEl) {
+            /* keep the existing markup contract: toggle the dot's class and
+               update ONLY the label span's text — never delete the styled
+               span or wholesale textContent the container (that destroys
+               the dot element and any future markup). */
             var dot = stateEl.querySelector('.about-x-dot');
+            var label = stateEl.querySelector('.about-x-live-txt');
             if (dot) {
                 dot.classList.remove('about-x-dot-on');
                 dot.classList.add('about-x-dot-off');
-                while (dot.nextSibling) stateEl.removeChild(dot.nextSibling);
-                stateEl.appendChild(
-                    document.createTextNode('Uptime — live data unreachable')
-                );
+            }
+            if (label) {
+                label.textContent = 'UPTIME — LIVE DATA UNREACHABLE';
+            } else if (dot) {
+                dot.insertAdjacentText('afterend', ' Uptime — live data unreachable');
             } else {
                 stateEl.textContent = 'Uptime — live data unreachable';
             }
@@ -91,18 +97,26 @@
     }
 
     var aborter = ('AbortController' in window) ? new AbortController() : null;
+    /* timer cleared on EVERY settle path (success AND failure) */
     var abortTimer = aborter ? setTimeout(function () { aborter.abort(); }, 10000) : 0;
+    function clearAbort() { if (abortTimer) { clearTimeout(abortTimer); abortTimer = 0; } }
     fetch('https://status.mysweetpea.cc/api/status-page/heartbeat/public', aborter ? { signal: aborter.signal } : {})
-        .then(function (r) { return r.ok ? r.json() : Promise.reject(); })
+        .then(function (r) { clearAbort(); return r.ok ? r.json() : Promise.reject(new Error('HTTP ' + r.status)); })
         .then(function (data) {
-            if (!data || !data.uptimeList || !pctEl) return Promise.reject();
+            if (!data || !data.uptimeList || !pctEl) return Promise.reject(new Error('no uptimeList'));
             // uptimeList keys are "<monitorId>_24", values are fractions 0..1
             var sum = 0, n = 0;
             Object.keys(MONITOR_IDS).forEach(function (name) {
                 var v = data.uptimeList[MONITOR_IDS[name] + '_24'];
                 if (typeof v === 'number' && v >= 0 && v <= 1) { sum += v; n++; }
             });
-            if (!n) return Promise.reject();
+            /* honesty rule: a PARTIAL set means server-side IDs drifted —
+               averaging the subset would show a plausible-but-wrong number.
+               Fail closed to the unreachable state instead. */
+            if (n !== Object.keys(MONITOR_IDS).length) {
+                console.warn('[msp] about uptime: partial monitor set (' + n + '/' + Object.keys(MONITOR_IDS).length + ')');
+                return Promise.reject(new Error('partial monitor set'));
+            }
             var avg = Math.round((sum / n) * 10) / 10;
             var s = avg.toFixed(1);
             if (pctFired || reducedMotion || !('IntersectionObserver' in window)) {
@@ -115,5 +129,8 @@
                 pctEl.setAttribute('data-count', s);
             }
         })
-        .then(function () { if (abortTimer) clearTimeout(abortTimer); })
-        .catch(markUnreachable); })();
+        .catch(function (err) {
+            clearAbort();
+            console.warn('[msp] about uptime fetch failed:', err && err.message ? err.message : err);
+            markUnreachable();
+        }); })();
