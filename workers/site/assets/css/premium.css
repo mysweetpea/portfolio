@@ -2888,3 +2888,37 @@ body[data-page='form'] .tier-form-panel .form-submit.ready:not([disabled]) {
 @media (prefers-reduced-motion: reduce) {
     body[data-page='form'] .tier-form-panel .form-submit.ready:not([disabled]) { animation: none; }
 }
+
+/* ==== about-x 'what is it' expansion =====================================
+   New "00 / THE SHORT VERSION" block on about.html: intro copy, analogy
+   strip (familiar app → garden counterpart) and a plain-terms row.
+   Token-driven only — site.css [data-theme] blocks redefine the tokens,
+   so no scheme queries and no hardcoded hex here. Self-contained: no
+   rule in this block affects pre-existing about content. */
+.about-x-ana-copy .about-x-lead + .about-x-lead { margin-top: 14px; }
+.about-x-ana { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-top: 20px; }
+.about-x-ana-item { position: relative; overflow: hidden; background: var(--card-bg);
+    border: 1px solid var(--border-primary); border-radius: 14px; padding: 18px 20px;
+    transition: border-color .3s ease, transform .3s ease, box-shadow .3s ease; }
+.about-x-ana-item::before { content: ''; position: absolute; top: 0; left: 14px; right: 14px;
+    height: 2px; border-radius: 2px;
+    background: linear-gradient(90deg, transparent, color-mix(in srgb, var(--sage) 45%, transparent), transparent); }
+.about-x-ana-item:hover { border-color: var(--sage);
+    box-shadow: 0 0 18px color-mix(in srgb, var(--sage) 14%, transparent);
+    transform: translateY(-2px); }
+.about-x-ana-from { display: inline-flex; align-items: center; gap: 7px;
+    font-family: var(--t-font-mono); color: var(--text-faint);
+    font-size: 0.74rem; letter-spacing: 0.1em; text-transform: uppercase; }
+.about-x-ana-from::after { content: '\2192'; color: var(--sage); font-size: 0.85rem; }
+.about-x-ana-to { display: block; color: var(--text); font-weight: 600; margin: 6px 0 7px;
+    font-size: 1.02rem; letter-spacing: .01em; }
+.about-x-ana-note { display: block; color: var(--text-faint); font-size: 0.85rem; line-height: 1.55; }
+.about-x-ana + .about-x-prows { margin-top: 26px; }
+/* P·00 'plain terms' row stands alone — frame it as a definition card */
+.about-x-ana + .about-x-prows { border: 1px solid var(--border-primary); border-radius: 14px;
+    background: var(--card-bg); padding: 4px 18px; }
+.about-x-ana + .about-x-prows .about-x-prow { padding: 18px 0; }
+@media (max-width: 760px) { .about-x-ana + .about-x-prows { padding: 2px 14px; } }
+@media (max-width: 900px) {
+    .about-x-ana { grid-template-columns: 1fr; }
+}
