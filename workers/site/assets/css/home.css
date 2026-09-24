@@ -134,10 +134,10 @@ body[data-page='home'] .g-src a:hover{color:var(--text-dim);text-decoration:unde
 
 /* ===== V3 POLISH PASS ===== */
 /* 1. vine dividers grow toward center on reveal */
-.vine-divider.reveal-grow::before, .vine-divider.reveal-grow::after{transform:scaleX(0);transition:transform .9s cubic-bezier(.4,0,.2,1) .1s}
+.js .vine-divider.reveal-grow::before, .js .vine-divider.reveal-grow::after{transform:scaleX(0);transition:transform .9s cubic-bezier(.4,0,.2,1) .1s}
 .vine-divider.reveal-grow.visible::before, .vine-divider.reveal-grow.visible::after{transform:scaleX(1)}
 /* 2. eyebrow grow line */
-.sec-eyebrow::before{transform:scaleX(0);transform-origin:left;transition:transform .9s cubic-bezier(.4,0,.2,1) .2s}
+.js .sec-eyebrow::before{transform:scaleX(0);transform-origin:left;transition:transform .9s cubic-bezier(.4,0,.2,1) .2s}
 .sec-eyebrow.visible::before{transform:scaleX(1)}
 /* 3c. card index numerals */
 .g-idx{font-family:var(--t-font-mono,ui-monospace,monospace);font-size:.6rem;letter-spacing:.12em;color:var(--text-faint);margin-right:8px;font-weight:400}
@@ -284,7 +284,7 @@ body[data-page='home'] .vb-ico{width:46px;height:46px;border-radius:12px;backgro
 body[data-page='home'] .vb-ico img{width:24px;height:24px}
 body[data-page='home'] .vb-title{font-family:var(--t-font-display,'Instrument Serif',Georgia,serif);font-weight:400;font-size:1.3rem;color:var(--text);margin:0 0 10px;line-height:1.25}
 body[data-page='home'] .vb-body{margin:0;font-size:.9rem;line-height:1.7;color:var(--text-dim);flex:1}
-body[data-page='home'] .vb-link{display:inline-block;margin-top:18px;font-family:var(--t-font-mono,ui-monospace,monospace);font-size:.64rem;letter-spacing:.14em;text-transform:uppercase;color:var(--sage);text-decoration:none;border-bottom:1px dotted var(--sage);transition:color .2s ease;padding:10px 0;margin-top:8px}
+body[data-page='home'] .vb-link{display:inline-block;margin-top:8px;padding:11px 0;font-family:var(--t-font-mono,ui-monospace,monospace);font-size:.64rem;letter-spacing:.14em;text-transform:uppercase;color:var(--sage);text-decoration:none;border-bottom:1px dotted var(--sage);transition:color .2s ease}
 body[data-page='home'] .vb-link:hover{color:var(--text)}
 body[data-page='home'] .vb-note{font-family:var(--t-font-mono,ui-monospace,monospace);font-size:.68rem;line-height:1.8;letter-spacing:.03em;color:var(--text-faint);max-width:760px;margin:26px auto 0;padding:0 20px;text-align:center}
 body[data-page='home'] .vb-note em{color:var(--text-dim);font-style:italic}
@@ -317,3 +317,17 @@ body[data-page='home'] .gw-card-alt .vb-body{color:var(--text-dim)}
 [data-theme="light"] body[data-page='home'] .vb-card{background:rgba(255,255,255,.5)}
 [data-theme="light"] body[data-page='home'] .gw-card{background:rgba(255,255,255,.5)}
 [data-theme="light"] body[data-page='home'] .gw-card-alt{background:rgba(255,255,255,.35)}
+
+/* OCR r1: reduced-motion must cover every later-added transition (source order beats
+   the earlier reduce block — same-specificity later declarations would win). */
+@media (prefers-reduced-motion: reduce){
+  body[data-page='home'] .vb-card,body[data-page='home'] .gw-card,body[data-page='home'] .record{transition:none}
+  body[data-page='home'] .vb-card:hover,body[data-page='home'] .gw-card:hover,body[data-page='home'] .record:hover{transform:none}
+}
+
+/* OCR r1: light-theme tints for the new sections (dark-first rgba tints wash out
+   on the light canvas; white scrims become invisible). */
+[data-theme="light"] body[data-page='home'] .vb-ico{background:rgba(78,124,136,.06)}
+[data-theme="light"] body[data-page='home'] .vb-card::after{background:radial-gradient(circle at 85% 15%,rgba(78,124,136,.06),transparent 55%)}
+[data-theme="light"] body[data-page='home'] .gw-kicker{background:rgba(78,124,136,.07)}
+[data-theme="light"] body[data-page='home'] .gw-card{background:rgba(78,124,136,.03)}
