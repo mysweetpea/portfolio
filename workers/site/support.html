@@ -22,9 +22,10 @@ html[data-theme="light"]{background:#E7EDEA;color-scheme:light}
     if(t)document.documentElement.setAttribute('data-theme',t);
   }catch(e){}
   document.documentElement.classList.add('js');
-  // Deferred scripts execute BEFORE DOMContentLoaded, so the decisive check
-  // must run after site.js had its chance — a plain timer here races the
-  // loader (site.js re-adds .js unconditionally and would re-hide reveals).
+  // Safety net: if site.js's reveal init never runs (script blocked, older
+  // cache), un-hide the reveals. site.js adds html.js exactly once at the top
+  // of its deferred script, before DOMContentLoaded — so this check fires
+  // after it and never undoes a completed init (guarded by __mspRevealInit).
   document.addEventListener('DOMContentLoaded', function(){
     if(!window.__mspRevealInit)document.documentElement.classList.remove('js');
   });
@@ -55,7 +56,7 @@ html[data-theme="light"]{background:#E7EDEA;color-scheme:light}
     <link rel="stylesheet" href="/assets/css/premium.css?v=114">
     <link rel="stylesheet" href="/assets/css/type-tokens.css?v=107">
     <link rel="stylesheet" href="/assets/css/hermes-type.css?v=107">
-<link rel="stylesheet" href="/assets/css/donate.css?v=7">
+<link rel="stylesheet" href="/assets/css/donate.css?v=8">
 <link rel="canonical" href="https://mysweetpea.cc/support">
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"Organization","name":"MySweetPea","url":"https://mysweetpea.cc","logo":"https://mysweetpea.cc/icon-512.png","description":"Private, self-hosted alternatives to the services you use every day. No ads, no tracking, no subscriptions — community funded.","email":"support@mysweetpea.cc","sameAs":["https://github.com/mysweetpea"]}</script>
 </head>
@@ -83,7 +84,7 @@ html[data-theme="light"]{background:#E7EDEA;color-scheme:light}
             <a href="/status.html" class="nav-btn" data-keywords="uptime health monitors operational down status page"><svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" aria-hidden="true" focusable="false"><path d="M1 6h1.8l1.3-2.8 1.8 5.6L7.2 6H11"/></svg>Status</a>
         </div>
         <div class="nav-group nav-group-r">
-            <a href="/about.html" class="nav-btn" data-keywords="story gardener who about team mission why runs runs it behind mysweetpea person solo one"><svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" aria-hidden="true" focusable="false"><circle cx="6" cy="6" r="5"/><path d="M6 5.3v3.1M6 3.5h.01"/></svg>About</a>
+            <a href="/about.html" class="nav-btn" data-keywords="story gardener who about team mission why runs it behind mysweetpea person solo one"><svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" aria-hidden="true" focusable="false"><circle cx="6" cy="6" r="5"/><path d="M6 5.3v3.1M6 3.5h.01"/></svg>About</a>
                         <a href="/redeem.html" class="nav-btn nav-code" data-keywords="redeem code invite access key"><svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" aria-hidden="true" focusable="false"><circle cx="3.6" cy="6" r="2.3"/><path d="M5.9 6H11M9.3 6v1.9M10.7 6v1.5"/></svg>I Have a Code</a>
             <span class="nav-sep" aria-hidden="true"></span>
             <div class="nav-actions"><button class="nav-search" aria-label="Search pages and services" title="Search (Ctrl+K)"><svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg></button><button class="theme-toggle" aria-label="Toggle color theme"><span class="icon-moon" aria-hidden="true"><img src="/assets/icons/icon-ui-moon.svg" class="" alt="" width="18" height="18" loading="lazy" decoding="async" aria-hidden="true"></span><span class="icon-sun" aria-hidden="true"><img src="/assets/icons/icon-ui-sun.svg" class="" alt="" width="18" height="18" loading="lazy" decoding="async" aria-hidden="true"></span></button></div>
@@ -129,8 +130,8 @@ html[data-theme="light"]{background:#E7EDEA;color-scheme:light}
                     <span class="dn-soon-pill">Coming soon</span>
                 </div>
                 <div class="crypto-options" id="dn-crypto-options">
-                    <button type="button" class="crypto-option" data-type="monero" data-action="select-crypto" disabled aria-disabled="true" title="Wallet addresses are being set up"><span class="icon"><img src="/assets/icons/icon-crypto-monero.svg" alt="" width="28" height="28" loading="lazy" decoding="async"></span><span class="name">Monero (XMR)</span><span class="crypto-soon">Soon</span></button>
-                    <button type="button" class="crypto-option" data-type="bitcoin" data-action="select-crypto" disabled aria-disabled="true" title="Wallet addresses are being set up"><span class="icon"><img src="/assets/icons/icon-crypto-bitcoin.svg" alt="" width="28" height="28" loading="lazy" decoding="async"></span><span class="name">Bitcoin (BTC)</span><span class="crypto-soon">Soon</span></button>
+                    <button type="button" class="crypto-option" data-type="monero" data-action="select-crypto" disabled title="Wallet addresses are being set up"><span class="icon"><img src="/assets/icons/icon-crypto-monero.svg" alt="" width="28" height="28" loading="lazy" decoding="async"></span><span class="name">Monero (XMR)</span><span class="crypto-soon">Soon</span></button>
+                    <button type="button" class="crypto-option" data-type="bitcoin" data-action="select-crypto" disabled title="Wallet addresses are being set up"><span class="icon"><img src="/assets/icons/icon-crypto-bitcoin.svg" alt="" width="28" height="28" loading="lazy" decoding="async"></span><span class="name">Bitcoin (BTC)</span><span class="crypto-soon">Soon</span></button>
                 </div>
                 <div class="dn-wallet-soon" id="dn-wallet-soon">
                     <img src="/assets/icons/icon-ui-blossom.svg" alt="" width="22" height="22" loading="lazy" decoding="async" aria-hidden="true">
@@ -232,7 +233,7 @@ html[data-theme="light"]{background:#E7EDEA;color-scheme:light}
             <a href="/form.html" data-keywords="request invite signup sign up access apply join">Get Access</a>
             <a href="/support.html" data-keywords="donate donation support fund help pay">Donate</a>
             <a href="/suggest.html" data-keywords="suggest request idea recommend new service feature">Suggest a Service</a>
-            <a href="/about.html" data-keywords="story gardener who about team mission why runs runs it behind mysweetpea person solo one">About</a>
+            <a href="/about.html" data-keywords="story gardener who about team mission why runs it behind mysweetpea person solo one">About</a>
             </div>
             <div class="footer-col">
             <h4>Support</h4>
@@ -259,7 +260,7 @@ html[data-theme="light"]{background:#E7EDEA;color-scheme:light}
     <script src="/assets/js/lenis-init.js?v=107" defer></script>
     <script src="/assets/js/site.js?v=109" defer></script>
     <script src="/assets/js/premium.js?v=107" defer></script>
-    <script src="/assets/js/support-page.js?v=6" defer></script>
+    <script src="/assets/js/support-page.js?v=7" defer></script>
     <script>
     if ('serviceWorker' in navigator) {
         window.addEventListener('load', function () {

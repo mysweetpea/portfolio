@@ -76,6 +76,7 @@
             if (addr.__dnBusy) return; /* feedback already running — no double write */
             var value = addr.getAttribute('data-wallet') || '';
             if (!value.trim()) return;
+            addr.__dnBusy = true; /* set BEFORE the async write: closes the double-click window */
             if (navigator.clipboard && navigator.clipboard.writeText) {
                 navigator.clipboard.writeText(value).then(function () {
                     flashCopied(addr, false);
@@ -85,7 +86,7 @@
             } else {
                 flashCopied(addr, true); /* insecure context / unsupported: say so */
             }
-            return;
+            return; /* flashCopied clears __dnBusy */
         }
 
         /* select-crypto: options are not payable yet — clicking one marks it
@@ -103,13 +104,13 @@
        "Copy failed" so a silent no-op is impossible. Restores the prior
        label via textContent only. */
     function flashCopied(el, failed) {
-        if (el.__dnBusy) return;
         el.__dnBusy = true;
         var prev = el.getAttribute('data-label') || el.textContent;
         el.setAttribute('data-label', prev);
         el.textContent = failed ? 'Copy failed' : 'Copied!';
         setTimeout(function () {
             el.textContent = prev;
+            el.removeAttribute('data-label'); /* re-capture next time — never cache stale labels */
             el.__dnBusy = false;
         }, 1600);
     }

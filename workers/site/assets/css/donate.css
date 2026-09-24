@@ -81,14 +81,6 @@ body[data-page='support'] .dn-tab:focus-visible {
 
 body[data-page='support'] .dn-panels { margin-top: 22px; }
 body[data-page='support'] .dn-panels .dn-card[hidden] { display: none; }
-body[data-page='support'] .dn-grid {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: 18px;
-    margin-top: 22px;
-    align-items: start;
-}
-
 /* --- cards ------------------------------------------------------------------
    Keeps the site's glass family. dn-crypto is the hero card: subtle gradient
    + gold hairline so the eye lands there first without shouting. */
@@ -239,7 +231,7 @@ body[data-page='support'] .crypto-option:disabled {
 }
 body[data-page='support'] .crypto-option:disabled:hover { transform: none; border-color: var(--border-primary); }
 body[data-page='support'] .crypto-option:hover:not(:disabled) { border-color: var(--primary); }
-body[data-page='support'] .crypto-option:focus-visible { outline: 3px solid var(--primary-bright); outline-offset: 2px; }
+body[data-page='support'] .crypto-option:focus-visible { outline: 3px solid var(--primary-bright, var(--primary)); outline-offset: 2px; }
 body[data-page='support'] .crypto-option .name {
     font-size: var(--t-fs-sm, 0.92rem);
     color: var(--text);
@@ -301,8 +293,8 @@ body[data-page='support'] .dn-btn-ghost {
 body[data-page='support'] .dn-btn-ghost svg { flex: none; opacity: 0.85; transition: opacity 0.2s ease; }
 body[data-page='support'] .dn-btn-ghost:hover {
     border-color: var(--primary);
+    background: rgba(143, 175, 181, 0.07); /* fallback first — old browsers drop the color-mix line below */
     background: color-mix(in srgb, var(--primary) 7%, transparent);
-    background: rgba(143, 175, 181, 0.07); /* fallback */
     transform: translateY(-1px);
 }
 body[data-page='support'] .dn-btn-ghost:hover svg { opacity: 1; }
@@ -343,8 +335,8 @@ body[data-page='support'] .dn-why::before {
     width: 200px;
     height: 200px;
     border-radius: 50%;
+    background: radial-gradient(circle, rgba(163, 201, 182, 0.09), transparent 70%); /* fallback first */
     background: radial-gradient(circle, color-mix(in srgb, var(--sage) 9%, transparent), transparent 70%);
-    background: radial-gradient(circle, rgba(163, 201, 182, 0.09), transparent 70%); /* fallback */
     pointer-events: none;
 }
 body[data-page='support'] .dn-why-head {
@@ -360,6 +352,7 @@ body[data-page='support'] .dn-why-icon {
     height: 44px;
     border-radius: 12px;
     border: 1px solid var(--border-primary);
+    background: rgba(163, 201, 182, 0.08); /* fallback first */
     background: color-mix(in srgb, var(--sage) 8%, transparent);
 }
 body[data-page='support'] .dn-why h3 {
@@ -384,8 +377,8 @@ body[data-page='support'] .dn-why-point {
     gap: 3px;
     padding: 12px 14px;
     border-radius: 12px;
+    background: rgba(255, 255, 255, 0.02); /* fallback first */
     background: color-mix(in srgb, var(--card-bg) 50%, transparent);
-    background: rgba(255, 255, 255, 0.02); /* fallback */
     border: 1px solid var(--border);
 }
 body[data-page='support'] .dn-why-point .pt-label {
@@ -423,7 +416,7 @@ body[data-page='support'] .faq-question {
     font-weight: 600;
     color: var(--text);
 }
-body[data-page='support'] .faq-question:focus-visible { outline: 3px solid var(--primary-bright); outline-offset: 2px; border-radius: 10px; }
+body[data-page='support'] .faq-question:focus-visible { outline: 3px solid var(--primary-bright, var(--primary)); outline-offset: 2px; border-radius: 10px; }
 body[data-page='support'] .faq-answer p { margin: 0; line-height: 1.65; font-size: var(--t-fs-sm, 0.92rem); color: var(--text); }
 body[data-page='support'] .faq-answer a { color: var(--primary); }
 
@@ -435,22 +428,20 @@ body[data-page='support'] .faq-answer a { color: var(--primary); }
 /* --- mobile ---------------------------------------------------------------- */
 @media (max-width: 760px) {
     body[data-page='support'] .dn-section { margin-top: 40px; }
-    body[data-page='support'] .dn-grid { grid-template-columns: 1fr; }
     body[data-page='support'] .dn-card { padding: 18px; }
-    body[data-page='support'] .dn-why { padding: 18px; grid-template-columns: 1fr; }
-    body[data-page='support'] .dn-why-icon { grid-row: auto; }
+    body[data-page='support'] .dn-why { padding: 18px; }
     body[data-page='support'] .crypto-options { grid-template-columns: 1fr; }
     body[data-page='support'] .faq-question { padding: 15px 16px; }
-}
-
-@media (max-width: 480px) {
 }
 
 /* --- reduced motion -------------------------------------------------------- */
 @media (prefers-reduced-motion: reduce) {
     body[data-page='support'] .dn-card,
     body[data-page='support'] .dn-btn,
-    body[data-page='support'] .crypto-option { transition: none !important; }
-    body[data-page='support'] .dn-card:hover { transform: none; }
+    body[data-page='support'] .crypto-option,
+    body[data-page='support'] .dn-card.glow-card::before,
+    body[data-page='support'] .vine-divider { transition: none !important; }
+    body[data-page='support'] .dn-card:hover,
     body[data-page='support'] .dn-btn:hover { transform: none; }
+    body[data-page='support'] .hero img.logo { animation: none; }
 }
