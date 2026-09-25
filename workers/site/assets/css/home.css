@@ -331,3 +331,27 @@ body[data-page='home'] .gw-card-alt .vb-body{color:var(--text-dim)}
 [data-theme="light"] body[data-page='home'] .vb-card::after{background:radial-gradient(circle at 85% 15%,rgba(78,124,136,.06),transparent 55%)}
 [data-theme="light"] body[data-page='home'] .gw-kicker{background:rgba(78,124,136,.07)}
 [data-theme="light"] body[data-page='home'] .gw-card{background:rgba(78,124,136,.03)}
+
+/* ===== v10: garden duel headers + sins lists (Sep 24) ===== */
+body[data-page='home'] .g-duel{display:flex;align-items:center;gap:14px;flex-wrap:wrap;padding:2px 0 12px;border-bottom:1px dashed var(--border);margin-bottom:12px}
+body[data-page='home'] .g-side{display:inline-flex;align-items:center;gap:9px;min-width:0}
+body[data-page='home'] .g-side-name{font-family:var(--t-font-mono,ui-monospace,monospace);font-size:.66rem;letter-spacing:.04em;color:var(--text-dim);white-space:nowrap}
+body[data-page='home'] .g-side-ours .g-side-name{color:var(--text)}
+body[data-page='home'] .g-side-ours img{width:28px;height:28px}
+body[data-page='home'] .g-vs{font-family:var(--t-font-mono,ui-monospace,monospace);font-size:.56rem;letter-spacing:.18em;text-transform:uppercase;color:var(--text-faint);border:1px solid var(--border);border-radius:999px;padding:3px 8px}
+body[data-page='home'] .g-twin-logo{width:26px;height:26px;display:inline-block;background-color:var(--text-faint);-webkit-mask:var(--tw) center/contain no-repeat;mask:var(--tw) center/contain no-repeat;opacity:.85;flex:none}
+body[data-page='home'] .g-twin-netflix{--tw:url('/assets/icons/twins/netflix.svg')}
+body[data-page='home'] .g-twin-googledrive{--tw:url('/assets/icons/twins/googledrive.svg')}
+body[data-page='home'] .g-twin-googlephotos{--tw:url('/assets/icons/twins/googlephotos.svg')}
+body[data-page='home'] .g-twin-whatsapp{--tw:url('/assets/icons/twins/whatsapp.svg')}
+body[data-page='home'] .g-twin-lastpass{--tw:url('/assets/icons/twins/lastpass.svg')}
+body[data-page='home'] .g-twin-notion{--tw:url('/assets/icons/twins/notion.svg')}
+body[data-page='home'] .g-twin-openai{--tw:url('/assets/icons/twins/openai.svg')}
+body[data-page='home'] .g-twin-discord{--tw:url('/assets/icons/twins/discord.svg')}
+body[data-page='home'] .g-twin-trakt{--tw:url('/assets/icons/twins/trakt.svg')}
+body[data-page='home'] .g-sins{margin:10px 0 0;padding:0;list-style:none;max-width:68ch}
+body[data-page='home'] .g-sins li{position:relative;padding:6px 0 6px 22px;font-size:.9rem;line-height:1.65;color:var(--text-dim);border-bottom:1px dashed rgba(217,140,140,.14)}
+body[data-page='home'] .g-sins li:last-child{border-bottom:0}
+body[data-page='home'] .g-sins li::before{content:'';position:absolute;left:2px;top:14px;width:9px;height:9px;border-radius:50%;background:rgba(217,140,140,.55);box-shadow:0 0 8px rgba(217,140,140,.35)}
+body[data-page='home'] .g-sins li strong{color:var(--text);font-weight:600;margin-right:2px}
+body[data-page='home'] .g-contrast strong{color:var(--sage)}
